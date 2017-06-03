@@ -1,0 +1,71 @@
+{
+	title = "GENERAL";
+	items =
+	(
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "HTTPS_EVERYWHERE_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "HTTPS_EVERYWHERE";
+			key = "forceHTTPSEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "OPEN_IN_NEW_TAB_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "OPEN_IN_NEW_TAB";
+			key = "openInNewTabOptionEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "UPLOAD_ANY_FILE_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "UPLOAD_ANY_FILE";
+			key = "uploadAnyFileOptionEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "DESKTOP_SWITCH_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "desktopButtonEnabled";
+			label = "DESKTOP_SWITCH_LABEL";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "LONG_PRESS_SUGGESTIONS_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "longPressSuggestionsEnabled";
+			label = "LONG_PRESS_SUGGESTIONS";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		}
+	);
+}

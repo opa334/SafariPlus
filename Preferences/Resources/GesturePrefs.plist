@@ -1,0 +1,88 @@
+{
+	items =
+	(
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			label = "URL_BAR_GESTURES_LABEL";
+			footerText = "SWIPE_LEFT_GESTURE_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "URLLeftSwipeGestureEnabled";
+			label = "SWIPE_LEFT_GESTURE";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "PSListItemsController";
+			key = "URLLeftSwipeAction";
+			label = "ACTION";
+			valuesDataSource = "gestureActionValues";
+			titlesDataSource = "gestureActionTitles";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "SWIPE_RIGHT_GESTURE_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "URLRightSwipeGestureEnabled";
+			label = "SWIPE_RIGHT_GESTURE";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "PSListItemsController";
+			key = "URLRightSwipeAction";
+			label = "ACTION";
+			valuesDataSource = "gestureActionValues";
+			titlesDataSource = "gestureActionTitles";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "SWIPE_DOWN_GESTURE_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "URLDownSwipeGestureEnabled";
+			label = "SWIPE_DOWN_GESTURE";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "PSListItemsController";
+			key = "URLDownSwipeAction";
+			label = "ACTION";
+			valuesDataSource = "gestureActionValues";
+			titlesDataSource = "gestureActionTitles";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "gestureBackground";
+			label = "BACKGROUND";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		}
+	);
+	title = "GESTURE_SETTINGS";
+}

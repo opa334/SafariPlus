@@ -1,0 +1,65 @@
+{
+	title = "Safari Plus";
+	items =
+	(
+		{
+      cell = PSGroupCell;
+      headerCellClass = SafariPlusHeaderCell;
+    },
+		{
+      cell = PSGroupCell;
+    },
+    {
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "GeneralPrefsController";
+      label = GENERAL;
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "ActionPrefsController";
+      label = ACTION_ADDONS;
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "GesturePrefsController";
+      label = GESTURE_ADDONS;
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "OtherPrefsController";
+			label = OTHER_ADDONS;
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "ColorPrefsController";
+			label = COLOR_SETTINGS;
+		},
+		{
+			cell = PSGroupCell;
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "CreditsController";
+			label = CREDITS;
+		},
+		{
+			cell = PSGroupCell;
+		},
+		{
+			action = sourceLink;
+			cell = PSButtonCell;
+			icon = "GitHub.png";
+			label = "SOURCE_CODE";
+		},
+		{
+			cell = PSGroupCell;
+			footerText = "© 2017 opa334";
+		},
+	);
+}

@@ -1,0 +1,32 @@
+{
+	title = "OTHER_ADDONS";
+	items =
+	(
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "FULLSCREEN_SCROLLING_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "FULLSCREEN_SCROLLING";
+			key = "fullscreenScrollingEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "DISABLE_PRIVATE_MODE_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "disablePrivateMode";
+			label = "DISABLE_PRIVATE_MODE";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+	);
+}

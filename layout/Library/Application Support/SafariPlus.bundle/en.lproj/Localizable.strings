@@ -1,0 +1,129 @@
+/* Root Page*/
+
+"GENERAL" = "General";
+"ACTION_ADDONS" = "Action Addons";
+"GESTURE_ADDONS" = "Gesture Addons";
+"OTHER_ADDONS" = "Other Addons";
+"COLOR_SETTINGS" = "Color Settings";
+"SOURCE_CODE" = "Source Code";
+
+/* General Settings */
+
+"HTTPS_EVERYWHERE_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: Might break sites that don't support HTTPS.";
+"HTTPS_EVERYWHERE" = "HTTPS Everywhere";
+
+"OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
+"OPEN_IN_NEW_TAB" = "'Open in new Tab' Option";
+
+"UPLOAD_ANY_FILE_FOOTER" = "Adds a new option to the document upload menu, that lets you pick any file from the root of your device.\nNOTE: This option affects any browser that uses webkit (eg. Google Chrome), not just Safari.";
+"UPLOAD_ANY_FILE" = "Upload any File";
+
+"DESKTOP_SWITCH_FOOTER" = "Adds a button to the tab switcher, which you can use to globally switch between mobile / desktop mode.";
+"DESKTOP_SWITCH_LABEL" = "Desktop Mode Switch";
+
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Long press on search / URL suggestions to insert them into the URL bar.";
+"LONG_PRESS_SUGGESTIONS" = "Long Press Suggestions";
+
+/* Action Settings */
+
+"NORMAL_MODE" = "Normal Browsing Mode";
+"PRIVATE_MODE" = "Private Browsing Mode";
+"TO" = "to...";
+"ON" = "on...";
+"FOR" = "for...";
+
+"CHANGE_MODE_ON" = "Change browsing mode on...";
+
+"LAUNCH_MODE_FOOTER" = "Changes to specified browsing mode, when Safari is launched.";
+"LAUNCH_MODE_LABEL" = "App Start";
+
+"RESUME_FOOTER" = "Changes to specified browsing mode, when Safari is resumed.";
+"RESUME_LABEL" = "App Resume";
+
+"EXTERNAL_URL_FOOTER" = "Changes to specified browsing mode, when an external URL (from another app) is opened with Safari.";
+"EXTERNAL_URL_LABEL" = "External Link opened";
+
+"AUTO_CLOSE_TABS_FOOTER" = "Closes tabs of specified browsing mode, when the specified case occurs.";
+"AUTO_CLOSE_TABS_LABEL" = "Auto-close Tabs";
+"SAFARI_CLOSED" = "Safari closed";
+"SAFARI_MINIMIZED" = "Safari minimized";
+
+"ACTIVE_MODE" = "Active Browsing Mode";
+"BOTH_MODES" = "Both Browsing Modes";
+
+/* Gesture Settings */
+
+"ACTION" = "Action";
+
+"URL_BAR_GESTURES_LABEL" = "Url bar gestures";
+
+"SWIPE_LEFT_GESTURE_FOOTER" = "Performs specified action when URL bar is swiped left.";
+"SWIPE_LEFT_GESTURE" = "Swipe Left Gesture";
+
+"SWIPE_RIGHT_GESTURE_FOOTER" = "Performs specified action when URL bar is swiped right.";
+"SWIPE_RIGHT_GESTURE" = "Swipe Right Gesture";
+
+"SWIPE_DOWN_GESTURE_FOOTER" = "Performs specified action when URL bar is swiped down.";
+"SWIPE_DOWN_GESTURE" = "Swipe Down Gesture";
+
+"CLOSE_ACTIVE_TAB" = "Close active Tab";
+"OPEN_NEW_TAB" = "Open new Tab";
+"DUPLICATE_ACTIVE_TAB" = "Duplicate active Tab";
+"CLOSE_ALL_TABS" = "Close all Tabs from Browsing Mode";
+"SWITCH_MODE" = "Switch Browsing Mode";
+
+"BACKGROUND" = "Duplicate Tab in Background";
+
+/* Other Settings */
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Hides the full top bar while scrolling down.";
+"FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
+"DISABLE_PRIVATE_MODE_FOOTER" = "Disables private browsing mode and removes the 'Private' button. (Hidden stock feature)";
+"DISABLE_PRIVATE_MODE" = "Fully disable private browsing";
+
+/* Color Settings */
+
+"APP_TINT_COLOR_ENABLED" = "App Tint Color";
+"APP_TINT_COLOR" = "App Tint Color...";
+
+"TOP_BAR_COLOR_ENABLED" = "Top Bar Color";
+"TOP_BAR_COLOR" = "Top Bar Color...";
+
+"URL_FONT_COLOR_ENABLED" = "URL Font Color";
+"URL_FONT_COLOR" = "URL Font Color...";
+
+"PROGRESS_BAR_COLOR_ENABLED" = "Progress Bar Color";
+"PROGRESS_BAR_COLOR" = "Progress Bar Color...";
+
+"TAB_TITLE_COLOR_ENABLED" = "Tab Title Color";
+"TAB_TITLE_COLOR" = "Tab Title Color...";
+
+"RELOAD_BUTTON_COLOR_ENABLED" = "Reload Button Color";
+"RELOAD_BUTTON_COLOR" = "Reload Button Color...";
+
+"LOCK_ICON_COLOR_ENABLED" = "Lock Icon Color";
+"LOCK_ICON_COLOR" = "Lock Icon Color...";
+
+"BOTTOM_BAR_COLOR_ENABLED" = "Bottom Bar Color";
+"BOTTOM_BAR_COLOR" = "Bottom Bar Color...";
+"BOTTOM_BAR_FOOTER" = "NOTE: This option is kinda broken.";
+
+"WHITE" = "White";
+"BLACK" = "Black";
+
+/* Credits */
+"CREDITS" = "Credits";
+"ICONS" = "Icons";
+"DESKTOP_MODE_BUTTON" = "'Desktop Mode' Button";
+"LOCAL_FILE_BUTTON" = "'Local File' Button";
+"PICKER_FILE_ENTRY" = "File Picker: File Icon";
+"PICKER_DIRECTORY_ENTRY" = "File Picker: Directory Icon";
+"STOLEN_FROM" = "Localization code stolen from";
+"PICKER_INSPIRED" = "File picker inspired by";
+
+/* In app */
+"OPEN_IN_NEW_TAB_OPTION" = "Open in New Tab";
+"LOCAL_FILE" = "Local File";
+
+/* File picker */
+"CANCEL" = "Cancel";

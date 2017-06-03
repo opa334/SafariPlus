@@ -1,0 +1,18 @@
+{
+	items =
+	(
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "NormalColorPrefsController";
+			label = NORMAL_MODE;
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "PrivateColorPrefsController";
+			label = PRIVATE_MODE;
+		}
+	);
+	title = "COLOR_SETTINGS";
+}

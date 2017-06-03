@@ -1,0 +1,129 @@
+/* Root Page*/
+
+"GENERAL" = "Allgemein";
+"ACTION_ADDONS" = "Aktionen Erweiterungen";
+"GESTURE_ADDONS" = "Gesten Erweiterungen";
+"OTHER_ADDONS" = "Andere Erweiterungen";
+"COLOR_SETTINGS" = "Farbeinstellungen";
+"SOURCE_CODE" = "Quellcode";
+
+/* General Settings */
+
+"HTTPS_EVERYWHERE_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Kann zu Problemen mit Seiten führen, die kein HTTPS unterstützen.";
+"HTTPS_EVERYWHERE" = "Überall HTTPS benutzen";
+
+"OPEN_IN_NEW_TAB_FOOTER" = "Fügt eine weitere 'In neuem Tab öffnen' Option zum Menü hinzu, das beim langen gedrückt halten von Links erscheint.\nStelle 'Links öffnen' in den Safari Einstellungen auf 'Im Hintergrund', um im Menü Zugriff auf beide Optionen zu haben.";
+"OPEN_IN_NEW_TAB" = "'In neuem Tab öffnen' Option";
+
+"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann.\nHINWEIS: Diese Option beinflusst alle Browser, die Webkit nutzen (z.B. Google Chrome), nicht nur Safari.";
+"UPLOAD_ANY_FILE" = "Jede Datei hochladen";
+
+"DESKTOP_SWITCH_FOOTER" = "Fügt einen Button zum Tab Switcher hinzu, mit dem global zwischen dem mobilen und dem desktop Modus gewechselt werden kann.";
+"DESKTOP_SWITCH_LABEL" = "Desktop Modus Schalter";
+
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Lässt dich auf Such / URL Vorschläge lange Drücken, um diese in die URL Leiste einzufügen.";
+"LONG_PRESS_SUGGESTIONS" = "Lange auf Vorschläge drücken";
+
+/* Action Settings */
+
+"NORMAL_MODE" = "Normaler Surfmodus";
+"PRIVATE_MODE" = "Privater Surfmodus";
+"TO" = "zu...";
+"ON" = "bei...";
+"FOR" = "für...";
+
+"CHANGE_MODE_ON" = "Surfmodus wechseln bei";
+
+"LAUNCH_MODE_FOOTER" = "Wechselt zum angegebenen Surfmodus, wenn Safari gestartet wird.";
+"LAUNCH_MODE_LABEL" = "App-Start";
+
+"RESUME_FOOTER" = "Wechselt zum angegebenen Surfmodus, wenn Safari aus dem Hintergrund wieder geöffnet wird.";
+"RESUME_LABEL" = "App-Wiederaufnahme";
+
+"EXTERNAL_URL_FOOTER" = "Wechselt zum angegeben Surfmodus, wenn ein externer Link (aus einer anderen App) in Safari geöffnet wird.";
+"EXTERNAL_URL_LABEL" = "Externem Link";
+
+"AUTO_CLOSE_TABS_FOOTER" = "Schließt die Tabs des angegebenen Surfmodus, wenn der angegebene Fall eintritt.";
+"AUTO_CLOSE_TABS_LABEL" = "Tabs automatisch schließen";
+"SAFARI_CLOSED" = "Safari geschlossen";
+"SAFARI_MINIMIZED" = "Safari minimiert";
+
+"ACTIVE_MODE" = "Aktiver Surfmodus";
+"BOTH_MODES" = "Beide Surfmodi";
+
+/* Gesture Settings */
+
+"ACTION" = "Aktion";
+
+"URL_BAR_GESTURES_LABEL" = "Gesten auf URL-Leiste";
+
+"SWIPE_LEFT_GESTURE_FOOTER" = "Führt die angebene Aktion aus, wenn auf der URL-Leiste nach links gewischt wird.";
+"SWIPE_LEFT_GESTURE" = "Nach links wischen";
+
+"SWIPE_RIGHT_GESTURE_FOOTER" = "Führt die angebene Aktion aus, wenn auf der URL-Leiste nach rechts gewischt wird.";
+"SWIPE_RIGHT_GESTURE" = "Nach rechts wischen";
+
+"SWIPE_DOWN_GESTURE_FOOTER" = "Führt die angebene Aktion aus, wenn auf der URL-Leiste nach unten gewischt wird.";
+"SWIPE_DOWN_GESTURE" = "Nach unten wischen";
+
+"CLOSE_ACTIVE_TAB" = "Aktiven Tab schließen";
+"OPEN_NEW_TAB" = "Neuer Tab";
+"DUPLICATE_ACTIVE_TAB" = "Aktiven Tab duplizieren";
+"CLOSE_ALL_TABS" = "Tabs vom Surfmodus schließen";
+"SWITCH_MODE" = "Surfmodus wechseln";
+
+"BACKGROUND" = "Tab im Hintergrund duplizieren";
+
+/* Other Settings */
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.";
+"FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
+"DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
+"DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
+
+/* Color Settings */
+
+"APP_TINT_COLOR_ENABLED" = "App Akzentfarbe";
+"APP_TINT_COLOR" = "App Akzentfarbe...";
+
+"TOP_BAR_COLOR_ENABLED" = "Farbe der oberen Leiste";
+"TOP_BAR_COLOR" = "Farbe der oberen Leiste...";
+
+"URL_FONT_COLOR_ENABLED" = "URL Schriftfarbe";
+"URL_FONT_COLOR" = "URL Schriftfarbe...";
+
+"PROGRESS_BAR_COLOR_ENABLED" = "Farbe des Ladebalkens";
+"PROGRESS_BAR_COLOR" = "Farbe des Ladebalkens...";
+
+"TAB_TITLE_COLOR_ENABLED" = "Tab Titelfarbe";
+"TAB_TITLE_COLOR" = "Tab Titelfarbe...";
+
+"RELOAD_BUTTON_COLOR_ENABLED" = "Farbe des neu laden Buttons";
+"RELOAD_BUTTON_COLOR" = "Farbe des neu laden Buttons...";
+
+"LOCK_ICON_COLOR_ENABLED" = "Farbe des Schlüsselicons";
+"LOCK_ICON_COLOR" = "Farbe des Schlüsselicons...";
+
+"BOTTOM_BAR_COLOR_ENABLED" = "Farbe der unteren Leiste";
+"BOTTOM_BAR_COLOR" = "Farbe der unteren Leiste...";
+"BOTTOM_BAR_FOOTER" = "HINWEIS: Diese Option funktioniert möglicherweise nicht richtig.";
+
+"WHITE" = "Weiß";
+"BLACK" = "Schwarz";
+
+/* Credits */
+"CREDITS" = "Credits";
+"ICONS" = "Icons";
+"DESKTOP_MODE_BUTTON" = "'Desktop Modus' Button";
+"LOCAL_FILE_BUTTON" = "'Lokale Datei' Button";
+"PICKER_FILE_ENTRY" = "Dateiauswahl: Datei Icon";
+"PICKER_DIRECTORY_ENTRY" = "Dateiauswahl: Ordner Icon";
+"STOLEN_FROM" = "Lokalisierungscode geklaut von";
+"PICKER_INSPIRED" = "Dateiauswahl inspiriert von";
+
+/* In app */
+"OPEN_IN_NEW_TAB_OPTION" = "In neuem Tab öffnen";
+"LOCAL_FILE" = "Lokale Datei";
+
+/* File picker */
+"CANCEL" = "Abbrechen";
