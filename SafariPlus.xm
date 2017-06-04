@@ -79,7 +79,7 @@ NSMutableDictionary* plist;
 /****** Safari Hooks ******/
 
 %hook Application
--(BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
+- (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
 {
   BOOL orig = %orig;
 
@@ -117,17 +117,17 @@ NSMutableDictionary* plist;
 }
 
 //Auto switch mode on resume
--(void)applicationWillEnterForeground:(id)arg1
+- (void)applicationWillEnterForeground:(id)arg1
 {
   %orig;
   if(forceModeOnResumeEnabled)
   {
     [self modeSwitchAction:forceModeOnResumeFor];
-	}
+  }
 }
 
 //Auto close tabs when Safari gets closed
--(void)applicationWillTerminate
+- (void)applicationWillTerminate
 {
   if(autoCloseTabsEnabled && autoCloseTabsOn == 1 /*Safari closed*/)
   {
@@ -135,7 +135,6 @@ NSMutableDictionary* plist;
   }
   if(desktopButtonEnabled)
   {
-
     [plist setObject:[NSNumber numberWithBool:userAgentButtonPortrait.selected] forKey:@"desktopButtonSelected"];
     [plist writeToFile:plistPath atomically:YES];
   }
@@ -144,7 +143,7 @@ NSMutableDictionary* plist;
 
 
 //Auto close tabs when Safari gets minimized
--(void)applicationDidEnterBackground:(id)arg1
+- (void)applicationDidEnterBackground:(id)arg1
 {
   if(autoCloseTabsEnabled && autoCloseTabsOn == 2 /*Safari minimized*/)
   {
@@ -155,7 +154,7 @@ NSMutableDictionary* plist;
 
 //Gets called to switch mode based on the setting
 %new
--(void)modeSwitchAction:(int)switchToMode
+- (void)modeSwitchAction:(int)switchToMode
 {
     if(switchToMode == 1 /*Normal Mode*/ && [self isPrivateBrowsingEnabledInAnyWindow])
     {
@@ -171,7 +170,7 @@ NSMutableDictionary* plist;
 
 //Gets called to close tabs based on the setting
 %new
--(void)autoCloseAction
+- (void)autoCloseAction
 {
   switch(autoCloseTabsFor)
   {
@@ -221,7 +220,7 @@ NSMutableDictionary* plist;
 %hook BrowserController
 
 //Full screen scrolling
--(BOOL)_isVerticallyConstrained
+- (BOOL)_isVerticallyConstrained
 {
   if(enableFullscreenScrolling)
   {
@@ -232,7 +231,7 @@ NSMutableDictionary* plist;
 }
 
 //Fully disable private mode
--(BOOL)isPrivateBrowsingAvailable
+- (BOOL)isPrivateBrowsingAvailable
 {
   if(disablePrivateMode)
   {
@@ -243,7 +242,7 @@ NSMutableDictionary* plist;
 }
 
 //Auto switch mode on external URL opened
--(id)handleExternalURL:(id)arg1
+- (id)handleExternalURL:(id)arg1
 {
   if(forceModeOnExternalLinkEnabled && arg1)
   {
@@ -266,7 +265,7 @@ UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
 UISwipeGestureRecognizer *swipeRightGestureRecognizer;
 UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
--(NavigationBar *)navigationBar
+- (NavigationBar *)navigationBar
 {
   if(URLLeftSwipeGestureEnabled || URLRightSwipeGestureEnabled || URLDownSwipeGestureEnabled)
   {
@@ -306,7 +305,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 //Call method based on the direction of the url bar swipe
 %new
--(void)navigationBarURLWasSwiped:(UISwipeGestureRecognizer*)swipe
+- (void)navigationBarURLWasSwiped:(UISwipeGestureRecognizer*)swipe
 {
   switch(swipe.direction)
   {
@@ -326,7 +325,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 //URL Swipe actions
 %new
--(void)handleSwipe:(NSInteger)swipeAction
+- (void)handleSwipe:(NSInteger)swipeAction
 {
   __block BOOL shouldClean = NO;
   switch(swipeAction)
@@ -364,7 +363,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Desktop mode button : Landscape
--(void)willPresentTabOverview
+- (void)willPresentTabOverview
 {
   %orig;
   if(desktopButtonEnabled)
@@ -377,13 +376,13 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
     userAgentButtonLandscape.frame = CGRectMake(self.tabController.tabOverview.privateBrowsingButton.frame.origin.x - 57.5, self.tabController.tabOverview.privateBrowsingButton.frame.origin.y, self.tabController.tabOverview.privateBrowsingButton.frame.size.height, self.tabController.tabOverview.privateBrowsingButton.frame.size.height);
 
-	  _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self.tabController.tabOverview, "_header");
+    _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self.tabController.tabOverview, "_header");
     [header.contentView addSubview:userAgentButtonLandscape];
   }
 }
 
 %new
--(void)userAgentButtonLandscapePressed
+- (void)userAgentButtonLandscapePressed
 {
   if(userAgentButtonLandscape.selected)
   {
@@ -410,7 +409,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %hook TabController
 
 //Desktop mode button : Portrait
--(NSArray *)tiltedTabViewToolbarItems
+- (NSArray *)tiltedTabViewToolbarItems
 {
   if(desktopButtonEnabled)
   {
@@ -434,7 +433,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 %new
--(void)userAgentButtonPortraitPressed
+- (void)userAgentButtonPortraitPressed
 {
   if(userAgentButtonPortrait.selected)
   {
@@ -463,7 +462,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 //Extra 'Open in new Tab' option
 
--(NSArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
+- (NSArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
   if(openInNewTabOptionEnabled)
   {
@@ -484,7 +483,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 //desktop mode + ForceHTTPS
 
--(id)_initWithTitle:(id)arg1 URL:(NSURL*)arg2 UUID:(id)arg3 privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6 createDocumentView:(id)arg7
+- (id)_initWithTitle:(id)arg1 URL:(NSURL*)arg2 UUID:(id)arg3 privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6 createDocumentView:(id)arg7
 {
   if((forceHTTPSEnabled || desktopButtonEnabled) && arg2)
   {
@@ -493,7 +492,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   return %orig;
 }
 
--(id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2
+- (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2
 {
   if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
   {
@@ -502,7 +501,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   return %orig;
 }
 
--(id)loadURL:(NSURL*)arg1 fromBookmark:(id)arg2
+- (id)loadURL:(NSURL*)arg1 fromBookmark:(id)arg2
 {
   if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
   {
@@ -511,7 +510,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   return %orig;
 }
 
--(void)_loadStartedDuringSimulatedClickForURL:(NSURL*)arg1
+- (void)_loadStartedDuringSimulatedClickForURL:(NSURL*)arg1
 {
   if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
   {
@@ -524,7 +523,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 %new
--(NSURL*)URLHandler:(NSURL*)URL
+- (NSURL*)URLHandler:(NSURL*)URL
 {
   if(forceHTTPSEnabled && [URL.port intValue] != 443 /*HTTPS port*/)
   {
@@ -540,7 +539,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Exception because method uses NSString instead of NSURL
--(NSString*)loadUserTypedAddress:(NSString*)arg1
+- (NSString*)loadUserTypedAddress:(NSString*)arg1
 {
   if(forceHTTPSEnabled || desktopButtonEnabled)
   {
@@ -574,7 +573,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 %hook CatalogViewController
 
--(UITableViewCell *)tableView:(id)tableView cellForRowAtIndexPath:(id)indexPath
+- (UITableViewCell *)tableView:(id)tableView cellForRowAtIndexPath:(id)indexPath
 {
   if(longPressSuggestionsEnabled)
   {
@@ -600,7 +599,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 %new
--(void)handleLongPress:(UILongPressGestureRecognizer*)gestureRecognizer
+- (void)handleLongPress:(UILongPressGestureRecognizer*)gestureRecognizer
 {
   if(gestureRecognizer.state == UIGestureRecognizerStateBegan)
   {
@@ -643,7 +642,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 %hook NavigationBar
 
--(void)_updateBackdropStyle
+- (void)_updateBackdropStyle
 {
   %orig;
   if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
@@ -682,7 +681,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Progress bar color
--(void)_updateProgressView
+- (void)_updateProgressView
 {
   %orig;
   if(progressBarColorNormalEnabled || progressBarColorPrivateEnabled)
@@ -701,7 +700,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Text color
--(id)_URLTextColor
+- (id)_URLTextColor
 {
   if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
   {
@@ -720,7 +719,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Text color of search text, needs to be less visible
--(id)_placeholderColor
+- (id)_placeholderColor
 {
   if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
   {
@@ -742,7 +741,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Reload button color
--(id)_URLControlsColor
+- (id)_URLControlsColor
 {
   if(reloadColorNormalEnabled || reloadColorPrivateEnabled)
   {
@@ -761,7 +760,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Lock icon color
--(id)_tintForLockImage:(BOOL)arg1
+- (id)_tintForLockImage:(BOOL)arg1
 {
   if(lockIconColorNormalEnabled || lockIconColorPrivateEnabled)
   {
@@ -852,7 +851,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %hook BrowserToolbar
 
 
--(void)layoutSubviews
+- (void)layoutSubviews
 {
   //Tint Color
   if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
@@ -898,28 +897,28 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 %ctor
 {
-	preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
+  preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
 
-	[preferences registerBool:&enableFullscreenScrolling default:NO forKey:@"fullscreenScrollingEnabled"];
-	[preferences registerBool:&forceHTTPSEnabled default:NO forKey:@"forceHTTPSEnabled"];
-	[preferences registerBool:&disablePrivateMode default:NO forKey:@"disablePrivateMode"];
+  [preferences registerBool:&enableFullscreenScrolling default:NO forKey:@"fullscreenScrollingEnabled"];
+  [preferences registerBool:&forceHTTPSEnabled default:NO forKey:@"forceHTTPSEnabled"];
+  [preferences registerBool:&disablePrivateMode default:NO forKey:@"disablePrivateMode"];
 
-	[preferences registerBool:&forceModeOnStartEnabled default:NO forKey:@"forceModeOnStartEnabled"];
-	[preferences registerInteger:&forceModeOnStartFor default:0 forKey:@"forceModeOnStartFor"];
-	[preferences registerBool:&forceModeOnResumeEnabled default:NO forKey:@"forceModeOnResumeEnabled"];
-	[preferences registerInteger:&forceModeOnResumeFor default:0 forKey:@"forceModeOnResumeFor"];
-	[preferences registerBool:&forceModeOnExternalLinkEnabled default:NO forKey:@"forceModeOnExternalLinkEnabled"];
-	[preferences registerInteger:&forceModeOnExternalLinkFor default:0 forKey:@"forceModeOnExternalLinkFor"];
-	[preferences registerBool:&autoCloseTabsEnabled default:NO forKey:@"autoCloseTabsEnabled"];
-	[preferences registerInteger:&autoCloseTabsOn default:0 forKey:@"autoCloseTabsOn"];
-	[preferences registerInteger:&autoCloseTabsFor default:0 forKey:@"autoCloseTabsFor"];
+  [preferences registerBool:&forceModeOnStartEnabled default:NO forKey:@"forceModeOnStartEnabled"];
+  [preferences registerInteger:&forceModeOnStartFor default:0 forKey:@"forceModeOnStartFor"];
+  [preferences registerBool:&forceModeOnResumeEnabled default:NO forKey:@"forceModeOnResumeEnabled"];
+  [preferences registerInteger:&forceModeOnResumeFor default:0 forKey:@"forceModeOnResumeFor"];
+  [preferences registerBool:&forceModeOnExternalLinkEnabled default:NO forKey:@"forceModeOnExternalLinkEnabled"];
+  [preferences registerInteger:&forceModeOnExternalLinkFor default:0 forKey:@"forceModeOnExternalLinkFor"];
+  [preferences registerBool:&autoCloseTabsEnabled default:NO forKey:@"autoCloseTabsEnabled"];
+  [preferences registerInteger:&autoCloseTabsOn default:0 forKey:@"autoCloseTabsOn"];
+  [preferences registerInteger:&autoCloseTabsFor default:0 forKey:@"autoCloseTabsFor"];
 
-	[preferences registerBool:&URLLeftSwipeGestureEnabled default:NO forKey:@"URLLeftSwipeGestureEnabled"];
-	[preferences registerInteger:&URLLeftSwipeAction default:0 forKey:@"URLLeftSwipeAction"];
-	[preferences registerBool:&URLRightSwipeGestureEnabled default:NO forKey:@"URLRightSwipeGestureEnabled"];
-	[preferences registerInteger:&URLRightSwipeAction default:0 forKey:@"URLRightSwipeAction"];
-	[preferences registerBool:&URLDownSwipeGestureEnabled default:NO forKey:@"URLDownSwipeGestureEnabled"];
-	[preferences registerInteger:&URLDownSwipeAction default:0 forKey:@"URLDownSwipeAction"];
+  [preferences registerBool:&URLLeftSwipeGestureEnabled default:NO forKey:@"URLLeftSwipeGestureEnabled"];
+  [preferences registerInteger:&URLLeftSwipeAction default:0 forKey:@"URLLeftSwipeAction"];
+  [preferences registerBool:&URLRightSwipeGestureEnabled default:NO forKey:@"URLRightSwipeGestureEnabled"];
+  [preferences registerInteger:&URLRightSwipeAction default:0 forKey:@"URLRightSwipeAction"];
+  [preferences registerBool:&URLDownSwipeGestureEnabled default:NO forKey:@"URLDownSwipeGestureEnabled"];
+  [preferences registerInteger:&URLDownSwipeAction default:0 forKey:@"URLDownSwipeAction"];
   [preferences registerBool:&gestureBackground default:NO forKey:@"gestureBackground"];
 
   [preferences registerBool:&openInNewTabOptionEnabled default:NO forKey:@"openInNewTabOptionEnabled"];

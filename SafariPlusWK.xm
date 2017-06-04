@@ -17,7 +17,7 @@ static BOOL uploadAnyFileOptionEnabled;
 %hook WKFileUploadPanel
 
 //Add button to document menu
--(void)_showDocumentPickerMenu
+- (void)_showDocumentPickerMenu
 {
   %orig;
   if(uploadAnyFileOptionEnabled)
@@ -31,7 +31,7 @@ static BOOL uploadAnyFileOptionEnabled;
 
 //Present file picker
 %new
--(void)_showFilePicker
+- (void)_showFilePicker
 {
   @autoreleasepool
   {
@@ -45,7 +45,7 @@ static BOOL uploadAnyFileOptionEnabled;
 
 //Dismiss file picker and start upload or cancel
 %new
--(void)didSelectFileAtURL:(NSURL*)url shouldCancel:(BOOL)cancel
+- (void)didSelectFileAtURL:(NSURL*)url shouldCancel:(BOOL)cancel
 {
   __block UIViewController* presentationViewController = MSHookIvar<UIViewController*>(self, "_presentationViewController");
   [presentationViewController dismissViewControllerAnimated:YES completion:^
@@ -72,7 +72,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 %ctor
 {
-	preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
+  preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
 
   [preferences registerBool:&uploadAnyFileOptionEnabled default:NO forKey:@"uploadAnyFileOptionEnabled"];
 }

@@ -7,7 +7,8 @@
 
 @implementation SafariPlusHeaderCell
 
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(id)reuseIdentifier specifier:(id)specifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(id)reuseIdentifier specifier:(id)specifier
+{
   self = [super initWithStyle:style reuseIdentifier:reuseIdentifier specifier:specifier];
 
   if(self)
@@ -25,25 +26,30 @@
   return self;
 }
 
-- (instancetype)initWithSpecifier:(PSSpecifier *)specifier {
+- (instancetype)initWithSpecifier:(PSSpecifier *)specifier
+{
   return [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SafariPlusHeaderCell" specifier:specifier];
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
   [headerImageView release];
   [super dealloc];
 }
 
-- (void)setFrame:(CGRect)frame {
+- (void)setFrame:(CGRect)frame
+{
   frame.origin.x = 0;
   [super setFrame:frame];
 }
 
-- (CGFloat)preferredHeightForWidth:(CGFloat)width {
+- (CGFloat)preferredHeightForWidth:(CGFloat)width
+{
   return 125.0;
 }
 
-- (CGFloat)preferredHeightForWidth:(CGFloat)width inTableView:(id)tableView {
+- (CGFloat)preferredHeightForWidth:(CGFloat)width inTableView:(id)tableView
+{
   return [self preferredHeightForWidth:width];
 }
 @end

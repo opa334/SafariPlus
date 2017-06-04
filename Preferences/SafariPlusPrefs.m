@@ -10,7 +10,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -20,7 +21,7 @@
 
 - (void)sourceLink
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];
+  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];
 }
 @end
 
@@ -28,7 +29,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"GeneralPrefs" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -42,7 +44,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"ActionPrefs" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -101,7 +104,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"GesturePrefs" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -130,7 +134,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"OtherPrefs" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -143,7 +148,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"ColorPrefs" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -156,7 +162,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"NormalColorPrefs" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -175,7 +182,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"PrivateColorPrefs" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];
@@ -194,7 +202,8 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers) {
+	if (!_specifiers)
+	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"Credits" target:self] retain];
 	}
 	[LGShared parseSpecifiers:_specifiers];

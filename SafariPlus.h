@@ -36,9 +36,9 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @end
 
 @interface WKFileUploadPanel : UIViewController <filePickerDelegate> {}
--(void)_chooseFiles:(id)arg1 displayString:(id)arg2 iconImage:(id)arg3 ;
--(void)_showFilePicker;
--(void)_cancel;
+- (void)_chooseFiles:(id)arg1 displayString:(id)arg2 iconImage:(id)arg3;
+- (void)_showFilePicker;
+- (void)_cancel;
 @end
 
 
@@ -60,11 +60,11 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface _SFReloadOptionsController : NSObject {}
 @property (nonatomic,readonly) BOOL loadedUsingDesktopUserAgent;
--(void)requestDesktopSiteWithURL:(id)arg1;
+- (void)requestDesktopSiteWithURL:(id)arg1;
 @end
 
 @interface _SFTabStateData : NSObject {}
--(BOOL)privateBrowsing;
+- (BOOL)privateBrowsing;
 @end
 
 @interface _SFToolbar : UIToolbar {}
@@ -74,7 +74,7 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 /**** SafariShared ****/
 
 @interface WBSBookmarkAndHistoryCompletionMatch : NSObject {}
--(id)originalURLString;
+- (id)originalURLString;
 @end
 
 
@@ -82,10 +82,10 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface Application : UIApplication {}
 @property (nonatomic,readonly) ApplicationShortcutController * shortcutController;
--(BOOL)isPrivateBrowsingEnabledInAnyWindow;
+- (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new methods below
--(void)autoCloseAction;
--(void)modeSwitchAction:(int)switchToMode;
+- (void)autoCloseAction;
+- (void)modeSwitchAction:(int)switchToMode;
 @end
 
 @interface ApplicationShortcutController : NSObject {}
@@ -94,31 +94,31 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface BrowserController : UIResponder {}
 @property (nonatomic,readonly) TabController * tabController;
--(BOOL)isShowingTabView;
--(void)togglePrivateBrowsing;
--(BOOL)privateBrowsingEnabled;
--(void)updateTabOverviewFrame;
--(id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
--(id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
--(void)dismissTransientUIAnimated:(BOOL)arg1;
+- (BOOL)isShowingTabView;
+- (void)togglePrivateBrowsing;
+- (BOOL)privateBrowsingEnabled;
+- (void)updateTabOverviewFrame;
+- (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
+- (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
+- (void)dismissTransientUIAnimated:(BOOL)arg1;
 //new methods below
--(void)handleURLSwipeLeft;
--(void)handleURLSwipeRight;
--(void)handleURLSwipeDown;
--(void)handleSwipe:(NSInteger)swipeAction;
--(void)userAgentButtonLandscapePressed;
+- (void)handleURLSwipeLeft;
+- (void)handleURLSwipeRight;
+- (void)handleURLSwipeDown;
+- (void)handleSwipe:(NSInteger)swipeAction;
+- (void)userAgentButtonLandscapePressed;
 @end
 
 @interface BrowserToolbar : _SFToolbar {}
 @property (nonatomic,retain) UIToolbar * replacementToolbar;
--(void)updateTintColor;
+- (void)updateTintColor;
 @end
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {}
 @property (nonatomic,retain) UnifiedField * textField;
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
--(id)_completionItemAtIndexPath:(id)arg1;
--(void)_textFieldEditingChanged;
+-  (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (id)_completionItemAtIndexPath:(id)arg1;
+- (void)_textFieldEditingChanged;
 @end
 
 @interface CompletionListTableViewController : UITableViewController {}
@@ -126,20 +126,20 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface GestureRecognizingBarButtonItem : UIBarButtonItem {}
 @property (nonatomic,retain) UIGestureRecognizer * gestureRecognizer;
--(void)setGestureRecognizer:(UIGestureRecognizer *)arg1 ;
--(UIGestureRecognizer *)gestureRecognizer;
--(void)setView:(id)arg1 ;
+- (void)setGestureRecognizer:(UIGestureRecognizer *)arg1;
+- (UIGestureRecognizer *)gestureRecognizer;
+- (void)setView:(id)arg1;
 @end
 
 @interface NavigationBar : _SFNavigationBar {}
 //new methods below
--(void)_updateControlTints;
--(void)didSwipe:(UISwipeGestureRecognizer*)swipe;
--(void)setPreferredBarTintColor:(UIColor *)arg1;
+- (void)_updateControlTints;
+- (void)didSwipe:(UISwipeGestureRecognizer*)swipe;
+- (void)setPreferredBarTintColor:(UIColor *)arg1;
 @end
 
 @interface SearchSuggestion : NSObject {}
--(NSString *)string;
+- (NSString *)string;
 @end
 
 @interface TabController : NSObject {}
@@ -147,22 +147,22 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
 @property (nonatomic,retain) TabDocument * activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview * tabOverview;
--(void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
--(void)closeTab;
--(void)newTab;
+- (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
+- (void)closeTab;
+- (void)newTab;
 //new methods below
--(void)userAgentButtonPressed;
+- (void)userAgentButtonPressed;
 @end
 
 @interface TabDocument : NSObject {}
 @property (assign,nonatomic) BrowserController * browserController;
 @property (nonatomic,readonly) _SFReloadOptionsController * reloadOptionsController;
 @property (nonatomic,readonly) _SFTabStateData * tabStateData;
--(id)URL;
--(void)_closeTabDocumentAnimated:(BOOL)arg1;
--(void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
+- (id)URL;
+- (void)_closeTabDocumentAnimated:(BOOL)arg1;
+- (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
 //new methods below
--(NSURL*)URLHandler:(NSURL*)URL;
+- (NSURL*)URLHandler:(NSURL*)URL;
 @end
 
 @interface TabOverview : UIView {}
@@ -170,10 +170,10 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @end
 
 @interface TiltedTabView : UIView {}
--(void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
+- (void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
 @end
 
 @interface UnifiedField : UITextField {}
--(void)_textDidChangeFromTyping;
--(void)setText:(id)arg1;
+- (void)_textDidChangeFromTyping;
+- (void)setText:(id)arg1;
 @end
