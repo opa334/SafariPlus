@@ -156,12 +156,12 @@ NSMutableDictionary* plist;
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
-    if(switchToMode == 1 /*Normal Mode*/ && [self isPrivateBrowsingEnabledInAnyWindow])
+    if(switchToMode == 1 /*Normal Mode*/ && [self.shortcutController.browserController privateBrowsingEnabled])
     {
       [self.shortcutController.browserController togglePrivateBrowsing];
     }
 
-    else if(switchToMode == 2 /*Private Mode*/  && ![self isPrivateBrowsingEnabledInAnyWindow])
+    else if(switchToMode == 2 /*Private Mode*/  && ![self.shortcutController.browserController privateBrowsingEnabled])
     {
       [self.shortcutController.browserController togglePrivateBrowsing];
       [self.shortcutController.browserController.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
@@ -179,7 +179,7 @@ NSMutableDictionary* plist;
     break;
 
     case 2: //Normal mode
-    if([self isPrivateBrowsingEnabledInAnyWindow])
+    if([self.shortcutController.browserController privateBrowsingEnabled])
     {
       [self.shortcutController.browserController togglePrivateBrowsing];
       [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
@@ -192,7 +192,7 @@ NSMutableDictionary* plist;
     break;
 
     case 3: //Private mode
-    if(![self isPrivateBrowsingEnabledInAnyWindow])
+    if(![self.shortcutController.browserController privateBrowsingEnabled])
     {
       [self.shortcutController.browserController togglePrivateBrowsing];
       [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
@@ -647,7 +647,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   %orig;
   if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
 
     if(appTintColorNormalEnabled && !privateMode)
     {
@@ -665,7 +665,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
   if(topBarColorNormalEnabled || topBarColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     _SFNavigationBarBackdrop* backdrop = MSHookIvar<_SFNavigationBarBackdrop*>(self, "_backdrop");
 
     if(topBarColorNormalEnabled && !privateMode) //Normal Mode
@@ -686,7 +686,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   %orig;
   if(progressBarColorNormalEnabled || progressBarColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     _SFFluidProgressView* progressView = MSHookIvar<_SFFluidProgressView*>(self, "_progressView");
     if(progressBarColorNormalEnabled && !privateMode)
     {
@@ -704,7 +704,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     if(URLFontColorNormalEnabled && !privateMode)
     {
       return LCPParseColorString(URLFontColorNormal, @"#FFFFFF");
@@ -723,7 +723,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     UIColor* customColor;
     if(URLFontColorNormalEnabled && !privateMode)
     {
@@ -745,7 +745,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(reloadColorNormalEnabled || reloadColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     if(reloadColorNormalEnabled && !privateMode)
     {
       return LCPParseColorString(reloadColorNormal, @"#FFFFFF");
@@ -764,7 +764,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(lockIconColorNormalEnabled || lockIconColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     if(lockIconColorNormalEnabled && !privateMode)
     {
       return LCPParseColorString(lockIconColorNormal, @"#FFFFFF");
@@ -787,7 +787,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     UIColor* customColor = %orig;
     if(tabTitleColorNormalEnabled && !privateMode)
     {
@@ -809,7 +809,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     UIColor* customColor = %orig;
     if(tabTitleColorNormalEnabled && !privateMode)
     {
@@ -831,7 +831,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     UIColor* customColor = %orig;
     if(tabTitleColorNormalEnabled && !privateMode)
     {
@@ -856,7 +856,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   //Tint Color
   if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     if(appTintColorNormalEnabled && !privateMode)
     {
       self.tintColor = LCPParseColorString(appTintColorNormal, @"#FFFFFF");
@@ -870,7 +870,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   //Bottom Bar Color (kinda broken? For some reason it only works properly when SafariDownloader + is installed?)
   if(bottomBarColorNormalEnabled || bottomBarColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]) isPrivateBrowsingEnabledInAnyWindow];
+    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
     _UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
     backgroundView.grayscaleTintView.hidden = NO;
     if(bottomBarColorNormalEnabled && !privateMode)
