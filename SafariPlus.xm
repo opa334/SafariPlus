@@ -606,7 +606,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     CompletionListTableViewController* completionTableController = MSHookIvar<CompletionListTableViewController*>(self, "_completionTableController");
     CGPoint p = [gestureRecognizer locationInView:completionTableController.tableView];
     NSIndexPath *indexPath = [completionTableController.tableView indexPathForRowAtPoint:p];
-    if (indexPath != nil)
+    if(indexPath != nil)
     {
       UITableViewCell *cell = [completionTableController.tableView cellForRowAtIndexPath:indexPath];
       if(cell.isHighlighted)

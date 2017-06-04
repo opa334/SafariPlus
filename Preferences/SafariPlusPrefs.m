@@ -10,7 +10,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
 	}
@@ -29,7 +29,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"GeneralPrefs" target:self] retain];
 	}
@@ -44,7 +44,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"ActionPrefs" target:self] retain];
 	}
@@ -104,7 +104,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"GesturePrefs" target:self] retain];
 	}
@@ -134,7 +134,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"OtherPrefs" target:self] retain];
 	}
@@ -148,7 +148,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"ColorPrefs" target:self] retain];
 	}
@@ -162,7 +162,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"NormalColorPrefs" target:self] retain];
 	}
@@ -182,7 +182,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"PrivateColorPrefs" target:self] retain];
 	}
@@ -202,7 +202,7 @@
 
 - (NSArray *)specifiers
 {
-	if (!_specifiers)
+	if(!_specifiers)
 	{
 		_specifiers = [[self loadSpecifiersFromPlistName:@"Credits" target:self] retain];
 	}
