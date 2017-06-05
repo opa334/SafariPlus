@@ -1,7 +1,7 @@
 Package: com.opa334.SafariPlus
 Name: Safari Plus
 Depends: firmware (>=10.0), mobilesubstrate, ws.hbang.common, org.thebigboss.libcolorpicker
-Version: 1.1.1
+Version: 1.0.0
 Architecture: iphoneos-arm
 Description: Various enhancements to Safari!
 Maintainer: opa334
