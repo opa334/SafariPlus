@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ACTION</key>
+	<string>عمل</string>
+	<key>ACTION_ADDONS</key>
+	<string>عمل الاضافات</string>
+	<key>ACTIVE_MODE</key>
+	<string>وضع المتصفح النشط</string>
+	<key>APP_TINT_COLOR</key>
+	<string>تدرج لون التطبيق..</string>
+	<key>APP_TINT_COLOR_ENABLED</key>
+	<string>تدرج لون التطبيق</string>
+	<key>AUTO_CLOSE_TABS_FOOTER</key>
+	<string>إغلاق علامات التبويب من وضع المتصفح المحدد، </string>
+	<key>AUTO_CLOSE_TABS_LABEL</key>
+	<string> اغلاق علامات التبويب تلقائيا</string>
+	<key>BACKGROUND</key>
+	<string>تكرار علامة التبويب في الخلفية</string>
+	<key>BLACK</key>
+	<string>رجوع</string>
+	<key>BOTH_MODES</key>
+	<string> كلا أوضاع التصفح</string>
+	<key>BOTTOM_BAR_COLOR</key>
+	<string>لون الشريط السفلي...
+</string>
+	<key>BOTTOM_BAR_COLOR_ENABLED</key>
+	<string>لون الشريط السفلي
+</string>
+	<key>BOTTOM_BAR_FOOTER</key>
+	<string>ملاحظة: هذا الخيار هو نوعا ً ما معطل</string>
+	<key>CANCEL</key>
+	<string>إلغاء</string>
+	<key>CHANGE_MODE_ON</key>
+	<string>تغيير وضع التصفح على...</string>
+	<key>CLOSE_ACTIVE_TAB</key>
+	<string>إغلاق علامة التبويب النشطة</string>
+	<key>CLOSE_ALL_TABS</key>
+	<string>إغلاق كافة علامات التبويب من وضع التصفح</string>
+	<key>COLOR_SETTINGS</key>
+	<string>إعدادات اللون
+</string>
+	<key>CREDITS</key>
+	<string>الاعتمادات</string>
+	<key>DESKTOP_MODE_BUTTON</key>
+	<string>زر 'وضع سطح المكتب'</string>
+	<key>DESKTOP_SWITCH_FOOTER</key>
+	<string>إضافة زر إلى مبدل علامات التبويب، والتي يمكنك استخدامها للتبديل عالميا بين وضع المحمول / سطح المكتب.
+</string>
+	<key>DESKTOP_SWITCH_LABEL</key>
+	<string>تبديل وضع سطح المكتب</string>
+	<key>DISABLE_PRIVATE_MODE</key>
+	<string>تعطيل التصفح الخاص بالكامل</string>
+	<key>DISABLE_PRIVATE_MODE_FOOTER</key>
+	<string>تعطيل وضع الاستعراض الخاص وأزاله الزر ' خاص '. (ميزه الأسهم المخفية)
+</string>
+	<key>DUPLICATE_ACTIVE_TAB</key>
+	<string>تكرار علامة التبويب النشطة</string>
+	<key>EXTERNAL_URL_FOOTER</key>
+	<string>التغييرات في وضع التصفح المحدد، عند فتح عنوان رابط خارجي (من تطبيق آخر) باستخدام سفاري.</string>
+	<key>EXTERNAL_URL_LABEL</key>
+	<string>فتح الرابط الخارجي
+</string>
+	<key>FOR</key>
+	<string>لـ...</string>
+	<key>FULLSCREEN_SCROLLING</key>
+	<string>التمرير ملء الشاشة</string>
+	<key>FULLSCREEN_SCROLLING_FOOTER</key>
+	<string>اخفاء كامل الشريط العلوي أثناء التمرير إلى أسفل.</string>
+	<key>GENERAL</key>
+	<string>عـام</string>
+	<key>GESTURE_ADDONS</key>
+	<string>اضافات لفته</string>
+	<key>HTTPS_EVERYWHERE</key>
+	<string>HTTPS في كل مكان</string>
+	<key>HTTPS_EVERYWHERE_FOOTER</key>
+	<string>منفذ بروتوكول HTTPS عالميا.
+ملاحظة: قد كسر المواقع التي لا تدعم HTTPS.</string>
+	<key>ICONS</key>
+	<string>ايقونات </string>
+	<key>LAUNCH_MODE_FOOTER</key>
+	<string>التغييرات في وضع المتصفح المحدد، عند تشغيل سفاري.</string>
+	<key>LAUNCH_MODE_LABEL</key>
+	<string>بدء التطبيق</string>
+	<key>LOCAL_FILE</key>
+	<string>ملف محلي</string>
+	<key>LOCAL_FILE_BUTTON</key>
+	<string>زر ' الملف المحلي '
+</string>
+	<key>LOCK_ICON_COLOR</key>
+	<string>تامين لون الايقونه...</string>
+	<key>LOCK_ICON_COLOR_ENABLED</key>
+	<string>تامين لون الايقونه...</string>
+	<key>LONG_PRESS_SUGGESTIONS</key>
+	<string>اضغط لفترة طويلة للاقتراحات</string>
+	<key>LONG_PRESS_SUGGESTIONS_FOOTER</key>
+	<string>اضغط لفتره طويلة على البحث / URL الاقتراحات لادراجها في شريط عنوان url.
+</string>
+	<key>NORMAL_MODE</key>
+	<string>وضع التصفح العادي</string>
+	<key>ON</key>
+	<string>على...</string>
+	<key>OPEN_IN_NEW_TAB</key>
+	<string>خيار ' فتح في علامة تبويب جديده '
+</string>
+	<key>OPEN_IN_NEW_TAB_FOOTER</key>
+	<string>أضافه خيار آخر ' فتح في علامة تبويب جديده ' إلى القائمة التي تظهر عندما يتم الضغط علي ارتباط طويل.
+تعيين '"فتح الارتباطات"' في إعدادات سفاري 'في الخلفية' أن كل الخيارات المتاحة عند طويلة</string>
+	<key>OPEN_IN_NEW_TAB_OPTION</key>
+	<string>فتح في علامة تبويب جديده</string>
+	<key>OPEN_NEW_TAB</key>
+	<string>فتح علامة تبويب جديده
+</string>
+	<key>OTHER_ADDONS</key>
+	<string>اضافات اخرى</string>
+	<key>PICKER_DIRECTORY_ENTRY</key>
+	<string>تنقية الملف: أيقونة الدليل</string>
+	<key>PICKER_FILE_ENTRY</key>
+	<string>تنقية الملف : ايقونة الملف</string>
+	<key>PICKER_INSPIRED</key>
+	<string>تنقية الملفات مستوحاة من</string>
+	<key>PRIVATE_MODE</key>
+	<string>وضع التصفح الخاص</string>
+	<key>PROGRESS_BAR_COLOR</key>
+	<string>لون شريط التقدم ...</string>
+	<key>PROGRESS_BAR_COLOR_ENABLED</key>
+	<string>لون شريط التقدم</string>
+	<key>RELOAD_BUTTON_COLOR</key>
+	<string>تحديث زر اللون ..</string>
+	<key>RELOAD_BUTTON_COLOR_ENABLED</key>
+	<string>تحديث زر اللون </string>
+	<key>RESUME_FOOTER</key>
+	<string>تغييرات علي وضع المتصفح المحدد ، عند استئناف السفاري.
+</string>
+	<key>RESUME_LABEL</key>
+	<string>استئناف التطبيق</string>
+	<key>SAFARI_CLOSED</key>
+	<string>تم اغلاق السفاري</string>
+	<key>SAFARI_MINIMIZED</key>
+	<string>تصغير السفاري</string>
+	<key>SOURCE_CODE</key>
+	<string>Source Code</string>
+	<key>STOLEN_FROM</key>
+	<string>تعريب : بدر الهزيمي</string>
+	<key>SWIPE_DOWN_GESTURE</key>
+	<string>مرر لاسفل</string>
+	<key>SWIPE_DOWN_GESTURE_FOOTER</key>
+	<string>تنفيذ إجراء محدد عند تمرير شريط عنوان URL لأسفل.</string>
+	<key>SWIPE_LEFT_GESTURE</key>
+	<string>تمرير لليسار</string>
+	<key>SWIPE_LEFT_GESTURE_FOOTER</key>
+	<string>لتنفيذ إجراء محدد عند تمرير شريط عنوان URL لليسار.</string>
+	<key>SWIPE_RIGHT_GESTURE</key>
+	<string>تمرير لليمين</string>
+	<key>SWIPE_RIGHT_GESTURE_FOOTER</key>
+	<string>لتنفيذ إجراء محدد عند تمرير شريط عنوان URL لليمين.</string>
+	<key>SWITCH_MODE</key>
+	<string>تبديل وضع المتصفح</string>
+	<key>TAB_TITLE_COLOR</key>
+	<string>لون عنوان التبويب</string>
+	<key>TAB_TITLE_COLOR_ENABLED</key>
+	<string>لون عنوان التبويب</string>
+	<key>TO</key>
+	<string>الى...</string>
+	<key>TOP_BAR_COLOR</key>
+	<string>لون الشريط العلوي</string>
+	<key>TOP_BAR_COLOR_ENABLED</key>
+	<string>لون الشريط العلوي</string>
+	<key>UPLOAD_ANY_FILE</key>
+	<string>رفع اي ملف</string>
+	<key>UPLOAD_ANY_FILE_FOOTER</key>
+	<string>لإضافة خيار جديد إلى قائمة تحميل المستند، التي تمكنك من اختيار أي ملف من جذر جهازك.
+ملاحظة: يؤثر هذا الخيار على أي متصفح يستخدم مجموعة ويب (مثل غوغل كروم)، وليس فقط سفاري.</string>
+	<key>URL_BAR_GESTURES_LABEL</key>
+	<string>إيماءات شريط URL</string>
+	<key>URL_FONT_COLOR</key>
+	<string>URL لون الخط</string>
+	<key>URL_FONT_COLOR_ENABLED</key>
+	<string>URL لون الخط</string>
+	<key>WHITE</key>
+	<string>ابيض</string>
+</dict>
+</plist>
