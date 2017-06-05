@@ -11,7 +11,7 @@ SafariPlus_EXTRA_FRAMEWORKS += Cephei
 SafariPlus_LIBRARIES = colorpicker
 
 SafariPlusWK_CFLAGS = -fobjc-arc
-SafariPlusWK_FILES = SafariPlusWK.xm filePicker.xm LGShared.xm
+SafariPlusWK_FILES = SafariPlusWK.xm filePicker.xm
 SafariPlusWK_TARGET = 10.1:10.1:10.1:10.1
 SafariPlusWK_EXTRA_FRAMEWORKS += Cephei
 

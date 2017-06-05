@@ -78,10 +78,476 @@ NSMutableDictionary* plist;
 
 /****** Safari Hooks ******/
 
+%group iOS10
+
+%hook Application
+
+//Gets called to switch mode based on the setting
+%new
+- (void)modeSwitchAction:(int)switchToMode
+{
+  NSLog(@"iOS 10: modeSwitchAction");
+  if(switchToMode == 1 /*Normal Mode*/ && [self.shortcutController.browserController privateBrowsingEnabled])
+  {
+    [self.shortcutController.browserController togglePrivateBrowsing];
+  }
+
+  else if(switchToMode == 2 /*Private Mode*/  && ![self.shortcutController.browserController privateBrowsingEnabled])
+  {
+    [self.shortcutController.browserController togglePrivateBrowsing];
+    [self.shortcutController.browserController.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+  }
+}
+
+//Gets called to close tabs based on the setting
+%new
+- (void)autoCloseAction
+{
+  switch(autoCloseTabsFor)
+  {
+    case 1: //Active mode
+    [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    break;
+
+    case 2: //Normal mode
+    if([self.shortcutController.browserController privateBrowsingEnabled])
+    {
+      [self.shortcutController.browserController togglePrivateBrowsing];
+      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      [self.shortcutController.browserController togglePrivateBrowsing];
+    }
+    else
+    {
+      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    }
+    break;
+
+    case 3: //Private mode
+    if(![self.shortcutController.browserController privateBrowsingEnabled])
+    {
+      [self.shortcutController.browserController togglePrivateBrowsing];
+      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      [self.shortcutController.browserController togglePrivateBrowsing];
+    }
+    else
+    {
+      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    }
+    break;
+
+    case 4: //Both modes
+    [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    [self.shortcutController.browserController togglePrivateBrowsing];
+    [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    [self.shortcutController.browserController togglePrivateBrowsing];
+    break;
+
+    default:
+    break;
+  }
+}
+
+%end
+
+%hook BrowserController
+
+//URL Swipe actions
+%new
+- (void)handleSwipe:(NSInteger)swipeAction
+{
+  __block BOOL shouldClean = NO;
+  switch(swipeAction)
+  {
+    case 1: //Close active tab
+    [self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
+    shouldClean = YES;
+    break;
+
+    case 2: //Open new tab
+    [self.tabController newTab];
+    break;
+
+    case 3: //Duplicate active tab
+    [self loadURLInNewTab:[self.tabController.activeTabDocument URL] inBackground:gestureBackground animated:YES];
+    break;
+
+    case 4: //Close all tabs from active mode
+    [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
+    shouldClean = YES;
+    break;
+
+    case 5: //Switch mode (Normal/Private)
+    [self togglePrivateBrowsing];
+    shouldClean = YES;
+    break;
+
+    default:
+    break;
+  }
+  if(shouldClean && [self privateBrowsingEnabled])
+  {
+    [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+  }
+}
+
+//Desktop mode button : Landscape
+- (void)willPresentTabOverview
+{
+  %orig;
+  if(desktopButtonEnabled)
+  {
+    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
+    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+    userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    userAgentButtonLandscape.layer.cornerRadius = 4;
+    userAgentButtonLandscape.adjustsImageWhenHighlighted = true;
+    [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
+    userAgentButtonLandscape.frame = CGRectMake(self.tabController.tabOverview.privateBrowsingButton.frame.origin.x - 57.5, self.tabController.tabOverview.privateBrowsingButton.frame.origin.y, self.tabController.tabOverview.privateBrowsingButton.frame.size.height, self.tabController.tabOverview.privateBrowsingButton.frame.size.height);
+
+    _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self.tabController.tabOverview, "_header");
+    [header.contentView addSubview:userAgentButtonLandscape];
+  }
+}
+
+%end
+
+%hook TabDocument
+
+//Extra 'Open in new Tab' option
+- (NSArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
+{
+  if(openInNewTabOptionEnabled)
+  {
+    NSArray* oldArray = %orig;
+
+    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+    {
+      [self.browserController loadURLInNewTab:arg1.URL inBackground:0];
+    }];
+
+    NSArray* newArray = [NSArray array];
+    newArray = @[oldArray[0], openInNewTab, oldArray[1], oldArray[2], oldArray[3], oldArray[4]];
+
+    return newArray;
+  }
+  return %orig;
+}
+
+%end
+
+%hook NavigationBar
+//Lock icon color
+- (id)_tintForLockImage:(BOOL)arg1
+{
+  if(lockIconColorNormalEnabled || lockIconColorPrivateEnabled)
+  {
+    BOOL privateMode = [self getBrowsingMode];
+    if(lockIconColorNormalEnabled && !privateMode)
+    {
+      return LCPParseColorString(lockIconColorNormal, @"#FFFFFF");
+    }
+    else if(lockIconColorPrivateEnabled && privateMode)
+    {
+      return LCPParseColorString(lockIconColorPrivate, @"#FFFFFF");
+    }
+  }
+
+  return %orig;
+}
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+}
+%end
+
+%hook TabBarStyle
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+}
+
+%end
+
+%hook TiltedTabItem
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+}
+
+%end
+
+%hook TabOverviewItem
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+}
+
+%end
+
+%hook BrowserToolbar
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+}
+
+%end
+
+%end
+
+
+%group iOS9
+
+%hook Application
+
+//Gets called to switch mode based on the setting
+%new
+- (void)modeSwitchAction:(int)switchToMode
+{
+  NSLog(@"iOS 9: modeSwitchAction");
+
+  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_controller");
+
+  if(switchToMode == 1 /*Normal Mode*/ && [browserController privateBrowsingEnabled])
+  {
+    [browserController togglePrivateBrowsing];
+  }
+
+  else if(switchToMode == 2 /*Private Mode*/  && ![browserController privateBrowsingEnabled])
+  {
+    [browserController togglePrivateBrowsing];
+    [browserController.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+  }
+}
+
+//Gets called to close tabs based on the setting
+%new
+- (void)autoCloseAction
+{
+  NSLog(@"iOS 9: autoCloseAction");
+
+  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_controller");
+
+  switch(autoCloseTabsFor)
+  {
+    case 1: //Active mode
+    [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    break;
+
+    case 2: //Normal mode
+    if([browserController privateBrowsingEnabled])
+    {
+      [browserController togglePrivateBrowsing];
+      [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      [browserController togglePrivateBrowsing];
+    }
+    else
+    {
+      [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    }
+    break;
+
+    case 3: //Private mode
+    if(![browserController privateBrowsingEnabled])
+    {
+      [browserController togglePrivateBrowsing];
+      [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      [browserController togglePrivateBrowsing];
+    }
+    else
+    {
+      [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    }
+    break;
+
+    case 4: //Both modes
+    [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    [browserController togglePrivateBrowsing];
+    [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    [browserController togglePrivateBrowsing];
+    break;
+
+    default:
+    break;
+  }
+}
+
+%end
+
+%hook BrowserController
+
+//URL Swipe actions
+%new
+- (void)handleSwipe:(NSInteger)swipeAction
+{
+  __block BOOL shouldClean = NO;
+  switch(swipeAction)
+  {
+    case 1: //Close active tab
+    [self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
+    shouldClean = YES;
+    break;
+
+    case 2: //Open new tab
+    [self.tabController newTab];
+    break;
+
+    case 3: //Duplicate active tab
+    [self loadURLInNewWindow:[self.tabController.activeTabDocument URL] inBackground:gestureBackground animated:YES];
+    break;
+
+    case 4: //Close all tabs from active mode
+    [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
+    shouldClean = YES;
+    break;
+
+    case 5: //Switch mode (Normal/Private)
+    [self togglePrivateBrowsing];
+    shouldClean = YES;
+    break;
+
+    default:
+    break;
+  }
+  if(shouldClean && [self privateBrowsingEnabled])
+  {
+    [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+  }
+}
+
+//Desktop mode button : Landscape
+- (void)willPresentTabOverview
+{
+  %orig;
+  if(desktopButtonEnabled)
+  {
+    NSLog(@"init desktopButton");
+    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
+    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+    userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+    userAgentButtonLandscape.layer.cornerRadius = 4;
+    userAgentButtonLandscape.adjustsImageWhenHighlighted = true;
+    [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
+    userAgentButtonLandscape.frame = CGRectMake(self.tabController.tabOverview.privateBrowsingButton.frame.origin.x - 57.5, self.tabController.tabOverview.privateBrowsingButton.frame.origin.y, self.tabController.tabOverview.privateBrowsingButton.frame.size.height, self.tabController.tabOverview.privateBrowsingButton.frame.size.height);
+
+    NSLog(@"add desktopButton to view");
+    UIView* header = MSHookIvar<UIView*>(self.tabController.tabOverview, "_header");
+    [header addSubview:userAgentButtonLandscape];
+  }
+}
+
+%end
+
+%hook TabDocument
+
+//Extra 'Open in new Tab' option
+- (NSArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
+{
+  if(openInNewTabOptionEnabled)
+  {
+    NSArray* oldArray = %orig;
+
+    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+    {
+      [MSHookIvar<BrowserController*>(self, "_browserController") loadURLInNewWindow:arg1.URL inBackground:0];
+    }];
+
+    NSArray* newArray = [NSArray array];
+    newArray = @[oldArray[0], openInNewTab, oldArray[1], oldArray[2], oldArray[3], oldArray[4]];
+
+    return newArray;
+  }
+  return %orig;
+}
+
+%end
+
+%hook NavigationBar
+//Lock icon color
+-(id)_lockImageWithTint:(id)arg1 usingMiniatureVersion:(BOOL)arg2
+{
+  if(lockIconColorNormalEnabled || lockIconColorPrivateEnabled)
+  {
+    BOOL privateMode = [self getBrowsingMode];
+    if(lockIconColorNormalEnabled && !privateMode)
+    {
+      arg1 = LCPParseColorString(lockIconColorNormal, @"#FFFFFF");
+    }
+    else if(lockIconColorPrivateEnabled && privateMode)
+    {
+      arg1 = LCPParseColorString(lockIconColorPrivate, @"#FFFFFF");
+    }
+    return %orig(arg1, arg2);
+  }
+
+  return %orig;
+}
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller") privateBrowsingEnabled];
+}
+
+%end
+
+%hook TabBarStyle
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller") privateBrowsingEnabled];
+}
+
+%end
+
+%hook TiltedTabItem
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller") privateBrowsingEnabled];
+}
+
+%end
+
+%hook TabOverviewItem
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller") privateBrowsingEnabled];
+}
+
+%end
+
+%hook BrowserToolbar
+
+%new
+- (BOOL)getBrowsingMode
+{
+  return [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller") privateBrowsingEnabled];
+}
+
+%end
+
+%end
+
+
 %hook Application
 - (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
 {
   BOOL orig = %orig;
+  NSLog(@"Current CF Version: %lf", kCFCoreFoundationVersionNumber);
 
   //Auto switch mode on launch
   if(forceModeOnStartEnabled)
@@ -152,69 +618,6 @@ NSMutableDictionary* plist;
   %orig;
 }
 
-//Gets called to switch mode based on the setting
-%new
-- (void)modeSwitchAction:(int)switchToMode
-{
-    if(switchToMode == 1 /*Normal Mode*/ && [self.shortcutController.browserController privateBrowsingEnabled])
-    {
-      [self.shortcutController.browserController togglePrivateBrowsing];
-    }
-
-    else if(switchToMode == 2 /*Private Mode*/  && ![self.shortcutController.browserController privateBrowsingEnabled])
-    {
-      [self.shortcutController.browserController togglePrivateBrowsing];
-      [self.shortcutController.browserController.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
-    }
-}
-
-//Gets called to close tabs based on the setting
-%new
-- (void)autoCloseAction
-{
-  switch(autoCloseTabsFor)
-  {
-    case 1: //Active mode
-    [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    break;
-
-    case 2: //Normal mode
-    if([self.shortcutController.browserController privateBrowsingEnabled])
-    {
-      [self.shortcutController.browserController togglePrivateBrowsing];
-      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-      [self.shortcutController.browserController togglePrivateBrowsing];
-    }
-    else
-    {
-      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    }
-    break;
-
-    case 3: //Private mode
-    if(![self.shortcutController.browserController privateBrowsingEnabled])
-    {
-      [self.shortcutController.browserController togglePrivateBrowsing];
-      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-      [self.shortcutController.browserController togglePrivateBrowsing];
-    }
-    else
-    {
-      [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    }
-    break;
-
-    case 4: //Both modes
-    [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    [self.shortcutController.browserController togglePrivateBrowsing];
-    [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    [self.shortcutController.browserController togglePrivateBrowsing];
-    break;
-
-    default:
-    break;
-  }
-}
 %end
 
 %hook BrowserController
@@ -323,64 +726,6 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   }
 }
 
-//URL Swipe actions
-%new
-- (void)handleSwipe:(NSInteger)swipeAction
-{
-  __block BOOL shouldClean = NO;
-  switch(swipeAction)
-  {
-    case 1: //Close active tab
-    [self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
-    shouldClean = YES;
-    break;
-
-    case 2: //Open new tab
-    [self.tabController newTab];
-    break;
-
-    case 3: //Duplicate active tab
-    [self loadURLInNewTab:[self.tabController.activeTabDocument URL] inBackground:gestureBackground animated:1];
-    break;
-
-    case 4: //Close all tabs from active mode
-    [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
-    shouldClean = YES;
-    break;
-
-    case 5: //Switch mode (Normal/Private)
-    [self togglePrivateBrowsing];
-    shouldClean = YES;
-    break;
-
-    default:
-    break;
-  }
-  if(shouldClean && [self privateBrowsingEnabled])
-  {
-    [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
-  }
-}
-
-//Desktop mode button : Landscape
-- (void)willPresentTabOverview
-{
-  %orig;
-  if(desktopButtonEnabled)
-  {
-    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
-    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
-    userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-    userAgentButtonLandscape.layer.cornerRadius = 4;
-    userAgentButtonLandscape.adjustsImageWhenHighlighted = true;
-    [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
-    userAgentButtonLandscape.frame = CGRectMake(self.tabController.tabOverview.privateBrowsingButton.frame.origin.x - 57.5, self.tabController.tabOverview.privateBrowsingButton.frame.origin.y, self.tabController.tabOverview.privateBrowsingButton.frame.size.height, self.tabController.tabOverview.privateBrowsingButton.frame.size.height);
-
-    _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self.tabController.tabOverview, "_header");
-    [header.contentView addSubview:userAgentButtonLandscape];
-  }
-}
-
 %new
 - (void)userAgentButtonLandscapePressed
 {
@@ -459,27 +804,6 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %end
 
 %hook TabDocument
-
-//Extra 'Open in new Tab' option
-
-- (NSArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
-{
-  if(openInNewTabOptionEnabled)
-  {
-    NSArray* oldArray = %orig;
-
-    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
-    {
-      [self.browserController loadURLInNewTab:arg1.URL inBackground:0];
-    }];
-
-    NSArray* newArray = [NSArray array];
-    newArray = @[oldArray[0], openInNewTab, oldArray[1], oldArray[2], oldArray[3], oldArray[4]];
-
-    return newArray;
-  }
-  return %orig;
-}
 
 //desktop mode + ForceHTTPS
 
@@ -612,25 +936,25 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
       if(cell.isHighlighted)
       {
         id target = [self _completionItemAtIndexPath:indexPath];
+
+        UnifiedField* textField = MSHookIvar<UnifiedField*>(self, "_textField");
+
         if([target isKindOfClass:[%c(WBSBookmarkAndHistoryCompletionMatch) class]])
         {
           //Set URL to textField
-          [self.textField setText:[target originalURLString]];
+          [textField setText:[target originalURLString]];
         }
         else //SearchSuggestion
         {
           //Set search string to textField
-          [self.textField setText:[target string]];
+          [textField setText:[target string]];
         }
 
-        //Pull up keyboard, if not active already
-        if(![self.textField isFirstResponder])
-        {
-          [self.textField becomeFirstResponder];
-        }
+        //Pull up keyboard
+        [textField becomeFirstResponder];
 
         //Update Entries
-        [self.textField _textDidChangeFromTyping];
+        [textField _textDidChangeFromTyping];
         [self _textFieldEditingChanged];
       }
     }
@@ -647,8 +971,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   %orig;
   if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
-
+    BOOL privateMode = [self getBrowsingMode];
     if(appTintColorNormalEnabled && !privateMode)
     {
       self.tintColor = LCPParseColorString(appTintColorNormal, @"#FFFFFF");
@@ -665,7 +988,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
   if(topBarColorNormalEnabled || topBarColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     _SFNavigationBarBackdrop* backdrop = MSHookIvar<_SFNavigationBarBackdrop*>(self, "_backdrop");
 
     if(topBarColorNormalEnabled && !privateMode) //Normal Mode
@@ -686,7 +1009,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   %orig;
   if(progressBarColorNormalEnabled || progressBarColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     _SFFluidProgressView* progressView = MSHookIvar<_SFFluidProgressView*>(self, "_progressView");
     if(progressBarColorNormalEnabled && !privateMode)
     {
@@ -704,7 +1027,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     if(URLFontColorNormalEnabled && !privateMode)
     {
       return LCPParseColorString(URLFontColorNormal, @"#FFFFFF");
@@ -723,7 +1046,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor;
     if(URLFontColorNormalEnabled && !privateMode)
     {
@@ -745,7 +1068,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(reloadColorNormalEnabled || reloadColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     if(reloadColorNormalEnabled && !privateMode)
     {
       return LCPParseColorString(reloadColorNormal, @"#FFFFFF");
@@ -758,26 +1081,6 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
   return %orig;
 }
-
-//Lock icon color
-- (id)_tintForLockImage:(BOOL)arg1
-{
-  if(lockIconColorNormalEnabled || lockIconColorPrivateEnabled)
-  {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
-    if(lockIconColorNormalEnabled && !privateMode)
-    {
-      return LCPParseColorString(lockIconColorNormal, @"#FFFFFF");
-    }
-    else if(lockIconColorPrivateEnabled && privateMode)
-    {
-      return LCPParseColorString(lockIconColorPrivate, @"#FFFFFF");
-    }
-  }
-
-  return %orig;
-}
-
 %end
 
 //Tab Title Color
@@ -787,7 +1090,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor = %orig;
     if(tabTitleColorNormalEnabled && !privateMode)
     {
@@ -809,7 +1112,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor = %orig;
     if(tabTitleColorNormalEnabled && !privateMode)
     {
@@ -831,7 +1134,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor = %orig;
     if(tabTitleColorNormalEnabled && !privateMode)
     {
@@ -850,13 +1153,12 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 %hook BrowserToolbar
 
-
 - (void)layoutSubviews
 {
   //Tint Color
   if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     if(appTintColorNormalEnabled && !privateMode)
     {
       self.tintColor = LCPParseColorString(appTintColorNormal, @"#FFFFFF");
@@ -870,7 +1172,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   //Bottom Bar Color (kinda broken? For some reason it only works properly when SafariDownloader + is installed?)
   if(bottomBarColorNormalEnabled || bottomBarColorPrivateEnabled)
   {
-    BOOL privateMode = [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController privateBrowsingEnabled];
+    BOOL privateMode = [self getBrowsingMode];
     _UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
     backgroundView.grayscaleTintView.hidden = NO;
     if(bottomBarColorNormalEnabled && !privateMode)
@@ -958,5 +1260,15 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
   [preferences registerObject:&lockIconColorPrivate default:@"#ffffff" forKey:@"lockIconColorPrivate"];
   [preferences registerBool:&bottomBarColorPrivateEnabled default:NO forKey:@"bottomBarColorPrivateEnabled"];
   [preferences registerObject:&bottomBarColorPrivate default:@"#ffffff" forKey:@"bottomBarColorPrivate"];
+
+  if(kCFCoreFoundationVersionNumber < 1348.00)
+  {
+    %init(iOS9);
+  }
+  else
+  {
+    %init(iOS10);
+  }
+  %init;
 
 }

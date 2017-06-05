@@ -23,7 +23,7 @@ static BOOL uploadAnyFileOptionEnabled;
   if(uploadAnyFileOptionEnabled)
   {
     UIDocumentMenuViewController* documentMenuController = MSHookIvar<UIDocumentMenuViewController*>(self, "_documentMenuController");
-    [documentMenuController addOptionWithTitle:[LGShared localisedStringForKey:@"LOCAL_FILE"] image:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/Device.png", bundlePath]] order:UIDocumentMenuOrderFirst handler:^{
+    [documentMenuController addOptionWithTitle:[%c(LGShared) localisedStringForKey:@"LOCAL_FILE"] image:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/Device.png", bundlePath]] order:UIDocumentMenuOrderFirst handler:^{
       [self _showFilePicker];
     }];
   }

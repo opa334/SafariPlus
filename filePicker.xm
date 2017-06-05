@@ -25,7 +25,7 @@
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastPathComponent" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     filesAtCurrentPath = (NSMutableArray*)[filesAtCurrentPath sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:[LGShared localisedStringForKey:@"CANCEL"] style:UIBarButtonItemStylePlain target:self action:@selector(cancelFilePicker)];
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:[%c(LGShared) localisedStringForKey:@"CANCEL"] style:UIBarButtonItemStylePlain target:self action:@selector(cancelFilePicker)];
     self.navigationItem.rightBarButtonItem = cancelButton;
 
     self.title = [self.currentPath lastPathComponent];

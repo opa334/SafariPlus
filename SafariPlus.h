@@ -101,6 +101,10 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
+//iOS9 below
++ (id)sharedBrowserController;
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 //new methods below
 - (void)handleURLSwipeLeft;
 - (void)handleURLSwipeRight;
@@ -112,6 +116,7 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @interface BrowserToolbar : _SFToolbar {}
 @property (nonatomic,retain) UIToolbar * replacementToolbar;
 - (void)updateTintColor;
+- (BOOL)getBrowsingMode; //New
 @end
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {}
@@ -135,11 +140,15 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 //new methods below
 - (void)_updateControlTints;
 - (void)didSwipe:(UISwipeGestureRecognizer*)swipe;
-- (void)setPreferredBarTintColor:(UIColor *)arg1;
+- (BOOL)getBrowsingMode;
 @end
 
 @interface SearchSuggestion : NSObject {}
 - (NSString *)string;
+@end
+
+@interface TabBarStyle : NSObject {}
+- (BOOL)getBrowsingMode; //new
 @end
 
 @interface TabController : NSObject {}
@@ -169,8 +178,16 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @property (nonatomic,readonly) UIButton * privateBrowsingButton;
 @end
 
+@interface TabOverviewItem : NSObject {}
+- (BOOL)getBrowsingMode; //new
+@end
+
 @interface TiltedTabView : UIView {}
 - (void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
+@end
+
+@interface TiltedTabItem : NSObject {}
+- (BOOL)getBrowsingMode; //new
 @end
 
 @interface UnifiedField : UITextField {}
