@@ -768,7 +768,11 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
     NSArray* old = %orig;
     NSArray* newArray = [NSArray array];
-    newArray = @[old[0], old[1], userAgentBarButton, old[1], old[2], old[3], old[1], old[1], old[4], old[5]];
+
+    UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    customSpace.width = 38;
+
+    newArray = newArray = @[old[0], old[1], userAgentBarButton, old[1], old[2], old[3], old[1], customSpace, old[4], old[5]];
     return newArray;
   }
 
