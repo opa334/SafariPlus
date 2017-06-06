@@ -86,7 +86,6 @@ NSMutableDictionary* plist;
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
-  NSLog(@"iOS 10: modeSwitchAction");
   if(switchToMode == 1 /*Normal Mode*/ && [self.shortcutController.browserController privateBrowsingEnabled])
   {
     [self.shortcutController.browserController togglePrivateBrowsing];
@@ -199,7 +198,6 @@ NSMutableDictionary* plist;
   %orig;
   if(desktopButtonEnabled)
   {
-    NSLog(@"init desktopButton");
     [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
     [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
     userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
@@ -208,7 +206,6 @@ NSMutableDictionary* plist;
     [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
     userAgentButtonLandscape.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
 
-    NSLog(@"add desktopButton to view");
     _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self, "_header");
     [header.contentView addSubview:userAgentButtonLandscape];
   }
@@ -317,8 +314,6 @@ NSMutableDictionary* plist;
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
-  NSLog(@"iOS 9: modeSwitchAction");
-
   BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_controller");
 
   if(switchToMode == 1 /*Normal Mode*/ && [browserController privateBrowsingEnabled])
@@ -337,8 +332,6 @@ NSMutableDictionary* plist;
 %new
 - (void)autoCloseAction
 {
-  NSLog(@"iOS 9: autoCloseAction");
-
   BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_controller");
 
   switch(autoCloseTabsFor)
@@ -438,7 +431,6 @@ NSMutableDictionary* plist;
   %orig;
   if(desktopButtonEnabled)
   {
-    NSLog(@"init desktopButton");
     [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
     [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
     userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
@@ -447,7 +439,6 @@ NSMutableDictionary* plist;
     [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
     userAgentButtonLandscape.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
 
-    NSLog(@"add desktopButton to view");
     UIView* header = MSHookIvar<UIView*>(self, "_header");
     [header addSubview:userAgentButtonLandscape];
   }
@@ -555,8 +546,7 @@ NSMutableDictionary* plist;
 - (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
 {
   BOOL orig = %orig;
-  NSLog(@"Current CF Version: %lf", kCFCoreFoundationVersionNumber);
-
+  
   //Auto switch mode on launch
   if(forceModeOnStartEnabled)
   {
