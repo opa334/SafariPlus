@@ -189,22 +189,27 @@ NSMutableDictionary* plist;
     [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
   }
 }
+%end
+
+%hook TabOverview
 
 //Desktop mode button : Landscape
-- (void)willPresentTabOverview
+- (void)layoutSubviews
 {
   %orig;
   if(desktopButtonEnabled)
   {
+    NSLog(@"init desktopButton");
     [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
     [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
     userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
     userAgentButtonLandscape.layer.cornerRadius = 4;
     userAgentButtonLandscape.adjustsImageWhenHighlighted = true;
     [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
-    userAgentButtonLandscape.frame = CGRectMake(self.tabController.tabOverview.privateBrowsingButton.frame.origin.x - 57.5, self.tabController.tabOverview.privateBrowsingButton.frame.origin.y, self.tabController.tabOverview.privateBrowsingButton.frame.size.height, self.tabController.tabOverview.privateBrowsingButton.frame.size.height);
+    userAgentButtonLandscape.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
 
-    _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self.tabController.tabOverview, "_header");
+    NSLog(@"add desktopButton to view");
+    _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self, "_header");
     [header.contentView addSubview:userAgentButtonLandscape];
   }
 }
@@ -423,8 +428,12 @@ NSMutableDictionary* plist;
   }
 }
 
+%end
+
+%hook TabOverview
+
 //Desktop mode button : Landscape
-- (void)willPresentTabOverview
+- (void)layoutSubviews
 {
   %orig;
   if(desktopButtonEnabled)
@@ -436,10 +445,10 @@ NSMutableDictionary* plist;
     userAgentButtonLandscape.layer.cornerRadius = 4;
     userAgentButtonLandscape.adjustsImageWhenHighlighted = true;
     [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
-    userAgentButtonLandscape.frame = CGRectMake(self.tabController.tabOverview.privateBrowsingButton.frame.origin.x - 57.5, self.tabController.tabOverview.privateBrowsingButton.frame.origin.y, self.tabController.tabOverview.privateBrowsingButton.frame.size.height, self.tabController.tabOverview.privateBrowsingButton.frame.size.height);
+    userAgentButtonLandscape.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
 
     NSLog(@"add desktopButton to view");
-    UIView* header = MSHookIvar<UIView*>(self.tabController.tabOverview, "_header");
+    UIView* header = MSHookIvar<UIView*>(self, "_header");
     [header addSubview:userAgentButtonLandscape];
   }
 }
@@ -725,6 +734,10 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   }
 }
 
+%end
+
+%hook TabOverview
+
 %new
 - (void)userAgentButtonLandscapePressed
 {
@@ -748,6 +761,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     userAgentButtonPortrait.backgroundColor = [UIColor whiteColor];
   }
 }
+
 %end
 
 %hook TabController

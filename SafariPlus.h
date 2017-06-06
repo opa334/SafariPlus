@@ -107,7 +107,6 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 - (void)handleURLSwipeRight;
 - (void)handleURLSwipeDown;
 - (void)handleSwipe:(NSInteger)swipeAction;
-- (void)userAgentButtonLandscapePressed;
 @end
 
 //iOS9
@@ -179,6 +178,8 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface TabOverview : UIView {}
 @property (nonatomic,readonly) UIButton * privateBrowsingButton;
+//new methods below
+- (void)userAgentButtonLandscapePressed;
 @end
 
 @interface TabOverviewItem : NSObject {}
