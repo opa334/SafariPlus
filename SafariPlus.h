@@ -102,16 +102,18 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
-//iOS9 below
-+ (id)sharedBrowserController;
-- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;
-- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 //new methods below
 - (void)handleURLSwipeLeft;
 - (void)handleURLSwipeRight;
 - (void)handleURLSwipeDown;
 - (void)handleSwipe:(NSInteger)swipeAction;
 - (void)userAgentButtonLandscapePressed;
+@end
+
+//iOS9
+@interface BrowserController (BrowserControllerTabs) {}
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 @end
 
 @interface BrowserToolbar : _SFToolbar {}

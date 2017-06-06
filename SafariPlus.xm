@@ -457,7 +457,8 @@ NSMutableDictionary* plist;
 
     _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
     {
-      [self.browserController loadURLInNewWindow:arg1.URL inBackground:NO];
+      BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+      [browserController loadURLInNewWindow:arg1.URL inBackground:NO];
     }];
 
     [options insertObject:openInNewTab atIndex:1];
