@@ -214,21 +214,23 @@ NSMutableDictionary* plist;
 %hook TabDocument
 
 //Extra 'Open in new Tab' option
-- (NSArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
+- (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(openInNewTabOptionEnabled)
+  if(openInNewTabOptionEnabled && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
   {
-    NSArray* oldArray = %orig;
+    NSMutableArray* options = %orig;
 
-    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+    if([options count] >= 4)
     {
-      [self.browserController loadURLInNewTab:arg1.URL inBackground:0];
-    }];
+      _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+      {
+        [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
+      }];
 
-    NSArray* newArray = [NSArray array];
-    newArray = @[oldArray[0], openInNewTab, oldArray[1], oldArray[2], oldArray[3], oldArray[4]];
+      [options insertObject:openInNewTab atIndex:1];
+    }
 
-    return newArray;
+    return options;
   }
   return %orig;
 }
@@ -450,21 +452,23 @@ NSMutableDictionary* plist;
 %hook TabDocument
 
 //Extra 'Open in new Tab' option
-- (NSArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
+- (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(openInNewTabOptionEnabled)
+  if(openInNewTabOptionEnabled && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
   {
-    NSArray* oldArray = %orig;
+    NSMutableArray* options = %orig;
 
-    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+    if([options count] >= 4)
     {
-      [MSHookIvar<BrowserController*>(self, "_browserController") loadURLInNewWindow:arg1.URL inBackground:0];
-    }];
+      _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+      {
+        [self.browserController loadURLInNewWindow:arg1.URL inBackground:NO];
+      }];
 
-    NSArray* newArray = [NSArray array];
-    newArray = @[oldArray[0], openInNewTab, oldArray[1], oldArray[2], oldArray[3], oldArray[4]];
+      [options insertObject:openInNewTab atIndex:1];
+    }
 
-    return newArray;
+    return options;
   }
   return %orig;
 }
