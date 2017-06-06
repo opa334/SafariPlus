@@ -216,19 +216,16 @@ NSMutableDictionary* plist;
 //Extra 'Open in new Tab' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(openInNewTabOptionEnabled && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
+  if(openInNewTabOptionEnabled && arg1.type == 0 && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
   {
     NSMutableArray* options = %orig;
 
-    if([options count] >= 4)
+    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
     {
-      _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
-      {
-        [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
-      }];
+      [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
+    }];
 
-      [options insertObject:openInNewTab atIndex:1];
-    }
+    [options insertObject:openInNewTab atIndex:1];
 
     return options;
   }
@@ -454,19 +451,16 @@ NSMutableDictionary* plist;
 //Extra 'Open in new Tab' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(openInNewTabOptionEnabled && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
+  if(openInNewTabOptionEnabled && arg1.type == 0 && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
   {
     NSMutableArray* options = %orig;
 
-    if([options count] >= 4)
+    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
     {
-      _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
-      {
-        [self.browserController loadURLInNewWindow:arg1.URL inBackground:NO];
-      }];
+      [self.browserController loadURLInNewWindow:arg1.URL inBackground:NO];
+    }];
 
-      [options insertObject:openInNewTab atIndex:1];
-    }
+    [options insertObject:openInNewTab atIndex:1];
 
     return options;
   }

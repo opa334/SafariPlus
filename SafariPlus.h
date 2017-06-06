@@ -28,6 +28,7 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface _WKActivatedElementInfo : NSObject {}
 @property (nonatomic, readonly) NSURL *URL;
+@property (nonatomic,readonly) long long type;
 @end
 
 @interface _WKElementAction : NSObject {
