@@ -546,7 +546,7 @@ NSMutableDictionary* plist;
 - (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
 {
   BOOL orig = %orig;
-  
+
   //Auto switch mode on launch
   if(forceModeOnStartEnabled)
   {
@@ -588,6 +588,16 @@ NSMutableDictionary* plist;
   {
     [self modeSwitchAction:forceModeOnResumeFor];
   }
+}
+
+//Auto switch mode on external URL opened
+-(void)applicationOpenURL:(id)arg1
+{
+  if(forceModeOnExternalLinkEnabled && arg1)
+  {
+    [self modeSwitchAction:forceModeOnExternalLinkFor];
+  }
+  return %orig;
 }
 
 //Auto close tabs when Safari gets closed
@@ -639,24 +649,6 @@ NSMutableDictionary* plist;
     return false;
   }
 
-  return %orig;
-}
-
-//Auto switch mode on external URL opened
-- (id)handleExternalURL:(id)arg1
-{
-  if(forceModeOnExternalLinkEnabled && arg1)
-  {
-    if(forceModeOnExternalLinkFor == 1 /*Normal Mode*/ && [self privateBrowsingEnabled])
-    {
-      [self togglePrivateBrowsing];
-    }
-    else if(forceModeOnExternalLinkFor == 2 /*Private Mode*/ && ![self privateBrowsingEnabled])
-    {
-      [self togglePrivateBrowsing];
-      [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO]; //Fixes a little issue with the "private mode" description
-    }
-  }
   return %orig;
 }
 
