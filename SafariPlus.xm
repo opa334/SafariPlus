@@ -766,10 +766,14 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     NSArray* old = %orig;
     NSArray* newArray = [NSArray array];
 
-    UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
-    customSpace.width = 38;
+    UIButton *emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
+    emptySpace.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
+    emptySpace.layer.cornerRadius = 4;
+    emptySpace.frame = CGRectMake(0, 0, 27.5, 27.5);
 
-    newArray = newArray = @[old[0], old[1], userAgentBarButton, old[1], old[2], old[3], old[1], customSpace, old[4], old[5]];
+    UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithCustomView:emptySpace];
+
+    newArray = newArray = @[old[0], old[1], userAgentBarButton, old[1], old[2], old[3], customSpace, old[1], old[4], old[5]];
     return newArray;
   }
 
