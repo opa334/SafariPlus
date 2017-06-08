@@ -161,6 +161,7 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
 @property (nonatomic,retain) TabDocument * activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview * tabOverview;
+@property (assign,nonatomic) BOOL usesTabBar;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
 - (void)closeTab;
 - (void)newTab;

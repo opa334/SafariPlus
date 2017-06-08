@@ -218,7 +218,8 @@ NSMutableDictionary* plist;
 //Extra 'Open in new Tab' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(openInNewTabOptionEnabled && arg1.type == 0 && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
+  BOOL tabBar = ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.usesTabBar;
+  if(openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
   {
     NSMutableArray* options = %orig;
 
@@ -451,7 +452,8 @@ NSMutableDictionary* plist;
 //Extra 'Open in new Tab' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(openInNewTabOptionEnabled && arg1.type == 0 && [[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationPortrait)
+  BOOL tabBar = MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.usesTabBar;
+  if(openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
   {
     NSMutableArray* options = %orig;
 
