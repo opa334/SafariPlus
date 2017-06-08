@@ -37,6 +37,9 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @end
 
 @interface WKFileUploadPanel : UIViewController <filePickerDelegate> {}
+- (void)_presentPopoverWithContentViewController:(id)arg1 animated:(BOOL)arg2;
+- (void)_presentFullscreenViewController:(id)arg1 animated:(BOOL)arg2;
+- (void)_dismissDisplayAnimated:(BOOL)arg1;
 - (void)_chooseFiles:(id)arg1 displayString:(id)arg2 iconImage:(id)arg3;
 - (void)_showFilePicker;
 - (void)_cancel;

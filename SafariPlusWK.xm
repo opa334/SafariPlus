@@ -38,8 +38,15 @@ static BOOL uploadAnyFileOptionEnabled;
     filePickerTableViewController* _filePickerTableViewController = [[filePickerTableViewController alloc] init];
     filePickerNavigationController* navController = [[filePickerNavigationController alloc] initWithRootViewController:_filePickerTableViewController];
     navController.filePickerDelegate = self;
-    UIViewController* presentationViewController = MSHookIvar<UIViewController*>(self, "_presentationViewController");
-    [presentationViewController presentViewController:navController animated:YES completion:nil];
+
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+    {
+      [self _presentPopoverWithContentViewController:navController animated:YES];
+    }
+    else
+    {
+      [self _presentFullscreenViewController:navController animated:YES];
+    }
   }
 }
 
@@ -47,11 +54,7 @@ static BOOL uploadAnyFileOptionEnabled;
 %new
 - (void)didSelectFileAtURL:(NSURL*)url shouldCancel:(BOOL)cancel
 {
-  __block UIViewController* presentationViewController = MSHookIvar<UIViewController*>(self, "_presentationViewController");
-  [presentationViewController dismissViewControllerAnimated:YES completion:^
-  {
-    presentationViewController = nil;
-  }];
+  [self _dismissDisplayAnimated:YES];
 
   if(cancel)
   {
