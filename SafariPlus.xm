@@ -753,6 +753,8 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if(desktopButtonEnabled)
   {
+    NSArray* old = %orig;
+
     [userAgentButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
     [userAgentButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
     userAgentButtonPortrait.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
@@ -761,20 +763,18 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     [userAgentButtonPortrait addTarget:self action:@selector(userAgentButtonPortraitPressed) forControlEvents:UIControlEventTouchUpInside];
     userAgentButtonPortrait.frame = CGRectMake(0, 0, 27.5, 27.5);
 
-    UIBarButtonItem *userAgentBarButton = [[UIBarButtonItem alloc] initWithCustomView:userAgentButtonPortrait];
-
-    NSArray* old = %orig;
-    NSArray* newArray = [NSArray array];
-
     UIButton *emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
     emptySpace.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
     emptySpace.layer.cornerRadius = 4;
     emptySpace.frame = CGRectMake(0, 0, 27.5, 27.5);
 
+    UIBarButtonItem *userAgentBarButton = [[UIBarButtonItem alloc] initWithCustomView:userAgentButtonPortrait];
+
     UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithCustomView:emptySpace];
 
-    newArray = newArray = @[old[0], old[1], userAgentBarButton, old[1], old[2], old[3], customSpace, old[1], old[4], old[5]];
-    return newArray;
+    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+
+    return @[old[0], flexibleItem, userAgentBarButton, flexibleItem, old[2], flexibleItem, customSpace, flexibleItem, old[4], old[5]];
   }
 
   return %orig;
