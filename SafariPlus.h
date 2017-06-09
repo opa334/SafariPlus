@@ -158,6 +158,7 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface TabController : NSObject {}
 @property (nonatomic,copy,readonly) NSArray * currentTabDocuments;
+@property (nonatomic,copy,readonly) NSArray * allTabDocuments;
 @property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
 @property (nonatomic,retain) TabDocument * activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview * tabOverview;
@@ -165,7 +166,9 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
 - (void)closeTab;
 - (void)newTab;
-//new methods below
+//new stuff below
+@property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
+- (void)reloadAllTabs;
 - (void)userAgentButtonPressed;
 @end
 
@@ -174,6 +177,7 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @property (nonatomic,readonly) _SFReloadOptionsController * reloadOptionsController;
 @property (nonatomic,readonly) _SFTabStateData * tabStateData;
 - (id)URL;
+- (void)reload;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
 //new methods below
@@ -182,7 +186,8 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 
 @interface TabOverview : UIView {}
 @property (nonatomic,readonly) UIButton * privateBrowsingButton;
-//new methods below
+//new stuff below
+@property (nonatomic, retain) UIButton * desktopModeButton;
 - (void)userAgentButtonLandscapePressed;
 @end
 

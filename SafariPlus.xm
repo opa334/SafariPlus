@@ -71,9 +71,7 @@ static NSString* bottomBarColorPrivate;
 
 /****** Other stuff ******/
 
-UIButton* userAgentButtonPortrait = [UIButton buttonWithType:UIButtonTypeCustom];
-UIButton* userAgentButtonLandscape = [UIButton buttonWithType:UIButtonTypeCustom];
-
+BOOL desktopButtonSelected;
 NSMutableDictionary* plist;
 
 /****** Safari Hooks ******/
@@ -192,22 +190,64 @@ NSMutableDictionary* plist;
 
 %hook TabOverview
 
+%property (nonatomic,retain) UIButton *desktopModeButton;
+
 //Desktop mode button : Landscape
 - (void)layoutSubviews
 {
   %orig;
   if(desktopButtonEnabled)
   {
-    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
-    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
-    userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-    userAgentButtonLandscape.layer.cornerRadius = 4;
-    userAgentButtonLandscape.adjustsImageWhenHighlighted = true;
-    [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
-    userAgentButtonLandscape.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
+    if(!self.desktopModeButton)
+    {
+      UIButton* desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+
+      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
+      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+      desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+      desktopModeButton.layer.cornerRadius = 4;
+      desktopModeButton.adjustsImageWhenHighlighted = true;
+      [desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+      desktopModeButton.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
+
+      if(desktopButtonSelected)
+      {
+        desktopModeButton.selected = YES;
+        desktopModeButton.backgroundColor = [UIColor whiteColor];
+      }
+
+      [self setDesktopModeButton:desktopModeButton];
+    }
 
     _UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self, "_header");
-    [header.contentView addSubview:userAgentButtonLandscape];
+    [header.contentView addSubview:self.desktopModeButton];
+  }
+}
+
+%new
+- (void)desktopModeButtonPressed
+{
+  if(desktopButtonSelected)
+  {
+    desktopButtonSelected = NO;
+    self.desktopModeButton.selected = NO;
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    self.desktopModeButton.backgroundColor = [UIColor clearColor];
+    [UIView commitAnimations];
+
+    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.selected = NO;
+    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
+  }
+  else
+  {
+    desktopButtonSelected = YES;
+
+    self.desktopModeButton.selected = YES;
+    self.desktopModeButton.backgroundColor = [UIColor whiteColor];
+
+    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.selected = YES;
+    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor]; //NOTE: Eclipse replaces this color with grey, fix needed (if even possible)
   }
 }
 
@@ -426,24 +466,67 @@ NSMutableDictionary* plist;
 
 %hook TabOverview
 
+%property (nonatomic,retain) UIButton *desktopModeButton;
+
 //Desktop mode button : Landscape
 - (void)layoutSubviews
 {
   %orig;
   if(desktopButtonEnabled)
   {
-    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
-    [userAgentButtonLandscape setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
-    userAgentButtonLandscape.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-    userAgentButtonLandscape.layer.cornerRadius = 4;
-    userAgentButtonLandscape.adjustsImageWhenHighlighted = true;
-    [userAgentButtonLandscape addTarget:self action:@selector(userAgentButtonLandscapePressed) forControlEvents:UIControlEventTouchUpInside];
-    userAgentButtonLandscape.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
+    if(!self.desktopModeButton)
+    {
+      UIButton* desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+
+      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
+      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+      desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+      desktopModeButton.layer.cornerRadius = 4;
+      desktopModeButton.adjustsImageWhenHighlighted = true;
+      [desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+      desktopModeButton.frame = CGRectMake(self.privateBrowsingButton.frame.origin.x - 57.5, self.privateBrowsingButton.frame.origin.y, self.privateBrowsingButton.frame.size.height, self.privateBrowsingButton.frame.size.height);
+
+      if(desktopButtonSelected)
+      {
+        desktopModeButton.selected = YES;
+        desktopModeButton.backgroundColor = [UIColor whiteColor];
+      }
+
+      [self setDesktopModeButton:desktopModeButton];
+    }
 
     UIView* header = MSHookIvar<UIView*>(self, "_header");
-    [header addSubview:userAgentButtonLandscape];
+    [header addSubview:self.desktopModeButton];
   }
 }
+
+%new
+- (void)desktopModeButtonPressed
+{
+  if(desktopButtonSelected)
+  {
+    desktopButtonSelected = NO;
+    self.desktopModeButton.selected = NO;
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.3];
+    self.desktopModeButton.backgroundColor = [UIColor clearColor];
+    [UIView commitAnimations];
+
+    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.selected = NO;
+    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
+  }
+  else
+  {
+    desktopButtonSelected = YES;
+
+    self.desktopModeButton.selected = YES;
+    self.desktopModeButton.backgroundColor = [UIColor whiteColor];
+
+    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.selected = YES;
+    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
+  }
+}
+
 
 %end
 
@@ -547,15 +630,7 @@ NSMutableDictionary* plist;
 %hook Application
 - (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
 {
-  BOOL orig = %orig;
-
-  //Auto switch mode on launch
-  if(forceModeOnStartEnabled)
-  {
-    [self modeSwitchAction:forceModeOnStartFor];
-  }
-
-  //Init plist and apply contents to buttons
+  //Init plist for desktop button
   if(desktopButtonEnabled)
   {
     if(!plist)
@@ -571,12 +646,16 @@ NSMutableDictionary* plist;
 
     if([[plist objectForKey:@"desktopButtonSelected"] boolValue])
     {
-      userAgentButtonPortrait.backgroundColor = [UIColor whiteColor];
-      userAgentButtonPortrait.selected = YES;
-
-      userAgentButtonLandscape.backgroundColor = [UIColor whiteColor];
-      userAgentButtonLandscape.selected = YES;
+      desktopButtonSelected = YES;
     }
+  }
+
+  BOOL orig = %orig;
+
+  //Auto switch mode on launch
+  if(forceModeOnStartEnabled)
+  {
+    [self modeSwitchAction:forceModeOnStartFor];
   }
 
   return orig;
@@ -611,7 +690,7 @@ NSMutableDictionary* plist;
   }
   if(desktopButtonEnabled)
   {
-    [plist setObject:[NSNumber numberWithBool:userAgentButtonPortrait.selected] forKey:@"desktopButtonSelected"];
+    [plist setObject:[NSNumber numberWithBool:desktopButtonSelected] forKey:@"desktopButtonSelected"];
     [plist writeToFile:plistPath atomically:YES];
   }
   %orig;
@@ -720,35 +799,9 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 %end
 
-%hook TabOverview
-
-%new
-- (void)userAgentButtonLandscapePressed
-{
-  if(userAgentButtonLandscape.selected)
-  {
-    userAgentButtonLandscape.selected = NO;
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.3];
-    userAgentButtonLandscape.backgroundColor = [UIColor clearColor];
-    [UIView commitAnimations];
-
-    userAgentButtonPortrait.selected = NO;
-    userAgentButtonPortrait.backgroundColor = [UIColor clearColor];
-  }
-  else
-  {
-    userAgentButtonLandscape.selected = YES;
-    userAgentButtonLandscape.backgroundColor = [UIColor whiteColor]; //NOTE: Eclipse replaces this color with grey, fix needed (if even possible)
-
-    userAgentButtonPortrait.selected = YES;
-    userAgentButtonPortrait.backgroundColor = [UIColor whiteColor];
-  }
-}
-
-%end
-
 %hook TabController
+
+%property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
 
 //Desktop mode button : Portrait
 - (NSArray *)tiltedTabViewToolbarItems
@@ -757,24 +810,37 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   {
     NSArray* old = %orig;
 
-    [userAgentButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
-    [userAgentButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
-    userAgentButtonPortrait.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
-    userAgentButtonPortrait.layer.cornerRadius = 4;
-    userAgentButtonPortrait.adjustsImageWhenHighlighted = true;
-    [userAgentButtonPortrait addTarget:self action:@selector(userAgentButtonPortraitPressed) forControlEvents:UIControlEventTouchUpInside];
-    userAgentButtonPortrait.frame = CGRectMake(0, 0, 27.5, 27.5);
+    NSLog(@"tiltedTabViewToolbarItems");
 
-    UIButton *emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
+    if(!self.tiltedTabViewDesktopModeButton)
+    {
+      UIButton* desktopModeButtonPortrait = [UIButton buttonWithType:UIButtonTypeCustom];
+
+      [desktopModeButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
+      [desktopModeButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+      desktopModeButtonPortrait.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
+      desktopModeButtonPortrait.layer.cornerRadius = 4;
+      desktopModeButtonPortrait.adjustsImageWhenHighlighted = true;
+      [desktopModeButtonPortrait addTarget:self action:@selector(tiltedTabViewDesktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+      desktopModeButtonPortrait.frame = CGRectMake(0, 0, 27.5, 27.5);
+      if(desktopButtonSelected)
+      {
+        desktopModeButtonPortrait.selected = YES;
+        desktopModeButtonPortrait.backgroundColor = [UIColor whiteColor];
+      }
+      [self setTiltedTabViewDesktopModeButton:desktopModeButtonPortrait];
+    }
+
+    UIButton* emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
     emptySpace.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
     emptySpace.layer.cornerRadius = 4;
     emptySpace.frame = CGRectMake(0, 0, 27.5, 27.5);
 
-    UIBarButtonItem *userAgentBarButton = [[UIBarButtonItem alloc] initWithCustomView:userAgentButtonPortrait];
-
     UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithCustomView:emptySpace];
 
     UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+
+    UIBarButtonItem *userAgentBarButton = [[UIBarButtonItem alloc] initWithCustomView:self.tiltedTabViewDesktopModeButton];
 
     return @[old[0], flexibleItem, userAgentBarButton, flexibleItem, old[2], flexibleItem, customSpace, flexibleItem, old[4], old[5]];
   }
@@ -783,26 +849,33 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 %new
-- (void)userAgentButtonPortraitPressed
+- (void)tiltedTabViewDesktopModeButtonPressed
 {
-  if(userAgentButtonPortrait.selected)
+  if(desktopButtonSelected)
   {
-    userAgentButtonPortrait.selected = NO;
+    desktopButtonSelected = NO;
+    self.tiltedTabViewDesktopModeButton.selected = NO;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.3];
-    userAgentButtonPortrait.backgroundColor = [UIColor clearColor];
+    self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
     [UIView commitAnimations];
-
-    userAgentButtonLandscape.selected = NO;
-    userAgentButtonLandscape.backgroundColor = [UIColor clearColor];
   }
   else
   {
-    userAgentButtonPortrait.selected = YES;
-    userAgentButtonPortrait.backgroundColor = [UIColor whiteColor];
+    desktopButtonSelected = YES;
+    self.tiltedTabViewDesktopModeButton.selected = YES;
+    self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
+  }
 
-    userAgentButtonLandscape.selected = YES;
-    userAgentButtonLandscape.backgroundColor = [UIColor whiteColor];
+  [self reloadAllTabs];
+}
+
+%new
+- (void)reloadAllTabs
+{
+  for(int i = 0; i < ([self.allTabDocuments count] - 1); i++)
+  {
+    [(TabDocument*)self.allTabDocuments[i] reload];
   }
 }
 
@@ -851,6 +924,15 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   }
 }
 
+- (void)reload
+{
+  %orig;
+  if(desktopButtonEnabled && desktopButtonSelected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
+  {
+    [self.reloadOptionsController requestDesktopSiteWithURL:[self URL]];
+  }
+}
+
 %new
 - (NSURL*)URLHandler:(NSURL*)URL
 {
@@ -859,7 +941,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     URL = [NSURL URLWithString:[[URL absoluteString] stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"]];
   }
 
-  if(desktopButtonEnabled && userAgentButtonPortrait.selected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
+  if(desktopButtonEnabled && desktopButtonSelected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
   {
     [self.reloadOptionsController requestDesktopSiteWithURL:URL];
   }
@@ -873,20 +955,25 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   if(forceHTTPSEnabled || desktopButtonEnabled)
   {
     NSString* newURL = arg1;
-    if(forceHTTPSEnabled && arg1)
+    if(forceHTTPSEnabled && newURL)
     {
-      if([arg1 rangeOfString:@"http://"].location != NSNotFound)
+      if([newURL rangeOfString:@"http://"].location != NSNotFound)
       {
-        newURL = [arg1 stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"];
+        newURL = [newURL stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"];
       }
-      else if([arg1 rangeOfString:@"https://"].location == NSNotFound)
+      else if([newURL rangeOfString:@"https://"].location == NSNotFound)
       {
-        newURL = [@"https://" stringByAppendingString:arg1];
+        newURL = [@"https://" stringByAppendingString:newURL];
       }
     }
 
-    if(desktopButtonEnabled && userAgentButtonPortrait.selected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
+    if(desktopButtonEnabled && desktopButtonSelected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
     {
+      //Fix weird crash
+      if([newURL rangeOfString:@"http://"].location == NSNotFound && [newURL rangeOfString:@"https://"].location == NSNotFound)
+      {
+        newURL = [@"http://" stringByAppendingString:newURL];
+      }
       [self.reloadOptionsController requestDesktopSiteWithURL:[NSURL URLWithString:newURL]];
       return nil;
     }
