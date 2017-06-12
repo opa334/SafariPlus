@@ -235,9 +235,6 @@ NSMutableDictionary* plist;
     [UIView setAnimationDuration:0.3];
     self.desktopModeButton.backgroundColor = [UIColor clearColor];
     [UIView commitAnimations];
-
-    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.selected = NO;
-    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
   }
   else
   {
@@ -245,10 +242,8 @@ NSMutableDictionary* plist;
 
     self.desktopModeButton.selected = YES;
     self.desktopModeButton.backgroundColor = [UIColor whiteColor];
-
-    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.selected = YES;
-    ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor]; //NOTE: Eclipse replaces this color with grey, fix needed (if even possible)
   }
+  [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController reloadAllTabs];
 }
 
 %end
@@ -511,9 +506,6 @@ NSMutableDictionary* plist;
     [UIView setAnimationDuration:0.3];
     self.desktopModeButton.backgroundColor = [UIColor clearColor];
     [UIView commitAnimations];
-
-    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.selected = NO;
-    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
   }
   else
   {
@@ -521,10 +513,8 @@ NSMutableDictionary* plist;
 
     self.desktopModeButton.selected = YES;
     self.desktopModeButton.backgroundColor = [UIColor whiteColor];
-
-    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.selected = YES;
-    MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
   }
+  [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController reloadAllTabs];
 }
 
 
@@ -803,14 +793,30 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 %property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
 
+-(void)tiltedTabViewDidPresent:(id)arg1
+{
+  %orig;
+  if(desktopButtonEnabled)
+  {
+    if(desktopButtonSelected)
+    {
+      self.tiltedTabViewDesktopModeButton.selected = YES;
+      self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
+    }
+    else
+    {
+      self.tiltedTabViewDesktopModeButton.selected = NO;
+      self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
+    }
+  }
+}
+
 //Desktop mode button : Portrait
 - (NSArray *)tiltedTabViewToolbarItems
 {
   if(desktopButtonEnabled)
   {
     NSArray* old = %orig;
-
-    NSLog(@"tiltedTabViewToolbarItems");
 
     if(!self.tiltedTabViewDesktopModeButton)
     {
@@ -873,7 +879,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %new
 - (void)reloadAllTabs
 {
-  for(int i = 0; i < ([self.allTabDocuments count] - 1); i++)
+  for(int i = 0; i < ([self.allTabDocuments count]); i++)
   {
     [(TabDocument*)self.allTabDocuments[i] reload];
   }
@@ -926,11 +932,15 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 - (void)reload
 {
-  %orig;
-  if(desktopButtonEnabled && desktopButtonSelected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
+  if(desktopButtonEnabled && desktopButtonSelected)
   {
-    [self.reloadOptionsController requestDesktopSiteWithURL:[self URL]];
+    [self setCustomUserAgent:desktopUserAgent];
   }
+  else if(desktopButtonEnabled && !desktopButtonSelected)
+  {
+    [self setCustomUserAgent:nil];
+  }
+  %orig;
 }
 
 %new
@@ -941,9 +951,13 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     URL = [NSURL URLWithString:[[URL absoluteString] stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"]];
   }
 
-  if(desktopButtonEnabled && desktopButtonSelected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
+  if(desktopButtonEnabled && desktopButtonSelected)
   {
-    [self.reloadOptionsController requestDesktopSiteWithURL:URL];
+    [self setCustomUserAgent:desktopUserAgent];
+  }
+  else if(desktopButtonEnabled && !desktopButtonSelected)
+  {
+    [self setCustomUserAgent:nil];
   }
 
   return URL;
@@ -967,15 +981,13 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
       }
     }
 
-    if(desktopButtonEnabled && desktopButtonSelected && !self.reloadOptionsController.loadedUsingDesktopUserAgent)
+    if(desktopButtonEnabled && desktopButtonSelected)
     {
-      //Fix weird crash
-      if([newURL rangeOfString:@"http://"].location == NSNotFound && [newURL rangeOfString:@"https://"].location == NSNotFound)
-      {
-        newURL = [@"http://" stringByAppendingString:newURL];
-      }
-      [self.reloadOptionsController requestDesktopSiteWithURL:[NSURL URLWithString:newURL]];
-      return nil;
+      [self setCustomUserAgent:desktopUserAgent];
+    }
+    else if(desktopButtonEnabled && !desktopButtonSelected)
+    {
+      [self setCustomUserAgent:nil];
     }
 
     return %orig(newURL);

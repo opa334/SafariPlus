@@ -11,8 +11,9 @@
 
 NSString* bundlePath = @"/Library/Application Support/SafariPlus.bundle";
 NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist";
+NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
 
-@class ApplicationShortcutController, BrowserController, TabController, TabDocument, TabOverview, TiltedTabView, UnifiedField;
+@class ApplicationShortcutController, BrowserController, SafariWebView, TabController, TabDocument, TabOverview, TiltedTabView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 @interface _UIBackdropView : UIView {}
@@ -43,6 +44,12 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 - (void)_chooseFiles:(id)arg1 displayString:(id)arg2 iconImage:(id)arg3;
 - (void)_showFilePicker;
 - (void)_cancel;
+@end
+
+@interface WKWebView : UIView
+- (id)loadRequest:(NSURLRequest *)request;
+- (id)reload;
+- (id)reloadFromOrigin;
 @end
 
 
@@ -148,6 +155,9 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 - (BOOL)getBrowsingMode;
 @end
 
+@interface SafariWebView : WKWebView {}
+@end
+
 @interface SearchSuggestion : NSObject {}
 - (NSString *)string;
 @end
@@ -157,7 +167,6 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @end
 
 @interface TabController : NSObject {}
-@property (nonatomic,copy,readonly) NSArray * currentTabDocuments;
 @property (nonatomic,copy,readonly) NSArray * allTabDocuments;
 @property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
 @property (nonatomic,retain) TabDocument * activeTabDocument;
@@ -176,10 +185,19 @@ NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safaripluspre
 @property (assign,nonatomic) BrowserController * browserController;
 @property (nonatomic,readonly) _SFReloadOptionsController * reloadOptionsController;
 @property (nonatomic,readonly) _SFTabStateData * tabStateData;
+@property (nonatomic,readonly) SafariWebView * webView;
+@property (nonatomic,copy) NSString * customUserAgent;
 - (id)URL;
+- (BOOL)isBlankDocument;
+- (id)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
 - (void)reload;
+- (BOOL)privateBrowsingEnabled;
+- (WebBookmark *)readingListBookmark;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
+- (id)loadURL:(id)arg1 userDriven:(BOOL)arg2;
+- (id)loadUserTypedAddress:(NSString*)arg1;
+- (void)setCustomUserAgent:(NSString *)arg1;
 //new methods below
 - (NSURL*)URLHandler:(NSURL*)URL;
 @end
