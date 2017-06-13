@@ -758,11 +758,14 @@ NSMutableDictionary* plist;
 - (void)togglePrivateBrowsing
 {
   %orig;
-  for(int i = 0; i < [self.tabController.allTabDocuments count]; i++)
+  if(desktopButtonEnabled)
   {
-    if(((desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == nil) || (!desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)self.tabController.allTabDocuments[i] isBlankDocument])
+    for(int i = 0; i < [self.tabController.allTabDocuments count]; i++)
     {
-      [((TabDocument*)self.tabController.allTabDocuments[i]) reload];
+      if(((desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == nil) || (!desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)self.tabController.allTabDocuments[i] isBlankDocument])
+      {
+        [((TabDocument*)self.tabController.allTabDocuments[i]) reload];
+      }
     }
   }
 }
