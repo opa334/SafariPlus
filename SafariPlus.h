@@ -95,6 +95,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) Ap
 @property (nonatomic,readonly) ApplicationShortcutController * shortcutController;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new methods below
+- (void)updateDesktopMode;
 - (void)autoCloseAction;
 - (void)modeSwitchAction:(int)switchToMode;
 @end
@@ -168,6 +169,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) Ap
 
 @interface TabController : NSObject {}
 @property (nonatomic,copy,readonly) NSArray * allTabDocuments;
+@property (nonatomic,copy,readonly) NSArray * currentTabDocuments;
 @property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
 @property (nonatomic,retain) TabDocument * activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview * tabOverview;

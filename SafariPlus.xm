@@ -80,6 +80,19 @@ NSMutableDictionary* plist;
 
 %hook Application
 
+//Gets called to update the tabs on startup
+%new
+- (void)updateDesktopMode
+{
+  for(int i = 0; i < [self.shortcutController.browserController.tabController.allTabDocuments count]; i++)
+  {
+    if(((desktopButtonSelected && ((TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i]).customUserAgent != desktopUserAgent) || (!desktopButtonSelected && ((TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i] isBlankDocument])
+    {
+      [((TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i]) reload];
+    }
+  }
+}
+
 //Gets called to switch mode based on the setting
 %new
 - (void)modeSwitchAction:(int)switchToMode
@@ -345,6 +358,20 @@ NSMutableDictionary* plist;
 %group iOS9
 
 %hook Application
+
+//Gets called to update the tabs on startup
+%new
+- (void)updateDesktopMode
+{
+  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_controller");
+  for(int i = 0; i < [browserController.tabController.allTabDocuments count]; i++)
+  {
+    if(((desktopButtonSelected && ((TabDocument*)browserController.tabController.allTabDocuments[i]).customUserAgent != desktopUserAgent) || (!desktopButtonSelected && ((TabDocument*)browserController.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)browserController.tabController.allTabDocuments[i] isBlankDocument])
+    {
+      [((TabDocument*)browserController.tabController.allTabDocuments[i]) reload];
+    }
+  }
+}
 
 //Gets called to switch mode based on the setting
 %new
@@ -648,6 +675,11 @@ NSMutableDictionary* plist;
     [self modeSwitchAction:forceModeOnStartFor];
   }
 
+  if(desktopButtonEnabled)
+  {
+    [self updateDesktopMode];
+  }
+
   return orig;
 }
 
@@ -721,6 +753,18 @@ NSMutableDictionary* plist;
   }
 
   return %orig;
+}
+
+- (void)togglePrivateBrowsing
+{
+  %orig;
+  for(int i = 0; i < [self.tabController.allTabDocuments count]; i++)
+  {
+    if(((desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == nil) || (!desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)self.tabController.allTabDocuments[i] isBlankDocument])
+    {
+      [((TabDocument*)self.tabController.allTabDocuments[i]) reload];
+    }
+  }
 }
 
 //Add swipe gestures to URL bar
@@ -881,7 +925,10 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   for(int i = 0; i < ([self.allTabDocuments count]); i++)
   {
-    [(TabDocument*)self.allTabDocuments[i] reload];
+    if(![(TabDocument*)self.allTabDocuments[i] isBlankDocument])
+    {
+      [(TabDocument*)self.allTabDocuments[i] reload];
+    }
   }
 }
 
