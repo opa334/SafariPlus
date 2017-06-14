@@ -11,7 +11,7 @@
 
 NSString* bundlePath = @"/Library/Application Support/SafariPlus.bundle";
 NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist";
-NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/7046A194A";
+NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4";
 
 @class ApplicationShortcutController, BrowserController, SafariWebView, TabController, TabDocument, TabOverview, TiltedTabView, UnifiedField, WebBookmark;
 
@@ -47,9 +47,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) Ap
 @end
 
 @interface WKWebView : UIView
-- (id)loadRequest:(NSURLRequest *)request;
-- (id)reload;
-- (id)reloadFromOrigin;
+@property (nonatomic, readonly) UIScrollView *scrollView;
 @end
 
 
@@ -95,6 +93,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) Ap
 @property (nonatomic,readonly) ApplicationShortcutController * shortcutController;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new methods below
+- (void)updateButtonState;
 - (void)updateDesktopMode;
 - (void)autoCloseAction;
 - (void)modeSwitchAction:(int)switchToMode;
@@ -168,18 +167,20 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) Ap
 @end
 
 @interface TabController : NSObject {}
+@property (nonatomic,copy,readonly) NSArray * tabDocuments;
+@property (nonatomic,copy,readonly) NSArray * privateTabDocuments;
 @property (nonatomic,copy,readonly) NSArray * allTabDocuments;
-@property (nonatomic,copy,readonly) NSArray * currentTabDocuments;
 @property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
 @property (nonatomic,retain) TabDocument * activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview * tabOverview;
 @property (assign,nonatomic) BOOL usesTabBar;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
+- (BOOL)isPrivateBrowsingEnabled;
 - (void)closeTab;
 - (void)newTab;
 //new stuff below
 @property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
-- (void)reloadAllTabs;
+- (void)reloadTabsIfNeeded;
 - (void)userAgentButtonPressed;
 @end
 

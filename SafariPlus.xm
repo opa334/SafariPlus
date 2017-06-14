@@ -84,13 +84,7 @@ NSMutableDictionary* plist;
 %new
 - (void)updateDesktopMode
 {
-  for(int i = 0; i < [self.shortcutController.browserController.tabController.allTabDocuments count]; i++)
-  {
-    if(((desktopButtonSelected && ((TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i]).customUserAgent != desktopUserAgent) || (!desktopButtonSelected && ((TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i] isBlankDocument])
-    {
-      [((TabDocument*)self.shortcutController.browserController.tabController.allTabDocuments[i]) reload];
-    }
-  }
+  [self.shortcutController.browserController.tabController reloadTabsIfNeeded];
 }
 
 //Gets called to switch mode based on the setting
@@ -256,7 +250,8 @@ NSMutableDictionary* plist;
     self.desktopModeButton.selected = YES;
     self.desktopModeButton.backgroundColor = [UIColor whiteColor];
   }
-  [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController reloadAllTabs];
+  [((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController reloadTabsIfNeeded];
+  [((Application*)[%c(Application) sharedApplication]) updateButtonState];
 }
 
 %end
@@ -364,13 +359,7 @@ NSMutableDictionary* plist;
 - (void)updateDesktopMode
 {
   BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_controller");
-  for(int i = 0; i < [browserController.tabController.allTabDocuments count]; i++)
-  {
-    if(((desktopButtonSelected && ((TabDocument*)browserController.tabController.allTabDocuments[i]).customUserAgent != desktopUserAgent) || (!desktopButtonSelected && ((TabDocument*)browserController.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)browserController.tabController.allTabDocuments[i] isBlankDocument])
-    {
-      [((TabDocument*)browserController.tabController.allTabDocuments[i]) reload];
-    }
-  }
+  [browserController.tabController reloadTabsIfNeeded];
 }
 
 //Gets called to switch mode based on the setting
@@ -541,7 +530,8 @@ NSMutableDictionary* plist;
     self.desktopModeButton.selected = YES;
     self.desktopModeButton.backgroundColor = [UIColor whiteColor];
   }
-  [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController reloadAllTabs];
+  [MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController reloadTabsIfNeeded];
+  [((Application*)[%c(Application) sharedApplication]) updateButtonState];
 }
 
 
@@ -710,11 +700,6 @@ NSMutableDictionary* plist;
   {
     [self autoCloseAction];
   }
-  if(desktopButtonEnabled)
-  {
-    [plist setObject:[NSNumber numberWithBool:desktopButtonSelected] forKey:@"desktopButtonSelected"];
-    [plist writeToFile:plistPath atomically:YES];
-  }
   %orig;
 }
 
@@ -727,6 +712,13 @@ NSMutableDictionary* plist;
     [self autoCloseAction];
   }
   %orig;
+}
+
+%new
+- (void)updateButtonState
+{
+  [plist setObject:[NSNumber numberWithBool:desktopButtonSelected] forKey:@"desktopButtonSelected"];
+  [plist writeToFile:plistPath atomically:YES];
 }
 
 %end
@@ -760,13 +752,7 @@ NSMutableDictionary* plist;
   %orig;
   if(desktopButtonEnabled)
   {
-    for(int i = 0; i < [self.tabController.allTabDocuments count]; i++)
-    {
-      if(((desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == nil) || (!desktopButtonSelected && ((TabDocument*)self.tabController.allTabDocuments[i]).customUserAgent == desktopUserAgent)) && ![(TabDocument*)self.tabController.allTabDocuments[i] isBlankDocument])
-      {
-        [((TabDocument*)self.tabController.allTabDocuments[i]) reload];
-      }
-    }
+    [self.tabController reloadTabsIfNeeded];
   }
 }
 
@@ -920,17 +906,30 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
   }
 
-  [self reloadAllTabs];
+  [self reloadTabsIfNeeded];
+  [((Application*)[%c(Application) sharedApplication]) updateButtonState];
 }
 
 %new
-- (void)reloadAllTabs
+- (void)reloadTabsIfNeeded
 {
-  for(int i = 0; i < ([self.allTabDocuments count]); i++)
+  NSArray* currentTabs;
+  if([self isPrivateBrowsingEnabled])
   {
-    if(![(TabDocument*)self.allTabDocuments[i] isBlankDocument])
+    currentTabs = self.privateTabDocuments;
+  }
+  else
+  {
+    currentTabs = self.tabDocuments;
+  }
+
+  for(int i = 0; i < ([currentTabs count]); i++)
+  {
+    if(![(TabDocument*)currentTabs[i] isBlankDocument] &&
+      ((desktopButtonSelected && (([((NSString*)((TabDocument*)currentTabs[i]).customUserAgent) isEqual:@""]) || (((NSString*)((TabDocument*)currentTabs[i]).customUserAgent) == nil))) ||
+      (!desktopButtonSelected && [((NSString*)((TabDocument*)currentTabs[i]).customUserAgent) isEqual:desktopUserAgent])))
     {
-      [(TabDocument*)self.allTabDocuments[i] reload];
+      [(TabDocument*)currentTabs[i] reload];
     }
   }
 }
@@ -988,7 +987,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   }
   else if(desktopButtonEnabled && !desktopButtonSelected)
   {
-    [self setCustomUserAgent:nil];
+    [self setCustomUserAgent:@""];
   }
   %orig;
 }
@@ -1007,7 +1006,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   }
   else if(desktopButtonEnabled && !desktopButtonSelected)
   {
-    [self setCustomUserAgent:nil];
+    [self setCustomUserAgent:@""];
   }
 
   return URL;
@@ -1037,7 +1036,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     }
     else if(desktopButtonEnabled && !desktopButtonSelected)
     {
-      [self setCustomUserAgent:nil];
+      [self setCustomUserAgent:@""];
     }
 
     return %orig(newURL);
