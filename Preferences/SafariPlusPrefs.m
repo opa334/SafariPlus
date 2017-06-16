@@ -115,12 +115,12 @@
 
 - (NSArray *)gestureActionValues
 {
-	return @[@1, @2, @3, @4, @5];
+	return @[@1, @2, @3, @4, @5, @6, @7, @8, @9, @10];
 }
 
 - (NSArray *)gestureActionTitles
 {
-	NSMutableArray* titles = [@[@"CLOSE_ACTIVE_TAB", @"OPEN_NEW_TAB", @"DUPLICATE_ACTIVE_TAB", @"CLOSE_ALL_TABS", @"SWITCH_MODE"] mutableCopy];
+	NSMutableArray* titles = [@[@"CLOSE_ACTIVE_TAB", @"OPEN_NEW_TAB", @"DUPLICATE_ACTIVE_TAB", @"CLOSE_ALL_TABS", @"SWITCH_MODE", @"TAB_BACKWARD", @"TAB_FORWARD", @"RELOAD_ACTIVE_TAB", @"REQUEST_DESTKOP_SITE", @"OPEN_FIND_ON_PAGE"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
 		titles[i] = [LGShared localisedStringForKey:titles[i]];

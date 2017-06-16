@@ -71,6 +71,11 @@
 "DUPLICATE_ACTIVE_TAB" = "Duplicate active Tab";
 "CLOSE_ALL_TABS" = "Close all Tabs from Browsing Mode";
 "SWITCH_MODE" = "Switch Browsing Mode";
+"TAB_BACKWARD" = "Switch Tab backwards";
+"TAB_FORWARD" = "Switch Tab forwards";
+"RELOAD_ACTIVE_TAB" = "Reload active Tab";
+"REQUEST_DESTKOP_SITE" = "Request Desktop Site";
+"OPEN_FIND_ON_PAGE" = "Open 'Find on Page'";
 
 "BACKGROUND" = "Duplicate Tab in Background";
 

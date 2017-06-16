@@ -185,6 +185,39 @@ NSMutableDictionary* plist;
     shouldClean = YES;
     break;
 
+    case 6: //Tab backward
+    {
+      NSInteger tabIndex = [self.tabController.currentTabDocuments indexOfObject:self.tabController.activeTabDocument] - 1;
+      if(tabIndex >= 0)
+      {
+        [self.tabController setActiveTabDocument:self.tabController.currentTabDocuments[tabIndex] animated:NO];
+      }
+      break;
+    }
+
+    case 7: //Tab forward
+    {
+      NSInteger tabIndex = [self.tabController.currentTabDocuments indexOfObject:self.tabController.activeTabDocument] + 1;
+      if(tabIndex < [self.tabController.currentTabDocuments count])
+      {
+        [self.tabController setActiveTabDocument:self.tabController.currentTabDocuments[tabIndex] animated:NO];
+      }
+      break;
+    }
+
+    case 8: //Reload active tab
+    [self.tabController.activeTabDocument reload];
+    break;
+
+    case 9: //Request desktop site
+    [self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+    break;
+
+    case 10: //Open 'find on page'
+    [self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
+    [self.tabController.activeTabDocument.findOnPageView showFindOnPage];
+    break;
+
     default:
     break;
   }
@@ -462,6 +495,57 @@ NSMutableDictionary* plist;
     case 5: //Switch mode (Normal/Private)
     [self togglePrivateBrowsing];
     shouldClean = YES;
+    break;
+
+    case 6: //Tab backward
+    {
+      NSArray* currentTabs;
+      if([self privateBrowsingEnabled])
+      {
+        currentTabs = self.tabController.privateTabDocuments;
+      }
+      else
+      {
+        currentTabs = self.tabController.tabDocuments;
+      }
+      NSInteger tabIndex = [currentTabs indexOfObject:self.tabController.activeTabDocument] - 1;
+      if(tabIndex >= 0)
+      {
+        [self.tabController setActiveTabDocument:currentTabs[tabIndex] animated:NO];
+      }
+      break;
+    }
+
+    case 7: //Tab forward
+    {
+      NSArray* currentTabs;
+      if([self privateBrowsingEnabled])
+      {
+        currentTabs = self.tabController.privateTabDocuments;
+      }
+      else
+      {
+        currentTabs = self.tabController.tabDocuments;
+      }
+      NSInteger tabIndex = [currentTabs indexOfObject:self.tabController.activeTabDocument] + 1;
+      if(tabIndex < [currentTabs count])
+      {
+        [self.tabController setActiveTabDocument:currentTabs[tabIndex] animated:NO];
+      }
+      break;
+    }
+
+    case 8: //Reload active tab
+    [self.tabController.activeTabDocument reload];
+    break;
+
+    case 9: //Request desktop site
+    [self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+    break;
+
+    case 10: //Open 'find on page'
+    self.shouldFocusFindOnPageTextField = YES;
+    [self showFindOnPage];
     break;
 
     default:

@@ -53,6 +53,11 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 
 /**** SafariServices ****/
 
+@interface _SFFindOnPageView : UIView {}
+- (void)setShouldFocusTextField:(BOOL)arg1;
+- (void)showFindOnPage;
+@end
+
 @interface _SFFluidProgressView : UIView {}
 @property (nonatomic,retain) UIColor * progressBarFillColor;
 @end
@@ -70,6 +75,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @interface _SFReloadOptionsController : NSObject {}
 @property (nonatomic,readonly) BOOL loadedUsingDesktopUserAgent;
 - (void)requestDesktopSiteWithURL:(id)arg1;
+- (void)requestDesktopSite;
 @end
 
 @interface _SFTabStateData : NSObject {}
@@ -105,6 +111,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 
 @interface BrowserController : UIResponder {}
 @property (nonatomic,readonly) TabController * tabController;
+@property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
 - (BOOL)privateBrowsingEnabled;
@@ -112,6 +119,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
+- (void)showFindOnPage; //iOS9
 //new methods below
 - (void)handleURLSwipeLeft;
 - (void)handleURLSwipeRight;
@@ -139,6 +147,9 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @end
 
 @interface CompletionListTableViewController : UITableViewController {}
+@end
+
+@interface FindOnPageView : _SFFindOnPageView {}
 @end
 
 @interface GestureRecognizingBarButtonItem : UIBarButtonItem {}
@@ -170,10 +181,12 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @property (nonatomic,copy,readonly) NSArray * tabDocuments;
 @property (nonatomic,copy,readonly) NSArray * privateTabDocuments;
 @property (nonatomic,copy,readonly) NSArray * allTabDocuments;
+@property (nonatomic,copy,readonly) NSArray * currentTabDocuments; //iOS 10 only
 @property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
 @property (nonatomic,retain) TabDocument * activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview * tabOverview;
 @property (assign,nonatomic) BOOL usesTabBar;
+- (void)setActiveTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
 - (BOOL)isPrivateBrowsingEnabled;
 - (void)closeTab;
@@ -190,6 +203,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @property (nonatomic,readonly) _SFTabStateData * tabStateData;
 @property (nonatomic,readonly) SafariWebView * webView;
 @property (nonatomic,copy) NSString * customUserAgent;
+@property (nonatomic,readonly) FindOnPageView * findOnPageView;
 - (id)URL;
 - (BOOL)isBlankDocument;
 - (id)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;

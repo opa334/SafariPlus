@@ -71,6 +71,11 @@
 "DUPLICATE_ACTIVE_TAB" = "Aktiven Tab duplizieren";
 "CLOSE_ALL_TABS" = "Tabs vom Surfmodus schließen";
 "SWITCH_MODE" = "Surfmodus wechseln";
+"TAB_BACKWARD" = "Tab rückwärts wechseln";
+"TAB_FORWARD" = "Tab vorwärts wechseln";
+"RELOAD_ACTIVE_TAB" = "Aktiven Tab neu laden";
+"REQUEST_DESTKOP_SITE" = "Desktop-Site anfordern";
+"OPEN_FIND_ON_PAGE" = "'Auf Seite suchen' öffnen";
 
 "BACKGROUND" = "Tab im Hintergrund duplizieren";
 
