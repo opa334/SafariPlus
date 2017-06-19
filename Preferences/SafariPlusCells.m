@@ -31,12 +31,6 @@
   return [self initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SafariPlusHeaderCell" specifier:specifier];
 }
 
-- (void)dealloc
-{
-  [headerImageView release];
-  [super dealloc];
-}
-
 - (void)setFrame:(CGRect)frame
 {
   frame.origin.x = 0;

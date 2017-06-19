@@ -72,9 +72,9 @@
 	<string>عـام</string>
 	<key>GESTURE_ADDONS</key>
 	<string>اضافات لفته</string>
-	<key>HTTPS_EVERYWHERE</key>
+	<key>FORCE_HTTPS</key>
 	<string>HTTPS في كل مكان</string>
-	<key>HTTPS_EVERYWHERE_FOOTER</key>
+	<key>FORCE_HTTPS_FOOTER</key>
 	<string>منفذ بروتوكول HTTPS عالميا.
 ملاحظة: قد كسر المواقع التي لا تدعم HTTPS.</string>
 	<key>ICONS</key>

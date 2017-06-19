@@ -217,6 +217,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 - (void)setCustomUserAgent:(NSString *)arg1;
 //new methods below
 - (NSURL*)URLHandler:(NSURL*)URL;
+- (BOOL)shouldRequestHTTPS:(NSURL*)URL;
 @end
 
 @interface TabOverview : UIView {}

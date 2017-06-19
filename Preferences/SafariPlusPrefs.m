@@ -12,7 +12,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	return _specifiers;
@@ -31,7 +31,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"GeneralPrefs" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"GeneralPrefs" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"GENERAL"]];
@@ -40,13 +40,157 @@
 
 @end
 
+@implementation ExceptionsController
+
+- (NSArray *)specifiers
+{
+	if(!_specifiers)
+	{
+		if(!plist)
+		{
+			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+		}
+
+		if(![[plist allKeys] containsObject:@"ForceHTTPSExceptions"])
+		{
+			ForceHTTPSExceptions = [NSMutableArray new];
+			[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
+			[plist writeToFile:plistPath atomically:YES];
+		}
+		else
+		{
+			ForceHTTPSExceptions = [plist objectForKey:@"ForceHTTPSExceptions"];
+		}
+
+		NSMutableArray* specifiers = [NSMutableArray new];
+
+		PSSpecifier* URLListGroup = [PSSpecifier preferenceSpecifierNamed:@""
+								target:self
+									set:nil
+									get:nil
+								detail:nil
+									cell:PSGroupCell
+									edit:nil];
+
+		[specifiers addObject:URLListGroup];
+
+		for(int i = 0; i < [ForceHTTPSExceptions count]; i++)
+		{
+			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:ForceHTTPSExceptions[i]
+									target:self
+										set:@selector(setPreferenceValue:specifier:)
+										get:@selector(readPreferenceValue:)
+									detail:nil
+										cell:PSStaticTextCell
+										edit:nil];
+
+			[specifier setProperty:@YES forKey:@"enabled"];
+
+			[specifiers addObject:specifier];
+		}
+
+		PSSpecifier* space = [PSSpecifier preferenceSpecifierNamed:@""
+								target:self
+									set:nil
+									get:nil
+								detail:nil
+									cell:PSGroupCell
+									edit:nil];
+
+		PSSpecifier* addButton = [PSSpecifier preferenceSpecifierNamed:[LGShared localisedStringForKey:@"ADD"]
+								target:self
+									set:@selector(setPreferenceValue:specifier:)
+									get:@selector(readPreferenceValue:)
+								detail:nil
+									cell:PSButtonCell
+									edit:nil];
+
+		[addButton setProperty:@YES forKey:@"enabled"];
+		[addButton setButtonAction:@selector(addButtonPressed)];
+
+		[specifiers addObject:space];
+		[specifiers addObject:addButton];
+
+		_specifiers = (NSArray*)[specifiers copy];
+	}
+
+	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"FORCE_HTTPS_EXCEPTIONS_TITLE"]];
+	return _specifiers;
+}
+
+- (void)addButtonPressed
+{
+	UIAlertController * addExceptionAlert = [UIAlertController alertControllerWithTitle:[LGShared localisedStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
+											message:[LGShared localisedStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
+											preferredStyle:UIAlertControllerStyleAlert];
+
+	[addExceptionAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
+	{
+		textField.placeholder = [LGShared localisedStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
+		textField.textColor = [UIColor blueColor];
+		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+		textField.borderStyle = UITextBorderStyleRoundedRect;
+	}];
+
+	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[LGShared localisedStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
+	{
+		[addExceptionAlert dismissViewControllerAnimated:YES completion:nil];
+	}]];
+
+	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[LGShared localisedStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+	{
+        UITextField * URLField = addExceptionAlert.textFields[0];
+
+				[ForceHTTPSExceptions addObject:URLField.text];
+				[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
+				[plist writeToFile:plistPath atomically:YES];
+
+				PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:URLField.text
+										target:self
+											set:@selector(setPreferenceValue:specifier:)
+											get:@selector(readPreferenceValue:)
+										detail:nil
+											cell:PSStaticTextCell
+											edit:nil];
+
+				[specifier setProperty:@YES forKey:@"enabled"];
+
+				[[NSNotificationCenter defaultCenter] postNotificationName:@"com.opa334.safariplusprefs/ReloadExceptions" object:nil];
+
+				[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
+  }]];
+
+	[self presentViewController:addExceptionAlert animated:YES completion:nil];
+}
+
+- (id)_editButtonBarItem
+{
+	return nil;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return UITableViewCellEditingStyleDelete;
+}
+
+- (BOOL)performDeletionActionForSpecifier:(PSSpecifier*)specifier
+{
+	BOOL orig = [super performDeletionActionForSpecifier:specifier];
+	[ForceHTTPSExceptions removeObject:[specifier name]];
+	[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
+	[plist writeToFile:plistPath atomically:YES];
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"com.opa334.safariplusprefs/ReloadExceptions" object:nil];
+	return orig;
+}
+@end
+
 @implementation ActionPrefsController
 
 - (NSArray *)specifiers
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"ActionPrefs" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"ActionPrefs" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"ACTION_ADDONS"]];
@@ -106,7 +250,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"GesturePrefs" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"GesturePrefs" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"GESTURE_ADDONS"]];
@@ -136,7 +280,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"OtherPrefs" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"OtherPrefs" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"OTHER_ADDONS"]];
@@ -150,7 +294,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"ColorPrefs" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"ColorPrefs" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"COLOR_SETTINGS"]];
@@ -164,7 +308,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"NormalColorPrefs" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"NormalColorPrefs" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"NORMAL_MODE"]];
@@ -184,7 +328,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"PrivateColorPrefs" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"PrivateColorPrefs" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"PRIVATE_MODE"]];
@@ -204,7 +348,7 @@
 {
 	if(!_specifiers)
 	{
-		_specifiers = [[self loadSpecifiersFromPlistName:@"Credits" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"Credits" target:self];
 	}
 	[LGShared parseSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"CREDITS"]];

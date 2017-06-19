@@ -9,8 +9,15 @@
 
 /* General Settings */
 
-"HTTPS_EVERYWHERE_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: Might break sites that don't support HTTPS.";
-"HTTPS_EVERYWHERE" = "HTTPS Everywhere";
+"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: Might break sites that don't support HTTPS.";
+"FORCE_HTTPS" = "Force HTTPS";
+"FORCE_HTTPS_EXCEPTIONS" = "Exceptions...";
+"FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";
+"EDIT" = "Edit";
+"ADD" = "Add";
+"ADD_EXCEPTION_ALERT_TITLE" = "Add Exception";
+"ADD_EXCEPTION_ALERT_MESSAGE" = "Enter a domain where the HTTPS site should not be forced.\nExample: 'google.com'";
+"ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
 "OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
 "OPEN_IN_NEW_TAB" = "'Open in new Tab' Option";

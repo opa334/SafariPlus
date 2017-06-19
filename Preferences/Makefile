@@ -4,6 +4,7 @@ export SYSROOT = $(THEOS)/sdks/iPhoneOS9.3.sdk
 #remove the line above, if you have issues compiling
 
 BUNDLE_NAME = SafariPlusPrefs
+SafariPlusPrefs_CFLAGS = -fobjc-arc
 SafariPlusPrefs_FILES = SafariPlusPrefs.m SafariPlusCells.m
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit

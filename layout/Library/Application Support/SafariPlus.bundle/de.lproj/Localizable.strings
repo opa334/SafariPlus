@@ -9,8 +9,15 @@
 
 /* General Settings */
 
-"HTTPS_EVERYWHERE_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Kann zu Problemen mit Seiten führen, die kein HTTPS unterstützen.";
-"HTTPS_EVERYWHERE" = "Überall HTTPS benutzen";
+"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Kann zu Problemen mit Seiten führen, die kein HTTPS unterstützen.";
+"FORCE_HTTPS" = "HTTPS erzwingen";
+"FORCE_HTTPS_EXCEPTIONS" = "Ausnahmen...";
+"FORCE_HTTPS_EXCEPTIONS_TITLE" = "Ausnahmen";
+"EDIT" = "Bearbeiten";
+"ADD" = "Hinzufügen";
+"ADD_EXCEPTION_ALERT_TITLE" = "Ausnahme hinzufügen";
+"ADD_EXCEPTION_ALERT_MESSAGE" = "Gebe eine Domain ein, bei der HTTPS nicht erzwungen werden soll.\nBeispiel: 'google.com'";
+"ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
 "OPEN_IN_NEW_TAB_FOOTER" = "Fügt eine weitere 'In neuem Tab öffnen' Option zum Menü hinzu, das beim langen gedrückt halten von Links erscheint.\nStelle 'Links öffnen' in den Safari Einstellungen auf 'Im Hintergrund', um im Menü Zugriff auf beide Optionen zu haben.";
 "OPEN_IN_NEW_TAB" = "'In neuem Tab öffnen' Option";
@@ -71,8 +78,8 @@
 "DUPLICATE_ACTIVE_TAB" = "Aktiven Tab duplizieren";
 "CLOSE_ALL_TABS" = "Tabs vom Surfmodus schließen";
 "SWITCH_MODE" = "Surfmodus wechseln";
-"TAB_BACKWARD" = "Tab rückwärts wechseln";
-"TAB_FORWARD" = "Tab vorwärts wechseln";
+"TAB_BACKWARD" = "Tab nach hinten wechseln";
+"TAB_FORWARD" = "Tab nach vorne wechseln";
 "RELOAD_ACTIVE_TAB" = "Aktiven Tab neu laden";
 "REQUEST_DESTKOP_SITE" = "Desktop-Site anfordern";
 "OPEN_FIND_ON_PAGE" = "'Auf Seite suchen' öffnen";

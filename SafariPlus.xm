@@ -72,7 +72,6 @@ static NSString* bottomBarColorPrivate;
 /****** Other stuff ******/
 
 BOOL desktopButtonSelected;
-NSMutableDictionary* plist;
 
 /****** Safari Hooks ******/
 
@@ -724,10 +723,7 @@ NSMutableDictionary* plist;
   //Init plist for desktop button
   if(desktopButtonEnabled)
   {
-    if(!plist)
-    {
-      plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
-    }
+    NSMutableDictionary* plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
 
     if(![[plist allKeys] containsObject:@"desktopButtonSelected"])
     {
@@ -801,6 +797,7 @@ NSMutableDictionary* plist;
 %new
 - (void)updateButtonState
 {
+  NSMutableDictionary* plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
   [plist setObject:[NSNumber numberWithBool:desktopButtonSelected] forKey:@"desktopButtonSelected"];
   [plist writeToFile:plistPath atomically:YES];
 }
@@ -1055,34 +1052,46 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
   {
-    %orig([self URLHandler:arg1]);
+    [self loadURL:[self URLHandler:arg1] userDriven:NO];
+    return;
   }
-  else
-  {
-    %orig;
-  }
+
+  %orig;
 }
 
 - (void)reload
 {
-  if(desktopButtonEnabled && desktopButtonSelected)
+  if(forceHTTPSEnabled || desktopButtonEnabled)
   {
-    [self setCustomUserAgent:desktopUserAgent];
+    NSURL* currentURL = (NSURL*)[self URL];
+    NSURL* tmpURL = [self URLHandler:currentURL];
+    if(![[tmpURL absoluteString] isEqual:[currentURL absoluteString]])
+    {
+      [self loadURL:tmpURL userDriven:NO];
+      return;
+    }
   }
-  else if(desktopButtonEnabled && !desktopButtonSelected)
-  {
-    [self setCustomUserAgent:@""];
-  }
+
   %orig;
 }
 
 %new
 - (NSURL*)URLHandler:(NSURL*)URL
 {
-  if(forceHTTPSEnabled && [URL.port intValue] != 443 /*HTTPS port*/)
+  NSLog(@"URL: %@", URL);
+  NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
+  if(forceHTTPSEnabled)
   {
-    URL = [NSURL URLWithString:[[URL absoluteString] stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"]];
+    if([self shouldRequestHTTPS:URL])
+    {
+      URLComponents.scheme = @"https";
+    }
+    else
+    {
+      URLComponents.scheme = @"http";
+    }
   }
+
 
   if(desktopButtonEnabled && desktopButtonSelected)
   {
@@ -1093,7 +1102,9 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     [self setCustomUserAgent:@""];
   }
 
-  return URL;
+  NSLog(@"EndURL: %@", URLComponents.URL);
+
+  return URLComponents.URL;
 }
 
 //Exception because method uses NSString instead of NSURL
@@ -1104,13 +1115,16 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     NSString* newURL = arg1;
     if(forceHTTPSEnabled && newURL)
     {
-      if([newURL rangeOfString:@"http://"].location != NSNotFound)
+      if([self shouldRequestHTTPS:[NSURL URLWithString:arg1]])
       {
-        newURL = [newURL stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"];
-      }
-      else if([newURL rangeOfString:@"https://"].location == NSNotFound)
-      {
-        newURL = [@"https://" stringByAppendingString:newURL];
+        if([newURL rangeOfString:@"http://"].location != NSNotFound)
+        {
+          newURL = [newURL stringByReplacingOccurrencesOfString:@"http://" withString:@"https://"];
+        }
+        else if([newURL rangeOfString:@"https://"].location == NSNotFound)
+        {
+          newURL = [@"https://" stringByAppendingString:newURL];
+        }
       }
     }
 
@@ -1126,6 +1140,23 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     return %orig(newURL);
   }
   return %orig;
+}
+
+%new
+- (BOOL)shouldRequestHTTPS:(NSURL*)URL
+{
+  NSMutableDictionary* plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+
+  NSMutableArray* ForceHTTPSExceptions = [plist objectForKey:@"ForceHTTPSExceptions"];
+
+  for(int i = 0; i < [ForceHTTPSExceptions count]; i++)
+  {
+    if([[URL host] rangeOfString:ForceHTTPSExceptions[i]].location != NSNotFound)
+    {
+      return false;
+    }
+  }
+  return true;
 }
 
 %end

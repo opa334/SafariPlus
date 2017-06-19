@@ -5,15 +5,21 @@
 		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
-			footerText = "HTTPS_EVERYWHERE_FOOTER";
+			footerText = "FORCE_HTTPS_FOOTER";
 		},
 		{
 			cell = "PSSwitchCell";
 			default = false;
 			defaults = "com.opa334.safariplusprefs";
-			label = "HTTPS_EVERYWHERE";
+			label = "FORCE_HTTPS";
 			key = "forceHTTPSEnabled";
 			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "ExceptionsController";
+			label = "FORCE_HTTPS_EXCEPTIONS";
 		},
 		{
 			cell = "PSGroupCell";
