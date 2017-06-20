@@ -1116,7 +1116,12 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     NSString* newURL = arg1;
     if(forceHTTPSEnabled && newURL)
     {
-      if([self shouldRequestHTTPS:[NSURL URLWithString:arg1]])
+      if(([newURL rangeOfString:@"http://"].location == NSNotFound) && ([newURL rangeOfString:@"https://"].location == NSNotFound))
+      {
+        newURL = [@"http://" stringByAppendingString:newURL];
+      }
+
+      if([self shouldRequestHTTPS:[NSURL URLWithString:newURL]])
       {
         if([newURL rangeOfString:@"http://"].location != NSNotFound)
         {
