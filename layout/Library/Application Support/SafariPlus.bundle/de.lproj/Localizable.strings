@@ -9,7 +9,7 @@
 
 /* General Settings */
 
-"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Kann zu Problemen mit Seiten führen, die kein HTTPS unterstützen.";
+"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Ausnahmen können hinzugefügt werden, damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
 "FORCE_HTTPS" = "HTTPS erzwingen";
 "FORCE_HTTPS_EXCEPTIONS" = "Ausnahmen...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Ausnahmen";

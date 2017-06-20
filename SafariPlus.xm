@@ -1052,8 +1052,12 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 {
   if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
   {
-    [self loadURL:[self URLHandler:arg1] userDriven:NO];
-    return;
+    NSURL* newURL = [self URLHandler:arg1];
+    if(![[newURL absoluteString] isEqual:[arg1 absoluteString]])
+    {
+      [self loadURL:newURL userDriven:NO];
+      return;
+    }
   }
 
   %orig;
@@ -1078,7 +1082,6 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %new
 - (NSURL*)URLHandler:(NSURL*)URL
 {
-  NSLog(@"URL: %@", URL);
   NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
   if(forceHTTPSEnabled)
   {
@@ -1101,8 +1104,6 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   {
     [self setCustomUserAgent:@""];
   }
-
-  NSLog(@"EndURL: %@", URLComponents.URL);
 
   return URLComponents.URL;
 }

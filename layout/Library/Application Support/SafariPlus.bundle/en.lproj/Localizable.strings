@@ -9,7 +9,7 @@
 
 /* General Settings */
 
-"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: Might break sites that don't support HTTPS.";
+"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: You can add sites that don't support HTTPS to exceptions, to get them working again.";
 "FORCE_HTTPS" = "Force HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "Exceptions...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";

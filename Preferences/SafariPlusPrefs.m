@@ -89,28 +89,6 @@
 			[specifiers addObject:specifier];
 		}
 
-		PSSpecifier* space = [PSSpecifier preferenceSpecifierNamed:@""
-								target:self
-									set:nil
-									get:nil
-								detail:nil
-									cell:PSGroupCell
-									edit:nil];
-
-		PSSpecifier* addButton = [PSSpecifier preferenceSpecifierNamed:[LGShared localisedStringForKey:@"ADD"]
-								target:self
-									set:@selector(setPreferenceValue:specifier:)
-									get:@selector(readPreferenceValue:)
-								detail:nil
-									cell:PSButtonCell
-									edit:nil];
-
-		[addButton setProperty:@YES forKey:@"enabled"];
-		[addButton setButtonAction:@selector(addButtonPressed)];
-
-		[specifiers addObject:space];
-		[specifiers addObject:addButton];
-
 		_specifiers = (NSArray*)[specifiers copy];
 	}
 
@@ -128,6 +106,7 @@
 	{
 		textField.placeholder = [LGShared localisedStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
 		textField.textColor = [UIColor blueColor];
+		textField.keyboardType = UIKeyboardTypeURL;
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 		textField.borderStyle = UITextBorderStyleRoundedRect;
 	}];
@@ -139,25 +118,22 @@
 
 	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[LGShared localisedStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 	{
-        UITextField * URLField = addExceptionAlert.textFields[0];
+		UITextField * URLField = addExceptionAlert.textFields[0];
 
-				[ForceHTTPSExceptions addObject:URLField.text];
-				[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
-				[plist writeToFile:plistPath atomically:YES];
+		[ForceHTTPSExceptions addObject:URLField.text];
+		[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
+		[plist writeToFile:plistPath atomically:YES];
 
-				PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:URLField.text
-										target:self
-											set:@selector(setPreferenceValue:specifier:)
-											get:@selector(readPreferenceValue:)
-										detail:nil
-											cell:PSStaticTextCell
-											edit:nil];
+		PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:URLField.text
+								target:self
+									set:@selector(setPreferenceValue:specifier:)
+									get:@selector(readPreferenceValue:)
+								detail:nil
+									cell:PSStaticTextCell
+									edit:nil];
 
-				[specifier setProperty:@YES forKey:@"enabled"];
-
-				[[NSNotificationCenter defaultCenter] postNotificationName:@"com.opa334.safariplusprefs/ReloadExceptions" object:nil];
-
-				[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
+		[specifier setProperty:@YES forKey:@"enabled"];
+		[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
   }]];
 
 	[self presentViewController:addExceptionAlert animated:YES completion:nil];
@@ -165,7 +141,8 @@
 
 - (id)_editButtonBarItem
 {
-	return nil;
+	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed)];
+	return addButton;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -179,7 +156,6 @@
 	[ForceHTTPSExceptions removeObject:[specifier name]];
 	[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
 	[plist writeToFile:plistPath atomically:YES];
-	[[NSNotificationCenter defaultCenter] postNotificationName:@"com.opa334.safariplusprefs/ReloadExceptions" object:nil];
 	return orig;
 }
 @end
