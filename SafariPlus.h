@@ -3,19 +3,22 @@
 
 // (c) 2017 opa334
 
-#import <Cephei/HBPreferences.h>
+#import "SafariPlusUtil.h"
 #import <CoreImage/CoreImage.h>
 #import "libcolorpicker.h"
-#import "LGShared.h"
 #import "filePicker.h"
+#import "downloadsView.h"
+#import "downloadManager.h"
+#import "lib/CWStatusBarNotification.h"
+#import <UserNotifications/UserNotifications.h>
 
-NSString* bundlePath = @"/Library/Application Support/SafariPlus.bundle";
-NSString* plistPath = @"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist";
-NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4";
+#define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
+#define desktopUserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
 
-@class ApplicationShortcutController, BrowserController, SafariWebView, TabController, TabDocument, TabOverview, TiltedTabView, UnifiedField, WebBookmark;
+@class ApplicationShortcutController, BrowserController, BrowserRootViewController, BrowserToolbar, DownloadDispatcher, SafariWebView, TabController, TabDocument, TabOverview, TiltedTabView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
+
 @interface _UIBackdropView : UIView {}
 @property (nonatomic, retain) UIView *contentView;
 @property (nonatomic, retain) UIView *grayscaleTintView;
@@ -27,17 +30,11 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 
 /**** WebKit ****/
 
-@interface _WKActivatedElementInfo : NSObject {}
-@property (nonatomic, readonly) NSURL *URL;
-@property (nonatomic,readonly) long long type;
+@interface WKNavigationResponse () {}
+@property (nonatomic,readonly) NSURLRequest * _request;
 @end
 
-@interface _WKElementAction : NSObject {
-}
-+ (id)elementActionWithTitle:(id)arg1 actionHandler:(id /* block */)arg2;
-@end
-
-@interface WKFileUploadPanel : UIViewController <filePickerDelegate> {}
+@interface WKFileUploadPanel <filePickerDelegate> {}
 - (void)_presentPopoverWithContentViewController:(id)arg1 animated:(BOOL)arg2;
 - (void)_presentFullscreenViewController:(id)arg1 animated:(BOOL)arg2;
 - (void)_dismissDisplayAnimated:(BOOL)arg1;
@@ -46,12 +43,30 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 - (void)_cancel;
 @end
 
-@interface WKWebView : UIView
-@property (nonatomic, readonly) UIScrollView *scrollView;
+@interface _WKActivatedElementInfo : NSObject {}
+@property (nonatomic, readonly) NSURL *URL;
+@property (nonatomic,readonly) long long type;
 @end
 
+@interface _WKElementAction : NSObject {}
++ (id)elementActionWithTitle:(id)arg1 actionHandler:(id)arg2;
+@end
 
 /**** SafariServices ****/
+
+@interface SFCrossfadingLabel : UILabel {}
+@end
+
+@interface _SFBookmarkInfoViewController : UITableViewController {}
+@end
+
+@interface _SFDialogController : NSObject {}
+- (void)owningWebViewWillBecomeActive;
+@end
+
+@interface _SFDownloadController : NSObject {}
+- (void)_beginDownloadBackgroundTask:(id)arg1;
+@end
 
 @interface _SFFindOnPageView : UIView {}
 - (void)setShouldFocusTextField:(BOOL)arg1;
@@ -60,6 +75,9 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 
 @interface _SFFluidProgressView : UIView {}
 @property (nonatomic,retain) UIColor * progressBarFillColor;
+@end
+
+@interface _SFSiteIconView : UIImageView {}
 @end
 
 @interface _SFNavigationBar : UIView {}
@@ -95,10 +113,34 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 
 /**** Safari ****/
 
-@interface Application : UIApplication {}
+@protocol BrowserToolbarDelegate <NSObject>
+@optional
+- (void)presentAddTabPopoverFromButtonBar;
+- (void)addTabFromButtonBar;
+
+@required
+- (void)toggleBookmarksFromButtonBar;
+- (void)backFromButtonBar;
+- (void)forwardFromButtonBar;
+- (void)showActionPanelFromButtonBar;
+- (void)presentBookmarksLongPressMenuFromButtonBar;
+- (void)showTabsFromButtonBar;
+- (void)presentBackPopoverFromButtonBar;
+- (void)presentForwardPopoverFromButtonBar;
+- (void)presentTabExposePopoverFromButtonBar;
+- (CGPoint*)targetPointForButtonBarLinkImageAnimationIntoLayer:(id)arg1 proposedTargetPoint:(CGPoint)arg2;
+//added by me
+- (void)downloadsFromButtonBar;
+- (BOOL)usesTabBar;
+
+@end
+
+@interface Application : UIApplication <UIApplicationDelegate, UNUserNotificationCenterDelegate> {}
 @property (nonatomic,readonly) ApplicationShortcutController * shortcutController;
+@property (nonatomic,readonly) NSArray * browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new methods below
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
 - (void)updateButtonState;
 - (void)updateDesktopMode;
 - (void)autoCloseAction;
@@ -109,8 +151,10 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @property (assign,nonatomic) BrowserController * browserController;
 @end
 
-@interface BrowserController : UIResponder {}
+@interface BrowserController : UIResponder <BrowserToolbarDelegate> {}
 @property (nonatomic,readonly) TabController * tabController;
+@property (nonatomic,readonly) BrowserToolbar * bottomToolbar;
+@property (nonatomic,readonly) BrowserRootViewController * rootViewController;
 @property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
@@ -118,13 +162,19 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 - (void)updateTabOverviewFrame;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
+- (void)_presentModalViewController:(id)arg1 fromButtonIdentifier:(long long)arg2 animated:(BOOL)arg3 completion:(/*^block*/id)arg4;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)showFindOnPage; //iOS9
-//new methods below
+//new stuff below
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 - (void)handleURLSwipeLeft;
 - (void)handleURLSwipeRight;
 - (void)handleURLSwipeDown;
 - (void)handleSwipe:(NSInteger)swipeAction;
+- (void)downloadsFromButtonBar;
+- (BOOL)usesTabBar;
 @end
 
 //iOS9
@@ -133,10 +183,23 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 @end
 
+@interface BrowserRootViewController : UIViewController <RootControllerDownloadDelegate> {} //added delegate
+//new stuff below
+@property(nonatomic,retain) CWStatusBarNotification *statusBarNotification;
+- (void)dispatchNotificationWithText:(NSString*)text;
+- (void)dismissNotificationWithCompletion:(void (^)(void))completion;
+- (void)presentViewController:(id)viewController;
+@end
+
 @interface BrowserToolbar : _SFToolbar {}
+@property (nonatomic,weak) id<BrowserToolbarDelegate> browserDelegate;
 @property (nonatomic,retain) UIToolbar * replacementToolbar;
 - (void)updateTintColor;
-- (BOOL)getBrowsingMode; //New
+//new stuff below
+@property (nonatomic,retain) UIBarButtonItem * _downloadsItem;
+- (void)setDownloadsEnabled:(BOOL)enabled;
+- (BOOL)getBrowsingMode;
+- (BOOL)usesTabBar;
 @end
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {}
@@ -149,6 +212,7 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @interface CompletionListTableViewController : UITableViewController {}
 @end
 
+
 @interface FindOnPageView : _SFFindOnPageView {}
 @end
 
@@ -160,8 +224,9 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @end
 
 @interface NavigationBar : _SFNavigationBar {}
-//new methods below
+@property (nonatomic,readonly) UnifiedField * textField;
 - (void)_updateControlTints;
+//new methods below
 - (void)didSwipe:(UISwipeGestureRecognizer*)swipe;
 - (BOOL)getBrowsingMode;
 @end
@@ -204,9 +269,11 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 @property (nonatomic,readonly) SafariWebView * webView;
 @property (nonatomic,copy) NSString * customUserAgent;
 @property (nonatomic,readonly) FindOnPageView * findOnPageView;
+@property (nonatomic,retain) _SFDownloadController * downloadController;
 - (id)URL;
 - (BOOL)isBlankDocument;
 - (id)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
+- (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
 - (void)reload;
 - (BOOL)privateBrowsingEnabled;
 - (WebBookmark *)readingListBookmark;
@@ -215,6 +282,8 @@ NSString* desktopUserAgent = @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) A
 - (id)loadURL:(id)arg1 userDriven:(BOOL)arg2;
 - (id)loadUserTypedAddress:(NSString*)arg1;
 - (void)setCustomUserAgent:(NSString *)arg1;
+- (void)stopLoading;
+- (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
 //new methods below
 - (NSURL*)URLHandler:(NSURL*)URL;
 - (BOOL)shouldRequestHTTPS:(NSURL*)URL;

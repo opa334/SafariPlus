@@ -20,35 +20,6 @@
 			label = "LOCAL_FILE_BUTTON";
 		},
 		{
-			action = fileLink;
-			cell = PSButtonCell;
-			icon = "File.png";
-			label = "PICKER_FILE_ENTRY";
-		},
-		{
-			action = directoryLink;
-			cell = PSButtonCell;
-			icon = "Directory.png";
-			label = "PICKER_DIRECTORY_ENTRY";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "STOLEN_FROM";
-		},
-		{
-			action = LockGlyphXRepoLink;
-			cell = PSButtonCell;
-			icon = "GitHub.png";
-			label = "LockGlyphX";
-		},
-		{
-			action = LockGlyphXFileLink;
-			cell = PSButtonCell;
-			icon = "GitHub.png";
-			label = "LockGlyphXPrefs.mm";
-		},
-		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
 			label = "PICKER_INSPIRED";

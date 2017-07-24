@@ -1,11 +1,11 @@
 include $(THEOS)/makefiles/common.mk
 
 export SYSROOT = $(THEOS)/sdks/iPhoneOS9.3.sdk
-#remove the line above, if you have issues compiling
+#remove the line above if you have issues while compiling
 
 BUNDLE_NAME = SafariPlusPrefs
 SafariPlusPrefs_CFLAGS = -fobjc-arc
-SafariPlusPrefs_FILES = SafariPlusPrefs.m SafariPlusCells.m
+SafariPlusPrefs_FILES = SPPreferenceLocalizationManager.xm SafariPlusPrefs.m SafariPlusCells.m
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
 SafariPlusPrefs_LIBRARIES = colorpicker

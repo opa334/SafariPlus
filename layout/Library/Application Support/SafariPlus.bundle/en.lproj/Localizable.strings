@@ -2,6 +2,7 @@
 
 "GENERAL" = "General";
 "ACTION_ADDONS" = "Action Addons";
+"DOWNLOAD_ADDONS" = "Download Addons";
 "GESTURE_ADDONS" = "Gesture Addons";
 "OTHER_ADDONS" = "Other Addons";
 "COLOR_SETTINGS" = "Color Settings";
@@ -9,7 +10,7 @@
 
 /* General Settings */
 
-"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: You can add sites that don't support HTTPS to exceptions, to get them working again.";
+"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: You can add sites that don't support HTTPS to exceptions to get them working again.";
 "FORCE_HTTPS" = "Force HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "Exceptions...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";
@@ -22,7 +23,7 @@
 "OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
 "OPEN_IN_NEW_TAB" = "'Open in new Tab' Option";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Adds a new option to the document upload menu, that lets you pick any file from the root of your device.\nNOTE: This option affects any browser that uses webkit (eg. Google Chrome), not just Safari.";
+"UPLOAD_ANY_FILE_FOOTER" = "Adds a new option to the document upload menu that lets you pick any file from the root of your device. You can also select and upload multiple files through long pressing on a file.\nNOTE: This option affects any browser that uses webkit (eg. Google Chrome), not just Safari.";
 "UPLOAD_ANY_FILE" = "Upload any File";
 
 "DESKTOP_SWITCH_FOOTER" = "Adds a button to the tab switcher, which you can use to globally switch between mobile / desktop mode.";
@@ -30,6 +31,27 @@
 
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Long press on search / URL suggestions to insert them into the URL bar.";
 "LONG_PRESS_SUGGESTIONS" = "Long Press Suggestions";
+
+/* Download Settings */
+
+"ENHANCED_DOWNLOADS" = "Enhanced Downloads";
+"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/User/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When you close Safari from the app switcher, all pending downloads will be cancelled.";
+
+"INSTANT_DOWNLOAD" = "Instant Download";
+"INSTANT_DOWNLOAD_FOOTER" = "Suppresses the download alert and always chooses the selcted option by default.";
+"OPTION" = "Option";
+
+"CUSTOM_DEFAULT_PATH" = "Custom Default Path";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\nNote: Due to missing root privileges, it's only possible to download files inside the /User/ (/private/var/mobile) directory!";
+
+"ONLY_DOWNLOAD_ON_WIFI" = "Only Download on Wifi";
+"ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Only allow downloading while the device is connected to a wifi network.";
+
+"DISABLE_PUSH_NOTIFICATIONS" = "Disable Push Notifications";
+"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "By default, you will recieve a push notification when a download finishes and the app is inactive. This option will disable that.";
+
+"DISABLE_BAR_NOTIFICATIONS" = "Disable Status Bar Notifications";
+"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "By default, you will recieve a status bar notification when a download starts / finishes and the app is active. This option will disable that.";
 
 /* Action Settings */
 
@@ -41,16 +63,16 @@
 
 "CHANGE_MODE_ON" = "Change browsing mode on...";
 
-"LAUNCH_MODE_FOOTER" = "Changes to specified browsing mode, when Safari is launched.";
+"LAUNCH_MODE_FOOTER" = "Changes to specified browsing mode when Safari is launched.";
 "LAUNCH_MODE_LABEL" = "App Start";
 
-"RESUME_FOOTER" = "Changes to specified browsing mode, when Safari is resumed.";
+"RESUME_FOOTER" = "Changes to specified browsing mode when Safari is resumed.";
 "RESUME_LABEL" = "App Resume";
 
-"EXTERNAL_URL_FOOTER" = "Changes to specified browsing mode, when an external URL (from another app) is opened with Safari.";
+"EXTERNAL_URL_FOOTER" = "Changes to specified browsing mode when an external URL (from another app) is opened with Safari.";
 "EXTERNAL_URL_LABEL" = "External Link opened";
 
-"AUTO_CLOSE_TABS_FOOTER" = "Closes tabs of specified browsing mode, when the specified case occurs.";
+"AUTO_CLOSE_TABS_FOOTER" = "Closes tabs of specified browsing mode when the specified case occurs.";
 "AUTO_CLOSE_TABS_LABEL" = "Auto-close Tabs";
 "SAFARI_CLOSED" = "Safari closed";
 "SAFARI_MINIMIZED" = "Safari minimized";
@@ -134,8 +156,37 @@
 "PICKER_INSPIRED" = "File picker inspired by";
 
 /* In app */
-"OPEN_IN_NEW_TAB_OPTION" = "Open in New Tab";
 "LOCAL_FILE" = "Local File";
 
 /* File picker */
+"DISMISS" = "Dismiss";
 "CANCEL" = "Cancel";
+"UPLOAD" = "Upload";
+
+/* Downloads */
+"DOWNLOAD" = "Download";
+"DOWNLOAD_TO" = "Download to...";
+"OPEN" = "Open";
+"OPEN_IN" = "Open in...";
+"SHOW_IN_FILZA" = "Show in Filza";
+"DELETE_FILE" = "Delete File";
+"WARNING" = "Warning!";
+"DELETE_FILE_MESSAGE" = "Are you sure you want to permanently delete the file <fn>? Recovering it later is not possible!";
+"DELETE" = "Delete";
+"DOWNLOAD_STARTED" = "Download started";
+"DOWNLOAD_SUCCESS" = "Download succeeded";
+"ERROR" = "Error";
+"FILE_EXISTS_MESSAGE" = "A file already exists at the target path!";
+"REPLACE_FILE" = "Replace File";
+"CHANGE_PATH" = "Change Download Path";
+"PENDING_DOWNLOADS" = "Pending Downloads";
+"FILES" = "Files";
+"CHOOSE" = "Choose";
+"START_DOWNLOAD" = "Start Download";
+"CHOOSE_FILENAME" = "Choose Filename";
+"FILENAME" = "Filename";
+"CLOSE" = "Close";
+"CLOSE_PICKER" = "Close Picker";
+"WRONG_PATH_MESSAGE" = "Due to missing root permissions, you can only download to paths inside the /User (/private/var/mobile) directory. Please choose a different path.";
+"PLAY" = "Play";
+"CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";

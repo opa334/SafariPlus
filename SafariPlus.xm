@@ -5,72 +5,12 @@
 
 #import "SafariPlus.h"
 
-/****** Preference variables ******/
+/****** Variables ******/
 
-HBPreferences *preferences;
-
-static BOOL enableFullscreenScrolling;
-static BOOL forceHTTPSEnabled;
-static BOOL disablePrivateMode;
-
-static BOOL forceModeOnStartEnabled;
-static NSInteger forceModeOnStartFor;
-static BOOL forceModeOnResumeEnabled;
-static NSInteger forceModeOnResumeFor;
-static BOOL forceModeOnExternalLinkEnabled;
-static NSInteger forceModeOnExternalLinkFor;
-static BOOL autoCloseTabsEnabled;
-static NSInteger autoCloseTabsOn;
-static NSInteger autoCloseTabsFor;
-
-static BOOL URLLeftSwipeGestureEnabled;
-static NSInteger URLLeftSwipeAction;
-static BOOL URLRightSwipeGestureEnabled;
-static NSInteger URLRightSwipeAction;
-static BOOL URLDownSwipeGestureEnabled;
-static NSInteger URLDownSwipeAction;
-static BOOL gestureBackground;
-
-static BOOL openInNewTabOptionEnabled;
-static BOOL desktopButtonEnabled;
-static BOOL longPressSuggestionsEnabled;
-
-static BOOL appTintColorNormalEnabled;
-static NSString* appTintColorNormal;
-static BOOL topBarColorNormalEnabled;
-static NSString* topBarColorNormal;
-static BOOL URLFontColorNormalEnabled;
-static NSString* URLFontColorNormal;
-static BOOL progressBarColorNormalEnabled;
-static NSString* progressBarColorNormal;
-static BOOL tabTitleColorNormalEnabled;
-static NSString* tabTitleColorNormal;
-static BOOL reloadColorNormalEnabled;
-static NSString* reloadColorNormal;
-static BOOL lockIconColorNormalEnabled;
-static NSString* lockIconColorNormal;
-static BOOL bottomBarColorNormalEnabled;
-static NSString* bottomBarColorNormal;
-
-static BOOL appTintColorPrivateEnabled;
-static NSString* appTintColorPrivate;
-static BOOL topBarColorPrivateEnabled;
-static NSString* topBarColorPrivate;
-static BOOL URLFontColorPrivateEnabled;
-static NSString* URLFontColorPrivate;
-static BOOL progressBarColorPrivateEnabled;
-static NSString* progressBarColorPrivate;
-static BOOL tabTitleColorPrivateEnabled;
-static NSString* tabTitleColorPrivate;
-static BOOL reloadColorPrivateEnabled;
-static NSString* reloadColorPrivate;
-static BOOL lockIconColorPrivateEnabled;
-static NSString* lockIconColorPrivate;
-static BOOL bottomBarColorPrivateEnabled;
-static NSString* bottomBarColorPrivate;
-
-/****** Other stuff ******/
-
+SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
+SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
+NSBundle* MSBundle = [NSBundle mainBundle];
+NSBundle* SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/SafariPlus.bundle"];
 BOOL desktopButtonSelected;
 
 /****** Safari Hooks ******/
@@ -79,14 +19,14 @@ BOOL desktopButtonSelected;
 
 %hook Application
 
-//Gets called to update the tabs on startup
+//Used to update the tabs on startup
 %new
 - (void)updateDesktopMode
 {
   [self.shortcutController.browserController.tabController reloadTabsIfNeeded];
 }
 
-//Gets called to switch mode based on the setting
+//Used to switch mode based on the setting
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
@@ -102,11 +42,11 @@ BOOL desktopButtonSelected;
   }
 }
 
-//Gets called to close tabs based on the setting
+//Used to close tabs based on the setting
 %new
 - (void)autoCloseAction
 {
-  switch(autoCloseTabsFor)
+  switch(preferenceManager.autoCloseTabsFor)
   {
     case 1: //Active mode
     [self.shortcutController.browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
@@ -154,6 +94,24 @@ BOOL desktopButtonSelected;
 
 %hook BrowserController
 
+//Present downloads view
+%new
+- (void)downloadsFromButtonBar
+{
+  downloadsNavigationController* downloadsController = [[downloadsNavigationController alloc] init];
+
+  dispatch_async(dispatch_get_main_queue(), ^
+  {
+    [self.rootViewController presentViewController:downloadsController animated:YES completion:^
+    {
+      if([((downloadsTableViewController*)downloadsController.visibleViewController).downloadsAtCurrentPath count] != 0)
+      {
+        [(downloadsTableViewController*)downloadsController.visibleViewController reloadDataAndDataSources]; //Fixes stuck download if the download finishes while the view presents
+      }
+    }];
+  });
+}
+
 //URL Swipe actions
 %new
 - (void)handleSwipe:(NSInteger)swipeAction
@@ -171,7 +129,7 @@ BOOL desktopButtonSelected;
     break;
 
     case 3: //Duplicate active tab
-    [self loadURLInNewTab:[self.tabController.activeTabDocument URL] inBackground:gestureBackground animated:YES];
+    [self loadURLInNewTab:[self.tabController.activeTabDocument URL] inBackground:preferenceManager.gestureBackground animated:YES];
     break;
 
     case 4: //Close all tabs from active mode
@@ -225,6 +183,25 @@ BOOL desktopButtonSelected;
     [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
   }
 }
+
+%end
+
+%hook BrowserRootViewController
+
+//Initialise status bar notifications
+- (void)viewDidLoad
+{
+  %orig;
+  if(preferenceManager.enhancedDownloadsEnabled && !preferenceManager.disableBarNotificationsEnabled && !self.statusBarNotification)
+  {
+    self.statusBarNotification = [CWStatusBarNotification new];
+    self.statusBarNotification.notificationLabelBackgroundColor = [UIColor blueColor];
+    self.statusBarNotification.notificationAnimationInStyle = CWNotificationAnimationStyleTop;
+    self.statusBarNotification.notificationAnimationOutStyle = CWNotificationAnimationStyleTop;
+    [downloadManager sharedInstance].rootControllerDelegate = self;
+  }
+}
+
 %end
 
 %hook TabOverview
@@ -235,14 +212,14 @@ BOOL desktopButtonSelected;
 - (void)layoutSubviews
 {
   %orig;
-  if(desktopButtonEnabled)
+  if(preferenceManager.desktopButtonEnabled)
   {
     if(!self.desktopModeButton)
     {
       UIButton* desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
-      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
-      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+      [desktopModeButton setImage:[UIImage imageNamed:@"desktopButtonInactive.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+      [desktopModeButton setImage:[UIImage imageNamed:@"desktopButtonActive.png" inBundle:SPBundle compatibleWithTraitCollection:nil]  forState:UIControlStateSelected];
       desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
       desktopModeButton.layer.cornerRadius = 4;
       desktopModeButton.adjustsImageWhenHighlighted = true;
@@ -294,11 +271,11 @@ BOOL desktopButtonSelected;
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
   BOOL tabBar = ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.usesTabBar;
-  if(openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
+  if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
   {
     NSMutableArray* options = %orig;
 
-    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[localizationManager localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:^
     {
       [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
     }];
@@ -313,19 +290,20 @@ BOOL desktopButtonSelected;
 %end
 
 %hook NavigationBar
+
 //Lock icon color
 - (id)_tintForLockImage:(BOOL)arg1
 {
-  if(lockIconColorNormalEnabled || lockIconColorPrivateEnabled)
+  if(preferenceManager.lockIconColorNormalEnabled || preferenceManager.lockIconColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
-    if(lockIconColorNormalEnabled && !privateMode)
+    if(preferenceManager.lockIconColorNormalEnabled && !privateMode)
     {
-      return LCPParseColorString(lockIconColorNormal, @"#FFFFFF");
+      return LCPParseColorString(preferenceManager.lockIconColorNormal, @"#FFFFFF");
     }
-    else if(lockIconColorPrivateEnabled && privateMode)
+    else if(preferenceManager.lockIconColorPrivateEnabled && privateMode)
     {
-      return LCPParseColorString(lockIconColorPrivate, @"#FFFFFF");
+      return LCPParseColorString(preferenceManager.lockIconColorPrivate, @"#FFFFFF");
     }
   }
 
@@ -386,7 +364,7 @@ BOOL desktopButtonSelected;
 
 %hook Application
 
-//Gets called to update the tabs on startup
+//Used to update the tabs on startup
 %new
 - (void)updateDesktopMode
 {
@@ -394,7 +372,7 @@ BOOL desktopButtonSelected;
   [browserController.tabController reloadTabsIfNeeded];
 }
 
-//Gets called to switch mode based on the setting
+//Used to switch mode based on the setting
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
@@ -412,13 +390,13 @@ BOOL desktopButtonSelected;
   }
 }
 
-//Gets called to close tabs based on the setting
+//Used to close tabs based on the setting
 %new
 - (void)autoCloseAction
 {
   BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_controller");
 
-  switch(autoCloseTabsFor)
+  switch(preferenceManager.autoCloseTabsFor)
   {
     case 1: //Active mode
     [browserController.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
@@ -466,6 +444,24 @@ BOOL desktopButtonSelected;
 
 %hook BrowserController
 
+//Present downloads view
+%new
+- (void)downloadsFromButtonBar
+{
+  downloadsNavigationController* downloadsController = [[downloadsNavigationController alloc] init];
+
+  dispatch_async(dispatch_get_main_queue(), ^
+  {
+    [MSHookIvar<BrowserRootViewController*>(self, "_rootViewController") presentViewController:downloadsController animated:YES completion:^
+    {
+      if([((downloadsTableViewController*)downloadsController.visibleViewController).downloadsAtCurrentPath count] != 0)
+      {
+        [(downloadsTableViewController*)downloadsController.visibleViewController reloadDataAndDataSources]; //Fixes stuck download if the download finishes while the view presents
+      }
+    }];
+  });
+}
+
 //URL Swipe actions
 %new
 - (void)handleSwipe:(NSInteger)swipeAction
@@ -483,7 +479,7 @@ BOOL desktopButtonSelected;
     break;
 
     case 3: //Duplicate active tab
-    [self loadURLInNewWindow:[self.tabController.activeTabDocument URL] inBackground:gestureBackground animated:YES];
+    [self loadURLInNewWindow:[self.tabController.activeTabDocument URL] inBackground:preferenceManager.gestureBackground animated:YES];
     break;
 
     case 4: //Close all tabs from active mode
@@ -558,6 +554,29 @@ BOOL desktopButtonSelected;
 
 %end
 
+%hook BrowserRootViewController
+
+//Initialise status bar notifications
+- (id)init
+{
+  self = %orig;
+  if(preferenceManager.enhancedDownloadsEnabled)
+  {
+    [downloadManager sharedInstance].rootControllerDelegate = self;
+
+    if(!preferenceManager.disableBarNotificationsEnabled)
+    {
+      self.statusBarNotification = [CWStatusBarNotification new];
+      self.statusBarNotification.notificationLabelBackgroundColor = [UIColor blueColor];
+      self.statusBarNotification.notificationAnimationInStyle = CWNotificationAnimationStyleTop;
+      self.statusBarNotification.notificationAnimationOutStyle = CWNotificationAnimationStyleTop;
+    }
+  }
+  return self;
+}
+
+%end
+
 %hook TabOverview
 
 %property (nonatomic,retain) UIButton *desktopModeButton;
@@ -566,14 +585,13 @@ BOOL desktopButtonSelected;
 - (void)layoutSubviews
 {
   %orig;
-  if(desktopButtonEnabled)
+  if(preferenceManager.desktopButtonEnabled)
   {
     if(!self.desktopModeButton)
     {
       UIButton* desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-
-      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
-      [desktopModeButton setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+      [desktopModeButton setImage:[UIImage imageNamed:@"desktopButtonInactive.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+      [desktopModeButton setImage:[UIImage imageNamed:@"desktopButtonActive.png" inBundle:SPBundle compatibleWithTraitCollection:nil]  forState:UIControlStateSelected];
       desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
       desktopModeButton.layer.cornerRadius = 4;
       desktopModeButton.adjustsImageWhenHighlighted = true;
@@ -626,11 +644,11 @@ BOOL desktopButtonSelected;
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
   BOOL tabBar = MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.usesTabBar;
-  if(openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
+  if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
   {
     NSMutableArray* options = %orig;
 
-    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[LGShared localisedStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
     {
       BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
       [browserController loadURLInNewWindow:arg1.URL inBackground:NO];
@@ -647,18 +665,18 @@ BOOL desktopButtonSelected;
 
 %hook NavigationBar
 //Lock icon color
--(id)_lockImageWithTint:(id)arg1 usingMiniatureVersion:(BOOL)arg2
+- (id)_lockImageWithTint:(id)arg1 usingMiniatureVersion:(BOOL)arg2
 {
-  if(lockIconColorNormalEnabled || lockIconColorPrivateEnabled)
+  if(preferenceManager.lockIconColorNormalEnabled || preferenceManager.lockIconColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
-    if(lockIconColorNormalEnabled && !privateMode)
+    if(preferenceManager.lockIconColorNormalEnabled && !privateMode)
     {
-      arg1 = LCPParseColorString(lockIconColorNormal, @"#FFFFFF");
+      arg1 = LCPParseColorString(preferenceManager.lockIconColorNormal, @"#FFFFFF");
     }
-    else if(lockIconColorPrivateEnabled && privateMode)
+    else if(preferenceManager.lockIconColorPrivateEnabled && privateMode)
     {
-      arg1 = LCPParseColorString(lockIconColorPrivate, @"#FFFFFF");
+      arg1 = LCPParseColorString(preferenceManager.lockIconColorPrivate, @"#FFFFFF");
     }
     return %orig(arg1, arg2);
   }
@@ -718,34 +736,53 @@ BOOL desktopButtonSelected;
 
 
 %hook Application
+
+%new
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
+{
+  //The bare existence of this method causes background downloads to finish properly...
+  //didFinishDownloadingToURL gets called, don't ask me why tho :D
+  //Otherwise files would only be moved on the next app-resume
+  //I presume the application gets resumed if this method exists
+
+  dispatch_async(dispatch_get_main_queue(),
+  ^{
+    completionHandler();
+  });
+}
+
 - (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
 {
   //Init plist for desktop button
-  if(desktopButtonEnabled)
+  if(preferenceManager.desktopButtonEnabled)
   {
-    NSMutableDictionary* plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
+		{
+      //Create plist if it does not exist already
+			[@{} writeToFile:otherPlistPath atomically:NO];
+		}
 
-    if(![[plist allKeys] containsObject:@"desktopButtonSelected"])
+    NSMutableDictionary* otherPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
+
+    if(![[otherPlist allKeys] containsObject:@"desktopButtonSelected"])
     {
-      [plist setObject:[NSNumber numberWithBool:NO] forKey:@"desktopButtonSelected"];
-      [plist writeToFile:plistPath atomically:YES];
+      //Create bool if it does not exist already
+      [otherPlist setObject:[NSNumber numberWithBool:NO] forKey:@"desktopButtonSelected"];
+      [otherPlist writeToFile:otherPlistPath atomically:YES];
     }
 
-    if([[plist objectForKey:@"desktopButtonSelected"] boolValue])
-    {
-      desktopButtonSelected = YES;
-    }
+    desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
   }
 
   BOOL orig = %orig;
 
   //Auto switch mode on launch
-  if(forceModeOnStartEnabled)
+  if(preferenceManager.forceModeOnStartEnabled)
   {
-    [self modeSwitchAction:forceModeOnStartFor];
+    [self modeSwitchAction:preferenceManager.forceModeOnStartFor];
   }
 
-  if(desktopButtonEnabled)
+  if(preferenceManager.desktopButtonEnabled)
   {
     [self updateDesktopMode];
   }
@@ -753,22 +790,22 @@ BOOL desktopButtonSelected;
   return orig;
 }
 
-//Auto switch mode on resume
+//Auto switch mode on app resume
 - (void)applicationWillEnterForeground:(id)arg1
 {
   %orig;
-  if(forceModeOnResumeEnabled)
+  if(preferenceManager.forceModeOnResumeEnabled)
   {
-    [self modeSwitchAction:forceModeOnResumeFor];
+    [self modeSwitchAction:preferenceManager.forceModeOnResumeFor];
   }
 }
 
 //Auto switch mode on external URL opened
--(void)applicationOpenURL:(id)arg1
+- (void)applicationOpenURL:(id)arg1
 {
-  if(forceModeOnExternalLinkEnabled && arg1)
+  if(preferenceManager.forceModeOnExternalLinkEnabled && arg1)
   {
-    [self modeSwitchAction:forceModeOnExternalLinkFor];
+    [self modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
   }
   return %orig;
 }
@@ -776,7 +813,7 @@ BOOL desktopButtonSelected;
 //Auto close tabs when Safari gets closed
 - (void)applicationWillTerminate
 {
-  if(autoCloseTabsEnabled && autoCloseTabsOn == 1 /*Safari closed*/)
+  if(preferenceManager.autoCloseTabsEnabled && preferenceManager.autoCloseTabsOn == 1 /*Safari closed*/)
   {
     [self autoCloseAction];
   }
@@ -787,29 +824,38 @@ BOOL desktopButtonSelected;
 //Auto close tabs when Safari gets minimized
 - (void)applicationDidEnterBackground:(id)arg1
 {
-  if(autoCloseTabsEnabled && autoCloseTabsOn == 2 /*Safari minimized*/)
+  if(preferenceManager.autoCloseTabsEnabled && preferenceManager.autoCloseTabsOn == 2 /*Safari minimized*/)
   {
     [self autoCloseAction];
   }
+
   %orig;
 }
 
+//Write current status of desktop button to plist
 %new
 - (void)updateButtonState
 {
-  NSMutableDictionary* plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
-  [plist setObject:[NSNumber numberWithBool:desktopButtonSelected] forKey:@"desktopButtonSelected"];
-  [plist writeToFile:plistPath atomically:YES];
+  NSMutableDictionary* otherPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
+  [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected] forKey:@"desktopButtonSelected"];
+  [otherPlist writeToFile:otherPlistPath atomically:YES];
 }
 
 %end
 
 %hook BrowserController
 
+//Returns status of tabbar (delegate function)
+%new
+- (BOOL)usesTabBar
+{
+  return [self.tabController usesTabBar];
+}
+
 //Full screen scrolling
 - (BOOL)_isVerticallyConstrained
 {
-  if(enableFullscreenScrolling)
+  if(preferenceManager.enableFullscreenScrolling)
   {
     return true;
   }
@@ -820,7 +866,7 @@ BOOL desktopButtonSelected;
 //Fully disable private mode
 - (BOOL)isPrivateBrowsingAvailable
 {
-  if(disablePrivateMode)
+  if(preferenceManager.disablePrivateMode)
   {
     return false;
   }
@@ -828,10 +874,11 @@ BOOL desktopButtonSelected;
   return %orig;
 }
 
+//Update tabs according to desktop button status when user toggles browsing mode
 - (void)togglePrivateBrowsing
 {
   %orig;
-  if(desktopButtonEnabled)
+  if(preferenceManager.desktopButtonEnabled)
   {
     [self.tabController reloadTabsIfNeeded];
   }
@@ -839,42 +886,42 @@ BOOL desktopButtonSelected;
 
 //Add swipe gestures to URL bar
 
-UISwipeGestureRecognizer *swipeLeftGestureRecognizer;
-UISwipeGestureRecognizer *swipeRightGestureRecognizer;
-UISwipeGestureRecognizer *swipeDownGestureRecognizer;
+%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
+%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
+%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 
 - (NavigationBar *)navigationBar
 {
-  if(URLLeftSwipeGestureEnabled || URLRightSwipeGestureEnabled || URLDownSwipeGestureEnabled)
+  if(preferenceManager.URLLeftSwipeGestureEnabled || preferenceManager.URLRightSwipeGestureEnabled || preferenceManager.URLDownSwipeGestureEnabled)
   {
     id orig = %orig;
     _SFNavigationBarURLButton* URLOutline = MSHookIvar<_SFNavigationBarURLButton*>(orig, "_URLOutline");
-    if(URLLeftSwipeGestureEnabled)
+    if(preferenceManager.URLLeftSwipeGestureEnabled)
     {
-      if(!swipeLeftGestureRecognizer)
+      if(!self.URLBarSwipeLeftGestureRecognizer)
       {
-        swipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
-        swipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+        self.URLBarSwipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+        self.URLBarSwipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+        [URLOutline addGestureRecognizer:self.URLBarSwipeLeftGestureRecognizer];
       }
-      [URLOutline addGestureRecognizer:swipeLeftGestureRecognizer];
     }
-    if(URLRightSwipeGestureEnabled)
+    if(preferenceManager.URLRightSwipeGestureEnabled)
     {
-      if(!swipeRightGestureRecognizer)
+      if(!self.URLBarSwipeRightGestureRecognizer)
       {
-        swipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
-        swipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        self.URLBarSwipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+        self.URLBarSwipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+        [URLOutline addGestureRecognizer:self.URLBarSwipeRightGestureRecognizer];
       }
-      [URLOutline addGestureRecognizer:swipeRightGestureRecognizer];
     }
-    if(URLDownSwipeGestureEnabled)
+    if(preferenceManager.URLDownSwipeGestureEnabled)
     {
-      if(!swipeDownGestureRecognizer)
+      if(!self.URLBarSwipeDownGestureRecognizer)
       {
-        swipeDownGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
-        swipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+        self.URLBarSwipeDownGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+        self.URLBarSwipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+        [URLOutline addGestureRecognizer:self.URLBarSwipeDownGestureRecognizer];
       }
-      [URLOutline addGestureRecognizer:swipeDownGestureRecognizer];
     }
     return orig;
   }
@@ -888,15 +935,15 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   switch(swipe.direction)
   {
     case UISwipeGestureRecognizerDirectionLeft:
-    [self handleSwipe:URLLeftSwipeAction];
+    [self handleSwipe:preferenceManager.URLLeftSwipeAction];
     break;
 
     case UISwipeGestureRecognizerDirectionRight:
-    [self handleSwipe:URLRightSwipeAction];
+    [self handleSwipe:preferenceManager.URLRightSwipeAction];
     break;
 
     case UISwipeGestureRecognizerDirectionDown:
-    [self handleSwipe:URLDownSwipeAction];
+    [self handleSwipe:preferenceManager.URLDownSwipeAction];
     break;
   }
 }
@@ -907,10 +954,11 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 %property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
 
--(void)tiltedTabViewDidPresent:(id)arg1
+//Set state of desktop button
+- (void)tiltedTabViewDidPresent:(id)arg1
 {
   %orig;
-  if(desktopButtonEnabled)
+  if(preferenceManager.desktopButtonEnabled)
   {
     if(desktopButtonSelected)
     {
@@ -926,9 +974,10 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 
 //Desktop mode button : Portrait
+
 - (NSArray *)tiltedTabViewToolbarItems
 {
-  if(desktopButtonEnabled)
+  if(preferenceManager.desktopButtonEnabled)
   {
     NSArray* old = %orig;
 
@@ -936,8 +985,8 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     {
       UIButton* desktopModeButtonPortrait = [UIButton buttonWithType:UIButtonTypeCustom];
 
-      [desktopModeButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonInactive.png", bundlePath]] forState:UIControlStateNormal];
-      [desktopModeButtonPortrait setImage:[UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/desktopButtonActive.png", bundlePath]] forState:UIControlStateSelected];
+      [desktopModeButtonPortrait setImage:[UIImage imageNamed:@"desktopButtonInactive.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+      [desktopModeButtonPortrait setImage:[UIImage imageNamed:@"desktopButtonActive.png" inBundle:SPBundle compatibleWithTraitCollection:nil]  forState:UIControlStateSelected];
       desktopModeButtonPortrait.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
       desktopModeButtonPortrait.layer.cornerRadius = 4;
       desktopModeButtonPortrait.adjustsImageWhenHighlighted = true;
@@ -991,6 +1040,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   [((Application*)[%c(Application) sharedApplication]) updateButtonState];
 }
 
+//Reload tabs if the useragents needs to be changed (depending on the desktop button state)
 %new
 - (void)reloadTabsIfNeeded
 {
@@ -1004,13 +1054,13 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     currentTabs = self.tabDocuments;
   }
 
-  for(int i = 0; i < ([currentTabs count]); i++)
+  for(TabDocument* tabDocument in currentTabs)
   {
-    if(![(TabDocument*)currentTabs[i] isBlankDocument] &&
-      ((desktopButtonSelected && (([((NSString*)((TabDocument*)currentTabs[i]).customUserAgent) isEqual:@""]) || (((NSString*)((TabDocument*)currentTabs[i]).customUserAgent) == nil))) ||
-      (!desktopButtonSelected && [((NSString*)((TabDocument*)currentTabs[i]).customUserAgent) isEqual:desktopUserAgent])))
+    if(![tabDocument isBlankDocument] &&
+      ((desktopButtonSelected && ([tabDocument.customUserAgent isEqualToString:@""] || tabDocument.customUserAgent == nil)) ||
+      (!desktopButtonSelected && [tabDocument.customUserAgent isEqualToString:desktopUserAgent])))
     {
-      [(TabDocument*)currentTabs[i] reload];
+      [tabDocument reload];
     }
   }
 }
@@ -1019,11 +1069,105 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 %hook TabDocument
 
+BOOL showAlert = YES;
+
+//Present download menu if clicked link is a downloadable file
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+{
+  if(preferenceManager.enhancedDownloadsEnabled)
+  {
+    NSString* MIMEType = navigationResponse.response.MIMEType;
+
+    //Check if alert should be presented
+    if(showAlert && (!navigationResponse.canShowMIMEType || [MIMEType rangeOfString:@"video/"].location != NSNotFound || [MIMEType rangeOfString:@"audio/"].location != NSNotFound || [MIMEType isEqualToString:@"application/pdf"]))
+    {
+      //Cancel loading
+      decisionHandler(WKNavigationResponsePolicyCancel);
+
+      //Init variables so they can be accessed from the actions
+      __block int64_t fileSize = navigationResponse.response.expectedContentLength;
+      __block NSString* fileName = navigationResponse.response.suggestedFilename;
+      __block NSString* fileDetails = [NSString stringWithFormat:@"%@ (%@)",
+          fileName, [NSByteCountFormatter stringFromByteCount:fileSize countStyle:NSByteCountFormatterCountStyleFile]];
+      __block NSURLRequest* request = navigationResponse._request;
+      __block WKWebView* webViewLocal = webView;
+
+      dispatch_async(dispatch_get_main_queue(), //Ensure we're on the main thread to avoid crashes
+      ^{
+        if(preferenceManager.instantDownloadsEnabled && preferenceManager.instantDownloadsOption == 1)
+        {
+          [[downloadManager sharedInstance] prepareDownloadFromRequest:request withSize:fileSize fileName:fileName];
+        }
+        else if(preferenceManager.instantDownloadsEnabled && preferenceManager.instantDownloadsOption == 2)
+        {
+          [[downloadManager sharedInstance] prepareDownloadFromRequest:request withSize:fileSize fileName:fileName customPath:YES];
+        }
+        else
+        {
+          //Create alert
+          UIAlertController *downloadAlert = [UIAlertController alertControllerWithTitle:fileDetails message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+          UIAlertAction *downloadAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD"]
+                style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+                {
+                  //Start download through SafariPlus
+                  [[downloadManager sharedInstance] prepareDownloadFromRequest:request withSize:fileSize fileName:fileName];
+                }];
+
+          UIAlertAction *downloadToAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_TO"]
+                style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+                {
+                  //Start download through SafariPlus with custom path
+                  [[downloadManager sharedInstance] prepareDownloadFromRequest:request withSize:fileSize fileName:fileName customPath:YES];
+                }];
+
+          UIAlertAction *viewAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN"]
+                style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+                {
+                  //Load request again and avoid another alert
+                  showAlert = NO;
+                  [webViewLocal loadRequest:request];
+                }];
+
+          UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
+                style:UIAlertActionStyleCancel handler:nil]; //Do nothing
+
+          //Add actions to alert
+          [downloadAlert addAction:downloadAction];
+          [downloadAlert addAction:downloadToAction];
+          [downloadAlert addAction:viewAction];
+          [downloadAlert addAction:cancelAction];
+
+          BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+          BrowserRootViewController* rootViewController = MSHookIvar<BrowserRootViewController*>(browserController, "_rootViewController");
+
+          //iPad fix
+          downloadAlert.popoverPresentationController.sourceView = rootViewController.view;
+          downloadAlert.popoverPresentationController.sourceRect = CGRectMake(rootViewController.view.bounds.size.width / 2.0, rootViewController.view.bounds.size.height / 2, 1.0, 1.0);
+          [downloadAlert.popoverPresentationController setPermittedArrowDirections:UIPopoverArrowDirectionDown];
+
+          //Present alert on rootViewController
+          [rootViewController presentViewController:downloadAlert animated:YES completion:nil];
+        }
+      });
+    }
+    else
+    {
+      showAlert = YES;
+      %orig;
+    }
+  }
+  else
+  {
+    %orig;
+  }
+}
+
 //desktop mode + ForceHTTPS
 
 - (id)_initWithTitle:(id)arg1 URL:(NSURL*)arg2 UUID:(id)arg3 privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6 createDocumentView:(id)arg7
 {
-  if((forceHTTPSEnabled || desktopButtonEnabled) && arg2)
+  if((preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled) && arg2)
   {
     return %orig(arg1, [self URLHandler:arg2], arg3, arg4, arg5, arg6, arg7);
   }
@@ -1032,7 +1176,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 - (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2
 {
-  if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
+  if((preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled) && arg1)
   {
     return %orig([self URLHandler:arg1], arg2);
   }
@@ -1041,7 +1185,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 - (id)loadURL:(NSURL*)arg1 fromBookmark:(id)arg2
 {
-  if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
+  if((preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled) && arg1)
   {
     return %orig([self URLHandler:arg1], arg2);
   }
@@ -1050,10 +1194,10 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 - (void)_loadStartedDuringSimulatedClickForURL:(NSURL*)arg1
 {
-  if((forceHTTPSEnabled || desktopButtonEnabled) && arg1)
+  if((preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled) && arg1)
   {
     NSURL* newURL = [self URLHandler:arg1];
-    if(![[newURL absoluteString] isEqual:[arg1 absoluteString]])
+    if(![[newURL absoluteString] isEqualToString:[arg1 absoluteString]])
     {
       [self loadURL:newURL userDriven:NO];
       return;
@@ -1065,11 +1209,11 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 - (void)reload
 {
-  if(forceHTTPSEnabled || desktopButtonEnabled)
+  if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
   {
     NSURL* currentURL = (NSURL*)[self URL];
     NSURL* tmpURL = [self URLHandler:currentURL];
-    if(![[tmpURL absoluteString] isEqual:[currentURL absoluteString]])
+    if(![[tmpURL absoluteString] isEqualToString:[currentURL absoluteString]])
     {
       [self loadURL:tmpURL userDriven:NO];
       return;
@@ -1079,11 +1223,12 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   %orig;
 }
 
+//Convert http url into https url and change user agent if needed
 %new
 - (NSURL*)URLHandler:(NSURL*)URL
 {
   NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
-  if(forceHTTPSEnabled)
+  if(preferenceManager.forceHTTPSEnabled)
   {
     if([self shouldRequestHTTPS:URL])
     {
@@ -1095,12 +1240,11 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     }
   }
 
-
-  if(desktopButtonEnabled && desktopButtonSelected)
+  if(preferenceManager.desktopButtonEnabled && desktopButtonSelected)
   {
     [self setCustomUserAgent:desktopUserAgent];
   }
-  else if(desktopButtonEnabled && !desktopButtonSelected)
+  else if(preferenceManager.desktopButtonEnabled && !desktopButtonSelected)
   {
     [self setCustomUserAgent:@""];
   }
@@ -1111,10 +1255,10 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 //Exception because method uses NSString instead of NSURL
 - (NSString*)loadUserTypedAddress:(NSString*)arg1
 {
-  if(forceHTTPSEnabled || desktopButtonEnabled)
+  if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
   {
     NSString* newURL = arg1;
-    if(forceHTTPSEnabled && newURL)
+    if(preferenceManager.forceHTTPSEnabled && newURL)
     {
       if(([newURL rangeOfString:@"http://"].location == NSNotFound) && ([newURL rangeOfString:@"https://"].location == NSNotFound))
       {
@@ -1134,11 +1278,11 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
       }
     }
 
-    if(desktopButtonEnabled && desktopButtonSelected)
+    if(preferenceManager.desktopButtonEnabled && desktopButtonSelected)
     {
       [self setCustomUserAgent:desktopUserAgent];
     }
-    else if(desktopButtonEnabled && !desktopButtonSelected)
+    else if(preferenceManager.desktopButtonEnabled && !desktopButtonSelected)
     {
       [self setCustomUserAgent:@""];
     }
@@ -1148,16 +1292,17 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
   return %orig;
 }
 
+//Checks through exceptions whether https should be forced or not
 %new
 - (BOOL)shouldRequestHTTPS:(NSURL*)URL
 {
-  NSMutableDictionary* plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+  NSMutableDictionary* plist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
 
   NSMutableArray* ForceHTTPSExceptions = [plist objectForKey:@"ForceHTTPSExceptions"];
 
-  for(int i = 0; i < [ForceHTTPSExceptions count]; i++)
+  for(NSString* exception in ForceHTTPSExceptions)
   {
-    if([[URL host] rangeOfString:ForceHTTPSExceptions[i]].location != NSNotFound)
+    if([[URL host] rangeOfString:exception].location != NSNotFound)
     {
       return false;
     }
@@ -1173,7 +1318,7 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 - (UITableViewCell *)tableView:(id)tableView cellForRowAtIndexPath:(id)indexPath
 {
-  if(longPressSuggestionsEnabled)
+  if(preferenceManager.longPressSuggestionsEnabled)
   {
     UITableViewCell* orig = %orig;
     @autoreleasepool
@@ -1236,6 +1381,166 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 }
 %end
 
+%hook BrowserToolbar
+
+%property (nonatomic,retain) UIBarButtonItem *_downloadsItem;
+
+//Correctly enable / disable downloads button when needed
+- (void)setEnabled:(BOOL)arg1
+{
+  %orig;
+  if(preferenceManager.enhancedDownloadsEnabled)
+  {
+    [self setDownloadsEnabled:arg1];
+  }
+}
+
+%new
+- (void)setDownloadsEnabled:(BOOL)enabled
+{
+  [self._downloadsItem setEnabled:enabled];
+}
+
+//Add downloads button to toolbar
+- (NSMutableArray *)defaultItems
+{
+  if(preferenceManager.enhancedDownloadsEnabled)
+  {
+    NSMutableArray* orig = %orig;
+
+    if(![orig containsObject:self._downloadsItem])
+    {
+      if(!self._downloadsItem)
+      {
+        self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"downloadsButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
+      }
+
+      //Portrait + Landscape on iPad
+      if(IS_PAD)
+      {
+        ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 3;
+        ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 3;
+        [orig insertObject:orig[10] atIndex:8];
+        [orig insertObject:self._downloadsItem atIndex:8];
+      }
+      else
+      {
+        //Portrait mode on plus models, portrait + landscape on non-plus models
+        if(![self.browserDelegate usesTabBar] || [orig count] < 15) //count thing fixes crash
+        {
+          UIBarButtonItem* flexibleItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+          UIBarButtonItem *fixedItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+          UIBarButtonItem *fixedItemHalf = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+
+          //Make everything flexible, thanks apple!
+          fixedItem.width = 15;
+          fixedItemHalf.width = 7.5f;
+          UIBarButtonItem *fixedItemTwo = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+          fixedItemTwo.width = 6;
+
+          orig = (NSMutableArray*)@[orig[1], fixedItem, flexibleItem, fixedItemHalf, orig[4], fixedItemHalf, flexibleItem, fixedItemTwo, orig[7], flexibleItem, orig[10], flexibleItem, self._downloadsItem, flexibleItem, orig[13]];
+        }
+        //Landscape on plus models
+        else
+        {
+          ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 10;
+          ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 10;
+          ((UIBarButtonItem*)orig[15]).width = 0;
+          [orig insertObject:orig[10] atIndex:9];
+          [orig insertObject:self._downloadsItem atIndex:9];
+        }
+      }
+
+      return orig;
+    }
+  }
+
+  return %orig;
+}
+
+%end
+
+%hook BrowserRootViewController
+
+%property(nonatomic, retain) CWStatusBarNotification *statusBarNotification;
+
+//Dispatch status bar notification
+%new
+- (void)dispatchNotificationWithText:(NSString*)text
+{
+  dispatch_async(dispatch_get_main_queue(), ^
+  {
+    [self.statusBarNotification displayNotificationWithMessage:text forDuration:2.0f];
+  });
+}
+
+//Dismiss notification
+%new
+- (void)dismissNotificationWithCompletion:(void (^)(void))completion
+{
+  dispatch_async(dispatch_get_main_queue(), ^
+  {
+    [self.statusBarNotification dismissNotificationWithCompletion:completion];
+  });
+}
+
+//Present viewController on rootController
+%new
+- (void)presentViewController:(id)viewController
+{
+  dispatch_async(dispatch_get_main_queue(), ^
+  {
+    [self presentViewController:viewController animated:YES completion:nil];
+  });
+}
+
+%end
+
+//Some attempts with custom bookmark pictures that did not work
+
+/*%hook SingleBookmarkNavigationController
+
+- (id)initWithCollection:(id)arg1
+{
+  id orig = %orig;
+  _SFBookmarkInfoViewController* infoViewController = MSHookIvar<_SFBookmarkInfoViewController*>(orig, "_infoViewController");
+  if(infoViewController)
+  {
+    _SFSiteIconView* iconImageView = MSHookIvar<_SFSiteIconView*>(infoViewController, "_iconImageView");
+    NSLog(@"iconImageView: %@", iconImageView);
+  }
+  return orig;
+}
+
++ (id)newBookmarkInfoViewControllerWithBookmark:(id)arg1 inCollection:(id)arg2 addingBookmark:(BOOL)arg3 toFavorites:(BOOL)arg4 willBeDisplayedModally:(BOOL)arg5
+{
+  id orig = %orig;
+
+  _SFSiteIconView* iconImageView = MSHookIvar<_SFSiteIconView*>(orig, "_iconImageView");
+  UIButton* invisibleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+
+  invisibleButton.adjustsImageWhenHighlighted = YES;
+  invisibleButton.frame = iconImageView.frame;
+
+  UILongPressGestureRecognizer *siteIconLongPressRecognizer = [[UILongPressGestureRecognizer alloc] init];
+  [siteIconLongPressRecognizer addTarget:self action:@selector(siteIconLongPressed:)];
+  [siteIconLongPressRecognizer setMinimumPressDuration:0.5];
+
+
+  [invisibleButton addGestureRecognizer:siteIconLongPressRecognizer];
+  [iconImageView addSubview:invisibleButton];
+  NSLog(@"iconImageView: %@", iconImageView);
+
+  return orig;
+}
+
+- (void)siteIconLongPressed:(UILongPressGestureRecognizer*)sender
+{
+  NSLog(@"icon long pressed!!!");
+}
+
+%end*/
+
 //Custom colors
 
 %hook NavigationBar
@@ -1243,16 +1548,16 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 - (void)_updateBackdropStyle
 {
   %orig;
-  if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
+  if(preferenceManager.appTintColorNormalEnabled || preferenceManager.appTintColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
-    if(appTintColorNormalEnabled && !privateMode)
+    if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
-      self.tintColor = LCPParseColorString(appTintColorNormal, @"#FFFFFF");
+      self.tintColor = LCPParseColorString(preferenceManager.appTintColorNormal, @"#FFFFFF");
     }
-    else if(appTintColorPrivateEnabled && privateMode)
+    else if(preferenceManager.appTintColorPrivateEnabled && privateMode)
     {
-      self.tintColor = LCPParseColorString(appTintColorPrivate, @"#FFFFFF");
+      self.tintColor = LCPParseColorString(preferenceManager.appTintColorPrivate, @"#FFFFFF");
     }
     else
     {
@@ -1260,19 +1565,19 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
     }
   }
 
-  if(topBarColorNormalEnabled || topBarColorPrivateEnabled)
+  if(preferenceManager.topBarColorNormalEnabled || preferenceManager.topBarColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
     _SFNavigationBarBackdrop* backdrop = MSHookIvar<_SFNavigationBarBackdrop*>(self, "_backdrop");
 
-    if(topBarColorNormalEnabled && !privateMode) //Normal Mode
+    if(preferenceManager.topBarColorNormalEnabled && !privateMode) //Normal Mode
     {
-      backdrop.grayscaleTintView.backgroundColor = LCPParseColorString(topBarColorNormal, @"#FFFFFF");
+      backdrop.grayscaleTintView.backgroundColor = LCPParseColorString(preferenceManager.topBarColorNormal, @"#FFFFFF");
     }
 
-    else if(topBarColorPrivateEnabled && privateMode) //Private Mode
+    else if(preferenceManager.topBarColorPrivateEnabled && privateMode) //Private Mode
     {
-      backdrop.grayscaleTintView.backgroundColor = LCPParseColorString(topBarColorPrivate, @"#FFFFFF");
+      backdrop.grayscaleTintView.backgroundColor = LCPParseColorString(preferenceManager.topBarColorPrivate, @"#FFFFFF");
     }
   }
 }
@@ -1281,17 +1586,17 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 - (void)_updateProgressView
 {
   %orig;
-  if(progressBarColorNormalEnabled || progressBarColorPrivateEnabled)
+  if(preferenceManager.progressBarColorNormalEnabled || preferenceManager.progressBarColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
     _SFFluidProgressView* progressView = MSHookIvar<_SFFluidProgressView*>(self, "_progressView");
-    if(progressBarColorNormalEnabled && !privateMode)
+    if(preferenceManager.progressBarColorNormalEnabled && !privateMode)
     {
-      progressView.progressBarFillColor = LCPParseColorString(progressBarColorNormal, @"#FFFFFF");
+      progressView.progressBarFillColor = LCPParseColorString(preferenceManager.progressBarColorNormal, @"#FFFFFF");
     }
-    else if(progressBarColorPrivateEnabled && privateMode)
+    else if(preferenceManager.progressBarColorPrivateEnabled && privateMode)
     {
-      progressView.progressBarFillColor = LCPParseColorString(progressBarColorPrivate, @"#FFFFFF");
+      progressView.progressBarFillColor = LCPParseColorString(preferenceManager.progressBarColorPrivate, @"#FFFFFF");
     }
   }
 }
@@ -1299,16 +1604,16 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 //Text color
 - (id)_URLTextColor
 {
-  if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
+  if(preferenceManager.URLFontColorNormalEnabled || preferenceManager.URLFontColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
-    if(URLFontColorNormalEnabled && !privateMode)
+    if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
     {
-      return LCPParseColorString(URLFontColorNormal, @"#FFFFFF");
+      return LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
     }
-    else if(URLFontColorPrivateEnabled && privateMode)
+    else if(preferenceManager.URLFontColorPrivateEnabled && privateMode)
     {
-      return LCPParseColorString(URLFontColorPrivate, @"#FFFFFF");
+      return LCPParseColorString(preferenceManager.URLFontColorPrivate, @"#FFFFFF");
     }
   }
 
@@ -1318,18 +1623,18 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 //Text color of search text, needs to be less visible
 - (id)_placeholderColor
 {
-  if(URLFontColorNormalEnabled || URLFontColorPrivateEnabled)
+  if(preferenceManager.URLFontColorNormalEnabled || preferenceManager.URLFontColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor;
-    if(URLFontColorNormalEnabled && !privateMode)
+    if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
     {
-      customColor = LCPParseColorString(URLFontColorNormal, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
       return [customColor colorWithAlphaComponent:0.5];
     }
-    else if(URLFontColorPrivateEnabled && privateMode)
+    else if(preferenceManager.URLFontColorPrivateEnabled && privateMode)
     {
-      customColor = LCPParseColorString(URLFontColorNormal, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
       return [customColor colorWithAlphaComponent:0.5];
     }
   }
@@ -1340,16 +1645,16 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 //Reload button color
 - (id)_URLControlsColor
 {
-  if(reloadColorNormalEnabled || reloadColorPrivateEnabled)
+  if(preferenceManager.reloadColorNormalEnabled || preferenceManager.reloadColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
-    if(reloadColorNormalEnabled && !privateMode)
+    if(preferenceManager.reloadColorNormalEnabled && !privateMode)
     {
-      return LCPParseColorString(reloadColorNormal, @"#FFFFFF");
+      return LCPParseColorString(preferenceManager.reloadColorNormal, @"#FFFFFF");
     }
-    else if(reloadColorPrivateEnabled && privateMode)
+    else if(preferenceManager.reloadColorPrivateEnabled && privateMode)
     {
-      return LCPParseColorString(reloadColorPrivate, @"#FFFFFF");
+      return LCPParseColorString(preferenceManager.reloadColorPrivate, @"#FFFFFF");
     }
   }
 
@@ -1362,17 +1667,17 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %hook TabBarStyle
 - (UIColor *)itemTitleColor
 {
-  if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
+  if(preferenceManager.tabTitleColorNormalEnabled || preferenceManager.tabTitleColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor = %orig;
-    if(tabTitleColorNormalEnabled && !privateMode)
+    if(preferenceManager.tabTitleColorNormalEnabled && !privateMode)
     {
-      customColor = LCPParseColorString(tabTitleColorNormal, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.tabTitleColorNormal, @"#FFFFFF");
     }
-    else if(tabTitleColorPrivateEnabled && privateMode)
+    else if(preferenceManager.tabTitleColorPrivateEnabled && privateMode)
     {
-      customColor = LCPParseColorString(tabTitleColorPrivate, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.tabTitleColorPrivate, @"#FFFFFF");
     }
     return customColor;
   }
@@ -1384,17 +1689,17 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %hook TiltedTabItem
 - (UIColor *)titleColor
 {
-  if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
+  if(preferenceManager.tabTitleColorNormalEnabled || preferenceManager.tabTitleColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor = %orig;
-    if(tabTitleColorNormalEnabled && !privateMode)
+    if(preferenceManager.tabTitleColorNormalEnabled && !privateMode)
     {
-      customColor = LCPParseColorString(tabTitleColorNormal, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.tabTitleColorNormal, @"#FFFFFF");
     }
-    else if(tabTitleColorPrivateEnabled && privateMode)
+    else if(preferenceManager.tabTitleColorPrivateEnabled && privateMode)
     {
-      customColor = LCPParseColorString(tabTitleColorPrivate, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.tabTitleColorPrivate, @"#FFFFFF");
     }
     return customColor;
   }
@@ -1406,17 +1711,17 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 %hook TabOverviewItem
 - (UIColor *)titleColor
 {
-  if(tabTitleColorNormalEnabled || tabTitleColorPrivateEnabled)
+  if(preferenceManager.tabTitleColorNormalEnabled || preferenceManager.tabTitleColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
     UIColor* customColor = %orig;
-    if(tabTitleColorNormalEnabled && !privateMode)
+    if(preferenceManager.tabTitleColorNormalEnabled && !privateMode)
     {
-      customColor = LCPParseColorString(tabTitleColorNormal, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.tabTitleColorNormal, @"#FFFFFF");
     }
-    else if(tabTitleColorPrivateEnabled && privateMode)
+    else if(preferenceManager.tabTitleColorPrivateEnabled && privateMode)
     {
-      customColor = LCPParseColorString(tabTitleColorPrivate, @"#FFFFFF");
+      customColor = LCPParseColorString(preferenceManager.tabTitleColorPrivate, @"#FFFFFF");
     }
     return customColor;
   }
@@ -1430,32 +1735,32 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 - (void)layoutSubviews
 {
   //Tint Color
-  if(appTintColorNormalEnabled || appTintColorPrivateEnabled)
+  if(preferenceManager.appTintColorNormalEnabled || preferenceManager.appTintColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
-    if(appTintColorNormalEnabled && !privateMode)
+    if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
-      self.tintColor = LCPParseColorString(appTintColorNormal, @"#FFFFFF");
+      self.tintColor = LCPParseColorString(preferenceManager.appTintColorNormal, @"#FFFFFF");
     }
-    else if(appTintColorPrivateEnabled && privateMode)
+    else if(preferenceManager.appTintColorPrivateEnabled && privateMode)
     {
-      self.tintColor = LCPParseColorString(appTintColorPrivate, @"#FFFFFF");
+      self.tintColor = LCPParseColorString(preferenceManager.appTintColorPrivate, @"#FFFFFF");
     }
   }
 
   //Bottom Bar Color (kinda broken? For some reason it only works properly when SafariDownloader + is installed?)
-  if(bottomBarColorNormalEnabled || bottomBarColorPrivateEnabled)
+  if(preferenceManager.bottomBarColorNormalEnabled || preferenceManager.bottomBarColorPrivateEnabled)
   {
     BOOL privateMode = [self getBrowsingMode];
     _UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
     backgroundView.grayscaleTintView.hidden = NO;
-    if(bottomBarColorNormalEnabled && !privateMode)
+    if(preferenceManager.bottomBarColorNormalEnabled && !privateMode)
     {
-      backgroundView.grayscaleTintView.backgroundColor = LCPParseColorString(bottomBarColorNormal, @"#FFFFFF");
+      backgroundView.grayscaleTintView.backgroundColor = LCPParseColorString(preferenceManager.bottomBarColorNormal, @"#FFFFFF");
     }
-    else if(bottomBarColorPrivateEnabled && privateMode)
+    else if(preferenceManager.bottomBarColorPrivateEnabled && privateMode)
     {
-      backgroundView.grayscaleTintView.backgroundColor = LCPParseColorString(bottomBarColorPrivate, @"#FFFFFF");
+      backgroundView.grayscaleTintView.backgroundColor = LCPParseColorString(preferenceManager.bottomBarColorPrivate, @"#FFFFFF");
     }
     else
     {
@@ -1469,72 +1774,8 @@ UISwipeGestureRecognizer *swipeDownGestureRecognizer;
 
 /****** Preference stuff ******/
 
-static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
-
 %ctor
 {
-  preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
-
-  [preferences registerBool:&enableFullscreenScrolling default:NO forKey:@"fullscreenScrollingEnabled"];
-  [preferences registerBool:&forceHTTPSEnabled default:NO forKey:@"forceHTTPSEnabled"];
-  [preferences registerBool:&disablePrivateMode default:NO forKey:@"disablePrivateMode"];
-
-  [preferences registerBool:&forceModeOnStartEnabled default:NO forKey:@"forceModeOnStartEnabled"];
-  [preferences registerInteger:&forceModeOnStartFor default:0 forKey:@"forceModeOnStartFor"];
-  [preferences registerBool:&forceModeOnResumeEnabled default:NO forKey:@"forceModeOnResumeEnabled"];
-  [preferences registerInteger:&forceModeOnResumeFor default:0 forKey:@"forceModeOnResumeFor"];
-  [preferences registerBool:&forceModeOnExternalLinkEnabled default:NO forKey:@"forceModeOnExternalLinkEnabled"];
-  [preferences registerInteger:&forceModeOnExternalLinkFor default:0 forKey:@"forceModeOnExternalLinkFor"];
-  [preferences registerBool:&autoCloseTabsEnabled default:NO forKey:@"autoCloseTabsEnabled"];
-  [preferences registerInteger:&autoCloseTabsOn default:0 forKey:@"autoCloseTabsOn"];
-  [preferences registerInteger:&autoCloseTabsFor default:0 forKey:@"autoCloseTabsFor"];
-
-  [preferences registerBool:&URLLeftSwipeGestureEnabled default:NO forKey:@"URLLeftSwipeGestureEnabled"];
-  [preferences registerInteger:&URLLeftSwipeAction default:0 forKey:@"URLLeftSwipeAction"];
-  [preferences registerBool:&URLRightSwipeGestureEnabled default:NO forKey:@"URLRightSwipeGestureEnabled"];
-  [preferences registerInteger:&URLRightSwipeAction default:0 forKey:@"URLRightSwipeAction"];
-  [preferences registerBool:&URLDownSwipeGestureEnabled default:NO forKey:@"URLDownSwipeGestureEnabled"];
-  [preferences registerInteger:&URLDownSwipeAction default:0 forKey:@"URLDownSwipeAction"];
-  [preferences registerBool:&gestureBackground default:NO forKey:@"gestureBackground"];
-
-  [preferences registerBool:&openInNewTabOptionEnabled default:NO forKey:@"openInNewTabOptionEnabled"];
-  [preferences registerBool:&desktopButtonEnabled default:NO forKey:@"desktopButtonEnabled"];
-  [preferences registerBool:&longPressSuggestionsEnabled default:NO forKey:@"longPressSuggestionsEnabled"];
-
-  [preferences registerBool:&appTintColorNormalEnabled default:NO forKey:@"appTintColorNormalEnabled"];
-  [preferences registerObject:&appTintColorNormal default:@"#ffffff" forKey:@"appTintColorNormal"];
-  [preferences registerBool:&topBarColorNormalEnabled default:NO forKey:@"topBarColorNormalEnabled"];
-  [preferences registerObject:&topBarColorNormal default:@"#ffffff" forKey:@"topBarColorNormal"];
-  [preferences registerBool:&URLFontColorNormalEnabled default:NO forKey:@"URLFontColorNormalEnabled"];
-  [preferences registerObject:&URLFontColorNormal default:@"#ffffff" forKey:@"URLFontColorNormal"];
-  [preferences registerBool:&progressBarColorNormalEnabled default:NO forKey:@"progressBarColorNormalEnabled"];
-  [preferences registerObject:&progressBarColorNormal default:@"#ffffff" forKey:@"progressBarColorNormal"];
-  [preferences registerBool:&tabTitleColorNormalEnabled default:NO forKey:@"tabTitleColorNormalEnabled"];
-  [preferences registerObject:&tabTitleColorNormal default:@"#ffffff" forKey:@"tabTitleColorNormal"];
-  [preferences registerBool:&reloadColorNormalEnabled default:NO forKey:@"reloadColorNormalEnabled"];
-  [preferences registerObject:&reloadColorNormal default:@"#ffffff" forKey:@"reloadColorNormal"];
-  [preferences registerBool:&lockIconColorNormalEnabled default:NO forKey:@"lockIconColorNormalEnabled"];
-  [preferences registerObject:&lockIconColorNormal default:@"#ffffff" forKey:@"lockIconColorNormal"];
-  [preferences registerBool:&bottomBarColorNormalEnabled default:NO forKey:@"bottomBarColorNormalEnabled"];
-  [preferences registerObject:&bottomBarColorNormal default:@"#ffffff" forKey:@"bottomBarColorNormal"];
-
-  [preferences registerBool:&appTintColorPrivateEnabled default:NO forKey:@"appTintColorPrivateEnabled"];
-  [preferences registerObject:&appTintColorPrivate default:@"#ffffff" forKey:@"appTintColorPrivate"];
-  [preferences registerBool:&topBarColorPrivateEnabled default:NO forKey:@"topBarColorPrivateEnabled"];
-  [preferences registerObject:&topBarColorPrivate default:@"#ffffff" forKey:@"topBarColorPrivate"];
-  [preferences registerBool:&URLFontColorPrivateEnabled default:NO forKey:@"URLFontColorPrivateEnabled"];
-  [preferences registerObject:&URLFontColorPrivate default:@"#ffffff" forKey:@"URLFontColorPrivate"];
-  [preferences registerBool:&progressBarColorPrivateEnabled default:NO forKey:@"progressBarColorPrivateEnabled"];
-  [preferences registerObject:&progressBarColorPrivate default:@"#ffffff" forKey:@"progressBarColorPrivate"];
-  [preferences registerBool:&tabTitleColorPrivateEnabled default:NO forKey:@"tabTitleColorPrivateEnabled"];
-  [preferences registerObject:&tabTitleColorPrivate default:@"#ffffff" forKey:@"tabTitleColorPrivate"];
-  [preferences registerBool:&reloadColorPrivateEnabled default:NO forKey:@"reloadColorPrivateEnabled"];
-  [preferences registerObject:&reloadColorPrivate default:@"#ffffff" forKey:@"reloadColorPrivate"];
-  [preferences registerBool:&lockIconColorPrivateEnabled default:NO forKey:@"lockIconColorPrivateEnabled"];
-  [preferences registerObject:&lockIconColorPrivate default:@"#ffffff" forKey:@"lockIconColorPrivate"];
-  [preferences registerBool:&bottomBarColorPrivateEnabled default:NO forKey:@"bottomBarColorPrivateEnabled"];
-  [preferences registerObject:&bottomBarColorPrivate default:@"#ffffff" forKey:@"bottomBarColorPrivate"];
-
   if(kCFCoreFoundationVersionNumber < 1348.00)
   {
     %init(iOS9);

@@ -6,124 +6,131 @@
 #import "filePicker.h"
 
 @implementation filePickerTableViewController
+
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    fileManager = [NSFileManager defaultManager];
+  [super viewDidLoad];
+  self.tableView.allowsMultipleSelectionDuringEditing = YES;
 
-    //If path is not set, set it to root
-    if(!self.currentPath)
-    {
-      self.currentPath = [NSURL URLWithString:@"/"];
-    }
-
-    //Fetch files from current path into array
-    filesAtCurrentPath = [[NSMutableArray alloc] init];
-    filesAtCurrentPath = (NSMutableArray*)[fileManager contentsOfDirectoryAtURL:self.currentPath includingPropertiesForKeys:nil options:nil error:nil];
-
-    //Sort files alphabetically
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"lastPathComponent" ascending:YES selector:@selector(caseInsensitiveCompare:)];
-    filesAtCurrentPath = (NSMutableArray*)[filesAtCurrentPath sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:[%c(LGShared) localisedStringForKey:@"CANCEL"] style:UIBarButtonItemStylePlain target:self action:@selector(cancelFilePicker)];
-    self.navigationItem.rightBarButtonItem = cancelButton;
-
-    self.title = [self.currentPath lastPathComponent];
+  UILongPressGestureRecognizer *tableLongPressRecognizer = [[UILongPressGestureRecognizer alloc]
+  initWithTarget:self action:@selector(tableWasLongPressed:)];
+  tableLongPressRecognizer.minimumPressDuration = 1.0;
+  [self.tableView addGestureRecognizer:tableLongPressRecognizer];
 }
 
-- (void)cancelFilePicker
+- (void)dismiss
 {
-  [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFileAtURL:nil shouldCancel:YES];
+  [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:nil];
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (void)selectedEntryAtURL:(NSURL*)entryURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
 {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-  return [filesAtCurrentPath count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  UITableViewCell* cell = [[UITableViewCell alloc] init];
-  NSURL* currentEntry = filesAtCurrentPath[indexPath.row];
-  NSString* currentEntryString = [[[currentEntry absoluteString] lastPathComponent] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-
-  cell.textLabel.text = currentEntryString;
-
-  NSNumber* isFile;
-
-  [currentEntry getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
-
-  //Entry is file
-  if([isFile boolValue])
+  //Type 1: file; type 2: symlink; type 3: directory
+  if(type == 1)
   {
-    cell.imageView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/File.png", imageBundlePath]];
+    [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:@[entryURL]];
   }
-  //Entry is directory / symlink
+
+  [super selectedEntryAtURL:entryURL type:type atIndexPath:indexPath];
+}
+
+- (void)tableWasLongPressed:(UILongPressGestureRecognizer *)gestureRecognizer
+{
+  if(!self.tableView.editing)
+  {
+    CGPoint p = [gestureRecognizer locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:p];
+
+    if(gestureRecognizer.state == UIGestureRecognizerStateBegan && indexPath)
+    {
+      [self toggleEditing];
+
+      NSNumber* isFile;
+      [(NSURL*)filesAtCurrentPath[indexPath.row] getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
+
+      if([isFile boolValue])
+      {
+        [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        [self updateTopRightButtonAvailability];
+      }
+    }
+  }
+}
+
+- (void)toggleEditing
+{
+  [self.tableView setEditing:!self.tableView.editing animated:YES];
+  if(self.tableView.editing)
+  {
+    UIBarButtonItem* cancelItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditing)];
+    UIBarButtonItem* uploadItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager localizedSPStringForKey:@"UPLOAD"] style:UIBarButtonItemStylePlain target:self action:@selector(uploadSelectedItems)];
+
+    self.navigationItem.leftBarButtonItem = cancelItem;
+    self.navigationItem.rightBarButtonItem = uploadItem;
+
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+  }
   else
   {
-    cell.imageView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/Directory.png", imageBundlePath]];
+    self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
+    self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
+    self.navigationItem.rightBarButtonItem.enabled = YES;
   }
+}
 
-  //Entry is hidden
-  if([currentEntryString hasPrefix:@"."])
+- (void)uploadSelectedItems
+{
+  NSArray* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
+  NSMutableArray* selectedURLs = [NSMutableArray new];
+
+  for(int i = 0; i < [selectedIndexPaths count]; i++)
   {
-    cell.imageView.alpha = 0.4;
-    cell.textLabel.alpha = 0.4;
+    NSIndexPath* indexPath = selectedIndexPaths[i];
+    NSURL* filePath = filesAtCurrentPath[indexPath.row];
+    [selectedURLs addObject:filePath];
   }
 
-  //http://stackoverflow.com/a/17517552
-  CGSize itemSize = CGSizeMake(28, 28);
-  UIGraphicsBeginImageContextWithOptions(itemSize, NO, UIScreen.mainScreen.scale);
-  CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
-  [cell.imageView.image drawInRect:imageRect];
-  cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
-  UIGraphicsEndImageContext();
-
-  [cell setSeparatorInset:UIEdgeInsetsZero];
-
-  return cell;
+  [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:selectedURLs];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  NSURL* selectedEntry = filesAtCurrentPath[indexPath.row];
-  NSNumber* isFile;
+  [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+  [self updateTopRightButtonAvailability];
+}
 
-  [selectedEntry getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  [self updateTopRightButtonAvailability];
+}
 
-  //Tapped entry is file
-  if([isFile boolValue])
+- (void)updateTopRightButtonAvailability
+{
+  if(self.tableView.editing)
   {
-    [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFileAtURL:selectedEntry shouldCancel:NO];
+    NSArray *selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
+    if([selectedIndexPaths count] <= 0)
+    {
+      self.navigationItem.rightBarButtonItem.enabled = NO;
+    }
+    else
+    {
+      self.navigationItem.rightBarButtonItem.enabled = YES;
+    }
   }
   else
   {
-    NSNumber* isSymlink;
-    [selectedEntry getResourceValue:&isSymlink forKey:NSURLIsSymbolicLinkKey error:nil];
-    filePickerTableViewController *nextController = [[filePickerTableViewController alloc] init];
-
-    //Tapped entry is symlink
-    if([isSymlink boolValue])
-    {
-      nextController.currentPath = [NSURL URLWithString:[fileManager destinationOfSymbolicLinkAtPath:[selectedEntry path] error:nil]];
-    }
-
-    //Tapped entry is directory
-    else
-    {
-      nextController.currentPath = selectedEntry;
-    }
-
-    //Present next directory
-    [self.navigationController pushViewController:nextController animated:YES];
+    self.navigationItem.rightBarButtonItem.enabled = YES;
   }
 }
+
 @end
 
 @implementation filePickerNavigationController
+
+- (id)newTableViewControllerWithPath:(NSURL*)path
+{
+  return [[filePickerTableViewController alloc] initWithPath:path];
+}
+
 @end

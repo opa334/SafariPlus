@@ -1,0 +1,108 @@
+{
+	title = "ENHANCED_DOWNLOADS";
+	items =
+	(
+    {
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "ENHANCED_DOWNLOADS_FOOTER";
+		},
+    {
+      cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "ENHANCED_DOWNLOADS";
+			key = "enhancedDownloadsEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+    },
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "INSTANT_DOWNLOAD_FOOTER";
+		},
+    {
+      cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "INSTANT_DOWNLOAD";
+			key = "instantDownloadsEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+    },
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "PSListItemsController";
+			key = "instantDownloadsOption";
+			label = "OPTION";
+			valuesDataSource = "instantDownloadValues";
+			titlesDataSource = "instantDownloadTitles";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "CUSTOM_DEFAULT_PATH_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "CUSTOM_DEFAULT_PATH";
+			key = "customDefaultPathEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSStaticTextCell";
+			defaults = "com.opa334.safariplusprefs";
+			label = "/User";
+		},
+		{
+			cell = "PSEditTextCell";
+			default = "";
+			isURL = true;
+			placeholder = "/Downloads/";
+			defaults = "com.opa334.safariplusprefs";
+			key = "customDefaultPath";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "ONLY_DOWNLOAD_ON_WIFI_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "ONLY_DOWNLOAD_ON_WIFI";
+			key = "onlyDownloadOnWifiEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "DISABLE_PUSH_NOTIFICATIONS_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "DISABLE_PUSH_NOTIFICATIONS";
+			key = "disablePushNotificationsEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "DISABLE_BAR_NOTIFICATIONS_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "DISABLE_BAR_NOTIFICATIONS";
+			key = "disableBarNotificationsEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+  );
+}

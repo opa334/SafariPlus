@@ -2,6 +2,7 @@
 
 "GENERAL" = "Allgemein";
 "ACTION_ADDONS" = "Aktionen Erweiterungen";
+"DOWNLOAD_ADDONS" = "Download Erweiterungen";
 "GESTURE_ADDONS" = "Gesten Erweiterungen";
 "OTHER_ADDONS" = "Andere Erweiterungen";
 "COLOR_SETTINGS" = "Farbeinstellungen";
@@ -22,7 +23,7 @@
 "OPEN_IN_NEW_TAB_FOOTER" = "Fügt eine weitere 'In neuem Tab öffnen' Option zum Menü hinzu, das beim langen gedrückt halten von Links erscheint.\nStelle 'Links öffnen' in den Safari Einstellungen auf 'Im Hintergrund', um im Menü Zugriff auf beide Optionen zu haben.";
 "OPEN_IN_NEW_TAB" = "'In neuem Tab öffnen' Option";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann.\nHINWEIS: Diese Option beinflusst alle Browser, die Webkit nutzen (z.B. Google Chrome), nicht nur Safari.";
+"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt und hochgeladen werden.\nHINWEIS: Diese Option beinflusst alle Browser, die Webkit nutzen (z.B. Google Chrome), nicht nur Safari.";
 "UPLOAD_ANY_FILE" = "Jede Datei hochladen";
 
 "DESKTOP_SWITCH_FOOTER" = "Fügt einen Button zum Tab Switcher hinzu, mit dem global zwischen dem mobilen und dem desktop Modus gewechselt werden kann.";
@@ -30,6 +31,27 @@
 
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Lässt dich auf Such / URL Vorschläge lange Drücken, um diese in die URL Leiste einzufügen.";
 "LONG_PRESS_SUGGESTIONS" = "Lange auf Vorschläge drücken";
+
+/* Download Settings */
+
+"ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
+"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /User/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads abgebrochen.";
+
+"INSTANT_DOWNLOAD" = "Direkter Download";
+"INSTANT_DOWNLOAD_FOOTER" = "Deaktiviert das Download-Menü und benutzt standardmäßig immer die ausgewählte Option.";
+"OPTION" = "Option";
+
+"CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Pfad";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /User (/private/var/mobile) Verzeichnisses abgespeichert werden!";
+
+"ONLY_DOWNLOAD_ON_WIFI" = "Nur über WLAN herunterladen";
+"ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Erlaubt das Herunterladen von Dateien nur, während das Gerät mit einem WLAN-Netzwerk verbunden ist.";
+
+"DISABLE_PUSH_NOTIFICATIONS" = "Push-Mitteilungen deaktivieren";
+"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Standardmäßig erhälst du eine Push-Mitteilung, wenn ein Download fertiggestellt wurde, diese Option deaktiviert das.";
+
+"DISABLE_BAR_NOTIFICATIONS" = "Status-Mitteilungen deaktivieren";
+"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Standardmäßig erhälst du eine Mitteilung in der Statusleiste, wenn ein Download gestartet oder fertiggestellt wurde, diese Option deaktiviert das.";
 
 /* Action Settings */
 
@@ -134,8 +156,37 @@
 "PICKER_INSPIRED" = "Dateiauswahl inspiriert von";
 
 /* In app */
-"OPEN_IN_NEW_TAB_OPTION" = "In neuem Tab öffnen";
 "LOCAL_FILE" = "Lokale Datei";
 
 /* File picker */
+"DISMISS" = "Schließen";
 "CANCEL" = "Abbrechen";
+"UPLOAD" = "Hochladen";
+
+/* Downloads */
+"DOWNLOAD" = "Herunterladen";
+"DOWNLOAD_TO" = "Herunterladen nach...";
+"OPEN" = "Öffnen";
+"OPEN_IN" = "Öffnen in...";
+"SHOW_IN_FILZA" = "In Filza anzeigen";
+"DELETE_FILE" = "Datei löschen";
+"WARNING" = "Warnung!";
+"DELETE_FILE_MESSAGE" = "Soll die Datei <fn> wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
+"DELETE" = "Löschen";
+"DOWNLOAD_STARTED" = "Download gestartet";
+"DOWNLOAD_SUCCESS" = "Download abgeschlossen";
+"ERROR" = "Fehler";
+"FILE_EXISTS_MESSAGE" = "Am Zielpfad existiert bereits eine Datei mit dem aktuellen Namen!";
+"REPLACE_FILE" = "Datei ersetzen";
+"CHANGE_PATH" = "Download-Pfad ändern";
+"PENDING_DOWNLOADS" = "Ausstehende Downloads";
+"FILES" = "Dateien";
+"CHOOSE" = "Auswählen";
+"START_DOWNLOAD" = "Download starten";
+"CHOOSE_FILENAME" = "Dateinamen auswählen";
+"FILENAME" = "Dateiname";
+"CLOSE" = "Schließen";
+"CLOSE_PICKER" = "Auswahl beenden";
+"WRONG_PATH_MESSAGE" = "Wegen fehlenden Root Rechten, kann nur innerhalb des /User (/private/var/mobile) Verzeichnisses heruntergeladen werden. Bitte wähle einen anderen Pfad.";
+"PLAY" = "Abspielen";
+"CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";

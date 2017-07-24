@@ -4,7 +4,6 @@
 // (c) 2017 opa334
 
 #import "SafariPlusPrefs.h"
-#import "../LGShared.xm"
 
 @implementation SafariPlusRootListController
 
@@ -14,7 +13,7 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	return _specifiers;
 }
 
@@ -33,9 +32,39 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"GeneralPrefs" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"GENERAL"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"GENERAL"]];
 	return _specifiers;
+}
+
+@end
+
+@implementation DownloadPrefsController
+
+- (NSArray *)specifiers
+{
+	if(!_specifiers)
+	{
+		_specifiers = [self loadSpecifiersFromPlistName:@"DownloadPrefs" target:self];
+	}
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"DOWNLOAD_ADDONS"]];
+	return _specifiers;
+}
+
+- (NSArray *)instantDownloadValues
+{
+	return @[@1, @2];
+}
+
+- (NSArray *)instantDownloadTitles
+{
+	NSMutableArray* titles = [@[@"DOWNLOAD", @"DOWNLOAD_TO"] mutableCopy];
+	for(int i = 0; i < titles.count; i++)
+	{
+		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
+	}
+	return titles;
 }
 
 @end
@@ -46,16 +75,21 @@
 {
 	if(!_specifiers)
 	{
+		if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
+		{
+			[@{} writeToFile:otherPlistPath atomically:NO];
+		}
+
 		if(!plist)
 		{
-			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
 		}
 
 		if(![[plist allKeys] containsObject:@"ForceHTTPSExceptions"])
 		{
 			ForceHTTPSExceptions = [NSMutableArray new];
 			[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
-			[plist writeToFile:plistPath atomically:YES];
+			[plist writeToFile:otherPlistPath atomically:YES];
 		}
 		else
 		{
@@ -65,18 +99,18 @@
 		NSMutableArray* specifiers = [NSMutableArray new];
 
 		PSSpecifier* URLListGroup = [PSSpecifier preferenceSpecifierNamed:@""
-								target:self
+									target:self
 									set:nil
 									get:nil
-								detail:nil
+									detail:nil
 									cell:PSGroupCell
 									edit:nil];
 
 		[specifiers addObject:URLListGroup];
 
-		for(int i = 0; i < [ForceHTTPSExceptions count]; i++)
+		for(NSString* exception in ForceHTTPSExceptions)
 		{
-			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:ForceHTTPSExceptions[i]
+			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:exception
 									target:self
 										set:@selector(setPreferenceValue:specifier:)
 										get:@selector(readPreferenceValue:)
@@ -92,43 +126,43 @@
 		_specifiers = (NSArray*)[specifiers copy];
 	}
 
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"FORCE_HTTPS_EXCEPTIONS_TITLE"]];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"FORCE_HTTPS_EXCEPTIONS_TITLE"]];
 	return _specifiers;
 }
 
 - (void)addButtonPressed
 {
-	UIAlertController * addExceptionAlert = [UIAlertController alertControllerWithTitle:[LGShared localisedStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
-											message:[LGShared localisedStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
+	UIAlertController * addExceptionAlert = [UIAlertController alertControllerWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
+											message:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
 											preferredStyle:UIAlertControllerStyleAlert];
 
 	[addExceptionAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
-		textField.placeholder = [LGShared localisedStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
-		textField.textColor = [UIColor blueColor];
+		textField.placeholder = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
+		textField.textColor = [UIColor blackColor];
 		textField.keyboardType = UIKeyboardTypeURL;
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-		textField.borderStyle = UITextBorderStyleRoundedRect;
+		textField.borderStyle = UITextBorderStyleNone;
 	}];
 
-	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[LGShared localisedStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
+	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
 	{
 		[addExceptionAlert dismissViewControllerAnimated:YES completion:nil];
 	}]];
 
-	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[LGShared localisedStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 	{
 		UITextField * URLField = addExceptionAlert.textFields[0];
 
 		[ForceHTTPSExceptions addObject:URLField.text];
 		[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
-		[plist writeToFile:plistPath atomically:YES];
+		[plist writeToFile:otherPlistPath atomically:YES];
 
 		PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:URLField.text
-								target:self
+									target:self
 									set:@selector(setPreferenceValue:specifier:)
 									get:@selector(readPreferenceValue:)
-								detail:nil
+									detail:nil
 									cell:PSStaticTextCell
 									edit:nil];
 
@@ -155,7 +189,7 @@
 	BOOL orig = [super performDeletionActionForSpecifier:specifier];
 	[ForceHTTPSExceptions removeObject:[specifier name]];
 	[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
-	[plist writeToFile:plistPath atomically:YES];
+	[plist writeToFile:otherPlistPath atomically:YES];
 	return orig;
 }
 @end
@@ -168,8 +202,8 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"ActionPrefs" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"ACTION_ADDONS"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ACTION_ADDONS"]];
 	return _specifiers;
 }
 
@@ -183,7 +217,7 @@
 	NSMutableArray* titles = [@[@"NORMAL_MODE", @"PRIVATE_MODE"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [LGShared localisedStringForKey:titles[i]];
+		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -198,7 +232,7 @@
 	NSMutableArray* titles = [@[@"SAFARI_CLOSED", @"SAFARI_MINIMIZED"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [LGShared localisedStringForKey:titles[i]];
+		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -213,7 +247,7 @@
 	NSMutableArray* titles = [@[@"ACTIVE_MODE", @"NORMAL_MODE", @"PRIVATE_MODE", @"BOTH_MODES"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [LGShared localisedStringForKey:titles[i]];
+		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -228,8 +262,8 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"GesturePrefs" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"GESTURE_ADDONS"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"GESTURE_ADDONS"]];
 	return _specifiers;
 }
 
@@ -243,7 +277,7 @@
 	NSMutableArray* titles = [@[@"CLOSE_ACTIVE_TAB", @"OPEN_NEW_TAB", @"DUPLICATE_ACTIVE_TAB", @"CLOSE_ALL_TABS", @"SWITCH_MODE", @"TAB_BACKWARD", @"TAB_FORWARD", @"RELOAD_ACTIVE_TAB", @"REQUEST_DESTKOP_SITE", @"OPEN_FIND_ON_PAGE"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [LGShared localisedStringForKey:titles[i]];
+		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -258,8 +292,8 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"OtherPrefs" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"OTHER_ADDONS"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"OTHER_ADDONS"]];
 	return _specifiers;
 }
 @end
@@ -272,8 +306,8 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"ColorPrefs" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"COLOR_SETTINGS"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"COLOR_SETTINGS"]];
 	return _specifiers;
 }
 @end
@@ -286,8 +320,8 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"NormalColorPrefs" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"NORMAL_MODE"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL_MODE"]];
 	return _specifiers;
 }
 
@@ -306,8 +340,8 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"PrivateColorPrefs" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"PRIVATE_MODE"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE_MODE"]];
 	return _specifiers;
 }
 
@@ -326,8 +360,8 @@
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"Credits" target:self];
 	}
-	[LGShared parseSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[LGShared localisedStringForKey:@"CREDITS"]];
+	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CREDITS"]];
 	return _specifiers;
 }
 
@@ -339,16 +373,6 @@
 - (void)deviceButtonLink
 {
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://icons8.com/icon/79/iphone"]];
-}
-
-- (void)fileLink
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://icons8.com/icon/11651/file"]];
-}
-
-- (void)directoryLink
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://icons8.com/icon/843/file"]];
 }
 
 - (void)LockGlyphXRepoLink
@@ -363,7 +387,7 @@
 
 - (void)WatusiLink
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.reddit.com/r/jailbreak/comments/57fgpf/release_discussion_watusi_2_the_ultimate_whatsapp/"]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.reddit.com/r/jailbreak/comments/6f7zdn/release_watusi_2_your_allinone_tweak_for_whatsapp/"]];
 }
 
 @end

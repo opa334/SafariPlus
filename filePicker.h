@@ -3,24 +3,21 @@
 
 // (c) 2017 opa334
 
-#import "LGShared.h"
-#define imageBundlePath @"/Library/Application Support/SafariPlus.bundle"
+#import "fileBrowser.h"
 
 @class filePickerNavigationController;
 
 @protocol filePickerDelegate<NSObject>
--(void)didSelectFileAtURL:(NSURL*)url shouldCancel:(BOOL)cancel;
+- (void)didSelectFilesAtURL:(NSArray*)URLArray;
 @end
 
-@interface filePickerNavigationController : UINavigationController {}
+@interface filePickerNavigationController : fileBrowserNavigationController {}
 @property (nonatomic, weak) id<filePickerDelegate> filePickerDelegate;
 @end
 
-@interface filePickerTableViewController : UITableViewController
-{
-  NSMutableArray* filesAtCurrentPath;
-  NSFileManager* fileManager;
-}
-@property filePickerNavigationController* navController;
-@property NSURL* currentPath;
+@interface filePickerTableViewController : fileBrowserTableViewController {}
+- (void)tableWasLongPressed:(UILongPressGestureRecognizer *)gestureRecognizer;
+- (void)toggleEditing;
+- (void)uploadSelectedItems;
+- (void)updateTopRightButtonAvailability;
 @end

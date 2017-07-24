@@ -4,10 +4,11 @@
 // (c) 2017 opa334
 
 #define bundlePath @"/Library/PreferenceBundles/SafariPlusPrefs.bundle"
-#define plistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"
+#define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSSpecifier.h>
+#import "SPPreferenceLocalizationManager.h"
 
 @interface PSEditableListController : PSListController {}
 - (id)_editButtonBarItem;
@@ -19,6 +20,9 @@
 @end
 
 @interface GeneralPrefsController : PSListController {}
+@end
+
+@interface DownloadPrefsController : PSListController {}
 @end
 
 @interface ExceptionsController : PSEditableListController {

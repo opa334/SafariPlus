@@ -18,6 +18,12 @@
 		{
 			cell = "PSLinkListCell";
 			defaults = "com.opa334.safariplusprefs";
+			detail = "DownloadPrefsController";
+      label = DOWNLOAD_ADDONS;
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
 			detail = "ActionPrefsController";
       label = ACTION_ADDONS;
 		},
