@@ -112,7 +112,7 @@
 {
   if(preferenceManager.customDefaultPathEnabled)
   {
-    return [NSURL fileURLWithPath:preferenceManager.customDefaultPath];
+    return [NSURL fileURLWithPath:[NSString stringWithFormat:@"/User%@", preferenceManager.customDefaultPath]];
   }
   else
   {

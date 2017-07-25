@@ -17,10 +17,14 @@
 	return _specifiers;
 }
 
-
 - (void)sourceLink
 {
   [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];
+}
+
+- (void)donationLink
+{
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.me/opa334d"]];
 }
 @end
 

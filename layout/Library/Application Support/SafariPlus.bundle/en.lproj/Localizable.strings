@@ -8,6 +8,9 @@
 "COLOR_SETTINGS" = "Color Settings";
 "SOURCE_CODE" = "Source Code";
 
+"DONATE" = "Donate";
+"DONATE_FOOTER" = "If you like this tweak, feel free to donate a small amount of money to support me! :)";
+
 /* General Settings */
 
 "FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: You can add sites that don't support HTTPS to exceptions to get them working again.";
@@ -23,7 +26,7 @@
 "OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
 "OPEN_IN_NEW_TAB" = "'Open in new Tab' Option";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Adds a new option to the document upload menu that lets you pick any file from the root of your device. You can also select and upload multiple files through long pressing on a file.\nNOTE: This option affects any browser that uses webkit (eg. Google Chrome), not just Safari.";
+"UPLOAD_ANY_FILE_FOOTER" = "Adds a new option to the document upload menu that lets you pick any file from the root of your device. You can also select and upload multiple files through long pressing on a file.";
 "UPLOAD_ANY_FILE" = "Upload any File";
 
 "DESKTOP_SWITCH_FOOTER" = "Adds a button to the tab switcher, which you can use to globally switch between mobile / desktop mode.";

@@ -65,6 +65,15 @@
 		},
 		{
 			cell = PSGroupCell;
+			footerText = "DONATE_FOOTER";
+		},
+		{
+			action = donationLink;
+			cell = PSButtonCell;
+			label = "DONATE";
+		},
+		{
+			cell = PSGroupCell;
 			footerText = "© 2017 opa334";
 		},
 	);

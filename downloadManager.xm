@@ -241,7 +241,6 @@
 
 - (void)startDownloadFromRequest:(NSURLRequest*)request
 {
-  NSLog(@"Download started");
   NSURLSessionConfiguration* config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.identifier];
   config.sessionSendsLaunchEvents = YES;
   config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
@@ -266,7 +265,7 @@ totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)
     self.updateCount++;
     self.totalBytesWritten = totalBytesWritten;
     int64_t bytesPerSecond = (totalBytesWritten - self.startBytes) / ([NSDate timeIntervalSinceReferenceDate] - self.startTime);
-    
+
     if(self.cellDelegate)
     {
       [self.cellDelegate updateProgress:totalBytesWritten totalBytes:totalBytesExpectedToWrite bytesPerSecond:bytesPerSecond animated:YES];

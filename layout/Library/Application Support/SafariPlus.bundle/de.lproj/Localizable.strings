@@ -8,6 +8,9 @@
 "COLOR_SETTINGS" = "Farbeinstellungen";
 "SOURCE_CODE" = "Quellcode";
 
+"DONATE" = "Spenden";
+"DONATE_FOOTER" = "Wenn dir dieser Tweak gefällt, dann spende doch eine geringe Summe, um mich zu unterstützen! :)";
+
 /* General Settings */
 
 "FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Ausnahmen können hinzugefügt werden, damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
@@ -23,7 +26,7 @@
 "OPEN_IN_NEW_TAB_FOOTER" = "Fügt eine weitere 'In neuem Tab öffnen' Option zum Menü hinzu, das beim langen gedrückt halten von Links erscheint.\nStelle 'Links öffnen' in den Safari Einstellungen auf 'Im Hintergrund', um im Menü Zugriff auf beide Optionen zu haben.";
 "OPEN_IN_NEW_TAB" = "'In neuem Tab öffnen' Option";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt und hochgeladen werden.\nHINWEIS: Diese Option beinflusst alle Browser, die Webkit nutzen (z.B. Google Chrome), nicht nur Safari.";
+"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt und hochgeladen werden.";
 "UPLOAD_ANY_FILE" = "Jede Datei hochladen";
 
 "DESKTOP_SWITCH_FOOTER" = "Fügt einen Button zum Tab Switcher hinzu, mit dem global zwischen dem mobilen und dem desktop Modus gewechselt werden kann.";
