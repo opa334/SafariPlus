@@ -342,7 +342,7 @@
       @"|-[percentProgress]-rightSpace-|" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-      @"V:[sizeProgress(6.0)]-3.0-[progressView(2.5)]-3.0-[percentProgress(6.0)]-3.0-|" options:0 metrics:metrics views:views]];
+      @"V:[sizeProgress(7.0)]-3.0-[progressView(2.5)]-3.0-[percentProgress(7.0)]-3.0-|" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
       @"[pauseResumeButton(buttonSize)]-8.0-|" options:0 metrics:metrics views:views]];
@@ -352,7 +352,7 @@
 
   if(download.totalBytesWritten > 0)
   {
-    [self updateProgress:download.totalBytesWritten totalBytes:download.fileSize animated:NO];
+    [self updateProgress:download.totalBytesWritten totalBytes:download.fileSize bytesPerSecond:0 animated:NO];
   }
 
   if(download.paused)
@@ -412,11 +412,13 @@
   [self.downloadDelegate cancelDownload];
 }
 
-- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated
+- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes bytesPerSecond:(int64_t)bytesPerSecond animated:(BOOL)animated
 {
     float progress = (float)currentBytes / (float)totalBytes;
     self.percentProgress.text = [NSString stringWithFormat:@"%.1f%%", progress * 100];
-    self.sizeProgress.text = [NSByteCountFormatter stringFromByteCount:currentBytes countStyle:NSByteCountFormatterCountStyleFile];
+    self.sizeProgress.text = [NSString stringWithFormat:@"%@ @ %@/s",
+      [NSByteCountFormatter stringFromByteCount:currentBytes countStyle:NSByteCountFormatterCountStyleFile],
+      [NSByteCountFormatter stringFromByteCount:bytesPerSecond countStyle:NSByteCountFormatterCountStyleFile]];
     dispatch_async(dispatch_get_main_queue(),
     ^{
       [self.progressView setProgress:progress animated:animated];

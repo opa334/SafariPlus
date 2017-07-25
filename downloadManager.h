@@ -12,7 +12,7 @@
 
 @protocol DownloadCellDelegate
 @required
-- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated;
+- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes bytesPerSecond:(int64_t)bytesPerSecond animated:(BOOL)animated;
 @end
 
 @protocol DownloadTableDelegate
@@ -63,6 +63,9 @@
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
 @property (nonatomic, weak) id<DownloadCellDelegate> cellDelegate;
 @property (nonatomic) BOOL paused;
+@property (nonatomic) NSInteger updateCount;
+@property (nonatomic) NSTimeInterval startTime;
+@property (nonatomic) int64_t startBytes;
 @property (nonatomic) int64_t totalBytesWritten;
 @property (nonatomic) NSString* fileName;
 @property (nonatomic) int64_t fileSize;

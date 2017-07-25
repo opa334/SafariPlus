@@ -149,6 +149,7 @@
   download.filePath = path;
   download.replaceFile = shouldReplace;
   download.identifier = [self generateIdentifier];
+  download.updateCount = 40;
   [download startDownloadFromRequest:request];
   [self.downloads addObject:download];
 
@@ -240,6 +241,7 @@
 
 - (void)startDownloadFromRequest:(NSURLRequest*)request
 {
+  NSLog(@"Download started");
   NSURLSessionConfiguration* config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.identifier];
   config.sessionSendsLaunchEvents = YES;
   config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
@@ -259,11 +261,27 @@
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten
 totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
-  self.totalBytesWritten = totalBytesWritten;
-
-  if(self.cellDelegate)
+  @try //Avoid crash that happens really really rarely (wasn't even able to reproduce it and I tried it around 50 times)
   {
-    [self.cellDelegate updateProgress:totalBytesWritten totalBytes:totalBytesExpectedToWrite animated:YES];
+    self.updateCount++;
+    self.totalBytesWritten = totalBytesWritten;
+    int64_t bytesPerSecond = (totalBytesWritten - self.startBytes) / ([NSDate timeIntervalSinceReferenceDate] - self.startTime);
+    
+    if(self.cellDelegate)
+    {
+      [self.cellDelegate updateProgress:totalBytesWritten totalBytes:totalBytesExpectedToWrite bytesPerSecond:bytesPerSecond animated:YES];
+    }
+
+    if(self.updateCount >= 40) //refreshing speed every 40 calls
+    {
+      self.startTime = [NSDate timeIntervalSinceReferenceDate];
+      self.startBytes = totalBytesWritten;
+      self.updateCount = 0;
+    }
+  }
+  @catch(NSException* exception)
+  {
+    NSLog(@"EXCEPTION: %@", exception);
   }
 }
 
@@ -282,6 +300,7 @@ totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)
 - (void)resumeDownload
 {
   self.paused = NO;
+  self.updateCount = 40;
   [self.downloadTask resume];
 }
 
