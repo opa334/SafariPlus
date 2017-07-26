@@ -14,8 +14,11 @@
 @interface downloadsNavigationController : fileBrowserNavigationController {}
 @end
 
-@interface downloadsTableViewController : fileBrowserTableViewController <DownloadTableDelegate> {}
+@interface downloadsTableViewController : fileBrowserTableViewController <DownloadTableDelegate, UIDocumentInteractionControllerDelegate> {}
 @property (nonatomic) NSMutableArray* downloadsAtCurrentPath;
+@property (nonatomic, strong) UIDocumentInteractionController* documentController;
+@property (nonatomic) NSURL* tmpSymlinkURL;
+@property (nonatomic) BOOL didSelectOptionFromDocumentController;
 - (id)newCellWithDownload:(Download*)download;
 - (void)startPlayerWithMedia:(NSURL*)mediaURL;
 @end

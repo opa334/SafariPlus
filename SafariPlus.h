@@ -145,6 +145,7 @@
 - (void)updateDesktopMode;
 - (void)autoCloseAction;
 - (void)modeSwitchAction:(int)switchToMode;
+- (void)clearData;
 @end
 
 @interface ApplicationShortcutController : NSObject {}
@@ -164,6 +165,8 @@
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 - (void)_presentModalViewController:(id)arg1 fromButtonIdentifier:(long long)arg2 animated:(BOOL)arg3 completion:(/*^block*/id)arg4;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
+- (void)clearHistoryMessageReceived;
+- (void)clearAutoFillMessageReceived;
 - (void)showFindOnPage; //iOS9
 //new stuff below
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;

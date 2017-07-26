@@ -19,6 +19,14 @@ BOOL desktopButtonSelected;
 
 %hook Application
 
+//Used to clear browser data
+%new
+- (void)clearData
+{
+  [self.shortcutController.browserController clearHistoryMessageReceived];
+  [self.shortcutController.browserController clearAutoFillMessageReceived];
+}
+
 //Used to update the tabs on startup
 %new
 - (void)updateDesktopMode
@@ -363,6 +371,15 @@ BOOL desktopButtonSelected;
 %group iOS9
 
 %hook Application
+
+//Used to clear browser data
+%new
+- (void)clearData
+{
+  BrowserController* controller = MSHookIvar<BrowserController*>(self, "_controller");
+  [controller clearHistoryMessageReceived];
+  [controller clearAutoFillMessageReceived];
+}
 
 //Used to update the tabs on startup
 %new
@@ -807,6 +824,7 @@ BOOL desktopButtonSelected;
   {
     [self modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
   }
+
   return %orig;
 }
 
@@ -817,6 +835,11 @@ BOOL desktopButtonSelected;
   {
     [self autoCloseAction];
   }
+  if(preferenceManager.autoDeleteDataEnabled && preferenceManager.autoDeleteDataOn == 1 /*Safari closed*/)
+  {
+    [self clearData];
+  }
+
   %orig;
 }
 
@@ -827,6 +850,10 @@ BOOL desktopButtonSelected;
   if(preferenceManager.autoCloseTabsEnabled && preferenceManager.autoCloseTabsOn == 2 /*Safari minimized*/)
   {
     [self autoCloseAction];
+  }
+  if(preferenceManager.autoDeleteDataEnabled && preferenceManager.autoDeleteDataOn == 2 /*Safari closed*/)
+  {
+    [self clearData];
   }
 
   %orig;

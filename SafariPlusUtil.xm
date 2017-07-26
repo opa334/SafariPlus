@@ -49,6 +49,8 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
   [preferences registerBool:&_autoCloseTabsEnabled default:NO forKey:@"autoCloseTabsEnabled"];
   [preferences registerInteger:&_autoCloseTabsOn default:0 forKey:@"autoCloseTabsOn"];
   [preferences registerInteger:&_autoCloseTabsFor default:0 forKey:@"autoCloseTabsFor"];
+  [preferences registerBool:&_autoDeleteDataEnabled default:NO forKey:@"autoDeleteDataEnabled"];
+  [preferences registerInteger:&_autoDeleteDataOn default:0 forKey:@"autoDeleteDataOn"];
 
   [preferences registerBool:&_URLLeftSwipeGestureEnabled default:NO forKey:@"URLLeftSwipeGestureEnabled"];
   [preferences registerInteger:&_URLLeftSwipeAction default:0 forKey:@"URLLeftSwipeAction"];

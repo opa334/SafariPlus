@@ -43,6 +43,8 @@ extern NSBundle* MSBundle;
 @property(nonatomic, readonly) BOOL autoCloseTabsEnabled;
 @property(nonatomic, readonly) NSInteger autoCloseTabsOn;
 @property(nonatomic, readonly) NSInteger autoCloseTabsFor;
+@property(nonatomic, readonly) BOOL autoDeleteDataEnabled;
+@property(nonatomic, readonly) NSInteger autoDeleteDataOn;
 
 @property(nonatomic, readonly) BOOL URLLeftSwipeGestureEnabled;
 @property(nonatomic, readonly) NSInteger URLLeftSwipeAction;

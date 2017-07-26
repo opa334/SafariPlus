@@ -107,5 +107,28 @@
 			titlesDataSource = "closeModeTitles";
 			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
 		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "AUTO_DELETE_DATA_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "autoDeleteDataEnabled";
+			label = "AUTO_DELETE_DATA_LABEL";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "PSListItemsController";
+			key = "autoDeleteDataOn";
+			label = "ON";
+			valuesDataSource = "stateValues";
+			titlesDataSource = "stateTitles";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
 	);
 }

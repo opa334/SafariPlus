@@ -168,9 +168,15 @@
     UIAlertAction *openInAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN_IN"]
           style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
           {
-            UIDocumentInteractionController* documentController = [UIDocumentInteractionController interactionControllerWithURL:entryURL];
-            CGRect rect = CGRectMake(0, 0, 0, 0);
-            [documentController presentOpenInMenuFromRect:rect inView:self.view animated:YES];
+            //Creating temporary link cause we ain't inside sandbox (silly, right?)
+            self.tmpSymlinkURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", NSTemporaryDirectory(), entryURL.lastPathComponent]];
+            [[NSFileManager defaultManager] linkItemAtURL:entryURL.URLByResolvingSymlinksInPath toURL:self.tmpSymlinkURL error:nil];
+
+            self.didSelectOptionFromDocumentController = NO;
+
+            self.documentController = [UIDocumentInteractionController interactionControllerWithURL:self.tmpSymlinkURL];
+            self.documentController.delegate = self;
+            [self.documentController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
           }];
 
     [openAlert addAction:openInAction];
@@ -231,6 +237,28 @@
     [self presentViewController:openAlert animated:YES completion:nil];
   }
   [super selectedEntryAtURL:entryURL type:type atIndexPath:indexPath];
+}
+
+//https://stackoverflow.com/a/35619091
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
+{
+  self.didSelectOptionFromDocumentController = YES;
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application
+{
+  //Clean up
+  [[NSFileManager defaultManager] removeItemAtURL:self.tmpSymlinkURL error:nil];
+}
+
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
+{
+  if(self.didSelectOptionFromDocumentController == NO) //Cancelled
+  {
+    //Clean up
+    [[NSFileManager defaultManager] removeItemAtURL:self.tmpSymlinkURL error:nil];
+  }
 }
 
 - (void)startPlayerWithMedia:(NSURL*)mediaURL

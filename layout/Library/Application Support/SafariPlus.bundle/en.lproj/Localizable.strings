@@ -77,6 +77,8 @@
 
 "AUTO_CLOSE_TABS_FOOTER" = "Closes tabs of specified browsing mode when the specified case occurs.";
 "AUTO_CLOSE_TABS_LABEL" = "Auto-close Tabs";
+"AUTO_DELETE_DATA_LABEL" = "Auto-delete Browser Data";
+"AUTO_DELETE_DATA_FOOTER" = "Removes browser data (history, autofill) when the specified case occurs.";
 "SAFARI_CLOSED" = "Safari closed";
 "SAFARI_MINIMIZED" = "Safari minimized";
 
