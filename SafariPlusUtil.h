@@ -20,10 +20,11 @@ extern NSBundle* MSBundle;
   HBPreferences *preferences;
 }
 
-@property(nonatomic, readonly) BOOL enableFullscreenScrolling;
 @property(nonatomic, readonly) BOOL forceHTTPSEnabled;
-@property(nonatomic, readonly) BOOL disablePrivateMode;
+@property(nonatomic, readonly) BOOL openInNewTabOptionEnabled;
 @property(nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;
+@property(nonatomic, readonly) BOOL desktopButtonEnabled;
+@property(nonatomic, readonly) BOOL longPressSuggestionsEnabled;
 
 @property(nonatomic, readonly) BOOL enhancedDownloadsEnabled;
 @property(nonatomic, readonly) BOOL instantDownloadsEnabled;
@@ -54,9 +55,9 @@ extern NSBundle* MSBundle;
 @property(nonatomic, readonly) NSInteger URLDownSwipeAction;
 @property(nonatomic, readonly) BOOL gestureBackground;
 
-@property(nonatomic, readonly) BOOL openInNewTabOptionEnabled;
-@property(nonatomic, readonly) BOOL desktopButtonEnabled;
-@property(nonatomic, readonly) BOOL longPressSuggestionsEnabled;
+@property(nonatomic, readonly) BOOL enableFullscreenScrolling;
+@property(nonatomic, readonly) BOOL disablePrivateMode;
+@property(nonatomic, readonly) BOOL suppressMailToDialog;
 
 @property(nonatomic, readonly) BOOL appTintColorNormalEnabled;
 @property(nonatomic, readonly,retain) NSString* appTintColorNormal;

@@ -26,10 +26,11 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
   preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
 
-  [preferences registerBool:&_enableFullscreenScrolling default:NO forKey:@"fullscreenScrollingEnabled"];
   [preferences registerBool:&_forceHTTPSEnabled default:NO forKey:@"forceHTTPSEnabled"];
-  [preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
+  [preferences registerBool:&_openInNewTabOptionEnabled default:NO forKey:@"openInNewTabOptionEnabled"];
   [preferences registerBool:&_uploadAnyFileOptionEnabled default:NO forKey:@"uploadAnyFileOptionEnabled"];
+  [preferences registerBool:&_desktopButtonEnabled default:NO forKey:@"desktopButtonEnabled"];
+  [preferences registerBool:&_longPressSuggestionsEnabled default:NO forKey:@"longPressSuggestionsEnabled"];
 
   [preferences registerBool:&_enhancedDownloadsEnabled default:NO forKey:@"enhancedDownloadsEnabled"];
   [preferences registerBool:&_instantDownloadsEnabled default:NO forKey:@"instantDownloadsEnabled"];
@@ -60,9 +61,9 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
   [preferences registerInteger:&_URLDownSwipeAction default:0 forKey:@"URLDownSwipeAction"];
   [preferences registerBool:&_gestureBackground default:NO forKey:@"gestureBackground"];
 
-  [preferences registerBool:&_openInNewTabOptionEnabled default:NO forKey:@"openInNewTabOptionEnabled"];
-  [preferences registerBool:&_desktopButtonEnabled default:NO forKey:@"desktopButtonEnabled"];
-  [preferences registerBool:&_longPressSuggestionsEnabled default:NO forKey:@"longPressSuggestionsEnabled"];
+  [preferences registerBool:&_enableFullscreenScrolling default:NO forKey:@"fullscreenScrollingEnabled"];
+  [preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
+  [preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
 
   [preferences registerBool:&_appTintColorNormalEnabled default:NO forKey:@"appTintColorNormalEnabled"];
   [preferences registerObject:&_appTintColorNormal default:@"#ffffff" forKey:@"appTintColorNormal"];
