@@ -119,6 +119,8 @@
 "FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
 "DISABLE_PRIVATE_MODE_FOOTER" = "Disables private browsing mode and removes the 'Private' button. (Hidden stock feature)";
 "DISABLE_PRIVATE_MODE" = "Fully disable private browsing";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 when a 'mailto:<email>' URL is accessed.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10) Suppress mailto dialog";
 
 /* Color Settings */
 

@@ -119,6 +119,8 @@
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
 "DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
 "DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 beim Aufrufen eines 'mailto:<email>' Links erscheint.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10) Mailto Dialog deaktivieren";
 
 /* Color Settings */
 
