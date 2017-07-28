@@ -28,5 +28,18 @@
 			label = "DISABLE_PRIVATE_MODE";
 			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
 		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
+			footerText = "SUPPRESS_MAILTO_DIALOG_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "suppressMailToDialog";
+			label = "SUPPRESS_MAILTO_DIALOG";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
 	);
 }

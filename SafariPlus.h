@@ -60,8 +60,13 @@
 @interface _SFBookmarkInfoViewController : UITableViewController {}
 @end
 
+@interface _SFDialog : NSObject {}
+@property (nonatomic,copy,readonly) NSString * defaultText;
+- (void)finishWithPrimaryAction:(BOOL)arg1 text:(id)arg2;
+@end
+
 @interface _SFDialogController : NSObject {}
-- (void)owningWebViewWillBecomeActive;
+-(void)_dismissDialog;
 @end
 
 @interface _SFDownloadController : NSObject {}
@@ -273,7 +278,7 @@
 @property (nonatomic,copy) NSString * customUserAgent;
 @property (nonatomic,readonly) FindOnPageView * findOnPageView;
 @property (nonatomic,retain) _SFDownloadController * downloadController;
-- (id)URL;
+- (NSURL*)URL;
 - (BOOL)isBlankDocument;
 - (id)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;

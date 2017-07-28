@@ -275,6 +275,19 @@ BOOL desktopButtonSelected;
 
 %hook TabDocument
 
+- (void)dialogController:(_SFDialogController*)dialogController willPresentDialog:(_SFDialog*)dialog
+{
+  if(preferenceManager.suppressMailToDialog && [[self URL].scheme isEqualToString:@"mailto"])
+  {
+    [dialog finishWithPrimaryAction:YES text:dialog.defaultText];
+    [dialogController _dismissDialog];
+  }
+  else
+  {
+    %orig;
+  }
+}
+
 //Extra 'Open in new Tab' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
@@ -661,7 +674,7 @@ BOOL desktopButtonSelected;
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
   BOOL tabBar = MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.usesTabBar;
-  if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
+  if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed when a TabBar exists
   {
     NSMutableArray* options = %orig;
 
