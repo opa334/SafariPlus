@@ -443,16 +443,15 @@
 - (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes bytesPerSecond:(int64_t)bytesPerSecond animated:(BOOL)animated
 {
     float progress = (float)currentBytes / (float)totalBytes;
-    self.percentProgress.text = [NSString stringWithFormat:@"%.1f%%", progress * 100];
-    self.sizeProgress.text = [NSString stringWithFormat:@"%@ @ %@/s",
+    NSString* percentProgressString = [NSString stringWithFormat:@"%.1f%%", progress * 100];
+    NSString* sizeProgressString = [NSString stringWithFormat:@"%@ @ %@/s",
       [NSByteCountFormatter stringFromByteCount:currentBytes countStyle:NSByteCountFormatterCountStyleFile],
       [NSByteCountFormatter stringFromByteCount:bytesPerSecond countStyle:NSByteCountFormatterCountStyleFile]];
     dispatch_async(dispatch_get_main_queue(),
     ^{
       [self.progressView setProgress:progress animated:animated];
-      [self.progressView setNeedsDisplay];
-      [self.percentProgress setNeedsDisplay];
-      [self.sizeProgress setNeedsDisplay];
+      self.percentProgress.text = percentProgressString;
+      self.sizeProgress.text = sizeProgressString;
     });
 }
 

@@ -260,27 +260,20 @@
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten
 totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
-  @try //Avoid crash that happens really really rarely (wasn't even able to reproduce it and I tried it around 50 times)
+  self.updateCount++;
+  self.totalBytesWritten = totalBytesWritten;
+  int64_t bytesPerSecond = (totalBytesWritten - self.startBytes) / ([NSDate timeIntervalSinceReferenceDate] - self.startTime);
+
+  if(self.cellDelegate)
   {
-    self.updateCount++;
-    self.totalBytesWritten = totalBytesWritten;
-    int64_t bytesPerSecond = (totalBytesWritten - self.startBytes) / ([NSDate timeIntervalSinceReferenceDate] - self.startTime);
-
-    if(self.cellDelegate)
-    {
-      [self.cellDelegate updateProgress:totalBytesWritten totalBytes:totalBytesExpectedToWrite bytesPerSecond:bytesPerSecond animated:YES];
-    }
-
-    if(self.updateCount >= 40) //refreshing speed every 40 calls
-    {
-      self.startTime = [NSDate timeIntervalSinceReferenceDate];
-      self.startBytes = totalBytesWritten;
-      self.updateCount = 0;
-    }
+    [self.cellDelegate updateProgress:totalBytesWritten totalBytes:totalBytesExpectedToWrite bytesPerSecond:bytesPerSecond animated:YES];
   }
-  @catch(NSException* exception)
+
+  if(self.updateCount >= 40) //refreshing speed every 40 calls
   {
-    NSLog(@"EXCEPTION: %@", exception);
+    self.startTime = [NSDate timeIntervalSinceReferenceDate];
+    self.startBytes = totalBytesWritten;
+    self.updateCount = 0;
   }
 }
 
