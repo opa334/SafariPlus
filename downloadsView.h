@@ -29,6 +29,8 @@
 @property UIProgressView* progressView;
 @property UILabel* percentProgress;
 @property UILabel* sizeProgress;
+@property UILabel* sizeSpeedSeperator;
+@property UILabel* downloadSpeed;
 @property UIButton* pauseResumeButton;
 @property UIButton* stopButton;
 - (id)initWithDownload:(Download*)download;

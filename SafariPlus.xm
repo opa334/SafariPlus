@@ -1268,16 +1268,10 @@ BOOL showAlert = YES;
 - (NSURL*)URLHandler:(NSURL*)URL
 {
   NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:URL resolvingAgainstBaseURL:NO];
-  if(preferenceManager.forceHTTPSEnabled)
+
+  if(preferenceManager.forceHTTPSEnabled && [URL.scheme isEqualToString:@"http"] && [self shouldRequestHTTPS:URL])
   {
-    if([self shouldRequestHTTPS:URL])
-    {
-      URLComponents.scheme = @"https";
-    }
-    else
-    {
-      URLComponents.scheme = @"http";
-    }
+    URLComponents.scheme = @"https";
   }
 
   if(preferenceManager.desktopButtonEnabled && desktopButtonSelected)
