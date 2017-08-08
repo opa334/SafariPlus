@@ -1,6 +1,4 @@
 //  SafariPlusPrefs.m
-//  Preference bundle for SafariPlus
-
 // (c) 2017 opa334
 
 #import "SafariPlusPrefs.h"

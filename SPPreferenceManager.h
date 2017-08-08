@@ -1,19 +1,12 @@
-//  SafariPlusUtil.h
-//  Headers for utils
-
+//  SPPreferenceManager.h
 // (c) 2017 opa334
 
 #import <Cephei/HBPreferences.h>
-@import WebKit;
 
-#define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-
-@class SPPreferenceManager, SPLocalizationManager;
+@class SPPreferenceManager;
 
 extern SPPreferenceManager* preferenceManager;
-extern SPLocalizationManager* localizationManager;
-extern NSBundle* SPBundle;
-extern NSBundle* MSBundle;
+static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 @interface SPPreferenceManager : NSObject
 {
@@ -94,14 +87,5 @@ extern NSBundle* MSBundle;
 @property(nonatomic, readonly,retain) NSString* bottomBarColorPrivate;
 
 + (instancetype)sharedInstance;
-
-@end
-
-
-@interface SPLocalizationManager : NSObject {}
-
-+ (instancetype)sharedInstance;
-- (NSString*)localizedSPStringForKey:(NSString*)key;
-- (NSString*)localizedMSStringForKey:(NSString*)key;
 
 @end

@@ -172,9 +172,9 @@
 
 /* Downloads */
 "DOWNLOAD" = "Herunterladen";
-"DOWNLOAD_TO" = "Herunterladen nach...";
+"DOWNLOAD_TO" = "Herunterladen nach ...";
 "OPEN" = "Öffnen";
-"OPEN_IN" = "Öffnen in...";
+"OPEN_IN" = "Öffnen in ...";
 "SHOW_IN_FILZA" = "In Filza anzeigen";
 "DELETE_FILE" = "Datei löschen";
 "WARNING" = "Warnung!";
@@ -182,6 +182,7 @@
 "DELETE" = "Löschen";
 "DOWNLOAD_STARTED" = "Download gestartet";
 "DOWNLOAD_SUCCESS" = "Download abgeschlossen";
+"SAVED_IMAGE" = "Bild gespeichert";
 "ERROR" = "Fehler";
 "FILE_EXISTS_MESSAGE" = "Am Zielpfad existiert bereits eine Datei mit dem aktuellen Namen!";
 "REPLACE_FILE" = "Datei ersetzen";

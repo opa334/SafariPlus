@@ -182,6 +182,7 @@
 "DELETE" = "Delete";
 "DOWNLOAD_STARTED" = "Download started";
 "DOWNLOAD_SUCCESS" = "Download succeeded";
+"SAVED_IMAGE" = "Saved Image";
 "ERROR" = "Error";
 "FILE_EXISTS_MESSAGE" = "A file already exists at the target path!";
 "REPLACE_FILE" = "Replace File";

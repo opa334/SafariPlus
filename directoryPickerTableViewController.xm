@@ -1,9 +1,7 @@
-//  directoryPicker.xm
-//  Directory picker for picking a path to download to
-
+//  directoryPickerTableViewController.xm
 // (c) 2017 opa334
 
-#import "directoryPicker.h"
+#import "directoryPickerTableViewController.h"
 
 @implementation directoryPickerTableViewController
 
@@ -34,15 +32,28 @@
   	{
   		UITextField * nameField = nameAlert.textFields[0];
 
-      NSURLRequest* request = ((directoryPickerNavigationController*)self.navigationController).request;
-
-      int64_t size = ((directoryPickerNavigationController*)self.navigationController).size;
-
       NSString* fileName = nameField.text;
 
-      [self dismiss];
+      if(((directoryPickerNavigationController*)self.navigationController).imageDownload)
+      {
+        NSLog(@"imageDownload");
+        UIImage* image = ((directoryPickerNavigationController*)self.navigationController).image;
 
-  		[[downloadManager sharedInstance] handleDirectoryPickerResponse:request size:size fileName:fileName path:self.currentPath];
+        [self dismiss];
+
+        [[downloadManager sharedInstance] handleDirectoryPickerImageResponse:image fileName:fileName path:self.currentPath];
+      }
+      else
+      {
+        NSLog(@"!imageDownload");
+        NSURLRequest* request = ((directoryPickerNavigationController*)self.navigationController).request;
+
+        int64_t size = ((directoryPickerNavigationController*)self.navigationController).size;
+
+        [self dismiss];
+
+    		[[downloadManager sharedInstance] handleDirectoryPickerResponse:request size:size fileName:fileName path:self.currentPath];
+      }
     }];
 
     [nameAlert addAction:startDownloadAction];
@@ -92,42 +103,6 @@
   {
     return YES;
   }
-}
-
-@end
-
-@implementation directoryPickerNavigationController
-
-- (id)initWithRequest:(NSURLRequest*)request size:(int64_t)size path:(NSURL*)path fileName:(NSString*)fileName
-{
-  self = [super init];
-  self.request = request;
-  self.size = size;
-  self.path = path;
-  self.fileName = fileName;
-  return self;
-}
-
-- (NSURL*)rootPath
-{
-  if(preferenceManager.customDefaultPathEnabled)
-  {
-    return [NSURL fileURLWithPath:[NSString stringWithFormat:@"/User%@", preferenceManager.customDefaultPath]];
-  }
-  else
-  {
-    return [NSURL fileURLWithPath:@"/User/Downloads"];
-  }
-}
-
-- (BOOL)shouldLoadPreviousPathElements
-{
-  return YES;
-}
-
-- (id)newTableViewControllerWithPath:(NSURL*)path
-{
-  return [[directoryPickerTableViewController alloc] initWithPath:path];
 }
 
 @end

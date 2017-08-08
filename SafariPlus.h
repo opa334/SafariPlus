@@ -1,13 +1,12 @@
 //  SafariPlus.h
-//  Headers for SafariPlus
-
 // (c) 2017 opa334
 
-#import "SafariPlusUtil.h"
+#import "SPLocalizationManager.h"
+#import "SPPreferenceManager.h"
 #import <CoreImage/CoreImage.h>
 #import "libcolorpicker.h"
-#import "filePicker.h"
-#import "downloadsView.h"
+#import "filePickerNavigationController.h"
+#import "downloadsNavigationController.h"
 #import "downloadManager.h"
 #import "lib/CWStatusBarNotification.h"
 #import <UserNotifications/UserNotifications.h>
@@ -46,6 +45,9 @@
 @interface _WKActivatedElementInfo : NSObject {}
 @property (nonatomic, readonly) NSURL *URL;
 @property (nonatomic,readonly) long long type;
+@property (nonatomic,copy,readonly) UIImage * image;
+@property (nonatomic,readonly) NSString * ID;
+@property (nonatomic,readonly) NSString * title;
 @end
 
 @interface _WKElementAction : NSObject {}

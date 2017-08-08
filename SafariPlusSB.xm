@@ -1,6 +1,4 @@
 //  SafariPlusSB.xm
-//  SpringBoard Hooks (Used for Push Notifications)
-
 // (c) 2017 opa334
 
 #import <RocketBootstrap/rocketbootstrap.h>

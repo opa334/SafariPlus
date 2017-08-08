@@ -1,6 +1,4 @@
 //  SafariPlusPrefs.h
-//  Headers for preference bundle
-
 // (c) 2017 opa334
 
 #define bundlePath @"/Library/PreferenceBundles/SafariPlusPrefs.bundle"

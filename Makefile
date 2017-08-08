@@ -5,7 +5,7 @@ export SYSROOT = $(THEOS)/sdks/iPhoneOS10.1.sdk
 
 TWEAK_NAME = SafariPlus SafariPlusWK SafariPlusSB
 SafariPlus_CFLAGS = -fobjc-arc
-SafariPlus_FILES = SafariPlusUtil.xm SafariPlus.xm downloadManager.xm fileBrowser.xm downloadsView.xm filePicker.xm directoryPicker.xm lib/CWStatusBarNotification.m
+SafariPlus_FILES = SPLocalizationManager.xm SPPreferenceManager.xm SafariPlus.xm directoryPickerNavigationController.xm directoryPickerTableViewController.xm Download.xm downloadManager.xm downloadsNavigationController.xm downloadsTableViewController.xm downloadTableViewCell.xm fileBrowserNavigationController.xm fileBrowserTableViewController.xm filePickerNavigationController.xm filePickerTableViewController.xm fileTableViewCell.xm lib/CWStatusBarNotification.m
 SafariPlus_EXTRA_FRAMEWORKS += Cephei
 SafariPlus_LIBRARIES = colorpicker rocketbootstrap
 

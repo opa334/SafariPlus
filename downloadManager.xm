@@ -1,8 +1,7 @@
 //  downloadManager.xm
-//  Downloads multiple files through NSURLSession
-
 // (c) 2017 opa334
 
+#import "Download.h"
 #import "downloadManager.h"
 
 @implementation downloadManager
@@ -99,14 +98,32 @@
   }
 }
 
+- (void)prepareImageDownload:(UIImage*)image fileName:(NSString*)fileName
+{
+  directoryPickerNavigationController* directoryPicker = [[directoryPickerNavigationController alloc] initWithImage:image fileName:fileName];
+  [self.rootControllerDelegate presentViewController:directoryPicker];
+}
+
 - (void)presentFileExistsAlert:(NSURLRequest*)request size:(int64_t)size fileName:(NSString*)fileName path:(NSURL*)path
+{
+  [self presentFileExistsAlert:request size:size fileName:fileName path:path isImage:NO];
+}
+
+- (void)presentFileExistsAlert:(NSURLRequest*)request size:(int64_t)size fileName:(NSString*)fileName path:(NSURL*)path isImage:(BOOL)isImage
 {
   UIAlertController *errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"] message:[localizationManager localizedSPStringForKey:@"FILE_EXISTS_MESSAGE"] preferredStyle:UIAlertControllerStyleAlert];
 
   UIAlertAction *replaceAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"REPLACE_FILE"]
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) //Start download and replace file
         {
-          [self startDownloadFromRequest:request size:size fileName:fileName path:path shouldReplace:YES];
+          if(isImage)
+          {
+
+          }
+          else
+          {
+            [self startDownloadFromRequest:request size:size fileName:fileName path:path shouldReplace:YES];
+          }
         }];
 
   UIAlertAction *changePathAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CHANGE_PATH"]
@@ -137,6 +154,19 @@
   else
   {
     [self startDownloadFromRequest:request size:size fileName:fileName path:path shouldReplace:NO];
+  }
+}
+
+- (void)handleDirectoryPickerImageResponse:(UIImage*)image fileName:(NSString*)fileName path:(NSURL*)path
+{
+  if([[NSFileManager defaultManager] fileExistsAtPath:[[path URLByAppendingPathComponent:fileName] path]])
+  {
+    [self presentFileExistsAlert:nil size:0 fileName:fileName path:path isImage:YES];
+  }
+  else
+  {
+    NSLog(@"image saving started");
+    [self saveImage:image fileName:fileName path:path shouldReplace:NO];
   }
 }
 
@@ -173,6 +203,25 @@
                               };
 
     [self.SPMessagingCenter sendMessageName:@"pushNotification" userInfo:userInfo];
+  }
+}
+
+- (void)saveImage:(UIImage*)image fileName:(NSString*)fileName path:(NSURL*)path shouldReplace:(BOOL)shouldReplace
+{
+  NSString* filePath = [[path URLByAppendingPathComponent:fileName] path];
+  if(shouldReplace)
+  {
+    [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
+  }
+  [UIImagePNGRepresentation(image) writeToFile:filePath atomically:YES];
+
+  if([[UIApplication sharedApplication] applicationState] == 0 && !preferenceManager.disableBarNotificationsEnabled)
+  {
+    [self.rootControllerDelegate dismissNotificationWithCompletion:^
+    {
+      [self.rootControllerDelegate dispatchNotificationWithText:
+        [NSString stringWithFormat:@"%@: %@", [localizationManager localizedSPStringForKey:@"SAVED_IMAGE"], fileName]];
+    }];
   }
 }
 
@@ -234,67 +283,5 @@
     }
   }
 }
-
-@end
-
-@implementation Download
-
-- (void)startDownloadFromRequest:(NSURLRequest*)request
-{
-  NSURLSessionConfiguration* config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.identifier];
-  config.sessionSendsLaunchEvents = YES;
-  config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
-
-  self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
-
-  self.downloadTask = [self.session downloadTaskWithRequest:request];
-  [self.downloadTask resume];
-}
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
-{
-  [session invalidateAndCancel];
-  [self.downloadManagerDelegate downloadFinished:self withLocation:location];
-}
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten
-totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
-{
-  self.updateCount++;
-  self.totalBytesWritten = totalBytesWritten;
-  int64_t bytesPerSecond = (totalBytesWritten - self.startBytes) / ([NSDate timeIntervalSinceReferenceDate] - self.startTime);
-
-  if(self.cellDelegate)
-  {
-    [self.cellDelegate updateProgress:totalBytesWritten totalBytes:totalBytesExpectedToWrite bytesPerSecond:bytesPerSecond animated:YES];
-  }
-
-  if(self.updateCount >= 40) //refreshing speed every 40 calls
-  {
-    self.startTime = [NSDate timeIntervalSinceReferenceDate];
-    self.startBytes = totalBytesWritten;
-    self.updateCount = 0;
-  }
-}
-
-- (void)cancelDownload
-{
-  [self.downloadTask cancel];
-  [self.downloadManagerDelegate downloadCancelled:self];
-}
-
-- (void)pauseDownload
-{
-  self.paused = YES;
-  [self.downloadTask suspend];
-}
-
-- (void)resumeDownload
-{
-  self.paused = NO;
-  self.updateCount = 40;
-  [self.downloadTask resume];
-}
-
 
 @end

@@ -1,6 +1,4 @@
 //  SafariPlusCells.m
-//  Header cell for preference bundle
-
 // (c) 2017 opa334
 
 #import "SafariPlusPrefs.h"

@@ -1,9 +1,7 @@
-//  filePicker.xm
-//  File picker for uploading
-
+//  filePickerTableViewController.xm
 // (c) 2017 opa334
 
-#import "filePicker.h"
+#import "filePickerTableViewController.h"
 
 @implementation filePickerTableViewController
 
@@ -122,15 +120,6 @@
   {
     self.navigationItem.rightBarButtonItem.enabled = YES;
   }
-}
-
-@end
-
-@implementation filePickerNavigationController
-
-- (id)newTableViewControllerWithPath:(NSURL*)path
-{
-  return [[filePickerTableViewController alloc] initWithPath:path];
 }
 
 @end

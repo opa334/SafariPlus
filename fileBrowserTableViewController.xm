@@ -1,9 +1,7 @@
-//  fileBrowser.xm
-//  Superclass for file picker, directory picker and downloads view
-
+//  fileBrowserTableViewController.xm
 // (c) 2017 opa334
 
-#import "fileBrowser.h"
+#import "fileBrowserTableViewController.h"
 
 @implementation fileBrowserTableViewController
 
@@ -211,90 +209,6 @@
 - (id)newCellWithSize:(int64_t)size
 {
   return [[fileTableViewCell alloc] initWithSize:size];
-}
-
-@end
-
-@implementation fileBrowserNavigationController
-
-- (void)viewDidLoad
-{
-  if(self.shouldLoadPreviousPathElements)
-  {
-    NSURL* tmpURL = self.rootPath;
-    NSMutableArray* URLListArray = [NSMutableArray new];
-
-    for(int i = 0; i <= [[self.rootPath pathComponents] count] - 1; i++)
-    {
-      [URLListArray addObject:tmpURL];
-      tmpURL = [tmpURL URLByDeletingLastPathComponent];
-    }
-
-    for(NSURL* URL in [URLListArray reverseObjectEnumerator])
-    {
-      [self pushViewController:[self newTableViewControllerWithPath:URL] animated:NO];
-    }
-  }
-
-  else
-  {
-    [self pushViewController:[self newTableViewControllerWithPath:self.rootPath] animated:NO];
-  }
-
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadAllTableViews) name:UIApplicationWillEnterForegroundNotification object:nil];
-
-  [super viewDidLoad];
-}
-
-- (void)viewDidUnload
-{
-  [super viewDidUnload];
-
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)reloadAllTableViews
-{
-  for(fileBrowserTableViewController* tableViewController in self.viewControllers)
-  {
-    [tableViewController reloadDataAndDataSources];
-  }
-}
-
-- (id)newTableViewControllerWithPath:(NSURL*)path
-{
-  return [[fileBrowserTableViewController alloc] initWithPath:path];
-}
-
-- (NSURL*)rootPath
-{
-  return [NSURL fileURLWithPath:@"/"];
-}
-
-- (BOOL)shouldLoadPreviousPathElements
-{
-  return NO;
-}
-
-@end
-
-@implementation fileTableViewCell
-
-- (id)initWithSize:(int64_t)size;
-{
-  self = [super init];
-
-  UILabel* sizeLabel = [[UILabel alloc] init];
-
-  sizeLabel.text = [NSByteCountFormatter stringFromByteCount:size countStyle:NSByteCountFormatterCountStyleFile];
-  sizeLabel.textColor = [UIColor lightGrayColor];
-  sizeLabel.backgroundColor = [UIColor clearColor];
-  sizeLabel.font = [sizeLabel.font fontWithSize:10];
-  sizeLabel.textAlignment = NSTextAlignmentRight;
-  sizeLabel.frame = CGRectMake(0,0, sizeLabel.intrinsicContentSize.width, 15);
-  self.accessoryView = sizeLabel;
-
-  return self;
 }
 
 @end

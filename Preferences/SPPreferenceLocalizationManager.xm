@@ -1,6 +1,4 @@
 //  SPPreferenceLocalizationManager.xm
-//  Localization manager for preferences
-
 // (c) 2017 opa334
 
 #import "SPPreferenceLocalizationManager.h"
@@ -26,9 +24,10 @@ NSBundle* SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/Saf
   {
     //Handle missing localization
     NSDictionary *englishDict = [[NSDictionary alloc] initWithContentsOfFile:[SPBundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:@"en.lproj"]];
-    if([englishDict objectForKey:key])
+    localizedString = [englishDict objectForKey:key];
+    if(!localizedString)
     {
-      localizedString = [englishDict objectForKey:key];
+      return key;
     }
   }
   return localizedString;

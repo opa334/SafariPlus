@@ -1,6 +1,4 @@
 //  SafariPlusWK.xm
-//  WebKit Hooks
-
 // (c) 2017 opa334
 
 #import "SafariPlus.h"

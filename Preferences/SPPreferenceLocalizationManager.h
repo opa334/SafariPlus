@@ -1,6 +1,4 @@
 //  SPPreferenceLocalizationManager.h
-//  Headers for localization manager
-
 // (c) 2017 opa334
 
 #import <Preferences/PSSpecifier.h>

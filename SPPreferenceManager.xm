@@ -1,12 +1,7 @@
-//  SafariPlusUtil.xm
-//  Localization manager and preference manager
-
+//  SPPreferenceManager.xm
 // (c) 2017 opa334
 
-
-#import "SafariPlusUtil.h"
-
-static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
+#import "SPPreferenceManager.h"
 
 @implementation SPPreferenceManager
 
@@ -100,43 +95,6 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
   [preferences registerObject:&_bottomBarColorPrivate default:@"#ffffff" forKey:@"bottomBarColorPrivate"];
 
   return self;
-}
-
-@end
-
-@implementation SPLocalizationManager
-
-+ (instancetype)sharedInstance
-{
-  static SPLocalizationManager *sharedInstance = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-      sharedInstance = [[SPLocalizationManager alloc] init];
-  });
-  return sharedInstance;
-}
-
-//Used to retrieve a localized string out of SafariPlus
-- (NSString*)localizedSPStringForKey:(NSString*)key;
-{
-  NSString* localizedString = [SPBundle localizedStringForKey:key value:nil table:nil];
-  if([localizedString isEqualToString:key])
-  {
-    //Handle missing localization
-    NSDictionary *englishDict = [[NSDictionary alloc] initWithContentsOfFile:[SPBundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:@"en.lproj"]];
-    if([englishDict objectForKey:key])
-    {
-      localizedString = [englishDict objectForKey:key];
-    }
-  }
-  return localizedString;
-}
-
-//Used to retrieve a localized string out of MobileSafari
-- (NSString*)localizedMSStringForKey:(NSString*)key
-{
-  NSString* localizedString = [MSBundle localizedStringForKey:key value:key table:nil];
-  return localizedString;
 }
 
 @end

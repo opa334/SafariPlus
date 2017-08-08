@@ -1,6 +1,4 @@
 //  SafariPlus.xm
-//  Safari Hooks
-
 // (c) 2017 opa334
 
 #import "SafariPlus.h"
@@ -291,6 +289,70 @@ BOOL desktopButtonSelected;
 //Extra 'Open in new Tab' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
+  if(preferenceManager.enhancedDownloadsEnabled || preferenceManager.openInNewTabOptionEnabled)
+  {
+    NSMutableArray* options = %orig;
+    BOOL tabBar = ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.usesTabBar;
+
+    if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed when a TabBar exists
+    {
+      _WKElementAction* openInNewTabAction = [%c(_WKElementAction) elementActionWithTitle:[localizationManager localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:^
+      {
+        [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
+      }];
+
+      [options insertObject:openInNewTabAction atIndex:1];
+    }
+
+    if(preferenceManager.enhancedDownloadsEnabled)
+    {
+      _WKElementAction* downloadToAction = [%c(_WKElementAction) elementActionWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_TO"] actionHandler:^
+      {
+        switch(arg1.type)
+        {
+          case 0:
+          {
+            NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:arg1.URL];
+            [[downloadManager sharedInstance] prepareDownloadFromRequest:downloadRequest withSize:0 fileName:@"site.html" customPath:YES];
+            break;
+          }
+          case 1:
+          {
+            [[downloadManager sharedInstance] prepareImageDownload:arg1.image fileName:@"image.png"];
+            break;
+          }
+          default:
+          break;
+        }
+      }];
+
+      switch(arg1.type)
+      {
+        case 0:
+        {
+          [options insertObject:downloadToAction atIndex:[options count] - 1];
+          break;
+        }
+        case 1:
+        {
+          [options addObject:downloadToAction];
+          break;
+        }
+        default:
+        break;
+      }
+    }
+
+    return options;
+  }
+
+  return %orig;
+}
+
+
+//Extra 'Open in new Tab' option
+/*- (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
+{
   BOOL tabBar = ((Application*)[%c(Application) sharedApplication]).shortcutController.browserController.tabController.usesTabBar;
   if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed, when a TabBar exists
   {
@@ -306,7 +368,7 @@ BOOL desktopButtonSelected;
     return options;
   }
   return %orig;
-}
+}*/
 
 %end
 
@@ -665,7 +727,6 @@ BOOL desktopButtonSelected;
   [((Application*)[%c(Application) sharedApplication]) updateButtonState];
 }
 
-
 %end
 
 %hook TabDocument
@@ -673,21 +734,63 @@ BOOL desktopButtonSelected;
 //Extra 'Open in new Tab' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1 defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  BOOL tabBar = MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.usesTabBar;
-  if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed when a TabBar exists
+  if(preferenceManager.enhancedDownloadsEnabled || preferenceManager.openInNewTabOptionEnabled)
   {
     NSMutableArray* options = %orig;
+    BOOL tabBar = MSHookIvar<BrowserController*>(((Application*)[%c(Application) sharedApplication]), "_controller").tabController.usesTabBar;
 
-    _WKElementAction* openInNewTab = [%c(_WKElementAction) elementActionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN_IN_NEW_TAB_OPTION"] actionHandler:^
+    if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar) //Showing the option is not needed when a TabBar exists
     {
-      BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
-      [browserController loadURLInNewWindow:arg1.URL inBackground:NO];
-    }];
+      _WKElementAction* openInNewTabAction = [%c(_WKElementAction) elementActionWithTitle:[localizationManager localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:^
+      {
+        BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+        [browserController loadURLInNewWindow:arg1.URL inBackground:NO];
+      }];
 
-    [options insertObject:openInNewTab atIndex:1];
+      [options insertObject:openInNewTabAction atIndex:1];
+    }
+
+    if(preferenceManager.enhancedDownloadsEnabled)
+    {
+      _WKElementAction* downloadToAction = [%c(_WKElementAction) elementActionWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_TO"] actionHandler:^
+      {
+        switch(arg1.type)
+        {
+          case 0:
+          {
+            NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:arg1.URL];
+            [[downloadManager sharedInstance] prepareDownloadFromRequest:downloadRequest withSize:0 fileName:@"site.html" customPath:YES];
+            break;
+          }
+          case 1:
+          {
+            break;
+          }
+          default:
+          break;
+        }
+      }];
+
+      switch(arg1.type)
+      {
+        case 0:
+        {
+          [options insertObject:downloadToAction atIndex:[options count] - 1];
+          break;
+        }
+        case 1:
+        {
+          [options addObject:downloadToAction];
+          break;
+        }
+        default:
+        break;
+      }
+    }
 
     return options;
   }
+
   return %orig;
 }
 
@@ -1131,6 +1234,9 @@ BOOL showAlert = YES;
           fileName, [NSByteCountFormatter stringFromByteCount:fileSize countStyle:NSByteCountFormatterCountStyleFile]];
       __block NSURLRequest* request = navigationResponse._request;
       __block WKWebView* webViewLocal = webView;
+
+      NSLog(@"REQUEST HEADERS: %@", [request allHTTPHeaderFields]);
+      NSLog(@"RESPONSE HEADERS: %@", [((NSHTTPURLResponse*)navigationResponse.response) allHeaderFields]);
 
       dispatch_async(dispatch_get_main_queue(), //Ensure we're on the main thread to avoid crashes
       ^{
