@@ -15,10 +15,12 @@
   switch(section)
   {
     case 0:
+    //return amount of downloads at path
     return [self.downloadsAtCurrentPath count];
     break;
 
     case 1:
+    //return amount of files at path
     return [filesAtCurrentPath count];
     break;
 
@@ -31,13 +33,17 @@
 - (void)populateDataSources
 {
   [super populateDataSources];
+
+  //Create new array for downloads and populate it
   self.downloadsAtCurrentPath = [NSMutableArray new];
   self.downloadsAtCurrentPath = [[downloadManager sharedInstance] getDownloadsForPath:self.currentPath];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+  //Set delegate of downloadManager for communication
   [downloadManager sharedInstance].downloadTableDelegate = self;
+
   [super viewDidAppear:animated];
 }
 
@@ -72,17 +78,16 @@
   {
     case 0:
     {
+      //Return downloadCells
       Download* currentDownload = self.downloadsAtCurrentPath[indexPath.row];
       downloadTableViewCell* cell = [self newCellWithDownload:currentDownload];
-      cell.imageView.image = [UIImage imageNamed:@"File.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
-      cell.textLabel.text = currentDownload.fileName;
-      currentDownload.cellDelegate = cell;
       return cell;
       break;
     }
 
     case 1:
     {
+      //Return fileCells
       return (fileTableViewCell*)[super tableView:tableView cellForRowAtIndexPath:indexPath];
       break;
     }
@@ -97,10 +102,12 @@
 {
   if(indexPath.section == 0)
   {
+    //Return 66.0, because downloadCells need more space
     return 66.0;
   }
   else
   {
+    //Return default height
     return tableView.rowHeight;
   }
 }
@@ -109,10 +116,12 @@
 {
   if(indexPath.section == 1)
   {
+    //File cells editable
     return [super tableView:tableView canEditRowAtIndexPath:indexPath];
   }
   else
   {
+    //Download cells not edititable
     return NO;
   }
 }
@@ -121,153 +130,192 @@
 {
   if(indexPath.section != 0)
   {
+    //Make download cells unselectable
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
   }
 }
 
-- (void)selectedEntryAtURL:(NSURL*)entryURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
+- (void)selectedFileAtURL:(NSURL*)fileURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
 {
   //Type 1: file; type 2: symlink; type 3: directory
   if(type == 1)
   {
+    //Check if Filza is installed
     BOOL filzaInstalled = [fileManager fileExistsAtPath:@"/Applications/Filza.app"];
-    NSString* fileName = [[entryURL lastPathComponent] stringByRemovingPercentEncoding];
 
+    //Get fileName for title
+    NSString* fileName = [[fileURL lastPathComponent] stringByRemovingPercentEncoding];
+
+    //Create alertSheet for tapped file
     UIAlertController *openAlert = [UIAlertController alertControllerWithTitle:fileName
-          message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+      message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-    CFStringRef fileExtension = (__bridge CFStringRef)[entryURL pathExtension];
-    CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+    //Get fileUTI
+    CFStringRef fileExtension = (__bridge CFStringRef)[fileURL pathExtension];
+    CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(
+      kUTTagClassFilenameExtension, fileExtension, NULL);
 
     if(UTTypeConformsTo(fileUTI, kUTTypeMovie) || UTTypeConformsTo(fileUTI, kUTTypeAudio))
     {
-      UIAlertAction *playAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
-            style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-            {
-              [self startPlayerWithMedia:entryURL];
-            }];
+      //File is audio or video -> Add option to play file
+      UIAlertAction *playAction = [UIAlertAction
+        actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+      {
+        [self startPlayerWithMedia:fileURL];
+      }];
 
       [openAlert addAction:playAction];
     }
 
-    UIAlertAction *openInAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN_IN"]
-          style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-          {
-            //Creating temporary link cause we ain't inside sandbox (silly, right?)
-            self.tmpSymlinkURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", NSTemporaryDirectory(), entryURL.lastPathComponent]];
-            [[NSFileManager defaultManager] linkItemAtURL:entryURL.URLByResolvingSymlinksInPath toURL:self.tmpSymlinkURL error:nil];
+    UIAlertAction *openInAction = [UIAlertAction actionWithTitle:[localizationManager
+      localizedSPStringForKey:@"OPEN_IN"]
+      style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+    {
+      //Creating temporary link cause we ain't inside sandbox (silly, right?)
+      self.tmpSymlinkURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@",
+        NSTemporaryDirectory(), fileURL.lastPathComponent]];
 
-            self.didSelectOptionFromDocumentController = NO;
+      [[NSFileManager defaultManager] linkItemAtURL:fileURL.URLByResolvingSymlinksInPath
+        toURL:self.tmpSymlinkURL error:nil];
 
-            self.documentController = [UIDocumentInteractionController interactionControllerWithURL:self.tmpSymlinkURL];
-            self.documentController.delegate = self;
-            [self.documentController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
-          }];
+      //No option selected yet
+      self.didSelectOptionFromDocumentController = NO;
+
+      //Create documentController from selected file and present it
+      self.documentController = [UIDocumentInteractionController
+        interactionControllerWithURL:self.tmpSymlinkURL];
+
+      self.documentController.delegate = self;
+      [self.documentController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+    }];
 
     [openAlert addAction:openInAction];
 
     if(filzaInstalled)
     {
+      //Filza is installed -> add 'Show in Filza' option
       UIAlertAction *showInFilzaAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"SHOW_IN_FILZA"]
-            style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-            {
-              //https://stackoverflow.com/a/32145122
-              NSString *FilzaPath = [NSString stringWithFormat:@"%@%@", @"filza://view",[entryURL absoluteString]];
-              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:FilzaPath]];
-            }];
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+      {
+        //https://stackoverflow.com/a/32145122
+        NSString *FilzaPath = [NSString stringWithFormat:@"%@%@", @"filza://view",[fileURL absoluteString]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:FilzaPath]];
+      }];
 
       [openAlert addAction:showInFilzaAction];
     }
 
+    //Add delete option
     UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE_FILE"]
           style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
           {
-            UIAlertController* confirmationController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
-              message:[[localizationManager localizedSPStringForKey:@"DELETE_FILE_MESSAGE"] stringByReplacingOccurrencesOfString:@"<fn>" withString:fileName] preferredStyle:UIAlertControllerStyleAlert];
+            //Create alert to confirm deletion of file
+            UIAlertController* confirmationController = [UIAlertController
+              alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
+              message:[[localizationManager localizedSPStringForKey:@"DELETE_FILE_MESSAGE"]
+              stringByReplacingOccurrencesOfString:@"<fn>" withString:fileName]
+              preferredStyle:UIAlertControllerStyleAlert];
 
-            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
+            //Add cancel option
+            UIAlertAction *cancelAction = [UIAlertAction
+              actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
               style:UIAlertActionStyleDefault handler:nil];
 
             [confirmationController addAction:cancelAction];
 
-            UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE"]
+            //Add delete option
+            UIAlertAction *deleteAction = [UIAlertAction
+              actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE"]
               style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
             {
               dispatch_async(dispatch_get_main_queue(), ^
               {
-                [fileManager removeItemAtPath:[entryURL path] error:nil];
+                //Delete file
+                [fileManager removeItemAtPath:[fileURL path] error:nil];
+
+                //Reload files
                 [self reloadDataAndDataSources];
               });
             }];
 
             [confirmationController addAction:deleteAction];
 
+            //Make cancel option bold
             confirmationController.preferredAction = cancelAction;
 
+            //Present confirmation alert
             [self presentViewController:confirmationController animated:YES completion:nil];
           }];
 
     [openAlert addAction:deleteAction];
 
+    //Add cancel option
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
           style:UIAlertActionStyleCancel handler:nil];
 
     [openAlert addAction:cancelAction];
 
-    //iPad fix
+    //iPad fix (Set position of open alert to row in table)
     CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
     openAlert.popoverPresentationController.sourceView = self.tableView;
     openAlert.popoverPresentationController.sourceRect = CGRectMake(cellRect.size.width / 2.0, cellRect.origin.y + cellRect.size.height / 2, 1.0, 1.0);
 
+    //Present open alert
     [self presentViewController:openAlert animated:YES completion:nil];
   }
-  [super selectedEntryAtURL:entryURL type:type atIndexPath:indexPath];
+  [super selectedFileAtURL:fileURL type:type atIndexPath:indexPath];
 }
 
 //https://stackoverflow.com/a/35619091
 
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
 {
+  //Selected app in open in alert
   self.didSelectOptionFromDocumentController = YES;
 }
 
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application
 {
-  //Clean up
+  //Link finished importing -> delete link
   [[NSFileManager defaultManager] removeItemAtURL:self.tmpSymlinkURL error:nil];
 }
 
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
 {
-  if(self.didSelectOptionFromDocumentController == NO) //Cancelled
+  if(self.didSelectOptionFromDocumentController == NO)
   {
-    //Clean up
+    //Cancelled open in menu -> delete link
     [[NSFileManager defaultManager] removeItemAtURL:self.tmpSymlinkURL error:nil];
   }
 }
 
 - (void)startPlayerWithMedia:(NSURL*)mediaURL
 {
-  [[AVAudioSession sharedInstance] setActive:YES error:nil];
-
   //Enable Background Audio
+  [[AVAudioSession sharedInstance] setActive:YES error:nil];
   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
 
+  //Create AVPlayer from media file
   AVPlayer* player = [AVPlayer playerWithURL:mediaURL];
 
+  //Create AVPlayerController
   AVPlayerViewController *playerViewController = [AVPlayerViewController new];
 
+  //Link AVPlayer and AVPlayerController
   playerViewController.player = player;
-  //playerViewController.allowsPictureInPicturePlayback = YES;
 
+  //Present AVPlayerController
   [self presentViewController:playerViewController animated:YES completion:^
   {
+    //Start playing when player is presented
     [player play];
   }];
 }
 
 - (id)newCellWithDownload:(Download*)download
 {
+  //Return instance of downloadTableViewCell
   return [[downloadTableViewCell alloc] initWithDownload:download];
 }
 

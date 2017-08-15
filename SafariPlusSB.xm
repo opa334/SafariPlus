@@ -15,18 +15,29 @@
 - (id)init
 {
   id orig = %orig;
-  CPDistributedMessagingCenter* SPMessagingCenter = [%c(CPDistributedMessagingCenter) centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
+
+  CPDistributedMessagingCenter* SPMessagingCenter =
+    [%c(CPDistributedMessagingCenter)
+    centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
+
   rocketbootstrap_distributedmessagingcenter_apply(SPMessagingCenter);
+
 	[SPMessagingCenter runServerOnCurrentThread];
-  [SPMessagingCenter registerForMessageName:@"pushNotification" target:self selector:@selector(sendPushNotificationNamed:withData:)];
+
+  [SPMessagingCenter registerForMessageName:@"pushNotification" target:self
+    selector:@selector(recieveMessageNamed:withData:)];
+
   return orig;
 }
 
 //Dispatch push notification (bulletin) through libbulletin
 %new
-- (NSDictionary *)sendPushNotificationNamed:(NSString *)name withData:(NSDictionary *)data
+- (NSDictionary *)recieveMessageNamed:(NSString *)name withData:(NSDictionary *)data
 {
-  [[objc_getClass("JBBulletinManager") sharedInstance] showBulletinWithTitle:[data objectForKey:@"title"] message:[data objectForKey:@"message"] bundleID:[data objectForKey:@"bundleID"]];
+  [[objc_getClass("JBBulletinManager") sharedInstance]
+    showBulletinWithTitle:[data objectForKey:@"title"]
+    message:[data objectForKey:@"message"]
+    bundleID:[data objectForKey:@"bundleID"]];
 
 	return nil;
 }

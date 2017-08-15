@@ -22,8 +22,12 @@
   if([localizedString isEqualToString:key])
   {
     //Handle missing localization
-    NSDictionary *englishDict = [[NSDictionary alloc] initWithContentsOfFile:[SPBundle pathForResource:@"Localizable" ofType:@"strings" inDirectory:@"en.lproj"]];
+    NSDictionary *englishDict = [[NSDictionary alloc]
+      initWithContentsOfFile:[SPBundle pathForResource:@"Localizable"
+      ofType:@"strings" inDirectory:@"en.lproj"]];
+
     localizedString = [englishDict objectForKey:key];
+
     if(!localizedString)
     {
       return key;

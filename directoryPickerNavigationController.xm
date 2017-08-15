@@ -7,6 +7,7 @@
 
 - (id)initWithRequest:(NSURLRequest*)request size:(int64_t)size path:(NSURL*)path fileName:(NSString*)fileName
 {
+  //Initialise an instance and set given properties
   self = [super init];
   self.request = request;
   self.size = size;
@@ -17,6 +18,7 @@
 
 - (id)initWithImage:(UIImage*)image fileName:(NSString*)fileName
 {
+  //Initialise an instance and set given properties
   self = [super init];
   self.image = image;
   self.imageDownload = YES;
@@ -28,12 +30,17 @@
 {
   if(preferenceManager.customDefaultPathEnabled)
   {
-    return [NSURL fileURLWithPath:[NSString stringWithFormat:@"/User%@", preferenceManager.customDefaultPath]];
+    //customDefaultPath enabled -> return custom path if it is valid
+    NSURL* path = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/User%@", preferenceManager.customDefaultPath]];
+    BOOL isDir;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path path] isDirectory:&isDir];
+    if(isDir && exists)
+    {
+      return path;
+    }
   }
-  else
-  {
-    return [NSURL fileURLWithPath:@"/User/Downloads"];
-  }
+  //customDefaultPath disabled or invalid -> return default path
+  return [NSURL fileURLWithPath:@"/User/Downloads/"];
 }
 
 - (BOOL)shouldLoadPreviousPathElements
@@ -43,6 +50,7 @@
 
 - (id)newTableViewControllerWithPath:(NSURL*)path
 {
+  //return instance of directoryPickerTableViewController
   return [[directoryPickerTableViewController alloc] initWithPath:path];
 }
 

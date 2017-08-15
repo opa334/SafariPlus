@@ -1,9 +1,10 @@
 //  fileBrowserTableViewController.xm
 // (c) 2017 opa334
 
-#import "fileBrowserTableViewController.h"
+#import "preferenceFileBrowserTableViewController.h"
+#import "SafariPlusPrefs.h"
 
-@implementation fileBrowserTableViewController
+@implementation preferenceFileBrowserTableViewController
 
 - (id)initWithPath:(NSURL*)path
 {
@@ -43,7 +44,7 @@
   if(!self.currentPath)
   {
     //Üath is not set -> set it to root
-    self.currentPath = ((fileBrowserNavigationController*)self.navigationController).rootPath;
+    self.currentPath = ((preferenceFileBrowserNavigationController*)self.navigationController).rootPath;
   }
 
   //Set rightBarButtonItem
@@ -94,7 +95,7 @@
 - (UIBarButtonItem*)defaultRightBarButtonItem
 {
   //Return dismiss button
-  return [[UIBarButtonItem alloc] initWithTitle:[localizationManager
+  return [[UIBarButtonItem alloc] initWithTitle:[[SPPreferenceLocalizationManager sharedInstance]
     localizedSPStringForKey:@"DISMISS"] style:UIBarButtonItemStylePlain
     target:self action:@selector(dismiss)];
 }
@@ -192,14 +193,14 @@
   //Type 1: file; type 2: directory
   if(type == 2)
   {
-    [self.navigationController pushViewController:[(fileBrowserNavigationController*)self.navigationController newTableViewControllerWithPath:fileURL] animated:YES];
+    [self.navigationController pushViewController:[(preferenceFileBrowserNavigationController*)self.navigationController newTableViewControllerWithPath:fileURL] animated:YES];
   }
 }
 
 - (id)newCellWithFileURL:(NSURL*)fileURL
 {
-  //Return instance of fileTableViewCell
-  return [[fileTableViewCell alloc] initWithFileURL:fileURL];
+  //Return instance of preferenceFileTableViewCell
+  return [[preferenceFileTableViewCell alloc] initWithFileURL:fileURL];
 }
 
 @end

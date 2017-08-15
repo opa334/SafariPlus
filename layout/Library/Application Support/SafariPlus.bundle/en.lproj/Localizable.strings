@@ -1,3 +1,6 @@
+"YES" = "Yes";
+"NO" = "No";
+
 /* Root Page*/
 
 "GENERAL" = "General";
@@ -47,6 +50,11 @@
 "CUSTOM_DEFAULT_PATH" = "Custom Default Path";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\nNote: Due to missing root privileges, it's only possible to download files inside the /User/ (/private/var/mobile) directory!";
 
+"PINNED_LOCATIONS_ENABLED" = "Pinned Locations enabled";
+"PINNED_LOCATIONS" = "Pinned Locations";
+"PINNED_LOCATIONS_FOOTER" = "Lets you pick a few locations that will appear when using the 'Download to' option.";
+"ERROR_INVALID_NAME_OR_PATH" = "Invalid name or path";
+
 "ONLY_DOWNLOAD_ON_WIFI" = "Only Download on Wifi";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Only allow downloading while the device is connected to a wifi network.";
 
@@ -55,6 +63,16 @@
 
 "DISABLE_BAR_NOTIFICATIONS" = "Disable Status Bar Notifications";
 "DISABLE_BAR_NOTIFICATIONS_FOOTER" = "By default, you will recieve a status bar notification when a download starts / finishes and the app is active. This option will disable that.";
+
+/* Pinned Locations */
+
+"PINNED_LOCATIONS_ALERT_TITLE" = "Add Pinned Location";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Choose a name and the path of the pinned location.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
+"BROWSE" = "Browse...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Choose Path";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n<pathURL>?";
 
 /* Action Settings */
 

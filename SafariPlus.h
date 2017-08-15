@@ -9,7 +9,6 @@
 #import "downloadsNavigationController.h"
 #import "downloadManager.h"
 #import "lib/CWStatusBarNotification.h"
-#import <UserNotifications/UserNotifications.h>
 
 #define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
 #define desktopUserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
@@ -142,17 +141,13 @@
 
 @end
 
-@interface Application : UIApplication <UIApplicationDelegate, UNUserNotificationCenterDelegate> {}
+@interface Application : UIApplication <UIApplicationDelegate> {}
 @property (nonatomic,readonly) ApplicationShortcutController * shortcutController;
 @property (nonatomic,readonly) NSArray * browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new methods below
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
 - (void)updateButtonState;
-- (void)updateDesktopMode;
-- (void)autoCloseAction;
-- (void)modeSwitchAction:(int)switchToMode;
-- (void)clearData;
 @end
 
 @interface ApplicationShortcutController : NSObject {}
@@ -174,6 +169,8 @@
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
 - (void)clearAutoFillMessageReceived;
+- (void)modeSwitchAction:(int)switchToMode;
+- (void)autoCloseAction;
 - (void)showFindOnPage; //iOS9
 //new stuff below
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
@@ -185,6 +182,7 @@
 - (void)handleSwipe:(NSInteger)swipeAction;
 - (void)downloadsFromButtonBar;
 - (BOOL)usesTabBar;
+- (void)clearData;
 @end
 
 //iOS9

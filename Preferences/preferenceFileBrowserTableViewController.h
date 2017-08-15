@@ -1,11 +1,11 @@
 //  fileBrowserTableViewController.h
 // (c) 2017 opa334
 
-#import "fileBrowserNavigationController.h"
-#import "fileTableViewCell.h"
-#import "SPLocalizationManager.h"
+#import "preferenceFileBrowserNavigationController.h"
+#import "preferenceFileTableViewCell.h"
+#import "SPPreferenceLocalizationManager.h"
 
-@interface fileBrowserTableViewController : UITableViewController
+@interface preferenceFileBrowserTableViewController : UITableViewController
 {
   NSMutableArray* filesAtCurrentPath;
   NSFileManager* fileManager;

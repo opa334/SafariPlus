@@ -1,6 +1,8 @@
 //  fileTableViewCell.h
 // (c) 2017 opa334
 
+#import "SPLocalizationManager.h"
+
 @interface fileTableViewCell : UITableViewCell {}
-- (id)initWithSize:(int64_t)size;
+- (id)initWithFileURL:(NSURL*)fileURL;
 @end

@@ -7,6 +7,7 @@
 
 - (id)newTableViewControllerWithPath:(NSURL*)path
 {
+  //return instance of filePickerTableViewController
   return [[filePickerTableViewController alloc] initWithPath:path];
 }
 

@@ -32,6 +32,7 @@
   [preferences registerInteger:&_instantDownloadsOption default:NO forKey:@"instantDownloadsOption"];
   [preferences registerBool:&_customDefaultPathEnabled default:NO forKey:@"customDefaultPathEnabled"];
   [preferences registerObject:&_customDefaultPath default:@"/User/Downloads/" forKey:@"customDefaultPath"];
+  [preferences registerBool:&_pinnedLocationsEnabled default:NO forKey:@"pinnedLocationsEnabled"];
   [preferences registerBool:&_onlyDownloadOnWifiEnabled default:NO forKey:@"onlyDownloadOnWifiEnabled"];
   [preferences registerBool:&_disablePushNotificationsEnabled default:NO forKey:@"disablePushNotificationsEnabled"];
   [preferences registerBool:&_disableBarNotificationsEnabled default:NO forKey:@"disableBarNotificationsEnabled"];

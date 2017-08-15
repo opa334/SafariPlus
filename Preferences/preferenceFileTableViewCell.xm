@@ -1,9 +1,9 @@
 //  fileTableViewCell.xm
 // (c) 2017 opa334
 
-#import "fileTableViewCell.h"
+#import "preferenceFileTableViewCell.h"
 
-@implementation fileTableViewCell
+@implementation preferenceFileTableViewCell
 
 - (id)initWithFileURL:(NSURL*)fileURL
 {
@@ -25,7 +25,7 @@
   if([isFile boolValue])
   {
     //URL is file -> set imageView to file icon
-    self.imageView.image = [UIImage imageNamed:@"File.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+    self.imageView.image = [UIImage imageNamed:@"File.png" inBundle:[NSBundle bundleWithPath:@"/Library/Application Support/SafariPlus.bundle"] compatibleWithTraitCollection:nil];
 
     //Get filesize
     int64_t fileSize = [[fileManager attributesOfItemAtPath:[fileURL path] error:nil] fileSize];
@@ -42,7 +42,7 @@
   else
   {
     //URL is directory -> set imageView to directory icon
-    self.imageView.image = [UIImage imageNamed:@"Directory.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+    self.imageView.image = [UIImage imageNamed:@"Directory.png" inBundle:[NSBundle bundleWithPath:@"/Library/Application Support/SafariPlus.bundle"] compatibleWithTraitCollection:nil];
 
     //Set accessoryType to disclosureIndicator (arrow to the right)
     self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;

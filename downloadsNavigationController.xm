@@ -9,6 +9,7 @@
 {
   if(preferenceManager.customDefaultPathEnabled)
   {
+    //customDefaultPath enabled -> return custom path if it is valid
     NSURL* path = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/User%@", preferenceManager.customDefaultPath]];
     BOOL isDir;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path path] isDirectory:&isDir];
@@ -17,6 +18,7 @@
       return path;
     }
   }
+  //customDefaultPath disabled or invalid -> return default path
   return [NSURL fileURLWithPath:@"/User/Downloads/"];
 }
 
@@ -27,6 +29,7 @@
 
 - (id)newTableViewControllerWithPath:(NSURL*)path
 {
+  //return instance of downloadsTableViewController
   return [[downloadsTableViewController alloc] initWithPath:path];
 }
 

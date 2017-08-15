@@ -35,7 +35,7 @@ NSBundle* SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/Saf
 
 - (void)parseSPLocalizationsForSpecifiers:(NSArray*)specifiers
 {
-  //Clone specifiers and return localized specifiers
+  //Localize specifiers
   NSMutableArray* mutableSpecifiers = (NSMutableArray*)specifiers;
   for(PSSpecifier* specifier in mutableSpecifiers)
   {

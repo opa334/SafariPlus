@@ -11,13 +11,8 @@
 
   if(self)
   {
-    CGFloat width = self.contentView.bounds.size.width;
-
     headerImage = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/PrefHeader.png", bundlePath]];
     headerImageView = [[UIImageView alloc] initWithImage:headerImage];
-    headerImageView.frame = CGRectMake(0,0, width, 125);
-    headerImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    headerImageView.contentMode = UIViewContentModeScaleToFill;
 
     [self.contentView addSubview:headerImageView];
   }
@@ -37,7 +32,15 @@
 
 - (CGFloat)preferredHeightForWidth:(CGFloat)width
 {
-  return 125.0;
+  CGFloat aspectRatio = headerImage.size.height / headerImage.size.width;
+
+  CGFloat height = width * aspectRatio;
+
+  headerImageView.frame = CGRectMake(0,0,self.contentView.bounds.size.width,height);
+  headerImageView.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
+  headerImageView.contentMode = UIViewContentModeScaleAspectFit;
+
+  return height;
 }
 
 - (CGFloat)preferredHeightForWidth:(CGFloat)width inTableView:(id)tableView

@@ -12,7 +12,8 @@
 
 @protocol DownloadCellDelegate
 @required
-- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes bytesPerSecond:(int64_t)bytesPerSecond animated:(BOOL)animated;
+- (void)updateDownloadSpeed:(int64_t)bytesPerSecond;
+- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated;
 @end
 
 @protocol RootControllerDownloadDelegate
@@ -42,15 +43,17 @@
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
 @property (nonatomic, weak) id<DownloadCellDelegate> cellDelegate;
 @property (nonatomic) BOOL paused;
-@property (nonatomic) NSInteger updateCount;
 @property (nonatomic) NSTimeInterval startTime;
+@property (nonatomic) NSTimer* speedTimer;
 @property (nonatomic) int64_t startBytes;
 @property (nonatomic) int64_t totalBytesWritten;
+@property (nonatomic) int64_t bytesPerSecond;
 @property (nonatomic) NSString* fileName;
 @property (nonatomic) int64_t fileSize;
 @property (nonatomic) NSURL* filePath;
 @property (nonatomic) BOOL replaceFile;
 @property (nonatomic) NSString* identifier;
+- (void)updateDownloadSpeed;
 - (void)cancelDownload;
 - (void)pauseDownload;
 - (void)resumeDownload;

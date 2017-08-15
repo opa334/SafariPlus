@@ -16,8 +16,15 @@ NSBundle* SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/Saf
   %orig;
   if(preferenceManager.uploadAnyFileOptionEnabled)
   {
-    UIDocumentMenuViewController* documentMenuController = MSHookIvar<UIDocumentMenuViewController*>(self, "_documentMenuController");
-    [documentMenuController addOptionWithTitle:[[%c(SPLocalizationManager) sharedInstance] localizedSPStringForKey:@"LOCAL_FILE"] image:[UIImage imageNamed:@"Device.png" inBundle:SPBundle compatibleWithTraitCollection:nil] order:UIDocumentMenuOrderFirst handler:^{
+    UIDocumentMenuViewController* documentMenuController =
+      MSHookIvar<UIDocumentMenuViewController*>(self, "_documentMenuController");
+
+    [documentMenuController addOptionWithTitle:[[%c(SPLocalizationManager) sharedInstance]
+      localizedSPStringForKey:@"LOCAL_FILE"]
+      image:[UIImage imageNamed:@"Device.png"
+      inBundle:SPBundle compatibleWithTraitCollection:nil]
+      order:UIDocumentMenuOrderFirst handler:
+    ^{
       [self _showFilePicker];
     }];
   }
@@ -52,7 +59,8 @@ NSBundle* SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/Saf
   }
   else
   {
-    [self _chooseFiles:URLArray displayString:[((NSURL*)URLArray[0]).lastPathComponent stringByRemovingPercentEncoding] iconImage:nil];
+    [self _chooseFiles:URLArray displayString:[((NSURL*)URLArray[0]).lastPathComponent
+      stringByRemovingPercentEncoding] iconImage:nil];
   }
 }
 %end

@@ -7,12 +7,12 @@
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSSpecifier.h>
 #import "SPPreferenceLocalizationManager.h"
+#import "preferenceDirectoryPickerNavigationController.h"
 
 @interface PSEditableListController : PSListController {}
 - (id)_editButtonBarItem;
 - (BOOL)performDeletionActionForSpecifier:(id)arg1;
 @end
-
 
 @interface SafariPlusRootListController : PSListController {}
 @end
@@ -23,10 +23,20 @@
 @interface DownloadPrefsController : PSListController {}
 @end
 
-@interface ExceptionsController : PSEditableListController {
+@interface ExceptionsController : PSEditableListController
+{
   NSMutableDictionary *plist;
   NSMutableArray *ForceHTTPSExceptions;
 }
+@end
+
+@interface PinnedLocationsController : PSEditableListController<PinnedLocationsDelegate>
+{
+  NSMutableDictionary *plist;
+  NSMutableArray *PinnedLocationNames;
+  NSMutableArray *PinnedLocationPaths;
+}
+- (void)openDirectoryPickerWithName:(NSString*)name;
 @end
 
 @interface ActionPrefsController : PSListController {}

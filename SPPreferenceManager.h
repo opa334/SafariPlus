@@ -24,6 +24,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property(nonatomic, readonly) NSInteger instantDownloadsOption;
 @property(nonatomic, readonly) BOOL customDefaultPathEnabled;
 @property(nonatomic, readonly, retain) NSString* customDefaultPath;
+@property(nonatomic, readonly) BOOL pinnedLocationsEnabled;
 @property(nonatomic, readonly) BOOL onlyDownloadOnWifiEnabled;
 @property(nonatomic, readonly) BOOL disablePushNotificationsEnabled;
 @property(nonatomic, readonly) BOOL disableBarNotificationsEnabled;

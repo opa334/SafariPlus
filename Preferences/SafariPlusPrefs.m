@@ -134,11 +134,11 @@
 
 - (void)addButtonPressed
 {
-	UIAlertController * addExceptionAlert = [UIAlertController alertControllerWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
+	UIAlertController * addLocationAlert = [UIAlertController alertControllerWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
 											message:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
 											preferredStyle:UIAlertControllerStyleAlert];
 
-	[addExceptionAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
+	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
 		textField.placeholder = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
 		textField.textColor = [UIColor blackColor];
@@ -147,14 +147,14 @@
 		textField.borderStyle = UITextBorderStyleNone;
 	}];
 
-	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
 	{
-		[addExceptionAlert dismissViewControllerAnimated:YES completion:nil];
+		[addLocationAlert dismissViewControllerAnimated:YES completion:nil];
 	}]];
 
-	[addExceptionAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 	{
-		UITextField * URLField = addExceptionAlert.textFields[0];
+		UITextField * URLField = addLocationAlert.textFields[0];
 
 		[ForceHTTPSExceptions addObject:URLField.text];
 		[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
@@ -172,7 +172,7 @@
 		[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
   }]];
 
-	[self presentViewController:addExceptionAlert animated:YES completion:nil];
+	[self presentViewController:addLocationAlert animated:YES completion:nil];
 }
 
 - (id)_editButtonBarItem
@@ -191,6 +191,224 @@
 	BOOL orig = [super performDeletionActionForSpecifier:specifier];
 	[ForceHTTPSExceptions removeObject:[specifier name]];
 	[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
+	[plist writeToFile:otherPlistPath atomically:YES];
+	return orig;
+}
+@end
+
+@implementation PinnedLocationsController
+
+- (NSArray *)specifiers
+{
+	if(!_specifiers)
+	{
+		if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
+		{
+			[@{} writeToFile:otherPlistPath atomically:NO];
+		}
+
+		if(!plist)
+		{
+			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
+		}
+
+		PinnedLocationNames = [NSMutableArray new];
+		PinnedLocationPaths = [NSMutableArray new];
+
+		if(![[plist allKeys] containsObject:@"PinnedLocationNames"])
+		{
+			[plist setObject:PinnedLocationNames forKey:@"PinnedLocationNames"];
+			[plist writeToFile:otherPlistPath atomically:YES];
+		}
+		else
+		{
+			PinnedLocationNames = [plist objectForKey:@"PinnedLocationNames"];
+		}
+
+		if(![[plist allKeys] containsObject:@"PinnedLocationPaths"])
+		{
+			[plist setObject:PinnedLocationPaths forKey:@"PinnedLocationPaths"];
+			[plist writeToFile:otherPlistPath atomically:YES];
+		}
+		else
+		{
+			PinnedLocationPaths = [plist objectForKey:@"PinnedLocationPaths"];
+		}
+
+		NSMutableArray* specifiers = [NSMutableArray new];
+
+		PSSpecifier* LocationListGroup = [PSSpecifier preferenceSpecifierNamed:@""
+									target:self
+									set:nil
+									get:nil
+									detail:nil
+									cell:PSGroupCell
+									edit:nil];
+
+		[specifiers addObject:LocationListGroup];
+
+		for(NSString* PinnedLocationName in PinnedLocationNames)
+		{
+			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:PinnedLocationName
+									target:self
+										set:@selector(setPreferenceValue:specifier:)
+										get:@selector(readPreferenceValue:)
+									detail:nil
+										cell:PSStaticTextCell
+										edit:nil];
+
+			[specifier setProperty:@YES forKey:@"enabled"];
+
+			[specifiers addObject:specifier];
+		}
+
+		_specifiers = (NSArray*)[specifiers copy];
+	}
+
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PINNED_LOCATIONS"]];
+	return _specifiers;
+}
+
+- (void)presentAddAlertWithName:(NSString*)name path:(NSString*)path
+{
+	UIAlertController* addLocationAlert = [UIAlertController alertControllerWithTitle:
+		[[SPPreferenceLocalizationManager sharedInstance]
+		localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_TITLE"]
+		message:[[SPPreferenceLocalizationManager sharedInstance]
+		localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_MESSAGE"]
+		preferredStyle:UIAlertControllerStyleAlert];
+
+	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
+	{
+		textField.placeholder = [[SPPreferenceLocalizationManager sharedInstance]
+			localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER"];
+
+		textField.textColor = [UIColor blackColor];
+		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+		textField.borderStyle = UITextBorderStyleNone;
+		textField.text = name;
+	}];
+
+	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
+	{
+		textField.placeholder = [[SPPreferenceLocalizationManager sharedInstance]
+			localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER"];
+
+		textField.textColor = [UIColor blackColor];
+		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+		textField.borderStyle = UITextBorderStyleNone;
+		textField.text = path;
+	}];
+
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:
+		[[SPPreferenceLocalizationManager sharedInstance]
+		localizedSPStringForKey:@"BROWSE"] style:UIAlertActionStyleDefault
+		handler:^(UIAlertAction *addAction)
+	{
+		NSString* name = addLocationAlert.textFields[0].text;
+		[self openDirectoryPickerWithName:name];
+	}]];
+
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:
+		[[SPPreferenceLocalizationManager sharedInstance]
+		localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault
+		handler:^(UIAlertAction *addAction)
+	{
+		NSString* name = addLocationAlert.textFields[0].text;
+		NSString* path = addLocationAlert.textFields[1].text;
+
+		BOOL isDir;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+
+		if(![name isEqualToString:@""] && ![path isEqualToString:@""] && exists && isDir)
+		{
+			[PinnedLocationNames addObject:name];
+			[plist setObject:PinnedLocationNames forKey:@"PinnedLocationNames"];
+			[plist writeToFile:otherPlistPath atomically:YES];
+
+			[PinnedLocationPaths addObject:path];
+			[plist setObject:PinnedLocationPaths forKey:@"PinnedLocationPaths"];
+			[plist writeToFile:otherPlistPath atomically:YES];
+
+			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:name
+										target:self
+										set:@selector(setPreferenceValue:specifier:)
+										get:@selector(readPreferenceValue:)
+										detail:nil
+										cell:PSStaticTextCell
+										edit:nil];
+
+			[specifier setProperty:@YES forKey:@"enabled"];
+			[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
+		}
+		else
+		{
+			UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:
+				[[SPPreferenceLocalizationManager sharedInstance]
+				localizedSPStringForKey:@"ERROR"]
+				message:[[SPPreferenceLocalizationManager sharedInstance]
+				localizedSPStringForKey:@"ERROR_INVALID_NAME_OR_PATH"]
+				preferredStyle:UIAlertControllerStyleAlert];
+
+			UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK"
+				style:UIAlertActionStyleDefault
+				handler:nil];
+
+			[errorAlert addAction:okAction];
+
+			[self presentViewController:errorAlert animated:YES completion:nil];
+		}
+  }]];
+
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
+	{
+		[addLocationAlert dismissViewControllerAnimated:YES completion:nil];
+	}]];
+
+	[self presentViewController:addLocationAlert animated:YES completion:nil];
+}
+
+- (void)addButtonPressed
+{
+	[self presentAddAlertWithName:nil path:nil];
+}
+
+- (void)openDirectoryPickerWithName:(NSString*)name
+{
+	preferenceDirectoryPickerNavigationController* directoryPicker =
+		[[preferenceDirectoryPickerNavigationController alloc] initWithDelegate:self name:name];
+
+	[self presentViewController:directoryPicker animated:YES completion:nil];
+}
+
+- (void)directoryPickerFinishedWithName:(NSString*)name path:(NSURL*)pathURL
+{
+	[self presentAddAlertWithName:name path:[pathURL path]];
+}
+
+- (id)_editButtonBarItem
+{
+	UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed)];
+	return addButton;
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return UITableViewCellEditingStyleDelete;
+}
+
+- (BOOL)performDeletionActionForSpecifier:(PSSpecifier*)specifier
+{
+	BOOL orig = [super performDeletionActionForSpecifier:specifier];
+
+	NSIndexPath* indexPath = [self indexPathForSpecifier:specifier];
+
+	[PinnedLocationNames removeObjectAtIndex:[indexPath row]];
+	[PinnedLocationPaths removeObjectAtIndex:[indexPath row]];
+
+	[plist setObject:PinnedLocationNames forKey:@"PinnedLocationNames"];
+	[plist setObject:PinnedLocationPaths forKey:@"PinnedLocationPaths"];
+
 	[plist writeToFile:otherPlistPath atomically:YES];
 	return orig;
 }

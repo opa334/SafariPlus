@@ -8,47 +8,67 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
+
+  //Activate checkmarks on the left while editing
   self.tableView.allowsMultipleSelectionDuringEditing = YES;
 
+  //Create long press recognizer for tableView
   UILongPressGestureRecognizer *tableLongPressRecognizer = [[UILongPressGestureRecognizer alloc]
-  initWithTarget:self action:@selector(tableWasLongPressed:)];
+    initWithTarget:self action:@selector(tableWasLongPressed:)];
+
+  //Duration of long press: 1 second
   tableLongPressRecognizer.minimumPressDuration = 1.0;
+
+  //Add long press recognizer to tableView
   [self.tableView addGestureRecognizer:tableLongPressRecognizer];
 }
 
 - (void)dismiss
 {
+  //Dismiss file picker
   [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:nil];
 }
 
-- (void)selectedEntryAtURL:(NSURL*)entryURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
+- (void)selectedFileAtURL:(NSURL*)fileURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
 {
-  //Type 1: file; type 2: symlink; type 3: directory
+  //Type 1: file; type 2: directory
   if(type == 1)
   {
-    [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:@[entryURL]];
+    //tapped entry is file -> call delegate to upload file
+    [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:@[fileURL]];
   }
 
-  [super selectedEntryAtURL:entryURL type:type atIndexPath:indexPath];
+  [super selectedFileAtURL:fileURL type:type atIndexPath:indexPath];
 }
 
 - (void)tableWasLongPressed:(UILongPressGestureRecognizer *)gestureRecognizer
 {
   if(!self.tableView.editing)
   {
+    //Long pressed while not editing -> toggle editing mode
+
+    //Get CGPoint of touch location
     CGPoint p = [gestureRecognizer locationInView:self.tableView];
+
+    //Get index path of CGPoint
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:p];
 
     if(gestureRecognizer.state == UIGestureRecognizerStateBegan && indexPath)
     {
+      //long press began & index path exists -> toggle editing mode
       [self toggleEditing];
 
+      //Check if long pressed cell is file
       NSNumber* isFile;
-      [(NSURL*)filesAtCurrentPath[indexPath.row] getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
+      [(NSURL*)filesAtCurrentPath[indexPath.row] getResourceValue:&isFile
+        forKey:NSURLIsRegularFileKey error:nil];
 
       if([isFile boolValue])
       {
-        [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
+        //Long pressed cell is file -> select file and update top right button status
+        [self.tableView selectRowAtIndexPath:indexPath animated:YES
+          scrollPosition:UITableViewScrollPositionNone];
+
         [self updateTopRightButtonAvailability];
       }
     }
@@ -57,11 +77,23 @@
 
 - (void)toggleEditing
 {
+  //Toggle editing
   [self.tableView setEditing:!self.tableView.editing animated:YES];
+
   if(self.tableView.editing)
   {
-    UIBarButtonItem* cancelItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIBarButtonItemStylePlain target:self action:@selector(toggleEditing)];
-    UIBarButtonItem* uploadItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager localizedSPStringForKey:@"UPLOAD"] style:UIBarButtonItemStylePlain target:self action:@selector(uploadSelectedItems)];
+    //Entered editing mode -> change top buttons
+    UIBarButtonItem* cancelItem = [[UIBarButtonItem alloc]
+      initWithTitle:[localizationManager
+      localizedSPStringForKey:@"CANCEL"]
+      style:UIBarButtonItemStylePlain
+      target:self action:@selector(toggleEditing)];
+
+    UIBarButtonItem* uploadItem = [[UIBarButtonItem alloc]
+      initWithTitle:[localizationManager
+      localizedSPStringForKey:@"UPLOAD"]
+      style:UIBarButtonItemStylePlain
+      target:self action:@selector(uploadSelectedItems)];
 
     self.navigationItem.leftBarButtonItem = cancelItem;
     self.navigationItem.rightBarButtonItem = uploadItem;
@@ -70,6 +102,7 @@
   }
   else
   {
+    //Exited editing mode -> revert top buttons
     self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
     self.navigationItem.rightBarButtonItem = [self defaultRightBarButtonItem];
     self.navigationItem.rightBarButtonItem.enabled = YES;
@@ -78,22 +111,26 @@
 
 - (void)uploadSelectedItems
 {
+  //Get selected items
   NSArray* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
   NSMutableArray* selectedURLs = [NSMutableArray new];
 
-  for(int i = 0; i < [selectedIndexPaths count]; i++)
+  //Store fileURLs into array
+  for(NSIndexPath* indexPath in selectedIndexPaths)
   {
-    NSIndexPath* indexPath = selectedIndexPaths[i];
     NSURL* filePath = filesAtCurrentPath[indexPath.row];
     [selectedURLs addObject:filePath];
   }
 
-  [((filePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:selectedURLs];
+  //Call delegate to upload files
+  [((filePickerNavigationController*)self.navigationController).filePickerDelegate
+    didSelectFilesAtURL:selectedURLs];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+
   [self updateTopRightButtonAvailability];
 }
 
@@ -109,15 +146,18 @@
     NSArray *selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
     if([selectedIndexPaths count] <= 0)
     {
+      //Count of selected files is 0 -> disable button
       self.navigationItem.rightBarButtonItem.enabled = NO;
     }
     else
     {
+      //Count of selected files is 1 or more -> enable button
       self.navigationItem.rightBarButtonItem.enabled = YES;
     }
   }
   else
   {
+    //TableView is not in editing mode -> enable button
     self.navigationItem.rightBarButtonItem.enabled = YES;
   }
 }

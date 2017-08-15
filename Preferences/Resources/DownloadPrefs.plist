@@ -68,6 +68,25 @@
 		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
+			footerText = "PINNED_LOCATIONS_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "PINNED_LOCATIONS_ENABLED";
+			key = "pinnedLocationsEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSLinkListCell";
+			defaults = "com.opa334.safariplusprefs";
+			detail = "PinnedLocationsController";
+			label = "PINNED_LOCATIONS";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
 			footerText = "ONLY_DOWNLOAD_ON_WIFI_FOOTER";
 		},
 		{

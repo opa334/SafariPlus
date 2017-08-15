@@ -1,9 +1,9 @@
 //  fileBrowserNavigationController.xm
 // (c) 2017 opa334
 
-#import "fileBrowserNavigationController.h"
+#import "preferenceFileBrowserNavigationController.h"
 
-@implementation fileBrowserNavigationController
+@implementation preferenceFileBrowserNavigationController
 
 - (void)viewDidLoad
 {
@@ -54,7 +54,7 @@
 - (void)reloadAllTableViews
 {
   //Cycle through all tableViews and reload their data
-  for(fileBrowserTableViewController* tableViewController in self.viewControllers)
+  for(preferenceFileBrowserTableViewController* tableViewController in self.viewControllers)
   {
     [tableViewController reloadDataAndDataSources];
   }
@@ -63,7 +63,7 @@
 - (id)newTableViewControllerWithPath:(NSURL*)path
 {
   //Return instance of fileBrowserTableViewController
-  return [[fileBrowserTableViewController alloc] initWithPath:path];
+  return [[preferenceFileBrowserTableViewController alloc] initWithPath:path];
 }
 
 - (NSURL*)rootPath

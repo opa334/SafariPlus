@@ -1,3 +1,6 @@
+"YES" = "Ja";
+"NO" = "Nein";
+
 /* Root Page*/
 
 "GENERAL" = "Allgemein";
@@ -47,6 +50,11 @@
 "CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Pfad";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /User (/private/var/mobile) Verzeichnisses abgespeichert werden!";
 
+"PINNED_LOCATIONS_ENABLED" = "Angepinnte Orte aktivieren";
+"PINNED_LOCATIONS" = "Angepinnte Orte";
+"PINNED_LOCATIONS_FOOTER" = "Lässt dich einige Orte auswählen, welche beim Benutzen der 'Herunterladen nach' Option auftauchen werden.";
+"ERROR_INVALID_NAME_OR_PATH" = "Ungültiger Name oder Pfad";
+
 "ONLY_DOWNLOAD_ON_WIFI" = "Nur über WLAN herunterladen";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Erlaubt das Herunterladen von Dateien nur, während das Gerät mit einem WLAN-Netzwerk verbunden ist.";
 
@@ -55,6 +63,16 @@
 
 "DISABLE_BAR_NOTIFICATIONS" = "Status-Mitteilungen deaktivieren";
 "DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Standardmäßig erhälst du eine Mitteilung in der Statusleiste, wenn ein Download gestartet oder fertiggestellt wurde, diese Option deaktiviert das.";
+
+/* Pinned Locations */
+
+"PINNED_LOCATIONS_ALERT_TITLE" = "Angepinnten Ort hinzufügen";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Wähle einen Namen und einen Pfad für den angepinnten Ort.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Pfad";
+"BROWSE" = "Durchsuchen...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Pfad auswählen";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Möchtest du den Pfad\n<pathURL>\nauswählen?";
 
 /* Action Settings */
 

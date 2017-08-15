@@ -3,6 +3,8 @@
 
 #import "downloadTableViewCell.h"
 
+//http://commandshift.co.uk/blog/2013/01/31/visual-format-language-for-autolayout/
+
 @interface UIView (Autolayout)
 + (id)autolayoutView;
 @end
@@ -16,39 +18,76 @@
 }
 @end
 
-
-
 @implementation downloadTableViewCell
 
 - (id)initWithDownload:(Download*)download
 {
-  self = [super initWithSize:download.fileSize];
-  self.downloadDelegate = download;
+  self = [super init];
+
+  //Create size label and set it to accessoryView
+  UILabel* sizeLabel = [[UILabel alloc] init];
+  sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.fileSize countStyle:NSByteCountFormatterCountStyleFile];
+  sizeLabel.textColor = [UIColor lightGrayColor];
+  sizeLabel.font = [sizeLabel.font fontWithSize:10];
+  sizeLabel.textAlignment = NSTextAlignmentRight;
+  sizeLabel.frame = CGRectMake(0,0, sizeLabel.intrinsicContentSize.width, 15);
+  self.accessoryView = sizeLabel;
+
+  //nil out default label and image just to be sure (Can't use them in constraints)
+  self.textLabel.text = nil;
+  self.imageView.image = nil;
+
+  //Make cell unselectable
   self.selectionStyle = UITableViewCellSelectionStyleNone;
-  self.progressView = [UIProgressView autolayoutView];
-  self.percentProgress = [UILabel autolayoutView];
+
+  //Set cell delegate to receive download updates (progress changes)
+  download.cellDelegate = self;
+
+  //Set download delegate to send actions (pause, resume, stop)
+  self.downloadDelegate = download;
+
+  //Create imageView with file icon add add it to contentView
+  self.fileIcon = [UIImageView autolayoutView];
+  self.fileIcon.image = [UIImage imageNamed:@"File.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+  [self.contentView addSubview:self.fileIcon];
+
+  //Create label with file name and add it to contentView
+  self.fileNameLabel = [UILabel autolayoutView];
+  self.fileNameLabel.text = download.fileName;
+  self.fileNameLabel.font = self.textLabel.font;
+  self.fileNameLabel.textAlignment = NSTextAlignmentLeft;
+  [self.contentView addSubview:self.fileNameLabel];
+
+  //Create label with size progress and add it to contentView
   self.sizeProgress = [UILabel autolayoutView];
-  self.sizeSpeedSeperator = [UILabel autolayoutView];
-  self.downloadSpeed = [UILabel autolayoutView];
-  [self.contentView addSubview:self.progressView];
-
-  self.percentProgress.textAlignment = NSTextAlignmentCenter;
-  self.percentProgress.font = [self.percentProgress.font fontWithSize:8];
-  [self.contentView addSubview:self.percentProgress];
-
-  self.sizeSpeedSeperator.textAlignment = NSTextAlignmentCenter;
-  self.sizeSpeedSeperator.font = [self.percentProgress.font fontWithSize:8];
-  self.sizeSpeedSeperator.text = @"@";
-  [self.contentView addSubview:self.sizeSpeedSeperator];
-
-  self.downloadSpeed.textAlignment = NSTextAlignmentLeft;
-  self.downloadSpeed.font = [self.downloadSpeed.font fontWithSize:8];
-  [self.contentView addSubview:self.downloadSpeed];
-
   self.sizeProgress.textAlignment = NSTextAlignmentRight;
   self.sizeProgress.font = [self.sizeProgress.font fontWithSize:8];
   [self.contentView addSubview:self.sizeProgress];
 
+  //Create label with seperator for size and speed (@ character) and add it to contentView
+  self.sizeSpeedSeperator = [UILabel autolayoutView];
+  self.sizeSpeedSeperator.textAlignment = NSTextAlignmentCenter;
+  self.sizeSpeedSeperator.font = [self.sizeSpeedSeperator.font fontWithSize:8];
+  self.sizeSpeedSeperator.text = @"@";
+  [self.contentView addSubview:self.sizeSpeedSeperator];
+
+  //Create label with downloadSpeed and add it to contentView
+  self.downloadSpeed = [UILabel autolayoutView];
+  self.downloadSpeed.textAlignment = NSTextAlignmentLeft;
+  self.downloadSpeed.font = [self.downloadSpeed.font fontWithSize:8];
+  [self.contentView addSubview:self.downloadSpeed];
+
+  //Create progress bar and add it to contentView
+  self.progressView = [UIProgressView autolayoutView];
+  [self.contentView addSubview:self.progressView];
+
+  //Create label with percent progress and add it to contentView
+  self.percentProgress = [UILabel autolayoutView];
+  self.percentProgress.textAlignment = NSTextAlignmentCenter;
+  self.percentProgress.font = [self.percentProgress.font fontWithSize:8];
+  [self.contentView addSubview:self.percentProgress];
+
+  //Create pause/resume button and add it to contentView
   self.pauseResumeButton = [UIButton buttonWithType:UIButtonTypeCustom];
   self.pauseResumeButton.translatesAutoresizingMaskIntoConstraints = NO;
   self.pauseResumeButton.adjustsImageWhenHighlighted = YES;
@@ -57,6 +96,7 @@
   [self.pauseResumeButton setImage:[UIImage imageNamed:@"ResumeButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateSelected];
   [self.contentView addSubview:self.pauseResumeButton];
 
+  //Create stop button and add it to contentView
   self.stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
   self.stopButton.translatesAutoresizingMaskIntoConstraints = NO;
   self.stopButton.adjustsImageWhenHighlighted = YES;
@@ -64,7 +104,8 @@
   [self.stopButton setImage:[UIImage imageNamed:@"StopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
   [self.contentView addSubview:self.stopButton];
 
-  NSDictionary *metrics = @{@"rightSpace":@43.5, @"smallSpace":@7.5, @"buttonSize":@28.0};
+  //Create metrics and views for constraints
+  NSDictionary *metrics = @{@"rightSpace":@43.5, @"smallSpace":@7.5, @"buttonSize":@28.0, @"iconSize":@30.0, @"topSpace":@6.0};
   NSDictionary *views = [NSDictionary dictionaryWithObjectsAndKeys:
                     self.progressView, @"progressView",
                     self.percentProgress, @"percentProgress",
@@ -73,8 +114,11 @@
                     self.downloadSpeed, @"downloadSpeed",
                     self.pauseResumeButton, @"pauseResumeButton",
                     self.stopButton, @"stopButton",
+                    self.fileNameLabel, @"fileNameLabel",
+                    self.fileIcon, @"fileIcon",
                     nil];
 
+  //Add dynamic constraints so the cell looks good across all devices
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
       @"|-[sizeProgress(downloadSpeed)]-smallSpace-[sizeSpeedSeperator(8)]-smallSpace-[downloadSpeed(sizeProgress)]-rightSpace-|" options:0 metrics:metrics views:views]];
 
@@ -85,7 +129,13 @@
       @"|-[percentProgress]-rightSpace-|" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-      @"[pauseResumeButton(buttonSize)]-8-|" options:0 metrics:metrics views:views]];
+      @"|-[fileIcon(iconSize)]-15-[fileNameLabel]-smallSpace-[pauseResumeButton(buttonSize)]-8-|" options:0 metrics:metrics views:views]];
+
+  [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+      @"V:|-topSpace-[fileIcon(iconSize)]" options:0 metrics:metrics views:views]];
+
+  [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+      @"V:|-topSpace-[fileNameLabel(iconSize)]" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
       @"V:|-4.0-[pauseResumeButton(buttonSize)]-[stopButton(buttonSize)]-4-|" options:0 metrics:metrics views:views]];
@@ -99,39 +149,61 @@
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
       @"V:[downloadSpeed(8)]-19-|" options:0 metrics:metrics views:views]];
 
+  //Update progress bar with current progress if needed
   if(download.totalBytesWritten > 0)
   {
-    [self updateProgress:download.totalBytesWritten totalBytes:download.fileSize bytesPerSecond:0 animated:NO];
+    [self updateProgress:download.totalBytesWritten totalBytes:download.fileSize animated:NO];
   }
 
-  if(download.paused)
+  //Update download speed if needed
+  if(download.bytesPerSecond > 0)
   {
-    self.pauseResumeButton.selected = YES;
-    self.percentProgress.textColor = [UIColor grayColor];
-    self.progressView.progressTintColor = [UIColor grayColor];
-    self.sizeProgress.textColor = [UIColor grayColor];
-    self.sizeSpeedSeperator.textColor = [UIColor grayColor];
-    self.downloadSpeed.textColor = [UIColor grayColor];
+    [self updateDownloadSpeed:download.bytesPerSecond];
+  }
+
+  //Check whether download is currently paused or not and update UI elements according to that
+  [self setPaused:download.paused];
+  self.pauseResumeButton.selected = download.paused;
+
+  return self;
+}
+
+- (void)setPaused:(BOOL)paused
+{
+  if(paused)
+  {
+    dispatch_async(dispatch_get_main_queue(),
+    ^{
+      //Grey out all elements
+      UIColor* pausedColor = [UIColor grayColor];
+      self.percentProgress.textColor = pausedColor;
+      self.progressView.progressTintColor = pausedColor;
+      self.sizeProgress.textColor = pausedColor;
+      self.sizeSpeedSeperator.textColor = pausedColor;
+      self.downloadSpeed.textColor = pausedColor;
+    });
   }
   else
   {
-    self.percentProgress.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-    self.progressView.progressTintColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-    self.sizeProgress.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-    self.sizeSpeedSeperator.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-    self.downloadSpeed.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
+    dispatch_async(dispatch_get_main_queue(),
+    ^{
+      //Make all elements light blue
+      UIColor* nonPausedColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
+      self.percentProgress.textColor = nonPausedColor;
+      self.progressView.progressTintColor = nonPausedColor;
+      self.sizeProgress.textColor = nonPausedColor;
+      self.sizeSpeedSeperator.textColor = nonPausedColor;
+      self.downloadSpeed.textColor = nonPausedColor;
+    });
   }
-
-  return self;
 }
 
 - (void)layoutSubviews
 {
   [super layoutSubviews];
-  dispatch_async(dispatch_get_main_queue(), ^
-  {
-    self.textLabel.frame = CGRectMake(self.textLabel.frame.origin.x,self.textLabel.frame.origin.y - 11,self.textLabel.frame.size.width - 32.5,self.textLabel.frame.size.height);
-    self.imageView.frame = CGRectMake(self.imageView.frame.origin.x,self.imageView.frame.origin.y - 11,self.imageView.frame.size.width,self.imageView.frame.size.height);
+  dispatch_async(dispatch_get_main_queue(),
+  ^{
+    //Make buttons round
     self.pauseResumeButton.imageView.layer.cornerRadius = self.pauseResumeButton.imageView.frame.size.height / 2.0;
     self.stopButton.imageView.layer.cornerRadius = self.stopButton.imageView.frame.size.height / 2.0;
   });
@@ -139,51 +211,62 @@
 
 - (void)pauseResumeButtonPressed
 {
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    self.pauseResumeButton.selected = !self.pauseResumeButton.selected;
+  //Invert button selection
+  self.pauseResumeButton.selected = !self.pauseResumeButton.selected;
 
-    if(self.pauseResumeButton.selected)
-    {
-      [self.downloadDelegate pauseDownload];
-      self.percentProgress.textColor = [UIColor grayColor];
-      self.progressView.progressTintColor = [UIColor grayColor];
-      self.sizeProgress.textColor = [UIColor grayColor];
-      self.sizeSpeedSeperator.textColor = [UIColor grayColor];
-      self.downloadSpeed.textColor = [UIColor grayColor];
-    }
-    else
-    {
-      [self.downloadDelegate resumeDownload];
-      self.percentProgress.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-      self.progressView.progressTintColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-      self.sizeProgress.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-      self.sizeSpeedSeperator.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-      self.downloadSpeed.textColor = [UIColor colorWithRed:0.45 green:0.65 blue:0.95 alpha:1.0];
-    }
-  });
+  if(self.pauseResumeButton.selected)
+  {
+    //Pause download and update UI elements
+    [self.downloadDelegate pauseDownload];
+    [self setPaused:YES];
+  }
+  else
+  {
+    //Resume download and update UI elements
+    [self.downloadDelegate resumeDownload];
+    [self setPaused:NO];
+  }
 }
 
 - (void)stopButtonPressed
 {
+  //Stop download
   [self.downloadDelegate cancelDownload];
 }
 
-- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes bytesPerSecond:(int64_t)bytesPerSecond animated:(BOOL)animated
+- (void)updateDownloadSpeed:(int64_t)bytesPerSecond
 {
-    float progress = (float)currentBytes / (float)totalBytes;
-    NSString* percentProgressString = [NSString stringWithFormat:@"%.1f%%", progress * 100];
-    NSString* sizeString = [NSByteCountFormatter stringFromByteCount:currentBytes countStyle:NSByteCountFormatterCountStyleFile];
-    NSString* sizeSpeedSeperator = @"@";
-    NSString* speedString = [NSString stringWithFormat:@"%@/s", [NSByteCountFormatter stringFromByteCount:bytesPerSecond countStyle:NSByteCountFormatterCountStyleFile]];
-    dispatch_async(dispatch_get_main_queue(),
-    ^{
-      [self.progressView setProgress:progress animated:animated];
-      self.percentProgress.text = percentProgressString;
-      self.sizeProgress.text = sizeString;
-      self.sizeSpeedSeperator.text = sizeSpeedSeperator;
-      self.downloadSpeed.text = speedString;
-    });
+  //Create string for bytesPerSecond
+  NSString* speedString = [NSString stringWithFormat:@"%@/s",
+    [NSByteCountFormatter stringFromByteCount:bytesPerSecond
+    countStyle:NSByteCountFormatterCountStyleFile]];
+
+  dispatch_async(dispatch_get_main_queue(),
+  ^{
+    //Update download speed
+    self.downloadSpeed.text = speedString;
+  });
+}
+
+- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated
+{
+  //Calculate progress and create strings for everything
+  float progress = (float)currentBytes / (float)totalBytes;
+  NSString* percentProgressString = [NSString
+    stringWithFormat:@"%.1f%%", progress * 100];
+
+  NSString* sizeString = [NSByteCountFormatter stringFromByteCount:currentBytes
+    countStyle:NSByteCountFormatterCountStyleFile];
+
+  NSString* sizeSpeedSeperator = @"@";
+  dispatch_async(dispatch_get_main_queue(),
+  ^{
+    //Update cell components from progress
+    [self.progressView setProgress:progress animated:animated];
+    self.percentProgress.text = percentProgressString;
+    self.sizeProgress.text = sizeString;
+    self.sizeSpeedSeperator.text = sizeSpeedSeperator;
+  });
 }
 
 @end

@@ -7,10 +7,12 @@
 
 @class filePickerNavigationController;
 
-@interface downloadTableViewCell : fileTableViewCell <DownloadCellDelegate> {}
+@interface downloadTableViewCell : UITableViewCell <DownloadCellDelegate> {}
 @property (nonatomic, weak) id<CellDownloadDelegate> downloadDelegate;
 @property NSString* fileName;
 @property UIProgressView* progressView;
+@property UILabel* fileNameLabel;
+@property UIImageView* fileIcon;
 @property UILabel* percentProgress;
 @property UILabel* sizeProgress;
 @property UILabel* sizeSpeedSeperator;
@@ -18,6 +20,7 @@
 @property UIButton* pauseResumeButton;
 @property UIButton* stopButton;
 - (id)initWithDownload:(Download*)download;
+- (void)setPaused:(BOOL)paused;
 - (void)pauseResumeButtonPressed;
 - (void)stopButtonPressed;
 @end
