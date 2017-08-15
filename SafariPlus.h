@@ -169,8 +169,6 @@
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
 - (void)clearAutoFillMessageReceived;
-- (void)modeSwitchAction:(int)switchToMode;
-- (void)autoCloseAction;
 - (void)showFindOnPage; //iOS9
 //new stuff below
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
@@ -183,6 +181,8 @@
 - (void)downloadsFromButtonBar;
 - (BOOL)usesTabBar;
 - (void)clearData;
+- (void)modeSwitchAction:(int)switchToMode;
+- (void)autoCloseAction;
 @end
 
 //iOS9
