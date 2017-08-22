@@ -283,7 +283,7 @@
           path = [NSURL fileURLWithPath:[[path path] stringByReplacingOccurrencesOfString:@"/var" withString:@"/private/var"]];
 
           //Check if image already exists
-          if([[NSFileManager defaultManager] fileExistsAtPath:[[path URLByAppendingPathComponent:fileName] path]])
+          if([[NSFileManager defaultManager] fileExistsAtPath:[[path URLByAppendingPathComponent:newFilename] path]])
           {
             //Image exists -> Present alert
             [self presentFileExistsAlert:nil size:0 fileName:newFilename path:path isImage:YES image:image];
