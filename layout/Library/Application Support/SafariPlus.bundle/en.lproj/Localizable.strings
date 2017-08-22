@@ -137,6 +137,7 @@
 "FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
 "DISABLE_PRIVATE_MODE_FOOTER" = "Disables private browsing mode and removes the 'Private' button. (Hidden stock feature)";
 "DISABLE_PRIVATE_MODE" = "Fully disable private browsing";
+"ALWAYS_OPEN_NEW_TAB" = "Always open links in new tab";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 when a 'mailto:<email>' URL is accessed.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10) Suppress mailto dialog";
 
@@ -171,6 +172,7 @@
 "BLACK" = "Black";
 
 /* Credits */
+
 "CREDITS" = "Credits";
 "ICONS" = "Icons";
 "DESKTOP_MODE_BUTTON" = "'Desktop Mode' Button";
@@ -181,14 +183,17 @@
 "PICKER_INSPIRED" = "File picker inspired by";
 
 /* In app */
+
 "LOCAL_FILE" = "Local File";
 
 /* File picker */
+
 "DISMISS" = "Dismiss";
 "CANCEL" = "Cancel";
 "UPLOAD" = "Upload";
 
 /* Downloads */
+
 "DOWNLOAD" = "Download";
 "DOWNLOAD_TO" = "Download to...";
 "OPEN" = "Open";

@@ -59,6 +59,7 @@
 
   [preferences registerBool:&_enableFullscreenScrolling default:NO forKey:@"fullscreenScrollingEnabled"];
   [preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
+  [preferences registerBool:&_alwaysOpenNewTabEnabled default:NO forKey:@"alwaysOpenNewTabEnabled"];
   [preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
 
   [preferences registerBool:&_appTintColorNormalEnabled default:NO forKey:@"appTintColorNormalEnabled"];

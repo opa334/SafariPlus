@@ -4,7 +4,6 @@
 	(
 		{
       cell = PSGroupCell;
-      headerCellClass = SafariPlusHeaderCell;
     },
 		{
       cell = PSGroupCell;

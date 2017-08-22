@@ -1256,6 +1256,59 @@ int iOSVersion;
 
 %hook TabDocument
 
+//Always open in new tab option
+- (void)webView:(WKWebView *)webView
+  decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
+  decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+  if(preferenceManager.alwaysOpenNewTabEnabled)
+  {
+    if(navigationAction.navigationType == WKNavigationTypeLinkActivated)
+    {
+      //Get array of components that are seperated by a #
+      NSArray* oldComponents = [[self URL].absoluteString
+        componentsSeparatedByString:@"#"];
+
+      //Strip fragment
+      NSString* oldURLWithoutFragment = oldComponents.firstObject;
+
+      //Get array of components that are seperated by a #
+      NSArray* newComponents = [navigationAction.request.URL.absoluteString
+        componentsSeparatedByString:@"#"];
+
+      //Strip fragment
+      NSString* newURLWithoutFragment = newComponents.firstObject;
+
+      if(![newURLWithoutFragment isEqualToString:oldURLWithoutFragment])
+      {
+        //Link doesn't contain current URL -> Open in new tab
+
+        //Cancel site load
+        decisionHandler(WKNavigationResponsePolicyCancel);
+        NSLog(@"Clicked link:%@",navigationAction.request.URL.absoluteString);
+        switch(iOSVersion)
+        {
+          case 9:
+          //Load URL in new tab
+          [MSHookIvar<BrowserController*>(self, "_browserController")
+            loadURLInNewWindow:navigationAction.request.URL
+            inBackground:NO animated:YES];
+          break;
+
+          case 10:
+          //Load URL in new tab
+          [self.browserController loadURLInNewTab:navigationAction.request.URL
+            inBackground:NO animated:YES];
+          break;
+        }
+        return;
+      }
+    }
+  }
+
+  %orig;
+}
+
 BOOL showAlert = YES;
 
 //Present download menu if clicked link is a downloadable file

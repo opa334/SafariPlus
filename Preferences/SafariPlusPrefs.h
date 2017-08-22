@@ -14,7 +14,8 @@
 - (BOOL)performDeletionActionForSpecifier:(id)arg1;
 @end
 
-@interface SafariPlusRootListController : PSListController {}
+@interface SafariPlusRootListController : PSListController<UITableViewDelegate>
+@property(nonatomic) UIImageView* headerView;
 @end
 
 @interface GeneralPrefsController : PSListController {}

@@ -284,7 +284,7 @@
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
 - (void)reload;
 - (BOOL)privateBrowsingEnabled;
-- (WebBookmark *)readingListBookmark;
+- (WebBookmark*)readingListBookmark;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
 - (id)loadURL:(id)arg1 userDriven:(BOOL)arg2;

@@ -31,6 +31,19 @@
 		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
+			//footerText = "";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "alwaysOpenNewTabEnabled";
+			label = "ALWAYS_OPEN_NEW_TAB";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
 			footerText = "SUPPRESS_MAILTO_DIALOG_FOOTER";
 		},
 		{

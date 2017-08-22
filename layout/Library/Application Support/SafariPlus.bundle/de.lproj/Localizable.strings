@@ -137,6 +137,7 @@
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
 "DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
 "DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
+"ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 beim Aufrufen eines 'mailto:<email>' Links erscheint.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10) Mailto Dialog deaktivieren";
 
@@ -171,6 +172,7 @@
 "BLACK" = "Schwarz";
 
 /* Credits */
+
 "CREDITS" = "Credits";
 "ICONS" = "Icons";
 "DESKTOP_MODE_BUTTON" = "'Desktop Modus' Button";
@@ -181,14 +183,17 @@
 "PICKER_INSPIRED" = "Dateiauswahl inspiriert von";
 
 /* In app */
+
 "LOCAL_FILE" = "Lokale Datei";
 
 /* File picker */
+
 "DISMISS" = "Schließen";
 "CANCEL" = "Abbrechen";
 "UPLOAD" = "Hochladen";
 
 /* Downloads */
+
 "DOWNLOAD" = "Herunterladen";
 "DOWNLOAD_TO" = "Herunterladen nach ...";
 "OPEN" = "Öffnen";

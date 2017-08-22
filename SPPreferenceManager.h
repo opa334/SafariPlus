@@ -51,6 +51,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 @property(nonatomic, readonly) BOOL enableFullscreenScrolling;
 @property(nonatomic, readonly) BOOL disablePrivateMode;
+@property(nonatomic, readonly) BOOL alwaysOpenNewTabEnabled;
 @property(nonatomic, readonly) BOOL suppressMailToDialog;
 
 @property(nonatomic, readonly) BOOL appTintColorNormalEnabled;
