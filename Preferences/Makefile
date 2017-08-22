@@ -5,7 +5,7 @@ export SYSROOT = $(THEOS)/sdks/iPhoneOS9.3.sdk
 
 BUNDLE_NAME = SafariPlusPrefs
 SafariPlusPrefs_CFLAGS = -fobjc-arc
-SafariPlusPrefs_FILES = SPPreferenceLocalizationManager.xm preferenceDirectoryPickerNavigationController.xm preferenceDirectoryPickerTableViewController.xm preferenceFileBrowserNavigationController.xm preferenceFileBrowserTableViewController.xm preferenceFileTableViewCell.xm SafariPlusPrefs.m #SafariPlusCells.m
+SafariPlusPrefs_FILES = SPPreferenceLocalizationManager.xm preferenceDirectoryPickerNavigationController.xm preferenceDirectoryPickerTableViewController.xm preferenceFileBrowserNavigationController.xm preferenceFileBrowserTableViewController.xm preferenceFileTableViewCell.xm SafariPlusPrefs.m
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
 SafariPlusPrefs_LIBRARIES = colorpicker

@@ -14,10 +14,13 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 }
 
 @property(nonatomic, readonly) BOOL forceHTTPSEnabled;
+@property(nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
 @property(nonatomic, readonly) BOOL openInNewTabOptionEnabled;
 @property(nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;
 @property(nonatomic, readonly) BOOL desktopButtonEnabled;
 @property(nonatomic, readonly) BOOL longPressSuggestionsEnabled;
+@property(nonatomic, readonly) CGFloat longPressSuggestionsDuration;
+@property(nonatomic, readonly) BOOL longPressSuggestionsFocusEnabled;
 
 @property(nonatomic, readonly) BOOL enhancedDownloadsEnabled;
 @property(nonatomic, readonly) BOOL instantDownloadsEnabled;

@@ -169,6 +169,7 @@
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
 - (void)clearAutoFillMessageReceived;
+- (void)_toggleTabViewKeyPressed;
 - (void)showFindOnPage; //iOS9
 //new stuff below
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;

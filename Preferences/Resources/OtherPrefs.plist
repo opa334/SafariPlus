@@ -31,7 +31,7 @@
 		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
-			//footerText = "";
+			footerText = "ALWAYS_OPEN_NEW_TAB_FOOTER";
 		},
 		{
 			cell = "PSSwitchCell";

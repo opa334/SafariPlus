@@ -16,7 +16,7 @@
 
 /* General Settings */
 
-"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Ausnahmen können hinzugefügt werden, damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
+"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Ausnahmen können hinzugefügt werden damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
 "FORCE_HTTPS" = "HTTPS erzwingen";
 "FORCE_HTTPS_EXCEPTIONS" = "Ausnahmen...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Ausnahmen";
@@ -29,6 +29,9 @@
 "OPEN_IN_NEW_TAB_FOOTER" = "Fügt eine weitere 'In neuem Tab öffnen' Option zum Menü hinzu, das beim langen gedrückt halten von Links erscheint.\nStelle 'Links öffnen' in den Safari Einstellungen auf 'Im Hintergrund', um im Menü Zugriff auf beide Optionen zu haben.";
 "OPEN_IN_NEW_TAB" = "'In neuem Tab öffnen' Option";
 
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Fügt eine Option zum Menü hinzu, was beim langen gedrückt halten von Links erscheint. Diese kann dazu benutzt werden, den Link im jeweils anderen Surfmodus zu öffen.\n(Normaler Modus -> Option zum Öffnen im privaten Modus,\nPrivater Modus -> Option zum Öffnen im normalen Modus)";
+"OPEN_IN_OPPOSITE_MODE" = "Option zum Öffnen in anderem Modus";
+
 "UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt und hochgeladen werden.";
 "UPLOAD_ANY_FILE" = "Jede Datei hochladen";
 
@@ -37,6 +40,8 @@
 
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Lässt dich auf Such / URL Vorschläge lange Drücken, um diese in die URL Leiste einzufügen.";
 "LONG_PRESS_SUGGESTIONS" = "Lange auf Vorschläge drücken";
+"LONG_PRESS_DURATION_TITLE" = "Dauer des Drucks";
+"LONG_PRESS_FOCUS_TITLE" = "URL Feld nach Druck fokussieren";
 
 /* Download Settings */
 
@@ -135,9 +140,13 @@
 
 "FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.";
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
 "DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
+
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Öffnet angeklickte Links immer in neuen Tabs.";
 "ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
+
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 beim Aufrufen eines 'mailto:<email>' Links erscheint.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10) Mailto Dialog deaktivieren";
 
@@ -221,3 +230,8 @@
 "WRONG_PATH_MESSAGE" = "Wegen fehlenden Root Rechten, kann nur innerhalb des /User (/private/var/mobile) Verzeichnisses heruntergeladen werden. Bitte wähle einen anderen Pfad.";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
+
+/* Open in Opposite Mode */
+
+"OPEN_IN_NORMAL_MODE" = "Im normalen Modus öffnen";
+"OPEN_IN_PRIVATE_MODE" = "Im privaten Modus öffnen";

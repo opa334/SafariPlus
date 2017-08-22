@@ -204,28 +204,64 @@ int iOSVersion;
   defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
   if(preferenceManager.enhancedDownloadsEnabled ||
-    preferenceManager.openInNewTabOptionEnabled)
+    preferenceManager.openInNewTabOptionEnabled ||
+    preferenceManager.openInOppositeModeOptionEnabled)
   {
     NSMutableArray* options = %orig;
 
-    //Get state of tabBar from tabController
-    BOOL tabBar = ((Application*) [%c(Application)
-      sharedApplication]).shortcutController.browserController.tabController.usesTabBar;
-
-    if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0 && !tabBar)
+    if(preferenceManager.openInOppositeModeOptionEnabled && arg1.type == 0)
     {
-      //Long pressed element is link & tabBar is not used
-      //-> Create in new tab option to alert
-      _WKElementAction* openInNewTabAction = [%c(_WKElementAction)
-        elementActionWithTitle:[localizationManager
-        localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:
+      //Create variable for title
+      NSString* title;
+
+      //Get title based on browsing mode
+      if(self.browserController.privateBrowsingEnabled)
+      {
+        title = [localizationManager localizedSPStringForKey:@"OPEN_IN_NORMAL_MODE"];
+      }
+      else
+      {
+        title = [localizationManager localizedSPStringForKey:@"OPEN_IN_PRIVATE_MODE"];
+      }
+
+      _WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
+        elementActionWithTitle:title actionHandler:
       ^{
-        //Open URL in new tab
-        [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
+        //Toggle browsing mode
+        [self.browserController togglePrivateBrowsing];
+
+        [NSTimer scheduledTimerWithTimeInterval:0.1
+          target:[NSBlockOperation blockOperationWithBlock:^
+          {
+            //After 0.1 seconds, open URL in new tab
+            [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
+          }]
+          selector:@selector(main)
+          userInfo:nil
+          repeats:NO
+          ];
       }];
 
-      //Add option to alert
-      [options insertObject:openInNewTabAction atIndex:1];
+      [options insertObject:openInOppositeModeAction atIndex:2];
+    }
+
+    if(preferenceManager.openInNewTabOptionEnabled && arg1.type == 0)
+    {
+      //Long pressed element is link -> Check for tabBar
+      if(!self.browserController.tabController.usesTabBar)
+      {
+        //tabBar is not active -> Create in new tab option to alert
+        _WKElementAction* openInNewTabAction = [%c(_WKElementAction)
+          elementActionWithTitle:[localizationManager
+          localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:
+        ^{
+          //Open URL in new tab
+          [self.browserController loadURLInNewTab:arg1.URL inBackground:NO];
+        }];
+
+        //Add option to alert
+        [options insertObject:openInNewTabAction atIndex:1];
+      }
     }
 
     if(preferenceManager.enhancedDownloadsEnabled)
@@ -491,33 +527,75 @@ int iOSVersion;
   defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
   if(preferenceManager.enhancedDownloadsEnabled ||
-    preferenceManager.openInNewTabOptionEnabled)
+    preferenceManager.openInNewTabOptionEnabled ||
+    preferenceManager.openInOppositeModeOptionEnabled)
   {
     NSMutableArray* options = %orig;
 
-    //Get state of tabBar from tabController
-    BOOL tabBar = MSHookIvar<BrowserController*>(((Application*)[%c(Application)
-      sharedApplication]), "_controller").tabController.usesTabBar;
-
-    if(preferenceManager.openInNewTabOptionEnabled &&
-      (arg1.type == 120259084288 || arg1.type == 0) && !tabBar)
+    if(preferenceManager.openInOppositeModeOptionEnabled &&
+      (arg1.type == 120259084288 || arg1.type == 0))
     {
-      //Long pressed element is link & tabBar is not used
-      //-> Create in new tab option to alert
-      _WKElementAction* openInNewTabAction = [%c(_WKElementAction)
-        elementActionWithTitle:[localizationManager
-        localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:
-      ^{
-        //Get browserController
-        BrowserController* browserController =
-          MSHookIvar<BrowserController*>(self, "_browserController");
+      //Create variable for title
+      NSString* title;
 
-        //Open URL in new tab
-        [browserController loadURLInNewWindow:arg1.URL inBackground:NO];
+      //Get browserController
+      BrowserController* browserController =
+        MSHookIvar<BrowserController*>(self, "_browserController");
+
+      //Get title based on browsing mode
+      if(browserController.privateBrowsingEnabled)
+      {
+        title = [localizationManager localizedSPStringForKey:@"OPEN_IN_NORMAL_MODE"];
+      }
+      else
+      {
+        title = [localizationManager localizedSPStringForKey:@"OPEN_IN_PRIVATE_MODE"];
+      }
+
+      _WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
+        elementActionWithTitle:title actionHandler:
+      ^{
+        //Toggle browsing mode
+        [browserController togglePrivateBrowsing];
+
+        [NSTimer scheduledTimerWithTimeInterval:0.1
+          target:[NSBlockOperation blockOperationWithBlock:^
+          {
+            //After 0.1 seconds, open URL in new tab
+            [browserController loadURLInNewWindow:arg1.URL inBackground:NO];
+          }]
+          selector:@selector(main)
+          userInfo:nil
+          repeats:NO
+          ];
       }];
 
-      //Add option to alert
-      [options insertObject:openInNewTabAction atIndex:1];
+      [options insertObject:openInOppositeModeAction atIndex:2];
+    }
+
+    if(preferenceManager.openInNewTabOptionEnabled &&
+      (arg1.type == 120259084288 || arg1.type == 0))
+    {
+      //Long pressed element is link -> Check for tabBar
+
+      //Get browserController
+      BrowserController* browserController =
+        MSHookIvar<BrowserController*>(self, "_browserController");
+
+      if(browserController.tabController.usesTabBar)
+      {
+        //tabBar is not active -> Create in new tab option to alert
+        _WKElementAction* openInNewTabAction = [%c(_WKElementAction)
+          elementActionWithTitle:[localizationManager
+          localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:
+        ^{
+          //Open URL in new tab
+          [browserController loadURLInNewWindow:arg1.URL inBackground:NO];
+        }];
+
+        //Add option to alert
+        [options insertObject:openInNewTabAction atIndex:1];
+      }
     }
 
     if(preferenceManager.enhancedDownloadsEnabled)
@@ -1285,7 +1363,6 @@ int iOSVersion;
 
         //Cancel site load
         decisionHandler(WKNavigationResponsePolicyCancel);
-        NSLog(@"Clicked link:%@",navigationAction.request.URL.absoluteString);
         switch(iOSVersion)
         {
           case 9:
@@ -1623,8 +1700,8 @@ BOOL showAlert = YES;
       UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc]
         initWithTarget:self action:@selector(handleLongPress:)];
 
-      //Get long press duration to one second
-      longPressRecognizer.minimumPressDuration = 1.0;
+      //Get long press duration to value specified in preferences
+      longPressRecognizer.minimumPressDuration = preferenceManager.longPressSuggestionsDuration;
 
       //Add recognizer to cell
       [orig addGestureRecognizer:longPressRecognizer];
@@ -1675,10 +1752,13 @@ BOOL showAlert = YES;
           [textField setText:[target string]];
         }
 
-        //Pull up keyboard
-        [textField becomeFirstResponder];
+        //Focus URL field if specified in preferences
+        if(preferenceManager.longPressSuggestionsFocusEnabled)
+        {
+          [textField becomeFirstResponder];
+        }
 
-        //Update Entries
+        //Update Field
         [textField _textDidChangeFromTyping];
         [self _textFieldEditingChanged];
       }
