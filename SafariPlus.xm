@@ -835,9 +835,9 @@ int iOSVersion;
       modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
     break;
     }
-
-    %orig;
   }
+
+  %orig;
 }
 
 //Auto close tabs when Safari gets closed
