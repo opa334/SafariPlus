@@ -1492,17 +1492,8 @@ BOOL showAlert = YES;
           BrowserRootViewController* rootViewController =
             MSHookIvar<BrowserRootViewController*>(browserController, "_rootViewController");
 
-          //iPad positions
-          downloadAlert.popoverPresentationController.sourceView = rootViewController.view;
-          downloadAlert.popoverPresentationController.sourceRect =
-            CGRectMake(rootViewController.view.bounds.size.width / 2.0,
-            rootViewController.view.bounds.size.height / 2, 1.0, 1.0);
-          [downloadAlert.popoverPresentationController
-            setPermittedArrowDirections:UIPopoverArrowDirectionDown];
-
           //Present alert on rootViewController
-          [rootViewController presentViewController:downloadAlert
-            animated:YES completion:nil];
+          [rootViewController presentAlertControllerSheet:downloadAlert];
         }
       });
     }
@@ -1993,6 +1984,28 @@ BOOL showAlert = YES;
     [self.statusBarNotification dismissNotificationWithCompletion:completion];
   });
 }
+
+//Present alertController with sheet on rootController (needed for iPad positions)
+%new
+- (void)presentAlertControllerSheet:(UIAlertController*)alertController
+{
+  dispatch_async(dispatch_get_main_queue(), ^
+  {
+    //Set iPad positions to middle of screen
+    alertController.popoverPresentationController.sourceView = self.view;
+    alertController.popoverPresentationController.sourceRect =
+      CGRectMake(self.view.bounds.size.width / 2,
+      self.view.bounds.size.height / 2, 1.0, 1.0);
+
+    //Make it always face upwards on iPad
+    [alertController.popoverPresentationController
+      setPermittedArrowDirections:UIPopoverArrowDirectionDown];
+
+    //Present alert
+    [self presentViewController:alertController animated:YES completion:nil];
+  });
+}
+
 
 //Present viewController on rootController
 %new

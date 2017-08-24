@@ -21,6 +21,7 @@
 - (void)dispatchNotificationWithText:(NSString*)text;
 - (void)dismissNotificationWithCompletion:(void (^)(void))completion;
 - (void)presentViewController:(id)viewController;
+- (void)presentAlertControllerSheet:(UIAlertController*)alertController;
 @end
 
 @protocol DownloadManagerDelegate

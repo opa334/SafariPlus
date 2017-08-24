@@ -198,7 +198,7 @@
 
       [pinnedLocationAlert addAction:cancelAction];
 
-      [self.rootControllerDelegate presentViewController:pinnedLocationAlert];
+      [self.rootControllerDelegate presentAlertControllerSheet:pinnedLocationAlert];
     }
     else
     {
@@ -327,7 +327,7 @@
 
     [pinnedLocationAlert addAction:cancelAction];
 
-    [self.rootControllerDelegate presentViewController:pinnedLocationAlert];
+    [self.rootControllerDelegate presentAlertControllerSheet:pinnedLocationAlert];
   }
   else
   {
