@@ -28,6 +28,7 @@
 @required
 - (void)downloadFinished:(Download*)download withLocation:(NSURL*)location;
 - (void)downloadCancelled:(Download*)download;
+- (void)saveDownloadsToDisk;
 @end
 
 @protocol CellDownloadDelegate
@@ -38,12 +39,15 @@
 - (void)setCellDelegate:(id<DownloadCellDelegate>)cellDelegate;
 @end
 
-@interface Download : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDelegate, CellDownloadDelegate> {}
+@interface Download : NSObject <NSURLSessionDownloadDelegate, NSURLSessionTaskDelegate, NSURLSessionDelegate, CellDownloadDelegate> {}
+@property (nonatomic, strong) NSURLRequest* request;
 @property (nonatomic, strong) NSURLSession* session;
 @property (nonatomic, strong) NSURLSessionDownloadTask* downloadTask;
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
 @property (nonatomic, weak) id<DownloadCellDelegate> cellDelegate;
 @property (nonatomic) BOOL paused;
+@property (nonatomic) BOOL resumedFromResumeData;
+@property (nonatomic) BOOL shouldReplace;
 @property (nonatomic) NSTimeInterval startTime;
 @property (nonatomic) NSTimer* speedTimer;
 @property (nonatomic) int64_t startBytes;
@@ -52,11 +56,13 @@
 @property (nonatomic) NSString* fileName;
 @property (nonatomic) int64_t fileSize;
 @property (nonatomic) NSURL* filePath;
-@property (nonatomic) BOOL replaceFile;
 @property (nonatomic) NSString* identifier;
-- (void)updateDownloadSpeed;
+- (id)initWithRequest:(NSURLRequest*)request;
+- (void)startDownload;
+- (void)resumeFromDiskLoad;
 - (void)cancelDownload;
 - (void)pauseDownload;
 - (void)resumeDownload;
-- (void)startDownloadFromRequest:(NSURLRequest*)request;
+- (void)setTimerEnabled:(BOOL)enabled;
+- (void)updateDownloadSpeed;
 @end

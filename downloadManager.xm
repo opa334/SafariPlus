@@ -6,22 +6,55 @@
 
 @implementation downloadManager
 
+- (id)init
+{
+  self = [super init];
+
+  self.downloads = [NSMutableArray new];
+
+  //Create message center to communicate with SpringBoard through RocketBootstrap
+  CPDistributedMessagingCenter* tmpCenter = [%c(CPDistributedMessagingCenter)
+    centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
+
+  rocketbootstrap_distributedmessagingcenter_apply(tmpCenter);
+
+  //Set message center to property
+  self.SPMessagingCenter = tmpCenter;
+
+  //Get downloads from plist
+  [self loadDownloadsFromDisk];
+
+  return self;
+}
+
+- (void)loadDownloadsFromDisk
+{
+  if([[NSFileManager defaultManager] fileExistsAtPath:downloadsStorePath])
+  {
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:downloadsStorePath]];
+    self.downloads = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    for(Download* download in self.downloads)
+    {
+      download.downloadManagerDelegate = self;
+      [download resumeFromDiskLoad];
+    }
+  }
+}
+
+- (void)saveDownloadsToDisk
+{
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.downloads];
+  [data writeToFile:downloadsStorePath atomically:YES];
+}
+
 + (instancetype)sharedInstance
 {
     static downloadManager *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken,
     ^{
-      //Initialise instance and properties
+      //Initialise instance
       sharedInstance = [[downloadManager alloc] init];
-      sharedInstance.downloads = [NSMutableArray new];
-
-      //Create message center to communicate with SpringBoard through RocketBootstrap
-      CPDistributedMessagingCenter* tmpCenter = [%c(CPDistributedMessagingCenter) centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
-      rocketbootstrap_distributedmessagingcenter_apply(tmpCenter);
-
-      //Set message center to property
-      sharedInstance.SPMessagingCenter = tmpCenter;
     });
     return sharedInstance;
 }
@@ -48,6 +81,7 @@
     {
       //Identifier is equal -> remove download from array
       [self.downloads removeObject:download];
+      [self saveDownloadsToDisk];
       return;
     }
   }
@@ -434,15 +468,17 @@
 - (void)startDownloadFromRequest:(NSURLRequest*)request size:(int64_t)size fileName:(NSString*)fileName path:(NSURL*)path shouldReplace:(BOOL)shouldReplace
 {
   //Initialise download with needed properties, start it and add it to array
-  Download* download = [[Download alloc] init];
+  Download* download = [[Download alloc] initWithRequest:request];
   download.downloadManagerDelegate = self;
   download.fileSize = size;
   download.fileName = fileName;
   download.filePath = path;
-  download.replaceFile = shouldReplace;
+  download.shouldReplace = shouldReplace;
   download.identifier = [self generateIdentifier];
-  [download startDownloadFromRequest:request];
+  [download startDownload];
   [self.downloads addObject:download];
+
+  [self saveDownloadsToDisk];
 
   //Dispatch status bar / push notification
   [self dispatchNotificationWithText:
@@ -477,7 +513,7 @@
   //Get path of desired location
   NSURL* path = [download.filePath URLByAppendingPathComponent:download.fileName];
 
-  if(download.replaceFile)
+  if(download.shouldReplace)
   {
     //File should be replaced -> delete existing file
     [[NSFileManager defaultManager] removeItemAtPath:[path path] error:nil];

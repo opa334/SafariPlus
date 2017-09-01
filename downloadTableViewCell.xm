@@ -26,7 +26,8 @@
 
   //Create size label and set it to accessoryView
   UILabel* sizeLabel = [[UILabel alloc] init];
-  sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.fileSize countStyle:NSByteCountFormatterCountStyleFile];
+  sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.fileSize
+    countStyle:NSByteCountFormatterCountStyleFile];
   sizeLabel.textColor = [UIColor lightGrayColor];
   sizeLabel.font = [sizeLabel.font fontWithSize:10];
   sizeLabel.textAlignment = NSTextAlignmentRight;
@@ -149,17 +150,11 @@
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
       @"V:[downloadSpeed(8)]-19-|" options:0 metrics:metrics views:views]];
 
-  //Update progress bar with current progress if needed
-  if(download.totalBytesWritten > 0)
-  {
-    [self updateProgress:download.totalBytesWritten totalBytes:download.fileSize animated:NO];
-  }
+  //Update progress bar with current progress
+  [self updateProgress:download.totalBytesWritten totalBytes:download.fileSize animated:NO];
 
-  //Update download speed if needed
-  if(download.bytesPerSecond > 0)
-  {
-    [self updateDownloadSpeed:download.bytesPerSecond];
-  }
+  //Update download speed
+  [self updateDownloadSpeed:download.bytesPerSecond];
 
   //Check whether download is currently paused or not and update UI elements according to that
   [self setPaused:download.paused];

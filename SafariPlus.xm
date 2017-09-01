@@ -3,30 +3,13 @@
 
 #import "SafariPlus.h"
 
-//Macro for setting the current browsing mode state to privateMode
-#define getBrowsingMode                                          \
-switch(iOSVersion)                                               \
-{                                                                \
-  case 9:                                                        \
-  privateMode = [((Application*)[%c(Application)                 \
-    sharedApplication]).shortcutController.browserController     \
-    privateBrowsingEnabled];                                     \
-  break;                                                         \
-                                                                 \
-  case 10:                                                       \
-  privateMode = [((Application*)[%c(Application)                 \
-    sharedApplication]).shortcutController.browserController     \
-    privateBrowsingEnabled];                                     \
-  break;                                                         \
-}                                                                \
-
 /****** Variables ******/
 
 //preferenceManager and localizationManager
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 
-//Bundles for localization
+//Bundles for localization and images
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:
   @"/Library/Application Support/SafariPlus.bundle"];
@@ -36,6 +19,31 @@ BOOL desktopButtonSelected;
 
 //Contains iOS Version (9, 10)
 int iOSVersion;
+
+/****** Useful functions ******/
+
+//Return current browsing status
+static BOOL privateBrowsingEnabled()
+{
+  BOOL privateBrowsingEnabled;
+
+  switch(iOSVersion)
+  {
+    case 9:
+    privateBrowsingEnabled = MSHookIvar<BrowserController*>
+      ((Application*)[%c(Application) sharedApplication],
+      "_controller").privateBrowsingEnabled;
+    break;
+
+    case 10:
+    privateBrowsingEnabled = [((Application*)[%c(Application)
+      sharedApplication]).shortcutController.browserController
+      privateBrowsingEnabled];
+    break;
+  }
+
+  return privateBrowsingEnabled;
+}
 
 /****** Safari Hooks ******/
 
@@ -1329,11 +1337,41 @@ int iOSVersion;
     }
   }
 }
+/*
+//Lock tabs (Prevent them from being closable)
+- (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
+{
+  if(item.layoutInfo.contentView.isLocked)
+  {
+    return NO;
+  }
 
+  return %orig;
+}
+
+- (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
+{
+  if(item.layoutInfo.itemView.isLocked)
+  {
+    return NO;
+  }
+
+  return %orig;
+}
+*/
 %end
 
 %hook TabDocument
-
+/*
+- (void)setClosed:(BOOL)closed userDriven:(BOOL)userDriven
+{
+  if(!(self.tiltedTabItem.layoutInfo.contentView.isLocked ||
+    self.tabOverviewItem.layoutInfo.itemView.isLocked))
+  {
+    %orig;
+  }
+}
+*/
 //Always open in new tab option
 - (void)webView:(WKWebView *)webView
   decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
@@ -1406,6 +1444,14 @@ BOOL showAlert = YES;
     {
       //Cancel loading
       decisionHandler(WKNavigationResponsePolicyCancel);
+
+      //Fix for some sites (eg dropbox), credits to https://stackoverflow.com/a/34740466
+      NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+      NSArray *cookies =[NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+      for(NSHTTPCookie *cookie in cookies)
+      {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+      }
 
       //Reinitialise variables so they can be accessed from the actions
       __block int64_t fileSize = navigationResponse.response.expectedContentLength;
@@ -1669,7 +1715,49 @@ BOOL showAlert = YES;
 }
 
 %end
+/*
+%hook TabThumbnailView
 
+%property(nonatomic, retain) UIButton *lockButton;
+%property(nonatomic, assign) BOOL isLocked;
+
+- (void)layoutSubviews
+{
+  %orig;
+  UIView* headerView = MSHookIvar<UIView*>(self, "_headerView");
+  if(!self.lockButton)
+  {
+    self.lockButton = [%c(_SFDimmingButton) buttonWithType:UIButtonTypeCustom];
+    self.lockButton.backgroundColor = [UIColor redColor];
+    [self.lockButton addTarget:self
+      action:@selector(lockButtonPressed)
+      forControlEvents:UIControlEventTouchUpInside];
+    self.lockButton.selected = self.isLocked;
+    [headerView addSubview:self.lockButton];
+  }
+  CGFloat size = self.closeButton.frame.size.width;
+  self.lockButton.frame = CGRectMake(headerView.frame.size.width - size, 0, size, size);
+}
+
+%new
+- (void)lockButtonPressed
+{
+  self.lockButton.selected = !self.lockButton.selected;
+  self.isLocked = self.lockButton.selected;
+  [self layoutSubviews];
+}
+
+%end
+
+%hook TiltedTabItemLayoutInfo
+
+-(void)setClosing:(BOOL)arg1
+{
+  %orig;
+}
+
+%end
+*/
 //Long press on Search / Site suggestions
 
 %hook CatalogViewController
@@ -2074,9 +2162,7 @@ BOOL showAlert = YES;
   if(preferenceManager.appTintColorNormalEnabled ||
     preferenceManager.appTintColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
@@ -2095,9 +2181,7 @@ BOOL showAlert = YES;
   if(preferenceManager.topBarColorNormalEnabled ||
     preferenceManager.topBarColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     _SFNavigationBarBackdrop* backdrop =
       MSHookIvar<_SFNavigationBarBackdrop*>(self, "_backdrop");
@@ -2123,9 +2207,7 @@ BOOL showAlert = YES;
   if(preferenceManager.progressBarColorNormalEnabled ||
     preferenceManager.progressBarColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     _SFFluidProgressView* progressView = MSHookIvar<_SFFluidProgressView*>(self, "_progressView");
     if(preferenceManager.progressBarColorNormalEnabled && !privateMode)
@@ -2147,9 +2229,7 @@ BOOL showAlert = YES;
   if(preferenceManager.URLFontColorNormalEnabled ||
     preferenceManager.URLFontColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
     {
@@ -2170,9 +2250,7 @@ BOOL showAlert = YES;
   if(preferenceManager.URLFontColorNormalEnabled ||
     preferenceManager.URLFontColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     UIColor* customColor;
     if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
@@ -2196,9 +2274,7 @@ BOOL showAlert = YES;
   if(preferenceManager.reloadColorNormalEnabled ||
     preferenceManager.reloadColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     if(preferenceManager.reloadColorNormalEnabled && !privateMode)
     {
@@ -2222,9 +2298,7 @@ BOOL showAlert = YES;
   if(preferenceManager.tabTitleColorNormalEnabled ||
     preferenceManager.tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     UIColor* customColor = %orig;
     if(preferenceManager.tabTitleColorNormalEnabled && !privateMode)
@@ -2248,9 +2322,7 @@ BOOL showAlert = YES;
   if(preferenceManager.tabTitleColorNormalEnabled ||
     preferenceManager.tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     UIColor* customColor = %orig;
     if(preferenceManager.tabTitleColorNormalEnabled && !privateMode)
@@ -2274,9 +2346,7 @@ BOOL showAlert = YES;
   if(preferenceManager.tabTitleColorNormalEnabled ||
     preferenceManager.tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     UIColor* customColor = %orig;
     if(preferenceManager.tabTitleColorNormalEnabled && !privateMode)
@@ -2302,9 +2372,7 @@ BOOL showAlert = YES;
   if(preferenceManager.appTintColorNormalEnabled ||
     preferenceManager.appTintColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
@@ -2320,9 +2388,7 @@ BOOL showAlert = YES;
   if(preferenceManager.bottomBarColorNormalEnabled ||
     preferenceManager.bottomBarColorPrivateEnabled)
   {
-    BOOL privateMode;
-
-    getBrowsingMode;
+    BOOL privateMode = privateBrowsingEnabled();
 
     _UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
     backgroundView.grayscaleTintView.hidden = NO;

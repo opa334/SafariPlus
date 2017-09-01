@@ -5,10 +5,124 @@
 
 @implementation Download
 
-- (void)startDownloadFromRequest:(NSURLRequest*)request
+- (id)initWithRequest:(NSURLRequest*)request
+{
+  self = [super init];
+  self.request = request;
+  return self;
+}
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+  self = [super init];
+
+  self.identifier = [decoder decodeObjectForKey:@"identifier"];
+  self.request = [decoder decodeObjectForKey:@"request"];
+  self.fileName = [decoder decodeObjectForKey:@"fileName"];
+  self.filePath = [decoder decodeObjectForKey:@"filePath"];
+  self.fileSize = [decoder decodeIntegerForKey:@"fileSize"];
+  self.shouldReplace = [decoder decodeBoolForKey:@"shouldReplace"];
+  self.paused = [decoder decodeBoolForKey:@"paused"];
+
+  return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+  [coder encodeObject:self.identifier forKey:@"identifier"];
+  [coder encodeObject:self.request forKey:@"request"];
+  [coder encodeObject:self.fileName forKey:@"fileName"];
+  [coder encodeObject:self.filePath forKey:@"filePath"];
+  [coder encodeInteger:self.fileSize forKey:@"fileSize"];
+  [coder encodeBool:self.shouldReplace forKey:@"shouldReplace"];
+  [coder encodeBool:self.paused forKey:@"paused"];
+}
+
+- (void)resumeFromDiskLoad
+{
+  self.resumedFromResumeData = NO;
+
+  //Create background session config and configure celluar access
+  NSURLSessionConfiguration* config = [NSURLSessionConfiguration
+    backgroundSessionConfigurationWithIdentifier:self.identifier];
+
+  config.sessionSendsLaunchEvents = YES;
+  config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
+
+  //Create session with configuration (This will get didCompleteWithError called)
+  self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+
+  //If Safari has not been closed properly (eg. through a respring), the downloadTask
+  //will continue in background. If that's the case, we need to fetch the existing task.
+  [NSTimer scheduledTimerWithTimeInterval:0.05
+    target:[NSBlockOperation blockOperationWithBlock:^
+    {
+      //After 0.05 seconds, check if download was not started with resumeData
+      //Kinda dirty workaround?
+      if(!self.resumedFromResumeData)
+      {
+        //Fetch existing task
+        [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks,
+          NSArray *uploadTasks, NSArray *downloadTasks)
+        {
+          self.downloadTask = downloadTasks.firstObject;
+        }];
+
+        //Start timer
+        [self setTimerEnabled:YES];
+      }
+    }]
+    selector:@selector(main)
+    userInfo:nil
+    repeats:NO
+    ];
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+  if(error)
+  {
+    //Get resumeData
+    NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
+
+    if(resumeData)
+    {
+      //Set resumeData property to YES
+      self.resumedFromResumeData = YES;
+
+      //Create downloadTask from resumeData
+      self.downloadTask = [session downloadTaskWithResumeData:resumeData];
+
+      //Parse resumeData
+      NSDictionary* resumeDataDict = [NSPropertyListSerialization
+        propertyListWithData:resumeData options:NSPropertyListImmutable
+        format:nil error:nil];
+
+      //Get progress from resumeData
+      NSNumber* progress = [resumeDataDict objectForKey:@"NSURLSessionResumeBytesReceived"];
+      self.totalBytesWritten = (int64_t)[progress longLongValue];
+
+      if(!self.paused)
+      {
+        //Not paused -> resume download
+        [self.downloadTask resume];
+
+        //Start timer
+        [self setTimerEnabled:YES];
+      }
+      return;
+    }
+  }
+  //Cancel session (to avoid possible memory leaks)
+  [session invalidateAndCancel];
+}
+
+- (void)startDownload
 {
   //Create background session config and configure celluar access
-  NSURLSessionConfiguration* config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:self.identifier];
+  NSURLSessionConfiguration* config = [NSURLSessionConfiguration
+    backgroundSessionConfigurationWithIdentifier:self.identifier];
+
   config.sessionSendsLaunchEvents = YES;
   config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
 
@@ -16,15 +130,35 @@
   self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
 
   //Create and start download task from session with given request
-  self.downloadTask = [self.session downloadTaskWithRequest:request];
+  self.downloadTask = [self.session downloadTaskWithRequest:self.request];
   [self.downloadTask resume];
 
-  //Start timer that updates download speed every 0.5 seconds
-  self.speedTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
-    target:self selector:@selector(updateDownloadSpeed) userInfo:nil repeats:YES];
+  //Start timer
+  [self setTimerEnabled:YES];
+}
 
-  //Set startTime (of timer) to current time
-  self.startTime = [NSDate timeIntervalSinceReferenceDate];
+- (void)setTimerEnabled:(BOOL)enabled
+{
+  if(enabled && !self.paused && ![self.speedTimer isValid])
+  {
+    dispatch_async(dispatch_get_main_queue(),
+    ^{
+      //Start timer that updates download speed every 0.5 seconds
+      self.speedTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
+        target:self selector:@selector(updateDownloadSpeed) userInfo:nil repeats:YES];
+
+      //Set startTime (of timer) to current time
+      self.startTime = [NSDate timeIntervalSinceReferenceDate];
+    });
+  }
+  else if(!enabled && [self.speedTimer isValid])
+  {
+    dispatch_async(dispatch_get_main_queue(),
+    ^{
+      //Stop timer
+      [self.speedTimer invalidate];
+    });
+  }
 }
 
 - (void)updateDownloadSpeed
@@ -48,11 +182,7 @@
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
 {
-  //Cancel session (to avoid possible memory leaks)
-  [session invalidateAndCancel];
-
-  //Stop timer
-  [self.speedTimer invalidate];
+  [self setTimerEnabled:NO];
 
   //Send location to download manager
   [self.downloadManagerDelegate downloadFinished:self withLocation:location];
@@ -71,31 +201,6 @@ totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)
   }
 }
 
-//Problem: Files fail to download from some sites (e.g. dropbox) and the method below gets called, my implementation changes nothing
-
-/*
-- (void)URLSession:(NSURLSession *)session
-didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
- completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
-{
-  NSLog(@"didReceiveChallenge %@", challenge.protectionSpace.authenticationMethod);
-
-  if([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust])
-  {
-    NSLog(@"Equal");
-    SecTrustResultType result;
-    SecTrustEvaluate(challenge.protectionSpace.serverTrust, &result);
-    NSURLCredential* credential = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
-    completionHandler(NSURLSessionAuthChallengeUseCredential, credential);
-  }
-  else
-  {
-    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-  }
-  //https://stackoverflow.com/questions/5044477/determining-trust-with-nsurlconnection-and-nsurlprotectionspace
-}
-*/
-
 - (void)cancelDownload
 {
   //Stop downloading
@@ -105,7 +210,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
   [self.downloadManagerDelegate downloadCancelled:self];
 
   //Stop timer
-  [self.speedTimer invalidate];
+  [self setTimerEnabled:NO];
 }
 
 - (void)pauseDownload
@@ -117,7 +222,10 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
   [self.downloadTask suspend];
 
   //Stop timer
-  [self.speedTimer invalidate];
+  [self setTimerEnabled:NO];
+
+  //Update data on disk
+  [self.downloadManagerDelegate saveDownloadsToDisk];
 }
 
 - (void)resumeDownload
@@ -129,8 +237,10 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
   [self.downloadTask resume];
 
   //Restart timer
-  self.speedTimer = [NSTimer scheduledTimerWithTimeInterval:1.0
-    target:self selector:@selector(updateDownloadSpeed) userInfo:nil repeats:YES];
+  [self setTimerEnabled:YES];
+
+  //Update data on disk
+  [self.downloadManagerDelegate saveDownloadsToDisk];
 }
 
 @end

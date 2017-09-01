@@ -13,7 +13,7 @@
 #define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
 #define desktopUserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
 
-@class ApplicationShortcutController, BrowserController, BrowserRootViewController, BrowserToolbar, DownloadDispatcher, SafariWebView, TabController, TabDocument, TabOverview, TiltedTabView, UnifiedField, WebBookmark;
+@class ApplicationShortcutController, BrowserController, BrowserRootViewController, BrowserToolbar, DownloadDispatcher, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 
@@ -23,13 +23,13 @@
 @end
 
 @interface _UIBarBackground : UIView {}
-@property (nonatomic,retain) UIView * customBackgroundView;
+@property (nonatomic,retain) UIView* customBackgroundView;
 @end
 
 /**** WebKit ****/
 
 @interface WKNavigationResponse () {}
-@property (nonatomic,readonly) NSURLRequest * _request;
+@property (nonatomic,readonly) NSURLRequest* _request;
 @end
 
 @interface WKFileUploadPanel <filePickerDelegate> {}
@@ -44,9 +44,9 @@
 @interface _WKActivatedElementInfo : NSObject {}
 @property (nonatomic, readonly) NSURL *URL;
 @property (nonatomic,readonly) long long type;
-@property (nonatomic,copy,readonly) UIImage * image;
-@property (nonatomic,readonly) NSString * ID;
-@property (nonatomic,readonly) NSString * title;
+@property (nonatomic,copy,readonly) UIImage* image;
+@property (nonatomic,readonly) NSString* ID;
+@property (nonatomic,readonly) NSString* title;
 @end
 
 @interface _WKElementAction : NSObject {}
@@ -62,13 +62,17 @@
 @end
 
 @interface _SFDialog : NSObject {}
-@property (nonatomic,copy,readonly) NSString * defaultText;
+@property (nonatomic,copy,readonly) NSString* defaultText;
 - (void)finishWithPrimaryAction:(BOOL)arg1 text:(id)arg2;
 @end
 
 @interface _SFDialogController : NSObject {}
 -(void)_dismissDialog;
 @end
+
+@interface _SFDimmingButton : UIButton {}
+@end
+
 
 @interface _SFDownloadController : NSObject {}
 - (void)_beginDownloadBackgroundTask:(id)arg1;
@@ -80,7 +84,7 @@
 @end
 
 @interface _SFFluidProgressView : UIView {}
-@property (nonatomic,retain) UIColor * progressBarFillColor;
+@property (nonatomic,retain) UIColor* progressBarFillColor;
 @end
 
 @interface _SFSiteIconView : UIImageView {}
@@ -90,7 +94,7 @@
 @end
 
 @interface _SFNavigationBarBackdrop : _UIBackdropView {}
-@property (nonatomic, retain) UIView * grayscaleTintView;
+@property (nonatomic, retain) UIView* grayscaleTintView;
 @end
 
 @interface _SFNavigationBarURLButton : UIButton {}
@@ -142,8 +146,8 @@
 @end
 
 @interface Application : UIApplication <UIApplicationDelegate> {}
-@property (nonatomic,readonly) ApplicationShortcutController * shortcutController;
-@property (nonatomic,readonly) NSArray * browserControllers;
+@property (nonatomic,readonly) ApplicationShortcutController* shortcutController;
+@property (nonatomic,readonly) NSArray* browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new methods below
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
@@ -151,13 +155,13 @@
 @end
 
 @interface ApplicationShortcutController : NSObject {}
-@property (assign,nonatomic) BrowserController * browserController;
+@property (assign,nonatomic) BrowserController* browserController;
 @end
 
 @interface BrowserController : UIResponder <BrowserToolbarDelegate> {}
-@property (nonatomic,readonly) TabController * tabController;
-@property (nonatomic,readonly) BrowserToolbar * bottomToolbar;
-@property (nonatomic,readonly) BrowserRootViewController * rootViewController;
+@property (nonatomic,readonly) TabController* tabController;
+@property (nonatomic,readonly) BrowserToolbar* bottomToolbar;
+@property (nonatomic,readonly) BrowserRootViewController* rootViewController;
 @property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
@@ -203,17 +207,16 @@
 
 @interface BrowserToolbar : _SFToolbar {}
 @property (nonatomic,weak) id<BrowserToolbarDelegate> browserDelegate;
-@property (nonatomic,retain) UIToolbar * replacementToolbar;
+@property (nonatomic,retain) UIToolbar* replacementToolbar;
 - (void)updateTintColor;
 //new stuff below
-@property (nonatomic,retain) UIBarButtonItem * _downloadsItem;
+@property (nonatomic,retain) UIBarButtonItem* _downloadsItem;
 - (void)setDownloadsEnabled:(BOOL)enabled;
-- (BOOL)getBrowsingMode;
 - (BOOL)usesTabBar;
 @end
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {}
-@property (nonatomic,retain) UnifiedField * textField;
+@property (nonatomic,retain) UnifiedField* textField;
 -  (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (id)_completionItemAtIndexPath:(id)arg1;
 - (void)_textFieldEditingChanged;
@@ -227,18 +230,17 @@
 @end
 
 @interface GestureRecognizingBarButtonItem : UIBarButtonItem {}
-@property (nonatomic,retain) UIGestureRecognizer * gestureRecognizer;
+@property (nonatomic,retain) UIGestureRecognizer* gestureRecognizer;
 - (void)setGestureRecognizer:(UIGestureRecognizer *)arg1;
 - (UIGestureRecognizer *)gestureRecognizer;
 - (void)setView:(id)arg1;
 @end
 
 @interface NavigationBar : _SFNavigationBar {}
-@property (nonatomic,readonly) UnifiedField * textField;
+@property (nonatomic,readonly) UnifiedField* textField;
 - (void)_updateControlTints;
 //new methods below
 - (void)didSwipe:(UISwipeGestureRecognizer*)swipe;
-- (BOOL)getBrowsingMode;
 @end
 
 @interface SafariWebView : WKWebView {}
@@ -248,18 +250,14 @@
 - (NSString *)string;
 @end
 
-@interface TabBarStyle : NSObject {}
-- (BOOL)getBrowsingMode; //new
-@end
-
 @interface TabController : NSObject {}
-@property (nonatomic,copy,readonly) NSArray * tabDocuments;
-@property (nonatomic,copy,readonly) NSArray * privateTabDocuments;
-@property (nonatomic,copy,readonly) NSArray * allTabDocuments;
-@property (nonatomic,copy,readonly) NSArray * currentTabDocuments; //iOS 10 only
-@property (nonatomic,retain,readonly) TiltedTabView * tiltedTabView;
-@property (nonatomic,retain) TabDocument * activeTabDocument;
-@property (nonatomic,retain,readonly) TabOverview * tabOverview;
+@property (nonatomic,copy,readonly) NSArray* tabDocuments;
+@property (nonatomic,copy,readonly) NSArray* privateTabDocuments;
+@property (nonatomic,copy,readonly) NSArray* allTabDocuments;
+@property (nonatomic,copy,readonly) NSArray* currentTabDocuments; //iOS 10 only
+@property (nonatomic,retain,readonly) TiltedTabView* tiltedTabView;
+@property (nonatomic,retain) TabDocument* activeTabDocument;
+@property (nonatomic,retain,readonly) TabOverview* tabOverview;
 @property (assign,nonatomic) BOOL usesTabBar;
 - (void)setActiveTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
@@ -273,13 +271,15 @@
 @end
 
 @interface TabDocument : NSObject {}
-@property (assign,nonatomic) BrowserController * browserController;
-@property (nonatomic,readonly) _SFReloadOptionsController * reloadOptionsController;
-@property (nonatomic,readonly) _SFTabStateData * tabStateData;
-@property (nonatomic,readonly) SafariWebView * webView;
-@property (nonatomic,copy) NSString * customUserAgent;
-@property (nonatomic,readonly) FindOnPageView * findOnPageView;
-@property (nonatomic,retain) _SFDownloadController * downloadController;
+@property (assign,nonatomic) BrowserController* browserController;
+@property (nonatomic,readonly) _SFReloadOptionsController* reloadOptionsController;
+@property (nonatomic,readonly) _SFTabStateData* tabStateData;
+@property (nonatomic,readonly) SafariWebView* webView;
+@property (nonatomic,copy) NSString* customUserAgent;
+@property (nonatomic,readonly) FindOnPageView* findOnPageView;
+@property (nonatomic,retain) _SFDownloadController* downloadController;
+@property (nonatomic,readonly) TiltedTabItem* tiltedTabItem;
+@property (nonatomic,readonly) TabOverviewItem* tabOverviewItem;
 - (NSURL*)URL;
 - (BOOL)isBlankDocument;
 - (id)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
@@ -300,22 +300,43 @@
 @end
 
 @interface TabOverview : UIView {}
-@property (nonatomic,readonly) UIButton * privateBrowsingButton;
+@property (nonatomic,readonly) UIButton* privateBrowsingButton;
 //new stuff below
-@property (nonatomic, retain) UIButton * desktopModeButton;
+@property (nonatomic, retain) UIButton* desktopModeButton;
 - (void)userAgentButtonLandscapePressed;
 @end
 
-@interface TabOverviewItem : NSObject {}
-- (BOOL)getBrowsingMode; //new
+@interface TabOverviewItem : NSObject
+@property (nonatomic,retain) TabOverviewItemLayoutInfo* layoutInfo;
+@end
+
+@interface TabOverviewItemLayoutInfo : NSObject
+@property (nonatomic,retain) TabOverviewItemView * itemView;
 @end
 
 @interface TiltedTabView : UIView {}
 - (void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
 @end
 
+@interface TabThumbnailView : UIView {}
+@property (nonatomic,readonly) UIButton* closeButton;
+@property(nonatomic, assign) BOOL isLocked; //new
+@property(nonatomic, retain) UIButton* lockButton; //new
+- (void)layoutSubviews;
+@end
+
+@interface TabOverviewItemView : TabThumbnailView
+@end
+
+@interface TiltedTabThumbnailView : TabThumbnailView
+@end
+
 @interface TiltedTabItem : NSObject {}
-- (BOOL)getBrowsingMode; //new
+@property (nonatomic,readonly) TiltedTabItemLayoutInfo* layoutInfo;
+@end
+
+@interface TiltedTabItemLayoutInfo : NSObject
+@property (nonatomic,retain) TiltedTabThumbnailView* contentView;
 @end
 
 @interface UnifiedField : UITextField {}

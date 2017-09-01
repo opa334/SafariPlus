@@ -9,6 +9,7 @@
 #import <RocketBootstrap/rocketbootstrap.h>
 
 #define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
+#define downloadsStorePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari/downloads"]
 
 @class downloadManager;
 
@@ -18,6 +19,8 @@
 @property (nonatomic, strong) CPDistributedMessagingCenter* SPMessagingCenter;
 @property NSMutableArray* downloads;
 + (instancetype)sharedInstance;
+- (void)loadDownloadsFromDisk;
+- (void)saveDownloadsToDisk;
 - (NSMutableArray*)getDownloadsForPath:(NSURL*)path;
 - (void)removeDownloadWithIdentifier:(NSString*)identifier;
 - (NSString*)generateIdentifier;
