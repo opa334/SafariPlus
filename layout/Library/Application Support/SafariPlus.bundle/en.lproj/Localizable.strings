@@ -46,7 +46,7 @@
 /* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Enhanced Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/User/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When you close Safari from the app switcher, all pending downloads will be cancelled.";
+"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/User/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.";
 
 "INSTANT_DOWNLOAD" = "Instant Download";
 "INSTANT_DOWNLOAD_FOOTER" = "Suppresses the download alert and always chooses the selcted option by default.";
