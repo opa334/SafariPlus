@@ -21,6 +21,7 @@
   self.fileName = [decoder decodeObjectForKey:@"fileName"];
   self.filePath = [decoder decodeObjectForKey:@"filePath"];
   self.fileSize = [decoder decodeIntegerForKey:@"fileSize"];
+  self.totalBytesWritten = [decoder decodeIntegerForKey:@"totalBytesWritten"];
   self.shouldReplace = [decoder decodeBoolForKey:@"shouldReplace"];
   self.paused = [decoder decodeBoolForKey:@"paused"];
 
@@ -34,6 +35,7 @@
   [coder encodeObject:self.fileName forKey:@"fileName"];
   [coder encodeObject:self.filePath forKey:@"filePath"];
   [coder encodeInteger:self.fileSize forKey:@"fileSize"];
+  [coder encodeInteger:self.totalBytesWritten forKey:@"totalBytesWritten"];
   [coder encodeBool:self.shouldReplace forKey:@"shouldReplace"];
   [coder encodeBool:self.paused forKey:@"paused"];
 }
