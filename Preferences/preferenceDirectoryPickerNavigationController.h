@@ -1,4 +1,4 @@
-//  directoryPickerNavigationController.h
+//  preferenceDirectoryPickerNavigationController.h
 // (c) 2017 opa334
 
 #import "preferenceDirectoryPickerTableViewController.h"

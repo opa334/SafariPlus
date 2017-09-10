@@ -102,16 +102,9 @@
 
 - (BOOL)canDownloadToPath:(NSURL*)pathURL
 {
-  if([[pathURL path] rangeOfString:@"/var/mobile"].location == NSNotFound)
-  {
-    //Path is not within /var/mobile -> Not writable
-    return NO;
-  }
-  else
-  {
-    //Path is within /var/mobile -> Writable
-    return YES;
-  }
+  NSNumber* writable;
+  [pathURL getResourceValue:&writable forKey:@"NSURLIsWritableKey" error:nil];
+  return [writable boolValue];
 }
 
 @end

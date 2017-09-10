@@ -1,4 +1,4 @@
-//  fileBrowserNavigationController.h
+//  preferenceFileBrowserNavigationController.h
 // (c) 2017 opa334
 
 #import "preferenceFileBrowserTableViewController.h"

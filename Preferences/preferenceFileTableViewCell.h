@@ -1,4 +1,4 @@
-//  fileTableViewCell.h
+//  preferenceFileTableViewCell.h
 // (c) 2017 opa334
 
 #import "SPPreferenceLocalizationManager.h"

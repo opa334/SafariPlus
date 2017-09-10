@@ -1,25 +1,30 @@
 include $(THEOS)/makefiles/common.mk
 
-export SYSROOT = $(THEOS)/sdks/iPhoneOS10.1.sdk
-#remove the line above if you have issues while compiling
+SIMJECT ?= 0;
 
-TWEAK_NAME = SafariPlus SafariPlusWK SafariPlusSB
-SafariPlus_CFLAGS = -fobjc-arc
-SafariPlus_FILES = SPLocalizationManager.xm SPPreferenceManager.xm SafariPlus.xm directoryPickerNavigationController.xm directoryPickerTableViewController.xm Download.xm downloadManager.xm downloadsNavigationController.xm downloadsTableViewController.xm downloadTableViewCell.xm fileBrowserNavigationController.xm fileBrowserTableViewController.xm filePickerNavigationController.xm filePickerTableViewController.xm fileTableViewCell.xm lib/CWStatusBarNotification.m
-SafariPlus_EXTRA_FRAMEWORKS += Cephei
-SafariPlus_LIBRARIES = colorpicker rocketbootstrap
+ifeq ($(SIMJECT),1)
 
-SafariPlusWK_CFLAGS = -fobjc-arc
-SafariPlusWK_FILES = SafariPlusWK.xm
-SafariPlusWK_EXTRA_FRAMEWORKS += Cephei
+export SIMJECT = 1
+export TARGET = simulator:latest:9.2
+export ARCHS = x86_64 i386
 
-SafariPlusSB_CFLAGS = -fobjc-arc
-SafariPlusSB_FILES = SafariPlusSB.xm
-SafariPlusSB_LIBRARIES = bulletin rocketbootstrap
+else
 
-include $(THEOS_MAKE_PATH)/tweak.mk
+export SIMJECT = 0
+export TARGET = iphone:latest:10.1
+export ARCHS = arm64 armv7
+
+endif
 
 after-install::
 	install.exec "killall -9 SpringBoard"
+
+SUBPROJECTS += MobileSafari SpringBoard
+
+include $(THEOS_MAKE_PATH)/tweak.mk
+
+ifeq ($(SIMJECT),0)
 SUBPROJECTS += Preferences
+endif
+
 include $(THEOS_MAKE_PATH)/aggregate.mk

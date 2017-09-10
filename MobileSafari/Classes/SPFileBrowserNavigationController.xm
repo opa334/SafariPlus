@@ -1,9 +1,9 @@
-//  preferenceFileBrowserNavigationController.xm
+//  SPFileBrowserNavigationController.xm
 // (c) 2017 opa334
 
-#import "preferenceFileBrowserNavigationController.h"
+#import "SPFileBrowserNavigationController.h"
 
-@implementation preferenceFileBrowserNavigationController
+@implementation SPFileBrowserNavigationController
 
 - (void)viewDidLoad
 {
@@ -54,7 +54,7 @@
 - (void)reloadAllTableViews
 {
   //Cycle through all tableViews and reload their data
-  for(preferenceFileBrowserTableViewController* tableViewController in self.viewControllers)
+  for(SPFileBrowserTableViewController* tableViewController in self.viewControllers)
   {
     [tableViewController reloadDataAndDataSources];
   }
@@ -62,8 +62,8 @@
 
 - (id)newTableViewControllerWithPath:(NSURL*)path
 {
-  //Return instance of fileBrowserTableViewController
-  return [[preferenceFileBrowserTableViewController alloc] initWithPath:path];
+  //Return instance of SPFileBrowserTableViewController
+  return [[SPFileBrowserTableViewController alloc] initWithPath:path];
 }
 
 - (NSURL*)rootPath
