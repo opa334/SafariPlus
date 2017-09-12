@@ -6,9 +6,9 @@
 
 @class SPDownload;
 
-@protocol DownloadTableDelegate
+@protocol DownloadNavigationControllerDelegate
 @required
-- (void)reloadDataAndDataSources;
+- (void)reloadTopTableView;
 @end
 
 @protocol DownloadCellDelegate

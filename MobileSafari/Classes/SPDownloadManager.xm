@@ -529,7 +529,7 @@
     [localizationManager localizedSPStringForKey:@"DOWNLOAD_SUCCESS"], download.fileName]];
 
   //Reload entries if currently inside downloadsView
-  [self.downloadTableDelegate reloadDataAndDataSources];
+  [self.downloadNavigationDelegate reloadTopTableView];
 
   //nil out download
   download = nil;
@@ -544,7 +544,7 @@
   download = nil;
 
   //Reload entries if currently inside downloadsView
-  [self.downloadTableDelegate reloadDataAndDataSources];
+  [self.downloadNavigationDelegate reloadTopTableView];
 }
 
 - (void)dispatchNotificationWithText:(NSString*)text

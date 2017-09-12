@@ -17,16 +17,7 @@
   dispatch_async(dispatch_get_main_queue(), ^
   {
     //Present SPDownloadsNavigationController
-    [self.rootViewController presentViewController:downloadsController animated:YES completion:^
-    {
-      if([((SPDownloadsTableViewController*)
-        downloadsController.visibleViewController).downloadsAtCurrentPath count] != 0)
-      {
-        //Fix stuck download if a download finishes while the view presents
-        [(SPDownloadsTableViewController*)
-          downloadsController.visibleViewController reloadDataAndDataSources];
-      }
-    }];
+    [self.rootViewController presentViewController:downloadsController animated:YES completion:nil];
   });
 }
 
@@ -34,7 +25,7 @@
 %new
 - (void)handleSwipe:(NSInteger)swipeAction
 {
-  //Some cases need cleaing -> Create bool for that
+  //Some cases need cleaning -> Create bool for that
   __block BOOL shouldClean = NO;
 
   switch(swipeAction)
@@ -134,17 +125,7 @@
   {
     //Present SPDownloadsNavigationController
     [MSHookIvar<BrowserRootViewController*>(self, "_rootViewController")
-      presentViewController:downloadsController animated:YES completion:^
-    {
-      if([((SPDownloadsTableViewController*)
-        downloadsController.visibleViewController).downloadsAtCurrentPath
-        count] != 0)
-      {
-        //Fixes stuck download if the download finishes while the view presents
-        [(SPDownloadsTableViewController*)downloadsController.visibleViewController
-          reloadDataAndDataSources];
-      }
-    }];
+      presentViewController:downloadsController animated:YES completion:nil];
   });
 }
 

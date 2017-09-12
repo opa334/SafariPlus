@@ -5,6 +5,16 @@
 
 @implementation SPDownloadsNavigationController
 
+- (id)init
+{
+  self = [super init];
+
+  //Set delegate of SPDownloadManager for communication
+  [SPDownloadManager sharedInstance].downloadNavigationDelegate = self;
+
+  return self;
+}
+
 - (NSURL*)rootPath
 {
   if(preferenceManager.customDefaultPathEnabled)

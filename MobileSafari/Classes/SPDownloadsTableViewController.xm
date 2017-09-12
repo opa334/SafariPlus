@@ -39,14 +39,6 @@
   self.downloadsAtCurrentPath = [[SPDownloadManager sharedInstance] getDownloadsForPath:self.currentPath];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-  //Set delegate of SPDownloadManager for communication
-  [SPDownloadManager sharedInstance].downloadTableDelegate = self;
-
-  [super viewDidAppear:animated];
-}
-
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
   if([self tableView:tableView numberOfRowsInSection:0] > 0)

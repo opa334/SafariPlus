@@ -14,7 +14,7 @@
 - (void)openURL:(id)arg1 options:(id)arg2 completionHandler:(id)arg3;
 @end
 
-@interface SPDownloadsTableViewController : SPFileBrowserTableViewController <DownloadTableDelegate, UIDocumentInteractionControllerDelegate> {}
+@interface SPDownloadsTableViewController : SPFileBrowserTableViewController <UIDocumentInteractionControllerDelegate> {}
 @property (nonatomic) NSMutableArray* downloadsAtCurrentPath;
 @property (nonatomic, strong) UIDocumentInteractionController* documentController;
 @property (nonatomic) NSURL* tmpSymlinkURL;

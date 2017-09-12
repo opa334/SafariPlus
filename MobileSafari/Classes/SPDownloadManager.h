@@ -16,7 +16,7 @@
 
 @interface SPDownloadManager : NSObject <DownloadManagerDelegate> {}
 @property (nonatomic, weak) id<RootControllerDownloadDelegate> rootControllerDelegate;
-@property (nonatomic, weak) id<DownloadTableDelegate> downloadTableDelegate;
+@property (nonatomic, weak) id<DownloadNavigationControllerDelegate> downloadNavigationDelegate;
 @property (nonatomic, strong) CPDistributedMessagingCenter* SPMessagingCenter;
 @property NSMutableArray* downloads;
 + (instancetype)sharedInstance;

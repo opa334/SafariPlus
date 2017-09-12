@@ -5,6 +5,7 @@
 
 @interface SPFileBrowserNavigationController : UINavigationController {}
 - (id)newTableViewControllerWithPath:(NSURL*)path;
+- (void)reloadTopTableView;
 - (void)reloadAllTableViews;
 - (BOOL)shouldLoadPreviousPathElements;
 - (NSURL*)rootPath;

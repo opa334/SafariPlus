@@ -51,6 +51,11 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)reloadTopTableView
+{
+  [(SPFileBrowserTableViewController*)self.visibleViewController reloadDataAndDataSources];
+}
+
 - (void)reloadAllTableViews
 {
   //Cycle through all tableViews and reload their data

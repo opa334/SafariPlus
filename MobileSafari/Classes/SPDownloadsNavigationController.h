@@ -6,5 +6,5 @@
 #import "SPDownloadsTableViewController.h"
 #import "../Shared.h"
 
-@interface SPDownloadsNavigationController : SPFileBrowserNavigationController {}
+@interface SPDownloadsNavigationController : SPFileBrowserNavigationController <DownloadNavigationControllerDelegate> {}
 @end
