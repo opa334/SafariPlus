@@ -6,12 +6,6 @@
 #import "SPDownloadManager.h"
 
 @interface SPDirectoryPickerNavigationController : SPFileBrowserNavigationController {}
-@property (nonatomic) NSURLRequest* request;
-@property (nonatomic) int64_t size;
-@property (nonatomic) NSURL* path;
-@property (nonatomic) NSString* fileName;
-@property (nonatomic) BOOL imageDownload;
-@property (nonatomic) UIImage* image;
-- (id)initWithRequest:(NSURLRequest*)request size:(int64_t)size path:(NSURL*)path fileName:(NSString*)fileName;
-- (id)initWithImage:(UIImage*)image fileName:(NSString*)fileName;
+@property (nonatomic) SPDownloadInfo* downloadInfo;
+- (id)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 @end

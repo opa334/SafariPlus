@@ -176,7 +176,7 @@
 - (void)presentForwardPopoverFromButtonBar;
 - (void)presentTabExposePopoverFromButtonBar;
 - (CGPoint*)targetPointForButtonBarLinkImageAnimationIntoLayer:(id)arg1 proposedTargetPoint:(CGPoint)arg2;
-//added by me
+//new stuff below
 - (void)downloadsFromButtonBar;
 - (BOOL)usesTabBar;
 
@@ -186,9 +186,8 @@
 @property (nonatomic,readonly) ApplicationShortcutController* shortcutController;
 @property (nonatomic,readonly) NSArray* browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
-//new methods below
+//new stuff below
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
-- (void)updateButtonState;
 @end
 
 @interface ApplicationShortcutController : NSObject {}
@@ -200,17 +199,16 @@
 @property (nonatomic,readonly) BrowserToolbar* bottomToolbar;
 @property (nonatomic,readonly) BrowserRootViewController* rootViewController;
 @property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
+- (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
 - (BOOL)privateBrowsingEnabled;
 - (void)updateTabOverviewFrame;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
-- (void)_presentModalViewController:(id)arg1 fromButtonIdentifier:(long long)arg2 animated:(BOOL)arg3 completion:(/*^block*/id)arg4;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
 - (void)clearAutoFillMessageReceived;
-- (void)_toggleTabViewKeyPressed;
 - (void)showFindOnPage; //iOS9
 //new stuff below
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;

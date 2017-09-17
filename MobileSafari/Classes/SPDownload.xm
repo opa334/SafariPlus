@@ -5,10 +5,15 @@
 
 @implementation SPDownload
 
-- (id)initWithRequest:(NSURLRequest*)request
+- (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
   self = [super init];
-  self.request = request;
+
+  self.request = downloadInfo.request;
+  self.filesize = downloadInfo.filesize;
+  self.filename = downloadInfo.filename;
+  self.targetPath = downloadInfo.targetPath;
+
   return self;
 }
 
@@ -16,13 +21,11 @@
 {
   self = [super init];
 
-  self.identifier = [decoder decodeObjectForKey:@"identifier"];
+  self.taskIdentifier = [decoder decodeIntegerForKey:@"taskIdentifier"];
   self.request = [decoder decodeObjectForKey:@"request"];
-  self.fileName = [decoder decodeObjectForKey:@"fileName"];
-  self.filePath = [decoder decodeObjectForKey:@"filePath"];
-  self.fileSize = [decoder decodeIntegerForKey:@"fileSize"];
-  self.totalBytesWritten = [decoder decodeIntegerForKey:@"totalBytesWritten"];
-  self.shouldReplace = [decoder decodeBoolForKey:@"shouldReplace"];
+  self.filename = [decoder decodeObjectForKey:@"filename"];
+  self.targetPath = [decoder decodeObjectForKey:@"targetPath"];
+  self.filesize = [decoder decodeIntegerForKey:@"filesize"];
   self.paused = [decoder decodeBoolForKey:@"paused"];
 
   return self;
@@ -30,113 +33,105 @@
 
 - (void)encodeWithCoder:(NSCoder *)coder
 {
-  [coder encodeObject:self.identifier forKey:@"identifier"];
+  [coder encodeInteger:self.taskIdentifier forKey:@"taskIdentifier"];
   [coder encodeObject:self.request forKey:@"request"];
-  [coder encodeObject:self.fileName forKey:@"fileName"];
-  [coder encodeObject:self.filePath forKey:@"filePath"];
-  [coder encodeInteger:self.fileSize forKey:@"fileSize"];
-  [coder encodeInteger:self.totalBytesWritten forKey:@"totalBytesWritten"];
-  [coder encodeBool:self.shouldReplace forKey:@"shouldReplace"];
+  [coder encodeObject:self.filename forKey:@"filename"];
+  [coder encodeObject:self.targetPath forKey:@"targetPath"];
+  [coder encodeInteger:self.filesize forKey:@"filesize"];
   [coder encodeBool:self.paused forKey:@"paused"];
-}
-
-- (void)resumeFromDiskLoad
-{
-  self.resumedFromResumeData = NO;
-
-  //Create background session config and configure celluar access
-  NSURLSessionConfiguration* config = [NSURLSessionConfiguration
-    backgroundSessionConfigurationWithIdentifier:self.identifier];
-
-  config.sessionSendsLaunchEvents = YES;
-  config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
-
-  //Create session with configuration (This will get didCompleteWithError called)
-  self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
-
-  //If Safari has not been closed properly (eg. through a respring), the downloadTask
-  //will continue in background. If that's the case, we need to fetch the existing task.
-  [NSTimer scheduledTimerWithTimeInterval:0.05
-    target:[NSBlockOperation blockOperationWithBlock:^
-    {
-      //After 0.05 seconds, check if download was not started with resumeData
-      //Kinda dirty workaround?
-      if(!self.resumedFromResumeData)
-      {
-        //Fetch existing task
-        [self.session getTasksWithCompletionHandler:^(NSArray *dataTasks,
-          NSArray *uploadTasks, NSArray *downloadTasks)
-        {
-          self.downloadTask = downloadTasks.firstObject;
-        }];
-
-        //Start timer
-        [self setTimerEnabled:YES];
-      }
-    }]
-    selector:@selector(main)
-    userInfo:nil
-    repeats:NO
-    ];
-}
-
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
-{
-  if(error)
-  {
-    //Get resumeData
-    NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
-
-    if(resumeData)
-    {
-      //Set resumeData property to YES
-      self.resumedFromResumeData = YES;
-
-      //Create downloadTask from resumeData
-      self.downloadTask = [session downloadTaskWithResumeData:resumeData];
-
-      //Parse resumeData
-      NSDictionary* resumeDataDict = [NSPropertyListSerialization
-        propertyListWithData:resumeData options:NSPropertyListImmutable
-        format:nil error:nil];
-
-      //Get progress from resumeData
-      NSNumber* progress = [resumeDataDict objectForKey:@"NSURLSessionResumeBytesReceived"];
-      self.totalBytesWritten = (int64_t)[progress longLongValue];
-
-      if(!self.paused)
-      {
-        //Not paused -> resume download
-        [self.downloadTask resume];
-
-        //Start timer
-        [self setTimerEnabled:YES];
-      }
-      return;
-    }
-  }
-  //Cancel session (to avoid possible memory leaks)
-  [session invalidateAndCancel];
 }
 
 - (void)startDownload
 {
-  //Create background session config and configure celluar access
-  NSURLSessionConfiguration* config = [NSURLSessionConfiguration
-    backgroundSessionConfigurationWithIdentifier:self.identifier];
+  //Create and start download task from shared session with given request
+  self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession]
+    downloadTaskWithRequest:self.request];
 
-  config.sessionSendsLaunchEvents = YES;
-  config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
+  //Set taskIdentifier to make downloade resumable after Safari has been closed
+  self.taskIdentifier = self.downloadTask.taskIdentifier;
 
-  //Create session with configuration
-  self.session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+  if(!self.paused)
+  {
+    //Start timer
+    [self setTimerEnabled:YES];
 
-  //Create and start download task from session with given request
-  self.downloadTask = [self.session downloadTaskWithRequest:self.request];
+    //Start downloading
+    [self.downloadTask resume];
+  }
+}
+
+- (void)startDownloadFromResumeData
+{
+  //Create downloadTask from resumeData
+  self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession]
+    downloadTaskWithResumeData:self.resumeData];
+
+  //Get new identifier
+  self.taskIdentifier = self.downloadTask.taskIdentifier;
+
+  //Parse resumeData
+  NSDictionary* resumeDataDict = [NSPropertyListSerialization
+    propertyListWithData:self.resumeData options:NSPropertyListImmutable
+    format:nil error:nil];
+
+  //Get progress from resumeData
+  NSNumber* progress = [resumeDataDict objectForKey:@"NSURLSessionResumeBytesReceived"];
+
+  //Update totalBytesWritten
+  self.totalBytesWritten = (int64_t)[progress longLongValue];
+
+  //Resume task to occupy it
   [self.downloadTask resume];
 
-  //Start timer
-  [self setTimerEnabled:YES];
+  if(self.paused)
+  {
+    //Pause task right after resuming it
+    dispatch_async(dispatch_get_main_queue(), ^
+    {
+      [self.downloadTask suspend];
+    });
+  }
+  else
+  {
+    //Start timer
+    [self setTimerEnabled:YES];
+  }
+}
+
+- (void)setPaused:(BOOL)paused
+{
+  if(paused != _paused)
+  {
+    _paused = paused;
+    if(paused)
+    {
+      //Suspend task
+      [self.downloadTask suspend];
+
+      //Stop timer
+      [self setTimerEnabled:NO];
+    }
+    else
+    {
+      //Resume task
+      [self.downloadTask resume];
+
+      //Start timer
+      [self setTimerEnabled:YES];
+    }
+
+    //Update data on disk
+    [self.downloadManagerDelegate saveDownloadsToDisk];
+  }
+}
+
+- (void)cancelDownload
+{
+  //Cancel task
+  [self.downloadTask cancel];
+
+  //Stop timer
+  [self setTimerEnabled:NO];
 }
 
 - (void)setTimerEnabled:(BOOL)enabled
@@ -149,8 +144,8 @@
       self.speedTimer = [NSTimer scheduledTimerWithTimeInterval:0.5
         target:self selector:@selector(updateDownloadSpeed) userInfo:nil repeats:YES];
 
-      //Set startTime (of timer) to current time
-      self.startTime = [NSDate timeIntervalSinceReferenceDate];
+      //Set lastSpeedRefreshTime (of timer) to current time
+      self.lastSpeedRefreshTime = [NSDate timeIntervalSinceReferenceDate];
     });
   }
   else if(!enabled && [self.speedTimer isValid])
@@ -169,80 +164,23 @@
   NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
 
   //Calculate bytes per second from last half a second
-  self.bytesPerSecond = (self.totalBytesWritten - self.startBytes) / (currentTime - self.startTime);
+  self.bytesPerSecond = (self.totalBytesWritten - self.startBytes) / (currentTime - self.lastSpeedRefreshTime);
 
   //Set new values for next update
   self.startBytes = self.totalBytesWritten;
-  self.startTime = currentTime;
+  self.lastSpeedRefreshTime = currentTime;
 
-  if(self.cellDelegate)
-  {
-    //Update value on cell
-    [self.cellDelegate updateDownloadSpeed:self.bytesPerSecond];
-  }
+  //Update value on cell
+  [self.cellDelegate updateDownloadSpeed:self.bytesPerSecond];
 }
 
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
+- (void)updateProgress:(int64_t)totalBytesWritten
 {
-  [self setTimerEnabled:NO];
-
-  //Send location to download manager
-  [self.downloadManagerDelegate downloadFinished:self withLocation:location];
-}
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten
-totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
-{
-  //Update totalBytesWritten property
+  //Update totalBytesWritten
   self.totalBytesWritten = totalBytesWritten;
 
-  if(self.cellDelegate)
-  {
-    //Update stuff in cell
-    [self.cellDelegate updateProgress:totalBytesWritten totalBytes:totalBytesExpectedToWrite animated:YES];
-  }
-}
-
-- (void)cancelDownload
-{
-  //Stop downloading
-  [self.downloadTask cancel];
-
-  //Tell download manager that download should be cancelled
-  [self.downloadManagerDelegate downloadCancelled:self];
-
-  //Stop timer
-  [self setTimerEnabled:NO];
-}
-
-- (void)pauseDownload
-{
-  //Set paused state to YES
-  self.paused = YES;
-
-  //Pause download
-  [self.downloadTask suspend];
-
-  //Stop timer
-  [self setTimerEnabled:NO];
-
-  //Update data on disk
-  [self.downloadManagerDelegate saveDownloadsToDisk];
-}
-
-- (void)resumeDownload
-{
-  //Set paused state to NO
-  self.paused = NO;
-
-  //Resume download
-  [self.downloadTask resume];
-
-  //Restart timer
-  [self setTimerEnabled:YES];
-
-  //Update data on disk
-  [self.downloadManagerDelegate saveDownloadsToDisk];
+  //Update cell
+  [self.cellDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
 }
 
 @end

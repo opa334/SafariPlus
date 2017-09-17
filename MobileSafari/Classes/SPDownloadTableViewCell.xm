@@ -26,7 +26,7 @@
 
   //Create size label and set it to accessoryView
   UILabel* sizeLabel = [[UILabel alloc] init];
-  sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.fileSize
+  sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.filesize
     countStyle:NSByteCountFormatterCountStyleFile];
   sizeLabel.textColor = [UIColor lightGrayColor];
   sizeLabel.font = [sizeLabel.font fontWithSize:10];
@@ -53,11 +53,11 @@
   [self.contentView addSubview:self.fileIcon];
 
   //Create label with file name and add it to contentView
-  self.fileNameLabel = [UILabel autolayoutView];
-  self.fileNameLabel.text = download.fileName;
-  self.fileNameLabel.font = self.textLabel.font;
-  self.fileNameLabel.textAlignment = NSTextAlignmentLeft;
-  [self.contentView addSubview:self.fileNameLabel];
+  self.filenameLabel = [UILabel autolayoutView];
+  self.filenameLabel.text = download.filename;
+  self.filenameLabel.font = self.textLabel.font;
+  self.filenameLabel.textAlignment = NSTextAlignmentLeft;
+  [self.contentView addSubview:self.filenameLabel];
 
   //Create label with size progress and add it to contentView
   self.sizeProgress = [UILabel autolayoutView];
@@ -115,7 +115,7 @@
                     self.downloadSpeed, @"downloadSpeed",
                     self.pauseResumeButton, @"pauseResumeButton",
                     self.stopButton, @"stopButton",
-                    self.fileNameLabel, @"fileNameLabel",
+                    self.filenameLabel, @"filenameLabel",
                     self.fileIcon, @"fileIcon",
                     nil];
 
@@ -130,13 +130,13 @@
       @"|-[percentProgress]-rightSpace-|" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-      @"|-[fileIcon(iconSize)]-15-[fileNameLabel]-smallSpace-[pauseResumeButton(buttonSize)]-8-|" options:0 metrics:metrics views:views]];
+      @"|-[fileIcon(iconSize)]-15-[filenameLabel]-smallSpace-[pauseResumeButton(buttonSize)]-8-|" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
       @"V:|-topSpace-[fileIcon(iconSize)]" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-      @"V:|-topSpace-[fileNameLabel(iconSize)]" options:0 metrics:metrics views:views]];
+      @"V:|-topSpace-[filenameLabel(iconSize)]" options:0 metrics:metrics views:views]];
 
   [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
       @"V:|-4.0-[pauseResumeButton(buttonSize)]-[stopButton(buttonSize)]-4-|" options:0 metrics:metrics views:views]];
@@ -151,7 +151,7 @@
       @"V:[downloadSpeed(8)]-19-|" options:0 metrics:metrics views:views]];
 
   //Update progress bar with current progress
-  [self updateProgress:download.totalBytesWritten totalBytes:download.fileSize animated:NO];
+  [self updateProgress:download.totalBytesWritten totalBytes:download.filesize animated:NO];
 
   //Update download speed
   [self updateDownloadSpeed:download.bytesPerSecond];
@@ -165,6 +165,8 @@
 
 - (void)setPaused:(BOOL)paused
 {
+  [self.downloadDelegate setPaused:paused];
+
   if(paused)
   {
     dispatch_async(dispatch_get_main_queue(),
@@ -212,13 +214,11 @@
   if(self.pauseResumeButton.selected)
   {
     //Pause download and update UI elements
-    [self.downloadDelegate pauseDownload];
     [self setPaused:YES];
   }
   else
   {
     //Resume download and update UI elements
-    [self.downloadDelegate resumeDownload];
     [self setPaused:NO];
   }
 }

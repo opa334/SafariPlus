@@ -10,7 +10,7 @@
   self = [super init];
 
   //Set delegate of SPDownloadManager for communication
-  [SPDownloadManager sharedInstance].downloadNavigationDelegate = self;
+  [SPDownloadManager sharedInstance].navigationControllerDelegate = self;
 
   return self;
 }

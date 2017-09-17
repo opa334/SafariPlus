@@ -9,9 +9,9 @@
 
 @interface SPDownloadTableViewCell : UITableViewCell <DownloadCellDelegate> {}
 @property (nonatomic, weak) id<CellDownloadDelegate> downloadDelegate;
-@property NSString* fileName;
+@property NSString* filename;
 @property UIProgressView* progressView;
-@property UILabel* fileNameLabel;
+@property UILabel* filenameLabel;
 @property UIImageView* fileIcon;
 @property UILabel* percentProgress;
 @property UILabel* sizeProgress;

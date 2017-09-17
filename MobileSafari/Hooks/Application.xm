@@ -23,31 +23,28 @@
 
 - (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
 {
+  loadOtherPlist();
+
   //Init plist for desktop button
   if(preferenceManager.desktopButtonEnabled)
   {
-    if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
-		{
-      //Create plist if it does not exist already
-			[@{} writeToFile:otherPlistPath atomically:NO];
-		}
-
-    //Get dictionary from plist
-    NSMutableDictionary* otherPlist = [[NSMutableDictionary alloc]
-      initWithContentsOfFile:otherPlistPath];
-
     if(![[otherPlist allKeys] containsObject:@"desktopButtonSelected"])
     {
-      //Create bool if it does not exist already
-      [otherPlist setObject:[NSNumber numberWithBool:NO]
+      //Set BOOL to false
+      desktopButtonSelected = NO;
+
+      //Add BOOL to dictionary
+      [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
         forKey:@"desktopButtonSelected"];
 
-      //Write dictionary to plist
-      [otherPlist writeToFile:otherPlistPath atomically:YES];
+      //Save changes
+      saveOtherPlist();
     }
-
-    //Get bool from plist and set it to desktopButtonSelected
-    desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
+    else
+    {
+      //Get bool from plist and set it to desktopButtonSelected
+      desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
+    }
   }
 
   BOOL orig = %orig;
@@ -227,21 +224,6 @@
   }
 
   %orig;
-}
-
-%new
-- (void)updateButtonState
-{
-  //Create dictionary for plist
-  NSMutableDictionary* otherPlist = [[NSMutableDictionary alloc]
-    initWithContentsOfFile:otherPlistPath];
-
-  //Update desktop bool
-  [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
-    forKey:@"desktopButtonSelected"];
-
-  //Write dictionary to plist
-  [otherPlist writeToFile:otherPlistPath atomically:YES];
 }
 
 %end

@@ -103,17 +103,25 @@
             //Create download request from URL
             NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:arg1.URL];
 
-            //Call SPDownloadManager with request
+            //Create downloadInfo
+            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
+              initWithRequest:downloadRequest];
+
+            //Set filename
+            downloadInfo.filename = @"site.html";
+
+            //Call downloadManager
             [[SPDownloadManager sharedInstance]
-              prepareDownloadFromRequest:downloadRequest withSize:0
-              fileName:@"site.html" customPath:YES];
+              configureDownloadWithInfo:downloadInfo];
             break;
           }
           case 1: //Image long pressed
           {
+            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
+              initWithImage:arg1.image];
+            downloadInfo.filename = @"image.png";
             //Call SPDownloadManager with image
-            [[SPDownloadManager sharedInstance] prepareImageDownload:arg1.image
-              fileName:@"image.png"];
+            [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
             break;
           }
           default:
@@ -243,18 +251,30 @@
             //Create download request from URL
             NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:arg1.URL];
 
-            //Call SPDownloadManager with request
+            //Create downloadInfo
+            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
+              initWithRequest:downloadRequest];
+
+            //Set filename
+            downloadInfo.filename = @"site.html";
+
+            //Call downloadManager
             [[SPDownloadManager sharedInstance]
-              prepareDownloadFromRequest:downloadRequest withSize:0
-              fileName:@"site.html" customPath:YES];
+              configureDownloadWithInfo:downloadInfo];
             break;
           }
           case 1: //Image long pressed
           case 120259084289:
           {
+            //Create downloadInfo
+            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
+              initWithImage:arg1.image];
+
+            downloadInfo.filename = @"image.png";
+
             //Call SPDownloadManager with image
-            [[SPDownloadManager sharedInstance] prepareImageDownload:arg1.image
-              fileName:@"image.png"];
+            [[SPDownloadManager sharedInstance]
+              configureDownloadWithInfo:downloadInfo];
             break;
           }
           default:
@@ -385,12 +405,12 @@ BOOL showAlert = YES;
       }
 
       //Reinitialise variables so they can be accessed from the actions
-      __block int64_t fileSize = navigationResponse.response.expectedContentLength;
+      __block int64_t filesize = navigationResponse.response.expectedContentLength;
 
-      __block NSString* fileName = navigationResponse.response.suggestedFilename;
+      __block NSString* filename = navigationResponse.response.suggestedFilename;
 
       __block NSString* fileDetails = [NSString stringWithFormat:@"%@ (%@)",
-        fileName, [NSByteCountFormatter stringFromByteCount:fileSize
+        filename, [NSByteCountFormatter stringFromByteCount:filesize
         countStyle:NSByteCountFormatterCountStyleFile]];
 
       __block NSURLRequest* request = navigationResponse._request;
@@ -402,14 +422,23 @@ BOOL showAlert = YES;
         if(preferenceManager.instantDownloadsEnabled &&
           preferenceManager.instantDownloadsOption == 1)
         {
+          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
+          downloadInfo.filesize = filesize;
+          downloadInfo.filename = filename;
+
           //Instant download enabled and on 'Download' option
-          [[SPDownloadManager sharedInstance] prepareDownloadFromRequest:request withSize:fileSize fileName:fileName];
+          [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
         }
         else if(preferenceManager.instantDownloadsEnabled &&
           preferenceManager.instantDownloadsOption == 2)
         {
+          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
+          downloadInfo.filesize = filesize;
+          downloadInfo.filename = filename;
+          downloadInfo.customPath = YES;
+
           //Instant download enabled and on 'Download to ...' option
-          [[SPDownloadManager sharedInstance] prepareDownloadFromRequest:request withSize:fileSize fileName:fileName customPath:YES];
+          [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
         }
         else
         {
@@ -425,8 +454,12 @@ BOOL showAlert = YES;
             style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
           {
             //Start download through SafariPlus
-            [[SPDownloadManager sharedInstance] prepareDownloadFromRequest:request
-              withSize:fileSize fileName:fileName];
+            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
+              initWithRequest:request];
+            downloadInfo.filesize = filesize;
+            downloadInfo.filename = filename;
+
+            [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
           }];
 
           //Create 'Download to ...' option
@@ -436,8 +469,13 @@ BOOL showAlert = YES;
             style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
           {
             //Start download through SafariPlus with custom path
-            [[SPDownloadManager sharedInstance] prepareDownloadFromRequest:request
-              withSize:fileSize fileName:fileName customPath:YES];
+            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
+              initWithRequest:request];
+            downloadInfo.filesize = filesize;
+            downloadInfo.filename = filename;
+            downloadInfo.customPath = YES;
+
+            [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
           }];
 
           //Create 'Open' option
@@ -626,12 +664,11 @@ BOOL showAlert = YES;
 %new
 - (BOOL)shouldRequestHTTPS:(NSURL*)URL
 {
-  //Get dictionary from plist
-  NSMutableDictionary* plist = [[NSMutableDictionary alloc]
-    initWithContentsOfFile:otherPlistPath];
+  //Reload dictionary
+  loadOtherPlist();
 
   //Get https exception array from dictionary
-  NSMutableArray* ForceHTTPSExceptions = [plist objectForKey:@"ForceHTTPSExceptions"];
+  NSMutableArray* ForceHTTPSExceptions = [otherPlist objectForKey:@"ForceHTTPSExceptions"];
 
   for(NSString* exception in ForceHTTPSExceptions)
   {

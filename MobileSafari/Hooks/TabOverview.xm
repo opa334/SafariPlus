@@ -103,7 +103,10 @@
   }
 
   //Write button state to plist
-  [((Application*)[%c(Application) sharedApplication]) updateButtonState];
+  loadOtherPlist();
+  [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
+    forKey:@"desktopButtonSelected"];
+  saveOtherPlist();
 }
 
 %end

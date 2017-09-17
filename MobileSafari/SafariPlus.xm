@@ -12,6 +12,8 @@ BOOL desktopButtonSelected;
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
+NSMutableDictionary* otherPlist;
+
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 
@@ -38,6 +40,21 @@ BOOL privateBrowsingEnabled()
   }
 
   return privateBrowsingEnabled;
+}
+
+void loadOtherPlist()
+{
+  otherPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
+  if(!otherPlist)
+  {
+    otherPlist = [NSMutableDictionary new];
+    saveOtherPlist();
+  }
+}
+
+void saveOtherPlist()
+{
+  [otherPlist writeToFile:otherPlistPath atomically:YES];
 }
 
 /****** Version detection ******/

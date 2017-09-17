@@ -216,7 +216,7 @@
 "DOWNLOAD_SUCCESS" = "Download abgeschlossen";
 "SAVED_IMAGE" = "Bild gespeichert";
 "ERROR" = "Fehler";
-"FILE_EXISTS_MESSAGE" = "Am Zielpfad existiert bereits eine Datei mit dem aktuellen Namen!";
+"FILE_EXISTS_MESSAGE" = "Am Zielpfad existiert bereits eine Datei oder ein ausstehender Download mit dem aktuellen Namen!";
 "REPLACE_FILE" = "Datei ersetzen";
 "CHANGE_PATH" = "Download-Pfad ändern";
 "PENDING_DOWNLOADS" = "Ausstehende Downloads";

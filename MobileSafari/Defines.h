@@ -15,6 +15,8 @@
 #define downloadsStorePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari/downloads"]
 #define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
+#define DownloadStorageRevision 2
+
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0
 #define kCFCoreFoundationVersionNumber_iOS_9_0 1223.1
 #endif

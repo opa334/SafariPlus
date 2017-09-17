@@ -216,7 +216,7 @@
 "DOWNLOAD_SUCCESS" = "Download succeeded";
 "SAVED_IMAGE" = "Saved Image";
 "ERROR" = "Error";
-"FILE_EXISTS_MESSAGE" = "A file already exists at the target path!";
+"FILE_EXISTS_MESSAGE" = "A file or a pending download already exists at the target path!";
 "REPLACE_FILE" = "Replace File";
 "CHANGE_PATH" = "Change Download Path";
 "PENDING_DOWNLOADS" = "Pending Downloads";

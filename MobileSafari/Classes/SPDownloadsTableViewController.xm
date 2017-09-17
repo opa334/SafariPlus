@@ -36,7 +36,7 @@
 
   //Create new array for downloads and populate it
   self.downloadsAtCurrentPath = [NSMutableArray new];
-  self.downloadsAtCurrentPath = [[SPDownloadManager sharedInstance] getDownloadsForPath:self.currentPath];
+  self.downloadsAtCurrentPath = [[SPDownloadManager sharedInstance] downloadsAtURL:self.currentPath];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

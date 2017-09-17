@@ -5,24 +5,12 @@
 
 @implementation SPDirectoryPickerNavigationController
 
-- (id)initWithRequest:(NSURLRequest*)request size:(int64_t)size path:(NSURL*)path fileName:(NSString*)fileName
+- (id)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-  //Initialise an instance and set given properties
   self = [super init];
-  self.request = request;
-  self.size = size;
-  self.path = path;
-  self.fileName = fileName;
-  return self;
-}
 
-- (id)initWithImage:(UIImage*)image fileName:(NSString*)fileName
-{
-  //Initialise an instance and set given properties
-  self = [super init];
-  self.image = image;
-  self.imageDownload = YES;
-  self.fileName = fileName;
+  self.downloadInfo = downloadInfo;
+
   return self;
 }
 

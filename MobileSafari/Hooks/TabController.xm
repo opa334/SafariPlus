@@ -121,7 +121,10 @@
   [self reloadTabsIfNeeded];
 
   //Write button state to plist
-  [((Application*)[%c(Application) sharedApplication]) updateButtonState];
+  loadOtherPlist();
+  [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
+    forKey:@"desktopButtonSelected"];
+  saveOtherPlist();
 }
 
 //Reload tabs if the useragents needs to be changed (depending on the desktop button state)

@@ -2,6 +2,7 @@
 // (c) 2017 opa334
 
 #import "SPDownload.h"
+#import "SPDownloadInfo.h"
 #import "SPDirectoryPickerNavigationController.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
@@ -12,27 +13,39 @@
 #import "../Defines.h"
 #import "../Shared.h"
 
-@class SPDownloadManager;
+@interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, DownloadManagerDelegate>
+@property (nonatomic) NSMutableArray* pendingDownloads;
+@property (nonatomic) CPDistributedMessagingCenter* SPMessagingCenter;
+@property (nonatomic) NSURLSession* downloadSession;
+@property (nonatomic) NSInteger errorCount;
+@property (nonatomic) NSInteger errorsCounted;
 
-@interface SPDownloadManager : NSObject <DownloadManagerDelegate> {}
 @property (nonatomic, weak) id<RootControllerDownloadDelegate> rootControllerDelegate;
-@property (nonatomic, weak) id<DownloadNavigationControllerDelegate> downloadNavigationDelegate;
-@property (nonatomic, strong) CPDistributedMessagingCenter* SPMessagingCenter;
-@property NSMutableArray* downloads;
+@property (nonatomic, weak) id<DownloadNavigationControllerDelegate> navigationControllerDelegate;
+
 + (instancetype)sharedInstance;
+
+- (void)setUpSession;
+- (void)checkDownloadStorageRevision;
+- (void)removeStoredDownloads;
+- (void)clearTempFiles;
+- (void)resumeDownloadsFromDiskLoad;
+
 - (void)loadDownloadsFromDisk;
 - (void)saveDownloadsToDisk;
-- (NSMutableArray*)getDownloadsForPath:(NSURL*)path;
-- (void)removeDownloadWithIdentifier:(NSString*)identifier;
-- (NSString*)generateIdentifier;
-- (void)presentFileExistsAlert:(NSURLRequest*)request size:(int64_t)size fileName:(NSString*)fileName path:(NSURL*)path;
-- (void)presentFileExistsAlert:(NSURLRequest*)request size:(int64_t)size fileName:(NSString*)fileName path:(NSURL*)path isImage:(BOOL)isImage image:(UIImage*)image;
-- (void)handleDirectoryPickerImageResponse:(UIImage*)image fileName:(NSString*)fileName path:(NSURL*)path;
-- (void)saveImage:(UIImage*)image fileName:(NSString*)fileName path:(NSURL*)path shouldReplace:(BOOL)shouldReplace;
-- (void)prepareDownloadFromRequest:(NSURLRequest*)request withSize:(int64_t)size fileName:(NSString*)fileName;
-- (void)prepareDownloadFromRequest:(NSURLRequest*)request withSize:(int64_t)size fileName:(NSString*)fileName customPath:(BOOL)customPath;
-- (void)prepareImageDownload:(UIImage*)image fileName:(NSString*)fileName;
-- (void)startDownloadFromRequest:(NSURLRequest*)request size:(int64_t)size fileName:(NSString*)fileName path:(NSURL*)path shouldReplace:(BOOL)shouldReplace;
-- (void)handleDirectoryPickerResponse:(NSURLRequest*)request size:(int64_t)size fileName:(NSString*)fileName path:(NSURL*)path;
-- (void)dispatchNotificationWithText:(NSString*)text;
+
+- (void)sendNotificationWithText:(NSString*)text;
+
+- (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier;
+- (NSMutableArray*)downloadsAtURL:(NSURL*)URL;
+- (BOOL)downloadExistsAtURL:(NSURL*)URL;
+
+- (void)configureDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
+- (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
+- (void)saveImageWithInfo:(SPDownloadInfo*)downloadInfo;
+
+- (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 @end

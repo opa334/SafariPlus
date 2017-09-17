@@ -17,6 +17,10 @@
 {
   if([self canDownloadToPath:self.currentPath])
   {
+    //Get downloadInfo
+    SPDownloadInfo* downloadInfo = ((SPDirectoryPickerNavigationController*)
+      self.navigationController).downloadInfo;
+
     //Path is writable -> create alert to pick file name
     UIAlertController * nameAlert = [UIAlertController alertControllerWithTitle:
       [localizationManager localizedSPStringForKey:@"CHOOSE_FILENAME"] message:nil
@@ -25,7 +29,7 @@
     //Add textField to choose filename
   	[nameAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
   	{
-      textField.text = ((SPDirectoryPickerNavigationController*)self.navigationController).fileName;
+      textField.text = downloadInfo.filename;
   		textField.placeholder = [localizationManager localizedSPStringForKey:@"FILENAME"];
   		textField.textColor = [UIColor blackColor];
   		textField.keyboardType = UIKeyboardTypeURL;
@@ -39,27 +43,17 @@
       localizedSPStringForKey:@"START_DOWNLOAD"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
   	{
-      //Get textField and the fileName from it's content
+      //Get textField and the filename from it's content
   		UITextField * nameField = nameAlert.textFields[0];
-      NSString* fileName = nameField.text;
+      NSString* filename = nameField.text;
 
-      if(((SPDirectoryPickerNavigationController*)self.navigationController).imageDownload)
-      {
-        //Download is image -> call image response with needed information
-        UIImage* image = ((SPDirectoryPickerNavigationController*)self.navigationController).image;
-        [self dismiss];
-        [[SPDownloadManager sharedInstance] handleDirectoryPickerImageResponse:image
-          fileName:fileName path:self.currentPath];
-      }
-      else
-      {
-        //Download is file -> call file response with needed information
-        NSURLRequest* request = ((SPDirectoryPickerNavigationController*)self.navigationController).request;
-        int64_t size = ((SPDirectoryPickerNavigationController*)self.navigationController).size;
-        [self dismiss];
-    		[[SPDownloadManager sharedInstance] handleDirectoryPickerResponse:request
-          size:size fileName:fileName path:self.currentPath];
-      }
+      downloadInfo.filename = filename;
+
+      downloadInfo.targetPath = self.currentPath;
+
+      [self dismiss];
+
+      [[SPDownloadManager sharedInstance] pathSelectionResponseWithDownloadInfo:downloadInfo];
     }];
 
     //Add action
