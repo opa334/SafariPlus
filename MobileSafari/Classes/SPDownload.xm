@@ -26,6 +26,7 @@
   self.filename = [decoder decodeObjectForKey:@"filename"];
   self.targetPath = [decoder decodeObjectForKey:@"targetPath"];
   self.filesize = [decoder decodeIntegerForKey:@"filesize"];
+  self.totalBytesWritten = [decoder decodeIntegerForKey:@"totalBytesWritten"];
   self.paused = [decoder decodeBoolForKey:@"paused"];
 
   return self;
@@ -38,6 +39,7 @@
   [coder encodeObject:self.filename forKey:@"filename"];
   [coder encodeObject:self.targetPath forKey:@"targetPath"];
   [coder encodeInteger:self.filesize forKey:@"filesize"];
+  [coder encodeInteger:self.totalBytesWritten forKey:@"totalBytesWritten"];
   [coder encodeBool:self.paused forKey:@"paused"];
 }
 

@@ -76,7 +76,6 @@
       {
         SPDownload* download = [self downloadWithTaskIdentifier:task.taskIdentifier];
         download.downloadTask = task;
-        download.totalBytesWritten = download.downloadTask.countOfBytesReceived;
         [download setTimerEnabled:YES];
       }
       else
