@@ -2,7 +2,7 @@
 Various enhancements to Safari
 
 ## Features
-- HTTPS Everywhere
+- Force HTTPS
 
 - Have both "Open in New Tab" and "Open in Background" options available
 
