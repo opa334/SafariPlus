@@ -2,6 +2,7 @@
 // (c) 2017 opa334
 
 #import "SPDownloadInfo.h"
+#import "SPDownload.h"
 
 @implementation SPDownloadInfo
 
@@ -19,6 +20,18 @@
   self = [super init];
 
   self.image = image;
+
+  return self;
+}
+
+- (SPDownloadInfo*)initWithDownload:(SPDownload*)download
+{
+  self = [super init];
+
+  self.request = download.request;
+  self.filesize = download.filesize;
+  self.filename = download.filename;
+  self.targetPath = download.targetPath;
 
   return self;
 }

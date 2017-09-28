@@ -35,5 +35,5 @@
 
 - (void)setTimerEnabled:(BOOL)enabled;
 - (void)updateDownloadSpeed;
-- (void)updateProgress:(int64_t)totalBytesWritten;
+- (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize;
 @end

@@ -19,12 +19,16 @@
       //desktopButton not created yet -> create and configure it
       self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
-      [self.desktopModeButton setImage:[UIImage imageNamed:@"desktopButtonInactive.png"
-        inBundle:SPBundle compatibleWithTraitCollection:nil]
+      UIImage* inactiveImage = [UIImage
+        imageNamed:@"desktopButton.png" inBundle:SPBundle
+        compatibleWithTraitCollection:nil];
+
+      UIImage* activeImage = [UIImage inverseColor:inactiveImage];
+
+      [self.desktopModeButton setImage:inactiveImage
         forState:UIControlStateNormal];
 
-      [self.desktopModeButton setImage:[UIImage imageNamed:@"desktopButtonActive.png"
-        inBundle:SPBundle compatibleWithTraitCollection:nil]
+      [self.desktopModeButton setImage:activeImage
         forState:UIControlStateSelected];
 
       self.desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);

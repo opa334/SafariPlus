@@ -18,7 +18,3 @@ SafariPlus_LIBRARIES = colorpicker rocketbootstrap
 endif
 
 include $(THEOS_MAKE_PATH)/tweak.mk
-
-after-install::
-	echo make finish
-	install.exec "killall -9 SpringBoard"

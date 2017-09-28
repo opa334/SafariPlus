@@ -17,6 +17,22 @@ NSMutableDictionary* otherPlist;
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 
+/****** Extensions ******/
+
+//https://stackoverflow.com/a/22669888
+@implementation UIImage (ColorInverse)
+
++ (UIImage *)inverseColor:(UIImage *)image
+{
+    CIImage *coreImage = [CIImage imageWithCGImage:image.CGImage];
+    CIFilter *filter = [CIFilter filterWithName:@"CIColorInvert"];
+    [filter setValue:coreImage forKey:kCIInputImageKey];
+    CIImage *result = [filter valueForKey:kCIOutputImageKey];
+    return [UIImage imageWithCIImage:result scale:image.scale orientation:image.imageOrientation];
+}
+
+@end
+
 /****** Useful functions ******/
 
 //Return current browsing status
@@ -40,6 +56,26 @@ BOOL privateBrowsingEnabled()
   }
 
   return privateBrowsingEnabled;
+}
+
+SafariWebView* activeWebView()
+{
+  SafariWebView* activeWebView;
+  switch(iOSVersion)
+  {
+    case 9:
+    activeWebView = MSHookIvar<BrowserController*>
+      ((Application*)[%c(Application) sharedApplication],
+      "_controller").tabController.activeTabDocument.webView;
+    break;
+
+    case 10:
+    activeWebView = ((Application*)[%c(Application) sharedApplication]).
+      shortcutController.browserController.tabController.
+      activeTabDocument.webView;
+    break;
+  }
+  return activeWebView;
 }
 
 void loadOtherPlist()

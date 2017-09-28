@@ -19,7 +19,7 @@
         //Resolve possible symlinks
         self.currentPath = path.URLByResolvingSymlinksInPath;
 
-        //Do some magic to fix up the path (why apple?)
+        //Do some magic to fix up the path
         self.currentPath = [NSURL fileURLWithPath:[self.currentPath.path
           stringByReplacingOccurrencesOfString:@"/var" withString:@"/private/var"]];
       }

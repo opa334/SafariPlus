@@ -7,6 +7,7 @@
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
+#import <WebKit/WKWebView.h>
 #ifndef SIMJECT
 #import <RocketBootstrap/rocketbootstrap.h>
 #endif
@@ -18,7 +19,7 @@
 @property (nonatomic) CPDistributedMessagingCenter* SPMessagingCenter;
 @property (nonatomic) NSURLSession* downloadSession;
 @property (nonatomic) NSInteger errorCount;
-@property (nonatomic) NSInteger errorsCounted;
+@property (nonatomic) NSInteger processedErrorCount;
 
 @property (nonatomic, weak) id<RootControllerDownloadDelegate> rootControllerDelegate;
 @property (nonatomic, weak) id<DownloadNavigationControllerDelegate> navigationControllerDelegate;
@@ -27,7 +28,7 @@
 
 - (void)setUpSession;
 - (void)checkDownloadStorageRevision;
-- (void)removeStoredDownloads;
+- (void)removeDownloadStorageFile;
 - (void)clearTempFiles;
 - (void)resumeDownloadsFromDiskLoad;
 
@@ -44,6 +45,8 @@
 - (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)saveImageWithInfo:(SPDownloadInfo*)downloadInfo;
 
+- (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo isSheet:(BOOL)isSheet;
+- (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;

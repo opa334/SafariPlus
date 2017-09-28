@@ -22,7 +22,7 @@
   #ifdef SIMJECT
 
   //Simject preferences (No preference bundle in Simulator)
-  _forceHTTPSEnabled = YES;
+  _forceHTTPSEnabled = NO;
   _openInOppositeModeOptionEnabled = YES;
   _openInNewTabOptionEnabled = YES;
   _uploadAnyFileOptionEnabled = YES;
@@ -32,6 +32,7 @@
   _longPressSuggestionsFocusEnabled = NO;
 
   _enhancedDownloadsEnabled = YES;
+  _videoDownloadingEnabled = YES;
   _instantDownloadsEnabled = NO;
   _instantDownloadsOption = 0;
   _customDefaultPathEnabled = NO;
@@ -101,6 +102,7 @@
   [preferences registerBool:&_longPressSuggestionsFocusEnabled default:YES forKey:@"longPressSuggestionsFocusEnabled"];
 
   [preferences registerBool:&_enhancedDownloadsEnabled default:NO forKey:@"enhancedDownloadsEnabled"];
+  [preferences registerBool:&_videoDownloadingEnabled default:NO forKey:@"videoDownloadingEnabled"];
   [preferences registerBool:&_instantDownloadsEnabled default:NO forKey:@"instantDownloadsEnabled"];
   [preferences registerInteger:&_instantDownloadsOption default:NO forKey:@"instantDownloadsOption"];
   [preferences registerBool:&_customDefaultPathEnabled default:NO forKey:@"customDefaultPathEnabled"];

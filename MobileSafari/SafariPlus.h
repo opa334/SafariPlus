@@ -136,6 +136,12 @@
 @interface AVPlaybackControlsViewController : UIViewController
 @property (nonatomic) AVPlayerViewController* playerViewController;
 @property (nonatomic, retain) AVPlayerController* playerController;
+- (BOOL)isPlaying;
+- (void)setPlaying:(BOOL)arg1;
+//new methods below
+- (void)downloadButtonPressed;
+- (void)presentErrorAlertWithError:(NSError*)error;
+- (void)presentNotFoundError;
 @end
 
 @interface AVButton : UIButton

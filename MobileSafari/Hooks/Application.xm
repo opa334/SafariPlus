@@ -13,7 +13,7 @@
   //The bare existence of this method causes background downloads to finish properly...
   //didFinishDownloadingToURL gets called, don't ask me why tho :D
   //Otherwise files would only be moved on the next app-resume
-  //I presume the application gets resumed if this method exists
+  //I presume the application only gets resumed if this method exists
 
   dispatch_async(dispatch_get_main_queue(),
   ^{

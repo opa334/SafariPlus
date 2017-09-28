@@ -109,6 +109,7 @@
 
             //Set filename
             downloadInfo.filename = @"site.html";
+            downloadInfo.customPath = YES;
 
             //Call downloadManager
             [[SPDownloadManager sharedInstance]
@@ -119,7 +120,10 @@
           {
             SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
               initWithImage:arg1.image];
+
             downloadInfo.filename = @"image.png";
+            downloadInfo.customPath = YES;
+
             //Call SPDownloadManager with image
             [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
             break;
@@ -257,6 +261,7 @@
 
             //Set filename
             downloadInfo.filename = @"site.html";
+            downloadInfo.customPath = YES;
 
             //Call downloadManager
             [[SPDownloadManager sharedInstance]
@@ -271,6 +276,7 @@
               initWithImage:arg1.image];
 
             downloadInfo.filename = @"image.png";
+            downloadInfo.customPath = YES;
 
             //Call SPDownloadManager with image
             [[SPDownloadManager sharedInstance]
@@ -404,113 +410,11 @@ BOOL showAlert = YES;
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
       }
 
-      //Reinitialise variables so they can be accessed from the actions
-      __block int64_t filesize = navigationResponse.response.expectedContentLength;
+      SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:navigationResponse._request];
+      downloadInfo.filesize = navigationResponse.response.expectedContentLength;
+      downloadInfo.filename = navigationResponse.response.suggestedFilename;
 
-      __block NSString* filename = navigationResponse.response.suggestedFilename;
-
-      __block NSString* fileDetails = [NSString stringWithFormat:@"%@ (%@)",
-        filename, [NSByteCountFormatter stringFromByteCount:filesize
-        countStyle:NSByteCountFormatterCountStyleFile]];
-
-      __block NSURLRequest* request = navigationResponse._request;
-
-      __block WKWebView* webViewLocal = webView;
-
-      dispatch_async(dispatch_get_main_queue(), //Ensure we're on the main thread to avoid crashes
-      ^{
-        if(preferenceManager.instantDownloadsEnabled &&
-          preferenceManager.instantDownloadsOption == 1)
-        {
-          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
-          downloadInfo.filesize = filesize;
-          downloadInfo.filename = filename;
-
-          //Instant download enabled and on 'Download' option
-          [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
-        }
-        else if(preferenceManager.instantDownloadsEnabled &&
-          preferenceManager.instantDownloadsOption == 2)
-        {
-          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
-          downloadInfo.filesize = filesize;
-          downloadInfo.filename = filename;
-          downloadInfo.customPath = YES;
-
-          //Instant download enabled and on 'Download to ...' option
-          [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
-        }
-        else
-        {
-          //Create alert for download options
-          UIAlertController *downloadAlert = [UIAlertController
-            alertControllerWithTitle:fileDetails message:nil
-            preferredStyle:UIAlertControllerStyleActionSheet];
-
-          //Create 'Download' option
-          UIAlertAction *downloadAction = [UIAlertAction
-            actionWithTitle:[localizationManager
-            localizedSPStringForKey:@"DOWNLOAD"]
-            style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-          {
-            //Start download through SafariPlus
-            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
-              initWithRequest:request];
-            downloadInfo.filesize = filesize;
-            downloadInfo.filename = filename;
-
-            [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
-          }];
-
-          //Create 'Download to ...' option
-          UIAlertAction *downloadToAction = [UIAlertAction
-            actionWithTitle:[localizationManager
-            localizedSPStringForKey:@"DOWNLOAD_TO"]
-            style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-          {
-            //Start download through SafariPlus with custom path
-            SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
-              initWithRequest:request];
-            downloadInfo.filesize = filesize;
-            downloadInfo.filename = filename;
-            downloadInfo.customPath = YES;
-
-            [[SPDownloadManager sharedInstance] configureDownloadWithInfo:downloadInfo];
-          }];
-
-          //Create 'Open' option
-          UIAlertAction *openAction = [UIAlertAction actionWithTitle:[localizationManager
-            localizedSPStringForKey:@"OPEN"]
-            style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-          {
-            //Load request again and avoid another alert
-            showAlert = NO;
-            [webViewLocal loadRequest:request];
-          }];
-
-          //Create 'Cancel' option
-          UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager
-            localizedSPStringForKey:@"CANCEL"]
-            style:UIAlertActionStyleCancel handler:nil]; //Do nothing
-
-          //Add options to alert
-          [downloadAlert addAction:downloadAction];
-          [downloadAlert addAction:downloadToAction];
-          [downloadAlert addAction:openAction];
-          [downloadAlert addAction:cancelAction];
-
-          //Get browserController
-          BrowserController* browserController =
-            MSHookIvar<BrowserController*>(self, "_browserController");
-
-          //Get rootViewController
-          BrowserRootViewController* rootViewController =
-            MSHookIvar<BrowserRootViewController*>(browserController, "_rootViewController");
-
-          //Present alert on rootViewController
-          [rootViewController presentAlertControllerSheet:downloadAlert];
-        }
-      });
+      [[SPDownloadManager sharedInstance] presentDownloadAlertWithDownloadInfo:downloadInfo];
     }
     else
     {
@@ -579,12 +483,15 @@ BOOL showAlert = YES;
   if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
   {
     NSURL* currentURL = (NSURL*)[self URL];
-    NSURL* tmpURL = [self URLHandler:currentURL];
-    if(![[tmpURL absoluteString] isEqualToString:[currentURL absoluteString]])
+    if(currentURL)
     {
-      //currentURL and tmpURL are not the same -> load tmpURL
-      [self loadURL:tmpURL userDriven:NO];
-      return;
+      NSURL* tmpURL = [self URLHandler:currentURL];
+      if(![[tmpURL absoluteString] isEqualToString:[currentURL absoluteString]])
+      {
+        //currentURL and tmpURL are not the same -> load tmpURL
+        [self loadURL:tmpURL userDriven:NO];
+        return;
+      }
     }
   }
 
@@ -632,7 +539,7 @@ BOOL showAlert = YES;
     {
       if([newURL rangeOfString:@"://"].location == NSNotFound)
       {
-        //URL has not scheme -> Default to http://
+        //URL has no scheme -> Default to http://
         newURL = [@"http://" stringByAppendingString:newURL];
       }
 

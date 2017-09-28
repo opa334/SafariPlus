@@ -24,15 +24,12 @@
   self.pendingDownloads = [NSMutableArray new];
 
   //Create message center to communicate with SpringBoard through RocketBootstrap
-  CPDistributedMessagingCenter* tmpCenter = [%c(CPDistributedMessagingCenter)
+  self.SPMessagingCenter = [%c(CPDistributedMessagingCenter)
     centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
 
   #ifndef SIMJECT
-  rocketbootstrap_distributedmessagingcenter_apply(tmpCenter);
+  rocketbootstrap_distributedmessagingcenter_apply(_SPMessagingCenter);
   #endif
-
-  //Set message center to property
-  self.SPMessagingCenter = tmpCenter;
 
   //Remove download storage if needed
   [self checkDownloadStorageRevision];
@@ -64,8 +61,8 @@
   self.downloadSession = [NSURLSession sessionWithConfiguration:config
     delegate:self delegateQueue:nil];
 
-  self.errorCount = 0;
-  self.errorsCounted = 0;
+  self.errorCount = 0; //Counts how many errors exists
+  self.processedErrorCount = 0; //Counts how many errors are processed
 
   [self.downloadSession getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks)
   {
@@ -95,14 +92,16 @@
 
   if(storageRevision != DownloadStorageRevision)
   {
-    //Remove stored downloads
-    [self removeStoredDownloads];
+    //Remove download storage
+    [self removeDownloadStorageFile];
 
     //Also clear temp files
     [self clearTempFiles];
 
+    //Update storageRevision to current
     storageRevision = DownloadStorageRevision;
 
+    //Save it to plist
     [otherPlist setObject:[NSNumber numberWithInt:storageRevision]
       forKey:@"downloadFormatRevision"];
 
@@ -110,11 +109,11 @@
   }
 }
 
-- (void)removeStoredDownloads
+- (void)removeDownloadStorageFile
 {
-  if([[NSFileManager defaultManager] fileExistsAtPath:downloadsStorePath])
+  if([[NSFileManager defaultManager] fileExistsAtPath:downloadStoragePath])
   {
-    [[NSFileManager defaultManager] removeItemAtPath:downloadsStorePath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:downloadStoragePath error:nil];
   }
 }
 
@@ -131,7 +130,7 @@
   {
     if([tmpFile.lastPathComponent containsString:@"CFNetworkDownload"])
     {
-      //File is download -> remove it
+      //File is cached download -> remove it
       [[NSFileManager defaultManager] removeItemAtPath:[tmpFile path] error:nil];
     }
   }
@@ -151,14 +150,20 @@
 
 - (void)resumeDownloadsFromDiskLoad
 {
+  //This function aims to resume the downloads in the same order they where
+  //when Safari was closed
+  //NOTE: The order gets a little messy when a download was left paused
+  //This 'problem' cannot be fixed reliably to my knowledge, because of how NSURLSessions work
   for(SPDownload* download in self.pendingDownloads)
   {
     if(download.resumeData)
     {
+      //Download has resume data -> resume it
       [download startDownloadFromResumeData];
     }
     else
     {
+      //Downlaod has no resume data -> start it from the beginning
       [download startDownload];
     }
   }
@@ -166,12 +171,16 @@
 
 - (void)loadDownloadsFromDisk
 {
-  if([[NSFileManager defaultManager] fileExistsAtPath:downloadsStorePath])
+  if([[NSFileManager defaultManager] fileExistsAtPath:downloadStoragePath])
   {
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:downloadsStorePath]];
+    //Get data from download storage file
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:downloadStoragePath]];
+
+    //Unarchive the data to pendingDownloads
     self.pendingDownloads = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     for(SPDownload* download in self.pendingDownloads)
     {
+      //Set downloadManagerDelegate for all downloads
       download.downloadManagerDelegate = self;
     }
   }
@@ -179,8 +188,11 @@
 
 - (void)saveDownloadsToDisk
 {
+  //Create data from pendingDownloads
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.pendingDownloads];
-  [data writeToFile:downloadsStorePath atomically:YES];
+
+  //Write data to file
+  [data writeToFile:downloadStoragePath atomically:YES];
 }
 
 - (void)sendNotificationWithText:(NSString*)text
@@ -235,7 +247,7 @@
   {
     if([download.targetPath.URLByResolvingSymlinksInPath.path isEqualToString:URL.URLByResolvingSymlinksInPath.path])
     {
-      //Download is at wanted path -> add it to array
+      //Download is at specified path -> add it to array
       [downloadsAtURL addObject:download];
     }
   }
@@ -254,9 +266,11 @@
     if([pathURL.URLByResolvingSymlinksInPath.path
       isEqualToString:URL.URLByResolvingSymlinksInPath.path])
     {
+      //Download with path exists
       return YES;
     }
   }
+  //Download with path doesn't exist
   return NO;
 }
 
@@ -264,32 +278,40 @@
 {
   if(downloadInfo.customPath)
   {
+    //Check if downloadInfo needs a custom path
     if(preferenceManager.pinnedLocationsEnabled)
     {
+      //Pinned Locations enabled -> present them
       [self presentPinnedLocationsWithDownloadInfo:downloadInfo];
     }
     else
     {
+      //Pinned Locations not enabled -> present directory picker
       [self presentDirectoryPickerWithDownloadInfo:downloadInfo];
     }
   }
   else
   {
+    //downloadInfo does not need custom path
     if(preferenceManager.customDefaultPathEnabled)
     {
+      //Custom default path enabled -> set it as target path
       downloadInfo.targetPath = [NSURL fileURLWithPath:preferenceManager.customDefaultPath];
     }
     else
     {
+      //Custom default path not enabled -> set path to default
       downloadInfo.targetPath = [NSURL fileURLWithPath:defaultDownloadPath];
     }
 
     if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
     {
+      //File or download exists -> present alert
       [self presentFileExistsAlertWithDownloadInfo:downloadInfo];
     }
     else
     {
+      //All good -> start download
       [self startDownloadWithInfo:downloadInfo];
     }
   }
@@ -299,6 +321,7 @@
 {
   if(downloadInfo.image)
   {
+    //Download is image -> Save it directly
     [self saveImageWithInfo:downloadInfo];
   }
   else if(downloadInfo.request)
@@ -315,8 +338,10 @@
     //Add download to array
     [self.pendingDownloads addObject:download];
 
+    //Save array to disk
     [self saveDownloadsToDisk];
 
+    //Send notification
     [self sendNotificationWithText:[NSString stringWithFormat:@"%@: %@",
       [localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"], downloadInfo.filename]];
   }
@@ -336,12 +361,158 @@
     localizedSPStringForKey:@"SAVED_IMAGE"], downloadInfo.filename]];
 }
 
+- (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo isSheet:(BOOL)isSheet
+{
+  dispatch_async(dispatch_get_main_queue(),
+  ^{
+    if(downloadInfo.alternatePresentationController)
+    {
+      if(isSheet)
+      {
+        UIAlertController* alertController = (UIAlertController*)viewController;
+
+        //Set sourceView (iPad)
+        alertController.popoverPresentationController.sourceView =
+          downloadInfo.alternatePresentationController.view;
+
+        //Set iPad positions to middle of screen (because we can't get the tapped links position)
+        alertController.popoverPresentationController.sourceRect =
+          CGRectMake(downloadInfo.alternatePresentationController.view.bounds.size.width / 2,
+          downloadInfo.alternatePresentationController.view.bounds.size.height / 2, 1.0, 1.0);
+
+        //Make sheet always face upwards on iPad
+        [alertController.popoverPresentationController
+          setPermittedArrowDirections:UIPopoverArrowDirectionDown];
+
+        [downloadInfo.alternatePresentationController presentViewController:alertController animated:YES completion:nil];
+      }
+      else
+      {
+        [downloadInfo.alternatePresentationController presentViewController:viewController animated:YES completion:nil];
+      }
+    }
+    else
+    {
+      if(isSheet)
+      {
+        [self.rootControllerDelegate presentAlertControllerSheet:(UIAlertController*)viewController];
+      }
+      else
+      {
+        [self.rootControllerDelegate presentViewController:viewController];
+      }
+    }
+  });
+}
+
+- (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
+{
+  if(preferenceManager.instantDownloadsEnabled)
+  {
+    if(preferenceManager.instantDownloadsOption == 1)
+    {
+      //Start download
+      [self configureDownloadWithInfo:downloadInfo];
+    }
+    else
+    {
+      //Start download with custom path
+      downloadInfo.customPath = YES;
+      [self configureDownloadWithInfo:downloadInfo];
+    }
+  }
+  else
+  {
+    NSString* title;
+
+    if(downloadInfo.filesize)
+    {
+      //Filesize exists -> add it to title
+      title = [NSString stringWithFormat:@"%@ (%@)", downloadInfo.filename,
+        [NSByteCountFormatter stringFromByteCount:downloadInfo.filesize
+        countStyle:NSByteCountFormatterCountStyleFile]];
+    }
+    else
+    {
+      //Filesize doesn't exist, just use filename as title
+      title = downloadInfo.filename;
+    }
+
+    UIAlertController* downloadAlert = [UIAlertController
+      alertControllerWithTitle:title message:nil
+      preferredStyle:UIAlertControllerStyleActionSheet];
+
+      //Download option
+      UIAlertAction *downloadAction = [UIAlertAction
+        actionWithTitle:[localizationManager
+        localizedSPStringForKey:@"DOWNLOAD"]
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+      {
+        //Start download
+        [self configureDownloadWithInfo:downloadInfo];
+      }];
+
+      [downloadAlert addAction:downloadAction];
+
+      //Download to... option
+      UIAlertAction *downloadToAction = [UIAlertAction
+        actionWithTitle:[localizationManager
+        localizedSPStringForKey:@"DOWNLOAD_TO"]
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+      {
+        //Start download with custom path
+        downloadInfo.customPath = YES;
+        [self configureDownloadWithInfo:downloadInfo];
+      }];
+
+      [downloadAlert addAction:downloadToAction];
+
+      //Copy link options (only on videos)
+      if(downloadInfo.isVideo)
+      {
+        UIAlertAction *copyLinkAction = [UIAlertAction
+          actionWithTitle:[localizationManager
+          localizedSPStringForKey:@"COPY_LINK"]
+          style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+        {
+          [UIPasteboard generalPasteboard].string = downloadInfo.request.URL.absoluteString;
+        }];
+
+        [downloadAlert addAction:copyLinkAction];
+      }
+      //Open option (not on videos)
+      else
+      {
+        UIAlertAction *openAction = [UIAlertAction actionWithTitle:[localizationManager
+          localizedSPStringForKey:@"OPEN"]
+          style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+        {
+          //Load request again and avoid another alert
+          showAlert = NO;
+          SafariWebView* webView = activeWebView();
+          [(WKWebView*)webView loadRequest:downloadInfo.request];
+        }];
+
+        [downloadAlert addAction:openAction];
+      }
+
+      //Cancel option
+      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager
+        localizedSPStringForKey:@"CANCEL"]
+        style:UIAlertActionStyleCancel handler:nil];
+
+      [downloadAlert addAction:cancelAction];
+
+      [self presentViewController:downloadAlert withDownloadInfo:downloadInfo isSheet:YES];
+  }
+}
+
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
   SPDirectoryPickerNavigationController* directoryPicker =
     [[SPDirectoryPickerNavigationController alloc] initWithDownloadInfo:downloadInfo];
 
-  [self.rootControllerDelegate presentViewController:directoryPicker];
+  [self presentViewController:directoryPicker withDownloadInfo:downloadInfo isSheet:NO];
 }
 
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -349,6 +520,7 @@
   //Load plist
   loadOtherPlist();
 
+  //Get pinned location names & paths
   NSArray* PinnedLocationNames = [NSArray new];
   NSArray* PinnedLocationPaths = [NSArray new];
   PinnedLocationNames = [otherPlist objectForKey:@"PinnedLocationNames"];
@@ -361,17 +533,23 @@
 
   for(NSString* name in PinnedLocationNames)
   {
+    //Add option for each location
     [pinnedLocationAlert addAction:[UIAlertAction actionWithTitle:name
       style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
     {
+      //Get index of tapped action
       NSInteger index = [pinnedLocationAlert.actions indexOfObject:action];
+
+      //Get path from index
       __block NSURL* path = [NSURL fileURLWithPath:[PinnedLocationPaths objectAtIndex:index]];
 
+      //Alert for filename
       UIAlertController* filenameAlert = [UIAlertController
         alertControllerWithTitle:[localizationManager
         localizedSPStringForKey:@"CHOOSE_FILENAME"] message:nil
         preferredStyle:UIAlertControllerStyleAlert];
 
+      //Add textfield
       [filenameAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
       {
         textField.placeholder = [localizationManager
@@ -382,6 +560,7 @@
         textField.text = downloadInfo.filename;
       }];
 
+      //Choose option
       UIAlertAction* chooseAction = [UIAlertAction actionWithTitle:
         [localizationManager localizedSPStringForKey:@"CHOOSE"]
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
@@ -391,11 +570,12 @@
         //Resolve possible symlinks
         path = path.URLByResolvingSymlinksInPath;
 
-        //Do some magic to fix up the path (why, apple?)
+        //Do some magic to fix up the path
         path = [NSURL fileURLWithPath:[[path path]
           stringByReplacingOccurrencesOfString:@"/var"
           withString:@"/private/var"]];
 
+        //Set selected path
         downloadInfo.targetPath = path;
 
         [self pathSelectionResponseWithDownloadInfo:downloadInfo];
@@ -403,16 +583,19 @@
 
       [filenameAlert addAction:chooseAction];
 
+      //Cancel option
       UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:
         [localizationManager localizedSPStringForKey:@"CANCEL"]
         style:UIAlertActionStyleCancel handler:nil];
 
       [filenameAlert addAction:cancelAction];
 
-      [self.rootControllerDelegate presentViewController:filenameAlert];
+      //Present filename alert
+      [self presentViewController:filenameAlert withDownloadInfo:downloadInfo isSheet:NO];
     }]];
   }
 
+  //Browse option
   UIAlertAction* browseAction = [UIAlertAction actionWithTitle:
     [localizationManager localizedSPStringForKey:@"BROWSE"]
     style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
@@ -423,13 +606,15 @@
 
   [pinnedLocationAlert addAction:browseAction];
 
+  //Cancel option
   UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:
     [localizationManager localizedSPStringForKey:@"CANCEL"]
     style:UIAlertActionStyleCancel handler:nil];
 
   [pinnedLocationAlert addAction:cancelAction];
 
-  [self.rootControllerDelegate presentAlertControllerSheet:pinnedLocationAlert];
+  //Present pinned location sheet
+  [self presentViewController:pinnedLocationAlert withDownloadInfo:downloadInfo isSheet:YES];
 }
 
 - (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -467,17 +652,19 @@
   [errorAlert addAction:cancelAction];
 
   //Present alert
-  [self.rootControllerDelegate presentViewController:errorAlert];
+  [self presentViewController:errorAlert withDownloadInfo:downloadInfo isSheet:NO];
 }
 
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
   if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
   {
+    //File or download already exists -> present file exists alert
     [self presentFileExistsAlertWithDownloadInfo:downloadInfo];
   }
   else
   {
+    //Nothing exists -> start download
     [self startDownloadWithInfo:downloadInfo];
   }
 }
@@ -489,14 +676,14 @@
   //Get finished download
   SPDownload* download = [self downloadWithTaskIdentifier:downloadTask.taskIdentifier];
 
-  //Get path of desired location
-  NSURL* pathURL = [download.targetPath URLByAppendingPathComponent:download.filename];
+  //Get downloadInfo from download
+  SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithDownload:download];
 
   //Remove file if it exists
-  if([[NSFileManager defaultManager] fileExistsAtPath:[pathURL path]])
-  {
-    [[NSFileManager defaultManager] removeItemAtPath:[pathURL path] error:nil];
-  }
+  [downloadInfo removeExistingFile];
+
+  //Get path of desired location
+  NSURL* pathURL = [downloadInfo pathURL];
 
   //Move downloaded file to desired location
   [[NSFileManager defaultManager] moveItemAtURL:location toURL:pathURL error:nil];
@@ -543,9 +730,9 @@
       download.resumeData = resumeData;
 
       //Count how often this function was called
-      self.errorsCounted++;
+      self.processedErrorCount++;
 
-      if(self.errorsCounted == self.errorCount)
+      if(self.processedErrorCount == self.errorCount)
       {
         //Function was called as often as expected -> resume all downloads
         [self resumeDownloadsFromDiskLoad];
@@ -565,7 +752,7 @@
   SPDownload* targetDownload = [self downloadWithTaskIdentifier:downloadTask.taskIdentifier];
 
   //Send data to download
-  [targetDownload updateProgress:totalBytesWritten];
+  [targetDownload updateProgress:totalBytesWritten totalFilesize:totalBytesExpectedToWrite];
 }
 
 @end

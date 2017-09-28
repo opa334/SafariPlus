@@ -54,7 +54,7 @@
 
     //Create action to close the picker
     UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CLOSE_PICKER"]
+      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL_PICKER"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
     {
       //Dismiss picker
@@ -85,7 +85,7 @@
 
     //Create action to close the picker
     UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CLOSE_PICKER"]
+      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL_PICKER"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
     {
       //Close picker

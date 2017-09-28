@@ -12,7 +12,7 @@
 #endif
 
 #define desktopUserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
-#define downloadsStorePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari/downloads"]
+#define downloadStoragePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari/downloads"]
 #define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 #define DownloadStorageRevision 2

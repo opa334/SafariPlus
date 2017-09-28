@@ -42,13 +42,17 @@
 
       self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
-      [self.tiltedTabViewDesktopModeButton setImage:[UIImage
-        imageNamed:@"desktopButtonInactive.png" inBundle:SPBundle
-        compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+      UIImage* inactiveImage = [UIImage
+        imageNamed:@"desktopButton.png" inBundle:SPBundle
+        compatibleWithTraitCollection:nil];
 
-      [self.tiltedTabViewDesktopModeButton setImage:[UIImage
-        imageNamed:@"desktopButtonActive.png" inBundle:SPBundle
-        compatibleWithTraitCollection:nil]  forState:UIControlStateSelected];
+      UIImage* activeImage = [UIImage inverseColor:inactiveImage];
+
+      [self.tiltedTabViewDesktopModeButton setImage:inactiveImage
+        forState:UIControlStateNormal];
+
+      [self.tiltedTabViewDesktopModeButton setImage:activeImage
+        forState:UIControlStateSelected];
 
       self.tiltedTabViewDesktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
       self.tiltedTabViewDesktopModeButton.layer.cornerRadius = 4;

@@ -48,6 +48,9 @@
 "ENHANCED_DOWNLOADS" = "Enhanced Downloads";
 "ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/User/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.";
 
+"VIDEO_DOWNLOADING" = "Video Downloading";
+"VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save that file, but it does not contain the video.";
+
 "INSTANT_DOWNLOAD" = "Instant Download";
 "INSTANT_DOWNLOAD_FOOTER" = "Suppresses the download alert and always chooses the selcted option by default.";
 "OPTION" = "Option";
@@ -226,10 +229,12 @@
 "CHOOSE_FILENAME" = "Choose Filename";
 "FILENAME" = "Filename";
 "CLOSE" = "Close";
-"CLOSE_PICKER" = "Close Picker";
+"CANCEL_PICKER" = "Cancel Picker";
 "WRONG_PATH_MESSAGE" = "Due to missing root permissions, you can only download to paths inside the /User (/private/var/mobile) directory. Please choose a different path.";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
+"VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";
+"COPY_LINK" = "Copy Link";
 
 /* Open in opposite mode */
 

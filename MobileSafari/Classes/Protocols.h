@@ -21,8 +21,6 @@
 
 @protocol DownloadManagerDelegate
 @required
-//- (void)downloadFinished:(SPDownload*)download withLocation:(NSURL*)location;
-//- (void)downloadCancelled:(SPDownload*)download;
 - (NSURLSession*)sharedDownloadSession;
 - (void)saveDownloadsToDisk;
 @end

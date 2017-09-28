@@ -82,19 +82,11 @@
   //Update totalBytesWritten
   self.totalBytesWritten = (int64_t)[progress longLongValue];
 
-  //Resume task to occupy it
-  [self.downloadTask resume];
+  if(!self.paused)
+  {
+    //Resume task
+    [self.downloadTask resume];
 
-  if(self.paused)
-  {
-    //Pause task right after resuming it
-    dispatch_async(dispatch_get_main_queue(), ^
-    {
-      [self.downloadTask suspend];
-    });
-  }
-  else
-  {
     //Start timer
     [self setTimerEnabled:YES];
   }
@@ -176,8 +168,11 @@
   [self.cellDelegate updateDownloadSpeed:self.bytesPerSecond];
 }
 
-- (void)updateProgress:(int64_t)totalBytesWritten
+- (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize
 {
+  //Set filesize
+  self.filesize = filesize;
+
   //Update totalBytesWritten
   self.totalBytesWritten = totalBytesWritten;
 

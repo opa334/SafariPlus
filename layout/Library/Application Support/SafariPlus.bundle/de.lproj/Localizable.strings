@@ -48,6 +48,10 @@
 "ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
 "ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /User/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.";
 
+"VIDEO_DOWNLOADING" = "Video Downloads";
+"VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
+
+
 "INSTANT_DOWNLOAD" = "Direkter Download";
 "INSTANT_DOWNLOAD_FOOTER" = "Deaktiviert das Download-Menü und benutzt standardmäßig immer die ausgewählte Option.";
 "OPTION" = "Option";
@@ -226,10 +230,12 @@
 "CHOOSE_FILENAME" = "Dateinamen auswählen";
 "FILENAME" = "Dateiname";
 "CLOSE" = "Schließen";
-"CLOSE_PICKER" = "Auswahl beenden";
+"CANCEL_PICKER" = "Auswahl abbrechen";
 "WRONG_PATH_MESSAGE" = "Wegen fehlenden Root Rechten, kann nur innerhalb des /User (/private/var/mobile) Verzeichnisses heruntergeladen werden. Bitte wähle einen anderen Pfad.";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
+"VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden, die aktuelle Seite wird wahrscheinlich nicht unterstützt!";
+"COPY_LINK" = "Link kopieren";
 
 /* Open in Opposite Mode */
 
