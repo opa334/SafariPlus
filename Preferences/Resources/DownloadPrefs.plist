@@ -18,6 +18,19 @@
 		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
+			footerText = "VIDEO_DOWNLOADING_FOOTER";
+		},
+    {
+      cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			label = "VIDEO_DOWNLOADING";
+			key = "videoDownloadingEnabled";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+    },
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
 			footerText = "INSTANT_DOWNLOAD_FOOTER";
 		},
     {
