@@ -67,7 +67,7 @@
 		{
 			cell = "PSStaticTextCell";
 			defaults = "com.opa334.safariplusprefs";
-			label = "/User";
+			label = "/var";
 		},
 		{
 			cell = "PSEditTextCell";
