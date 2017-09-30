@@ -296,7 +296,8 @@
     if(preferenceManager.customDefaultPathEnabled)
     {
       //Custom default path enabled -> set it as target path
-      downloadInfo.targetPath = [NSURL fileURLWithPath:preferenceManager.customDefaultPath];
+      downloadInfo.targetPath = [NSURL fileURLWithPath:[@"/var"
+        stringByAppendingString:preferenceManager.customDefaultPath]];
     }
     else
     {

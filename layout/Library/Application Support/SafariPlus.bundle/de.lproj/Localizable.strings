@@ -57,7 +57,7 @@
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Pfad";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /User (/private/var/mobile) Verzeichnisses abgespeichert werden!";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /var (/private/var) Verzeichnisses abgespeichert werden!";
 
 "PINNED_LOCATIONS_ENABLED" = "Angepinnte Orte aktivieren";
 "PINNED_LOCATIONS" = "Angepinnte Orte";
@@ -231,7 +231,7 @@
 "FILENAME" = "Dateiname";
 "CLOSE" = "Schließen";
 "CANCEL_PICKER" = "Auswahl abbrechen";
-"WRONG_PATH_MESSAGE" = "Wegen fehlenden Root Rechten, kann nur innerhalb des /User (/private/var/mobile) Verzeichnisses heruntergeladen werden. Bitte wähle einen anderen Pfad.";
+"WRONG_PATH_MESSAGE" = "Aufgrund von fehlenden Root Rechten, kann nur innerhalb des /var (/private/var) Verzeichnisses heruntergeladen werden, außerdem kann es sein, dass die Zugriffsrechte des aktuellen Verzeichnisses falsch eingestellt sind, dies kann mit Hilfe von Apps wie Filza behoben werden. Bitte wähle einen anderen Pfad.";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
 "VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden, die aktuelle Seite wird wahrscheinlich nicht unterstützt!";

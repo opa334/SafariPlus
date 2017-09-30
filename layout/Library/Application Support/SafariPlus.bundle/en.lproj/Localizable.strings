@@ -56,7 +56,7 @@
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "Custom Default Path";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\nNote: Due to missing root privileges, it's only possible to download files inside the /User/ (/private/var/mobile) directory!";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\nNote: Due to missing root privileges, it's only possible to download files inside the /var (/private/var) directory!";
 
 "PINNED_LOCATIONS_ENABLED" = "Pinned Locations Enabled";
 "PINNED_LOCATIONS" = "Pinned Locations";
@@ -230,7 +230,7 @@
 "FILENAME" = "Filename";
 "CLOSE" = "Close";
 "CANCEL_PICKER" = "Cancel Picker";
-"WRONG_PATH_MESSAGE" = "Due to missing root permissions, you can only download to paths inside the /User (/private/var/mobile) directory. Please choose a different path.";
+"WRONG_PATH_MESSAGE" = "Due to missing root permissions, you can only download to paths inside the /var (/private/var) directory, it's also possible that the rights required to write to the current directory are wrongly configured. If that's the case, you can correct it via Filza (or similar apps). Please choose a different path.";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
 "VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";
