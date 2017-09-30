@@ -1,28 +1,23 @@
-include $(THEOS)/makefiles/common.mk
-
 SIMJECT ?= 0;
 
 ifeq ($(SIMJECT),1)
-
-export SIMJECT = 1
-export TARGET = simulator:clang::5.0
-export ARCHS = x86_64 i386
-
+	export SIMJECT = 1
+	export TARGET = simulator:clang:9.2:8.0
+	export ARCHS = x86_64 i386
 else
-
-export SYSPATH = $(THEOS)/sdks/iPhoneOS10.1.sdk
-export SIMJECT = 0
-export TARGET = iphone:latest:10.1
-export ARCHS = arm64 armv7
-
+	export SIMJECT = 0
+	export TARGET = iphone:clang:10.1:8.0
+	export ARCHS = arm64 armv7
 endif
+
+include $(THEOS)/makefiles/common.mk
 
 after-install::
 	install.exec "killall -9 MobileSafari"
 
-SUBPROJECTS += MobileSafari SpringBoard
-
 include $(THEOS_MAKE_PATH)/tweak.mk
+
+SUBPROJECTS += MobileSafari SpringBoard
 
 ifeq ($(SIMJECT),0)
 SUBPROJECTS += Preferences

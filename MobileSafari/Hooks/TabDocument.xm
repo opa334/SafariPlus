@@ -3,6 +3,8 @@
 
 #import "../SafariPlus.h"
 
+BOOL showAlert = YES;
+
 %group iOS10
 %hook TabDocument
 
@@ -28,9 +30,9 @@
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1
   defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(preferenceManager.enhancedDownloadsEnabled ||
+  if(!arg3 && (preferenceManager.enhancedDownloadsEnabled ||
     preferenceManager.openInNewTabOptionEnabled ||
-    preferenceManager.openInOppositeModeOptionEnabled)
+    preferenceManager.openInOppositeModeOptionEnabled))
   {
     NSMutableArray* options = %orig;
 
@@ -168,9 +170,9 @@
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)arg1
   defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-  if(preferenceManager.enhancedDownloadsEnabled ||
+  if(!arg3 && (preferenceManager.enhancedDownloadsEnabled ||
     preferenceManager.openInNewTabOptionEnabled ||
-    preferenceManager.openInOppositeModeOptionEnabled)
+    preferenceManager.openInOppositeModeOptionEnabled))
   {
     NSMutableArray* options = %orig;
 
@@ -318,6 +320,8 @@
 %end
 %end
 
+%group iOS9_10
+
 %hook TabDocument
 /*
 - (void)setClosed:(BOOL)closed userDriven:(BOOL)userDriven
@@ -381,8 +385,6 @@
   %orig;
 }
 
-BOOL showAlert = YES;
-
 //Present download menu if clicked link is a downloadable file
 - (void)webView:(WKWebView *)webView
   decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse
@@ -429,18 +431,6 @@ BOOL showAlert = YES;
 }
 
 //desktop mode + ForceHTTPS
-- (id)_initWithTitle:(id)arg1 URL:(NSURL*)arg2 UUID:(id)arg3
-  privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5
-  browserController:(id)arg6 createDocumentView:(id)arg7
-{
-  if((preferenceManager.forceHTTPSEnabled ||
-    preferenceManager.desktopButtonEnabled) && arg2)
-  {
-    return %orig(arg1, [self URLHandler:arg2], arg3, arg4, arg5, arg6, arg7);
-  }
-  return %orig;
-}
-
 - (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2
 {
   if((preferenceManager.forceHTTPSEnabled ||
@@ -457,6 +447,51 @@ BOOL showAlert = YES;
     preferenceManager.desktopButtonEnabled) && arg1)
   {
     return %orig([self URLHandler:arg1], arg2);
+  }
+  return %orig;
+}
+
+%end
+%end
+
+%group iOS8
+
+%hook TabDocument
+
+- (void)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2
+{
+  if((preferenceManager.forceHTTPSEnabled ||
+    preferenceManager.desktopButtonEnabled) && arg1)
+  {
+    return %orig([self URLHandler:arg1], arg2);
+  }
+  return %orig;
+}
+
+- (void)loadURL:(NSURL*)arg1 fromBookmark:(id)arg2
+{
+  if((preferenceManager.forceHTTPSEnabled ||
+    preferenceManager.desktopButtonEnabled) && arg1)
+  {
+    return %orig([self URLHandler:arg1], arg2);
+  }
+  return %orig;
+}
+
+%end
+
+%end
+
+%hook TabDocument
+
+- (id)_initWithTitle:(id)arg1 URL:(NSURL*)arg2 UUID:(id)arg3
+  privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5
+  browserController:(id)arg6 createDocumentView:(id)arg7
+{
+  if((preferenceManager.forceHTTPSEnabled ||
+    preferenceManager.desktopButtonEnabled) && arg2)
+  {
+    return %orig(arg1, [self URLHandler:arg2], arg3, arg4, arg5, arg6, arg7);
   }
   return %orig;
 }
@@ -528,45 +563,6 @@ BOOL showAlert = YES;
   return URLComponents.URL;
 }
 
-//Exception because method uses NSString instead of NSURL
-- (NSString*)loadUserTypedAddress:(NSString*)arg1
-{
-  if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
-  {
-    NSString* newURL = arg1;
-    if((preferenceManager.forceHTTPSEnabled && newURL) &&
-      ([newURL rangeOfString:@"https://"].location == NSNotFound))
-    {
-      if([newURL rangeOfString:@"://"].location == NSNotFound)
-      {
-        //URL has no scheme -> Default to http://
-        newURL = [@"http://" stringByAppendingString:newURL];
-      }
-
-      if([self shouldRequestHTTPS:[NSURL URLWithString:newURL]])
-      {
-        //Set scheme to https://
-        newURL = [newURL stringByReplacingOccurrencesOfString:@"http://"
-          withString:@"https://"];
-      }
-    }
-
-    if(preferenceManager.desktopButtonEnabled && desktopButtonSelected)
-    {
-      //desktop button is selected -> change user agent to desktop agent
-      [self setCustomUserAgent:desktopUserAgent];
-    }
-    else if(preferenceManager.desktopButtonEnabled && !desktopButtonSelected)
-    {
-      //desktop button is selected -> change user agent to mobile agent
-      [self setCustomUserAgent:@""];
-    }
-
-    return %orig(newURL);
-  }
-  return %orig;
-}
-
 //Checks through exceptions whether https should be forced or not
 %new
 - (BOOL)shouldRequestHTTPS:(NSURL*)URL
@@ -601,5 +597,15 @@ BOOL showAlert = YES;
   {
     %init(iOS9);
   }
-  %init;
+  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0)
+  {
+    %init(iOS8);
+  }
+
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+  {
+    %init(iOS9_10);
+  }
+
+  %init();
 }

@@ -52,36 +52,14 @@
   //Auto switch mode on launch
   if(preferenceManager.forceModeOnStartEnabled)
   {
-    switch(iOSVersion)
-    {
-      case 9:
-      //Switch mode to specified mode
-      [MSHookIvar<BrowserController*>(self, "_controller")
-        modeSwitchAction:preferenceManager.forceModeOnStartFor];
-      break;
-
-      case 10:
-      //Switch mode to specified mode
-      [self.shortcutController.browserController
-        modeSwitchAction:preferenceManager.forceModeOnStartFor];
-      break;
-    }
+    //Switch mode to specified mode
+    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnStartFor];
   }
 
   if(preferenceManager.desktopButtonEnabled)
   {
-    switch(iOSVersion)
-    {
-      case 9:
-      //Reload tabs
-      [MSHookIvar<BrowserController*>(self, "_controller").tabController reloadTabsIfNeeded];
-      break;
-
-      case 10:
-      //Reload tabs
-      [self.shortcutController.browserController.tabController reloadTabsIfNeeded];
-      break;
-    }
+    //Reload tabs
+    [mainBrowserController().tabController reloadTabsIfNeeded];
   }
 
 
@@ -105,20 +83,8 @@
   %orig;
   if(preferenceManager.forceModeOnResumeEnabled)
   {
-    switch(iOSVersion)
-    {
-      case 9:
-      //Switch mode to specified mode
-      [MSHookIvar<BrowserController*>(self, "_controller")
-        modeSwitchAction:preferenceManager.forceModeOnResumeFor];
-      break;
-
-      case 10:
-      //Switch mode to specified mode
-      [self.shortcutController.browserController
-        modeSwitchAction:preferenceManager.forceModeOnResumeFor];
-      break;
-    }
+    //Switch mode to specified mode
+    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnResumeFor];
   }
 }
 
@@ -127,20 +93,8 @@
 {
   if(preferenceManager.forceModeOnExternalLinkEnabled && arg1)
   {
-    switch(iOSVersion)
-    {
-    case 9:
     //Switch mode to specified mode
-    [MSHookIvar<BrowserController*>(self, "_controller")
-      modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
-    break;
-
-    case 10:
-    //Switch mode to specified mode
-    [self.shortcutController.browserController
-      modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
-    break;
-    }
+    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
   }
 
   %orig;
@@ -152,35 +106,14 @@
   if(preferenceManager.autoCloseTabsEnabled &&
     preferenceManager.autoCloseTabsOn == 1 /*Safari closed*/)
   {
-    switch(iOSVersion)
-    {
-      case 9:
-      //Close all tabs for specified modes
-      [MSHookIvar<BrowserController*>(self, "_controller") autoCloseAction];
-      break;
-
-      case 10:
-      //Close all tabs for specified modes
-      [self.shortcutController.browserController autoCloseAction];
-      break;
-    }
+    [mainBrowserController() autoCloseAction];
   }
 
   if(preferenceManager.autoDeleteDataEnabled &&
     preferenceManager.autoDeleteDataOn == 1 /*Safari closed*/)
   {
-    switch(iOSVersion)
-    {
-      case 9:
-      //Clear browser data
-      [MSHookIvar<BrowserController*>(self, "_controller") clearData];
-      break;
-
-      case 10:
-      //Clear browser data
-      [self.shortcutController.browserController clearData];
-      break;
-    }
+    //Clear browser data
+    [mainBrowserController() clearData];
   }
 
   %orig;
@@ -192,35 +125,15 @@
   if(preferenceManager.autoCloseTabsEnabled &&
     preferenceManager.autoCloseTabsOn == 2 /*Safari minimized*/)
   {
-    switch(iOSVersion)
-    {
-      case 9:
-      //Close all tabs for specified modes
-      [MSHookIvar<BrowserController*>(self, "_controller") autoCloseAction];
-      break;
-
-      case 10:
-      //Close all tabs for specified modes
-      [self.shortcutController.browserController autoCloseAction];
-      break;
-    }
+    //Close all tabs for specified modes
+    [mainBrowserController() autoCloseAction];
   }
 
   if(preferenceManager.autoDeleteDataEnabled &&
     preferenceManager.autoDeleteDataOn == 2 /*Safari closed*/)
   {
-    switch(iOSVersion)
-    {
-      case 9:
-      //Clear browser data
-      [MSHookIvar<BrowserController*>(self, "_controller") clearData];
-      break;
-
-      case 10:
-      //Clear browser data
-      [self.shortcutController.browserController clearData];
-      break;
-    }
+    //Clear browser data
+    [mainBrowserController() clearData];
   }
 
   %orig;

@@ -120,7 +120,7 @@
   {
     %init(iOS10);
   }
-  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+  else// if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
     %init(iOS9);
   }

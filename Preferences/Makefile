@@ -1,7 +1,6 @@
 include $(THEOS)/makefiles/common.mk
 
-export SYSROOT = $(THEOS)/sdks/iPhoneOS9.3.sdk
-#remove the line above if you have issues while compiling
+export TARGET = iphone:clang:9.3:8.0
 
 BUNDLE_NAME = SafariPlusPrefs
 SafariPlusPrefs_CFLAGS = -fobjc-arc

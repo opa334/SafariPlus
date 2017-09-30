@@ -105,7 +105,11 @@
 @property (nonatomic, retain) UIView* grayscaleTintView;
 @end
 
-@interface _SFNavigationBarURLButton : UIButton {}
+@interface _SFNavigationBarURLButton : UIButton {} //iOS 9 + 10
+//new stuff below
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 @end
 
 @interface _SFReloadOptionsController : NSObject {}
@@ -217,13 +221,7 @@
 - (void)clearAutoFillMessageReceived;
 - (void)showFindOnPage; //iOS9
 //new stuff below
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
-- (void)handleURLSwipeLeft;
-- (void)handleURLSwipeRight;
-- (void)handleURLSwipeDown;
-- (void)handleSwipe:(NSInteger)swipeAction;
+- (void)handleGesture:(NSInteger)swipeAction;
 - (void)downloadsFromButtonBar;
 - (BOOL)usesTabBar;
 - (void)clearData;
@@ -235,6 +233,7 @@
 @interface BrowserController (BrowserControllerTabs) {}
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
+- (void)newTabKeyPressed; //iOS8
 @end
 
 @interface BrowserRootViewController : UIViewController <RootControllerDownloadDelegate> {} //added delegate
@@ -284,6 +283,13 @@
 - (void)didSwipe:(UISwipeGestureRecognizer*)swipe;
 @end
 
+@interface NavigationBarURLButton : UIView {} //iOS 8
+//new stuff below
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
+@end
+
 @interface SafariWebView : WKWebView {}
 @end
 
@@ -331,13 +337,17 @@
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
 - (id)loadURL:(id)arg1 userDriven:(BOOL)arg2;
-- (id)loadUserTypedAddress:(NSString*)arg1;
 - (void)setCustomUserAgent:(NSString *)arg1;
 - (void)stopLoading;
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
+- (void)requestDesktopSite; //iOS 8
 //new methods below
 - (NSURL*)URLHandler:(NSURL*)URL;
 - (BOOL)shouldRequestHTTPS:(NSURL*)URL;
+@end
+
+//iOS 8
+@interface TabDocumentWK2 : TabDocument {}
 @end
 
 @interface TabOverview : UIView {}

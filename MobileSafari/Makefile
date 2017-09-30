@@ -11,7 +11,6 @@ ifeq ($(SIMJECT),1)
 dir_string := @"\"$(CURDIR)\""
 username_string := @"\"$(USER)\""
 SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string) -D USER=$(username_string)
-#$(info Current directory is $(dir_string))
 else
 SafariPlus_EXTRA_FRAMEWORKS += Cephei
 SafariPlus_LIBRARIES = colorpicker rocketbootstrap

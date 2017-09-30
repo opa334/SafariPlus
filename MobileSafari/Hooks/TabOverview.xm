@@ -55,6 +55,7 @@
     //Add desktopButton to top bar
     switch(iOSVersion)
     {
+      case 8:
       case 9:
       [MSHookIvar<UIView*>(self, "_header") addSubview:self.desktopModeButton];
       break;
@@ -92,19 +93,7 @@
   }
 
   //Reload tabs
-  switch(iOSVersion)
-  {
-    case 9:
-    [MSHookIvar<BrowserController*>(((Application*)[%c(Application)
-      sharedApplication]), "_controller").tabController reloadTabsIfNeeded];
-    break;
-
-    case 10:
-    [((Application*)[%c(Application)
-      sharedApplication]).shortcutController.browserController.tabController
-      reloadTabsIfNeeded];
-    break;
-  }
+  [mainBrowserController().tabController reloadTabsIfNeeded];
 
   //Write button state to plist
   loadOtherPlist();

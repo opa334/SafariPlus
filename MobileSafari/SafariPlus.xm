@@ -39,21 +39,7 @@ SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstan
 BOOL privateBrowsingEnabled()
 {
   BOOL privateBrowsingEnabled;
-
-  switch(iOSVersion)
-  {
-    case 9:
-    privateBrowsingEnabled = MSHookIvar<BrowserController*>
-      ((Application*)[%c(Application) sharedApplication],
-      "_controller").privateBrowsingEnabled;
-    break;
-
-    case 10:
-    privateBrowsingEnabled = [((Application*)[%c(Application)
-      sharedApplication]).shortcutController.browserController
-      privateBrowsingEnabled];
-    break;
-  }
+  privateBrowsingEnabled = mainBrowserController().privateBrowsingEnabled;
 
   return privateBrowsingEnabled;
 }
@@ -63,6 +49,7 @@ SafariWebView* activeWebView()
   SafariWebView* activeWebView;
   switch(iOSVersion)
   {
+    case 8:
     case 9:
     activeWebView = MSHookIvar<BrowserController*>
       ((Application*)[%c(Application) sharedApplication],
@@ -76,6 +63,26 @@ SafariWebView* activeWebView()
     break;
   }
   return activeWebView;
+}
+
+BrowserController* mainBrowserController()
+{
+  BrowserController* controller;
+  switch(iOSVersion)
+  {
+    case 8:
+    case 9:
+    controller = MSHookIvar<BrowserController*>
+      ((Application*)[%c(Application) sharedApplication],
+      "_controller");
+    break;
+
+    case 10:
+    controller = ((Application*)[%c(Application) sharedApplication]).
+      shortcutController.browserController;
+    break;
+  }
+  return controller;
 }
 
 void loadOtherPlist()
@@ -108,5 +115,9 @@ void saveOtherPlist()
   else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
     iOSVersion = 9;
+  }
+  else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0)
+  {
+    iOSVersion = 8;
   }
 }

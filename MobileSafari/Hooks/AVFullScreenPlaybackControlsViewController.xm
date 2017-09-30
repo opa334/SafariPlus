@@ -70,7 +70,8 @@
 
   switch(iOSVersion)
   {
-    //For some reason for loops have issues on iOS 9 (or I'm just stupid lol)
+    //For some reason for loops have issues prior to iOS 10 (or I'm just stupid lol)
+    case 8:
     case 9:
     getVideoURL = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@",
     @"var videos = document.querySelectorAll('video');",
