@@ -123,6 +123,7 @@
 @end
 
 @interface _SFToolbar : UIToolbar {}
+@property (nonatomic,readonly) long long toolbarSize;
 @end
 
 
@@ -188,8 +189,6 @@
 - (CGPoint*)targetPointForButtonBarLinkImageAnimationIntoLayer:(id)arg1 proposedTargetPoint:(CGPoint)arg2;
 //new stuff below
 - (void)downloadsFromButtonBar;
-- (BOOL)usesTabBar;
-
 @end
 
 @interface Application : UIApplication <UIApplicationDelegate> {}
@@ -219,6 +218,8 @@
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
 - (void)clearAutoFillMessageReceived;
+- (BOOL)isPrivateBrowsingEnabled; //iOS11
+- (void)togglePrivateBrowsingEnabled; //iOS11
 - (void)showFindOnPage; //iOS9
 //new stuff below
 - (void)handleGesture:(NSInteger)swipeAction;
@@ -367,6 +368,7 @@
 
 @interface TiltedTabView : UIView {}
 - (void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
+- (void)setShowsPrivateBrowsingExplanationView:(BOOL)arg1 animated:(BOOL)arg2; //iOS 11
 @end
 
 @interface TabThumbnailView : UIView {}

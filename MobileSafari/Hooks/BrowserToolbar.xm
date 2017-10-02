@@ -31,6 +31,10 @@
   {
     NSMutableArray* orig = %orig;
 
+    //Check if FullSafari is installed
+    BOOL fullSafariInstalled = [[NSFileManager defaultManager]
+      fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/FullSafari.dylib"];
+
     if(![orig containsObject:self._downloadsItem])
     {
       if(!self._downloadsItem)
@@ -51,46 +55,89 @@
       }
       else
       {
-        //Portrait mode on plus models, portrait + landscape on non-plus models
-        if(![self.browserDelegate usesTabBar] || [orig count] < 15) //count thing fixes crash
+        //Portrait mode on larger devices, portrait + landscape on smaller devices
+        if(MSHookIvar<long long>(self, "_placement"))
         {
           UIBarButtonItem* flexibleItem = [[UIBarButtonItem alloc]
             initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
             target:nil action:nil];
 
-          UIBarButtonItem *fixedItem = [[UIBarButtonItem alloc]
-            initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-            target:nil action:nil];
+          if(fullSafariInstalled)
+          {
+            orig = [@[orig[1], flexibleItem, flexibleItem,
+              orig[4], flexibleItem, orig[7], flexibleItem, orig[10], flexibleItem, self._downloadsItem,
+              flexibleItem, orig[13]] mutableCopy];
 
-          UIBarButtonItem *fixedItemHalf = [[UIBarButtonItem alloc]
-            initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-            target:nil action:nil];
+            //Add FullSafari button to final array
+            //Code from https://github.com/Bensge/FullSafari/blob/master/Tweak.xm
+            GestureRecognizingBarButtonItem *addTabItem =
+              MSHookIvar<GestureRecognizingBarButtonItem *>(self, "_addTabItem");
 
-          //Make everything flexible, thanks apple!
-          fixedItem.width = 15;
-          fixedItemHalf.width = 7.5f;
+            if(!addTabItem || ![orig containsObject:addTabItem])
+            {
+              if(!addTabItem)
+              {
+                // Recreate the "add tab" button for iOS versions that don't do that by default on iPhone models
+                addTabItem = [[NSClassFromString(@"GestureRecognizingBarButtonItem") alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:[self valueForKey:@"_browserDelegate"] action:@selector(addTabFromButtonBar)];
+                UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
+                recognizer.allowableMovement = 3.0;
+                addTabItem.gestureRecognizer = recognizer;
+              }
+              [orig addObject:flexibleItem];
+              [orig addObject:addTabItem];
+            }
+          }
+          else
+          {
+            UIBarButtonItem *fixedItem = [[UIBarButtonItem alloc]
+              initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+              target:nil action:nil];
 
-          UIBarButtonItem *fixedItemTwo = [[UIBarButtonItem alloc]
-            initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-            target:nil action:nil];
+            UIBarButtonItem *fixedItemHalf = [[UIBarButtonItem alloc]
+              initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+              target:nil action:nil];
 
-          fixedItemTwo.width = 6;
+            //Make everything flexible, thanks apple!
+            fixedItem.width = 15;
+            fixedItemHalf.width = 7.5f;
 
-          orig = (NSMutableArray*)@[orig[1], fixedItem, flexibleItem,
-            fixedItemHalf, orig[4], fixedItemHalf, flexibleItem, fixedItemTwo,
-            orig[7], flexibleItem, orig[10], flexibleItem, self._downloadsItem,
-            flexibleItem, orig[13]];
+            UIBarButtonItem *fixedItemTwo = [[UIBarButtonItem alloc]
+              initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
+              target:nil action:nil];
+
+            fixedItemTwo.width = 6;
+
+            orig = [@[orig[1], fixedItem, flexibleItem,
+              fixedItemHalf, orig[4], fixedItemHalf, flexibleItem, fixedItemTwo,
+              orig[7], flexibleItem, orig[10], flexibleItem, self._downloadsItem,
+              flexibleItem, orig[13]] mutableCopy];
+          }
         }
         //Landscape on plus models
         else
         {
           ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 10;
           ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 10;
-          ((UIBarButtonItem*)orig[15]).width = 0;
-          [orig insertObject:orig[10] atIndex:9];
-          [orig insertObject:self._downloadsItem atIndex:9];
+
+          if(iOSVersion >= 11)
+          {
+            ((UIBarButtonItem*)orig[14]).width = 0;
+            [orig insertObject:orig[10] atIndex:8];
+            [orig insertObject:self._downloadsItem atIndex:8];
+          }
+          else
+          {
+            ((UIBarButtonItem*)orig[15]).width = 0;
+            [orig insertObject:orig[10] atIndex:9];
+            [orig insertObject:self._downloadsItem atIndex:9];
+          }
         }
       }
+
+      NSMutableDictionary* defaultItemsForToolbarSize =
+        MSHookIvar<NSMutableDictionary*>(self, "_defaultItemsForToolbarSize");
+
+      defaultItemsForToolbarSize[@([self toolbarSize])] = orig;
 
       return orig;
     }

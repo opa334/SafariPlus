@@ -3,7 +3,6 @@
 
 #import "../SafariPlus.h"
 
-%group iOS10
 %hook BrowserController
 
 //Present downloads view
@@ -14,11 +13,24 @@
   SPDownloadsNavigationController* downloadsController =
     [[SPDownloadsNavigationController alloc] init];
 
-  dispatch_async(dispatch_get_main_queue(), ^
+  if(iOSVersion > 9)
   {
-    //Present SPDownloadsNavigationController
-    [self.rootViewController presentViewController:downloadsController animated:YES completion:nil];
-  });
+    dispatch_async(dispatch_get_main_queue(), ^
+    {
+      //Present SPDownloadsNavigationController
+      [self.rootViewController presentViewController:downloadsController
+        animated:YES completion:nil];
+    });
+  }
+  else
+  {
+    dispatch_async(dispatch_get_main_queue(), ^
+    {
+      //Present SPDownloadsNavigationController
+      [MSHookIvar<BrowserRootViewController*>(self, "_rootViewController")
+        presentViewController:downloadsController animated:YES completion:nil];
+    });
+  }
 }
 
 //URL Swipe actions
@@ -36,13 +48,36 @@
     break;
 
     case 2: //Open new tab
-    [self.tabController newTab];
-    break;
+    {
+      if(iOSVersion == 8)
+      {
+        [self newTabKeyPressed];
+      }
+      else
+      {
+        [self.tabController newTab];
+      }
+      break;
+    }
 
     case 3: //Duplicate active tab
-    [self loadURLInNewTab:[self.tabController.activeTabDocument URL]
-      inBackground:preferenceManager.gestureBackground animated:YES];
-    break;
+    {
+      switch(iOSVersion)
+      {
+        case 8:
+        case 9:
+        [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
+          inBackground:preferenceManager.gestureBackground animated:YES];
+        break;
+
+        case 10:
+        case 11:
+        [self loadURLInNewTab:[self.tabController.activeTabDocument URL]
+          inBackground:preferenceManager.gestureBackground animated:YES];
+        break;
+      }
+      break;
+    }
 
     case 4: //Close all tabs from active mode
     [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
@@ -50,36 +85,62 @@
     break;
 
     case 5: //Switch mode (Normal/Private)
-    [self togglePrivateBrowsing];
-    shouldClean = YES;
+    {
+      togglePrivateBrowsing();
+      shouldClean = YES;
+    }
     break;
 
     case 6: //Tab backward
     {
+      NSArray* activeTabs;
+
+      if(privateBrowsingEnabled())
+      {
+        //Private mode enabled -> set currentTabs to tabs of private mode
+        activeTabs = self.tabController.privateTabDocuments;
+      }
+      else
+      {
+        //Private mode disabled -> set currentTabs to tabs of normal mode
+        activeTabs = self.tabController.tabDocuments;
+      }
+
       //Get index of previous tab
-      NSInteger tabIndex = [self.tabController.currentTabDocuments
-        indexOfObject:self.tabController.activeTabDocument] - 1;
+      NSInteger tabIndex = [activeTabs indexOfObject:
+        self.tabController.activeTabDocument] - 1;
 
       if(tabIndex >= 0)
       {
-        //tabIndex is not smaller than 0 -> switch to previous tab
-        [self.tabController
-          setActiveTabDocument:self.tabController.currentTabDocuments[tabIndex] animated:NO];
+        //tabIndex is greater than 0 -> switch to previous tab
+        [self.tabController setActiveTabDocument: activeTabs[tabIndex] animated:NO];
       }
       break;
     }
 
     case 7: //Tab forward
     {
-      //Get index of next tab
-      NSInteger tabIndex = [self.tabController.currentTabDocuments
-        indexOfObject:self.tabController.activeTabDocument] + 1;
+      NSArray* activeTabs;
 
-      if(tabIndex < [self.tabController.currentTabDocuments count])
+      if(privateBrowsingEnabled())
+      {
+        //Private mode enabled -> set currentTabs to tabs of private mode
+        activeTabs = self.tabController.privateTabDocuments;
+      }
+      else
+      {
+        //Private mode disabled -> set currentTabs to tabs of normal mode
+        activeTabs = self.tabController.tabDocuments;
+      }
+
+      //Get index of next tab
+      NSInteger tabIndex = [activeTabs indexOfObject:
+        self.tabController.activeTabDocument] + 1;
+
+      if(tabIndex < [activeTabs count])
       {
         //tabIndex is not bigger than array -> switch to next tab
-        [self.tabController
-          setActiveTabDocument:self.tabController.currentTabDocuments[tabIndex] animated:NO];
+        [self.tabController setActiveTabDocument:activeTabs[tabIndex] animated:NO];
       }
       break;
     }
@@ -89,274 +150,53 @@
     break;
 
     case 9: //Request desktop site
-    [self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
-    break;
+    {
+      if(iOSVersion > 8)
+      {
+        [self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+      }
+      else
+      {
+        [self.tabController.activeTabDocument requestDesktopSite];
+      }
+      break;
+    }
 
     case 10: //Open 'find on page'
-    [self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
-    [self.tabController.activeTabDocument.findOnPageView showFindOnPage];
-    break;
+    {
+      if(iOSVersion != 8)
+      {
+        if(iOSVersion == 9)
+        {
+          self.shouldFocusFindOnPageTextField = YES;
+          [self showFindOnPage];
+        }
+        else
+        {
+          [self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
+          [self.tabController.activeTabDocument.findOnPageView showFindOnPage];
+        }
+      }
+      break;
+    }
 
     default:
     break;
   }
-  if(shouldClean && [self privateBrowsingEnabled])
+  if(shouldClean && privateBrowsingEnabled())
   {
     //Remove private mode message
-    [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+    if(iOSVersion >= 11)
+    {
+      [self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
+        animated:NO];
+    }
+    else
+    {
+      [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+    }
   }
 }
-
-%end
-%end
-
-%group iOS9_8
-%hook BrowserController
-
-//Present downloads view
-%new
-- (void)downloadsFromButtonBar
-{
-  //Create SPDownloadsNavigationController
-  SPDownloadsNavigationController* downloadsController =
-    [[SPDownloadsNavigationController alloc] init];
-
-  dispatch_async(dispatch_get_main_queue(), ^
-  {
-    //Present SPDownloadsNavigationController
-    [MSHookIvar<BrowserRootViewController*>(self, "_rootViewController")
-      presentViewController:downloadsController animated:YES completion:nil];
-  });
-}
-
-%end
-%end
-
-%group iOS9
-%hook BrowserController
-//URL Swipe actions
-%new
-- (void)handleGesture:(NSInteger)swipeAction
-{
-  //Some cases need cleaing -> Create bool for that
-  __block BOOL shouldClean = NO;
-
-  switch(swipeAction)
-  {
-    case 1: //Close active tab
-    [self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
-    shouldClean = YES;
-    break;
-
-    case 2: //Open new tab
-    [self.tabController newTab];
-    break;
-
-    case 3: //Duplicate active tab
-    [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
-      inBackground:preferenceManager.gestureBackground animated:YES];
-    break;
-
-    case 4: //Close all tabs from active mode
-    [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
-    shouldClean = YES;
-    break;
-
-    case 5: //Switch mode (Normal/Private)
-    [self togglePrivateBrowsing];
-    shouldClean = YES;
-    break;
-
-    case 6: //Tab backward
-    {
-      NSArray* currentTabs;
-      if([self privateBrowsingEnabled])
-      {
-        //Private mode enabled -> set currentTabs to tabs of private mode
-        currentTabs = self.tabController.privateTabDocuments;
-      }
-      else
-      {
-        //Private mode disabled -> set currentTabs to tabs of normal mode
-        currentTabs = self.tabController.tabDocuments;
-      }
-
-      //Get index of previous tab
-      NSInteger tabIndex = [currentTabs
-        indexOfObject:self.tabController.activeTabDocument] - 1;
-
-      if(tabIndex >= 0)
-      {
-        //tabIndex is not smaller than 0 -> switch to previous tab
-        [self.tabController setActiveTabDocument:currentTabs[tabIndex] animated:NO];
-      }
-      break;
-    }
-
-    case 7: //Tab forward
-    {
-      NSArray* currentTabs;
-      if([self privateBrowsingEnabled])
-      {
-        //Private mode enabled -> set currentTabs to tabs of private mode
-        currentTabs = self.tabController.privateTabDocuments;
-      }
-      else
-      {
-        //Private mode disabled -> set currentTabs to tabs of normal mode
-        currentTabs = self.tabController.tabDocuments;
-      }
-
-      //Get index of next tab
-      NSInteger tabIndex = [currentTabs
-        indexOfObject:self.tabController.activeTabDocument] + 1;
-
-      if(tabIndex < [currentTabs count])
-      {
-        //tabIndex is not bigger than array -> switch to next tab
-        [self.tabController setActiveTabDocument:currentTabs[tabIndex] animated:NO];
-      }
-      break;
-    }
-
-    case 8: //Reload active tab
-    [self.tabController.activeTabDocument reload];
-    break;
-
-    case 9: //Request desktop site
-    [self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
-    break;
-
-    case 10: //Open 'find on page'
-    self.shouldFocusFindOnPageTextField = YES;
-    [self showFindOnPage];
-    break;
-
-    default:
-    break;
-  }
-  if(shouldClean && [self privateBrowsingEnabled])
-  {
-    //Remove private mode message
-    [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
-  }
-}
-%end
-%end
-
-%group iOS8
-%hook BrowserController
-
-//URL Swipe actions
-%new
-- (void)handleGesture:(NSInteger)swipeAction
-{
-  //Some cases need cleaing -> Create bool for that
-  __block BOOL shouldClean = NO;
-
-  switch(swipeAction)
-  {
-    case 1: //Close active tab
-    [self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
-    shouldClean = YES;
-    break;
-
-    case 2: //Open new tab
-    [self newTabKeyPressed];
-    break;
-
-    case 3: //Duplicate active tab
-    [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
-      inBackground:preferenceManager.gestureBackground animated:YES];
-    break;
-
-    case 4: //Close all tabs from active mode
-    [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
-    shouldClean = YES;
-    break;
-
-    case 5: //Switch mode (Normal/Private)
-    [self togglePrivateBrowsing];
-    shouldClean = YES;
-    break;
-
-    case 6: //Tab backward
-    {
-      NSArray* currentTabs;
-      if([self privateBrowsingEnabled])
-      {
-        //Private mode enabled -> set currentTabs to tabs of private mode
-        currentTabs = self.tabController.privateTabDocuments;
-      }
-      else
-      {
-        //Private mode disabled -> set currentTabs to tabs of normal mode
-        currentTabs = self.tabController.tabDocuments;
-      }
-
-      //Get index of previous tab
-      NSInteger tabIndex = [currentTabs
-        indexOfObject:self.tabController.activeTabDocument] - 1;
-
-      if(tabIndex >= 0)
-      {
-        //tabIndex is not smaller than 0 -> switch to previous tab
-        [self.tabController setActiveTabDocument:currentTabs[tabIndex] animated:NO];
-      }
-      break;
-    }
-
-    case 7: //Tab forward
-    {
-      NSArray* currentTabs;
-      if([self privateBrowsingEnabled])
-      {
-        //Private mode enabled -> set currentTabs to tabs of private mode
-        currentTabs = self.tabController.privateTabDocuments;
-      }
-      else
-      {
-        //Private mode disabled -> set currentTabs to tabs of normal mode
-        currentTabs = self.tabController.tabDocuments;
-      }
-
-      //Get index of next tab
-      NSInteger tabIndex = [currentTabs
-        indexOfObject:self.tabController.activeTabDocument] + 1;
-
-      if(tabIndex < [currentTabs count])
-      {
-        //tabIndex is not bigger than array -> switch to next tab
-        [self.tabController setActiveTabDocument:currentTabs[tabIndex] animated:NO];
-      }
-      break;
-    }
-
-    case 8: //Reload active tab
-    [self.tabController.activeTabDocument reload];
-    break;
-
-    case 9: //Request desktop site
-    [self.tabController.activeTabDocument requestDesktopSite];
-    break;
-
-    //Find on page does not exist in iOS 8
-
-    default:
-    break;
-  }
-  if(shouldClean && [self privateBrowsingEnabled])
-  {
-    //Remove private mode message
-    [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
-  }
-}
-
-
-%end
-%end
-
-%hook BrowserController
 
 %new
 - (void)clearData
@@ -380,16 +220,16 @@
     break;
 
     case 2: //Normal mode
-    if([self privateBrowsingEnabled])
+    if(privateBrowsingEnabled())
     {
       //Surfing mode is private -> switch to normal mode
-      [self togglePrivateBrowsing];
+      togglePrivateBrowsing();
 
       //Close tabs from normal mode
       [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
       //Switch back to private mode
-      [self togglePrivateBrowsing];
+      togglePrivateBrowsing();
     }
     else
     {
@@ -399,16 +239,16 @@
     break;
 
     case 3: //Private mode
-    if(![self privateBrowsingEnabled])
+    if(!privateBrowsingEnabled())
     {
       //Surfing mode is normal -> switch to private mode
-      [self togglePrivateBrowsing];
+      togglePrivateBrowsing();
 
       //Close tabs from private mode
       [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
       //Switch back to normal mode
-      [self togglePrivateBrowsing];
+      togglePrivateBrowsing();
     }
     else
     {
@@ -422,13 +262,13 @@
     [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
     //Switch mode
-    [self togglePrivateBrowsing];
+    togglePrivateBrowsing();
 
     //Close tabs from other surfing mode
     [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
     //Switch back
-    [self togglePrivateBrowsing];
+    togglePrivateBrowsing();
     break;
 
     default:
@@ -440,18 +280,16 @@
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
-  if(switchToMode == 1 /*Normal Mode*/ &&
-    [self privateBrowsingEnabled])
+  if(switchToMode == 1 /*Normal Mode*/ && privateBrowsingEnabled())
   {
     //Private browsing mode is active -> toggle browsing mode
-    [self togglePrivateBrowsing];
+    togglePrivateBrowsing();
   }
 
-  else if(switchToMode == 2 /*Private Mode*/  &&
-    ![self privateBrowsingEnabled])
+  else if(switchToMode == 2 /*Private Mode*/  && !privateBrowsingEnabled())
   {
     //Normal browsing mode is active -> toggle browsing mode
-    [self togglePrivateBrowsing];
+    togglePrivateBrowsing();
 
     //Hide private mode notice
     [self.tabController.tiltedTabView
@@ -525,22 +363,5 @@
 
 %ctor
 {
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
-  {
-    %init(iOS10);
-  }
-  else
-  {
-    %init(iOS9_8);
-    if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-    {
-      %init(iOS9);
-    }
-    else
-    {
-      %init(iOS8);
-    }
-  }
-
   %init;
 }

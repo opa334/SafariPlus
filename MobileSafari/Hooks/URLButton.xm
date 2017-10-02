@@ -77,12 +77,15 @@
 
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
+    //Class for iOS 9 and above is _SFNavigationBarURLButton
     buttonClass = objc_getClass("_SFNavigationBarURLButton");
   }
   else
   {
+    //Class for iOS 8 is NavigationBarURLButton
     buttonClass = objc_getClass("NavigationBarURLButton");
   }
 
+  //Init group with class name
   %init(iOS8_9_10, URLButton=buttonClass);
 }

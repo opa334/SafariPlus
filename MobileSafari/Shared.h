@@ -13,6 +13,7 @@ extern NSBundle* MSBundle;
 extern NSMutableDictionary* otherPlist;
 
 extern BOOL privateBrowsingEnabled();
+extern void togglePrivateBrowsing();
 extern SafariWebView* activeWebView();
 extern BrowserController* mainBrowserController();
 extern void loadOtherPlist();

@@ -39,9 +39,30 @@ SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstan
 BOOL privateBrowsingEnabled()
 {
   BOOL privateBrowsingEnabled;
-  privateBrowsingEnabled = mainBrowserController().privateBrowsingEnabled;
+
+  if(iOSVersion == 11)
+  {
+    privateBrowsingEnabled = [mainBrowserController() isPrivateBrowsingEnabled];
+  }
+  else
+  {
+    privateBrowsingEnabled = mainBrowserController().privateBrowsingEnabled;
+  }
 
   return privateBrowsingEnabled;
+}
+
+void togglePrivateBrowsing()
+{
+  BrowserController* controller = mainBrowserController();
+  if(iOSVersion == 11)
+  {
+    [controller togglePrivateBrowsingEnabled];
+  }
+  else
+  {
+    [controller togglePrivateBrowsing];
+  }
 }
 
 SafariWebView* activeWebView()
@@ -78,6 +99,7 @@ BrowserController* mainBrowserController()
     break;
 
     case 10:
+    case 11:
     controller = ((Application*)[%c(Application) sharedApplication]).
       shortcutController.browserController;
     break;
