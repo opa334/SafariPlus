@@ -22,12 +22,14 @@ Various enhancements to Safari
 
 - Fullscreen scrolling
 
+- Lock top and bottom bar in place
+
 - Disable private surfing
 
 - Change (almost) any color of the Safari interface
 
 ## Compatibilty
-Any iDevice between iOS 9.0 and 10.2 should be supported (including iPad)
+Any iDevice between iOS 8.0 and 10.2 should be supported (including iPad)
 
 ## Localization
 If you wish to help with localizing the tweak, take the english template from [here](https://github.com/opa334/SafariPlus/blob/master/layout/Library/Application%20Support/SafariPlus.bundle/en.lproj/Localizable.strings) and contact me somewhere with the localized file.
