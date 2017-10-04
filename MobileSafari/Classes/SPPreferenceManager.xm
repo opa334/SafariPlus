@@ -22,7 +22,7 @@
   #ifdef SIMJECT
 
   //Simject preferences (No preference bundle in Simulator)
-  _forceHTTPSEnabled = NO;
+  _forceHTTPSEnabled = YES;
   _openInOppositeModeOptionEnabled = YES;
   _openInNewTabOptionEnabled = YES;
   _uploadAnyFileOptionEnabled = YES;
@@ -133,6 +133,7 @@
   [preferences registerBool:&_gestureBackground default:NO forKey:@"gestureBackground"];
 
   [preferences registerBool:&_enableFullscreenScrolling default:NO forKey:@"fullscreenScrollingEnabled"];
+  [preferences registerBool:&_lockBars default:NO forKey:@"lockBars"];
   [preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
   [preferences registerBool:&_alwaysOpenNewTabEnabled default:NO forKey:@"alwaysOpenNewTabEnabled"];
   [preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];

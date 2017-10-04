@@ -16,7 +16,7 @@
 
 /* General Settings */
 
-"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\nNOTE: You can add sites that don't support HTTPS to exceptions.";
+"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\n\nNOTE: You can add sites that don't support HTTPS to exceptions.";
 "FORCE_HTTPS" = "Force HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "Exceptions...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";
@@ -49,14 +49,14 @@
 "ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/User/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.";
 
 "VIDEO_DOWNLOADING" = "Video Downloading";
-"VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save that file, but it does not contain the video.";
+"VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save that file, but it does not contain the video.";
 
 "INSTANT_DOWNLOAD" = "Instant Download";
 "INSTANT_DOWNLOAD_FOOTER" = "Suppresses the download alert and always chooses the selcted option by default.";
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "Custom Default Path";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\nNote: Due to missing root privileges, it's only possible to download files inside the /var (/private/var) directory!";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\n\nNote: Due to missing root privileges, it's only possible to download files inside the /var (/private/var) directory!";
 
 "PINNED_LOCATIONS_ENABLED" = "Pinned Locations Enabled";
 "PINNED_LOCATIONS" = "Pinned Locations";
@@ -141,8 +141,11 @@
 
 /* Other Settings */
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Hides the complete top bar when scrolling down.";
+"FULLSCREEN_SCROLLING_FOOTER" = "Hides the complete top bar when scrolling down.\n\nNOTE: Does not work on iOS 8!";
 "FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
+
+"LOCK_BARS" = "Lock Bars";
+"LOCK_BARS_FOOTER" = "Locks the bottom and the top bar in place, so they won't get hidden anymore when the page is being scrolled down.";
 
 "DISABLE_PRIVATE_MODE_FOOTER" = "Disables private browsing mode and removes the 'Private' button. (Hidden stock feature)";
 "DISABLE_PRIVATE_MODE" = "Fully Disable Private Browsing";

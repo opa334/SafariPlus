@@ -16,7 +16,7 @@
 
 /* General Settings */
 
-"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\nHINWEIS: Ausnahmen können hinzugefügt werden damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
+"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\n\nHINWEIS: Ausnahmen können hinzugefügt werden damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
 "FORCE_HTTPS" = "HTTPS erzwingen";
 "FORCE_HTTPS_EXCEPTIONS" = "Ausnahmen...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Ausnahmen";
@@ -49,7 +49,7 @@
 "ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /User/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.";
 
 "VIDEO_DOWNLOADING" = "Video Downloads";
-"VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
+"VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\n\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
 
 
 "INSTANT_DOWNLOAD" = "Direkter Download";
@@ -57,7 +57,7 @@
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Pfad";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /var (/private/var) Verzeichnisses abgespeichert werden!";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\n\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /var (/private/var) Verzeichnisses abgespeichert werden!";
 
 "PINNED_LOCATIONS_ENABLED" = "Angepinnte Orte aktivieren";
 "PINNED_LOCATIONS" = "Angepinnte Orte";
@@ -142,8 +142,11 @@
 
 /* Other Settings */
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.";
+"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.\n\nHINWEIS: Nicht kompatibel mit iOS 8!";
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
+
+"LOCK_BARS" = "Leisten sperren";
+"LOCK_BARS_FOOTER" = "Sperrt die obere und die untere Leiste, sodass diese nicht mehr verschwinden, wenn die Seite nach unten gescrollt wird.";
 
 "DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
 "DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";

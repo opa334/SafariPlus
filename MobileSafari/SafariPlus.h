@@ -47,6 +47,7 @@
 - (void)_chooseFiles:(id)arg1 displayString:(id)arg2 iconImage:(id)arg3;
 - (void)_showFilePicker;
 - (void)_cancel;
+- (void)_showMediaSourceSelectionSheet; //iOS8
 @end
 
 @interface _WKActivatedElementInfo : NSObject {}
@@ -134,6 +135,7 @@
 @end
 
 /**** AVKit ****/
+
 @interface AVPlayerController : UIResponder
 @property (nonatomic, retain) AVPlayer *player;
 @end
@@ -155,19 +157,6 @@
 @interface AVFullScreenPlaybackControlsViewController : AVPlaybackControlsViewController
 @property (nonatomic, retain) AVButton* downloadButton; //new
 @end
-
-/**** WebCore ****/
-
-@interface WebAVMediaSelectionOption : NSObject
-@property (retain) NSString *localizedDisplayName;
-@end
-
-@interface WebAVPlayerController : NSObject
-@property (retain) AVPlayerController *playerControllerProxy;
-@property (retain) WebAVMediaSelectionOption *currentAudioMediaSelectionOption;
-@property (retain) WebAVMediaSelectionOption *currentLegibleMediaSelectionOption;
-@end
-
 
 /**** Safari ****/
 
@@ -224,7 +213,6 @@
 //new stuff below
 - (void)handleGesture:(NSInteger)swipeAction;
 - (void)downloadsFromButtonBar;
-- (BOOL)usesTabBar;
 - (void)clearData;
 - (void)modeSwitchAction:(int)switchToMode;
 - (void)autoCloseAction;
@@ -330,14 +318,14 @@
 @property (nonatomic,readonly) TabOverviewItem* tabOverviewItem;
 - (NSURL*)URL;
 - (BOOL)isBlankDocument;
-- (id)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
+- (void)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
 - (void)reload;
 - (BOOL)privateBrowsingEnabled;
 - (WebBookmark*)readingListBookmark;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
-- (id)loadURL:(id)arg1 userDriven:(BOOL)arg2;
+- (void)loadURL:(id)arg1 userDriven:(BOOL)arg2;
 - (void)setCustomUserAgent:(NSString *)arg1;
 - (void)stopLoading;
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;

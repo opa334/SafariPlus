@@ -24,11 +24,11 @@ SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstan
 
 + (UIImage *)inverseColor:(UIImage *)image
 {
-    CIImage *coreImage = [CIImage imageWithCGImage:image.CGImage];
-    CIFilter *filter = [CIFilter filterWithName:@"CIColorInvert"];
-    [filter setValue:coreImage forKey:kCIInputImageKey];
-    CIImage *result = [filter valueForKey:kCIOutputImageKey];
-    return [UIImage imageWithCIImage:result scale:image.scale orientation:image.imageOrientation];
+  CIImage *coreImage = [CIImage imageWithCGImage:image.CGImage];
+  CIFilter *filter = [CIFilter filterWithName:@"CIColorInvert"];
+  [filter setValue:coreImage forKey:kCIInputImageKey];
+  CIImage *result = [filter valueForKey:kCIOutputImageKey];
+  return [UIImage imageWithCIImage:result scale:image.scale orientation:image.imageOrientation];
 }
 
 @end
@@ -40,7 +40,7 @@ BOOL privateBrowsingEnabled()
 {
   BOOL privateBrowsingEnabled;
 
-  if(iOSVersion == 11)
+  if(iOSVersion >= 11)
   {
     privateBrowsingEnabled = [mainBrowserController() isPrivateBrowsingEnabled];
   }
@@ -54,36 +54,19 @@ BOOL privateBrowsingEnabled()
 
 void togglePrivateBrowsing()
 {
-  BrowserController* controller = mainBrowserController();
-  if(iOSVersion == 11)
+  if(iOSVersion >= 11)
   {
-    [controller togglePrivateBrowsingEnabled];
+    [mainBrowserController() togglePrivateBrowsingEnabled];
   }
   else
   {
-    [controller togglePrivateBrowsing];
+    [mainBrowserController() togglePrivateBrowsing];
   }
 }
 
 SafariWebView* activeWebView()
 {
-  SafariWebView* activeWebView;
-  switch(iOSVersion)
-  {
-    case 8:
-    case 9:
-    activeWebView = MSHookIvar<BrowserController*>
-      ((Application*)[%c(Application) sharedApplication],
-      "_controller").tabController.activeTabDocument.webView;
-    break;
-
-    case 10:
-    activeWebView = ((Application*)[%c(Application) sharedApplication]).
-      shortcutController.browserController.tabController.
-      activeTabDocument.webView;
-    break;
-  }
-  return activeWebView;
+  return mainBrowserController().tabController.activeTabDocument.webView;
 }
 
 BrowserController* mainBrowserController()

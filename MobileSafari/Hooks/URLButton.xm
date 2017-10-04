@@ -3,9 +3,9 @@
 
 #import "../SafariPlus.h"
 
-#define selfButton ((NavigationBarURLButton*)self)
+#define castedSelf ((NavigationBarURLButton*)self)
 
-%group iOS8_9_10
+%group all
 
 %hook URLButton
 
@@ -25,40 +25,40 @@
     if(preferenceManager.URLLeftSwipeGestureEnabled)
     {
       //Create gesture recognizer
-      selfButton.URLBarSwipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+      castedSelf.URLBarSwipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc]
         initWithTarget:mainBrowserController() action:@selector(navigationBarURLWasSwiped:)];
 
       //Set swipe direction to left
-      selfButton.URLBarSwipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+      castedSelf.URLBarSwipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 
       //Add gestureRecognizer
-      [selfButton addGestureRecognizer:selfButton.URLBarSwipeLeftGestureRecognizer];
+      [castedSelf addGestureRecognizer:castedSelf.URLBarSwipeLeftGestureRecognizer];
     }
 
     if(preferenceManager.URLRightSwipeGestureEnabled)
     {
       //Create gesture recognizer
-      selfButton.URLBarSwipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+      castedSelf.URLBarSwipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc]
         initWithTarget:mainBrowserController() action:@selector(navigationBarURLWasSwiped:)];
 
       //Set swipe direction to right
-      selfButton.URLBarSwipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+      castedSelf.URLBarSwipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 
       //Add gestureRecognizer
-      [selfButton addGestureRecognizer:selfButton.URLBarSwipeRightGestureRecognizer];
+      [castedSelf addGestureRecognizer:castedSelf.URLBarSwipeRightGestureRecognizer];
     }
 
     if(preferenceManager.URLDownSwipeGestureEnabled)
     {
       //Create gesture recognizer
-      selfButton.URLBarSwipeDownGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+      castedSelf.URLBarSwipeDownGestureRecognizer = [[UISwipeGestureRecognizer alloc]
         initWithTarget:mainBrowserController() action:@selector(navigationBarURLWasSwiped:)];
 
       //Set swipe direction to down
-      selfButton.URLBarSwipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+      castedSelf.URLBarSwipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
 
       //Add gestureRecognizer
-      [selfButton addGestureRecognizer:selfButton.URLBarSwipeDownGestureRecognizer];
+      [castedSelf addGestureRecognizer:castedSelf.URLBarSwipeDownGestureRecognizer];
     }
 
     return orig;
@@ -87,5 +87,5 @@
   }
 
   //Init group with class name
-  %init(iOS8_9_10, URLButton=buttonClass);
+  %init(all, URLButton=buttonClass);
 }

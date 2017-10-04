@@ -21,62 +21,6 @@
   });
 }
 
-- (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
-{
-  loadOtherPlist();
-
-  //Init plist for desktop button
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    if(![[otherPlist allKeys] containsObject:@"desktopButtonSelected"])
-    {
-      //Set BOOL to false
-      desktopButtonSelected = NO;
-
-      //Add BOOL to dictionary
-      [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
-        forKey:@"desktopButtonSelected"];
-
-      //Save changes
-      saveOtherPlist();
-    }
-    else
-    {
-      //Get bool from plist and set it to desktopButtonSelected
-      desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
-    }
-  }
-
-  BOOL orig = %orig;
-
-  //Auto switch mode on launch
-  if(preferenceManager.forceModeOnStartEnabled)
-  {
-    //Switch mode to specified mode
-    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnStartFor];
-  }
-
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    //Reload tabs
-    [mainBrowserController().tabController reloadTabsIfNeeded];
-  }
-
-
-  if(preferenceManager.enhancedDownloadsEnabled)
-  {
-    NSString* downloadPath = defaultDownloadPath;
-    if(![[NSFileManager defaultManager] fileExistsAtPath:downloadPath])
-    {
-      //Downloads directory doesn't exist -> create it
-      [[NSFileManager defaultManager] createDirectoryAtPath:downloadPath
-        withIntermediateDirectories:NO attributes:nil error:nil];
-    }
-  }
-
-  return orig;
-}
-
 //Auto switch mode on app resume
 - (void)applicationWillEnterForeground:(id)arg1
 {
@@ -140,3 +84,136 @@
 }
 
 %end
+
+%group iOS9Up
+%hook Application
+
+- (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
+{
+  loadOtherPlist();
+
+  //Init plist for desktop button
+  if(preferenceManager.desktopButtonEnabled)
+  {
+    if(![[otherPlist allKeys] containsObject:@"desktopButtonSelected"])
+    {
+      //Set BOOL to false
+      desktopButtonSelected = NO;
+
+      //Add BOOL to dictionary
+      [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
+        forKey:@"desktopButtonSelected"];
+
+      //Save changes
+      saveOtherPlist();
+    }
+    else
+    {
+      //Get bool from plist and set it to desktopButtonSelected
+      desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
+    }
+  }
+
+  BOOL orig = %orig;
+
+  //Auto switch mode on launch
+  if(preferenceManager.forceModeOnStartEnabled)
+  {
+    //Switch mode to specified mode
+    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnStartFor];
+  }
+
+  if(preferenceManager.desktopButtonEnabled)
+  {
+    //Reload tabs
+    [mainBrowserController().tabController reloadTabsIfNeeded];
+  }
+
+
+  if(preferenceManager.enhancedDownloadsEnabled)
+  {
+    if(![[NSFileManager defaultManager] fileExistsAtPath:defaultDownloadPath])
+    {
+      //Downloads directory doesn't exist -> create it
+      [[NSFileManager defaultManager] createDirectoryAtPath:defaultDownloadPath
+        withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+  }
+
+  return orig;
+}
+
+%end
+%end
+
+%group iOS8
+%hook Application
+
+- (void)applicationDidFinishLaunching:(id)arg1
+{
+  loadOtherPlist();
+
+  //Init plist for desktop button
+  if(preferenceManager.desktopButtonEnabled)
+  {
+    if(![[otherPlist allKeys] containsObject:@"desktopButtonSelected"])
+    {
+      //Set BOOL to false
+      desktopButtonSelected = NO;
+
+      //Add BOOL to dictionary
+      [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
+        forKey:@"desktopButtonSelected"];
+
+      //Save changes
+      saveOtherPlist();
+    }
+    else
+    {
+      //Get bool from plist and set it to desktopButtonSelected
+      desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
+    }
+  }
+
+  %orig;
+
+  //Auto switch mode on launch
+  if(preferenceManager.forceModeOnStartEnabled)
+  {
+    //Switch mode to specified mode
+    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnStartFor];
+  }
+
+  if(preferenceManager.desktopButtonEnabled)
+  {
+    //Reload tabs
+    [mainBrowserController().tabController reloadTabsIfNeeded];
+  }
+
+
+  if(preferenceManager.enhancedDownloadsEnabled)
+  {
+    if(![[NSFileManager defaultManager] fileExistsAtPath:defaultDownloadPath])
+    {
+      //Downloads directory doesn't exist -> create it
+      [[NSFileManager defaultManager] createDirectoryAtPath:defaultDownloadPath
+        withIntermediateDirectories:NO attributes:nil error:nil];
+    }
+  }
+}
+
+%end
+%end
+
+%ctor
+{
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+  {
+    %init(iOS9Up);
+  }
+  else
+  {
+    %init(iOS8);
+  }
+  %init;
+}

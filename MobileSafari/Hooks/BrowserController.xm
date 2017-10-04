@@ -297,33 +297,22 @@
   }
 }
 
-%new
-- (BOOL)usesTabBar
-{
-  //Return status of tabbar (delegate function)
-  return [self.tabController usesTabBar];
-}
-
 //Full screen scrolling
 - (BOOL)_isVerticallyConstrained
 {
-  if(preferenceManager.enableFullscreenScrolling)
-  {
-    return true;
-  }
-
-  return %orig;
+  return (preferenceManager.enableFullscreenScrolling) ? YES : %orig;
 }
 
 //Fully disable private mode
 - (BOOL)isPrivateBrowsingAvailable
 {
-  if(preferenceManager.disablePrivateMode)
-  {
-    return false;
-  }
+  return (preferenceManager.disablePrivateMode) ? NO : %orig;
+}
 
-  return %orig;
+
+- (BOOL)dynamicBarAnimator:(id)arg1 canHideBarsByDraggingWithOffset:(float)arg2
+{
+  return (preferenceManager.lockBars) ? NO : %orig;
 }
 
 //Update tabs according to desktop button status when user toggles browsing mode
@@ -360,8 +349,3 @@
 }
 
 %end
-
-%ctor
-{
-  %init;
-}

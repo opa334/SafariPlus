@@ -181,8 +181,8 @@
       style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
     {
       //Creating temporary link cause we ain't inside sandbox (silly, right?)
-      self.tmpSymlinkURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@",
-        NSTemporaryDirectory(), fileURL.lastPathComponent]];
+      self.tmpSymlinkURL = [NSURL fileURLWithPath:[NSTemporaryDirectory()
+        stringByAppendingPathComponent:fileURL.lastPathComponent]];
 
       [[NSFileManager defaultManager] linkItemAtURL:fileURL.URLByResolvingSymlinksInPath
         toURL:self.tmpSymlinkURL error:nil];
@@ -249,8 +249,11 @@
 
             [confirmationController addAction:deleteAction];
 
-            //Make cancel option bold
-            confirmationController.preferredAction = cancelAction;
+            //Make cancel option bold on iOS 9 and above
+            if(iOSVersion > 8)
+            {
+              confirmationController.preferredAction = cancelAction;
+            }
 
             //Present confirmation alert
             [self presentViewController:confirmationController animated:YES completion:nil];

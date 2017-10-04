@@ -3,6 +3,8 @@
 
 #import "../SafariPlus.h"
 
+BOOL fullSafariInstalled;
+
 %hook BrowserToolbar
 
 //Property for downloads button
@@ -30,10 +32,6 @@
   if(preferenceManager.enhancedDownloadsEnabled)
   {
     NSMutableArray* orig = %orig;
-
-    //Check if FullSafari is installed
-    BOOL fullSafariInstalled = [[NSFileManager defaultManager]
-      fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/FullSafari.dylib"];
 
     if(![orig containsObject:self._downloadsItem])
     {
@@ -208,3 +206,10 @@
 }
 
 %end
+
+%ctor
+{
+  //Check if FullSafari is installed
+  fullSafariInstalled = [[NSFileManager defaultManager]
+    fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/FullSafari.dylib"];
+}

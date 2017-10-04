@@ -18,6 +18,19 @@
 		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
+			footerText = "LOCK_BARS_FOOTER";
+		},
+		{
+			cell = "PSSwitchCell";
+			default = false;
+			defaults = "com.opa334.safariplusprefs";
+			key = "lockBars";
+			label = "LOCK_BARS";
+			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
+		},
+		{
+			cell = "PSGroupCell";
+			defaults = "com.opa334.safariplusprefs";
 			footerText = "DISABLE_PRIVATE_MODE_FOOTER";
 		},
 		{
