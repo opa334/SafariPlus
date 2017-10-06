@@ -111,24 +111,25 @@ BOOL fullSafariInstalled;
               flexibleItem, orig[13]] mutableCopy];
           }
         }
-        //Landscape on plus models
+        //Landscape
         else
         {
-          ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 10;
-          ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 10;
-
-          if(iOSVersion >= 11)
+          //Plus models
+          if([orig count] >= 15)
           {
-            ((UIBarButtonItem*)orig[14]).width = 0;
-            [orig insertObject:orig[10] atIndex:8];
-            [orig insertObject:self._downloadsItem atIndex:8];
+            ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 10;
+            ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 10;
+            ((UIBarButtonItem*)orig.lastObject).width = 0;
           }
+          //Non plus models
           else
           {
-            ((UIBarButtonItem*)orig[15]).width = 0;
-            [orig insertObject:orig[10] atIndex:9];
-            [orig insertObject:self._downloadsItem atIndex:9];
+            ((UIBarButtonItem*)orig[10]).width = 0;
+            ((UIBarButtonItem*)orig[12]).width = 0;
           }
+
+          [orig insertObject:orig[10] atIndex:8];
+          [orig insertObject:self._downloadsItem atIndex:8];
         }
       }
 
