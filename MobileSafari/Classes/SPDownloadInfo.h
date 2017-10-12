@@ -12,6 +12,7 @@
 @property (nonatomic) BOOL customPath;
 @property (nonatomic) BOOL isVideo;
 @property (nonatomic) UIViewController* alternatePresentationController;
+@property (nonatomic) CGRect sourceRect;
 
 - (SPDownloadInfo*)initWithRequest:(NSURLRequest*)request;
 - (SPDownloadInfo*)initWithImage:(UIImage*)image;

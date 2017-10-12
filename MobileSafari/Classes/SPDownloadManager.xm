@@ -362,46 +362,57 @@
     localizedSPStringForKey:@"SAVED_IMAGE"], downloadInfo.filename]];
 }
 
-- (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo isSheet:(BOOL)isSheet
+- (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
   dispatch_async(dispatch_get_main_queue(),
   ^{
     if(downloadInfo.alternatePresentationController)
     {
-      if(isSheet)
+      if([viewController isKindOfClass:[UIAlertController class]])
       {
         UIAlertController* alertController = (UIAlertController*)viewController;
 
-        //Set sourceView (iPad)
-        alertController.popoverPresentationController.sourceView =
-          downloadInfo.alternatePresentationController.view;
+        if(alertController.preferredStyle == UIAlertControllerStyleActionSheet)
+        {
+          //Set sourceView (iPad)
+          alertController.popoverPresentationController.sourceView =
+            downloadInfo.alternatePresentationController.view;
 
-        //Set iPad positions to middle of screen (because we can't get the tapped links position)
-        alertController.popoverPresentationController.sourceRect =
-          CGRectMake(downloadInfo.alternatePresentationController.view.bounds.size.width / 2,
-          downloadInfo.alternatePresentationController.view.bounds.size.height / 2, 1.0, 1.0);
+          if(CGRectIsEmpty(downloadInfo.sourceRect))
+          {
+            //Fallback iPad positions to middle of screen (because no sourceRect was specified)
+            alertController.popoverPresentationController.sourceRect =
+              CGRectMake(downloadInfo.alternatePresentationController.view.bounds.size.width / 2,
+              downloadInfo.alternatePresentationController.view.bounds.size.height / 2, 1.0, 1.0);
+          }
+          else
+          {
+            //Set iPad positions to specified sourceRect
+            alertController.popoverPresentationController.sourceRect = downloadInfo.sourceRect;
+          }
 
-        //Make sheet always face upwards on iPad
-        [alertController.popoverPresentationController
-          setPermittedArrowDirections:UIPopoverArrowDirectionDown];
-
-        [downloadInfo.alternatePresentationController presentViewController:alertController animated:YES completion:nil];
+          //Make sheet always face upwards on iPad
+          [alertController.popoverPresentationController
+            setPermittedArrowDirections:UIPopoverArrowDirectionDown];
+        }
       }
-      else
-      {
-        [downloadInfo.alternatePresentationController presentViewController:viewController animated:YES completion:nil];
-      }
+
+      [downloadInfo.alternatePresentationController presentViewController:viewController animated:YES completion:nil];
     }
     else
     {
-      if(isSheet)
+      if([viewController isKindOfClass:[UIAlertController class]])
       {
-        [self.rootControllerDelegate presentAlertControllerSheet:(UIAlertController*)viewController];
+        UIAlertController* alertController = (UIAlertController*)viewController;
+
+        if(alertController.preferredStyle == UIAlertControllerStyleActionSheet)
+        {
+          [self.rootControllerDelegate presentAlertControllerSheet:alertController];
+          return;
+        }
       }
-      else
-      {
-        [self.rootControllerDelegate presentViewController:viewController];
-      }
+
+      [self.rootControllerDelegate presentViewController:viewController];
     }
   });
 }
@@ -504,7 +515,7 @@
 
       [downloadAlert addAction:cancelAction];
 
-      [self presentViewController:downloadAlert withDownloadInfo:downloadInfo isSheet:YES];
+      [self presentViewController:downloadAlert withDownloadInfo:downloadInfo];
   }
 }
 
@@ -513,7 +524,7 @@
   SPDirectoryPickerNavigationController* directoryPicker =
     [[SPDirectoryPickerNavigationController alloc] initWithDownloadInfo:downloadInfo];
 
-  [self presentViewController:directoryPicker withDownloadInfo:downloadInfo isSheet:NO];
+  [self presentViewController:directoryPicker withDownloadInfo:downloadInfo];
 }
 
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -592,7 +603,7 @@
       [filenameAlert addAction:cancelAction];
 
       //Present filename alert
-      [self presentViewController:filenameAlert withDownloadInfo:downloadInfo isSheet:NO];
+      [self presentViewController:filenameAlert withDownloadInfo:downloadInfo];
     }]];
   }
 
@@ -615,7 +626,7 @@
   [pinnedLocationAlert addAction:cancelAction];
 
   //Present pinned location sheet
-  [self presentViewController:pinnedLocationAlert withDownloadInfo:downloadInfo isSheet:YES];
+  [self presentViewController:pinnedLocationAlert withDownloadInfo:downloadInfo];
 }
 
 - (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -653,7 +664,7 @@
   [errorAlert addAction:cancelAction];
 
   //Present alert
-  [self presentViewController:errorAlert withDownloadInfo:downloadInfo isSheet:NO];
+  [self presentViewController:errorAlert withDownloadInfo:downloadInfo];
 }
 
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo

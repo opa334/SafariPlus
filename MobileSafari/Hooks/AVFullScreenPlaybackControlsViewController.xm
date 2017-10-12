@@ -112,6 +112,7 @@
       downloadInfo.filename = [videoURL lastPathComponent];
       downloadInfo.isVideo = YES;
       downloadInfo.alternatePresentationController = self;
+      downloadInfo.sourceRect = self.downloadButton.frame;
 
       [[SPDownloadManager sharedInstance] presentDownloadAlertWithDownloadInfo:downloadInfo];
     }

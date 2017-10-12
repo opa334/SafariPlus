@@ -45,7 +45,7 @@
 - (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)saveImageWithInfo:(SPDownloadInfo*)downloadInfo;
 
-- (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo isSheet:(BOOL)isSheet;
+- (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
