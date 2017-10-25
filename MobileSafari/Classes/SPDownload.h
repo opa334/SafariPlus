@@ -7,6 +7,10 @@
 #import "Protocols.h"
 
 @interface SPDownload : NSObject <CellDownloadDelegate>
+{
+  _Bool verifiedSize;
+}
+@property (nonatomic) SPDownloadInfo* orgInfo;
 @property (nonatomic) NSURLRequest* request;
 @property (nonatomic) UIImage* image;
 @property (nonatomic) int64_t filesize;
@@ -36,4 +40,6 @@
 - (void)setTimerEnabled:(BOOL)enabled;
 - (void)updateDownloadSpeed;
 - (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize;
+
+- (int64_t)remainingBytes;
 @end

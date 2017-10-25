@@ -223,6 +223,7 @@
 "SAVED_IMAGE" = "Saved Image";
 "ERROR" = "Error";
 "FILE_EXISTS_MESSAGE" = "A file or a pending download already exists at the target path!";
+"NOT_ENOUGH_SPACE_MESSAGE" = "Not enough space left!\nFree up some space and try again!";
 "REPLACE_FILE" = "Replace File";
 "CHANGE_PATH" = "Change Download Path";
 "PENDING_DOWNLOADS" = "Pending Downloads";

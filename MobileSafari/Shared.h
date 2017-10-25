@@ -1,7 +1,7 @@
 // Shared.h
 // (c) 2017 opa334
 
-@class BrowserController, SPLocalizationManager, SPPreferenceManager, SafariWebView;
+@class BrowserController, TabDocument, SPLocalizationManager, SPPreferenceManager, SafariWebView;
 
 extern BOOL desktopButtonSelected;
 extern BOOL showAlert;
@@ -14,6 +14,7 @@ extern NSMutableDictionary* otherPlist;
 
 extern BOOL privateBrowsingEnabled();
 extern void togglePrivateBrowsing();
+extern TabDocument* activeTabDocument();
 extern SafariWebView* activeWebView();
 extern BrowserController* mainBrowserController();
 extern void loadOtherPlist();

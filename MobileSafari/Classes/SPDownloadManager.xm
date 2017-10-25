@@ -2,6 +2,7 @@
 // (c) 2017 opa334
 
 #import "SPDownloadManager.h"
+#import "../SafariPlus.h"
 
 @implementation SPDownloadManager
 
@@ -225,6 +226,49 @@
   }
 }
 
+- (int64_t)freeDiscspace
+{
+  int64_t freeSpace; //Free space of device
+  int64_t occupiedDownloadSpace = 0; //Space that's 'reserved' for downloads
+  int64_t totalFreeSpace; //Total usable space
+
+  NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSDictionary* dictionary = [[NSFileManager defaultManager]
+    attributesOfFileSystemForPath:[paths lastObject] error:nil];
+
+  if(dictionary)
+  {
+    freeSpace = ((NSNumber*)[dictionary objectForKey:NSFileSystemFreeSize]).longLongValue;
+  }
+
+  for(SPDownload* download in self.pendingDownloads)
+  {
+    occupiedDownloadSpace += [download remainingBytes];
+  }
+
+  totalFreeSpace = freeSpace - occupiedDownloadSpace;
+
+  return totalFreeSpace;
+}
+
+- (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo
+{
+  return downloadInfo.filesize <= [self freeDiscspace];
+}
+
+//When a download url was opened in a new tab, the tab will stay
+//blank after an option was selected, this function closes that tab
+- (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+{
+  if(downloadInfo)
+  {
+    if(![downloadInfo.sourceDocument URL] && !downloadInfo.sourceDocument.blankDocument)
+    {
+      [downloadInfo.sourceDocument _closeTabDocumentAnimated:YES];
+    }
+  }
+}
+
 - (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier
 {
   for(SPDownload* download in self.pendingDownloads)
@@ -309,6 +353,11 @@
     {
       //File or download exists -> present alert
       [self presentFileExistsAlertWithDownloadInfo:downloadInfo];
+    }
+    else if(![self enoughDiscspaceForDownloadInfo:downloadInfo])
+    {
+      //Not enough space for download
+      [self presentNotEnoughSpaceAlertWithDownloadInfo:downloadInfo];
     }
     else
     {
@@ -432,6 +481,8 @@
       downloadInfo.customPath = YES;
       [self configureDownloadWithInfo:downloadInfo];
     }
+
+    [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
   }
   else
   {
@@ -462,6 +513,7 @@
       {
         //Start download
         [self configureDownloadWithInfo:downloadInfo];
+        [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
       }];
 
       [downloadAlert addAction:downloadAction];
@@ -475,6 +527,7 @@
         //Start download with custom path
         downloadInfo.customPath = YES;
         [self configureDownloadWithInfo:downloadInfo];
+        [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
       }];
 
       [downloadAlert addAction:downloadToAction];
@@ -501,8 +554,7 @@
         {
           //Load request again and avoid another alert
           showAlert = NO;
-          SafariWebView* webView = activeWebView();
-          [(WKWebView*)webView loadRequest:downloadInfo.request];
+          [downloadInfo.sourceDocument.webView loadRequest:downloadInfo.request];
         }];
 
         [downloadAlert addAction:openAction];
@@ -511,8 +563,10 @@
       //Cancel option
       UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager
         localizedSPStringForKey:@"CANCEL"]
-        style:UIAlertActionStyleCancel handler:nil];
-
+        style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
+      {
+        [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
+      }];
       [downloadAlert addAction:cancelAction];
 
       [self presentViewController:downloadAlert withDownloadInfo:downloadInfo];
@@ -644,7 +698,8 @@
   {
     [self startDownloadWithInfo:downloadInfo];
   }];
-    //Change path action
+
+  //Change path action
   UIAlertAction *changePathAction = [UIAlertAction
     actionWithTitle:[localizationManager localizedSPStringForKey:@"CHANGE_PATH"]
     style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
@@ -667,12 +722,36 @@
   [self presentViewController:errorAlert withDownloadInfo:downloadInfo];
 }
 
+- (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
+{
+  //Create error alert
+  UIAlertController *errorAlert = [UIAlertController
+    alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+    message:[localizationManager localizedSPStringForKey:@"NOT_ENOUGH_SPACE_MESSAGE"]
+    preferredStyle:UIAlertControllerStyleAlert];
+
+  //Do nothing
+  UIAlertAction *cancelAction = [UIAlertAction
+    actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
+    style:UIAlertActionStyleCancel handler:nil];
+
+  [errorAlert addAction:cancelAction];
+
+  //Present alert
+  [self presentViewController:errorAlert withDownloadInfo:downloadInfo];
+}
+
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
   if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
   {
     //File or download already exists -> present file exists alert
     [self presentFileExistsAlertWithDownloadInfo:downloadInfo];
+  }
+  else if(![self enoughDiscspaceForDownloadInfo:downloadInfo])
+  {
+    //Not enough space for download
+    [self presentNotEnoughSpaceAlertWithDownloadInfo:downloadInfo];
   }
   else
   {

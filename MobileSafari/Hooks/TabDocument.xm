@@ -228,7 +228,7 @@ BOOL showAlert = YES;
       BrowserController* browserController =
         MSHookIvar<BrowserController*>(castedSelf, "_browserController");
 
-      if(browserController.tabController.usesTabBar)
+      if(!browserController.tabController.usesTabBar)
       {
         //tabBar is not active -> Create in new tab option to alert
         _WKElementAction* openInNewTabAction = [%c(_WKElementAction)
@@ -451,7 +451,7 @@ BOOL showAlert = YES;
       BrowserController* browserController =
         MSHookIvar<BrowserController*>(castedSelf, "_browserController");
 
-      if(browserController.tabController.usesTabBar)
+      if(!browserController.tabController.usesTabBar)
       {
         //tabBar is not active -> Create in new tab option to alert
         _WKElementAction* openInNewTabAction = [%c(_WKElementAction)
@@ -654,6 +654,7 @@ BOOL showAlert = YES;
         decisionHandler(WKNavigationResponsePolicyCancel);
         switch(iOSVersion)
         {
+          case 8:
           case 9:
           //Load URL in new tab
           [MSHookIvar<BrowserController*>(castedSelf, "_browserController")
@@ -705,6 +706,7 @@ BOOL showAlert = YES;
       SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:navigationResponse._request];
       downloadInfo.filesize = navigationResponse.response.expectedContentLength;
       downloadInfo.filename = navigationResponse.response.suggestedFilename;
+      downloadInfo.sourceDocument = self;
 
       [[SPDownloadManager sharedInstance] presentDownloadAlertWithDownloadInfo:downloadInfo];
     }

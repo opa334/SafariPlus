@@ -316,6 +316,7 @@
 @property (nonatomic,retain) _SFDownloadController* downloadController;
 @property (nonatomic,readonly) TiltedTabItem* tiltedTabItem;
 @property (nonatomic,readonly) TabOverviewItem* tabOverviewItem;
+@property (assign,getter=isBlankDocument,nonatomic) BOOL blankDocument;
 - (NSURL*)URL;
 - (BOOL)isBlankDocument;
 - (void)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
@@ -329,6 +330,7 @@
 - (void)setCustomUserAgent:(NSString *)arg1;
 - (void)stopLoading;
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
+- (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)requestDesktopSite; //iOS 8
 //new methods below
 - (NSURL*)URLHandler:(NSURL*)URL;

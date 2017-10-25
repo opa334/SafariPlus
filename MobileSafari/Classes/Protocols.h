@@ -23,6 +23,8 @@
 @required
 - (NSURLSession*)sharedDownloadSession;
 - (void)saveDownloadsToDisk;
+- (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 @end
 
 @protocol CellDownloadDelegate

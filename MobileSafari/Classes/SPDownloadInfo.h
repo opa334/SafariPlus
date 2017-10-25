@@ -1,7 +1,7 @@
 //  SPDownloadInfo.h
 // (c) 2017 opa334
 
-@class SPDownload;
+@class SPDownload, TabDocument;
 
 @interface SPDownloadInfo : NSObject
 @property (nonatomic) NSURLRequest* request;
@@ -11,6 +11,7 @@
 @property (nonatomic) NSURL* targetPath;
 @property (nonatomic) BOOL customPath;
 @property (nonatomic) BOOL isVideo;
+@property (nonatomic) TabDocument* sourceDocument;
 @property (nonatomic) UIViewController* alternatePresentationController;
 @property (nonatomic) CGRect sourceRect;
 

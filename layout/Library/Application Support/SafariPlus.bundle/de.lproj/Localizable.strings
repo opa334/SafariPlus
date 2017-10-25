@@ -224,6 +224,7 @@
 "SAVED_IMAGE" = "Bild gespeichert";
 "ERROR" = "Fehler";
 "FILE_EXISTS_MESSAGE" = "Am Zielpfad existiert bereits eine Datei oder ein ausstehender Download mit dem aktuellen Namen!";
+"NOT_ENOUGH_SPACE_MESSAGE" = "Nicht genügend Speicherplatz verfügbar!\nSchaffe etwas Speicherplatz und versuche es erneut!";
 "REPLACE_FILE" = "Datei ersetzen";
 "CHANGE_PATH" = "Download-Pfad ändern";
 "PENDING_DOWNLOADS" = "Ausstehende Downloads";

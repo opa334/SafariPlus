@@ -14,6 +14,8 @@
   self.filename = downloadInfo.filename;
   self.targetPath = downloadInfo.targetPath;
 
+  self.orgInfo = downloadInfo;
+
   return self;
 }
 
@@ -170,14 +172,43 @@
 
 - (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize
 {
-  //Set filesize
-  self.filesize = filesize;
+  //Verify filesize once
+  if(!verifiedSize)
+  {
+    verifiedSize = YES;
+
+    if(self.filesize != filesize)
+    {
+      //Set filesize
+      self.filesize = filesize;
+
+      //Also update size of info
+      self.orgInfo.filesize = filesize;
+
+      //Check if enough space left
+      if(![self.downloadManagerDelegate enoughDiscspaceForDownloadInfo:self.orgInfo])
+      {
+        [self cancelDownload];
+
+        [self.downloadManagerDelegate presentNotEnoughSpaceAlertWithDownloadInfo:self.orgInfo];
+      }
+    }
+
+    //Not needed anymore
+    self.orgInfo = nil;
+  }
+
 
   //Update totalBytesWritten
   self.totalBytesWritten = totalBytesWritten;
 
   //Update cell
   [self.cellDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
+}
+
+- (int64_t)remainingBytes
+{
+  return self.filesize - self.totalBytesWritten;
 }
 
 @end

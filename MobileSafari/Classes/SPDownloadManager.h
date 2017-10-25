@@ -37,6 +37,11 @@
 
 - (void)sendNotificationWithText:(NSString*)text;
 
+- (int64_t)freeDiscspace;
+- (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
+
+- (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+
 - (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier;
 - (NSMutableArray*)downloadsAtURL:(NSURL*)URL;
 - (BOOL)downloadExistsAtURL:(NSURL*)URL;
@@ -50,5 +55,6 @@
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 @end
