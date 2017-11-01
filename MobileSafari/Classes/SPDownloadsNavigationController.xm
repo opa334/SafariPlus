@@ -15,6 +15,51 @@
   return self;
 }
 
+- (void)viewDidLoad
+{
+  [super viewDidLoad];
+
+  UILongPressGestureRecognizer* barRecognizer = [[UILongPressGestureRecognizer alloc] init];
+  barRecognizer.minimumPressDuration = 5;
+  [barRecognizer addTarget:self action:@selector(handleNavigationBarLongPress:)];
+
+  [self.navigationBar addGestureRecognizer:barRecognizer];
+}
+
+- (void)handleNavigationBarLongPress:(UILongPressGestureRecognizer*)sender
+{
+  if(sender.state == UIGestureRecognizerStateBegan)
+  {
+      UIAlertController* warningAlert = [UIAlertController
+        alertControllerWithTitle:[localizationManager
+        localizedSPStringForKey:@"WARNING"]
+        message:[localizationManager localizedSPStringForKey:@"CLEAR_EVERYTHING_WARNING"]
+        preferredStyle:UIAlertControllerStyleAlert];
+
+      UIAlertAction* yesAction = [UIAlertAction actionWithTitle:[localizationManager
+        localizedSPStringForKey:@"YES"]
+        style:UIAlertActionStyleDestructive
+        handler:^(UIAlertAction* action)
+      {
+        [[SPDownloadManager sharedInstance] cancelAllDownloads];
+        [[SPDownloadManager sharedInstance] removeDownloadStorageFile];
+        [[SPDownloadManager sharedInstance] clearTempFiles];
+      }];
+
+      UIAlertAction* noAction = [UIAlertAction actionWithTitle:[localizationManager
+        localizedSPStringForKey:@"NO"]
+        style:UIAlertActionStyleCancel
+        handler:nil];
+
+      [warningAlert addAction:yesAction];
+      [warningAlert addAction:noAction];
+
+      [self presentViewController:warningAlert animated:YES completion:nil];
+  }
+
+
+}
+
 - (NSURL*)rootPath
 {
   if(preferenceManager.customDefaultPathEnabled)

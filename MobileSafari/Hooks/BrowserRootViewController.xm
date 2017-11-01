@@ -29,7 +29,7 @@
 %end
 %end
 
-%group iOS9
+%group iOS9_8
 %hook BrowserRootViewController
 
 //Initialise status bar notifications
@@ -120,9 +120,9 @@
   {
     %init(iOS10);
   }
-  else// if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+  else
   {
-    %init(iOS9);
+    %init(iOS9_8);
   }
   %init;
 }

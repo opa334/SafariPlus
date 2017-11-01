@@ -7,4 +7,5 @@
 #import "../Shared.h"
 
 @interface SPDownloadsNavigationController : SPFileBrowserNavigationController <DownloadNavigationControllerDelegate> {}
+- (void)handleNavigationBarLongPress:(UILongPressGestureRecognizer*)sender;
 @end

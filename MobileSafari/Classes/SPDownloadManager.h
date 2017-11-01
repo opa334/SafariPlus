@@ -30,6 +30,7 @@
 - (void)checkDownloadStorageRevision;
 - (void)removeDownloadStorageFile;
 - (void)clearTempFiles;
+- (void)cancelAllDownloads;
 - (void)resumeDownloadsFromDiskLoad;
 
 - (void)loadDownloadsFromDisk;

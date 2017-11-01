@@ -149,6 +149,14 @@
   //NOTE: Sometimes temp files are saved in /tmp and sometimes in caches
 }
 
+- (void)cancelAllDownloads
+{
+  for(SPDownload* download in self.pendingDownloads)
+  {
+    [download cancelDownload];
+  }
+}
+
 - (void)resumeDownloadsFromDiskLoad
 {
   //This function aims to resume the downloads in the same order they where
@@ -505,71 +513,71 @@
       alertControllerWithTitle:title message:nil
       preferredStyle:UIAlertControllerStyleActionSheet];
 
-      //Download option
-      UIAlertAction *downloadAction = [UIAlertAction
+    //Download option
+    UIAlertAction *downloadAction = [UIAlertAction
+      actionWithTitle:[localizationManager
+      localizedSPStringForKey:@"DOWNLOAD"]
+      style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+    {
+      //Start download
+      [self configureDownloadWithInfo:downloadInfo];
+      [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
+    }];
+
+    [downloadAlert addAction:downloadAction];
+
+    //Download to... option
+    UIAlertAction *downloadToAction = [UIAlertAction
+      actionWithTitle:[localizationManager
+      localizedSPStringForKey:@"DOWNLOAD_TO"]
+      style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+    {
+      //Start download with custom path
+      downloadInfo.customPath = YES;
+      [self configureDownloadWithInfo:downloadInfo];
+      [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
+    }];
+
+    [downloadAlert addAction:downloadToAction];
+
+    //Copy link options (only on videos)
+    if(downloadInfo.isVideo)
+    {
+      UIAlertAction *copyLinkAction = [UIAlertAction
         actionWithTitle:[localizationManager
-        localizedSPStringForKey:@"DOWNLOAD"]
+        localizedSPStringForKey:@"COPY_LINK"]
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
       {
-        //Start download
-        [self configureDownloadWithInfo:downloadInfo];
-        [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
+        [UIPasteboard generalPasteboard].string = downloadInfo.request.URL.absoluteString;
       }];
 
-      [downloadAlert addAction:downloadAction];
-
-      //Download to... option
-      UIAlertAction *downloadToAction = [UIAlertAction
-        actionWithTitle:[localizationManager
-        localizedSPStringForKey:@"DOWNLOAD_TO"]
+      [downloadAlert addAction:copyLinkAction];
+    }
+    //Open option (not on videos)
+    else
+    {
+      UIAlertAction *openAction = [UIAlertAction actionWithTitle:[localizationManager
+        localizedSPStringForKey:@"OPEN"]
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
       {
-        //Start download with custom path
-        downloadInfo.customPath = YES;
-        [self configureDownloadWithInfo:downloadInfo];
-        [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
+        //Load request again and avoid another alert
+        showAlert = NO;
+        [downloadInfo.sourceDocument.webView loadRequest:downloadInfo.request];
       }];
 
-      [downloadAlert addAction:downloadToAction];
+      [downloadAlert addAction:openAction];
+    }
 
-      //Copy link options (only on videos)
-      if(downloadInfo.isVideo)
-      {
-        UIAlertAction *copyLinkAction = [UIAlertAction
-          actionWithTitle:[localizationManager
-          localizedSPStringForKey:@"COPY_LINK"]
-          style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-        {
-          [UIPasteboard generalPasteboard].string = downloadInfo.request.URL.absoluteString;
-        }];
+    //Cancel option
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager
+      localizedSPStringForKey:@"CANCEL"]
+      style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
+    {
+      [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
+    }];
+    [downloadAlert addAction:cancelAction];
 
-        [downloadAlert addAction:copyLinkAction];
-      }
-      //Open option (not on videos)
-      else
-      {
-        UIAlertAction *openAction = [UIAlertAction actionWithTitle:[localizationManager
-          localizedSPStringForKey:@"OPEN"]
-          style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-        {
-          //Load request again and avoid another alert
-          showAlert = NO;
-          [downloadInfo.sourceDocument.webView loadRequest:downloadInfo.request];
-        }];
-
-        [downloadAlert addAction:openAction];
-      }
-
-      //Cancel option
-      UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager
-        localizedSPStringForKey:@"CANCEL"]
-        style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
-      {
-        [self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
-      }];
-      [downloadAlert addAction:cancelAction];
-
-      [self presentViewController:downloadAlert withDownloadInfo:downloadInfo];
+    [self presentViewController:downloadAlert withDownloadInfo:downloadInfo];
   }
 }
 

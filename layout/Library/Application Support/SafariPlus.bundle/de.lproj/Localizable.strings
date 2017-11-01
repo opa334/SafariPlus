@@ -46,7 +46,7 @@
 /* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /User/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.";
+"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /User/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.\n3) Falls Probleme auftreten, ist es möglich die obere Leiste des Download Menüs für 5 Sekunden zu berühren, um alle Downloads zu beenden und die temporären Dateien zu bereinigen.";
 
 "VIDEO_DOWNLOADING" = "Video Downloads";
 "VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\n\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
@@ -218,6 +218,7 @@
 "DELETE_FILE" = "Datei löschen";
 "WARNING" = "Warnung!";
 "DELETE_FILE_MESSAGE" = "Soll die Datei <fn> wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
+"CLEAR_EVERYTHING_WARNING" = "Sollen alle Downloads abgebrochen und die temporären Dateien bereinigt werden?";
 "DELETE" = "Löschen";
 "DOWNLOAD_STARTED" = "Download gestartet";
 "DOWNLOAD_SUCCESS" = "Download abgeschlossen";
