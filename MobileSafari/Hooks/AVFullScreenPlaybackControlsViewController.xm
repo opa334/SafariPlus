@@ -41,13 +41,24 @@
       {
         CGFloat x = self.view.frame.size.width - 81;
 
-        if(MSHookIvar<BOOL>(self, "_pictureInPictureButtonEnabled"))
+        if(iOSVersion > 8)
         {
-          x = x - 52.3334;
+          if(MSHookIvar<BOOL>(self, "_pictureInPictureButtonEnabled"))
+          {
+            x = x - 52.3334;
+          }
+          if(MSHookIvar<BOOL>(self, "_showsMediaSelectionButton"))
+          {
+            x = x - 47;
+          }
         }
-        if(MSHookIvar<BOOL>(self, "_showsMediaSelectionButton"))
+        else
         {
-          x = x - 47;
+          //Different approach needed on iOS 8 for some reason
+          if(!MSHookIvar<UIButton*>(self, "_mediaSelectionButton").hidden)
+          {
+            x = x - 47;
+          }
         }
 
         buttonPosition = CGPointMake(x, self.view.frame.size.height - 37);
