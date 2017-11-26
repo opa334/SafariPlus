@@ -10,7 +10,6 @@
 #import "Protocols.h"
 
 @class ApplicationShortcutController, AVPlayer, AVPlayerViewController, BrowserController, BrowserRootViewController, BrowserToolbar, CWStatusBarNotification, DownloadDispatcher, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
-@protocol filePickerDelegate;
 
 /**** General stuff ****/
 
