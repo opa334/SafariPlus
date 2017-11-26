@@ -2,7 +2,19 @@
 // (c) 2017 opa334
 
 #import "../SafariPlus.h"
+
 #import "../Shared.h"
+#import "../Defines.h"
+#import "../Classes/SPDownloadInfo.h"
+#import "../Classes/SPDownloadManager.h"
+#import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPLocalizationManager.h"
+
+#import <AVFoundation/AVAsset.h>
+#import <AVFoundation/AVPlayer.h>
+#import <AVFoundation/AVPlayerItem.h>
+#import <AVKit/AVPlayerViewController.h>
+#import <WebKit/WKNavigationResponse.h>
 
 %hook AVFullScreenPlaybackControlsViewController
 

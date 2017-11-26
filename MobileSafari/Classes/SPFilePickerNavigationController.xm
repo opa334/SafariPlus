@@ -3,6 +3,8 @@
 
 #import "SPFilePickerNavigationController.h"
 
+#import "SPFilePickerTableViewController.h"
+
 @implementation SPFilePickerNavigationController
 
 - (id)newTableViewControllerWithPath:(NSURL*)path

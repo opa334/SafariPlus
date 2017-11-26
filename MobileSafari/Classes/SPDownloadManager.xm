@@ -2,7 +2,22 @@
 // (c) 2017 opa334
 
 #import "SPDownloadManager.h"
+
+#import "../Defines.h"
 #import "../SafariPlus.h"
+#import "../Shared.h"
+#import "SPDirectoryPickerNavigationController.h"
+#import "SPDownload.h"
+#import "SPDownloadInfo.h"
+#import "SPLocalizationManager.h"
+#import "SPPreferenceManager.h"
+
+#import <AppSupport/CPDistributedMessagingCenter.h>
+#import <WebKit/WKWebView.h>
+
+#ifndef SIMJECT
+#import <RocketBootstrap/rocketbootstrap.h>
+#endif
 
 @implementation SPDownloadManager
 

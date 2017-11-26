@@ -3,6 +3,10 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Shared.h"
+#import "libcolorpicker.h"
+
 //Tab Title Color
 %hook TabBarStyle
 - (UIColor *)itemTitleColor

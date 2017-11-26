@@ -3,6 +3,9 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Shared.h"
+
 //Long press on Search / Site suggestions
 %hook CatalogViewController
 

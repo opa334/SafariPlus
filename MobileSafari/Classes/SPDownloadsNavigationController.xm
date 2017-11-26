@@ -3,6 +3,14 @@
 
 #import "SPDownloadsNavigationController.h"
 
+#import "../Defines.h"
+#import "../Shared.h"
+#import "SPDownloadManager.h"
+#import "SPDownloadsTableViewController.h"
+#import "SPFileBrowserNavigationController.h"
+#import "SPLocalizationManager.h"
+#import "SPPreferenceManager.h"
+
 @implementation SPDownloadsNavigationController
 
 - (id)init

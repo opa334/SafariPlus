@@ -3,6 +3,17 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPLocalizationManager.h"
+#import "../Classes/SPDownload.h"
+#import "../Classes/SPDownloadInfo.h"
+#import "../Classes/SPDownloadManager.h"
+#import "../Defines.h"
+#import "../Shared.h"
+
+#import <WebKit/WKNavigationAction.h>
+#import <WebKit/WKNavigationDelegate.h>
+
 #define castedSelf ((TabDocument*)self)
 
 BOOL showAlert = YES;

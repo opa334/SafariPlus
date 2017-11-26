@@ -2,6 +2,7 @@
 // (c) 2017 opa334
 
 #import "SPDownloadInfo.h"
+
 #import "SPDownload.h"
 
 @implementation SPDownloadInfo

@@ -3,6 +3,10 @@
 
 #import "../SafariPlus.h"
 
+#import "../Shared.h"
+#import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPDownloadsNavigationController.h"
+
 %hook BrowserController
 
 //Present downloads view

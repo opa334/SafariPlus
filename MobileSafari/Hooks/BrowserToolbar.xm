@@ -3,6 +3,11 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Defines.h"
+#import "../Shared.h"
+#import "libcolorpicker.h"
+
 BOOL fullSafariInstalled;
 
 %hook BrowserToolbar

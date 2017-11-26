@@ -3,6 +3,13 @@
 
 #import "SPDirectoryPickerTableViewController.h"
 
+#import "../Shared.h"
+#import "SPDirectoryPickerNavigationController.h"
+#import "SPDownloadInfo.h"
+#import "SPDownloadManager.h"
+#import "SPLocalizationManager.h"
+#import "SPPreferenceManager.h"
+
 @implementation SPDirectoryPickerTableViewController
 
 - (UIBarButtonItem*)defaultRightBarButtonItem

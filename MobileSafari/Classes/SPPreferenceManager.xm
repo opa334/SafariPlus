@@ -3,6 +3,13 @@
 
 #import "SPPreferenceManager.h"
 
+#import "../Defines.h"
+#import "../Shared.h"
+
+#ifndef SIMJECT
+#import <Cephei/HBPreferences.h>
+#endif
+
 @implementation SPPreferenceManager
 
 + (instancetype)sharedInstance

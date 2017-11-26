@@ -3,6 +3,11 @@
 
 #import "SPDownloadTableViewCell.h"
 
+#import "../Shared.h"
+#import "SPDownload.h"
+#import "SPDownloadManager.h"
+#import "SPFileTableViewCell.h"
+
 //http://commandshift.co.uk/blog/2013/01/31/visual-format-language-for-autolayout/
 
 @interface UIView (Autolayout)

@@ -3,6 +3,10 @@
 
 #import "../SafariPlus.h"
 
+#import "../Shared.h"
+#import "../Defines.h"
+#import "../Classes/SPPreferenceManager.h"
+
 %hook Application
 
 %new

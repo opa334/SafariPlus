@@ -3,6 +3,12 @@
 
 #import "SPDirectoryPickerNavigationController.h"
 
+#import "../Defines.h"
+#import "../Shared.h"
+#import "SPDirectoryPickerTableViewController.h"
+#import "SPDownloadManager.h"
+#import "SPPreferenceManager.h"
+
 @implementation SPDirectoryPickerNavigationController
 
 - (id)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo

@@ -3,6 +3,9 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Shared.h"
+
 %hook TabOverview
 
 //Property for landscape desktop button

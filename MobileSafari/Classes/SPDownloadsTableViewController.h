@@ -2,13 +2,8 @@
 // (c) 2017 opa334
 
 #import "SPFileBrowserTableViewController.h"
-#import "SPFileTableViewCell.h"
-#import "SPDownloadManager.h"
-#import "SPDownloadTableViewCell.h"
-#import "SPLocalizationManager.h"
-#import "../Shared.h"
-@import AVKit;
-@import AVFoundation;
+
+@class SPDownload;
 
 @interface UIApplication(iOS10)
 - (void)openURL:(id)arg1 options:(id)arg2 completionHandler:(id)arg3;

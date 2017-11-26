@@ -1,7 +1,7 @@
 // TabThumbnailView.xm
 // (c) 2017 opa334
 
-#import "../SafariPlus.h"
+//#import "../SafariPlus.h"
 
 /*%hook TabThumbnailView
 

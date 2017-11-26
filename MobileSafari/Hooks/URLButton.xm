@@ -3,6 +3,9 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Shared.h"
+
 #define castedSelf ((NavigationBarURLButton*)self)
 
 %group all

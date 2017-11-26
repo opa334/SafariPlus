@@ -3,6 +3,12 @@
 
 #import "../SafariPlus.h"
 
+#import "../Defines.h"
+#import "../Shared.h"
+#import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPDownloadManager.h"
+#import "../Lib/CWStatusBarNotification.h"
+
 %group iOS10
 %hook BrowserRootViewController
 

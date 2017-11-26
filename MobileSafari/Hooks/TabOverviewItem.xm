@@ -3,6 +3,10 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Shared.h"
+#import "libcolorpicker.h"
+
 %hook TabOverviewItem
 - (UIColor *)titleColor
 {

@@ -2,11 +2,7 @@
 // (c) 2017 opa334
 
 #import "SPFileBrowserNavigationController.h"
-#import "SPFilePickerTableViewController.h"
-
-@protocol filePickerDelegate<NSObject>
-- (void)didSelectFilesAtURL:(NSArray*)URLArray;
-@end
+#import "../Protocols.h"
 
 @interface SPFilePickerNavigationController : SPFileBrowserNavigationController {}
 @property (nonatomic, weak) id<filePickerDelegate> filePickerDelegate;

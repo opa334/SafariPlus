@@ -3,6 +3,8 @@
 
 #import "SPLocalizationManager.h"
 
+#import "../Shared.h"
+
 @implementation SPLocalizationManager
 
 + (instancetype)sharedInstance

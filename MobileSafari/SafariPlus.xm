@@ -1,8 +1,12 @@
 // SafariPlus.xm
 // (c) 2017 opa334
 
-
 #import "SafariPlus.h"
+
+#import "Shared.h"
+#import "Defines.h"
+#import "Classes/SPPreferenceManager.h"
+#import "Classes/SPLocalizationManager.h"
 
 /****** Variables ******/
 

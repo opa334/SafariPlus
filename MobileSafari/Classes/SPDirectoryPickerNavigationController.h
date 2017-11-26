@@ -1,9 +1,9 @@
 //  SPDirectoryPickerNavigationController.h
 // (c) 2017 opa334
 
-#import "SPDirectoryPickerTableViewController.h"
 #import "SPFileBrowserNavigationController.h"
-#import "SPDownloadManager.h"
+
+@class SPDownloadInfo;
 
 @interface SPDirectoryPickerNavigationController : SPFileBrowserNavigationController {}
 @property (nonatomic) SPDownloadInfo* downloadInfo;

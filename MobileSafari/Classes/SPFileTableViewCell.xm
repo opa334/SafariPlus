@@ -3,6 +3,9 @@
 
 #import "SPFileTableViewCell.h"
 
+#import "../Shared.h"
+#import "SPLocalizationManager.h"
+
 @implementation SPFileTableViewCell
 
 - (id)initWithFileURL:(NSURL*)fileURL

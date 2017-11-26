@@ -1,11 +1,6 @@
 //  SPFileBrowserTableViewController.h
 // (c) 2017 opa334
 
-#import "SPFileBrowserNavigationController.h"
-#import "SPFileTableViewCell.h"
-#import "SPLocalizationManager.h"
-#import "../Shared.h"
-
 @interface SPFileBrowserTableViewController : UITableViewController
 {
   NSMutableArray* filesAtCurrentPath;

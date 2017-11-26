@@ -3,6 +3,11 @@
 
 #import "SPFileBrowserTableViewController.h"
 
+#import "../Shared.h"
+#import "SPFileBrowserNavigationController.h"
+#import "SPFileTableViewCell.h"
+#import "SPLocalizationManager.h"
+
 @implementation SPFileBrowserTableViewController
 
 - (id)initWithPath:(NSURL*)path

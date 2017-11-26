@@ -3,6 +3,10 @@
 
 #import "SPDownload.h"
 
+#import "../Shared.h"
+#import "SPDownloadInfo.h"
+#import "SPPreferenceManager.h"
+
 @implementation SPDownload
 
 - (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo

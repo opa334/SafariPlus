@@ -3,6 +3,8 @@
 
 #import "SPFileBrowserNavigationController.h"
 
+#import "SPFileBrowserTableViewController.h"
+
 @implementation SPFileBrowserNavigationController
 
 - (void)viewDidLoad

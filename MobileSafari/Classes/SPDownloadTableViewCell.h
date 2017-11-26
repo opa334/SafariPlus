@@ -1,9 +1,7 @@
 //  SPDownloadTableViewCell.h
 // (c) 2017 opa334
 
-#import <MobileCoreServices/MobileCoreServices.h>
-#import "SPFileTableViewCell.h"
-#import "SPDownloadManager.h"
+#import "../Protocols.h"
 
 @class SPFilePickerNavigationController;
 

@@ -3,6 +3,17 @@
 
 #import "SPDownloadsTableViewController.h"
 
+#import "../Shared.h"
+#import "SPDownloadManager.h"
+#import "SPDownloadTableViewCell.h"
+#import "SPFileBrowserTableViewController.h"
+#import "SPFileTableViewCell.h"
+#import "SPLocalizationManager.h"
+
+#import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVPlayerViewController.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+
 @implementation SPDownloadsTableViewController
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

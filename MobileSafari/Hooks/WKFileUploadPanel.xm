@@ -3,6 +3,12 @@
 
 #import "../SafariPlus.h"
 
+#import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPLocalizationManager.h"
+#import "../Classes/SPFilePickerNavigationController.h"
+#import "../Defines.h"
+#import "../Shared.h"
+
 %group iOS9Up
 
 %hook WKFileUploadPanel

@@ -5,23 +5,12 @@
 #import "substrate.h"
 #endif
 
-#import "libcolorpicker.h"
-#import <CoreImage/CoreImage.h>
-#import "Lib/CWStatusBarNotification.h"
-#import "Classes/SPLocalizationManager.h"
-#import "Classes/SPPreferenceManager.h"
-#import "Classes/SPDownloadsNavigationController.h"
-#import "Classes/SPFilePickerNavigationController.h"
-#import "Classes/SPDownloadManager.h"
-#import "Defines.h"
-#import "Shared.h"
+#import <WebKit/WKNavigationResponse.h>
+#import <WebKit/WKWebView.h>
+#import "Protocols.h"
 
-@import AVKit;
-@import AVFoundation;
-@import MediaPlayer;
-@import WebKit;
-
-@class ApplicationShortcutController, BrowserController, BrowserRootViewController, BrowserToolbar, CWStatusBarNotification, DownloadDispatcher, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, BrowserController, BrowserRootViewController, BrowserToolbar, CWStatusBarNotification, DownloadDispatcher, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@protocol filePickerDelegate;
 
 /**** General stuff ****/
 

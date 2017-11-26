@@ -1,17 +1,9 @@
 //  SPPreferenceManager.h
 // (c) 2017 opa334
 
-#ifndef SIMJECT
-#import <Cephei/HBPreferences.h>
-#endif
-#import "../Shared.h"
-#import "../Defines.h"
-
-@class SPPreferenceManager;
+@class SPPreferenceManager, HBPreferences;
 
 static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
-
-
 
 @interface SPPreferenceManager : NSObject
 #ifndef SIMJECT

@@ -3,6 +3,10 @@
 
 #import "SPFilePickerTableViewController.h"
 
+#import "../Shared.h"
+#import "SPFilePickerNavigationController.h"
+#import "SPLocalizationManager.h"
+
 @implementation SPFilePickerTableViewController
 
 - (void)viewDidLoad

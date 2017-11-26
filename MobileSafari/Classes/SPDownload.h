@@ -1,15 +1,15 @@
 //  SPDownload.h
 // (c) 2017 opa334
 
-#import "SPPreferenceManager.h"
-#import "SPDownloadInfo.h"
-#import "../Shared.h"
-#import "Protocols.h"
+#import "../Protocols.h"
+
+@protocol CellDownloadDelegate;
 
 @interface SPDownload : NSObject <CellDownloadDelegate>
 {
   _Bool verifiedSize;
 }
+
 @property (nonatomic) SPDownloadInfo* orgInfo;
 @property (nonatomic) NSURLRequest* request;
 @property (nonatomic) UIImage* image;

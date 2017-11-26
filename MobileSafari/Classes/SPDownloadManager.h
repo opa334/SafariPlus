@@ -1,18 +1,9 @@
 //  SPDownloadManager.h
 // (c) 2017 opa334
 
-#import "SPDownload.h"
-#import "SPDownloadInfo.h"
-#import "SPDirectoryPickerNavigationController.h"
-#import "SPLocalizationManager.h"
-#import "SPPreferenceManager.h"
-#import <AppSupport/CPDistributedMessagingCenter.h>
-#import <WebKit/WKWebView.h>
-#ifndef SIMJECT
-#import <RocketBootstrap/rocketbootstrap.h>
-#endif
-#import "../Defines.h"
-#import "../Shared.h"
+#import "../Protocols.h"
+
+@class CPDistributedMessagingCenter;
 
 @interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, DownloadManagerDelegate>
 @property (nonatomic) NSMutableArray* pendingDownloads;

@@ -1,7 +1,7 @@
 // SingleBookmarkNavigationController.xm
 // (c) 2017 opa334
 
-#import "../SafariPlus.h"
+//#import "../SafariPlus.h"
 
 //Some attempts with custom bookmark pictures that did not work
 /*%hook SingleBookmarkNavigationController
