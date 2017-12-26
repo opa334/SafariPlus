@@ -276,14 +276,12 @@
       stringWithFormat:@"%.1f%%", progress * 100];
   }
 
-  NSString* sizeSpeedSeperator = @"@";
   dispatch_async(dispatch_get_main_queue(),
   ^{
     //Update cell components from progress
     [self.progressView setProgress:progress animated:animated];
     self.percentProgress.text = percentProgressString;
     self.sizeProgress.text = sizeString;
-    self.sizeSpeedSeperator.text = sizeSpeedSeperator;
   });
 }
 
