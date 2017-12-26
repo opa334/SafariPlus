@@ -7,6 +7,7 @@
 #import "SPDownload.h"
 #import "SPDownloadManager.h"
 #import "SPFileTableViewCell.h"
+#import "SPLocalizationManager.h"
 
 //http://commandshift.co.uk/blog/2013/01/31/visual-format-language-for-autolayout/
 
@@ -31,8 +32,15 @@
 
   //Create size label and set it to accessoryView
   UILabel* sizeLabel = [[UILabel alloc] init];
-  sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.filesize
-    countStyle:NSByteCountFormatterCountStyleFile];
+  if(download.filesize < 0)
+  {
+    sizeLabel.text = @"?";
+  }
+  else
+  {
+    sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.filesize
+      countStyle:NSByteCountFormatterCountStyleFile];
+  }
   sizeLabel.textColor = [UIColor lightGrayColor];
   sizeLabel.font = [sizeLabel.font fontWithSize:10];
   sizeLabel.textAlignment = NSTextAlignmentRight;
@@ -250,13 +258,23 @@
 
 - (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated
 {
-  //Calculate progress and create strings for everything
-  float progress = (float)currentBytes / (float)totalBytes;
-  NSString* percentProgressString = [NSString
-    stringWithFormat:@"%.1f%%", progress * 100];
-
+  float progress;
   NSString* sizeString = [NSByteCountFormatter stringFromByteCount:currentBytes
     countStyle:NSByteCountFormatterCountStyleFile];
+  NSString* percentProgressString;
+
+  if(totalBytes < 0)
+  {
+    progress = 0;
+    percentProgressString = [localizationManager localizedSPStringForKey:@"SIZE_UNKNOWN"];
+  }
+  else
+  {
+    //Calculate progress and create strings for everything
+    progress = (float)currentBytes / (float)totalBytes;
+    percentProgressString = [NSString
+      stringWithFormat:@"%.1f%%", progress * 100];
+  }
 
   NSString* sizeSpeedSeperator = @"@";
   dispatch_async(dispatch_get_main_queue(),

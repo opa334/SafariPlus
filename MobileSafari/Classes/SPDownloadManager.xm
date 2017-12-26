@@ -511,7 +511,13 @@
   {
     NSString* title;
 
-    if(downloadInfo.filesize)
+    if(downloadInfo.filesize < 0)
+    {
+      //Size unknown (Happens on Google Drive for example)
+      title = [NSString stringWithFormat:@"%@ (%@)", downloadInfo.filename,
+        [localizationManager localizedSPStringForKey:@"SIZE_UNKNOWN"]];
+    }
+    else if(downloadInfo.filesize)
     {
       //Filesize exists -> add it to title
       title = [NSString stringWithFormat:@"%@ (%@)", downloadInfo.filename,
