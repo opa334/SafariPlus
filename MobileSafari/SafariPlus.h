@@ -146,6 +146,43 @@
 @property (nonatomic, retain) AVButton* downloadButton; //new
 @end
 
+//iOS 11
+
+@interface AVPlayerViewController : UIViewController
+@property (nonatomic,readonly) UIViewController* fullScreenViewController;
+@end
+
+@interface WebAVPlayerController : NSObject
+@end
+
+@interface AVPlaybackControlsController : NSObject
+@property (assign,nonatomic) AVPlayerController* playerController;
+@property (nonatomic,readonly) AVPlayerViewController* playerViewController;
+@end
+
+@interface AVStackView : UIStackView
+@end
+
+@interface AVBackdropView : UIView
+
+@property (nonatomic,readonly) AVStackView* contentView;
+
+@end
+
+@interface AVTransportControlsView : UIView
+
+@property (nonatomic,readonly) AVBackdropView* backdropView;
+@property (assign,nonatomic) AVPlaybackControlsController* delegate;
+
+//new
+@property(nonatomic,retain) AVButton *downloadButton;
+- (void)downloadButtonPressed;
+- (void)downloadButtonPressed;
+- (void)presentErrorAlertWithError:(NSError*)error;
+- (void)presentNotFoundError;
+
+@end
+
 /**** Safari ****/
 
 @protocol BrowserToolbarDelegate <NSObject>

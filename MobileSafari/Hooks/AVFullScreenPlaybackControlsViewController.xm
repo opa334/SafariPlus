@@ -16,6 +16,8 @@
 #import <AVKit/AVPlayerViewController.h>
 #import <WebKit/WKNavigationResponse.h>
 
+%group iOS10_9_8
+
 %hook AVFullScreenPlaybackControlsViewController
 
 %property(nonatomic,retain) AVButton *downloadButton;
@@ -91,36 +93,33 @@
 {
   NSString* getVideoURL;
 
-  switch(iOSVersion)
+  if(iOSVersion < 10)
   {
     //For some reason for loops have issues prior to iOS 10 (or I'm just stupid lol)
-    case 8:
-    case 9:
-    getVideoURL = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@%@%@",
-    @"var videos = document.querySelectorAll('video');",
-    @"var i = 0;",
-    @"while(i < videos.length)",
-    @"{",
-      @"if(videos[i].webkitDisplayingFullscreen)",
-      @"{",
-        @"videos[i].currentSrc;",
-        @"break;",
-      @"}",
+    getVideoURL = [NSString stringWithFormat:
+    @"var videos = document.querySelectorAll('video');"
+    @"var i = 0;"
+    @"while(i < videos.length)"
+    @"{"
+      @"if(videos[i].webkitDisplayingFullscreen)"
+      @"{"
+        @"videos[i].currentSrc;"
+        @"break;"
+      @"}"
       @"i++;"
     @"}"];
-    break;
-
-    case 10:
-    getVideoURL = [NSString stringWithFormat:@"%@%@%@%@%@%@%@%@",
-    @"var videos = document.querySelectorAll('video');",
-    @"for(var video of videos)",
-    @"{",
-      @"if(video.webkitDisplayingFullscreen)",
-      @"{",
-        @"video.currentSrc;",
-      @"}",
+  }
+  else
+  {
+    getVideoURL = [NSString stringWithFormat:
+    @"var videos = document.querySelectorAll('video');"
+    @"for(var video of videos)"
+    @"{"
+      @"if(video.webkitDisplayingFullscreen)"
+      @"{"
+        @"video.currentSrc;"
+      @"}"
     @"}"];
-    break;
   }
 
   SafariWebView* webView = activeWebView();
@@ -196,3 +195,13 @@
 }
 
 %end
+
+%end
+
+%ctor
+{
+  if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
+  {
+    %init(iOS10_9_8)
+  }
+}
