@@ -14,7 +14,6 @@
 
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <WebKit/WKWebView.h>
-#import <MobileGestalt/MobileGestalt.h>
 
 #ifndef SIMJECT
 #import <RocketBootstrap/rocketbootstrap.h>
