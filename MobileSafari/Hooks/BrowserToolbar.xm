@@ -1,6 +1,19 @@
 // BrowserToolbar.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
@@ -49,7 +62,7 @@ BOOL fullSafariInstalled;
       }
 
       //Portrait + Landscape on iPad
-      if(IS_PAD)
+      if(IS_PAD && (!MSHookIvar<long long>(self, "_placement") || iOSVersion <= 8))
       {
         ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 3;
         ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 3;
@@ -156,11 +169,11 @@ BOOL fullSafariInstalled;
   if(preferenceManager.appTintColorNormalEnabled ||
     preferenceManager.appTintColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorNormal, @"#FFFFFF");
@@ -168,7 +181,7 @@ BOOL fullSafariInstalled;
     }
     else if(preferenceManager.appTintColorPrivateEnabled && privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorPrivate, @"#FFFFFF");
@@ -180,13 +193,13 @@ BOOL fullSafariInstalled;
   if(preferenceManager.bottomBarColorNormalEnabled ||
     preferenceManager.bottomBarColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     _UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
     backgroundView.grayscaleTintView.hidden = NO;
     if(preferenceManager.bottomBarColorNormalEnabled && !privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       backgroundView.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backgroundView.grayscaleTintView.backgroundColor =
@@ -195,7 +208,7 @@ BOOL fullSafariInstalled;
     }
     else if(preferenceManager.bottomBarColorPrivateEnabled && privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       backgroundView.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backgroundView.grayscaleTintView.backgroundColor =

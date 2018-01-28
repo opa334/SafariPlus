@@ -5,15 +5,20 @@ SafariPlus_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
 SafariPlus_FILES = SafariPlus.xm
 SafariPlus_FILES += $(wildcard Hooks/*.xm)
 SafariPlus_FILES += $(wildcard Classes/*.xm)
+SafariPlus_FILES += $(wildcard Classes/*.m)
 SafariPlus_FILES += $(wildcard Lib/*.m)
 
 ifeq ($(SIMJECT),1)
-dir_string := @"\"$(CURDIR)\""
-username_string := @"\"$(USER)\""
-SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string) -D USER=$(username_string)
-else
-SafariPlus_EXTRA_FRAMEWORKS += Cephei
-SafariPlus_LIBRARIES = colorpicker rocketbootstrap
+	dir_string := @"\"$(CURDIR)\""
+	username_string := @"\"$(USER)\""
+	SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string) -D USER=$(username_string)
+else ifeq ($(ELECTRA),0)
+	SafariPlus_EXTRA_FRAMEWORKS += Cephei
+	SafariPlus_LIBRARIES = colorpicker rocketbootstrap
+endif
+
+ifeq ($(ELECTRA),1)
+	SafariPlus_CFLAGS += -D ELECTRA=1
 endif
 
 include $(THEOS_MAKE_PATH)/tweak.mk

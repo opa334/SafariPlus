@@ -29,7 +29,7 @@ Various enhancements to Safari
 - Change (almost) any color of the Safari interface
 
 ## Compatibilty
-Any iDevice between iOS 8.0 and 10.2 should be supported (including iPad)
+Any iDevice between iOS 8.0 and 11.1.2 should be supported (including iPad)
 
 ## Localization
 If you wish to help with localizing the tweak, take the english template from [here](https://github.com/opa334/SafariPlus/blob/master/layout/Library/Application%20Support/SafariPlus.bundle/en.lproj/Localizable.strings) and contact me somewhere with the localized file.
@@ -44,6 +44,3 @@ You will need the following libraries / frameworks in order to compile SafariPlu
 - [libbulletin](https://github.com/limneos/libbulletin)
 
 - [RocketBootstrap](https://github.com/rpetrich/RocketBootstrap/)
-
-## Credits
-- [CWStatusBarNotification](https://github.com/cezarywojcik/CWStatusBarNotification)

@@ -1,15 +1,29 @@
-//  SafariPlus.h
+// SafariPlus.h
 // (c) 2017 opa334
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef SIMJECT
 #import "substrate.h"
 #endif
 
+#import <WebKit/WKNavigationAction.h>
 #import <WebKit/WKNavigationResponse.h>
 #import <WebKit/WKWebView.h>
 #import "Protocols.h"
 
-@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, BrowserController, BrowserRootViewController, BrowserToolbar, CWStatusBarNotification, DownloadDispatcher, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 
@@ -24,7 +38,11 @@
 
 /**** WebKit ****/
 
-@interface WKNavigationResponse () {}
+@interface WKNavigationAction ()
+@property (getter=_isUserInitiated, nonatomic, readonly) bool _userInitiated;
+@end
+
+@interface WKNavigationResponse ()
 @property (nonatomic,readonly) NSURLRequest* _request;
 @end
 
@@ -58,13 +76,16 @@
 @interface _SFBookmarkInfoViewController : UITableViewController {}
 @end
 
+@interface _SFBrowserSavedState : NSObject {}
+@end
+
 @interface _SFDialog : NSObject {}
 @property (nonatomic,copy,readonly) NSString* defaultText;
 - (void)finishWithPrimaryAction:(BOOL)arg1 text:(id)arg2;
 @end
 
 @interface _SFDialogController : NSObject {}
--(void)_dismissDialog;
+- (void)_dismissDialog;
 @end
 
 @interface _SFDimmingButton : UIButton {}
@@ -88,6 +109,7 @@
 @end
 
 @interface _SFNavigationBar : UIView {}
+@property (nonatomic, weak) BrowserController* delegate;
 @end
 
 @interface _SFNavigationBarBackdrop : _UIBackdropView {}
@@ -111,8 +133,10 @@
 - (BOOL)privateBrowsing;
 @end
 
-@interface _SFToolbar : UIToolbar {}
+@interface _SFToolbar : NSObject {}
+@property (nonatomic) UIColor* tintColor;
 @property (nonatomic,readonly) long long toolbarSize;
+@property (nonatomic,weak) BrowserController* delegate;
 @end
 
 
@@ -164,15 +188,18 @@
 @end
 
 @interface AVBackdropView : UIView
-
 @property (nonatomic,readonly) AVStackView* contentView;
-
 @end
 
-@interface AVTransportControlsView : UIView
-
-@property (nonatomic,readonly) AVBackdropView* backdropView;
+@interface AVPlayerViewControllerContentView
 @property (assign,nonatomic) AVPlaybackControlsController* delegate;
+@end
+
+@interface AVPlaybackControlsView : UIView
+@property (assign,nonatomic) AVPlayerViewControllerContentView* delegate;
+@property (nonatomic,readonly) AVBackdropView* screenModeControls;
+@property (assign,getter=isDoubleRowLayoutEnabled,nonatomic) bool doubleRowLayoutEnabled;
+@property (nonatomic,readonly) AVButton* doneButton;
 
 //new
 @property(nonatomic,retain) AVButton *downloadButton;
@@ -221,6 +248,9 @@
 @property (nonatomic,readonly) TabController* tabController;
 @property (nonatomic,readonly) BrowserToolbar* bottomToolbar;
 @property (nonatomic,readonly) BrowserRootViewController* rootViewController;
+@property (nonatomic,readonly) NSUUID * UUID;
+@property(readonly, nonatomic) NavigationBar* navigationBar;
+@property (nonatomic,readonly) BrowserToolbar * activeToolbar;
 @property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
 - (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;
@@ -235,7 +265,13 @@
 - (BOOL)isPrivateBrowsingEnabled; //iOS11
 - (void)togglePrivateBrowsingEnabled; //iOS11
 - (void)showFindOnPage; //iOS9
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2; //iOS9
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3; //iOS9
+- (void)newTabKeyPressed; //iOS8
 //new stuff below
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 - (void)handleGesture:(NSInteger)swipeAction;
 - (void)downloadsFromButtonBar;
 - (void)clearData;
@@ -243,20 +279,7 @@
 - (void)autoCloseAction;
 @end
 
-//iOS9
-@interface BrowserController (BrowserControllerTabs) {}
-- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;
-- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
-- (void)newTabKeyPressed; //iOS8
-@end
-
-@interface BrowserRootViewController : UIViewController <RootControllerDownloadDelegate> {} //added delegate
-//new stuff below
-@property(nonatomic,retain) CWStatusBarNotification *statusBarNotification;
-- (void)dispatchNotificationWithText:(NSString*)text;
-- (void)dismissNotificationWithCompletion:(void (^)(void))completion;
-- (void)presentViewController:(id)viewController;
-- (void)presentAlertControllerSheet:(UIAlertController*)alertController;
+@interface BrowserRootViewController : UIViewController {} //added delegate
 @end
 
 @interface BrowserToolbar : _SFToolbar {}
@@ -293,8 +316,6 @@
 @interface NavigationBar : _SFNavigationBar {}
 @property (nonatomic,readonly) UnifiedField* textField;
 - (void)_updateControlTints;
-//new methods below
-- (void)didSwipe:(UISwipeGestureRecognizer*)swipe;
 @end
 
 @interface NavigationBarURLButton : UIView {} //iOS 8
@@ -302,6 +323,7 @@
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
 @property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
+@property(nonatomic, weak) NavigationBar* delegate;
 @end
 
 @interface SafariWebView : WKWebView {}
@@ -309,6 +331,10 @@
 
 @interface SearchSuggestion : NSObject {}
 - (NSString *)string;
+@end
+
+@interface TabBarStyle : NSObject
+@property (nonatomic,readonly) BOOL usesLightControls;
 @end
 
 @interface TabController : NSObject {}
@@ -321,14 +347,17 @@
 @property (nonatomic,retain,readonly) TabOverview* tabOverview;
 @property (assign,nonatomic) BOOL usesTabBar;
 - (void)setActiveTabDocument:(id)arg1 animated:(BOOL)arg2;
+- (void)closeTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
 - (BOOL)isPrivateBrowsingEnabled;
 - (void)closeTab;
 - (void)newTab;
 //new stuff below
+@property (assign,nonatomic) BOOL desktopButtonSelected;
 @property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
-- (void)reloadTabsIfNeeded;
-- (void)userAgentButtonPressed;
+- (void)loadDesktopButtonState;
+- (void)saveDesktopButtonState;
+- (void)updateUserAgents;
 @end
 
 @interface TabDocument : NSObject {}
@@ -342,6 +371,7 @@
 @property (nonatomic,readonly) TiltedTabItem* tiltedTabItem;
 @property (nonatomic,readonly) TabOverviewItem* tabOverviewItem;
 @property (assign,getter=isBlankDocument,nonatomic) BOOL blankDocument;
++ (id)tabDocumentForWKWebView:(id)arg1;
 - (NSURL*)URL;
 - (BOOL)isBlankDocument;
 - (void)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
@@ -352,14 +382,15 @@
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
 - (void)loadURL:(id)arg1 userDriven:(BOOL)arg2;
-- (void)setCustomUserAgent:(NSString *)arg1;
 - (void)stopLoading;
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
+- (BOOL)isHibernated;
 - (void)requestDesktopSite; //iOS 8
-//new methods below
-- (NSURL*)URLHandler:(NSURL*)URL;
+//new stuff below
+- (void)updateDesktopMode;
 - (BOOL)shouldRequestHTTPS:(NSURL*)URL;
+@property(nonatomic) BOOL desktopMode;
 @end
 
 //iOS 8
@@ -367,7 +398,9 @@
 @end
 
 @interface TabOverview : UIView {}
-@property (nonatomic,readonly) UIButton* privateBrowsingButton;
+@property(readonly, nonatomic) UIButton *addTabButton;
+@property(nonatomic,readonly) UIButton* privateBrowsingButton;
+@property(nonatomic, weak) TabController* delegate;
 //new stuff below
 @property (nonatomic, retain) UIButton* desktopModeButton;
 - (void)userAgentButtonLandscapePressed;
@@ -375,6 +408,7 @@
 
 @interface TabOverviewItem : NSObject
 @property (nonatomic,retain) TabOverviewItemLayoutInfo* layoutInfo;
+@property (nonatomic,weak) TabOverview* tabOverview;
 @end
 
 @interface TabOverviewItemLayoutInfo : NSObject
@@ -382,6 +416,7 @@
 @end
 
 @interface TiltedTabView : UIView {}
+@property (nonatomic,weak) BrowserController* delegate;
 - (void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
 - (void)setShowsPrivateBrowsingExplanationView:(BOOL)arg1 animated:(BOOL)arg2; //iOS 11
 @end
@@ -401,6 +436,7 @@
 
 @interface TiltedTabItem : NSObject {}
 @property (nonatomic,readonly) TiltedTabItemLayoutInfo* layoutInfo;
+@property (nonatomic,weak) TiltedTabView* tiltedTabView;
 @end
 
 @interface TiltedTabItemLayoutInfo : NSObject

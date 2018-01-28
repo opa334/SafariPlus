@@ -1,6 +1,19 @@
 // TabController.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
@@ -10,8 +23,70 @@
 
 %hook TabController
 
+//BOOL for desktop button selection
+%property (nonatomic,retain) BOOL desktopButtonSelected;
+
 //Property for desktop button in portrait
 %property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
+
+- (TabController*)initWithBrowserController:(BrowserController*)browserController
+{
+  id orig = %orig;
+
+  [orig loadDesktopButtonState];
+
+  return orig;
+}
+
+%new
+- (void)loadDesktopButtonState
+{
+  loadOtherPlist();
+
+  NSString* key;
+  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+
+  if(iOSVersion >= 10)
+  {
+    key = [NSString stringWithFormat:@"desktopButtonSelected-%@", browserController.UUID];
+  }
+  else
+  {
+    key = [NSString stringWithFormat:@"desktopButtonSelected"];
+  }
+
+  if(![[otherPlist allKeys] containsObject:key])
+  {
+    self.desktopButtonSelected = NO;
+    [otherPlist setObject:[NSNumber numberWithBool:self.desktopButtonSelected] forKey:key];
+    saveOtherPlist();
+  }
+  else
+  {
+    self.desktopButtonSelected = [[otherPlist objectForKey:key] boolValue];
+  }
+}
+
+%new
+- (void)saveDesktopButtonState
+{
+  loadOtherPlist();
+  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+
+  NSString* key;
+
+  if(iOSVersion >= 10)
+  {
+    key = [NSString stringWithFormat:@"desktopButtonSelected-%@", browserController.UUID];
+  }
+  else
+  {
+    key = [NSString stringWithFormat:@"desktopButtonSelected"];
+  }
+
+  [otherPlist setObject:[NSNumber numberWithBool:self.desktopButtonSelected] forKey:key];
+  saveOtherPlist();
+}
 
 //Set state of desktop button
 - (void)tiltedTabViewDidPresent:(id)arg1
@@ -19,7 +94,7 @@
   %orig;
   if(preferenceManager.desktopButtonEnabled)
   {
-    if(desktopButtonSelected)
+    if(self.desktopButtonSelected)
     {
       //desktop button should be selected -> Select it
       self.tiltedTabViewDesktopModeButton.selected = YES;
@@ -44,7 +119,6 @@
     if(!self.tiltedTabViewDesktopModeButton)
     {
       //desktopButton not created yet -> create and configure it
-
       self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
       UIImage* inactiveImage = [UIImage
@@ -69,7 +143,7 @@
 
       self.tiltedTabViewDesktopModeButton.frame = CGRectMake(0, 0, 27.5, 27.5);
 
-      if(desktopButtonSelected)
+      if(self.desktopButtonSelected)
       {
         self.tiltedTabViewDesktopModeButton.selected = YES;
         self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
@@ -104,10 +178,10 @@
 %new
 - (void)tiltedTabViewDesktopModeButtonPressed
 {
-  if(desktopButtonSelected)
+  if(self.desktopButtonSelected)
   {
     //Deselect desktop button
-    desktopButtonSelected = NO;
+    self.desktopButtonSelected = NO;
     self.tiltedTabViewDesktopModeButton.selected = NO;
 
     //Remove white color with animation
@@ -119,48 +193,34 @@
   else
   {
     //Select desktop button
-    desktopButtonSelected = YES;
+    self.desktopButtonSelected = YES;
     self.tiltedTabViewDesktopModeButton.selected = YES;
 
     //Set color to white
     self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
   }
 
-  //Reload tabs
-  [self reloadTabsIfNeeded];
+  //Update user agents
+  [self updateUserAgents];
 
   //Write button state to plist
-  loadOtherPlist();
-  [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
-    forKey:@"desktopButtonSelected"];
-  saveOtherPlist();
+  [self saveDesktopButtonState];
 }
 
-//Reload tabs if the useragents needs to be changed (depending on the desktop button state)
+//Update user agent of all tabs
 %new
-- (void)reloadTabsIfNeeded
+- (void)updateUserAgents
 {
-  NSArray* currentTabs;
-  if([self isPrivateBrowsingEnabled])
+  for(TabDocument* tabDocument in self.allTabDocuments)
   {
-    //Private mode enabled -> set currentTabs to tabs of private mode
-    currentTabs = self.privateTabDocuments;
-  }
-  else
-  {
-    //Private mode disabled -> set currentTabs to tabs of normal mode
-    currentTabs = self.tabDocuments;
-  }
-
-  for(TabDocument* tabDocument in currentTabs)
-  {
-    if(![tabDocument isBlankDocument] && ((desktopButtonSelected &&
-      ([tabDocument.customUserAgent isEqualToString:@""] ||
-      tabDocument.customUserAgent == nil)) || (!desktopButtonSelected &&
-      [tabDocument.customUserAgent isEqualToString:desktopUserAgent])))
+    if(tabDocument.desktopMode != self.desktopButtonSelected)
     {
-      //Tab is not blank and it's user agent needs to be changed -> reload it
-      [tabDocument reload];
+      [tabDocument updateDesktopMode];
+
+      if(!tabDocument.isHibernated)
+      {
+        [tabDocument reload];
+      }
     }
   }
 }

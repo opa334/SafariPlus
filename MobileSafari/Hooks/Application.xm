@@ -1,10 +1,24 @@
 // Application.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "../SafariPlus.h"
 
 #import "../Shared.h"
 #import "../Defines.h"
+#import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"
 
 %hook Application
@@ -31,21 +45,12 @@
   %orig;
   if(preferenceManager.forceModeOnResumeEnabled)
   {
-    //Switch mode to specified mode
-    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnResumeFor];
+    for(BrowserController* controller in browserControllers())
+    {
+      //Switch mode to specified mode
+      [controller modeSwitchAction:preferenceManager.forceModeOnResumeFor];
+    }
   }
-}
-
-//Auto switch mode on external URL opened
-- (void)applicationOpenURL:(id)arg1
-{
-  if(preferenceManager.forceModeOnExternalLinkEnabled && arg1)
-  {
-    //Switch mode to specified mode
-    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
-  }
-
-  %orig;
 }
 
 //Auto close tabs when Safari gets closed
@@ -54,14 +59,21 @@
   if(preferenceManager.autoCloseTabsEnabled &&
     preferenceManager.autoCloseTabsOn == 1 /*Safari closed*/)
   {
-    [mainBrowserController() autoCloseAction];
+    for(BrowserController* controller in browserControllers())
+    {
+      //Close all tabs for specified modes
+      [controller autoCloseAction];
+    }
   }
 
   if(preferenceManager.autoDeleteDataEnabled &&
     preferenceManager.autoDeleteDataOn == 1 /*Safari closed*/)
   {
-    //Clear browser data
-    [mainBrowserController() clearData];
+    for(BrowserController* controller in browserControllers())
+    {
+      //Clear browser data
+      [controller clearData];
+    }
   }
 
   %orig;
@@ -73,15 +85,21 @@
   if(preferenceManager.autoCloseTabsEnabled &&
     preferenceManager.autoCloseTabsOn == 2 /*Safari minimized*/)
   {
-    //Close all tabs for specified modes
-    [mainBrowserController() autoCloseAction];
+    for(BrowserController* controller in browserControllers())
+    {
+      //Close all tabs for specified modes
+      [controller autoCloseAction];
+    }
   }
 
   if(preferenceManager.autoDeleteDataEnabled &&
     preferenceManager.autoDeleteDataOn == 2 /*Safari closed*/)
   {
-    //Clear browser data
-    [mainBrowserController() clearData];
+    for(BrowserController* controller in browserControllers())
+    {
+      //Clear browser data
+      [controller clearData];
+    }
   }
 
   %orig;
@@ -92,56 +110,23 @@
 %group iOS9Up
 %hook Application
 
-- (BOOL)application:(id)arg1 didFinishLaunchingWithOptions:(id)arg2
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-  loadOtherPlist();
-
-  //Init plist for desktop button
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    if(![[otherPlist allKeys] containsObject:@"desktopButtonSelected"])
-    {
-      //Set BOOL to false
-      desktopButtonSelected = NO;
-
-      //Add BOOL to dictionary
-      [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
-        forKey:@"desktopButtonSelected"];
-
-      //Save changes
-      saveOtherPlist();
-    }
-    else
-    {
-      //Get bool from plist and set it to desktopButtonSelected
-      desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
-    }
-  }
-
   BOOL orig = %orig;
 
   //Auto switch mode on launch
-  if(preferenceManager.forceModeOnStartEnabled)
+  if(preferenceManager.forceModeOnStartEnabled && !launchOptions[UIApplicationLaunchOptionsURLKey])
   {
-    //Switch mode to specified mode
-    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnStartFor];
+    for(BrowserController* controller in browserControllers())
+    {
+      //Switch mode to specified mode
+      [controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
+    }
   }
-
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    //Reload tabs
-    [mainBrowserController().tabController reloadTabsIfNeeded];
-  }
-
 
   if(preferenceManager.enhancedDownloadsEnabled)
   {
-    if(![[NSFileManager defaultManager] fileExistsAtPath:defaultDownloadPath])
-    {
-      //Downloads directory doesn't exist -> create it
-      [[NSFileManager defaultManager] createDirectoryAtPath:defaultDownloadPath
-        withIntermediateDirectories:NO attributes:nil error:nil];
-    }
+    downloadManager = [SPDownloadManager sharedInstance];
   }
 
   return orig;
@@ -153,56 +138,31 @@
 %group iOS8
 %hook Application
 
-- (void)applicationDidFinishLaunching:(id)arg1
+- (void)applicationOpenURL:(NSURL*)URL
 {
-  loadOtherPlist();
-
-  //Init plist for desktop button
-  if(preferenceManager.desktopButtonEnabled)
+  if(preferenceManager.forceModeOnExternalLinkEnabled && URL)
   {
-    if(![[otherPlist allKeys] containsObject:@"desktopButtonSelected"])
-    {
-      //Set BOOL to false
-      desktopButtonSelected = NO;
-
-      //Add BOOL to dictionary
-      [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
-        forKey:@"desktopButtonSelected"];
-
-      //Save changes
-      saveOtherPlist();
-    }
-    else
-    {
-      //Get bool from plist and set it to desktopButtonSelected
-      desktopButtonSelected = [[otherPlist objectForKey:@"desktopButtonSelected"] boolValue];
-    }
+    //Switch mode to specified mode
+    [browserControllers().firstObject modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
   }
 
+  %orig;
+}
+
+- (void)applicationDidFinishLaunching:(id)arg1
+{
   %orig;
 
   //Auto switch mode on launch
   if(preferenceManager.forceModeOnStartEnabled)
   {
     //Switch mode to specified mode
-    [mainBrowserController() modeSwitchAction:preferenceManager.forceModeOnStartFor];
+    [browserControllers().firstObject modeSwitchAction:preferenceManager.forceModeOnStartFor];
   }
-
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    //Reload tabs
-    [mainBrowserController().tabController reloadTabsIfNeeded];
-  }
-
 
   if(preferenceManager.enhancedDownloadsEnabled)
   {
-    if(![[NSFileManager defaultManager] fileExistsAtPath:defaultDownloadPath])
-    {
-      //Downloads directory doesn't exist -> create it
-      [[NSFileManager defaultManager] createDirectoryAtPath:defaultDownloadPath
-        withIntermediateDirectories:NO attributes:nil error:nil];
-    }
+    downloadManager = [SPDownloadManager sharedInstance];
   }
 }
 

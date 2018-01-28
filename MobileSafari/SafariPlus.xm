@@ -1,6 +1,19 @@
 // SafariPlus.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "SafariPlus.h"
 
 #import "Shared.h"
@@ -8,10 +21,12 @@
 #import "Classes/SPPreferenceManager.h"
 #import "Classes/SPLocalizationManager.h"
 
+#import <sys/utsname.h>
+
 /****** Variables ******/
 
-int iOSVersion;
-BOOL desktopButtonSelected;
+float iOSVersion;
+BOOL iPhoneX;
 
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
@@ -20,6 +35,7 @@ NSMutableDictionary* otherPlist;
 
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
+SPDownloadManager* downloadManager;
 
 /****** Extensions ******/
 
@@ -37,63 +53,144 @@ SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstan
 
 @end
 
+@implementation NSURL (HTTPtoHTTPS)
+
+//Convert http url into https url
+- (NSURL*)httpsURL
+{
+  //Get URL components
+  NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:self
+    resolvingAgainstBaseURL:NO];
+
+  if([self.scheme isEqualToString:@"http"])
+  {
+    //Change scheme to https
+    URLComponents.scheme = @"https";
+  }
+
+  return URLComponents.URL;
+}
+
+@end
+
+@implementation NSString (Strip)
+- (NSString*)stringStrippedByStrings:(NSArray<NSString*>*)strings
+{
+  NSString* strippedString = self;
+  NSArray* tmpArray;
+
+  for(NSString* string in strings)
+  {
+    tmpArray = [strippedString componentsSeparatedByString:string];
+    strippedString = tmpArray.firstObject;
+  }
+
+  return strippedString;
+}
+@end
+
 /****** Useful functions ******/
 
 //Return current browsing status
-BOOL privateBrowsingEnabled()
+BOOL privateBrowsingEnabled(BrowserController* controller)
 {
   BOOL privateBrowsingEnabled;
 
-  if(iOSVersion >= 11)
+  if(iOSVersion >= 10.3)
   {
-    privateBrowsingEnabled = [mainBrowserController() isPrivateBrowsingEnabled];
+    privateBrowsingEnabled = [controller isPrivateBrowsingEnabled];
   }
   else
   {
-    privateBrowsingEnabled = mainBrowserController().privateBrowsingEnabled;
+    privateBrowsingEnabled = controller.privateBrowsingEnabled;
   }
 
   return privateBrowsingEnabled;
 }
 
-void togglePrivateBrowsing()
+//Toggle private mode
+void togglePrivateBrowsing(BrowserController* controller)
 {
-  if(iOSVersion >= 11)
+  if(iOSVersion >= 10.3)
   {
-    [mainBrowserController() togglePrivateBrowsingEnabled];
+    [controller togglePrivateBrowsingEnabled];
   }
   else
   {
-    [mainBrowserController() togglePrivateBrowsing];
+    [controller togglePrivateBrowsing];
   }
 }
 
-SafariWebView* activeWebView()
+//Get active webViews
+NSArray<SafariWebView*>* activeWebViews()
 {
-  return mainBrowserController().tabController.activeTabDocument.webView;
-}
-
-BrowserController* mainBrowserController()
-{
-  BrowserController* controller;
-  switch(iOSVersion)
+  NSMutableArray<SafariWebView*>* webViews = [NSMutableArray new];
+  for(BrowserController* controller in browserControllers())
   {
-    case 8:
-    case 9:
-    controller = MSHookIvar<BrowserController*>
-      ((Application*)[%c(Application) sharedApplication],
-      "_controller");
-    break;
-
-    case 10:
-    case 11:
-    controller = ((Application*)[%c(Application) sharedApplication]).
-      shortcutController.browserController;
-    break;
+    [webViews addObject:controller.tabController.activeTabDocument.webView];
   }
-  return controller;
+  return [webViews copy];
 }
 
+//Return array of all browsercontrollers
+NSArray<BrowserController*>* browserControllers()
+{
+  NSArray* browserControllers;
+
+  if(iOSVersion >= 10)
+  {
+    browserControllers = ((Application*)[UIApplication sharedApplication]).browserControllers;
+  }
+  else //8,9
+  {
+    browserControllers = @[MSHookIvar<BrowserController*>((Application*)[%c(Application) sharedApplication],"_controller")];
+  }
+
+  return browserControllers;
+}
+
+//Get browserController from tabDocument
+BrowserController* browserControllerForTabDocument(TabDocument* document)
+{
+  BrowserController* browserController;
+
+  if(iOSVersion >= 10)
+  {
+    browserController = document.browserController;
+  }
+  else
+  {
+    browserController = MSHookIvar<BrowserController*>(document, "_browserController");
+  }
+
+  return browserController;
+}
+
+//Get rootViewController from browserController
+BrowserRootViewController* rootViewControllerForBrowserController(BrowserController* controller)
+{
+  BrowserRootViewController* rootViewController;
+
+  if(iOSVersion >= 10)
+  {
+    rootViewController = controller.rootViewController;
+  }
+  else
+  {
+    rootViewController = MSHookIvar<BrowserRootViewController*>(controller, "_rootViewController");
+  }
+
+  return rootViewController;
+}
+
+
+//Get rootViewController from tabDocument
+BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document)
+{
+  return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
+}
+
+//Load com.opa334.safariplusprefOther.plist
 void loadOtherPlist()
 {
   otherPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
@@ -104,18 +201,23 @@ void loadOtherPlist()
   }
 }
 
+//Save com.opa334.safariplusprefOther.plist
 void saveOtherPlist()
 {
   [otherPlist writeToFile:otherPlistPath atomically:YES];
 }
 
-/****** Version detection ******/
+/****** Version and device detection ******/
 
 %ctor
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
   {
     iOSVersion = 11;
+  }
+  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_3)
+  {
+    iOSVersion = 10.3;
   }
   else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
   {
@@ -129,4 +231,14 @@ void saveOtherPlist()
   {
     iOSVersion = 8;
   }
+
+  //Detection of iPhone X (Needs special treatment in some cases)
+  #ifdef SIMJECT
+  NSString* model = NSProcessInfo.processInfo.environment[@"SIMULATOR_MODEL_IDENTIFIER"];
+  #else
+  struct utsname systemInfo;
+  uname(&systemInfo);
+  NSString* model = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+  #endif
+  iPhoneX = [model isEqualToString:@"iPhone10,3"] || [model isEqualToString:@"iPhone10,6"];
 }

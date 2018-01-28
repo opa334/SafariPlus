@@ -46,7 +46,7 @@
 /* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Enhanced Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/User/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.\n3) If you encounter any issues, you can long press the navigation bar of the downloads menu for 5 seconds to cancel all downloads and clear all temporary files.";
+"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/var/mobile/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.\n3) If you encounter any issues, you can long press the navigation bar of the downloads menu for 5 seconds to cancel all downloads and clear all temporary files.";
 
 "VIDEO_DOWNLOADING" = "Video Downloading";
 "VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save that file, but it does not contain the video.";
@@ -153,8 +153,8 @@
 "ALWAYS_OPEN_NEW_TAB_FOOTER" = "Always opens clicked links in new tabs.";
 "ALWAYS_OPEN_NEW_TAB" = "Always Open Links in New Tab";
 
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 when a 'mailto:<email>' URL is accessed.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10) Suppress Mailto Dialog";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 and above when a 'mailto:<email>' URL is accessed.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Suppress Mailto Dialog";
 
 /* Color Settings */
 
@@ -189,17 +189,11 @@
 /* Credits */
 
 "CREDITS" = "Credits";
-"ICONS" = "Icons";
-"DESKTOP_MODE_BUTTON" = "'Desktop Mode' Button";
-"LOCAL_FILE_BUTTON" = "'Local File' Button";
-"PICKER_FILE_ENTRY" = "File Picker: File Icon";
-"PICKER_DIRECTORY_ENTRY" = "File Picker: Directory Icon";
-"STOLEN_FROM" = "Localization code stolen from";
 "PICKER_INSPIRED" = "File picker inspired by";
 
 /* In app */
 
-"LOCAL_FILE" = "Local File";
+"LOCAL_FILES" = "Local Files";
 
 /* File picker */
 

@@ -43,8 +43,6 @@
 </string>
 	<key>CREDITS</key>
 	<string>الاعتمادات</string>
-	<key>DESKTOP_MODE_BUTTON</key>
-	<string>زر 'وضع سطح المكتب'</string>
 	<key>DESKTOP_SWITCH_FOOTER</key>
 	<string>إضافة زر إلى مبدل علامات التبويب، والتي يمكنك استخدامها للتبديل عالميا بين وضع المحمول / سطح المكتب.
 </string>
@@ -77,17 +75,12 @@
 	<key>FORCE_HTTPS_FOOTER</key>
 	<string>منفذ بروتوكول HTTPS عالميا.
 ملاحظة: قد كسر المواقع التي لا تدعم HTTPS.</string>
-	<key>ICONS</key>
-	<string>ايقونات </string>
 	<key>LAUNCH_MODE_FOOTER</key>
 	<string>التغييرات في وضع المتصفح المحدد، عند تشغيل سفاري.</string>
 	<key>LAUNCH_MODE_LABEL</key>
 	<string>بدء التطبيق</string>
-	<key>LOCAL_FILE</key>
+	<key>LOCAL_FILES</key>
 	<string>ملف محلي</string>
-	<key>LOCAL_FILE_BUTTON</key>
-	<string>زر ' الملف المحلي '
-</string>
 	<key>LOCK_ICON_COLOR</key>
 	<string>تامين لون الايقونه...</string>
 	<key>LOCK_ICON_COLOR_ENABLED</key>
@@ -111,10 +104,6 @@
 </string>
 	<key>OTHER_ADDONS</key>
 	<string>اضافات اخرى</string>
-	<key>PICKER_DIRECTORY_ENTRY</key>
-	<string>تنقية الملف: أيقونة الدليل</string>
-	<key>PICKER_FILE_ENTRY</key>
-	<string>تنقية الملف : ايقونة الملف</string>
 	<key>PICKER_INSPIRED</key>
 	<string>تنقية الملفات مستوحاة من</string>
 	<key>PRIVATE_MODE</key>
@@ -138,8 +127,6 @@
 	<string>تصغير السفاري</string>
 	<key>SOURCE_CODE</key>
 	<string>Source Code</string>
-	<key>STOLEN_FROM</key>
-	<string>تعريب : بدر الهزيمي</string>
 	<key>SWIPE_DOWN_GESTURE</key>
 	<string>مرر لاسفل</string>
 	<key>SWIPE_DOWN_GESTURE_FOOTER</key>

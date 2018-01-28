@@ -4,10 +4,16 @@ export TARGET = iphone:clang:9.3:8.0
 
 BUNDLE_NAME = SafariPlusPrefs
 SafariPlusPrefs_CFLAGS = -fobjc-arc
-SafariPlusPrefs_FILES = SPPreferenceLocalizationManager.xm preferenceDirectoryPickerNavigationController.xm preferenceDirectoryPickerTableViewController.xm preferenceFileBrowserNavigationController.xm preferenceFileBrowserTableViewController.xm preferenceFileTableViewCell.xm SafariPlusPrefs.m
+SafariPlusPrefs_FILES = $(wildcard *.m)
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
+
+ifeq ($(ELECTRA),0)
 SafariPlusPrefs_LIBRARIES = colorpicker
+else
+SafariPlusPrefs_CFLAGS += -D ELECTRA=1
+endif
+
 SafariPlusPrefs_PRIVATE_FRAMEWORKS = Preferences
 
 include $(THEOS_MAKE_PATH)/bundle.mk

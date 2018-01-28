@@ -1,5 +1,18 @@
-//  SPDownloadManager.xm
+// SPDownloadManager.xm
 // (c) 2017 opa334
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPDownloadManager.h"
 
@@ -11,11 +24,13 @@
 #import "SPDownloadInfo.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
+#import "SPStatusBarNotification.h"
+#import "SPStatusBarNotificationWindow.h"
 
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <WebKit/WKWebView.h>
 
-#ifndef SIMJECT
+#if !defined(SIMJECT) && !defined(ELECTRA)
 #import <RocketBootstrap/rocketbootstrap.h>
 #endif
 
@@ -37,24 +52,38 @@
 {
   self = [super init];
 
+  if(![[NSFileManager defaultManager] fileExistsAtPath:defaultDownloadPath])
+  {
+    //Downloads directory doesn't exist -> create it
+    [[NSFileManager defaultManager] createDirectoryAtPath:defaultDownloadPath
+      withIntermediateDirectories:NO attributes:nil error:nil];
+  }
+
   self.pendingDownloads = [NSMutableArray new];
 
   //Create message center to communicate with SpringBoard through RocketBootstrap
-  self.SPMessagingCenter = [%c(CPDistributedMessagingCenter)
+  self.messagingCenter = [%c(CPDistributedMessagingCenter)
     centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
 
-  #ifndef SIMJECT
-  rocketbootstrap_distributedmessagingcenter_apply(_SPMessagingCenter);
+  #if !defined(SIMJECT) && !defined(ELECTRA)
+  rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
   #endif
+
+  //Init notification window for status bar notifications
+  self.notificationWindow = [[SPStatusBarNotificationWindow alloc] init];
+
+  #ifndef ELECTRA
 
   //Remove download storage if needed
   [self checkDownloadStorageRevision];
 
+  #endif
+
   //Get downloads from file
   [self loadDownloadsFromDisk];
 
-  //Set session up
-  [self setUpSession];
+  //Configure session
+  [self configureSession];
 
   return self;
 }
@@ -64,7 +93,7 @@
   return self.downloadSession;
 }
 
-- (void)setUpSession
+- (void)configureSession
 {
   //Create background configuration for shared session
   NSURLSessionConfiguration* config = [NSURLSessionConfiguration
@@ -90,11 +119,13 @@
         SPDownload* download = [self downloadWithTaskIdentifier:task.taskIdentifier];
         download.downloadTask = task;
         [download setTimerEnabled:YES];
+        //NSLog(@"SafariPlus - Reconnected task:%@", task);
       }
       else
       {
         //Count how often didCompleteWithError will get called
         self.errorCount++;
+        //NSLog(@"SafariPlus - Task will error:%@", task);
       }
     }
   }];
@@ -104,10 +135,13 @@
 {
   loadOtherPlist();
 
+  //Get storage revision from plist
   int storageRevision = [[otherPlist objectForKey:@"downloadFormatRevision"] intValue];
 
+  //Check if download storage is up to date
   if(storageRevision != DownloadStorageRevision)
   {
+    //NSLog(@"SafariPlus - Download Storage not up to date");
     //Remove download storage
     [self removeDownloadStorageFile];
 
@@ -135,59 +169,71 @@
 
 - (void)clearTempFiles
 {
+  //NOTE: Sometimes temp files are saved in /tmp and sometimes in caches
+
+  //NSLog(@"SafariPlus - clearTempFiles");
+
   //Get files in tmp directory
   NSArray* tmpFiles = [[NSFileManager defaultManager]
     contentsOfDirectoryAtURL:[NSURL fileURLWithPath:NSTemporaryDirectory()]
     includingPropertiesForKeys:nil
-    options:nil
+    options:0
     error:nil];
 
-  for(NSURL* tmpFile in tmpFiles)
+  //Get files in caches directory
+  NSArray* cacheFiles = [[NSFileManager defaultManager]
+    contentsOfDirectoryAtURL:[NSURL fileURLWithPath:[NSHomeDirectory()
+    stringByAppendingString:@"/Library/Caches/com.apple.nsurlsessiond/Downloads/com.apple.mobilesafari"]]
+    includingPropertiesForKeys:nil
+    options:0
+    error:nil];
+
+  //Join arrays
+  NSArray* files = [tmpFiles arrayByAddingObjectsFromArray:cacheFiles];
+
+  for(NSURL* file in files)
   {
-    if([tmpFile.lastPathComponent containsString:@"CFNetworkDownload"])
+    if([file.lastPathComponent containsString:@"CFNetworkDownload"])
     {
       //File is cached download -> remove it
-      [[NSFileManager defaultManager] removeItemAtPath:[tmpFile path] error:nil];
+      [[NSFileManager defaultManager] removeItemAtPath:[file path] error:nil];
     }
   }
-
-  //Get nsurlsessiond cache path
-  NSString* cachePath = [NSHomeDirectory()
-    stringByAppendingString:@"/Library/Caches/com.apple.nsurlsessiond"];
-
-  if([[NSFileManager defaultManager] fileExistsAtPath:cachePath])
-  {
-    //Remove cache directory
-    [[NSFileManager defaultManager] removeItemAtPath:cachePath error:nil];
-  }
-
-  //NOTE: Sometimes temp files are saved in /tmp and sometimes in caches
 }
 
 - (void)cancelAllDownloads
 {
+  //Cancel all downloads
   for(SPDownload* download in self.pendingDownloads)
   {
     [download cancelDownload];
   }
+
+  //Reinitialise array
+  self.pendingDownloads = [NSMutableArray new];
+
+  //Reload table views
+  [self.navigationControllerDelegate reloadTopTableView];
 }
 
 - (void)resumeDownloadsFromDiskLoad
 {
-  //This function aims to resume the downloads in the same order they where
+  //This function aims to resume the downloads in the same order they were
   //when Safari was closed
   //NOTE: The order gets a little messy when a download was left paused
-  //This 'problem' cannot be fixed reliably to my knowledge, because of how NSURLSessions work
+  //This cannot be fixed reliably to my knowledge, because of how NSURLSessions work
   for(SPDownload* download in self.pendingDownloads)
   {
     if(download.resumeData)
     {
+      //NSLog(@"SafariPlus - started download %@ from resume data", download);
       //Download has resume data -> resume it
       [download startDownloadFromResumeData];
     }
     else
     {
-      //Downlaod has no resume data -> start it from the beginning
+      //NSLog(@"SafariPlus - started download %@ from beginning", download);
+      //Download has no resume data -> start it from the beginning
       [download startDownload];
     }
   }
@@ -195,6 +241,7 @@
 
 - (void)loadDownloadsFromDisk
 {
+  //NSLog(@"SafariPlus - loadDownloadsFromDisk");
   if([[NSFileManager defaultManager] fileExistsAtPath:downloadStoragePath])
   {
     //Get data from download storage file
@@ -207,6 +254,8 @@
       //Set downloadManagerDelegate for all downloads
       download.downloadManagerDelegate = self;
     }
+
+    //NSLog(@"SafariPlus - Download Storage Exists");
   }
 }
 
@@ -226,10 +275,10 @@
   {
     //Application is active -> Use status bar notification if not disabled
     //Dissmiss current status notification (if one exists)
-    [self.rootControllerDelegate dismissNotificationWithCompletion:^
+    [self.notificationWindow dismissWithCompletion:^
     {
       //Dispatch status notification with given text
-      [self.rootControllerDelegate dispatchNotificationWithText:text];
+      [self.notificationWindow dispatchNotification:[SPStatusBarNotification downloadStyleWithText:text]];
     }];
   }
   else if([[UIApplication sharedApplication] applicationState] != 0 &&
@@ -245,7 +294,7 @@
 
     //Send userInfo to SpringBoard using RocketBootstrap
     //There it dispatches a notification using libbulletin
-    [self.SPMessagingCenter sendMessageName:@"pushNotification" userInfo:userInfo];
+    [self.messagingCenter sendMessageName:@"pushNotification" userInfo:userInfo];
   }
 }
 
@@ -436,57 +485,38 @@
 
 - (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    if(downloadInfo.alternatePresentationController)
+  if(downloadInfo.presentationController)
+  {
+    if([viewController isKindOfClass:[UIAlertController class]])
     {
-      if([viewController isKindOfClass:[UIAlertController class]])
+      UIAlertController* alertController = (UIAlertController*)viewController;
+
+      if(alertController.preferredStyle == UIAlertControllerStyleActionSheet)
       {
-        UIAlertController* alertController = (UIAlertController*)viewController;
+        //Set sourceView (iPad)
+        alertController.popoverPresentationController.sourceView =
+          downloadInfo.presentationController.view;
 
-        if(alertController.preferredStyle == UIAlertControllerStyleActionSheet)
+        if(CGRectIsEmpty(downloadInfo.sourceRect))
         {
-          //Set sourceView (iPad)
-          alertController.popoverPresentationController.sourceView =
-            downloadInfo.alternatePresentationController.view;
-
-          if(CGRectIsEmpty(downloadInfo.sourceRect))
-          {
-            //Fallback iPad positions to middle of screen (because no sourceRect was specified)
-            alertController.popoverPresentationController.sourceRect =
-              CGRectMake(downloadInfo.alternatePresentationController.view.bounds.size.width / 2,
-              downloadInfo.alternatePresentationController.view.bounds.size.height / 2, 1.0, 1.0);
-          }
-          else
-          {
-            //Set iPad positions to specified sourceRect
-            alertController.popoverPresentationController.sourceRect = downloadInfo.sourceRect;
-          }
-
-          //Make sheet always face upwards on iPad
-          [alertController.popoverPresentationController
-            setPermittedArrowDirections:UIPopoverArrowDirectionDown];
+          //Fallback iPad positions to middle of screen (because no sourceRect was specified)
+          alertController.popoverPresentationController.sourceRect =
+            CGRectMake(downloadInfo.presentationController.view.bounds.size.width / 2,
+            downloadInfo.presentationController.view.bounds.size.height / 2, 1.0, 1.0);
+        }
+        else
+        {
+          //Set iPad positions to specified sourceRect
+          alertController.popoverPresentationController.sourceRect = downloadInfo.sourceRect;
         }
       }
-
-      [downloadInfo.alternatePresentationController presentViewController:viewController animated:YES completion:nil];
     }
-    else
-    {
-      if([viewController isKindOfClass:[UIAlertController class]])
-      {
-        UIAlertController* alertController = (UIAlertController*)viewController;
 
-        if(alertController.preferredStyle == UIAlertControllerStyleActionSheet)
-        {
-          [self.rootControllerDelegate presentAlertControllerSheet:alertController];
-          return;
-        }
-      }
-
-      [self.rootControllerDelegate presentViewController:viewController];
-    }
-  });
+    dispatch_async(dispatch_get_main_queue(),
+    ^{
+      [downloadInfo.presentationController presentViewController:viewController animated:YES completion:nil];
+    });
+  }
 }
 
 - (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -828,6 +858,7 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
   didCompleteWithError:(NSError *)error
 {
+  //NSLog(@"SafariPlus - %@ didCompleteWithError", task);
   if(error)
   {
     //Get download
@@ -845,6 +876,8 @@
     {
       //Get resumeData
       NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
+
+      //NSLog(@"SafariPlus - Got resumeData %@", resumeData);
 
       //Connect resumeData with download
       download.resumeData = resumeData;

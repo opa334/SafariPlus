@@ -1,16 +1,33 @@
-//  SPPreferenceManager.h
+// SPPreferenceManager.h
 // (c) 2017 opa334
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @class SPPreferenceManager, HBPreferences;
 
 static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 @interface SPPreferenceManager : NSObject
-#ifndef SIMJECT
 {
+  #if !defined(SIMJECT) && !defined(ELECTRA)
   HBPreferences *preferences;
+  #endif
+
+  #ifdef ELECTRA
+  NSDictionary *userDefaults;
+  #endif
 }
-#endif
 
 @property(nonatomic, readonly) BOOL forceHTTPSEnabled;
 @property(nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
@@ -52,7 +69,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property(nonatomic, readonly) NSInteger URLDownSwipeAction;
 @property(nonatomic, readonly) BOOL gestureBackground;
 
-@property(nonatomic, readonly) BOOL enableFullscreenScrolling;
+@property(nonatomic, readonly) BOOL fullscreenScrollingEnabled;
 @property(nonatomic, readonly) BOOL lockBars;
 @property(nonatomic, readonly) BOOL disablePrivateMode;
 @property(nonatomic, readonly) BOOL alwaysOpenNewTabEnabled;
@@ -95,3 +112,13 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 + (instancetype)sharedInstance;
 
 @end
+
+#ifdef ELECTRA
+
+@interface NSUserDefaults (Private)
+
+- (instancetype)_initWithSuiteName:(NSString *)suiteName container:(NSURL *)container;
+
+@end
+
+#endif

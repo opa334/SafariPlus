@@ -1,6 +1,19 @@
 // NavigationBar.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
@@ -17,15 +30,12 @@
   if(preferenceManager.lockIconColorNormalEnabled ||
     preferenceManager.lockIconColorPrivateEnabled)
   {
-    //Get browsing mode (iOS10)
-    BOOL privateMode = [((Application*)[%c(Application)
-      sharedApplication]).shortcutController.browserController
-      privateBrowsingEnabled];
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     if(preferenceManager.lockIconColorNormalEnabled && !privateMode)
     {
       //Replace color with the specified one
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.lockIconColorNormal, @"#FFFFFF");
@@ -34,7 +44,7 @@
     else if(preferenceManager.lockIconColorPrivateEnabled && privateMode)
     {
       //Replace color with the specified one
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.lockIconColorPrivate, @"#FFFFFF");
@@ -57,15 +67,12 @@
   if(preferenceManager.lockIconColorNormalEnabled ||
     preferenceManager.lockIconColorPrivateEnabled)
   {
-    //Get browsing mode (iOS9)
-    BOOL privateMode = [((Application*)[%c(Application)
-      sharedApplication]).shortcutController.browserController
-      privateBrowsingEnabled];
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     if(preferenceManager.lockIconColorNormalEnabled && !privateMode)
     {
       //Replace color with the specified one
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       arg1 = [UIColor redColor];
       #else
       arg1 = LCPParseColorString(preferenceManager.lockIconColorNormal, @"#FFFFFF");
@@ -74,7 +81,7 @@
     else if(preferenceManager.lockIconColorPrivateEnabled && privateMode)
     {
       //Replace color with the specified one
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       arg1 = [UIColor redColor];
       #else
       arg1 = LCPParseColorString(preferenceManager.lockIconColorPrivate, @"#FFFFFF");
@@ -97,11 +104,11 @@
   if(preferenceManager.appTintColorNormalEnabled ||
     preferenceManager.appTintColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorNormal, @"#FFFFFF");
@@ -109,7 +116,7 @@
     }
     else if(preferenceManager.appTintColorPrivateEnabled && privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorPrivate, @"#FFFFFF");
@@ -124,14 +131,14 @@
   if(preferenceManager.topBarColorNormalEnabled ||
     preferenceManager.topBarColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     _SFNavigationBarBackdrop* backdrop =
       MSHookIvar<_SFNavigationBarBackdrop*>(self, "_backdrop");
 
     if(preferenceManager.topBarColorNormalEnabled && !privateMode) //Normal Mode
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       backdrop.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backdrop.grayscaleTintView.backgroundColor =
@@ -141,7 +148,7 @@
 
     else if(preferenceManager.topBarColorPrivateEnabled && privateMode) //Private Mode
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       backdrop.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backdrop.grayscaleTintView.backgroundColor =
@@ -158,12 +165,12 @@
   if(preferenceManager.progressBarColorNormalEnabled ||
     preferenceManager.progressBarColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     _SFFluidProgressView* progressView = MSHookIvar<_SFFluidProgressView*>(self, "_progressView");
     if(preferenceManager.progressBarColorNormalEnabled && !privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       progressView.progressBarFillColor = [UIColor redColor];
       #else
       progressView.progressBarFillColor =
@@ -172,7 +179,7 @@
     }
     else if(preferenceManager.progressBarColorPrivateEnabled && privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       progressView.progressBarFillColor = [UIColor redColor];
       #else
       progressView.progressBarFillColor =
@@ -188,11 +195,11 @@
   if(preferenceManager.URLFontColorNormalEnabled ||
     preferenceManager.URLFontColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
@@ -200,7 +207,7 @@
     }
     else if(preferenceManager.URLFontColorPrivateEnabled && privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.URLFontColorPrivate, @"#FFFFFF");
@@ -217,12 +224,12 @@
   if(preferenceManager.URLFontColorNormalEnabled ||
     preferenceManager.URLFontColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     UIColor* customColor;
     if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       customColor = [UIColor redColor];
       #else
       customColor = LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
@@ -231,7 +238,7 @@
     }
     else if(preferenceManager.URLFontColorPrivateEnabled && privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       customColor = [UIColor redColor];
       #else
       customColor = LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
@@ -249,11 +256,11 @@
   if(preferenceManager.reloadColorNormalEnabled ||
     preferenceManager.reloadColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled();
+    BOOL privateMode = privateBrowsingEnabled(self.delegate);
 
     if(preferenceManager.reloadColorNormalEnabled && !privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.reloadColorNormal, @"#FFFFFF");
@@ -261,7 +268,7 @@
     }
     else if(preferenceManager.reloadColorPrivateEnabled && privateMode)
     {
-      #ifdef SIMJECT
+      #if defined(SIMJECT) || defined(ELECTRA)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.reloadColorPrivate, @"#FFFFFF");

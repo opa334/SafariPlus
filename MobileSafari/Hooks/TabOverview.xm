@@ -1,6 +1,19 @@
 // TabOverview.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
@@ -42,41 +55,37 @@
         action:@selector(desktopModeButtonPressed)
         forControlEvents:UIControlEventTouchUpInside];
 
-      self.desktopModeButton.frame = CGRectMake(
-        self.privateBrowsingButton.frame.origin.x - 57.5,
-        self.privateBrowsingButton.frame.origin.y,
-        self.privateBrowsingButton.frame.size.height,
-        self.privateBrowsingButton.frame.size.height);
-
-      if(desktopButtonSelected)
+      if(self.delegate.desktopButtonSelected)
       {
         self.desktopModeButton.selected = YES;
         self.desktopModeButton.backgroundColor = [UIColor whiteColor];
       }
     }
 
-    //Add desktopButton to top bar
-    switch(iOSVersion)
+    CGFloat offset = 30;
+    if(iPhoneX)
     {
-      case 8:
-      case 9:
-      [MSHookIvar<UIView*>(self, "_header") addSubview:self.desktopModeButton];
-      break;
-      case 10:
-      [MSHookIvar<_UIBackdropView*>(self, "_header").contentView
-        addSubview:self.desktopModeButton];
-      break;
+      offset = offset * 1.75;
     }
+
+    self.desktopModeButton.frame = CGRectMake(
+      self.privateBrowsingButton.frame.origin.x - (offset + self.privateBrowsingButton.frame.size.height),
+      self.privateBrowsingButton.frame.origin.y,
+      self.privateBrowsingButton.frame.size.height,
+      self.privateBrowsingButton.frame.size.height);
+
+    //Add desktopButton to top bar
+    [[self.privateBrowsingButton superview] addSubview:self.desktopModeButton];
   }
 }
 
 %new
 - (void)desktopModeButtonPressed
 {
-  if(desktopButtonSelected)
+  if(self.delegate.desktopButtonSelected)
   {
     //Deselect desktop button
-    desktopButtonSelected = NO;
+    self.delegate.desktopButtonSelected = NO;
     self.desktopModeButton.selected = NO;
 
     //Remove white color with animation
@@ -88,7 +97,7 @@
   else
   {
     //Select desktop button
-    desktopButtonSelected = YES;
+    self.delegate.desktopButtonSelected = YES;
     self.desktopModeButton.selected = YES;
 
     //Set color to white
@@ -96,13 +105,10 @@
   }
 
   //Reload tabs
-  [mainBrowserController().tabController reloadTabsIfNeeded];
+  [self.delegate updateUserAgents];
 
   //Write button state to plist
-  loadOtherPlist();
-  [otherPlist setObject:[NSNumber numberWithBool:desktopButtonSelected]
-    forKey:@"desktopButtonSelected"];
-  saveOtherPlist();
+  [self.delegate saveDesktopButtonState];
 }
 
 %end

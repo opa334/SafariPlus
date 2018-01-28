@@ -1,4 +1,11 @@
 SIMJECT ?= 0;
+ELECTRA ?= 0;
+
+ifeq ($(ELECTRA),1)
+	export ELECTRA = 1
+else
+	export ELECTRA = 0
+endif
 
 ifeq ($(SIMJECT),1)
 	export SIMJECT = 1
@@ -17,10 +24,16 @@ after-install::
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
-SUBPROJECTS += MobileSafari SpringBoard
+SUBPROJECTS += MobileSafari
 
 ifeq ($(SIMJECT),0)
-SUBPROJECTS += Preferences
+	ifeq ($(ELECTRA),1)
+		SUBPROJECTS += Preferences
+	else
+		SUBPROJECTS += SpringBoard Preferences
+	endif
 endif
+
+
 
 include $(THEOS_MAKE_PATH)/aggregate.mk

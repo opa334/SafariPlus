@@ -1,6 +1,19 @@
 // AVFullScreenPlaybackControlsViewController.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "../SafariPlus.h"
 
 #import "../Shared.h"
@@ -16,7 +29,7 @@
 #import <AVKit/AVPlayerViewController.h>
 #import <WebKit/WKNavigationResponse.h>
 
-%group iOS10_9_8
+%group iOS10Down
 
 %hook AVFullScreenPlaybackControlsViewController
 
@@ -61,18 +74,11 @@
           {
             x = x - 52.3334;
           }
-          if(MSHookIvar<BOOL>(self, "_showsMediaSelectionButton"))
-          {
-            x = x - 47;
-          }
         }
-        else
+
+        if(!MSHookIvar<UIButton*>(self, "_mediaSelectionButton").hidden)
         {
-          //Different approach needed on iOS 8 for some reason
-          if(!MSHookIvar<UIButton*>(self, "_mediaSelectionButton").hidden)
-          {
-            x = x - 47;
-          }
+          x = x - 47;
         }
 
         buttonPosition = CGPointMake(x, self.view.frame.size.height - 37);
@@ -93,7 +99,7 @@
 {
   NSString* getVideoURL;
 
-  if(iOSVersion < 10)
+  if(iOSVersion <= 9)
   {
     //For some reason for loops have issues prior to iOS 10 (or I'm just stupid lol)
     getVideoURL = [NSString stringWithFormat:
@@ -122,39 +128,57 @@
     @"}"];
   }
 
-  SafariWebView* webView = activeWebView();
-  [webView evaluateJavaScript:getVideoURL completionHandler:^(id result, NSError *error)
+  NSArray<SafariWebView*>* webViews = activeWebViews();
+
+  unsigned int webViewCount = [webViews count];
+  __block unsigned int webViewPos = 0;
+  __block NSError* _error;
+
+  //Check all active webViews (2 at most) for the video URL
+  for(SafariWebView* webView in webViews)
   {
-    if(result)
+    [webView evaluateJavaScript:getVideoURL completionHandler:^(id result, NSError *error)
     {
-      NSURL* videoURL = [NSURL URLWithString:result];
-      NSURLRequest* request = [NSURLRequest requestWithURL:videoURL];
+      webViewPos++;
+      if(result)
+      {
+        NSURL* videoURL = [NSURL URLWithString:result];
+        NSURLRequest* request = [NSURLRequest requestWithURL:videoURL];
 
-      SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
-      downloadInfo.filename = [videoURL lastPathComponent];
-      downloadInfo.isVideo = YES;
-      downloadInfo.alternatePresentationController = self;
-      downloadInfo.sourceRect = self.downloadButton.frame;
+        SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
+        downloadInfo.filename = [videoURL lastPathComponent];
+        downloadInfo.isVideo = YES;
+        downloadInfo.presentationController = self;
+        downloadInfo.sourceRect = self.downloadButton.frame;
 
-      [[SPDownloadManager sharedInstance] presentDownloadAlertWithDownloadInfo:downloadInfo];
-    }
-    else if(error)
-    {
-      [self presentErrorAlertWithError:error];
-    }
-    else
-    {
-      [self presentNotFoundError];
-    }
-  }];
+        [downloadManager presentDownloadAlertWithDownloadInfo:downloadInfo];
+      }
+      else if(error)
+      {
+        _error = error;
+        if(webViewPos == webViewCount)
+        {
+          [self presentErrorAlertWithError:error];
+        }
+      }
+      else if(webViewPos == webViewCount)
+      {
+        if(_error)
+        {
+          [self presentErrorAlertWithError:_error];
+        }
+        else
+        {
+          [self presentNotFoundError];
+        }
+      }
+    }];
+  }
 }
 
 %new
 - (void)presentErrorAlertWithError:(NSError*)error
 {
-  //NSString* exception = [error.userInfo
-    //objectForKey:@"WKJavaScriptExceptionMessage"];
-
   UIAlertController *errorAlert = [UIAlertController
     alertControllerWithTitle:[localizationManager
     localizedSPStringForKey:@"ERROR"] message:[NSString
@@ -202,6 +226,6 @@
 {
   if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
   {
-    %init(iOS10_9_8)
+    %init(iOS10Down)
   }
 }

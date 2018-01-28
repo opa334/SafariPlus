@@ -1,5 +1,18 @@
-//  SPDownload.xm
+// SPDownload.m
 // (c) 2017 opa334
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPDownload.h"
 
@@ -55,7 +68,7 @@
   self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession]
     downloadTaskWithRequest:self.request];
 
-  //Set taskIdentifier to make downloade resumable after Safari has been closed
+  //Set taskIdentifier to make download resumable after Safari has been closed
   self.taskIdentifier = self.downloadTask.taskIdentifier;
 
   if(!self.paused)
@@ -73,6 +86,8 @@
   //Create downloadTask from resumeData
   self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession]
     downloadTaskWithResumeData:self.resumeData];
+
+  //NSLog(@"SafariPlus - Got download task %@ for resume data %@", self.downloadTask, self.resumeData);
 
   //Get new identifier
   self.taskIdentifier = self.downloadTask.taskIdentifier;
@@ -176,32 +191,23 @@
 
 - (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize
 {
-  //Verify filesize once
-  if(!verifiedSize)
+  //Verify filesize
+  if(self.filesize != filesize)
   {
-    verifiedSize = YES;
+    //Set filesize
+    self.filesize = filesize;
 
-    if(self.filesize != filesize)
+    //Also update size of info
+    self.orgInfo.filesize = filesize;
+
+    //Check if enough space is left
+    if(![self.downloadManagerDelegate enoughDiscspaceForDownloadInfo:self.orgInfo])
     {
-      //Set filesize
-      self.filesize = filesize;
+      [self cancelDownload];
 
-      //Also update size of info
-      self.orgInfo.filesize = filesize;
-
-      //Check if enough space left
-      if(![self.downloadManagerDelegate enoughDiscspaceForDownloadInfo:self.orgInfo])
-      {
-        [self cancelDownload];
-
-        [self.downloadManagerDelegate presentNotEnoughSpaceAlertWithDownloadInfo:self.orgInfo];
-      }
+      [self.downloadManagerDelegate presentNotEnoughSpaceAlertWithDownloadInfo:self.orgInfo];
     }
-
-    //Not needed anymore
-    self.orgInfo = nil;
   }
-
 
   //Update totalBytesWritten
   self.totalBytesWritten = totalBytesWritten;

@@ -5,23 +5,6 @@
 		{
 			cell = "PSGroupCell";
 			defaults = "com.opa334.safariplusprefs";
-			label = "ICONS";
-		},
-		{
-			action = desktopButtonLink;
-			cell = PSButtonCell;
-			icon = "desktopButton.png";
-			label = "DESKTOP_MODE_BUTTON";
-		},
-		{
-			action = deviceButtonLink;
-			cell = PSButtonCell;
-			icon = "Device.png";
-			label = "LOCAL_FILE_BUTTON";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
 			label = "PICKER_INSPIRED";
 		},
 		{

@@ -1,5 +1,18 @@
-//  SafariPlusPrefs.m
+// SafariPlusPrefs.m
 // (c) 2017 opa334
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SafariPlusPrefs.h"
 
@@ -463,7 +476,7 @@
 
 - (NSArray *)modeValues
 {
-	return @[@1, @2];
+	return @[@(ModeSwitchActionNormalMode), @(ModeSwitchActionPrivateMode)];
 }
 
 - (NSArray *)modeTitles
@@ -478,7 +491,7 @@
 
 - (NSArray *)stateValues
 {
-	return @[@1, @2];
+	return @[@(CloseTabActionOnSafariClosed), @(CloseTabActionOnSafariMinimized)];
 }
 
 - (NSArray *)stateTitles
@@ -493,7 +506,7 @@
 
 - (NSArray *)closeModeValues
 {
-	return @[@1, @2, @3, @4];
+	return @[@(CloseTabActionFromActiveMode), @(CloseTabActionFromNormalMode), @(CloseTabActionFromPrivateMode), @(CloseTabActionFromBothModes)];
 }
 
 - (NSArray *)closeModeTitles
@@ -523,7 +536,7 @@
 
 - (NSArray *)gestureActionValues
 {
-	return @[@1, @2, @3, @4, @5, @6, @7, @8, @9, @10];
+	return @[@(GestureActionCloseActiveTab), @(GestureActionOpenNewTab), @(GestureActionDuplicateActiveTab), @(GestureActionCloseAllTabs), @(GestureActionSwitchMode), @(GestureActionSwitchTabBackwards), @(GestureActionSwitchTabForwards), @(GestureActionReloadActiveTab), @(GestureActionRequestDesktopSite), @(GestureActionOpenFindOnPage)];
 }
 
 - (NSArray *)gestureActionTitles
@@ -551,6 +564,8 @@
 	return _specifiers;
 }
 @end
+
+#ifndef ELECTRA
 
 @implementation ColorPrefsController
 
@@ -606,6 +621,19 @@
 }
 @end
 
+#else
+
+@implementation ColorPrefsController
+
+- (NSArray *)specifiers
+{
+	[(UINavigationItem *)self.navigationItem setTitle:@"Not supported on Electra"];
+	return nil;
+}
+@end
+
+#endif
+
 @implementation CreditsController
 
 - (NSArray *)specifiers
@@ -617,26 +645,6 @@
 	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CREDITS"]];
 	return _specifiers;
-}
-
-- (void)desktopButtonLink
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://icons8.com/icon/1345/workstation"]];
-}
-
-- (void)deviceButtonLink
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://icons8.com/icon/79/iphone"]];
-}
-
-- (void)LockGlyphXRepoLink
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/evilgoldfish/LockGlyphX"]];
-}
-
-- (void)LockGlyphXFileLink
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/evilgoldfish/LockGlyphX/blob/master/Prefs/LockGlyphXPrefs.mm"]];
 }
 
 - (void)WatusiLink

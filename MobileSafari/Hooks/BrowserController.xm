@@ -1,13 +1,33 @@
 // BrowserController.xm
 // (c) 2017 opa334
 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #import "../SafariPlus.h"
 
+#import "../Defines.h"
+#import "../Enums.h"
 #import "../Shared.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPDownloadsNavigationController.h"
 
 %hook BrowserController
+
+//Properties for gesture recognizers
+%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
+%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
+%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 
 //Present downloads view
 %new
@@ -17,24 +37,9 @@
   SPDownloadsNavigationController* downloadsController =
     [[SPDownloadsNavigationController alloc] init];
 
-  if(iOSVersion > 9)
-  {
-    dispatch_async(dispatch_get_main_queue(), ^
-    {
-      //Present SPDownloadsNavigationController
-      [self.rootViewController presentViewController:downloadsController
-        animated:YES completion:nil];
-    });
-  }
-  else
-  {
-    dispatch_async(dispatch_get_main_queue(), ^
-    {
-      //Present SPDownloadsNavigationController
-      [MSHookIvar<BrowserRootViewController*>(self, "_rootViewController")
-        presentViewController:downloadsController animated:YES completion:nil];
-    });
-  }
+  //Present SPDownloadsNavigationController
+  [rootViewControllerForBrowserController(self) presentViewController:downloadsController
+    animated:YES completion:nil];
 }
 
 //URL Swipe actions
@@ -46,60 +51,59 @@
 
   switch(swipeAction)
   {
-    case 1: //Close active tab
+    case GestureActionCloseActiveTab:
     [self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
     shouldClean = YES;
     break;
 
-    case 2: //Open new tab
+    case GestureActionOpenNewTab:
     {
-      if(iOSVersion == 8)
-      {
-        [self newTabKeyPressed];
-      }
-      else
+      if(iOSVersion >= 9)
       {
         [self.tabController newTab];
       }
-      break;
-    }
-
-    case 3: //Duplicate active tab
-    {
-      switch(iOSVersion)
+      else //iOS 8
       {
-        case 8:
-        case 9:
-        [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
-          inBackground:preferenceManager.gestureBackground animated:YES];
-        break;
-
-        case 10:
-        case 11:
-        [self loadURLInNewTab:[self.tabController.activeTabDocument URL]
-          inBackground:preferenceManager.gestureBackground animated:YES];
-        break;
+        [self newTabKeyPressed];
       }
       break;
     }
 
-    case 4: //Close all tabs from active mode
-    [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
-    shouldClean = YES;
-    break;
-
-    case 5: //Switch mode (Normal/Private)
+    case GestureActionDuplicateActiveTab:
     {
-      togglePrivateBrowsing();
+      if(iOSVersion >= 10)
+      {
+        [self loadURLInNewTab:[self.tabController.activeTabDocument URL]
+          inBackground:preferenceManager.gestureBackground animated:YES];
+      }
+      else //iOS 8, 9
+      {
+        [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
+          inBackground:preferenceManager.gestureBackground animated:YES];
+      }
+
+      break;
+    }
+
+    case GestureActionCloseAllTabs:
+    {
+      [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
+      shouldClean = YES;
+      break;
+    }
+
+    case GestureActionSwitchMode:
+    {
+      togglePrivateBrowsing(self);
       shouldClean = YES;
     }
     break;
 
-    case 6: //Tab backward
+    case GestureActionSwitchTabBackwards:
     {
       NSArray* activeTabs;
 
-      if(privateBrowsingEnabled())
+      if(privateBrowsingEnabled(self))
       {
         //Private mode enabled -> set currentTabs to tabs of private mode
         activeTabs = self.tabController.privateTabDocuments;
@@ -122,11 +126,11 @@
       break;
     }
 
-    case 7: //Tab forward
+    case GestureActionSwitchTabForwards:
     {
       NSArray* activeTabs;
 
-      if(privateBrowsingEnabled())
+      if(privateBrowsingEnabled(self))
       {
         //Private mode enabled -> set currentTabs to tabs of private mode
         activeTabs = self.tabController.privateTabDocuments;
@@ -149,11 +153,13 @@
       break;
     }
 
-    case 8: //Reload active tab
-    [self.tabController.activeTabDocument reload];
-    break;
+    case GestureActionReloadActiveTab:
+    {
+      [self.tabController.activeTabDocument reload];
+      break;
+    }
 
-    case 9: //Request desktop site
+    case GestureActionRequestDesktopSite:
     {
       if(iOSVersion > 8)
       {
@@ -166,19 +172,20 @@
       break;
     }
 
-    case 10: //Open 'find on page'
+    case GestureActionOpenFindOnPage:
     {
+      //Not available on iOS 8
       if(iOSVersion != 8)
       {
-        if(iOSVersion == 9)
-        {
-          self.shouldFocusFindOnPageTextField = YES;
-          [self showFindOnPage];
-        }
-        else
+        if(iOSVersion >= 10)
         {
           [self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
           [self.tabController.activeTabDocument.findOnPageView showFindOnPage];
+        }
+        else //iOS 9
+        {
+          self.shouldFocusFindOnPageTextField = YES;
+          [self showFindOnPage];
         }
       }
       break;
@@ -187,7 +194,7 @@
     default:
     break;
   }
-  if(shouldClean && privateBrowsingEnabled())
+  if(shouldClean && privateBrowsingEnabled(self))
   {
     //Remove private mode message
     if(iOSVersion >= 11)
@@ -218,22 +225,22 @@
 {
   switch(preferenceManager.autoCloseTabsFor)
   {
-    case 1: //Active mode
+    case CloseTabActionFromActiveMode:
     //Close tabs from active surfing mode
     [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
     break;
 
-    case 2: //Normal mode
-    if(privateBrowsingEnabled())
+    case CloseTabActionFromNormalMode:
+    if(privateBrowsingEnabled(self))
     {
       //Surfing mode is private -> switch to normal mode
-      togglePrivateBrowsing();
+      togglePrivateBrowsing(self);
 
       //Close tabs from normal mode
       [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
       //Switch back to private mode
-      togglePrivateBrowsing();
+      togglePrivateBrowsing(self);
     }
     else
     {
@@ -242,17 +249,17 @@
     }
     break;
 
-    case 3: //Private mode
-    if(!privateBrowsingEnabled())
+    case CloseTabActionFromPrivateMode:
+    if(!privateBrowsingEnabled(self))
     {
       //Surfing mode is normal -> switch to private mode
-      togglePrivateBrowsing();
+      togglePrivateBrowsing(self);
 
       //Close tabs from private mode
       [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
       //Switch back to normal mode
-      togglePrivateBrowsing();
+      togglePrivateBrowsing(self);
     }
     else
     {
@@ -261,18 +268,18 @@
     }
     break;
 
-    case 4: //Both modes
+    case CloseTabActionFromBothModes: //Both modes
     //Close tabs from active surfing mode
     [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
     //Switch mode
-    togglePrivateBrowsing();
+    togglePrivateBrowsing(self);
 
     //Close tabs from other surfing mode
     [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
     //Switch back
-    togglePrivateBrowsing();
+    togglePrivateBrowsing(self);
     break;
 
     default:
@@ -284,27 +291,34 @@
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
-  if(switchToMode == 1 /*Normal Mode*/ && privateBrowsingEnabled())
+  if(switchToMode == ModeSwitchActionNormalMode && privateBrowsingEnabled(self))
   {
     //Private browsing mode is active -> toggle browsing mode
-    togglePrivateBrowsing();
+    togglePrivateBrowsing(self);
   }
 
-  else if(switchToMode == 2 /*Private Mode*/  && !privateBrowsingEnabled())
+  else if(switchToMode == ModeSwitchActionPrivateMode  && !privateBrowsingEnabled(self))
   {
     //Normal browsing mode is active -> toggle browsing mode
-    togglePrivateBrowsing();
+    togglePrivateBrowsing(self);
 
     //Hide private mode notice
-    [self.tabController.tiltedTabView
-      setShowsExplanationView:NO animated:NO];
+    if(iOSVersion >= 11)
+    {
+      [self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
+        animated:NO];
+    }
+    else
+    {
+      [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+    }
   }
 }
 
 //Full screen scrolling
 - (BOOL)_isVerticallyConstrained
 {
-  return (preferenceManager.enableFullscreenScrolling) ? YES : %orig;
+  return (preferenceManager.fullscreenScrollingEnabled) ? YES : %orig;
 }
 
 //Fully disable private mode
@@ -319,13 +333,52 @@
   return (preferenceManager.lockBars) ? NO : %orig;
 }
 
-//Update tabs according to desktop button status when user toggles browsing mode
-- (void)togglePrivateBrowsing
+- (void)_initSubviews
 {
   %orig;
-  if(preferenceManager.desktopButtonEnabled)
+  if(preferenceManager.URLLeftSwipeGestureEnabled || preferenceManager.URLRightSwipeGestureEnabled
+    || preferenceManager.URLDownSwipeGestureEnabled)
   {
-    [self.tabController reloadTabsIfNeeded];
+    _SFNavigationBarURLButton* URLButton = MSHookIvar<_SFNavigationBarURLButton*>(self.navigationBar, "_URLOutline");
+
+    if(preferenceManager.URLLeftSwipeGestureEnabled)
+    {
+      //Create gesture recognizer
+      self.URLBarSwipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+        initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+
+      //Set swipe direction to left
+      self.URLBarSwipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+
+      //Add gestureRecognizer
+      [URLButton addGestureRecognizer:self.URLBarSwipeLeftGestureRecognizer];
+    }
+
+    if(preferenceManager.URLRightSwipeGestureEnabled && !self.URLBarSwipeRightGestureRecognizer)
+    {
+      //Create gesture recognizer
+      self.URLBarSwipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+        initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+
+      //Set swipe direction to right
+      self.URLBarSwipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+
+      //Add gestureRecognizer
+      [URLButton addGestureRecognizer:self.URLBarSwipeRightGestureRecognizer];
+    }
+
+    if(preferenceManager.URLDownSwipeGestureEnabled && !self.URLBarSwipeDownGestureRecognizer)
+    {
+      //Create gesture recognizer
+      self.URLBarSwipeDownGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+        initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+
+      //Set swipe direction to down
+      self.URLBarSwipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+
+      //Add gestureRecognizer
+      [URLButton addGestureRecognizer:self.URLBarSwipeDownGestureRecognizer];
+    }
   }
 }
 
@@ -353,3 +406,30 @@
 }
 
 %end
+
+%group iOS9Up
+%hook BrowserController
+
+//Auto switch mode on external URL opened
+- (NSURL*)handleExternalURL:(NSURL*)URL
+{
+  if(URL && preferenceManager.forceModeOnExternalLinkEnabled)
+  {
+    [self modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
+  }
+
+  return %orig;
+}
+
+%end
+%end
+
+%ctor
+{
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+  {
+    %init(iOS9Up);
+  }
+
+  %init();
+}

@@ -46,7 +46,7 @@
 /* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /User/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.\n3) Falls Probleme auftreten, ist es möglich die obere Leiste des Download Menüs für 5 Sekunden zu berühren, um alle Downloads zu beenden und die temporären Dateien zu bereinigen.";
+"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /var/mobile/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.\n3) Falls Probleme auftreten, ist es möglich die obere Leiste des Download Menüs für 5 Sekunden zu berühren, um alle Downloads zu beenden und die temporären Dateien zu bereinigen.";
 
 "VIDEO_DOWNLOADING" = "Video Downloads";
 "VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\n\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
@@ -154,8 +154,8 @@
 "ALWAYS_OPEN_NEW_TAB_FOOTER" = "Öffnet angeklickte Links immer in neuen Tabs.";
 "ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
 
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 beim Aufrufen eines 'mailto:<email>' Links erscheint.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10) Mailto Dialog deaktivieren";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";
 
 /* Color Settings */
 
@@ -190,17 +190,11 @@
 /* Credits */
 
 "CREDITS" = "Credits";
-"ICONS" = "Icons";
-"DESKTOP_MODE_BUTTON" = "'Desktop Modus' Button";
-"LOCAL_FILE_BUTTON" = "'Lokale Datei' Button";
-"PICKER_FILE_ENTRY" = "Dateiauswahl: Datei Icon";
-"PICKER_DIRECTORY_ENTRY" = "Dateiauswahl: Ordner Icon";
-"STOLEN_FROM" = "Lokalisierungscode geklaut von";
 "PICKER_INSPIRED" = "Dateiauswahl inspiriert von";
 
 /* In app */
 
-"LOCAL_FILE" = "Lokale Datei";
+"LOCAL_FILES" = "Lokale Dateien";
 
 /* File picker */
 
