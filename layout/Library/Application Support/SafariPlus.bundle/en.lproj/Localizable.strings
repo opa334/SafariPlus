@@ -209,10 +209,12 @@
 "OPEN_IN" = "Open in...";
 "SHOW_IN_FILZA" = "Show in Filza";
 "DELETE_FILE" = "Delete File";
+"RENAME_FILE" = "Rename File";
 "WARNING" = "Warning!";
 "DELETE_FILE_MESSAGE" = "Are you sure you want to permanently delete the file <fn>? Recovering it later is not possible!";
 "CLEAR_EVERYTHING_WARNING" = "Are you sure you want to cancel all downloads and clear all temporary files?";
 "DELETE" = "Delete";
+"RENAME" = "Rename";
 "DOWNLOAD_STARTED" = "Download started";
 "DOWNLOAD_SUCCESS" = "Download succeeded";
 "SAVED_IMAGE" = "Saved Image";

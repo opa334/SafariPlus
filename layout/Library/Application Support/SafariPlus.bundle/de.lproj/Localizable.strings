@@ -51,7 +51,6 @@
 "VIDEO_DOWNLOADING" = "Video Downloads";
 "VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\n\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
 
-
 "INSTANT_DOWNLOAD" = "Direkter Download";
 "INSTANT_DOWNLOAD_FOOTER" = "Deaktiviert das Download-Menü und benutzt standardmäßig immer die ausgewählte Option.";
 "OPTION" = "Option";
@@ -210,11 +209,13 @@
 "OPEN_IN" = "Öffnen in ...";
 "SHOW_IN_FILZA" = "In Filza anzeigen";
 "DELETE_FILE" = "Datei löschen";
+"RENAME_FILE" = "Datei umbenennen";
 "WARNING" = "Warnung!";
 "DELETE_FILE_MESSAGE" = "Soll die Datei <fn> wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
 "CLEAR_EVERYTHING_WARNING" = "Sollen alle Downloads abgebrochen und die temporären Dateien bereinigt werden?";
 "DELETE" = "Löschen";
 "DOWNLOAD_STARTED" = "Download gestartet";
+"RENAME" = "Umbenennen";
 "DOWNLOAD_SUCCESS" = "Download abgeschlossen";
 "SAVED_IMAGE" = "Bild gespeichert";
 "ERROR" = "Fehler";

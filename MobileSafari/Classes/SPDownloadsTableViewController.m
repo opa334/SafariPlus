@@ -175,11 +175,11 @@
     //Check if Filza is installed
     BOOL filzaInstalled = [_fileManager fileExistsAtPath:@"/Applications/Filza.app"];
 
-    //Get fileName for title
-    NSString* fileName = [[fileURL lastPathComponent] stringByRemovingPercentEncoding];
+    //Get filename for title
+    NSString* filename = [[fileURL lastPathComponent] stringByRemovingPercentEncoding];
 
     //Create alertSheet for tapped file
-    UIAlertController *openAlert = [UIAlertController alertControllerWithTitle:fileName
+    UIAlertController *openAlert = [UIAlertController alertControllerWithTitle:filename
       message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     //Get fileUTI
@@ -190,7 +190,7 @@
     if(UTTypeConformsTo(fileUTI, kUTTypeMovie) || UTTypeConformsTo(fileUTI, kUTTypeAudio))
     {
       //File is audio or video -> Add option to play file
-      UIAlertAction *playAction = [UIAlertAction
+      UIAlertAction* playAction = [UIAlertAction
         actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
       {
@@ -200,7 +200,7 @@
       [openAlert addAction:playAction];
     }
 
-    UIAlertAction *openInAction = [UIAlertAction actionWithTitle:[localizationManager
+    UIAlertAction* openInAction = [UIAlertAction actionWithTitle:[localizationManager
       localizedSPStringForKey:@"OPEN_IN"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
     {
@@ -227,58 +227,111 @@
     if(filzaInstalled)
     {
       //Filza is installed -> add 'Show in Filza' option
-      UIAlertAction *showInFilzaAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"SHOW_IN_FILZA"]
+      UIAlertAction* showInFilzaAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"SHOW_IN_FILZA"]
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
       {
         //https://stackoverflow.com/a/32145122
-        NSString *FilzaPath = [NSString stringWithFormat:@"%@%@", @"filza://view",[fileURL absoluteString]];
-        [self openScheme:FilzaPath];
+        NSString* filzaPath = [NSString stringWithFormat:@"%@%@", @"filza://view",[fileURL absoluteString]];
+        [self openScheme:filzaPath];
       }];
 
       [openAlert addAction:showInFilzaAction];
     }
 
+    //Add rename option
+    UIAlertAction* renameAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"RENAME_FILE"]
+      style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+    {
+      UIAlertController* selectFilenameController = [UIAlertController
+        alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"RENAME_FILE"]
+        message:nil
+        preferredStyle:UIAlertControllerStyleAlert];
+
+      [selectFilenameController addTextFieldWithConfigurationHandler:^(UITextField *textField)
+      {
+        textField.text = filename;
+        textField.placeholder = [localizationManager localizedSPStringForKey:@"FILENAME"];
+        textField.textColor = [UIColor blackColor];
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.borderStyle = UITextBorderStyleNone;
+      }];
+
+      //Add cancel option
+      UIAlertAction *cancelAction = [UIAlertAction
+        actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
+        style:UIAlertActionStyleDefault handler:nil];
+
+      [selectFilenameController addAction:cancelAction];
+
+      //Add rename option
+      UIAlertAction* confirmRenameAction = [UIAlertAction
+        actionWithTitle:[localizationManager localizedSPStringForKey:@"RENAME"]
+        style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+      {
+        //Rename file
+        [_fileManager moveItemAtPath:[fileURL path] toPath:[[[fileURL path]
+          stringByDeletingLastPathComponent]
+          stringByAppendingPathComponent:selectFilenameController.textFields[0].text]
+          error:nil];
+
+        //Reload files
+        [self reloadDataAndDataSources];
+      }];
+
+      [selectFilenameController addAction:confirmRenameAction];
+
+      //Make rename option bold on iOS 9 and above
+      if(iOSVersion > 8)
+      {
+        selectFilenameController.preferredAction = confirmRenameAction;
+      }
+
+      [self presentViewController:selectFilenameController animated:YES completion:nil];
+    }];
+
+    [openAlert addAction:renameAction];
+
     //Add delete option
-    UIAlertAction *deleteAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE_FILE"]
-          style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
-          {
-            //Create alert to confirm deletion of file
-            UIAlertController* confirmationController = [UIAlertController
-              alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
-              message:[[localizationManager localizedSPStringForKey:@"DELETE_FILE_MESSAGE"]
-              stringByReplacingOccurrencesOfString:@"<fn>" withString:fileName]
-              preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction* deleteAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE_FILE"]
+      style:UIAlertActionStyleDestructive handler:^(UIAlertAction* action)
+    {
+      //Create alert to confirm deletion of file
+      UIAlertController* confirmationController = [UIAlertController
+        alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
+        message:[[localizationManager localizedSPStringForKey:@"DELETE_FILE_MESSAGE"]
+        stringByReplacingOccurrencesOfString:@"<fn>" withString:filename]
+        preferredStyle:UIAlertControllerStyleAlert];
 
-            //Add cancel option
-            UIAlertAction *cancelAction = [UIAlertAction
-              actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
-              style:UIAlertActionStyleDefault handler:nil];
+      //Add cancel option
+      UIAlertAction *cancelAction = [UIAlertAction
+        actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
+        style:UIAlertActionStyleDefault handler:nil];
 
-            [confirmationController addAction:cancelAction];
+      [confirmationController addAction:cancelAction];
 
-            //Add delete option
-            UIAlertAction *deleteAction = [UIAlertAction
-              actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE"]
-              style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
-            {
-              //Delete file
-              [_fileManager removeItemAtPath:[fileURL path] error:nil];
+      //Add delete option
+      UIAlertAction *deleteAction = [UIAlertAction
+        actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE"]
+        style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
+      {
+        //Delete file
+        [_fileManager removeItemAtPath:[fileURL path] error:nil];
 
-              //Reload files
-              [self reloadDataAndDataSources];
-            }];
+        //Reload files
+        [self reloadDataAndDataSources];
+      }];
 
-            [confirmationController addAction:deleteAction];
+      [confirmationController addAction:deleteAction];
 
-            //Make cancel option bold on iOS 9 and above
-            if(iOSVersion > 8)
-            {
-              confirmationController.preferredAction = cancelAction;
-            }
+      //Make cancel option bold on iOS 9 and above
+      if(iOSVersion > 8)
+      {
+        confirmationController.preferredAction = cancelAction;
+      }
 
-            //Present confirmation alert
-            [self presentViewController:confirmationController animated:YES completion:nil];
-          }];
+      //Present confirmation alert
+      [self presentViewController:confirmationController animated:YES completion:nil];
+    }];
 
     [openAlert addAction:deleteAction];
 
