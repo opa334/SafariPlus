@@ -260,7 +260,17 @@
 - (BOOL)uploadAnyFileOptionEnabled { return [[userDefaults objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
 - (BOOL)desktopButtonEnabled { return [[userDefaults objectForKey:@"desktopButtonEnabled"] boolValue]; }
 - (BOOL)longPressSuggestionsEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsEnabled"] boolValue]; }
-- (CGFloat)longPressSuggestionsDuration { return [[userDefaults objectForKey:@"longPressSuggestionsDuration"] floatValue]; }
+- (CGFloat)longPressSuggestionsDuration
+{
+  if([userDefaults objectForKey:@"longPressSuggestionsDuration"])
+  {
+    return [[userDefaults objectForKey:@"longPressSuggestionsDuration"] floatValue];
+  }
+  else
+  {
+    return 0.5;
+  }
+}
 - (BOOL)longPressSuggestionsFocusEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsFocusEnabled"] boolValue]; }
 
 - (BOOL)enhancedDownloadsEnabled { return [[userDefaults objectForKey:@"enhancedDownloadsEnabled"] boolValue]; }
@@ -300,23 +310,23 @@
 - (BOOL)alwaysOpenNewTabEnabled { return [[userDefaults objectForKey:@"alwaysOpenNewTabEnabled"] boolValue]; }
 - (BOOL)suppressMailToDialog { return [[userDefaults objectForKey:@"suppressMailToDialog"] boolValue]; }
 
-- (BOOL) appTintColorNormalEnabled { return NO; }
-- (BOOL) topBarColorNormalEnabled { return NO; }
-- (BOOL) URLFontColorNormalEnabled { return NO; }
-- (BOOL) progressBarColorNormalEnabled { return NO; }
-- (BOOL) tabTitleColorNormalEnabled { return NO; }
-- (BOOL) reloadColorNormalEnabled { return NO; }
-- (BOOL) lockIconColorNormalEnabled { return NO; }
-- (BOOL) bottomBarColorNormalEnabled { return NO; }
+- (BOOL)appTintColorNormalEnabled { return NO; }
+- (BOOL)topBarColorNormalEnabled { return NO; }
+- (BOOL)URLFontColorNormalEnabled { return NO; }
+- (BOOL)progressBarColorNormalEnabled { return NO; }
+- (BOOL)tabTitleColorNormalEnabled { return NO; }
+- (BOOL)reloadColorNormalEnabled { return NO; }
+- (BOOL)lockIconColorNormalEnabled { return NO; }
+- (BOOL)bottomBarColorNormalEnabled { return NO; }
 
-- (BOOL) appTintColorPrivateEnabled { return NO; }
-- (BOOL) topBarColorPrivateEnabled { return NO; }
-- (BOOL) URLFontColorPrivateEnabled { return NO; }
-- (BOOL) progressBarColorPrivateEnabled { return NO; }
-- (BOOL) tabTitleColorPrivateEnabled { return NO; }
-- (BOOL) reloadColorPrivateEnabled { return NO; }
-- (BOOL) lockIconColorPrivateEnabled { return NO; }
-- (BOOL) bottomBarColorPrivateEnabled { return NO; }
+- (BOOL)appTintColorPrivateEnabled { return NO; }
+- (BOOL)topBarColorPrivateEnabled { return NO; }
+- (BOOL)URLFontColorPrivateEnabled { return NO; }
+- (BOOL)progressBarColorPrivateEnabled { return NO; }
+- (BOOL)tabTitleColorPrivateEnabled { return NO; }
+- (BOOL)reloadColorPrivateEnabled { return NO; }
+- (BOOL)lockIconColorPrivateEnabled { return NO; }
+- (BOOL)bottomBarColorPrivateEnabled { return NO; }
 
 #endif
 
