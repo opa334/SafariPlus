@@ -41,8 +41,6 @@
 
   self.clipsToBounds = YES;
 
-  [self makeKeyWindow];
-
   //Update frame once
   [self updateFrame];
 
