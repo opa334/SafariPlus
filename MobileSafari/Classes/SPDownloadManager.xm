@@ -69,8 +69,11 @@
   rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
   #endif
 
-  //Init notification window for status bar notifications
-  self.notificationWindow = [[SPStatusBarNotificationWindow alloc] init];
+  if(!preferenceManager.disableBarNotificationsEnabled)
+  {
+    //Init notification window for status bar notifications
+    self.notificationWindow = [[SPStatusBarNotificationWindow alloc] init];
+  }
 
   #ifndef ELECTRA
 
@@ -239,6 +242,16 @@
   }
 }
 
+- (void)forceCancelDownload:(SPDownload*)download
+{
+  //Remove download from array
+  [self.pendingDownloads removeObject:download];
+  download = nil;
+
+  //Reload table
+  [self.navigationControllerDelegate reloadTopTableView];
+}
+
 - (void)loadDownloadsFromDisk
 {
   //NSLog(@"SafariPlus - loadDownloadsFromDisk");
@@ -271,7 +284,7 @@
 - (void)sendNotificationWithText:(NSString*)text
 {
   if([[UIApplication sharedApplication] applicationState] == 0 &&
-    !preferenceManager.disableBarNotificationsEnabled)
+    !preferenceManager.disableBarNotificationsEnabled && self.notificationWindow)
   {
     //Application is active -> Use status bar notification if not disabled
     //Dissmiss current status notification (if one exists)

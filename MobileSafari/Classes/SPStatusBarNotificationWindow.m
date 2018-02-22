@@ -15,53 +15,74 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPStatusBarNotificationWindow.h"
-#import "SPStatusBarNotificationRootController.h"
 #import "SPStatusBarNotification.h"
 #import "SPStatusBarTextView.h"
 #import "../Shared.h"
+
+@interface UIWindow (private)
+- (id)_initWithOrientation:(long long)arg1;
+- (BOOL)_canAffectStatusBarAppearance;
+@end
 
 @implementation SPStatusBarNotificationWindow
 
 - (instancetype)init
 {
-  self = [super init];
+  //Force portrait initialization to solve an issue that occurs when this window gets initialized in landscape mode
+  self = [super _initWithOrientation:1];
 
   self.windowLevel = UIWindowLevelAlert + 1;
-
-  self.rootViewController = [[SPStatusBarNotificationRootController alloc] init];
-  self.rootViewController.view = [[UIView alloc] init];
-
-  _textView = [[SPStatusBarTextView alloc] init];
-  _textView.translatesAutoresizingMaskIntoConstraints = NO;
-  NSDictionary* views = NSDictionaryOfVariableBindings(_textView);
-
-  [self.rootViewController.view addSubview:_textView];
-  [self.rootViewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_textView(20)]-0-|" options:0 metrics:nil views:views]];
-  [self.rootViewController.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-0-[_textView]-0-|" options:0 metrics:nil views:views]];
-
   self.clipsToBounds = YES;
 
-  //Update frame once
-  [self updateFrame];
+  //Set base transformation
+  _baseTransformation = self.transform;
 
-  _textView.frame = self.rootViewController.view.frame;
-  [_textView layoutSubviews];
+  //Init and add textView
+  _textView = [[SPStatusBarTextView alloc] init];
+  [self addSubview:_textView];
 
   //Register for orientation changes
   [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
   [[NSNotificationCenter defaultCenter]
     addObserver:self
-    selector:@selector(updateFrame)
+    selector:@selector(orientationDidChange)
     name:UIDeviceOrientationDidChangeNotification
     object:nil];
 
   return self;
 }
 
-- (void)updateFrame
+- (BOOL)_canAffectStatusBarAppearance
 {
+  return NO;
+}
+
+- (void)updateTransformation
+{
+  switch([UIApplication sharedApplication].statusBarOrientation)
+  {
+    case UIInterfaceOrientationPortrait:
+    self.transform = CGAffineTransformRotate(_baseTransformation, 0);
+    break;
+
+    case UIInterfaceOrientationLandscapeLeft:
+    self.transform = CGAffineTransformRotate(_baseTransformation, -M_PI_2);
+    break;
+
+    case UIInterfaceOrientationLandscapeRight:
+    self.transform = CGAffineTransformRotate(_baseTransformation, M_PI_2);
+    break;
+
+    default:
+    break;
+  }
+}
+
+- (void)updateFrames
+{
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+
   //NOTE: Sometimes UIDeviceOrientationUnknown is returned, even if it should be portrait. Workaround checks screen size
-  //TODO(?): Better handling of upside down (check if app supports it?)
   if(iPhoneX && (UIDevice.currentDevice.orientation == UIDeviceOrientationPortrait || (UIDevice.currentDevice.orientation == UIDeviceOrientationUnknown && [[UIScreen mainScreen] bounds].size.width == 375 && [[UIScreen mainScreen] bounds].size.height == 812)))
   {
     _barHeight = 50;
@@ -73,14 +94,73 @@
 
   if(_isPresented)
   {
-    self.frame = CGRectMake(0,0,[UIScreen mainScreen].bounds.size.width, _barHeight);
+    switch (orientation)
+    {
+      case UIInterfaceOrientationPortrait:
+      self.frame = CGRectMake(0,0,[UIScreen mainScreen].bounds.size.width, _barHeight);
+      break;
+
+      case UIInterfaceOrientationLandscapeLeft:
+      self.frame = CGRectMake(0,0,_barHeight,[UIScreen mainScreen].bounds.size.width);
+      break;
+
+      case UIInterfaceOrientationLandscapeRight:
+      self.frame = CGRectMake([UIScreen mainScreen].bounds.size.height-_barHeight,0,_barHeight,[UIScreen mainScreen].bounds.size.width);
+      break;
+
+      default:
+      break;
+    }
   }
   else
   {
-    self.frame = CGRectMake(0,-_barHeight,[UIScreen mainScreen].bounds.size.width, _barHeight);
+    switch (orientation)
+    {
+      case UIInterfaceOrientationPortrait:
+      self.frame = CGRectMake(0,-_barHeight,[UIScreen mainScreen].bounds.size.width, _barHeight);
+      break;
+
+      case UIInterfaceOrientationLandscapeLeft:
+      self.frame = CGRectMake(-_barHeight,0,_barHeight,[UIScreen mainScreen].bounds.size.width);
+      break;
+
+      case UIInterfaceOrientationLandscapeRight:
+      self.frame = CGRectMake([UIScreen mainScreen].bounds.size.height,0,_barHeight,[UIScreen mainScreen].bounds.size.width);
+      break;
+
+      default:
+      break;
+    }
   }
 
-  self.rootViewController.view.frame = CGRectMake(0,_barHeight-20,self.frame.size.width,20);
+  if(orientation == UIInterfaceOrientationPortrait)
+  {
+    _textView.frame = CGRectMake(0,-20+_barHeight,self.frame.size.width,20);
+  }
+  else
+  {
+    _textView.frame = CGRectMake(0,0,[UIScreen mainScreen].bounds.size.width,20);
+  }
+}
+
+- (void)orientationDidChange
+{
+  dispatch_async(dispatch_get_main_queue(),
+  ^{
+    if(self.hidden)
+    {
+      [self updateTransformation];
+      [self updateFrames];
+    }
+    else
+    {
+      [UIView animateWithDuration:.28 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:
+      ^{
+        [self updateTransformation];
+        [self updateFrames];
+      } completion:nil];
+    }
+  });
 }
 
 - (void)dispatchNotification:(SPStatusBarNotification*)notification
@@ -92,24 +172,23 @@
 {
   if(!_isPresented && !_isBeingPresented && !_isBeingDismissed)
   {
-    [_textView setCurrentNotification:notification];
-    self.hidden = NO;
-    [self updateFrame];
-
-    self.backgroundColor = notification.backgroundColor;
-
     _isBeingPresented = YES;
 
     dispatch_async(dispatch_get_main_queue(),
     ^{
+      self.hidden = NO;
+      self.backgroundColor = notification.backgroundColor;
+
+      [_textView setCurrentNotification:notification];
+
       [UIView animateWithDuration:.3 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:
       ^{
-        self.frame  = CGRectMake(0, 0, self.frame.size.width,self.frame.size.height);
+        _isPresented = YES;
+        [self updateFrames];
       }
       completion:^(BOOL finished)
       {
         _isBeingPresented = NO;
-        _isPresented = YES;
 
         if(notification.dismissAfter)
         {
@@ -121,9 +200,9 @@
           completion();
         }
 
-        if(_shouldImmediatlyDismiss)
+        if(_shouldImmediatelyDismiss)
         {
-          _shouldImmediatlyDismiss = NO;
+          _shouldImmediatelyDismiss = NO;
           [self dismissWithCompletion:_savedBlock];
         }
       }];
@@ -131,7 +210,7 @@
   }
   else if(_isBeingDismissed)
   {
-    _shouldImmediatlyPresent = YES;
+    _shouldImmediatelyPresent = YES;
     _savedBlock = completion;
     _savedNotification = notification;
   }
@@ -151,8 +230,10 @@
     ^{
       [UIView animateWithDuration:.3 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:
       ^{
-        self.frame  = CGRectMake(0, -_barHeight, self.frame.size.width,self.frame.size.height);
-      } completion:^(BOOL finished)
+        _isPresented = NO;
+        [self updateFrames];
+      }
+      completion:^(BOOL finished)
       {
         self.hidden = YES;
         _isBeingDismissed = NO;
@@ -167,9 +248,9 @@
           [_timer invalidate];
         }
 
-        if(_shouldImmediatlyPresent)
+        if(_shouldImmediatelyPresent)
         {
-          _shouldImmediatlyPresent = NO;
+          _shouldImmediatelyPresent = NO;
           [self dispatchNotification:_savedNotification completion:_savedBlock];
         }
       }];
@@ -177,7 +258,7 @@
   }
   else if(_isBeingPresented)
   {
-    _shouldImmediatlyDismiss = YES;
+    _shouldImmediatelyDismiss = YES;
     _savedBlock = completion;
   }
   else if(!_isPresented)

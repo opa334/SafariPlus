@@ -20,11 +20,12 @@
 
 @interface SPStatusBarNotificationWindow : UIWindow
 {
+  CGAffineTransform _baseTransformation;
   BOOL _isPresented;
   BOOL _isBeingPresented;
   BOOL _isBeingDismissed;
-  BOOL _shouldImmediatlyDismiss;
-  BOOL _shouldImmediatlyPresent;
+  BOOL _shouldImmediatelyDismiss;
+  BOOL _shouldImmediatelyPresent;
   CGFloat _barHeight;
   SPStatusBarTextView* _textView;
   NSTimer* _timer;
@@ -32,7 +33,9 @@
   SPStatusBarNotification* _savedNotification;
 }
 
-- (void)updateFrame;
+- (void)updateTransformation;
+- (void)updateFrames;
+- (void)orientationDidChange;
 
 - (void)dispatchNotification:(SPStatusBarNotification*)notification;
 - (void)dispatchNotification:(SPStatusBarNotification*)notification completion:(void(^)(void))completion;

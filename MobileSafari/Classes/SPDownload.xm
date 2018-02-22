@@ -142,11 +142,19 @@
 
 - (void)cancelDownload
 {
-  //Cancel task
-  [self.downloadTask cancel];
+  if(self.downloadTask)
+  {
+    //Cancel task
+    [self.downloadTask cancel];
 
-  //Stop timer
-  [self setTimerEnabled:NO];
+    //Stop timer
+    [self setTimerEnabled:NO];
+  }
+  else
+  {
+    //Download appears to be stuck, force the cancellation
+    [self.downloadManagerDelegate forceCancelDownload:self];
+  }
 }
 
 - (void)setTimerEnabled:(BOOL)enabled

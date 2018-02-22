@@ -34,6 +34,7 @@
 @protocol DownloadManagerDelegate
 @required
 - (NSURLSession*)sharedDownloadSession;
+- (void)forceCancelDownload:(SPDownload*)download;
 - (void)saveDownloadsToDisk;
 - (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;

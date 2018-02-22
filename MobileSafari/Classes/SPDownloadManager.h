@@ -36,6 +36,7 @@
 - (void)clearTempFiles;
 - (void)cancelAllDownloads;
 - (void)resumeDownloadsFromDiskLoad;
+- (void)forceCancelDownload:(SPDownload*)download;
 
 - (void)loadDownloadsFromDisk;
 - (void)saveDownloadsToDisk;

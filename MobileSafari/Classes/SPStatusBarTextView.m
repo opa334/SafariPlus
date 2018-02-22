@@ -40,12 +40,9 @@
 
 - (void)setCurrentNotification:(SPStatusBarNotification*)notification
 {
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    _textLabel.text = notification.text;
-    _textLabel.textColor = notification.textColor;
-    _textLabel.textAlignment = NSTextAlignmentCenter;
-  });
+  _textLabel.text = notification.text;
+  _textLabel.textColor = notification.textColor;
+  _textLabel.textAlignment = NSTextAlignmentCenter;
 }
 
 @end

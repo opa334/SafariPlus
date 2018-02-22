@@ -32,7 +32,7 @@
 {
   self = %orig;
 
-  if(preferenceManager.videoDownloadingEnabled)
+  if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
   {
     self.downloadButton = [[%c(AVButton) alloc] init];
 
@@ -54,7 +54,7 @@
 - (void)layoutSubviews
 {
   %orig;
-  if(preferenceManager.videoDownloadingEnabled)
+  if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
   {
     if([self.delegate.delegate.playerController isKindOfClass:[%c(WebAVPlayerController) class]])
     {
