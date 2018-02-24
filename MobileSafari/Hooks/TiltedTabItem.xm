@@ -26,7 +26,16 @@
   if(preferenceManager.tabTitleColorNormalEnabled ||
     preferenceManager.tabTitleColorPrivateEnabled)
   {
-    BOOL privateMode = privateBrowsingEnabled(self.tiltedTabView.delegate);
+    BOOL privateMode;
+
+    if([self.tiltedTabView.delegate isKindOfClass:[%c(TabController) class]])
+    {
+      privateMode = privateBrowsingEnabled(MSHookIvar<BrowserController*>(self.tiltedTabView.delegate, "_browserController"));
+    }
+    else
+    {
+      privateMode = privateBrowsingEnabled(self.tiltedTabView.delegate);
+    }
 
     UIColor* customColor = %orig;
     if(preferenceManager.tabTitleColorNormalEnabled && !privateMode)
