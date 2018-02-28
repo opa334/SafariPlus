@@ -30,7 +30,7 @@
     UIColor* customColor = %orig;
     if(preferenceManager.tabTitleColorNormalEnabled && !self.usesLightControls)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       customColor = [UIColor redColor];
       #else
       customColor = LCPParseColorString(preferenceManager.tabTitleColorNormal, @"#FFFFFF");
@@ -38,7 +38,7 @@
     }
     else if(preferenceManager.tabTitleColorPrivateEnabled && self.usesLightControls)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       customColor = [UIColor redColor];
       #else
       customColor = LCPParseColorString(preferenceManager.tabTitleColorPrivate, @"#FFFFFF");

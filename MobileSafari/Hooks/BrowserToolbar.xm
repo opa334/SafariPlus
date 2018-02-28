@@ -176,7 +176,7 @@ BOOL fullSafariInstalled;
 
     if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorNormal, @"#FFFFFF");
@@ -184,7 +184,7 @@ BOOL fullSafariInstalled;
     }
     else if(preferenceManager.appTintColorPrivateEnabled && privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorPrivate, @"#FFFFFF");
@@ -202,7 +202,7 @@ BOOL fullSafariInstalled;
     backgroundView.grayscaleTintView.hidden = NO;
     if(preferenceManager.bottomBarColorNormalEnabled && !privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       backgroundView.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backgroundView.grayscaleTintView.backgroundColor =
@@ -211,7 +211,7 @@ BOOL fullSafariInstalled;
     }
     else if(preferenceManager.bottomBarColorPrivateEnabled && privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       backgroundView.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backgroundView.grayscaleTintView.backgroundColor =

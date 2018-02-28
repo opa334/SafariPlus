@@ -34,15 +34,7 @@ NSBundle* SPBundle;
 {
   self = [super init];
 
-  #if defined(ELECTRA)
-
-  SPBundle = [NSBundle bundleWithPath:@"/bootstrap/Library/Application Support/SafariPlus.bundle"];
-
-  #else
-
   SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/SafariPlus.bundle"];
-
-  #endif
 
   return self;
 }

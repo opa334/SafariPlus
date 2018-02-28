@@ -18,6 +18,8 @@
 
 extern BOOL showAlert;
 extern BOOL iPhoneX;
+extern BOOL sandboxActive;
+extern NSString* defaultDownloadPath;
 extern float iOSVersion;
 extern SPPreferenceManager* preferenceManager;
 extern SPLocalizationManager* localizationManager;

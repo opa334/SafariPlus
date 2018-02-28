@@ -14,11 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifdef ELECTRA
-#define bundlePath @"/bootstrap/Library/PreferenceBundles/SafariPlusPrefs.bundle"
-#else
 #define bundlePath @"/Library/PreferenceBundles/SafariPlusPrefs.bundle"
-#endif
 #define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>

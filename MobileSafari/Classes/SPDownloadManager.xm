@@ -30,7 +30,7 @@
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import <WebKit/WKWebView.h>
 
-#if !defined(SIMJECT) && !defined(ELECTRA)
+#if !defined(SIMJECT)
 #import <RocketBootstrap/rocketbootstrap.h>
 #endif
 
@@ -65,7 +65,7 @@
   self.messagingCenter = [%c(CPDistributedMessagingCenter)
     centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
 
-  #if !defined(SIMJECT) && !defined(ELECTRA)
+  #if !defined(SIMJECT)
   rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
   #endif
 
@@ -75,12 +75,8 @@
     self.notificationWindow = [[SPStatusBarNotificationWindow alloc] init];
   }
 
-  #ifndef ELECTRA
-
   //Remove download storage if needed
   [self checkDownloadStorageRevision];
-
-  #endif
 
   //Get downloads from file
   [self loadDownloadsFromDisk];

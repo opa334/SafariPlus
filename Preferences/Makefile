@@ -7,12 +7,7 @@ SafariPlusPrefs_CFLAGS = -fobjc-arc
 SafariPlusPrefs_FILES = $(wildcard *.m)
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
-
-ifeq ($(ELECTRA),0)
 SafariPlusPrefs_LIBRARIES = colorpicker
-else
-SafariPlusPrefs_CFLAGS += -D ELECTRA=1
-endif
 
 SafariPlusPrefs_PRIVATE_FRAMEWORKS = Preferences
 

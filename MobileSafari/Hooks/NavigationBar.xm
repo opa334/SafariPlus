@@ -35,7 +35,7 @@
     if(preferenceManager.lockIconColorNormalEnabled && !privateMode)
     {
       //Replace color with the specified one
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.lockIconColorNormal, @"#FFFFFF");
@@ -44,7 +44,7 @@
     else if(preferenceManager.lockIconColorPrivateEnabled && privateMode)
     {
       //Replace color with the specified one
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.lockIconColorPrivate, @"#FFFFFF");
@@ -72,7 +72,7 @@
     if(preferenceManager.lockIconColorNormalEnabled && !privateMode)
     {
       //Replace color with the specified one
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       arg1 = [UIColor redColor];
       #else
       arg1 = LCPParseColorString(preferenceManager.lockIconColorNormal, @"#FFFFFF");
@@ -81,7 +81,7 @@
     else if(preferenceManager.lockIconColorPrivateEnabled && privateMode)
     {
       //Replace color with the specified one
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       arg1 = [UIColor redColor];
       #else
       arg1 = LCPParseColorString(preferenceManager.lockIconColorPrivate, @"#FFFFFF");
@@ -108,7 +108,7 @@
 
     if(preferenceManager.appTintColorNormalEnabled && !privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorNormal, @"#FFFFFF");
@@ -116,7 +116,7 @@
     }
     else if(preferenceManager.appTintColorPrivateEnabled && privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       self.tintColor = [UIColor redColor];
       #else
       self.tintColor = LCPParseColorString(preferenceManager.appTintColorPrivate, @"#FFFFFF");
@@ -138,7 +138,7 @@
 
     if(preferenceManager.topBarColorNormalEnabled && !privateMode) //Normal Mode
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       backdrop.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backdrop.grayscaleTintView.backgroundColor =
@@ -148,7 +148,7 @@
 
     else if(preferenceManager.topBarColorPrivateEnabled && privateMode) //Private Mode
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       backdrop.grayscaleTintView.backgroundColor = [UIColor redColor];
       #else
       backdrop.grayscaleTintView.backgroundColor =
@@ -170,7 +170,7 @@
     _SFFluidProgressView* progressView = MSHookIvar<_SFFluidProgressView*>(self, "_progressView");
     if(preferenceManager.progressBarColorNormalEnabled && !privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       progressView.progressBarFillColor = [UIColor redColor];
       #else
       progressView.progressBarFillColor =
@@ -179,7 +179,7 @@
     }
     else if(preferenceManager.progressBarColorPrivateEnabled && privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       progressView.progressBarFillColor = [UIColor redColor];
       #else
       progressView.progressBarFillColor =
@@ -199,7 +199,7 @@
 
     if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
@@ -207,7 +207,7 @@
     }
     else if(preferenceManager.URLFontColorPrivateEnabled && privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.URLFontColorPrivate, @"#FFFFFF");
@@ -229,7 +229,7 @@
     UIColor* customColor;
     if(preferenceManager.URLFontColorNormalEnabled && !privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       customColor = [UIColor redColor];
       #else
       customColor = LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
@@ -238,7 +238,7 @@
     }
     else if(preferenceManager.URLFontColorPrivateEnabled && privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       customColor = [UIColor redColor];
       #else
       customColor = LCPParseColorString(preferenceManager.URLFontColorNormal, @"#FFFFFF");
@@ -260,7 +260,7 @@
 
     if(preferenceManager.reloadColorNormalEnabled && !privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.reloadColorNormal, @"#FFFFFF");
@@ -268,7 +268,7 @@
     }
     else if(preferenceManager.reloadColorPrivateEnabled && privateMode)
     {
-      #if defined(SIMJECT) || defined(ELECTRA)
+      #if defined(SIMJECT)
       return [UIColor redColor];
       #else
       return LCPParseColorString(preferenceManager.reloadColorPrivate, @"#FFFFFF");

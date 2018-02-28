@@ -20,12 +20,8 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 @interface SPPreferenceManager : NSObject
 {
-  #if !defined(SIMJECT) && !defined(ELECTRA)
+  #if !defined(SIMJECT)
   HBPreferences *preferences;
-  #endif
-
-  #ifdef ELECTRA
-  NSDictionary *userDefaults;
   #endif
 }
 
@@ -112,13 +108,3 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 + (instancetype)sharedInstance;
 
 @end
-
-#ifdef ELECTRA
-
-@interface NSUserDefaults (Private)
-
-- (instancetype)_initWithSuiteName:(NSString *)suiteName container:(NSURL *)container;
-
-@end
-
-#endif

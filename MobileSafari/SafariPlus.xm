@@ -37,6 +37,8 @@ SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
 
+NSString* defaultDownloadPath;
+
 /****** Extensions ******/
 
 //https://stackoverflow.com/a/22669888
@@ -241,4 +243,20 @@ void saveOtherPlist()
   NSString* model = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
   #endif
   iPhoneX = [model isEqualToString:@"iPhone10,3"] || [model isEqualToString:@"iPhone10,6"];
+
+  //Check if sandbox is active and set defaultDownloadPath according to that
+  #ifndef SIMJECT
+  NSError* sandboxError;
+  [[NSFileManager defaultManager] contentsOfDirectoryAtPath:@"/var/mobile" error:&sandboxError];
+  if(sandboxError.code == 257)
+  {
+    defaultDownloadPath = [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"];
+  }
+  else
+  {
+    defaultDownloadPath = @"/var/mobile/Downloads";
+  }
+  #else
+  defaultDownloadPath = [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", USER];
+  #endif
 }

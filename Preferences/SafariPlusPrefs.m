@@ -565,8 +565,6 @@
 }
 @end
 
-#ifndef ELECTRA
-
 @implementation ColorPrefsController
 
 - (NSArray *)specifiers
@@ -620,19 +618,6 @@
     [super viewWillAppear:animated];
 }
 @end
-
-#else
-
-@implementation ColorPrefsController
-
-- (NSArray *)specifiers
-{
-	[(UINavigationItem *)self.navigationItem setTitle:@"Not supported on Electra"];
-	return nil;
-}
-@end
-
-#endif
 
 @implementation CreditsController
 

@@ -19,7 +19,7 @@
 #import "../Defines.h"
 #import "../Shared.h"
 
-#if !defined(SIMJECT) && !defined(ELECTRA)
+#if !defined(SIMJECT)
 #import <Cephei/HBPreferences.h>
 #endif
 
@@ -109,61 +109,7 @@
   _lockIconColorPrivateEnabled = NO;
   _bottomBarColorPrivateEnabled = NO;
 
-  #elif defined(ELECTRA)
-
-  userDefaults = [[NSDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"];
-
-  //NSUserDefaults did not seem to work, so I switched to an NSDictionary
-
-  /*[userDefaults registerDefaults:@{
-		@"forceHTTPSEnabled": @NO,
-    @"openInOppositeModeOptionEnabled": @NO,
-    @"openInNewTabOptionEnabled": @NO,
-    @"uploadAnyFileOptionEnabled": @NO,
-    @"desktopButtonEnabled": @NO,
-    @"longPressSuggestionsEnabled": @NO,
-    @"longPressSuggestionsDuration": @1,
-    @"longPressSuggestionsFocusEnabled": @NO,
-
-    @"enhancedDownloadsEnabled": @NO,
-    @"videoDownloadingEnabled": @NO,
-    @"instantDownloadsEnabled": @NO,
-    @"instantDownloadsOption": @NO,
-    @"customDefaultPathEnabled": @NO,
-    @"customDefaultPath": defaultDownloadPath,
-    @"pinnedLocationsEnabled": @NO,
-    @"onlyDownloadOnWifiEnabled": @NO,
-    @"disablePushNotificationsEnabled": @NO,
-    @"disableBarNotificationsEnabled": @NO,
-
-    @"forceModeOnStartEnabled": @NO,
-    @"forceModeOnStartFor": @0,
-    @"forceModeOnResumeEnabled": @NO,
-    @"forceModeOnResumeFor": @0,
-    @"forceModeOnExternalLinkEnabled": @NO,
-    @"forceModeOnExternalLinkFor": @0,
-    @"autoCloseTabsEnabled": @NO,
-    @"autoCloseTabsOn": @0,
-    @"autoCloseTabsFor": @0,
-    @"autoDeleteDataEnabled": @NO,
-    @"autoDeleteDataOn": @NO,
-
-    @"URLLeftSwipeGestureEnabled": @NO,
-    @"URLLeftSwipeAction": @0,
-    @"URLRightSwipeGestureEnabled": @NO,
-    @"URLRightSwipeAction": @0,
-    @"URLDownSwipeGestureEnabled": @NO,
-    @"URLDownSwipeAction": @0,
-    @"gestureBackground": @NO,
-
-    @"fullscreenScrollingEnabled": @NO,
-    @"lockBars": @NO,
-    @"disablePrivateMode": @NO,
-    @"alwaysOpenNewTabEnabled": @NO,
-    @"suppressMailToDialog": @NO
-	}];*/
-
-  #else
+  #endif
 
   preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
 
@@ -247,87 +193,7 @@
   [preferences registerBool:&_bottomBarColorPrivateEnabled default:NO forKey:@"bottomBarColorPrivateEnabled"];
   [preferences registerObject:&_bottomBarColorPrivate default:@"#ffffff" forKey:@"bottomBarColorPrivate"];
 
-  #endif
-
   return self;
 }
-
-#ifdef ELECTRA
-
-- (BOOL)forceHTTPSEnabled { return [[userDefaults objectForKey:@"forceHTTPSEnabled"] boolValue]; }
-- (BOOL)openInOppositeModeOptionEnabled { return [[userDefaults objectForKey:@"openInOppositeModeOptionEnabled"] boolValue]; }
-- (BOOL)openInNewTabOptionEnabled { return [[userDefaults objectForKey:@"openInNewTabOptionEnabled"] boolValue]; }
-- (BOOL)uploadAnyFileOptionEnabled { return [[userDefaults objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
-- (BOOL)desktopButtonEnabled { return [[userDefaults objectForKey:@"desktopButtonEnabled"] boolValue]; }
-- (BOOL)longPressSuggestionsEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsEnabled"] boolValue]; }
-- (CGFloat)longPressSuggestionsDuration
-{
-  if([userDefaults objectForKey:@"longPressSuggestionsDuration"])
-  {
-    return [[userDefaults objectForKey:@"longPressSuggestionsDuration"] floatValue];
-  }
-  else
-  {
-    return 0.5;
-  }
-}
-- (BOOL)longPressSuggestionsFocusEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsFocusEnabled"] boolValue]; }
-
-- (BOOL)enhancedDownloadsEnabled { return [[userDefaults objectForKey:@"enhancedDownloadsEnabled"] boolValue]; }
-- (BOOL)videoDownloadingEnabled { return [[userDefaults objectForKey:@"videoDownloadingEnabled"] boolValue]; }
-- (BOOL)instantDownloadsEnabled { return [[userDefaults objectForKey:@"instantDownloadsEnabled"] boolValue]; }
-- (NSInteger)instantDownloadsOption { return [[userDefaults objectForKey:@"instantDownloadsOption"] integerValue]; }
-- (BOOL)customDefaultPathEnabled { return [[userDefaults objectForKey:@"customDefaultPathEnabled"] boolValue]; }
-- (NSString*)customDefaultPath { return [userDefaults objectForKey:@"customDefaultPath"]; }
-- (BOOL)pinnedLocationsEnabled { return [[userDefaults objectForKey:@"pinnedLocationsEnabled"] boolValue]; }
-- (BOOL)onlyDownloadOnWifiEnabled { return [[userDefaults objectForKey:@"onlyDownloadOnWifiEnabled"] boolValue]; }
-- (BOOL)disablePushNotificationsEnabled { return [[userDefaults objectForKey:@"disablePushNotificationsEnabled"] boolValue]; }
-- (BOOL)disableBarNotificationsEnabled { return [[userDefaults objectForKey:@"disableBarNotificationsEnabled"] boolValue]; }
-
-- (BOOL)forceModeOnStartEnabled { return [[userDefaults objectForKey:@"forceModeOnStartEnabled"] boolValue]; }
-- (NSInteger)forceModeOnStartFor { return [[userDefaults objectForKey:@"forceModeOnStartFor"] integerValue]; }
-- (BOOL)forceModeOnResumeEnabled { return [[userDefaults objectForKey:@"forceModeOnResumeEnabled"] boolValue]; }
-- (NSInteger)forceModeOnResumeFor { return [[userDefaults objectForKey:@"forceModeOnResumeFor"] integerValue]; }
-- (BOOL)forceModeOnExternalLinkEnabled { return [[userDefaults objectForKey:@"forceModeOnExternalLinkEnabled"] boolValue]; }
-- (NSInteger)forceModeOnExternalLinkFor { return [[userDefaults objectForKey:@"forceModeOnExternalLinkFor"] integerValue]; }
-- (BOOL)autoCloseTabsEnabled { return [[userDefaults objectForKey:@"autoCloseTabsEnabled"] boolValue]; }
-- (NSInteger)autoCloseTabsOn { return [[userDefaults objectForKey:@"autoCloseTabsOn"] integerValue]; }
-- (NSInteger)autoCloseTabsFor { return [[userDefaults objectForKey:@"autoCloseTabsFor"] integerValue]; }
-- (BOOL)autoDeleteDataEnabled { return [[userDefaults objectForKey:@"autoDeleteDataEnabled"] boolValue]; }
-- (NSInteger)autoDeleteDataOn { return [[userDefaults objectForKey:@"autoDeleteDataOn"] integerValue]; }
-
-- (BOOL)URLLeftSwipeGestureEnabled { return [[userDefaults objectForKey:@"URLLeftSwipeGestureEnabled"] boolValue]; }
-- (NSInteger)URLLeftSwipeAction { return [[userDefaults objectForKey:@"URLLeftSwipeAction"] integerValue]; }
-- (BOOL)URLRightSwipeGestureEnabled { return [[userDefaults objectForKey:@"URLRightSwipeGestureEnabled"] boolValue]; }
-- (NSInteger)URLRightSwipeAction { return [[userDefaults objectForKey:@"URLRightSwipeAction"] integerValue]; }
-- (BOOL)URLDownSwipeGestureEnabled { return [[userDefaults objectForKey:@"URLDownSwipeGestureEnabled"] boolValue]; }
-- (NSInteger)URLDownSwipeAction { return [[userDefaults objectForKey:@"URLDownSwipeAction"] integerValue]; }
-- (BOOL)gestureBackground { return [[userDefaults objectForKey:@"gestureBackground"] boolValue]; }
-
-- (BOOL)fullscreenScrollingEnabled { return [[userDefaults objectForKey:@"fullscreenScrollingEnabled"] boolValue]; }
-- (BOOL)lockBars { return [[userDefaults objectForKey:@"lockBars"] boolValue]; }
-- (BOOL)disablePrivateMode { return [[userDefaults objectForKey:@"disablePrivateMode"] boolValue]; }
-- (BOOL)alwaysOpenNewTabEnabled { return [[userDefaults objectForKey:@"alwaysOpenNewTabEnabled"] boolValue]; }
-- (BOOL)suppressMailToDialog { return [[userDefaults objectForKey:@"suppressMailToDialog"] boolValue]; }
-
-- (BOOL)appTintColorNormalEnabled { return NO; }
-- (BOOL)topBarColorNormalEnabled { return NO; }
-- (BOOL)URLFontColorNormalEnabled { return NO; }
-- (BOOL)progressBarColorNormalEnabled { return NO; }
-- (BOOL)tabTitleColorNormalEnabled { return NO; }
-- (BOOL)reloadColorNormalEnabled { return NO; }
-- (BOOL)lockIconColorNormalEnabled { return NO; }
-- (BOOL)bottomBarColorNormalEnabled { return NO; }
-
-- (BOOL)appTintColorPrivateEnabled { return NO; }
-- (BOOL)topBarColorPrivateEnabled { return NO; }
-- (BOOL)URLFontColorPrivateEnabled { return NO; }
-- (BOOL)progressBarColorPrivateEnabled { return NO; }
-- (BOOL)tabTitleColorPrivateEnabled { return NO; }
-- (BOOL)reloadColorPrivateEnabled { return NO; }
-- (BOOL)lockIconColorPrivateEnabled { return NO; }
-- (BOOL)bottomBarColorPrivateEnabled { return NO; }
-
-#endif
 
 @end
