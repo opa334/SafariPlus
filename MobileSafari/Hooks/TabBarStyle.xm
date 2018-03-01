@@ -20,33 +20,39 @@
 #import "../Shared.h"
 #import "libcolorpicker.h"
 
-//Tab Title Color
+//Tab Bar Title Color
 %hook TabBarStyle
-- (UIColor *)itemTitleColor
+
++ (TabBarStyle*)normalStyle
 {
-  if(preferenceManager.tabTitleColorNormalEnabled ||
-    preferenceManager.tabTitleColorPrivateEnabled)
+  TabBarStyle* normalStyle = %orig;
+
+  if(preferenceManager.tabTitleColorNormalEnabled)
   {
-    UIColor* customColor = %orig;
-    if(preferenceManager.tabTitleColorNormalEnabled && !self.usesLightControls)
-    {
-      #if defined(SIMJECT)
-      customColor = [UIColor redColor];
-      #else
-      customColor = LCPParseColorString(preferenceManager.tabTitleColorNormal, @"#FFFFFF");
-      #endif
-    }
-    else if(preferenceManager.tabTitleColorPrivateEnabled && self.usesLightControls)
-    {
-      #if defined(SIMJECT)
-      customColor = [UIColor redColor];
-      #else
-      customColor = LCPParseColorString(preferenceManager.tabTitleColorPrivate, @"#FFFFFF");
-      #endif
-    }
-    return customColor;
+    #if defined(SIMJECT)
+    MSHookIvar<UIColor*>(normalStyle, "_itemTitleColor") = [UIColor redColor];
+    #else
+    MSHookIvar<UIColor*>(normalStyle, "_itemTitleColor") = LCPParseColorString(preferenceManager.tabTitleColorNormal, @"#FFFFFF");
+    #endif
   }
 
-  return %orig;
+  return normalStyle;
 }
+
++ (TabBarStyle*)privateBrowsingStyle
+{
+  TabBarStyle* privateBrowsingStyle = %orig;
+
+  if(preferenceManager.tabTitleColorPrivateEnabled)
+  {
+    #if defined(SIMJECT)
+    MSHookIvar<UIColor*>(privateBrowsingStyle, "_itemTitleColor") = [UIColor redColor];
+    #else
+    MSHookIvar<UIColor*>(privateBrowsingStyle, "_itemTitleColor") = LCPParseColorString(preferenceManager.tabTitleColorPrivate, @"#FFFFFF");
+    #endif
+  }
+
+  return privateBrowsingStyle;
+}
+
 %end

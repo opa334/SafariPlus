@@ -109,7 +109,7 @@
   _lockIconColorPrivateEnabled = NO;
   _bottomBarColorPrivateEnabled = NO;
 
-  #endif
+  #else
 
   preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
 
@@ -192,6 +192,8 @@
   [preferences registerObject:&_lockIconColorPrivate default:@"#ffffff" forKey:@"lockIconColorPrivate"];
   [preferences registerBool:&_bottomBarColorPrivateEnabled default:NO forKey:@"bottomBarColorPrivateEnabled"];
   [preferences registerObject:&_bottomBarColorPrivate default:@"#ffffff" forKey:@"bottomBarColorPrivate"];
+
+  #endif
 
   return self;
 }

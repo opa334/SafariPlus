@@ -334,7 +334,6 @@
 @end
 
 @interface TabBarStyle : NSObject
-@property (nonatomic,readonly) BOOL usesLightControls;
 @end
 
 @interface TabController : NSObject {}
