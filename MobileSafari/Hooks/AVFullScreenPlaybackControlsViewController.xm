@@ -50,7 +50,7 @@
       if(!self.downloadButton)
       {
         self.downloadButton = [%c(AVButton) buttonWithType:UIButtonTypeCustom];
-        UIImage* buttonImage = [UIImage imageNamed:@"videoDownload.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+        UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
         [self.downloadButton setImage:buttonImage forState:UIControlStateNormal];
         [self.downloadButton setImage:[UIImage inverseColor:buttonImage] forState:UIControlStateHighlighted];
 

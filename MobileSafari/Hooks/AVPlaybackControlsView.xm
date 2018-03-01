@@ -36,7 +36,7 @@
   {
     self.downloadButton = [[%c(AVButton) alloc] init];
 
-    [self.downloadButton setImage:[[UIImage imageNamed:@"videoDownload.png"
+    [self.downloadButton setImage:[[UIImage imageNamed:@"VideoDownloadButton.png"
       inBundle:SPBundle compatibleWithTraitCollection:nil]
       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
       forState:UIControlStateNormal];

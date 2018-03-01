@@ -36,7 +36,7 @@
       self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
       UIImage* inactiveImage = [UIImage
-        imageNamed:@"desktopButton.png" inBundle:SPBundle
+        imageNamed:@"DesktopButton.png" inBundle:SPBundle
         compatibleWithTraitCollection:nil];
 
       UIImage* activeImage = [UIImage inverseColor:inactiveImage];

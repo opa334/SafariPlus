@@ -56,7 +56,7 @@ BOOL fullSafariInstalled;
       if(!self._downloadsItem)
       {
         self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage
-          imageNamed:@"downloadsButton.png" inBundle:SPBundle
+          imageNamed:@"DownloadsButton.png" inBundle:SPBundle
           compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain
           target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
       }
