@@ -41,51 +41,57 @@
 %new
 - (void)loadDesktopButtonState
 {
-  loadOtherPlist();
+  //Get data
+  NSData* data = [NSData dataWithContentsOfFile:desktopButtonStateCachePath];
 
-  NSString* key;
-  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+  //Unarchive data
+  NSMutableDictionary* stateCache = (NSMutableDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
 
-  if(iOSVersion >= 10)
+  if(stateCache)
   {
-    key = [NSString stringWithFormat:@"desktopButtonSelected-%@", browserController.UUID];
-  }
-  else
-  {
-    key = [NSString stringWithFormat:@"desktopButtonSelected"];
-  }
-
-  if(![[otherPlist allKeys] containsObject:key])
-  {
-    self.desktopButtonSelected = NO;
-    [otherPlist setObject:[NSNumber numberWithBool:self.desktopButtonSelected] forKey:key];
-    saveOtherPlist();
-  }
-  else
-  {
-    self.desktopButtonSelected = [[otherPlist objectForKey:key] boolValue];
+    if(iOSVersion >= 10)
+    {
+      //Get state from browserController
+      BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+      self.desktopButtonSelected = [[stateCache objectForKey:browserController.UUID] boolValue];
+    }
+    else
+    {
+      //Get global state (iOS 9 and below can't have multiple browserControllers)
+      self.desktopButtonSelected = [[stateCache objectForKey:@"Enabled"] boolValue];
+    }
   }
 }
 
 %new
 - (void)saveDesktopButtonState
 {
-  loadOtherPlist();
-  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+  //Get data
+  NSData* data = [NSData dataWithContentsOfFile:desktopButtonStateCachePath];
 
-  NSString* key;
+  //Unarchive data
+  NSMutableDictionary* stateCache = (NSMutableDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+  if(!stateCache)
+  {
+    //If stateCache is nil, initialise it
+    stateCache = [[NSMutableDictionary alloc] init];
+  }
 
   if(iOSVersion >= 10)
   {
-    key = [NSString stringWithFormat:@"desktopButtonSelected-%@", browserController.UUID];
+    //Save state for browserController
+    BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+    [stateCache setObject:[NSNumber numberWithBool:self.desktopButtonSelected] forKey:browserController.UUID];
   }
   else
   {
-    key = [NSString stringWithFormat:@"desktopButtonSelected"];
+    //Save global state (iOS 9 and below can't have multiple browserControllers)
+    [stateCache setObject:[NSNumber numberWithBool:self.desktopButtonSelected] forKey:@"Enabled"];
   }
 
-  [otherPlist setObject:[NSNumber numberWithBool:self.desktopButtonSelected] forKey:key];
-  saveOtherPlist();
+  //Save dictionary to file
+  [[NSKeyedArchiver archivedDataWithRootObject:stateCache] writeToFile:desktopButtonStateCachePath atomically:YES];
 }
 
 //Set state of desktop button

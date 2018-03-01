@@ -196,17 +196,6 @@ BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* documen
 void loadOtherPlist()
 {
   otherPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
-  if(!otherPlist)
-  {
-    otherPlist = [NSMutableDictionary new];
-    saveOtherPlist();
-  }
-}
-
-//Save com.opa334.safariplusprefOther.plist
-void saveOtherPlist()
-{
-  [otherPlist writeToFile:otherPlistPath atomically:YES];
 }
 
 /****** Version and device detection ******/

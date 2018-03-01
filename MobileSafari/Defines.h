@@ -23,10 +23,10 @@
 #endif
 
 #define desktopUserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
-#define downloadStoragePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari/downloads"]
+#define safariPlusCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
+#define downloadCachePath [safariPlusCachePath stringByAppendingString:@"/downloads.plist"]
+#define desktopButtonStateCachePath [safariPlusCachePath stringByAppendingString:@"/desktopButtonStates.plist"]
 #define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-
-#define DownloadStorageRevision 2
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0
 #define kCFCoreFoundationVersionNumber_iOS_9_0 1223.1

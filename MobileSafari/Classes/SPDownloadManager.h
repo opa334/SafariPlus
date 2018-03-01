@@ -31,7 +31,6 @@
 + (instancetype)sharedInstance;
 
 - (void)configureSession;
-- (void)checkDownloadStorageRevision;
 - (void)removeDownloadStorageFile;
 - (void)clearTempFiles;
 - (void)cancelAllDownloads;

@@ -129,6 +129,12 @@
     downloadManager = [SPDownloadManager sharedInstance];
   }
 
+  if(![[NSFileManager defaultManager] fileExistsAtPath:safariPlusCachePath])
+  {
+    [[NSFileManager defaultManager] createDirectoryAtPath:safariPlusCachePath
+      withIntermediateDirectories:NO attributes:nil error:nil];
+  }
+
   return orig;
 }
 
@@ -163,6 +169,12 @@
   if(preferenceManager.enhancedDownloadsEnabled)
   {
     downloadManager = [SPDownloadManager sharedInstance];
+  }
+
+  if(![[NSFileManager defaultManager] fileExistsAtPath:safariPlusCachePath])
+  {
+    [[NSFileManager defaultManager] createDirectoryAtPath:safariPlusCachePath
+      withIntermediateDirectories:NO attributes:nil error:nil];
   }
 }
 

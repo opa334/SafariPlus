@@ -75,9 +75,6 @@
     self.notificationWindow = [[SPStatusBarNotificationWindow alloc] init];
   }
 
-  //Remove download storage if needed
-  [self checkDownloadStorageRevision];
-
   //Get downloads from file
   [self loadDownloadsFromDisk];
 
@@ -130,39 +127,11 @@
   }];
 }
 
-- (void)checkDownloadStorageRevision
-{
-  loadOtherPlist();
-
-  //Get storage revision from plist
-  int storageRevision = [[otherPlist objectForKey:@"downloadFormatRevision"] intValue];
-
-  //Check if download storage is up to date
-  if(storageRevision != DownloadStorageRevision)
-  {
-    //NSLog(@"SafariPlus - Download Storage not up to date");
-    //Remove download storage
-    [self removeDownloadStorageFile];
-
-    //Also clear temp files
-    [self clearTempFiles];
-
-    //Update storageRevision to current
-    storageRevision = DownloadStorageRevision;
-
-    //Save it to plist
-    [otherPlist setObject:[NSNumber numberWithInt:storageRevision]
-      forKey:@"downloadFormatRevision"];
-
-    saveOtherPlist();
-  }
-}
-
 - (void)removeDownloadStorageFile
 {
-  if([[NSFileManager defaultManager] fileExistsAtPath:downloadStoragePath])
+  if([[NSFileManager defaultManager] fileExistsAtPath:downloadCachePath])
   {
-    [[NSFileManager defaultManager] removeItemAtPath:downloadStoragePath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:downloadCachePath error:nil];
   }
 }
 
@@ -251,10 +220,10 @@
 - (void)loadDownloadsFromDisk
 {
   //NSLog(@"SafariPlus - loadDownloadsFromDisk");
-  if([[NSFileManager defaultManager] fileExistsAtPath:downloadStoragePath])
+  if([[NSFileManager defaultManager] fileExistsAtPath:downloadCachePath])
   {
     //Get data from download storage file
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:downloadStoragePath]];
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:downloadCachePath]];
 
     //Unarchive the data to pendingDownloads
     self.pendingDownloads = [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -274,7 +243,7 @@
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.pendingDownloads];
 
   //Write data to file
-  [data writeToFile:downloadStoragePath atomically:YES];
+  [data writeToFile:downloadCachePath atomically:YES];
 }
 
 - (void)sendNotificationWithText:(NSString*)text
