@@ -16,6 +16,11 @@
 
 #import "SafariPlusPrefs.h"
 
+void otherPlistChanged()
+{
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.opa334.safariplusprefs/ReloadOtherPlist"), NULL, NULL, true);
+}
+
 @implementation SafariPlusRootListController
 
 - (NSArray *)specifiers
@@ -23,8 +28,8 @@
 	if(!_specifiers)
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"Root" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	return _specifiers;
 }
 
@@ -80,8 +85,8 @@
 	if(!_specifiers)
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"GeneralPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"GENERAL"]];
 	return _specifiers;
 }
@@ -95,8 +100,8 @@
 	if(!_specifiers)
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"DownloadPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"DOWNLOAD_ADDONS"]];
 	return _specifiers;
 }
@@ -127,6 +132,7 @@
 		if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
 		{
 			[@{} writeToFile:otherPlistPath atomically:NO];
+			otherPlistChanged();
 		}
 
 		if(!plist)
@@ -139,13 +145,14 @@
 			ForceHTTPSExceptions = [NSMutableArray new];
 			[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
 			[plist writeToFile:otherPlistPath atomically:YES];
+			otherPlistChanged();
 		}
 		else
 		{
 			ForceHTTPSExceptions = [plist objectForKey:@"ForceHTTPSExceptions"];
 		}
 
-		NSMutableArray* specifiers = [NSMutableArray new];
+		_specifiers = [NSMutableArray new];
 
 		PSSpecifier* URLListGroup = [PSSpecifier preferenceSpecifierNamed:@""
 									target:self
@@ -155,24 +162,22 @@
 									cell:PSGroupCell
 									edit:nil];
 
-		[specifiers addObject:URLListGroup];
+		[_specifiers addObject:URLListGroup];
 
 		for(NSString* exception in ForceHTTPSExceptions)
 		{
 			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:exception
 									target:self
-										set:@selector(setPreferenceValue:specifier:)
-										get:@selector(readPreferenceValue:)
+										set:nil
+										get:nil
 									detail:nil
 										cell:PSStaticTextCell
 										edit:nil];
 
 			[specifier setProperty:@YES forKey:@"enabled"];
 
-			[specifiers addObject:specifier];
+			[_specifiers addObject:specifier];
 		}
-
-		_specifiers = (NSArray*)[specifiers copy];
 	}
 
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"FORCE_HTTPS_EXCEPTIONS_TITLE"]];
@@ -204,7 +209,6 @@
 		UITextField * URLField = addLocationAlert.textFields[0];
 
 		[ForceHTTPSExceptions addObject:URLField.text];
-		[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
 		[plist writeToFile:otherPlistPath atomically:YES];
 
 		PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:URLField.text
@@ -217,6 +221,8 @@
 
 		[specifier setProperty:@YES forKey:@"enabled"];
 		[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
+
+		otherPlistChanged();
   }]];
 
 	[self presentViewController:addLocationAlert animated:YES completion:nil];
@@ -237,8 +243,8 @@
 {
 	BOOL orig = [super performDeletionActionForSpecifier:specifier];
 	[ForceHTTPSExceptions removeObject:[specifier name]];
-	[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
 	[plist writeToFile:otherPlistPath atomically:YES];
+	otherPlistChanged();
 	return orig;
 }
 @end
@@ -252,6 +258,7 @@
 		if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
 		{
 			[@{} writeToFile:otherPlistPath atomically:NO];
+			otherPlistChanged();
 		}
 
 		if(!plist)
@@ -259,13 +266,12 @@
 			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
 		}
 
-		PinnedLocationNames = [NSMutableArray new];
-		PinnedLocationPaths = [NSMutableArray new];
-
 		if(![[plist allKeys] containsObject:@"PinnedLocationNames"])
 		{
+			PinnedLocationNames = [NSMutableArray new];
 			[plist setObject:PinnedLocationNames forKey:@"PinnedLocationNames"];
 			[plist writeToFile:otherPlistPath atomically:YES];
+			otherPlistChanged();
 		}
 		else
 		{
@@ -274,15 +280,17 @@
 
 		if(![[plist allKeys] containsObject:@"PinnedLocationPaths"])
 		{
+			PinnedLocationPaths = [NSMutableArray new];
 			[plist setObject:PinnedLocationPaths forKey:@"PinnedLocationPaths"];
 			[plist writeToFile:otherPlistPath atomically:YES];
+			otherPlistChanged();
 		}
 		else
 		{
 			PinnedLocationPaths = [plist objectForKey:@"PinnedLocationPaths"];
 		}
 
-		NSMutableArray* specifiers = [NSMutableArray new];
+		_specifiers = [NSMutableArray new];
 
 		PSSpecifier* LocationListGroup = [PSSpecifier preferenceSpecifierNamed:@""
 									target:self
@@ -292,24 +300,22 @@
 									cell:PSGroupCell
 									edit:nil];
 
-		[specifiers addObject:LocationListGroup];
+		[_specifiers addObject:LocationListGroup];
 
 		for(NSString* PinnedLocationName in PinnedLocationNames)
 		{
 			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:PinnedLocationName
 									target:self
-										set:@selector(setPreferenceValue:specifier:)
-										get:@selector(readPreferenceValue:)
+										set:nil
+										get:nil
 									detail:nil
 										cell:PSStaticTextCell
 										edit:nil];
 
 			[specifier setProperty:@YES forKey:@"enabled"];
 
-			[specifiers addObject:specifier];
+			[_specifiers addObject:specifier];
 		}
-
-		_specifiers = (NSArray*)[specifiers copy];
 	}
 
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PINNED_LOCATIONS"]];
@@ -370,11 +376,8 @@
 		if(![name isEqualToString:@""] && ![path isEqualToString:@""] && exists && isDir)
 		{
 			[PinnedLocationNames addObject:name];
-			[plist setObject:PinnedLocationNames forKey:@"PinnedLocationNames"];
-			[plist writeToFile:otherPlistPath atomically:YES];
-
 			[PinnedLocationPaths addObject:path];
-			[plist setObject:PinnedLocationPaths forKey:@"PinnedLocationPaths"];
+
 			[plist writeToFile:otherPlistPath atomically:YES];
 
 			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:name
@@ -387,6 +390,8 @@
 
 			[specifier setProperty:@YES forKey:@"enabled"];
 			[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
+
+			otherPlistChanged();
 		}
 		else
 		{
@@ -453,10 +458,9 @@
 	[PinnedLocationNames removeObjectAtIndex:[indexPath row]];
 	[PinnedLocationPaths removeObjectAtIndex:[indexPath row]];
 
-	[plist setObject:PinnedLocationNames forKey:@"PinnedLocationNames"];
-	[plist setObject:PinnedLocationPaths forKey:@"PinnedLocationPaths"];
-
 	[plist writeToFile:otherPlistPath atomically:YES];
+	otherPlistChanged();
+
 	return orig;
 }
 @end
@@ -528,8 +532,8 @@
 	if(!_specifiers)
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"GesturePrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"GESTURE_ADDONS"]];
 	return _specifiers;
 }
@@ -558,65 +562,171 @@
 	if(!_specifiers)
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"OtherPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"OTHER_ADDONS"]];
 	return _specifiers;
 }
 @end
 
-@implementation ColorPrefsController
+@implementation ColorOverviewPrefsController
 
 - (NSArray *)specifiers
 {
 	if(!_specifiers)
 	{
-		_specifiers = [self loadSpecifiersFromPlistName:@"ColorPrefs" target:self];
+		_specifiers = [self loadSpecifiersFromPlistName:@"ColorPrefsOverview" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"COLOR_SETTINGS"]];
 	return _specifiers;
 }
+
 @end
 
-@implementation NormalColorPrefsController
+@implementation ColorPrefsController
+
+- (void)removeDisabledGroups:(NSMutableArray*)specifiers
+{
+	for(PSSpecifier* specifier in [specifiers reverseObjectEnumerator])
+	{
+		if(specifier.cellType == 6)
+		{
+			CFStringRef key = (__bridge CFStringRef)[[specifier properties] objectForKey:@"key"];
+			CFStringRef defaults = (__bridge CFStringRef)[[specifier properties] objectForKey:@"defaults"];
+
+			Boolean keyExists;
+			Boolean enabled = CFPreferencesGetAppBooleanValue(key, defaults, &keyExists);
+
+			if(!enabled || !keyExists)
+			{
+				PSSpecifier* colorSpecifier = _specifiers[[_specifiers indexOfObject:specifier] + 1];
+				[specifiers removeObject:colorSpecifier];
+			}
+		}
+	}
+}
+
+- (void)setColorEnabled:(NSNumber *)value forSpecifier:(PSSpecifier*)specifier
+{
+	[self setPreferenceValue:value specifier:specifier];
+
+	PSSpecifier* colorSpecifier = _fullSpecifiers[[_fullSpecifiers indexOfObject:specifier] + 1];
+
+	if([value boolValue])
+	{
+		[self insertContiguousSpecifiers:@[colorSpecifier] afterSpecifier:specifier animated:YES];
+	}
+	else
+	{
+		[self removeContiguousSpecifiers:@[colorSpecifier] animated:YES];
+	}
+}
+
+@end
+
+@implementation TopBarNormalColorPrefsController
+
+- (NSMutableArray*)specifiers
+{
+	if(!_specifiers)
+	{
+		_specifiers = [self loadSpecifiersFromPlistName:@"TopBarNormalColorPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+		_fullSpecifiers = [_specifiers copy];
+		[self removeDisabledGroups:_specifiers];
+	}
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"]];
+	return _specifiers;
+}
+
+
+
+@end
+
+@implementation TopBarPrivateColorPrefsController
 
 - (NSArray *)specifiers
 {
 	if(!_specifiers)
 	{
-		_specifiers = [self loadSpecifiersFromPlistName:@"NormalColorPrefs" target:self];
+		_specifiers = [self loadSpecifiersFromPlistName:@"TopBarPrivateColorPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+		_fullSpecifiers = [_specifiers copy];
+		[self removeDisabledGroups:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL_MODE"]];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"]];
 	return _specifiers;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self reload];
-    [super viewWillAppear:animated];
-}
 @end
 
-@implementation PrivateColorPrefsController
+@implementation BottomBarNormalColorPrefsController
 
 - (NSArray *)specifiers
 {
 	if(!_specifiers)
 	{
-		_specifiers = [self loadSpecifiersFromPlistName:@"PrivateColorPrefs" target:self];
+		_specifiers = [self loadSpecifiersFromPlistName:@"BottomBarNormalColorPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+		_fullSpecifiers = [_specifiers copy];
+		[self removeDisabledGroups:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
-	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE_MODE"]];
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"]];
 	return _specifiers;
 }
 
-- (void)viewWillAppear:(BOOL)animated
+@end
+
+@implementation BottomBarPrivateColorPrefsController
+
+- (NSArray *)specifiers
 {
-    [self reload];
-    [super viewWillAppear:animated];
+	if(!_specifiers)
+	{
+		_specifiers = [self loadSpecifiersFromPlistName:@"BottomBarPrivateColorPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+		_fullSpecifiers = [_specifiers copy];
+		[self removeDisabledGroups:_specifiers];
+	}
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"]];
+	return _specifiers;
 }
+
+@end
+
+@implementation TabSwitcherNormalColorPrefsController
+
+- (NSArray *)specifiers
+{
+	if(!_specifiers)
+	{
+		_specifiers = [self loadSpecifiersFromPlistName:@"TabSwitcherNormalColorPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+		_fullSpecifiers = [_specifiers copy];
+		[self removeDisabledGroups:_specifiers];
+	}
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"]];
+	return _specifiers;
+}
+
+@end
+
+@implementation TabSwitcherPrivateColorPrefsController
+
+- (NSArray *)specifiers
+{
+	if(!_specifiers)
+	{
+		_specifiers = [self loadSpecifiersFromPlistName:@"TabSwitcherPrivateColorPrefs" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+		_fullSpecifiers = [_specifiers copy];
+		[self removeDisabledGroups:_specifiers];
+	}
+	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"]];
+	return _specifiers;
+}
+
 @end
 
 @implementation CreditsController
@@ -626,8 +736,8 @@
 	if(!_specifiers)
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:@"Credits" target:self];
+		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	}
-	[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
 	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CREDITS"]];
 	return _specifiers;
 }

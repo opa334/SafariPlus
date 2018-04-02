@@ -61,10 +61,14 @@ BOOL fullSafariInstalled;
           target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
       }
 
+      #if __LP64__
       long long placement = MSHookIvar<long long>(self, "_placement");
+      #else
+      long placement = MSHookIvar<long>(self, "_placement");
+      #endif
 
       //Landscape on newer devices, portrait + landscape on iPads
-      if(placement == 0 || placement == 4294967296 || (IS_PAD && iOSVersion <= 8))
+      if(placement == 0 || (IS_PAD && iOSVersion <= 8))
       {
         //iPads
         if(IS_PAD)
@@ -116,7 +120,7 @@ BOOL fullSafariInstalled;
             if(!addTabItem)
             {
               // Recreate the "add tab" button for iOS versions that don't do that by default on iPhone models
-              addTabItem = [[NSClassFromString(@"GestureRecognizingBarButtonItem") alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:[self valueForKey:@"_browserDelegate"] action:@selector(addTabFromButtonBar)];
+              addTabItem = [[NSClassFromString(@"GestureRecognizingBarButtonItem") alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:self.browserDelegate action:@selector(addTabFromButtonBar)];
               UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
               recognizer.allowableMovement = 3.0;
               addTabItem.gestureRecognizer = recognizer;
@@ -157,74 +161,13 @@ BOOL fullSafariInstalled;
         MSHookIvar<NSMutableDictionary*>(self, "_defaultItemsForToolbarSize");
 
       //Save items to dictionary
-      defaultItemsForToolbarSize[@([self toolbarSize])] = orig;
+      defaultItemsForToolbarSize[@(self.toolbarSize)] = orig;
 
       return orig;
     }
   }
 
   return %orig;
-}
-
-- (void)layoutSubviews
-{
-  //Tint Color
-  if(preferenceManager.appTintColorNormalEnabled ||
-    preferenceManager.appTintColorPrivateEnabled)
-  {
-    BOOL privateMode = privateBrowsingEnabled(self.delegate);
-
-    if(preferenceManager.appTintColorNormalEnabled && !privateMode)
-    {
-      #if defined(SIMJECT)
-      self.tintColor = [UIColor redColor];
-      #else
-      self.tintColor = LCPParseColorString(preferenceManager.appTintColorNormal, @"#FFFFFF");
-      #endif
-    }
-    else if(preferenceManager.appTintColorPrivateEnabled && privateMode)
-    {
-      #if defined(SIMJECT)
-      self.tintColor = [UIColor redColor];
-      #else
-      self.tintColor = LCPParseColorString(preferenceManager.appTintColorPrivate, @"#FFFFFF");
-      #endif
-    }
-  }
-
-  //Bottom Bar Color (kinda broken? For some reason it only works properly when SafariDownloader + is installed?)
-  if(preferenceManager.bottomBarColorNormalEnabled ||
-    preferenceManager.bottomBarColorPrivateEnabled)
-  {
-    BOOL privateMode = privateBrowsingEnabled(self.delegate);
-
-    _UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
-    backgroundView.grayscaleTintView.hidden = NO;
-    if(preferenceManager.bottomBarColorNormalEnabled && !privateMode)
-    {
-      #if defined(SIMJECT)
-      backgroundView.grayscaleTintView.backgroundColor = [UIColor redColor];
-      #else
-      backgroundView.grayscaleTintView.backgroundColor =
-        LCPParseColorString(preferenceManager.bottomBarColorNormal, @"#FFFFFF");
-      #endif
-    }
-    else if(preferenceManager.bottomBarColorPrivateEnabled && privateMode)
-    {
-      #if defined(SIMJECT)
-      backgroundView.grayscaleTintView.backgroundColor = [UIColor redColor];
-      #else
-      backgroundView.grayscaleTintView.backgroundColor =
-        LCPParseColorString(preferenceManager.bottomBarColorPrivate, @"#FFFFFF");
-      #endif
-    }
-    else
-    {
-      [self updateTintColor];
-    }
-  }
-
-  %orig;
 }
 
 %end

@@ -20,7 +20,11 @@
 #import "../Shared.h"
 
 @interface UIWindow (private)
+#if __LP64__
 - (id)_initWithOrientation:(long long)arg1;
+#else
+- (id)_initWithOrientation:(long)arg1;
+#endif
 - (BOOL)_canAffectStatusBarAppearance;
 @end
 

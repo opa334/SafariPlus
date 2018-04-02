@@ -6,7 +6,7 @@ ifeq ($(SIMJECT),1)
 	export ARCHS = x86_64 i386
 else
 	export SIMJECT = 0
-	export TARGET = iphone:clang:10.1:8.0
+	export TARGET = iphone:clang:11.2:8.0
 	export ARCHS = arm64 armv7
 endif
 

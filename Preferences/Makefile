@@ -1,7 +1,5 @@
 include $(THEOS)/makefiles/common.mk
 
-export TARGET = iphone:clang:9.3:8.0
-
 BUNDLE_NAME = SafariPlusPrefs
 SafariPlusPrefs_CFLAGS = -fobjc-arc
 SafariPlusPrefs_FILES = $(wildcard *.m)

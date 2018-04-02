@@ -21,11 +21,16 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @interface SPPreferenceManager : NSObject
 {
   #if !defined(SIMJECT)
-  HBPreferences *preferences;
+  HBPreferences* preferences;
+  NSDictionary* colors;
+  NSDictionary* otherPlist;
   #endif
 }
 
++ (instancetype)sharedInstance;
+
 @property(nonatomic, readonly) BOOL forceHTTPSEnabled;
+- (NSArray*)forceHTTPSExceptions;
 @property(nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
 @property(nonatomic, readonly) BOOL openInNewTabOptionEnabled;
 @property(nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;
@@ -41,6 +46,8 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property(nonatomic, readonly) BOOL customDefaultPathEnabled;
 @property(nonatomic, readonly, retain) NSString* customDefaultPath;
 @property(nonatomic, readonly) BOOL pinnedLocationsEnabled;
+- (NSArray*)pinnedLocationNames;
+- (NSArray*)pinnedLocationPaths;
 @property(nonatomic, readonly) BOOL onlyDownloadOnWifiEnabled;
 @property(nonatomic, readonly) BOOL disablePushNotificationsEnabled;
 @property(nonatomic, readonly) BOOL disableBarNotificationsEnabled;
@@ -71,40 +78,53 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property(nonatomic, readonly) BOOL alwaysOpenNewTabEnabled;
 @property(nonatomic, readonly) BOOL suppressMailToDialog;
 
-@property(nonatomic, readonly) BOOL appTintColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* appTintColorNormal;
-@property(nonatomic, readonly) BOOL topBarColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* topBarColorNormal;
-@property(nonatomic, readonly) BOOL URLFontColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* URLFontColorNormal;
-@property(nonatomic, readonly) BOOL progressBarColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* progressBarColorNormal;
-@property(nonatomic, readonly) BOOL tabTitleColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* tabTitleColorNormal;
-@property(nonatomic, readonly) BOOL reloadColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* reloadColorNormal;
-@property(nonatomic, readonly) BOOL lockIconColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* lockIconColorNormal;
-@property(nonatomic, readonly) BOOL bottomBarColorNormalEnabled;
-@property(nonatomic, readonly,retain) NSString* bottomBarColorNormal;
+@property(nonatomic, readonly) BOOL topBarNormalTintColorEnabled;
+- (UIColor*)topBarNormalTintColor;
+@property(nonatomic, readonly) BOOL topBarNormalBackgroundColorEnabled;
+- (UIColor*)topBarNormalBackgroundColor;
+@property(nonatomic, readonly) BOOL topBarNormalTabBarTitleColorEnabled;
+- (UIColor*)topBarNormalTabBarTitleColor;
+@property(nonatomic, readonly) BOOL topBarNormalURLFontColorEnabled;
+- (UIColor*)topBarNormalURLFontColor;
+@property(nonatomic, readonly) BOOL topBarNormalProgressBarColorEnabled;
+- (UIColor*)topBarNormalProgressBarColor;
+@property(nonatomic, readonly) BOOL topBarNormalLockIconColorEnabled;
+- (UIColor*)topBarNormalLockIconColor;
+@property(nonatomic, readonly) BOOL topBarNormalReloadButtonColorEnabled;
+- (UIColor*)topBarNormalReloadButtonColor;
+@property(nonatomic, readonly) BOOL bottomBarNormalTintColorEnabled;
+- (UIColor*)bottomBarNormalTintColor;
+@property(nonatomic, readonly) BOOL bottomBarNormalBackgroundColorEnabled;
+- (UIColor*)bottomBarNormalBackgroundColor;
+@property(nonatomic, readonly) BOOL tabTitleBarNormalTextColorEnabled;
+- (UIColor*)tabTitleBarNormalTextColor;
+@property(nonatomic, readonly) BOOL tabTitleBarNormalBackgroundColorEnabled;
+- (UIColor*)tabTitleBarNormalBackgroundColor;
 
-@property(nonatomic, readonly) BOOL appTintColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* appTintColorPrivate;
-@property(nonatomic, readonly) BOOL topBarColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* topBarColorPrivate;
-@property(nonatomic, readonly) BOOL URLFontColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* URLFontColorPrivate;
-@property(nonatomic, readonly) BOOL progressBarColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* progressBarColorPrivate;
-@property(nonatomic, readonly) BOOL tabTitleColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* tabTitleColorPrivate;
-@property(nonatomic, readonly) BOOL reloadColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* reloadColorPrivate;
-@property(nonatomic, readonly) BOOL lockIconColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* lockIconColorPrivate;
-@property(nonatomic, readonly) BOOL bottomBarColorPrivateEnabled;
-@property(nonatomic, readonly,retain) NSString* bottomBarColorPrivate;
+@property(nonatomic, readonly) BOOL topBarPrivateTintColorEnabled;
+- (UIColor*)topBarPrivateTintColor;
+@property(nonatomic, readonly) BOOL topBarPrivateBackgroundColorEnabled;
+- (UIColor*)topBarPrivateBackgroundColor;
+@property(nonatomic, readonly) BOOL topBarPrivateTabBarTitleColorEnabled;
+- (UIColor*)topBarPrivateTabBarTitleColor;
+@property(nonatomic, readonly) BOOL topBarPrivateURLFontColorEnabled;
+- (UIColor*)topBarPrivateURLFontColor;
+@property(nonatomic, readonly) BOOL topBarPrivateProgressBarColorEnabled;
+- (UIColor*)topBarPrivateProgressBarColor;
+@property(nonatomic, readonly) BOOL topBarPrivateLockIconColorEnabled;
+- (UIColor*)topBarPrivateLockIconColor;
+@property(nonatomic, readonly) BOOL topBarPrivateReloadButtonColorEnabled;
+- (UIColor*)topBarPrivateReloadButtonColor;
+@property(nonatomic, readonly) BOOL bottomBarPrivateTintColorEnabled;
+- (UIColor*)bottomBarPrivateTintColor;
+@property(nonatomic, readonly) BOOL bottomBarPrivateBackgroundColorEnabled;
+- (UIColor*)bottomBarPrivateBackgroundColor;
+@property(nonatomic, readonly) BOOL tabTitleBarPrivateTextColorEnabled;
+- (UIColor*)tabTitleBarPrivateTextColor;
+@property(nonatomic, readonly) BOOL tabTitleBarPrivateBackgroundColorEnabled;
+- (UIColor*)tabTitleBarPrivateBackgroundColor;
 
-+ (instancetype)sharedInstance;
+- (void)reloadColors;
+- (void)reloadOtherPlist;
 
 @end

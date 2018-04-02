@@ -59,6 +59,12 @@ BOOL showAlert = YES;
 %group iOS9Up
 %hook TabDocument
 
+/*- (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element defaultActions:(NSArray*)defaultActions previewViewController:(UIViewController*)previewViewController
+{
+  NSLog(@"_actionsForElement:%@ defaultActions:%@ previewViewController:%@", element, defaultActions, previewViewController);
+  return [defaultActions mutableCopy];
+}*/
+
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element
   defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
@@ -73,7 +79,7 @@ BOOL showAlert = YES;
     BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
     //URL long pressed
-    if(element.type == ElementInfoURL_iOS10AndUp || element.type == ElementInfoURL_iOS9AndBelow)
+    if(element.type == ElementInfoURL)
     {
       if(preferenceManager.openInOppositeModeOptionEnabled)
       {
@@ -150,7 +156,7 @@ BOOL showAlert = YES;
     {
       _WKElementAction* downloadToAction;
 
-      if(element.type == ElementInfoURL_iOS10AndUp || element.type == ElementInfoURL_iOS9AndBelow)
+      if(element.type == ElementInfoURL)
       {
         downloadToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
@@ -175,7 +181,7 @@ BOOL showAlert = YES;
 
         [options insertObject:downloadToAction atIndex:[options count] - 1];
       }
-      else if(element.type == ElementInfoImage_iOS10AndUp || element.type == ElementInfoImage_iOS9AndBelow)
+      else if(element.type == ElementInfoImage)
       {
         downloadToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
@@ -269,7 +275,7 @@ BOOL showAlert = YES;
     BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
     //URL long pressed
-    if(element.type == ElementInfoURL_iOS9AndBelow)
+    if(element.type == ElementInfoURL)
     {
       if(preferenceManager.openInOppositeModeOptionEnabled)
       {
@@ -332,7 +338,7 @@ BOOL showAlert = YES;
     {
       _WKElementAction* downloadToAction;
 
-      if(element.type == ElementInfoURL_iOS9AndBelow)
+      if(element.type == ElementInfoURL)
       {
         downloadToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
@@ -357,7 +363,7 @@ BOOL showAlert = YES;
 
         [options insertObject:downloadToAction atIndex:[options count] - 1];
       }
-      else if(element.type == ElementInfoImage_iOS9AndBelow)
+      else if(element.type == ElementInfoImage)
       {
         downloadToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
@@ -635,13 +641,7 @@ BOOL showAlert = YES;
     return NO;
   }
 
-  //Reload dictionary
-  loadOtherPlist();
-
-  //Get https exception array from dictionary
-  NSMutableArray* ForceHTTPSExceptions = [otherPlist objectForKey:@"ForceHTTPSExceptions"];
-
-  for(NSString* exception in ForceHTTPSExceptions)
+  for(NSString* exception in [preferenceManager forceHTTPSExceptions])
   {
     if([[URL host] rangeOfString:exception].location != NSNotFound)
     {
@@ -660,11 +660,6 @@ BOOL showAlert = YES;
 {
   Class TabDocumentClass;
 
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
-  {
-    %init(iOS10Up, TabDocument=TabDocumentClass);
-  }
-
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
     TabDocumentClass = objc_getClass("TabDocument");
@@ -674,6 +669,11 @@ BOOL showAlert = YES;
   {
     TabDocumentClass = objc_getClass("TabDocumentWK2");
     %init(iOS8, TabDocument=TabDocumentClass);
+  }
+
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
+  {
+    %init(iOS10Up, TabDocument=TabDocumentClass);
   }
 
   %init(all, TabDocument=TabDocumentClass);

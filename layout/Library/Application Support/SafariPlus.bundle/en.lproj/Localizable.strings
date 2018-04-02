@@ -158,30 +158,22 @@
 
 /* Color Settings */
 
-"APP_TINT_COLOR_ENABLED" = "App Tint Color";
-"APP_TINT_COLOR" = "App Tint Color...";
+"TOP_BAR" = "Top Bar";
+"BOTTOM_BAR" = "Bottom Bar";
+"TAB_SWITCHER" = "Tab Switcher";
 
-"TOP_BAR_COLOR_ENABLED" = "Top Bar Color";
-"TOP_BAR_COLOR" = "Top Bar Color...";
+"TINT_COLOR" = "Tint Color";
+"BACKGROUND_COLOR" = "Background Color";
+"TAB_BAR_TITLE_COLOR" = "Tab Bar Title Color";
+"TAB_BAR_BACKGROUND_COLOR" = "Tab Bar Background Color";
+"URL_FONT_COLOR" = "URL Font Color";
+"PROGRESS_BAR_COLOR" = "Progress Bar Color";
+"RELOAD_BUTTON_COLOR" = "Reload Button Color";
+"LOCK_ICON_COLOR" = "Lock Icon Color";
+"TAB_TITLE_TEXT_COLOR" = "Tab Title Text Color";
+"TAB_TITLE_BACKGROUND_COLOR" = "Tab Title Background Color";
 
-"URL_FONT_COLOR_ENABLED" = "URL Font Color";
-"URL_FONT_COLOR" = "URL Font Color...";
-
-"PROGRESS_BAR_COLOR_ENABLED" = "Progress Bar Color";
-"PROGRESS_BAR_COLOR" = "Progress Bar Color...";
-
-"TAB_TITLE_COLOR_ENABLED" = "Tab Title Color";
-"TAB_TITLE_COLOR" = "Tab Title Color...";
-
-"RELOAD_BUTTON_COLOR_ENABLED" = "Reload Button Color";
-"RELOAD_BUTTON_COLOR" = "Reload Button Color...";
-
-"LOCK_ICON_COLOR_ENABLED" = "Lock Icon Color";
-"LOCK_ICON_COLOR" = "Lock Icon Color...";
-
-"BOTTOM_BAR_COLOR_ENABLED" = "Bottom Bar Color";
-"BOTTOM_BAR_COLOR" = "Bottom Bar Color...";
-"BOTTOM_BAR_FOOTER" = "NOTE: This option is kinda broken.";
+"TAB_BAR_NOTE" = "NOTE: The tab bar does not exist on all devices sizes / orientations.";
 
 "WHITE" = "White";
 "BLACK" = "Black";

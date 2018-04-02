@@ -620,21 +620,16 @@
 
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-  //Load plist
-  loadOtherPlist();
-
   //Get pinned location names & paths
-  NSArray* PinnedLocationNames = [NSArray new];
-  NSArray* PinnedLocationPaths = [NSArray new];
-  PinnedLocationNames = [otherPlist objectForKey:@"PinnedLocationNames"];
-  PinnedLocationPaths = [otherPlist objectForKey:@"PinnedLocationPaths"];
-
+  NSArray* pinnedLocationNames = [preferenceManager pinnedLocationNames];
+  NSArray* pinnedLocationPaths = [preferenceManager pinnedLocationPaths];
+  
   UIAlertController* pinnedLocationAlert = [UIAlertController
     alertControllerWithTitle:[localizationManager
     localizedSPStringForKey:@"PINNED_LOCATIONS"] message:nil
     preferredStyle:UIAlertControllerStyleActionSheet];
 
-  for(NSString* name in PinnedLocationNames)
+  for(NSString* name in pinnedLocationNames)
   {
     //Add option for each location
     [pinnedLocationAlert addAction:[UIAlertAction actionWithTitle:name
@@ -644,7 +639,7 @@
       NSInteger index = [pinnedLocationAlert.actions indexOfObject:action];
 
       //Get path from index
-      __block NSURL* path = [NSURL fileURLWithPath:[PinnedLocationPaths objectAtIndex:index]];
+      __block NSURL* path = [NSURL fileURLWithPath:[pinnedLocationPaths objectAtIndex:index]];
 
       //Alert for filename
       UIAlertController* filenameAlert = [UIAlertController

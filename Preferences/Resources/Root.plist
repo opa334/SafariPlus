@@ -41,7 +41,7 @@
 		{
 			cell = "PSLinkListCell";
 			defaults = "com.opa334.safariplusprefs";
-			detail = "ColorPrefsController";
+			detail = "ColorOverviewPrefsController";
 			label = COLOR_SETTINGS;
 		},
 		{
@@ -73,7 +73,7 @@
 		},
 		{
 			cell = PSGroupCell;
-			footerText = "© 2017 opa334";
+			footerText = "© 2018 opa334";
 		},
 	);
 }

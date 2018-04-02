@@ -63,13 +63,33 @@
 @interface OtherPrefsController : PSListController {}
 @end
 
-@interface ColorPrefsController : PSListController {}
+@interface ColorOverviewPrefsController : PSListController {}
 @end
 
-@interface NormalColorPrefsController : PSListController {}
+@interface ColorPrefsController : PSListController
+{
+  NSArray* _fullSpecifiers;
+}
+- (void)removeDisabledGroups:(NSMutableArray*)specifiers;
+- (void)setColorEnabled:(NSNumber *)value forSpecifier:(PSSpecifier*)specifier;
 @end
 
-@interface PrivateColorPrefsController : PSListController {}
+@interface TopBarNormalColorPrefsController : ColorPrefsController {}
+@end
+
+@interface BottomBarNormalColorPrefsController : ColorPrefsController {}
+@end
+
+@interface TabSwitcherNormalColorPrefsController : ColorPrefsController {}
+@end
+
+@interface TopBarPrivateColorPrefsController : ColorPrefsController {}
+@end
+
+@interface BottomBarPrivateColorPrefsController : ColorPrefsController {}
+@end
+
+@interface TabSwitcherPrivateColorPrefsController : ColorPrefsController {}
 @end
 
 @interface CreditsController : PSListController {}

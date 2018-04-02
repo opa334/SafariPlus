@@ -18,10 +18,8 @@
 //Enum for long pressed element type
 enum
 {
-  ElementInfoURL_iOS10AndUp = 0,
-  ElementInfoImage_iOS10AndUp = 1,
-  ElementInfoURL_iOS9AndBelow = 120259084288,
-  ElementInfoImage_iOS9AndBelow = 120259084289
+  ElementInfoURL = 0,
+  ElementInfoImage = 1,
 };
 
 //Enum for mode switch actions

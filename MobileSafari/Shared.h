@@ -25,7 +25,6 @@ extern SPLocalizationManager* localizationManager;
 extern SPDownloadManager* downloadManager;
 extern NSBundle* SPBundle;
 extern NSBundle* MSBundle;
-extern NSMutableDictionary* otherPlist;
 
 extern BOOL privateBrowsingEnabled(BrowserController* controller);
 extern void togglePrivateBrowsing(BrowserController* controller);

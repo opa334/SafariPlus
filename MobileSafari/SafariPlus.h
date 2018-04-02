@@ -32,8 +32,15 @@
 @property (nonatomic, retain) UIView *grayscaleTintView;
 @end
 
+@interface _UIBackdropViewSettings : NSObject
+@end
+
 @interface _UIBarBackground : UIView {}
 @property (nonatomic,retain) UIView* customBackgroundView;
+@end
+
+@interface UIImage(Private)
+- (UIImage*)_flatImageWithColor:(UIColor*)color;
 @end
 
 /**** WebKit ****/
@@ -58,7 +65,11 @@
 
 @interface _WKActivatedElementInfo : NSObject {}
 @property (nonatomic, readonly) NSURL *URL;
+#if __LP64__
 @property (nonatomic,readonly) long long type;
+#else
+@property (nonatomic,readonly) long type;
+#endif
 @property (nonatomic,copy,readonly) UIImage* image;
 @property (nonatomic,readonly) NSString* ID;
 @property (nonatomic,readonly) NSString* title;
@@ -113,7 +124,7 @@
 @end
 
 @interface _SFNavigationBarBackdrop : _UIBackdropView {}
-@property (nonatomic, retain) UIView* grayscaleTintView;
+@property (assign,nonatomic) NavigationBar* navigationBar;
 @end
 
 @interface _SFNavigationBarURLButton : UIButton {} //iOS 9 + 10
@@ -133,10 +144,13 @@
 - (BOOL)privateBrowsing;
 @end
 
-@interface _SFToolbar : NSObject {}
+@interface _SFToolbar : UIToolbar {}
 @property (nonatomic) UIColor* tintColor;
+#if __LP64__
 @property (nonatomic,readonly) long long toolbarSize;
-@property (nonatomic,weak) BrowserController* delegate;
+#else
+@property (nonatomic,readonly) long toolbarSize;
+#endif
 @end
 
 
@@ -283,13 +297,13 @@
 @end
 
 @interface BrowserToolbar : _SFToolbar {}
-@property (nonatomic,weak) id<BrowserToolbarDelegate> browserDelegate;
+@property (assign,nonatomic) BrowserController* browserDelegate;
 @property (nonatomic,retain) UIToolbar* replacementToolbar;
+@property(nonatomic) BOOL hasDarkBackground; //iOS8
 - (void)updateTintColor;
 //new stuff below
 @property (nonatomic,retain) UIBarButtonItem* _downloadsItem;
 - (void)setDownloadsEnabled:(BOOL)enabled;
-- (BOOL)usesTabBar;
 @end
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {}
@@ -315,7 +329,14 @@
 
 @interface NavigationBar : _SFNavigationBar {}
 @property (nonatomic,readonly) UnifiedField* textField;
+@property(nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
+- (UIImage*)_lockImageWithTint:(UIColor*)tint usingMiniatureVersion:(BOOL)miniatureVersion;
 - (void)_updateControlTints;
+- (UIColor*)_placeholderColor;
+@end
+
+@interface NavigationBarBackdrop : _UIBackdropView
+@property(nonatomic) NavigationBar *navigationBar;
 @end
 
 @interface NavigationBarURLButton : UIView {} //iOS 8
@@ -331,6 +352,10 @@
 
 @interface SearchSuggestion : NSObject {}
 - (NSString *)string;
+@end
+
+@interface TabBar : UIView
+@property(nonatomic) TabController* delegate;
 @end
 
 @interface TabBarStyle : NSObject
@@ -420,10 +445,14 @@
 - (void)setShowsPrivateBrowsingExplanationView:(BOOL)arg1 animated:(BOOL)arg2; //iOS 11
 @end
 
+@interface TabThumbnailHeaderView : UIView
+@end
+
 @interface TabThumbnailView : UIView {}
 @property (nonatomic,readonly) UIButton* closeButton;
-@property(nonatomic, assign) BOOL isLocked; //new
-@property(nonatomic, retain) UIButton* lockButton; //new
+@property (nonatomic) BOOL usesDarkTheme;
+//@property(nonatomic, assign) BOOL isLocked; //new
+//@property(nonatomic, retain) UIButton* lockButton; //new
 - (void)layoutSubviews;
 @end
 
@@ -445,4 +474,5 @@
 @interface UnifiedField : UITextField {}
 - (void)_textDidChangeFromTyping;
 - (void)setText:(id)arg1;
+- (void)setInteractionTintColor:(UIColor*)interactionTintColor;
 @end

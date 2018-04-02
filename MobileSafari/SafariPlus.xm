@@ -31,8 +31,6 @@ BOOL iPhoneX;
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
-NSMutableDictionary* otherPlist;
-
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
@@ -190,12 +188,6 @@ BrowserRootViewController* rootViewControllerForBrowserController(BrowserControl
 BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document)
 {
   return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
-}
-
-//Load com.opa334.safariplusprefOther.plist
-void loadOtherPlist()
-{
-  otherPlist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
 }
 
 /****** Version and device detection ******/

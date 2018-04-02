@@ -21,7 +21,18 @@
 
 #if !defined(SIMJECT)
 #import <Cephei/HBPreferences.h>
+#import "libcolorpicker.h"
 #endif
+
+void reloadOtherPlist()
+{
+  [preferenceManager reloadOtherPlist];
+}
+
+void reloadColors()
+{
+  [preferenceManager reloadColors];
+}
 
 @implementation SPPreferenceManager
 
@@ -91,23 +102,29 @@
   _alwaysOpenNewTabEnabled = NO;
   _suppressMailToDialog = NO;
 
-  _appTintColorNormalEnabled = NO;
-  _topBarColorNormalEnabled = NO;
-  _URLFontColorNormalEnabled = NO;
-  _progressBarColorNormalEnabled = NO;
-  _tabTitleColorNormalEnabled = NO;
-  _reloadColorNormalEnabled = NO;
-  _lockIconColorNormalEnabled = NO;
-  _bottomBarColorNormalEnabled = NO;
+  _topBarNormalTintColorEnabled = NO;
+  _topBarNormalBackgroundColorEnabled = NO;
+  _topBarNormalURLFontColorEnabled = NO;
+  _topBarNormalProgressBarColorEnabled = NO;
+  _topBarNormalLockIconColorEnabled = NO;
+  _topBarNormalReloadButtonColorEnabled = NO;
+  _topBarNormalTabBarTitleColorEnabled = NO;
+  _bottomBarNormalTintColorEnabled = NO;
+  _bottomBarNormalBackgroundColorEnabled = NO;
+  _tabTitleBarNormalTextColorEnabled = NO;
+  _tabTitleBarNormalBackgroundColorEnabled = YES;
 
-  _appTintColorPrivateEnabled = NO;
-  _topBarColorPrivateEnabled = NO;
-  _URLFontColorPrivateEnabled = NO;
-  _progressBarColorPrivateEnabled = NO;
-  _tabTitleColorPrivateEnabled = NO;
-  _reloadColorPrivateEnabled = NO;
-  _lockIconColorPrivateEnabled = NO;
-  _bottomBarColorPrivateEnabled = NO;
+  _topBarPrivateTintColorEnabled = NO;
+  _topBarPrivateBackgroundColorEnabled = NO;
+  _topBarPrivateURLFontColorEnabled = NO;
+  _topBarPrivateProgressBarColorEnabled = NO;
+  _topBarPrivateLockIconColorEnabled = NO;
+  _topBarPrivateReloadButtonColorEnabled = NO;
+  _topBarPrivateTabBarTitleColorEnabled = NO;
+  _bottomBarPrivateTintColorEnabled = NO;
+  _bottomBarPrivateBackgroundColorEnabled = NO;
+  _tabTitleBarPrivateTextColorEnabled = YES;
+  _tabTitleBarPrivateBackgroundColorEnabled = NO;
 
   #else
 
@@ -159,43 +176,224 @@
   [preferences registerBool:&_alwaysOpenNewTabEnabled default:NO forKey:@"alwaysOpenNewTabEnabled"];
   [preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
 
-  [preferences registerBool:&_appTintColorNormalEnabled default:NO forKey:@"appTintColorNormalEnabled"];
-  [preferences registerObject:&_appTintColorNormal default:@"#ffffff" forKey:@"appTintColorNormal"];
-  [preferences registerBool:&_topBarColorNormalEnabled default:NO forKey:@"topBarColorNormalEnabled"];
-  [preferences registerObject:&_topBarColorNormal default:@"#ffffff" forKey:@"topBarColorNormal"];
-  [preferences registerBool:&_URLFontColorNormalEnabled default:NO forKey:@"URLFontColorNormalEnabled"];
-  [preferences registerObject:&_URLFontColorNormal default:@"#ffffff" forKey:@"URLFontColorNormal"];
-  [preferences registerBool:&_progressBarColorNormalEnabled default:NO forKey:@"progressBarColorNormalEnabled"];
-  [preferences registerObject:&_progressBarColorNormal default:@"#ffffff" forKey:@"progressBarColorNormal"];
-  [preferences registerBool:&_tabTitleColorNormalEnabled default:NO forKey:@"tabTitleColorNormalEnabled"];
-  [preferences registerObject:&_tabTitleColorNormal default:@"#ffffff" forKey:@"tabTitleColorNormal"];
-  [preferences registerBool:&_reloadColorNormalEnabled default:NO forKey:@"reloadColorNormalEnabled"];
-  [preferences registerObject:&_reloadColorNormal default:@"#ffffff" forKey:@"reloadColorNormal"];
-  [preferences registerBool:&_lockIconColorNormalEnabled default:NO forKey:@"lockIconColorNormalEnabled"];
-  [preferences registerObject:&_lockIconColorNormal default:@"#ffffff" forKey:@"lockIconColorNormal"];
-  [preferences registerBool:&_bottomBarColorNormalEnabled default:NO forKey:@"bottomBarColorNormalEnabled"];
-  [preferences registerObject:&_bottomBarColorNormal default:@"#ffffff" forKey:@"bottomBarColorNormal"];
+  [preferences registerBool:&_topBarNormalTintColorEnabled default:NO forKey:@"topBarNormalTintColorEnabled"];
+  [preferences registerBool:&_topBarNormalBackgroundColorEnabled default:NO forKey:@"topBarNormalBackgroundColorEnabled"];
+  [preferences registerBool:&_topBarNormalTabBarTitleColorEnabled default:NO forKey:@"topBarNormalTabBarTitleColorEnabled"];
+  [preferences registerBool:&_topBarNormalURLFontColorEnabled default:NO forKey:@"topBarNormalURLFontColorEnabled"];
+  [preferences registerBool:&_topBarNormalProgressBarColorEnabled default:NO forKey:@"topBarNormalProgressBarColorEnabled"];
+  [preferences registerBool:&_topBarNormalLockIconColorEnabled default:NO forKey:@"topBarNormalLockIconColorEnabled"];
+  [preferences registerBool:&_topBarNormalReloadButtonColorEnabled default:NO forKey:@"topBarNormalReloadButtonColorEnabled"];
+  [preferences registerBool:&_bottomBarNormalTintColorEnabled default:NO forKey:@"bottomBarNormalTintColorEnabled"];
+  [preferences registerBool:&_bottomBarNormalBackgroundColorEnabled default:NO forKey:@"bottomBarNormalBackgroundColorEnabled"];
+  [preferences registerBool:&_tabTitleBarNormalTextColorEnabled default:NO forKey:@"tabTitleBarNormalTextColorEnabled"];
+  [preferences registerBool:&_tabTitleBarNormalBackgroundColorEnabled default:NO forKey:@"tabTitleBarNormalBackgroundColorEnabled"];
 
-  [preferences registerBool:&_appTintColorPrivateEnabled default:NO forKey:@"appTintColorPrivateEnabled"];
-  [preferences registerObject:&_appTintColorPrivate default:@"#ffffff" forKey:@"appTintColorPrivate"];
-  [preferences registerBool:&_topBarColorPrivateEnabled default:NO forKey:@"topBarColorPrivateEnabled"];
-  [preferences registerObject:&_topBarColorPrivate default:@"#ffffff" forKey:@"topBarColorPrivate"];
-  [preferences registerBool:&_URLFontColorPrivateEnabled default:NO forKey:@"URLFontColorPrivateEnabled"];
-  [preferences registerObject:&_URLFontColorPrivate default:@"#ffffff" forKey:@"URLFontColorPrivate"];
-  [preferences registerBool:&_progressBarColorPrivateEnabled default:NO forKey:@"progressBarColorPrivateEnabled"];
-  [preferences registerObject:&_progressBarColorPrivate default:@"#ffffff" forKey:@"progressBarColorPrivate"];
-  [preferences registerBool:&_tabTitleColorPrivateEnabled default:NO forKey:@"tabTitleColorPrivateEnabled"];
-  [preferences registerObject:&_tabTitleColorPrivate default:@"#ffffff" forKey:@"tabTitleColorPrivate"];
-  [preferences registerBool:&_reloadColorPrivateEnabled default:NO forKey:@"reloadColorPrivateEnabled"];
-  [preferences registerObject:&_reloadColorPrivate default:@"#ffffff" forKey:@"reloadColorPrivate"];
-  [preferences registerBool:&_lockIconColorPrivateEnabled default:NO forKey:@"lockIconColorPrivateEnabled"];
-  [preferences registerObject:&_lockIconColorPrivate default:@"#ffffff" forKey:@"lockIconColorPrivate"];
-  [preferences registerBool:&_bottomBarColorPrivateEnabled default:NO forKey:@"bottomBarColorPrivateEnabled"];
-  [preferences registerObject:&_bottomBarColorPrivate default:@"#ffffff" forKey:@"bottomBarColorPrivate"];
+  [preferences registerBool:&_topBarPrivateTintColorEnabled default:NO forKey:@"topBarPrivateTintColorEnabled"];
+  [preferences registerBool:&_topBarPrivateBackgroundColorEnabled default:NO forKey:@"topBarPrivateBackgroundColorEnabled"];
+  [preferences registerBool:&_topBarPrivateTabBarTitleColorEnabled default:NO forKey:@"topBarPrivateTabBarTitleColorEnabled"];
+  [preferences registerBool:&_topBarPrivateURLFontColorEnabled default:NO forKey:@"topBarPrivateURLFontColorEnabled"];
+  [preferences registerBool:&_topBarPrivateProgressBarColorEnabled default:NO forKey:@"topBarPrivateProgressBarColorEnabled"];
+  [preferences registerBool:&_topBarPrivateLockIconColorEnabled default:NO forKey:@"topBarPrivateLockIconColorEnabled"];
+  [preferences registerBool:&_topBarPrivateReloadButtonColorEnabled default:NO forKey:@"topBarPrivateReloadButtonColorEnabled"];
+  [preferences registerBool:&_bottomBarPrivateTintColorEnabled default:NO forKey:@"bottomBarPrivateTintColorEnabled"];
+  [preferences registerBool:&_bottomBarPrivateBackgroundColorEnabled default:NO forKey:@"bottomBarPrivateBackgroundColorEnabled"];
+  [preferences registerBool:&_tabTitleBarPrivateTextColorEnabled default:NO forKey:@"tabTitleBarPrivateTextColorEnabled"];
+  [preferences registerBool:&_tabTitleBarPrivateBackgroundColorEnabled default:NO forKey:@"tabTitleBarPrivateBackgroundColorEnabled"];
+
+  [self reloadColors];
+  [self reloadOtherPlist];
+
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadColors, CFSTR("com.opa334.safaripluscolorprefs/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+  CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadOtherPlist, CFSTR("com.opa334.safariplusprefs/ReloadOtherPlist"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
   #endif
 
   return self;
 }
+
+#if defined(SIMJECT)
+
+- (void)reloadOtherPlist {}
+- (void)reloadColors {}
+
+- (NSArray*)forceHTTPSExceptions
+{
+  return nil;
+}
+
+- (NSArray*)pinnedLocationNames
+{
+  return @[@"Dummy Name"];
+}
+
+- (NSArray*)pinnedLocationPaths
+{
+  return @[@"dummy/path"];
+}
+
+- (UIColor*)topBarNormalTintColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalBackgroundColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalURLFontColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalProgressBarColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalLockIconColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalReloadButtonColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalTabBarTitleColor { return [UIColor redColor]; }
+- (UIColor*)bottomBarNormalTintColor { return [UIColor redColor]; }
+- (UIColor*)bottomBarNormalBackgroundColor { return [UIColor redColor]; }
+- (UIColor*)tabTitleBarNormalTextColor { return [UIColor redColor]; }
+- (UIColor*)tabTitleBarNormalBackgroundColor { return [UIColor redColor]; }
+
+
+- (UIColor*)topBarPrivateTintColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateBackgroundColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateURLFontColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateProgressBarColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateLockIconColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateReloadButtonColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateTabBarTitleColor { return [UIColor redColor]; }
+- (UIColor*)bottomBarPrivateTintColor { return [UIColor redColor]; }
+- (UIColor*)bottomBarPrivateBackgroundColor { return [UIColor redColor]; }
+- (UIColor*)tabTitleBarPrivateTextColor { return [UIColor redColor]; }
+- (UIColor*)tabTitleBarPrivateBackgroundColor { return [UIColor redColor]; }
+
+#else
+
+- (void)reloadOtherPlist
+{
+  otherPlist = [[NSDictionary alloc] initWithContentsOfFile:otherPlistPath];
+}
+
+- (void)reloadColors
+{
+  colors = [[NSDictionary alloc] initWithContentsOfFile:colorPrefsPath];
+}
+
+- (NSArray*)forceHTTPSExceptions
+{
+  return [otherPlist objectForKey:@"ForceHTTPSExceptions"];
+}
+
+- (NSArray*)pinnedLocationNames
+{
+  return [otherPlist objectForKey:@"PinnedLocationNames"];
+}
+
+- (NSArray*)pinnedLocationPaths
+{
+  return [otherPlist objectForKey:@"PinnedLocationPaths"];
+}
+
+- (UIColor*)topBarNormalTintColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarNormalTintColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarNormalBackgroundColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarNormalBackgroundColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarNormalURLFontColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarNormalURLFontColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarNormalProgressBarColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarNormalProgressBarColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarNormalLockIconColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarNormalLockIconColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarNormalReloadButtonColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarNormalReloadButtonColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarNormalTabBarTitleColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarNormalTabBarTitleColor"], @"#FFFFFF");
+}
+
+- (UIColor*)bottomBarNormalTintColor
+{
+  return LCPParseColorString([colors objectForKey:@"bottomBarNormalTintColor"], @"#FFFFFF");
+}
+
+- (UIColor*)bottomBarNormalBackgroundColor
+{
+  return LCPParseColorString([colors objectForKey:@"bottomBarNormalBackgroundColor"], @"#FFFFFF");
+}
+
+- (UIColor*)tabTitleBarNormalTextColor
+{
+  return LCPParseColorString([colors objectForKey:@"tabTitleBarNormalTextColor"], @"#FFFFFF");
+}
+
+- (UIColor*)tabTitleBarNormalBackgroundColor
+{
+  return LCPParseColorString([colors objectForKey:@"tabTitleBarNormalBackgroundColor"], @"#FFFFFF");
+}
+
+
+- (UIColor*)topBarPrivateTintColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarPrivateTintColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarPrivateBackgroundColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarPrivateBackgroundColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarPrivateURLFontColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarPrivateURLFontColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarPrivateProgressBarColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarPrivateProgressBarColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarPrivateLockIconColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarPrivateLockIconColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarPrivateReloadButtonColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarPrivateReloadButtonColor"], @"#FFFFFF");
+}
+
+- (UIColor*)topBarPrivateTabBarTitleColor
+{
+  return LCPParseColorString([colors objectForKey:@"topBarPrivateTabBarTitleColor"], @"#FFFFFF");
+}
+
+- (UIColor*)bottomBarPrivateTintColor
+{
+  return LCPParseColorString([colors objectForKey:@"bottomBarPrivateTintColor"], @"#FFFFFF");
+}
+
+- (UIColor*)bottomBarPrivateBackgroundColor
+{
+  return LCPParseColorString([colors objectForKey:@"bottomBarPrivateBackgroundColor"], @"#FFFFFF");
+}
+
+- (UIColor*)tabTitleBarPrivateTextColor
+{
+  return LCPParseColorString([colors objectForKey:@"tabTitleBarPrivateTextColor"], @"#FFFFFF");
+}
+
+- (UIColor*)tabTitleBarPrivateBackgroundColor
+{
+  return LCPParseColorString([colors objectForKey:@"tabTitleBarPrivateBackgroundColor"], @"#FFFFFF");
+}
+
+#endif
 
 @end

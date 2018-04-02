@@ -158,30 +158,22 @@
 
 /* Color Settings */
 
-"APP_TINT_COLOR_ENABLED" = "App Akzentfarbe";
-"APP_TINT_COLOR" = "App Akzentfarbe...";
+"TOP_BAR" = "Obere Leiste";
+"BOTTOM_BAR" = "Untere Leiste";
+"TAB_SWITCHER" = "Tab Ansicht";
 
-"TOP_BAR_COLOR_ENABLED" = "Farbe der oberen Leiste";
-"TOP_BAR_COLOR" = "Farbe der oberen Leiste...";
+"TINT_COLOR" = "Akzentfarbe";
+"BACKGROUND_COLOR" = "Hintergrundfarbe";
+"TAB_BAR_TITLE_COLOR" = "Schriftfarbe der Tab Leiste";
+"TAB_BAR_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Leiste";
+"URL_FONT_COLOR" = "URL Schriftfarbe";
+"PROGRESS_BAR_COLOR" = "Farbe des Ladebalkens";
+"RELOAD_BUTTON_COLOR" = "Farbe des Neuladen Buttons";
+"LOCK_ICON_COLOR" = "Farbe des Schlüsselicons";
+"TAB_TITLE_TEXT_COLOR" = "Schriftfarbe der Tab Titelleiste";
+"TAB_TITLE_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Titelleiste";
 
-"URL_FONT_COLOR_ENABLED" = "URL Schriftfarbe";
-"URL_FONT_COLOR" = "URL Schriftfarbe...";
-
-"PROGRESS_BAR_COLOR_ENABLED" = "Farbe des Ladebalkens";
-"PROGRESS_BAR_COLOR" = "Farbe des Ladebalkens...";
-
-"TAB_TITLE_COLOR_ENABLED" = "Tab Titelfarbe";
-"TAB_TITLE_COLOR" = "Tab Titelfarbe...";
-
-"RELOAD_BUTTON_COLOR_ENABLED" = "Farbe des neu laden Buttons";
-"RELOAD_BUTTON_COLOR" = "Farbe des neu laden Buttons...";
-
-"LOCK_ICON_COLOR_ENABLED" = "Farbe des Schlüsselicons";
-"LOCK_ICON_COLOR" = "Farbe des Schlüsselicons...";
-
-"BOTTOM_BAR_COLOR_ENABLED" = "Farbe der unteren Leiste";
-"BOTTOM_BAR_COLOR" = "Farbe der unteren Leiste...";
-"BOTTOM_BAR_FOOTER" = "HINWEIS: Diese Option funktioniert möglicherweise nicht richtig.";
+"TAB_BAR_NOTE" = "HINWEIS: Die Tab Leiste ist nicht auf allen Geräten aktiviert.";
 
 "WHITE" = "Weiß";
 "BLACK" = "Schwarz";
