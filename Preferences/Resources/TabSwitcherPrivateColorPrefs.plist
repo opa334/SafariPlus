@@ -17,8 +17,8 @@
 			<string>tabTitleBarPrivateTextColorEnabled</string>
 			<key>label</key>
 			<string>TAB_TITLE_TEXT_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -58,8 +58,8 @@
 			<string>tabTitleBarPrivateBackgroundColorEnabled</string>
 			<key>label</key>
 			<string>TAB_TITLE_BACKGROUND_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>

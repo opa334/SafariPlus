@@ -1,140 +1,247 @@
-{
-	title = "ENHANCED_DOWNLOADS";
-	items =
-	(
-    {
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "ENHANCED_DOWNLOADS_FOOTER";
-		},
-    {
-      cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "ENHANCED_DOWNLOADS";
-			key = "enhancedDownloadsEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-    },
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "VIDEO_DOWNLOADING_FOOTER";
-		},
-    {
-      cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "VIDEO_DOWNLOADING";
-			key = "videoDownloadingEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-    },
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "INSTANT_DOWNLOAD_FOOTER";
-		},
-    {
-      cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "INSTANT_DOWNLOAD";
-			key = "instantDownloadsEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-    },
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "instantDownloadsOption";
-			label = "OPTION";
-			valuesDataSource = "instantDownloadValues";
-			titlesDataSource = "instantDownloadTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "CUSTOM_DEFAULT_PATH_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "CUSTOM_DEFAULT_PATH";
-			key = "customDefaultPathEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSStaticTextCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "/var";
-		},
-		{
-			cell = "PSEditTextCell";
-			default = "";
-			isURL = true;
-			placeholder = "/Downloads/";
-			defaults = "com.opa334.safariplusprefs";
-			key = "customDefaultPath";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "PINNED_LOCATIONS_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "PINNED_LOCATIONS_ENABLED";
-			key = "pinnedLocationsEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PinnedLocationsController";
-			label = "PINNED_LOCATIONS";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "ONLY_DOWNLOAD_ON_WIFI_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "ONLY_DOWNLOAD_ON_WIFI";
-			key = "onlyDownloadOnWifiEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "DISABLE_PUSH_NOTIFICATIONS_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "DISABLE_PUSH_NOTIFICATIONS";
-			key = "disablePushNotificationsEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "DISABLE_BAR_NOTIFICATIONS_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			label = "DISABLE_BAR_NOTIFICATIONS";
-			key = "disableBarNotificationsEnabled";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-  );
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>ENHANCED_DOWNLOADS_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>enhancedDownloadsEnabled</string>
+			<key>label</key>
+			<string>ENHANCED_DOWNLOADS</string>
+			<key>nestedEntryCount</key>
+			<integer>18</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>VIDEO_DOWNLOADING_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>videoDownloadingEnabled</string>
+			<key>label</key>
+			<string>VIDEO_DOWNLOADING</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>INSTANT_DOWNLOAD_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>instantDownloadsEnabled</string>
+			<key>label</key>
+			<string>INSTANT_DOWNLOAD</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>instantDownloadsOption</string>
+			<key>label</key>
+			<string>OPTION</string>
+			<key>titlesDataSource</key>
+			<string>instantDownloadTitles</string>
+			<key>valuesDataSource</key>
+			<string>instantDownloadValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>CUSTOM_DEFAULT_PATH_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>customDefaultPathEnabled</string>
+			<key>label</key>
+			<string>CUSTOM_DEFAULT_PATH</string>
+			<key>nestedEntryCount</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>label</key>
+			<string>/var</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>isURL</key>
+			<string>true</string>
+			<key>key</key>
+			<string>customDefaultPath</string>
+			<key>placeholder</key>
+			<string>/mobile/Downloads/</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>PINNED_LOCATIONS_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>pinnedLocationsEnabled</string>
+			<key>label</key>
+			<string>PINNED_LOCATIONS_ENABLED</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PinnedLocationsController</string>
+			<key>label</key>
+			<string>PINNED_LOCATIONS</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>ONLY_DOWNLOAD_ON_WIFI_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>onlyDownloadOnWifiEnabled</string>
+			<key>label</key>
+			<string>ONLY_DOWNLOAD_ON_WIFI</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>DISABLE_PUSH_NOTIFICATIONS_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>disablePushNotificationsEnabled</string>
+			<key>label</key>
+			<string>DISABLE_PUSH_NOTIFICATIONS</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>DISABLE_BAR_NOTIFICATIONS_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>disableBarNotificationsEnabled</string>
+			<key>label</key>
+			<string>DISABLE_BAR_NOTIFICATIONS</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>ENHANCED_DOWNLOADS</string>
+</dict>
+</plist>

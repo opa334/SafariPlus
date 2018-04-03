@@ -56,7 +56,7 @@ void reloadColors()
   //Simject preferences (No PreferenceLoader in Simulator)
   _forceHTTPSEnabled = YES;
   _openInOppositeModeOptionEnabled = YES;
-  _openInNewTabOptionEnabled = NO;
+  _openInNewTabOptionEnabled = YES;
   _uploadAnyFileOptionEnabled = YES;
   _desktopButtonEnabled = YES;
   _longPressSuggestionsEnabled = YES;
@@ -112,7 +112,7 @@ void reloadColors()
   _bottomBarNormalTintColorEnabled = NO;
   _bottomBarNormalBackgroundColorEnabled = NO;
   _tabTitleBarNormalTextColorEnabled = NO;
-  _tabTitleBarNormalBackgroundColorEnabled = YES;
+  _tabTitleBarNormalBackgroundColorEnabled = NO;
 
   _topBarPrivateTintColorEnabled = NO;
   _topBarPrivateBackgroundColorEnabled = NO;
@@ -123,7 +123,7 @@ void reloadColors()
   _topBarPrivateTabBarTitleColorEnabled = NO;
   _bottomBarPrivateTintColorEnabled = NO;
   _bottomBarPrivateBackgroundColorEnabled = NO;
-  _tabTitleBarPrivateTextColorEnabled = YES;
+  _tabTitleBarPrivateTextColorEnabled = NO;
   _tabTitleBarPrivateBackgroundColorEnabled = NO;
 
   #else

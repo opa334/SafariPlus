@@ -55,7 +55,7 @@
 "INSTANT_DOWNLOAD_FOOTER" = "Deaktiviert das Download-Menü und benutzt standardmäßig immer die ausgewählte Option.";
 "OPTION" = "Option";
 
-"CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Pfad";
+"CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Standardpfad";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\n\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /var (/private/var) Verzeichnisses abgespeichert werden!";
 
 "PINNED_LOCATIONS_ENABLED" = "Angepinnte Orte aktivieren";

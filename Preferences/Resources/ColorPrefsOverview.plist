@@ -1,52 +1,87 @@
-{
-	title = "COLOR_SETTINGS";
-	items =
-	(
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "NORMAL_MODE";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "TopBarNormalColorPrefsController";
-			label = "TOP_BAR";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "BottomBarNormalColorPrefsController";
-			label = "BOTTOM_BAR";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "TabSwitcherNormalColorPrefsController";
-			label = "TAB_SWITCHER";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "PRIVATE_MODE";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "TopBarPrivateColorPrefsController";
-			label = "TOP_BAR";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "BottomBarPrivateColorPrefsController";
-			label = "BOTTOM_BAR";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "TabSwitcherPrivateColorPrefsController";
-			label = "TAB_SWITCHER";
-		}
-	);
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>label</key>
+			<string>NORMAL_MODE</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>TopBarNormalColorPrefsController</string>
+			<key>label</key>
+			<string>TOP_BAR</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>BottomBarNormalColorPrefsController</string>
+			<key>label</key>
+			<string>BOTTOM_BAR</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>TabSwitcherNormalColorPrefsController</string>
+			<key>label</key>
+			<string>TAB_SWITCHER</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>label</key>
+			<string>PRIVATE_MODE</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>TopBarPrivateColorPrefsController</string>
+			<key>label</key>
+			<string>TOP_BAR</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>BottomBarPrivateColorPrefsController</string>
+			<key>label</key>
+			<string>BOTTOM_BAR</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>TabSwitcherPrivateColorPrefsController</string>
+			<key>label</key>
+			<string>TAB_SWITCHER</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>COLOR_SETTINGS</string>
+</dict>
+</plist>

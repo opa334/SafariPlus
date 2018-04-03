@@ -1,118 +1,199 @@
-<?xml version=1.0 encoding=UTF-8?>
-<!DOCTYPE plist PUBLIC -//Apple//DTD PLIST 1.0//EN http://www.apple.com/DTDs/PropertyList-1.0.dtd>
-<plist version=1.0>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
 <dict>
-	<key>title</key> <string>GENERAL</string>
 	<key>items</key>
 	<array>
 		<dict>
-			<key>cell</key> <string>PSGroupCell</string>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>footerText</key> <string>FORCE_HTTPS_FOOTER</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>FORCE_HTTPS_FOOTER</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSwitchCell</string>
-			<key>default</key> <false/>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>label</key> <string>FORCE_HTTPS</string>
-			<key>key</key> <string>forceHTTPSEnabled</string>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>forceHTTPSEnabled</string>
+			<key>label</key>
+			<string>FORCE_HTTPS</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSLinkListCell</string>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>detail</key> <string>ExceptionsController</string>
-			<key>label</key> <string>FORCE_HTTPS_EXCEPTIONS</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>ExceptionsController</string>
+			<key>label</key>
+			<string>FORCE_HTTPS_EXCEPTIONS</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSGroupCell</string>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>footerText</key> <string>OPEN_IN_NEW_TAB_FOOTER</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>OPEN_IN_NEW_TAB_FOOTER</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSwitchCell</string>
-			<key>default</key> <false/>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>label</key> <string>OPEN_IN_NEW_TAB</string>
-			<key>key</key> <string>openInNewTabOptionEnabled</string>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>openInNewTabOptionEnabled</string>
+			<key>label</key>
+			<string>OPEN_IN_NEW_TAB</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSGroupCell</string>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>footerText</key> <string>OPEN_IN_OPPOSITE_MODE_FOOTER</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>OPEN_IN_OPPOSITE_MODE_FOOTER</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSwitchCell</string>
-			<key>default</key> <false/>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>label</key> <string>OPEN_IN_OPPOSITE_MODE</string>
-			<key>key</key> <string>openInOppositeModeOptionEnabled</string>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>openInOppositeModeOptionEnabled</string>
+			<key>label</key>
+			<string>OPEN_IN_OPPOSITE_MODE</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSGroupCell</string>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>footerText</key> <string>UPLOAD_ANY_FILE_FOOTER</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>UPLOAD_ANY_FILE_FOOTER</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSwitchCell</string>
-			<key>default</key> <false/>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>label</key> <string>UPLOAD_ANY_FILE</string>
-			<key>key</key> <string>uploadAnyFileOptionEnabled</string>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>uploadAnyFileOptionEnabled</string>
+			<key>label</key>
+			<string>UPLOAD_ANY_FILE</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSGroupCell</string>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>footerText</key> <string>DESKTOP_SWITCH_FOOTER</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>DESKTOP_SWITCH_FOOTER</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSwitchCell</string>
-			<key>default</key> <false/>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>key</key> <string>desktopButtonEnabled</string>
-			<key>label</key> <string>DESKTOP_SWITCH_LABEL</string>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>desktopButtonEnabled</string>
+			<key>label</key>
+			<string>DESKTOP_SWITCH_LABEL</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSGroupCell</string>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>footerText</key> <string>LONG_PRESS_SUGGESTIONS_FOOTER</string>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>LONG_PRESS_SUGGESTIONS_FOOTER</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSwitchCell</string>
-			<key>default</key> <false/>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>key</key> <string>longPressSuggestionsEnabled</string>
-			<key>label</key> <string>LONG_PRESS_SUGGESTIONS</string>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>longPressSuggestionsEnabled</string>
+			<key>label</key>
+			<string>LONG_PRESS_SUGGESTIONS</string>
+			<key>nestedEntryCount</key>
+			<integer>3</integer>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSStaticTextCell</string>
-			<key>label</key> <string>LONG_PRESS_DURATION_TITLE</string>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>label</key>
+			<string>LONG_PRESS_DURATION_TITLE</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSliderCell</string>
-  		<key>default</key> <string>1</string>
-  		<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-  		<key>key</key> <string>longPressSuggestionsDuration</string>
-  		<key>min</key> <string>0.25</string>
-  		<key>max</key> <string>2</string>
-  		<key>showValue</key> <string>1</string>
-  		<key>isSegmented</key> <string>1</string>
-			<key>segmentCount</key> <integer>7</integer>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>1</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>isSegmented</key>
+			<string>1</string>
+			<key>key</key>
+			<string>longPressSuggestionsDuration</string>
+			<key>max</key>
+			<string>2</string>
+			<key>min</key>
+			<string>0.25</string>
+			<key>segmentCount</key>
+			<integer>7</integer>
+			<key>showValue</key>
+			<string>1</string>
 		</dict>
 		<dict>
-			<key>cell</key> <string>PSSwitchCell</string>
-			<key>default</key> <true/>
-			<key>defaults</key> <string>com.opa334.safariplusprefs</string>
-			<key>key</key> <string>longPressSuggestionsFocusEnabled</string>
-			<key>label</key> <string>LONG_PRESS_FOCUS_TITLE</string>
-			<key>PostNotification</key> <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>longPressSuggestionsFocusEnabled</string>
+			<key>label</key>
+			<string>LONG_PRESS_FOCUS_TITLE</string>
 		</dict>
 	</array>
+	<key>title</key>
+	<string>GENERAL</string>
 </dict>
 </plist>

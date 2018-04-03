@@ -28,14 +28,25 @@
 - (BOOL)performDeletionActionForSpecifier:(id)arg1;
 @end
 
-@interface SafariPlusRootListController : PSListController<UITableViewDelegate>
+//Parses nestedEntryCount property for more dynamic preferences (also localizes specifiers)
+@interface SPListController : PSListController
+{
+  NSArray* _allSpecifiers;
+}
+
+- (NSString*)plistName;
+- (NSString*)title;
+- (void)removeDisabledGroups:(NSMutableArray*)specifiers;
+@end
+
+@interface SafariPlusRootListController : SPListController<UITableViewDelegate>
 @property(nonatomic) UIImageView* headerView;
 @end
 
-@interface GeneralPrefsController : PSListController {}
+@interface GeneralPrefsController : SPListController {}
 @end
 
-@interface DownloadPrefsController : PSListController {}
+@interface DownloadPrefsController : SPListController {}
 @end
 
 @interface ExceptionsController : PSEditableListController
@@ -54,45 +65,37 @@
 - (void)openDirectoryPickerWithName:(NSString*)name;
 @end
 
-@interface ActionPrefsController : PSListController {}
+@interface ActionPrefsController : SPListController {}
 @end
 
-@interface GesturePrefsController : PSListController {}
+@interface GesturePrefsController : SPListController {}
 @end
 
-@interface OtherPrefsController : PSListController {}
+@interface OtherPrefsController : SPListController {}
 @end
 
-@interface ColorOverviewPrefsController : PSListController {}
+@interface ColorOverviewPrefsController : SPListController {}
 @end
 
-@interface ColorPrefsController : PSListController
-{
-  NSArray* _fullSpecifiers;
-}
-- (void)removeDisabledGroups:(NSMutableArray*)specifiers;
-- (void)setColorEnabled:(NSNumber *)value forSpecifier:(PSSpecifier*)specifier;
+@interface TopBarNormalColorPrefsController : SPListController {}
 @end
 
-@interface TopBarNormalColorPrefsController : ColorPrefsController {}
+@interface BottomBarNormalColorPrefsController : SPListController {}
 @end
 
-@interface BottomBarNormalColorPrefsController : ColorPrefsController {}
+@interface TabSwitcherNormalColorPrefsController : SPListController {}
 @end
 
-@interface TabSwitcherNormalColorPrefsController : ColorPrefsController {}
+@interface TopBarPrivateColorPrefsController : SPListController {}
 @end
 
-@interface TopBarPrivateColorPrefsController : ColorPrefsController {}
+@interface BottomBarPrivateColorPrefsController : SPListController {}
 @end
 
-@interface BottomBarPrivateColorPrefsController : ColorPrefsController {}
+@interface TabSwitcherPrivateColorPrefsController : SPListController {}
 @end
 
-@interface TabSwitcherPrivateColorPrefsController : ColorPrefsController {}
-@end
-
-@interface CreditsController : PSListController {}
+@interface CreditsController : SPListController {}
 @end
 
 @protocol PreferencesTableCustomView

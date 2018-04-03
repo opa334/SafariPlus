@@ -17,8 +17,8 @@
 			<string>topBarPrivateTintColorEnabled</string>
 			<key>label</key>
 			<string>TINT_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -58,8 +58,8 @@
 			<string>topBarPrivateBackgroundColorEnabled</string>
 			<key>label</key>
 			<string>BACKGROUND_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -101,8 +101,8 @@
 			<string>topBarPrivateTabBarTitleColorEnabled</string>
 			<key>label</key>
 			<string>TAB_BAR_TITLE_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -142,8 +142,8 @@
 			<string>topBarPrivateURLFontColorEnabled</string>
 			<key>label</key>
 			<string>URL_FONT_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -183,8 +183,8 @@
 			<string>topBarPrivateProgressBarColorEnabled</string>
 			<key>label</key>
 			<string>PROGRESS_BAR_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -224,8 +224,8 @@
 			<string>topBarPrivateLockIconColorEnabled</string>
 			<key>label</key>
 			<string>LOCK_ICON_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -265,8 +265,8 @@
 			<string>topBarPrivateReloadButtonColorEnabled</string>
 			<key>label</key>
 			<string>RELOAD_BUTTON_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>

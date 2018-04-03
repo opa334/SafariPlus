@@ -1,88 +1,159 @@
-{
-	items =
-	(
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "URL_BAR_GESTURES_LABEL";
-			footerText = "SWIPE_LEFT_GESTURE_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "URLLeftSwipeGestureEnabled";
-			label = "SWIPE_LEFT_GESTURE";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "URLLeftSwipeAction";
-			label = "ACTION";
-			valuesDataSource = "gestureActionValues";
-			titlesDataSource = "gestureActionTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "SWIPE_RIGHT_GESTURE_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "URLRightSwipeGestureEnabled";
-			label = "SWIPE_RIGHT_GESTURE";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "URLRightSwipeAction";
-			label = "ACTION";
-			valuesDataSource = "gestureActionValues";
-			titlesDataSource = "gestureActionTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "SWIPE_DOWN_GESTURE_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "URLDownSwipeGestureEnabled";
-			label = "SWIPE_DOWN_GESTURE";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "URLDownSwipeAction";
-			label = "ACTION";
-			valuesDataSource = "gestureActionValues";
-			titlesDataSource = "gestureActionTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "gestureBackground";
-			label = "BACKGROUND";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		}
-	);
-	title = "GESTURE_SETTINGS";
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>SWIPE_LEFT_GESTURE_FOOTER</string>
+			<key>label</key>
+			<string>URL_BAR_GESTURES_LABEL</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>URLLeftSwipeGestureEnabled</string>
+			<key>label</key>
+			<string>SWIPE_LEFT_GESTURE</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>URLLeftSwipeAction</string>
+			<key>label</key>
+			<string>ACTION</string>
+			<key>titlesDataSource</key>
+			<string>gestureActionTitles</string>
+			<key>valuesDataSource</key>
+			<string>gestureActionValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>SWIPE_RIGHT_GESTURE_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>URLRightSwipeGestureEnabled</string>
+			<key>label</key>
+			<string>SWIPE_RIGHT_GESTURE</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>URLRightSwipeAction</string>
+			<key>label</key>
+			<string>ACTION</string>
+			<key>titlesDataSource</key>
+			<string>gestureActionTitles</string>
+			<key>valuesDataSource</key>
+			<string>gestureActionValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>SWIPE_DOWN_GESTURE_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>URLDownSwipeGestureEnabled</string>
+			<key>label</key>
+			<string>SWIPE_DOWN_GESTURE</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>URLDownSwipeAction</string>
+			<key>label</key>
+			<string>ACTION</string>
+			<key>titlesDataSource</key>
+			<string>gestureActionTitles</string>
+			<key>valuesDataSource</key>
+			<string>gestureActionValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>gestureBackground</string>
+			<key>label</key>
+			<string>BACKGROUND</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>GESTURE_SETTINGS</string>
+</dict>
+</plist>

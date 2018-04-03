@@ -17,8 +17,8 @@
 			<string>bottomBarNormalTintColorEnabled</string>
 			<key>label</key>
 			<string>TINT_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -58,8 +58,8 @@
 			<string>bottomBarNormalBackgroundColorEnabled</string>
 			<key>label</key>
 			<string>BACKGROUND_COLOR</string>
-			<key>set</key>
-			<string>setColorEnabled:forSpecifier:</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>cell</key>

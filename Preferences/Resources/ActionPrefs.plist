@@ -1,134 +1,245 @@
-{
-	title = "TAB_SETTINGS";
-	items =
-	(
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "CHANGE_MODE_ON";
-			footerText = "LAUNCH_MODE_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "forceModeOnStartEnabled";
-			label = "LAUNCH_MODE_LABEL";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "forceModeOnStartFor";
-			label = "TO";
-			valuesDataSource = "modeValues";
-			titlesDataSource = "modeTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "CHANGE_MODE_ON";
-			footerText = "RESUME_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "forceModeOnResumeEnabled";
-			label = "RESUME_LABEL";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "forceModeOnResumeFor";
-			label = "TO";
-			valuesDataSource = "modeValues";
-			titlesDataSource = "modeTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			label = "CHANGE_MODE_ON";
-			footerText = "EXTERNAL_URL_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "forceModeOnExternalLinkEnabled";
-			label = "EXTERNAL_URL_LABEL";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "forceModeOnExternalLinkFor";
-			label = "TO";
-			valuesDataSource = "modeValues";
-			titlesDataSource = "modeTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "AUTO_CLOSE_TABS_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "autoCloseTabsEnabled";
-			label = "AUTO_CLOSE_TABS_LABEL";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "autoCloseTabsOn";
-			label = "ON";
-			valuesDataSource = "stateValues";
-			titlesDataSource = "stateTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "autoCloseTabsFor";
-			label = "FOR";
-			valuesDataSource = "closeModeValues";
-			titlesDataSource = "closeModeTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSGroupCell";
-			defaults = "com.opa334.safariplusprefs";
-			footerText = "AUTO_DELETE_DATA_FOOTER";
-		},
-		{
-			cell = "PSSwitchCell";
-			default = false;
-			defaults = "com.opa334.safariplusprefs";
-			key = "autoDeleteDataEnabled";
-			label = "AUTO_DELETE_DATA_LABEL";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-		{
-			cell = "PSLinkListCell";
-			defaults = "com.opa334.safariplusprefs";
-			detail = "PSListItemsController";
-			key = "autoDeleteDataOn";
-			label = "ON";
-			valuesDataSource = "stateValues";
-			titlesDataSource = "stateTitles";
-			PostNotification = "com.opa334.safariplusprefs/ReloadPrefs";
-		},
-	);
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>LAUNCH_MODE_FOOTER</string>
+			<key>label</key>
+			<string>CHANGE_MODE_ON</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>forceModeOnStartEnabled</string>
+			<key>label</key>
+			<string>LAUNCH_MODE_LABEL</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>forceModeOnStartFor</string>
+			<key>label</key>
+			<string>TO</string>
+			<key>titlesDataSource</key>
+			<string>modeTitles</string>
+			<key>valuesDataSource</key>
+			<string>modeValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>RESUME_FOOTER</string>
+			<key>label</key>
+			<string>CHANGE_MODE_ON</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>forceModeOnResumeEnabled</string>
+			<key>label</key>
+			<string>RESUME_LABEL</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>forceModeOnResumeFor</string>
+			<key>label</key>
+			<string>TO</string>
+			<key>titlesDataSource</key>
+			<string>modeTitles</string>
+			<key>valuesDataSource</key>
+			<string>modeValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>EXTERNAL_URL_FOOTER</string>
+			<key>label</key>
+			<string>CHANGE_MODE_ON</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>forceModeOnExternalLinkEnabled</string>
+			<key>label</key>
+			<string>EXTERNAL_URL_LABEL</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>forceModeOnExternalLinkFor</string>
+			<key>label</key>
+			<string>TO</string>
+			<key>titlesDataSource</key>
+			<string>modeTitles</string>
+			<key>valuesDataSource</key>
+			<string>modeValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>AUTO_CLOSE_TABS_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>autoCloseTabsEnabled</string>
+			<key>label</key>
+			<string>AUTO_CLOSE_TABS_LABEL</string>
+			<key>nestedEntryCount</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>autoCloseTabsOn</string>
+			<key>label</key>
+			<string>ON</string>
+			<key>titlesDataSource</key>
+			<string>stateTitles</string>
+			<key>valuesDataSource</key>
+			<string>stateValues</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>autoCloseTabsFor</string>
+			<key>label</key>
+			<string>FOR</string>
+			<key>titlesDataSource</key>
+			<string>closeModeTitles</string>
+			<key>valuesDataSource</key>
+			<string>closeModeValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>AUTO_DELETE_DATA_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>autoDeleteDataEnabled</string>
+			<key>label</key>
+			<string>AUTO_DELETE_DATA_LABEL</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>autoDeleteDataOn</string>
+			<key>label</key>
+			<string>ON</string>
+			<key>titlesDataSource</key>
+			<string>stateTitles</string>
+			<key>valuesDataSource</key>
+			<string>stateValues</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>TAB_SETTINGS</string>
+</dict>
+</plist>
