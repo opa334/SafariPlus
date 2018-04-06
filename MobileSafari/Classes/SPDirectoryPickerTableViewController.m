@@ -52,7 +52,6 @@
       textField.text = downloadInfo.filename;
   		textField.placeholder = [localizationManager localizedSPStringForKey:@"FILENAME"];
   		textField.textColor = [UIColor blackColor];
-  		textField.keyboardType = UIKeyboardTypeURL;
   		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
   		textField.borderStyle = UITextBorderStyleNone;
   	}];

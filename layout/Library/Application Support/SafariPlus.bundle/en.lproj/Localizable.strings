@@ -162,6 +162,9 @@
 "BOTTOM_BAR" = "Bottom Bar";
 "TAB_SWITCHER" = "Tab Switcher";
 
+"NORMAL" = "Normal";
+"PRIVATE" = "Private";
+
 "TINT_COLOR" = "Tint Color";
 "BACKGROUND_COLOR" = "Background Color";
 "TAB_BAR_TITLE_COLOR" = "Tab Bar Title Color";
@@ -174,6 +177,7 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Tab Title Background Color";
 
 "TAB_BAR_NOTE" = "NOTE: The tab bar does not exist on all devices sizes / orientations.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTE: Some settings will require an app restart to be applied.";
 
 "WHITE" = "White";
 "BLACK" = "Black";

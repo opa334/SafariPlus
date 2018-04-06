@@ -676,7 +676,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"];
+	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL"]];
 }
 
 - (NSString*)plistName
@@ -690,7 +690,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"];
+	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE"]];
 }
 
 - (NSString*)plistName
@@ -704,7 +704,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"];
+	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL"]];
 }
 
 - (NSString*)plistName
@@ -718,7 +718,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"];
+	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE"]];
 }
 
 - (NSString*)plistName
@@ -732,7 +732,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"];
+	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL"]];
 }
 
 - (NSString*)plistName
@@ -746,7 +746,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"];
+	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE"]];
 }
 
 - (NSString*)plistName

@@ -162,6 +162,9 @@
 "BOTTOM_BAR" = "Untere Leiste";
 "TAB_SWITCHER" = "Tab Ansicht";
 
+"NORMAL" = "Normal";
+"PRIVATE" = "Privat";
+
 "TINT_COLOR" = "Akzentfarbe";
 "BACKGROUND_COLOR" = "Hintergrundfarbe";
 "TAB_BAR_TITLE_COLOR" = "Schriftfarbe der Tab Leiste";
@@ -174,6 +177,7 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Titelleiste";
 
 "TAB_BAR_NOTE" = "HINWEIS: Die Tab Leiste ist nicht auf allen Geräten aktiviert.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "HINWEIS: Einige Einstellungen werden erst nach einem App-Neustart angewandt.";
 
 "WHITE" = "Weiß";
 "BLACK" = "Schwarz";

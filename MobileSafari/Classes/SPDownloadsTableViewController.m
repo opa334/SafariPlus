@@ -58,8 +58,7 @@
 {
   [super populateDataSources];
 
-  //Create new array for downloads and populate it
-  self.downloadsAtCurrentPath = [NSMutableArray new];
+  //Repopulate download array
   self.downloadsAtCurrentPath = [downloadManager downloadsAtURL:self.currentPath];
 }
 
@@ -132,12 +131,12 @@
 {
   if(indexPath.section == 1)
   {
-    //File cells editable
+    //File cells are editable
     return [super tableView:tableView canEditRowAtIndexPath:indexPath];
   }
   else
   {
-    //Download cells not edititable
+    //Download cells are not edititable
     return NO;
   }
 }
@@ -324,7 +323,7 @@
       [confirmationController addAction:deleteAction];
 
       //Make cancel option bold on iOS 9 and above
-      if(iOSVersion > 8)
+      if(iOSVersion >= 9)
       {
         confirmationController.preferredAction = cancelAction;
       }

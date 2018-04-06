@@ -46,6 +46,8 @@
 
     self.downloadButton.adjustsImageWhenHighlighted = NO;
     [self.downloadButton.widthAnchor constraintEqualToConstant:60].active = true;
+    
+    self.downloadButton.tintColor = [UIColor colorWithWhite:1 alpha:0.55];
   }
 
   return self;
@@ -61,15 +63,6 @@
       if(![self.screenModeControls.contentView.arrangedSubviews containsObject:self.downloadButton])
       {
         [self.screenModeControls.contentView addArrangedSubview:self.downloadButton];
-      }
-
-      if(IS_PAD || self.doubleRowLayoutEnabled)
-      {
-        self.downloadButton.tintColor = [UIColor lightGrayColor];
-      }
-      else
-      {
-        self.downloadButton.tintColor = [UIColor colorWithRed:0.85 green:0.85 blue:0.85 alpha:1.0];
       }
     }
   }

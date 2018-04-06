@@ -47,6 +47,8 @@
 			<string>PSGroupCell</string>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>COLOR_SETTINGS_BOTTOM_NOTICE</string>
 			<key>label</key>
 			<string>PRIVATE_MODE</string>
 		</dict>
@@ -81,7 +83,5 @@
 			<string>TAB_SWITCHER</string>
 		</dict>
 	</array>
-	<key>title</key>
-	<string>COLOR_SETTINGS</string>
 </dict>
 </plist>
