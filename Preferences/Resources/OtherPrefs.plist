@@ -91,6 +91,22 @@
 			<string>alwaysOpenNewTabEnabled</string>
 			<key>label</key>
 			<string>ALWAYS_OPEN_NEW_TAB</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<string>false</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>alwaysOpenNewTabInBackgroundEnabled</string>
+			<key>label</key>
+			<string>OPEN_NEW_TAB_IN_BACKGROUND</string>
 		</dict>
 		<dict>
 			<key>cell</key>

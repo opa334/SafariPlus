@@ -100,6 +100,7 @@ void reloadColors()
   _fullscreenScrollingEnabled = YES;
   _disablePrivateMode = NO;
   _alwaysOpenNewTabEnabled = NO;
+  _alwaysOpenNewTabInBackgroundEnabled = NO;
   _suppressMailToDialog = NO;
 
   _topBarNormalTintColorEnabled = NO;
@@ -174,6 +175,7 @@ void reloadColors()
   [preferences registerBool:&_lockBars default:NO forKey:@"lockBars"];
   [preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
   [preferences registerBool:&_alwaysOpenNewTabEnabled default:NO forKey:@"alwaysOpenNewTabEnabled"];
+  [preferences registerBool:&_alwaysOpenNewTabInBackgroundEnabled default:NO forKey:@"alwaysOpenNewTabInBackgroundEnabled"];
   [preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
 
   [preferences registerBool:&_topBarNormalTintColorEnabled default:NO forKey:@"topBarNormalTintColorEnabled"];

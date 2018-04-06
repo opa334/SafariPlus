@@ -152,6 +152,7 @@
 
 "ALWAYS_OPEN_NEW_TAB_FOOTER" = "Öffnet angeklickte Links immer in neuen Tabs.";
 "ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Neuen Tab im Hintergrund öffnen";
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";

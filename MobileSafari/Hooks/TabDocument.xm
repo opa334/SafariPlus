@@ -513,16 +513,18 @@ BOOL showAlert = YES;
 
         BrowserController* controller = browserControllerForTabDocument(castedSelf);
 
+        BOOL inBackground = preferenceManager.alwaysOpenNewTabInBackgroundEnabled;
+
         //Load URL in new tab
         if(iOSVersion <= 9)
         {
           [controller loadURLInNewWindow:navigationAction.request.URL
-            inBackground:NO animated:YES];
+            inBackground:inBackground animated:YES];
         }
         else
         {
           [controller loadURLInNewTab:navigationAction.request.URL
-            inBackground:NO animated:YES];
+            inBackground:inBackground animated:YES];
         }
 
         return;

@@ -76,6 +76,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property(nonatomic, readonly) BOOL lockBars;
 @property(nonatomic, readonly) BOOL disablePrivateMode;
 @property(nonatomic, readonly) BOOL alwaysOpenNewTabEnabled;
+@property(nonatomic, readonly) BOOL alwaysOpenNewTabInBackgroundEnabled;
 @property(nonatomic, readonly) BOOL suppressMailToDialog;
 
 @property(nonatomic, readonly) BOOL topBarNormalTintColorEnabled;
