@@ -282,9 +282,7 @@ BOOL showAlert = YES;
     preferenceManager.openInOppositeModeOptionEnabled)
   {
     NSMutableArray* actions = %orig;
-
-    NSLog(@"SafariPlus URL:%@ type:%lu image:%@", element.URL, (unsigned long)element.type, element.image);
-
+    
     //Get browserController
     BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
