@@ -51,6 +51,10 @@
 "VIDEO_DOWNLOADING" = "Video Downloads";
 "VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\n\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
 
+"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Fügt Optionen zum Herunterladen einer Seite / eines Bildes zum Menü hinzu, welches beim langen gedrückt halten eines Seitenelements erscheint.";
+"DOWNLOAD_SITE_TO_OPTION" = "'Seite herunterladen nach ...' Option";
+"DOWNLOAD_IMAGE_TO_OPTION" = "'Bild herunterladen nach ...' Option";
+
 "INSTANT_DOWNLOAD" = "Direkter Download";
 "INSTANT_DOWNLOAD_FOOTER" = "Deaktiviert das Download-Menü und benutzt standardmäßig immer die ausgewählte Option.";
 "OPTION" = "Option";
@@ -202,6 +206,8 @@
 
 "DOWNLOAD" = "Herunterladen";
 "DOWNLOAD_TO" = "Herunterladen nach ...";
+"DOWNLOAD_SITE_TO" = "Seite herunterladen nach ...";
+"DOWNLOAD_IMAGE_TO" = "Bild herunterladen nach ...";
 "OPEN" = "Öffnen";
 "OPEN_IN" = "Öffnen in ...";
 "SHOW_IN_FILZA" = "In Filza anzeigen";

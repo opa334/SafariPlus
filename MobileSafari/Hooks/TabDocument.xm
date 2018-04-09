@@ -59,12 +59,6 @@ BOOL showAlert = YES;
 %group iOS9Up
 %hook TabDocument
 
-/*- (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element defaultActions:(NSArray*)defaultActions previewViewController:(UIViewController*)previewViewController
-{
-  NSLog(@"_actionsForElement:%@ defaultActions:%@ previewViewController:%@", element, defaultActions, previewViewController);
-  return [defaultActions mutableCopy];
-}*/
-
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element
   defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
@@ -73,13 +67,13 @@ BOOL showAlert = YES;
     preferenceManager.openInNewTabOptionEnabled ||
     preferenceManager.openInOppositeModeOptionEnabled))
   {
-    NSMutableArray* options = %orig;
+    NSMutableArray* actions = %orig;
 
     //Get browserController
     BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
     //URL long pressed
-    if(element.type == ElementInfoURL)
+    if(element.URL && ![element.URL.absoluteString isEqualToString:@""])
     {
       if(preferenceManager.openInOppositeModeOptionEnabled)
       {
@@ -120,11 +114,10 @@ BOOL showAlert = YES;
             }]
             selector:@selector(main)
             userInfo:nil
-            repeats:NO
-            ];
+            repeats:NO];
         }];
 
-        [options insertObject:openInOppositeModeAction atIndex:2];
+        [actions insertObject:openInOppositeModeAction atIndex:2];
       }
 
       if(preferenceManager.openInNewTabOptionEnabled)
@@ -147,27 +140,26 @@ BOOL showAlert = YES;
             }
           }];
 
-          [options insertObject:openInNewTabAction atIndex:1];
+          [actions insertObject:openInNewTabAction atIndex:1];
         }
       }
     }
 
     if(preferenceManager.enhancedDownloadsEnabled)
     {
-      _WKElementAction* downloadToAction;
-
-      if(element.type == ElementInfoURL)
+      if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && preferenceManager.downloadSiteToActionEnabled)
       {
-        downloadToAction = [%c(_WKElementAction)
+        _WKElementAction* downloadSiteToAction;
+
+        downloadSiteToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
-          localizedSPStringForKey:@"DOWNLOAD_TO"] actionHandler:^
+          localizedSPStringForKey:@"DOWNLOAD_SITE_TO"] actionHandler:^
         {
           //Create download request from URL
           NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:element.URL];
 
           //Create downloadInfo
-          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
-            initWithRequest:downloadRequest];
+          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:downloadRequest];
 
           //Set filename
           downloadInfo.filename = @"site.html";
@@ -175,35 +167,55 @@ BOOL showAlert = YES;
           downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
 
           //Call downloadManager
-          [downloadManager
-            configureDownloadWithInfo:downloadInfo];
+          [downloadManager configureDownloadWithInfo:downloadInfo];
         }];
 
-        [options insertObject:downloadToAction atIndex:[options count] - 1];
+        if(iOSVersion <= 9)
+        {
+          if(element.type == ElementInfoImage)
+          {
+            [actions insertObject:downloadSiteToAction atIndex:[actions count] - 2];
+          }
+          else
+          {
+            [actions addObject:downloadSiteToAction];
+          }
+        }
+        else
+        {
+          if(element.type == ElementInfoImage)
+          {
+            [actions insertObject:downloadSiteToAction atIndex:[actions count] - 4];
+          }
+          else
+          {
+            [actions insertObject:downloadSiteToAction atIndex:[actions count] - 1];
+          }
+        }
       }
-      else if(element.type == ElementInfoImage)
+
+      if(element.type == ElementInfoImage && preferenceManager.downloadImageToActionEnabled)
       {
-        downloadToAction = [%c(_WKElementAction)
+        _WKElementAction* downloadImageToAction;
+        downloadImageToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
-          localizedSPStringForKey:@"DOWNLOAD_TO"] actionHandler:^
+          localizedSPStringForKey:@"DOWNLOAD_IMAGE_TO"] actionHandler:^
         {
           //Create downloadInfo
-          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
-            initWithImage:element.image];
+          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithImage:element.image];
 
           downloadInfo.filename = @"image.png";
           downloadInfo.customPath = YES;
           downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
 
           //Call SPDownloadManager with image
-          [downloadManager
-            configureDownloadWithInfo:downloadInfo];
+          [downloadManager configureDownloadWithInfo:downloadInfo];
         }];
 
-        [options addObject:downloadToAction];
+        [actions addObject:downloadImageToAction];
       }
     }
-    return options;
+    return actions;
   }
   return %orig;
 }
@@ -269,13 +281,15 @@ BOOL showAlert = YES;
     preferenceManager.openInNewTabOptionEnabled ||
     preferenceManager.openInOppositeModeOptionEnabled)
   {
-    NSMutableArray* options = %orig;
+    NSMutableArray* actions = %orig;
+
+    NSLog(@"SafariPlus URL:%@ type:%lu image:%@", element.URL, (unsigned long)element.type, element.image);
 
     //Get browserController
     BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
     //URL long pressed
-    if(element.type == ElementInfoURL)
+    if(element.URL && ![element.URL.absoluteString isEqualToString:@""])
     {
       if(preferenceManager.openInOppositeModeOptionEnabled)
       {
@@ -309,11 +323,10 @@ BOOL showAlert = YES;
             }]
             selector:@selector(main)
             userInfo:nil
-            repeats:NO
-            ];
+            repeats:NO];
         }];
 
-        [options insertObject:openInOppositeModeAction atIndex:2];
+        [actions insertObject:openInOppositeModeAction atIndex:2];
       }
 
       if(preferenceManager.openInNewTabOptionEnabled)
@@ -329,27 +342,26 @@ BOOL showAlert = YES;
             [browserController loadURLInNewWindow:element.URL inBackground:NO];
           }];
 
-          [options insertObject:openInNewTabAction atIndex:1];
+          [actions insertObject:openInNewTabAction atIndex:1];
         }
       }
     }
 
     if(preferenceManager.enhancedDownloadsEnabled)
     {
-      _WKElementAction* downloadToAction;
-
-      if(element.type == ElementInfoURL)
+      if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && preferenceManager.downloadSiteToActionEnabled)
       {
-        downloadToAction = [%c(_WKElementAction)
+        _WKElementAction* downloadSiteToAction;
+
+        downloadSiteToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
-          localizedSPStringForKey:@"DOWNLOAD_TO"] actionHandler:^
+          localizedSPStringForKey:@"DOWNLOAD_SITE_TO"] actionHandler:^
         {
           //Create download request from URL
           NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:element.URL];
 
           //Create downloadInfo
-          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
-            initWithRequest:downloadRequest];
+          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:downloadRequest];
 
           //Set filename
           downloadInfo.filename = @"site.html";
@@ -357,35 +369,41 @@ BOOL showAlert = YES;
           downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
 
           //Call downloadManager
-          [downloadManager
-            configureDownloadWithInfo:downloadInfo];
+          [downloadManager configureDownloadWithInfo:downloadInfo];
         }];
 
-        [options insertObject:downloadToAction atIndex:[options count] - 1];
+        if(element.type == ElementInfoImage)
+        {
+          [actions insertObject:downloadSiteToAction atIndex:[actions count] - 2];
+        }
+        else
+        {
+          [actions addObject:downloadSiteToAction];
+        }
       }
-      else if(element.type == ElementInfoImage)
+
+      if(element.type == ElementInfoImage && preferenceManager.downloadImageToActionEnabled)
       {
-        downloadToAction = [%c(_WKElementAction)
+        _WKElementAction* downloadImageToAction;
+        downloadImageToAction = [%c(_WKElementAction)
           elementActionWithTitle:[localizationManager
-          localizedSPStringForKey:@"DOWNLOAD_TO"] actionHandler:^
+          localizedSPStringForKey:@"DOWNLOAD_IMAGE_TO"] actionHandler:^
         {
           //Create downloadInfo
-          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc]
-            initWithImage:element.image];
+          SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithImage:element.image];
 
           downloadInfo.filename = @"image.png";
           downloadInfo.customPath = YES;
           downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
 
           //Call SPDownloadManager with image
-          [downloadManager
-            configureDownloadWithInfo:downloadInfo];
+          [downloadManager configureDownloadWithInfo:downloadInfo];
         }];
 
-        [options addObject:downloadToAction];
+        [actions addObject:downloadImageToAction];
       }
     }
-    return options;
+    return actions;
   }
   return %orig;
 }

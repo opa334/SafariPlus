@@ -65,6 +65,8 @@ void reloadColors()
 
   _enhancedDownloadsEnabled = YES;
   _videoDownloadingEnabled = YES;
+  _downloadSiteToActionEnabled = YES;
+  _downloadImageToActionEnabled = YES;
   _instantDownloadsEnabled = NO;
   _instantDownloadsOption = 0;
   _customDefaultPathEnabled = NO;
@@ -142,6 +144,8 @@ void reloadColors()
 
   [preferences registerBool:&_enhancedDownloadsEnabled default:NO forKey:@"enhancedDownloadsEnabled"];
   [preferences registerBool:&_videoDownloadingEnabled default:NO forKey:@"videoDownloadingEnabled"];
+  [preferences registerBool:&_downloadSiteToActionEnabled default:YES forKey:@"downloadSiteToActionEnabled"];
+  [preferences registerBool:&_downloadImageToActionEnabled default:YES forKey:@"downloadImageToActionEnabled"];
   [preferences registerBool:&_instantDownloadsEnabled default:NO forKey:@"instantDownloadsEnabled"];
   [preferences registerInteger:&_instantDownloadsOption default:NO forKey:@"instantDownloadsOption"];
   [preferences registerBool:&_customDefaultPathEnabled default:NO forKey:@"customDefaultPathEnabled"];

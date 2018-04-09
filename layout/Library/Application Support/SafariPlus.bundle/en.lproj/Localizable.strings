@@ -51,6 +51,10 @@
 "VIDEO_DOWNLOADING" = "Video Downloading";
 "VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save that file, but it does not contain the video.";
 
+"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Adds options to download a site / an image to the menu that appears when long pressing site elements.";
+"DOWNLOAD_SITE_TO_OPTION" = "'Download Site to...' Option";
+"DOWNLOAD_IMAGE_TO_OPTION" = "'Download Image to...' Option";
+
 "INSTANT_DOWNLOAD" = "Instant Download";
 "INSTANT_DOWNLOAD_FOOTER" = "Suppresses the download alert and always chooses the selcted option by default.";
 "OPTION" = "Option";
@@ -202,6 +206,8 @@
 
 "DOWNLOAD" = "Download";
 "DOWNLOAD_TO" = "Download to...";
+"DOWNLOAD_SITE_TO" = "Download Site to...";
+"DOWNLOAD_IMAGE_TO" = "Download Image to...";
 "OPEN" = "Open";
 "OPEN_IN" = "Open in...";
 "SHOW_IN_FILZA" = "Show in Filza";
