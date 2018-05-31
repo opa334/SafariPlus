@@ -328,7 +328,7 @@
 }
 
 
-- (BOOL)dynamicBarAnimator:(id)arg1 canHideBarsByDraggingWithOffset:(float)arg2
+- (BOOL)dynamicBarAnimator:(id)arg1 canHideBarsByDraggingWithOffset:(CGFloat)arg2
 {
   return (preferenceManager.lockBars) ? NO : %orig;
 }

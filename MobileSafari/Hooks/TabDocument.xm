@@ -282,7 +282,7 @@ BOOL showAlert = YES;
     preferenceManager.openInOppositeModeOptionEnabled)
   {
     NSMutableArray* actions = %orig;
-    
+
     //Get browserController
     BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
@@ -561,7 +561,7 @@ BOOL showAlert = YES;
     //Get MIMEType
     NSString* MIMEType = navigationResponse.response.MIMEType;
 
-    //Check if MIMEType indicates that link is download
+    //Check if MIMEType indicates that link can be downloaded
     if(showAlert && (!navigationResponse.canShowMIMEType ||
       [MIMEType rangeOfString:@"video/"].location != NSNotFound ||
       [MIMEType rangeOfString:@"audio/"].location != NSNotFound ||

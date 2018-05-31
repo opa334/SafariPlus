@@ -65,11 +65,7 @@
 
 @interface _WKActivatedElementInfo : NSObject {}
 @property (nonatomic, readonly) NSURL *URL;
-#if __LP64__
-@property (nonatomic,readonly) long long type;
-#else
-@property (nonatomic,readonly) long type;
-#endif
+@property (nonatomic,readonly) NSInteger type;
 @property (nonatomic,copy,readonly) UIImage* image;
 @property (nonatomic,readonly) NSString* ID;
 @property (nonatomic,readonly) NSString* title;
@@ -146,11 +142,7 @@
 
 @interface _SFToolbar : UIToolbar {}
 @property (nonatomic) UIColor* tintColor;
-#if __LP64__
-@property (nonatomic,readonly) long long toolbarSize;
-#else
-@property (nonatomic,readonly) long toolbarSize;
-#endif
+@property (nonatomic,readonly) NSInteger toolbarSize;
 @end
 
 
@@ -263,8 +255,9 @@
 @property (nonatomic,readonly) BrowserToolbar* bottomToolbar;
 @property (nonatomic,readonly) BrowserRootViewController* rootViewController;
 @property (nonatomic,readonly) NSUUID * UUID;
-@property(readonly, nonatomic) NavigationBar* navigationBar;
+@property (readonly, nonatomic) NavigationBar* navigationBar;
 @property (nonatomic,readonly) BrowserToolbar * activeToolbar;
+@property (nonatomic, getter=isShowingTabBar) BOOL showingTabBar;
 @property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
 - (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;

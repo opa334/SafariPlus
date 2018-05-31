@@ -19,13 +19,16 @@
 #import "SPStatusBarTextView.h"
 #import "../Shared.h"
 
+#define DEGREES_TO_RADIANS(degrees)((M_PI * degrees)/180)
+
 @interface UIWindow (private)
-#if __LP64__
-- (id)_initWithOrientation:(long long)arg1;
-#else
-- (id)_initWithOrientation:(long)arg1;
-#endif
+- (id)_initWithOrientation:(UIInterfaceOrientation)arg1;
 - (BOOL)_canAffectStatusBarAppearance;
+@end
+
+@interface UIView (private)
++ (double)_durationForRotationFromInterfaceOrientation:(UIInterfaceOrientation)arg1 toInterfaceOrientation:(UIInterfaceOrientation)arg2;
++ (int)_degreesToRotateFromInterfaceOrientation:(UIInterfaceOrientation)arg1 toInterfaceOrientation:(UIInterfaceOrientation)arg2;
 @end
 
 @implementation SPStatusBarNotificationWindow
@@ -33,13 +36,11 @@
 - (instancetype)init
 {
   //Force portrait initialization to solve an issue that occurs when this window gets initialized in landscape mode
-  self = [super _initWithOrientation:1];
+  self = [super _initWithOrientation:UIInterfaceOrientationPortrait];
+  _currentDeviceOrientation = UIInterfaceOrientationPortrait;
 
   self.windowLevel = UIWindowLevelAlert + 1;
   self.clipsToBounds = YES;
-
-  //Set base transformation
-  _baseTransformation = self.transform;
 
   //Init and add textView
   _textView = [[SPStatusBarTextView alloc] init];
@@ -61,32 +62,9 @@
   return NO;
 }
 
-- (void)updateTransformation
+- (void)updateFramesForOrientation:(UIInterfaceOrientation)orientation
 {
-  switch([UIApplication sharedApplication].statusBarOrientation)
-  {
-    case UIInterfaceOrientationPortrait:
-    self.transform = CGAffineTransformRotate(_baseTransformation, 0);
-    break;
-
-    case UIInterfaceOrientationLandscapeLeft:
-    self.transform = CGAffineTransformRotate(_baseTransformation, -M_PI_2);
-    break;
-
-    case UIInterfaceOrientationLandscapeRight:
-    self.transform = CGAffineTransformRotate(_baseTransformation, M_PI_2);
-    break;
-
-    default:
-    break;
-  }
-}
-
-- (void)updateFrames
-{
-  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-
-  //NOTE: Sometimes UIDeviceOrientationUnknown is returned, even if it should be portrait. Workaround checks screen size
+  //NOTE: Sometimes UIDeviceOrientationUnknown is passed, even if it should be portrait. Workaround checks screen size
   if(iPhoneX && (UIDevice.currentDevice.orientation == UIDeviceOrientationPortrait || (UIDevice.currentDevice.orientation == UIDeviceOrientationUnknown && [[UIScreen mainScreen] bounds].size.width == 375 && [[UIScreen mainScreen] bounds].size.height == 812)))
   {
     _barHeight = 50;
@@ -149,22 +127,29 @@
 
 - (void)orientationDidChange
 {
-  dispatch_async(dispatch_get_main_queue(),
+  self.currentDeviceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+}
+
+- (void)setCurrentDeviceOrientation:(UIInterfaceOrientation)newOrientation
+{
+  void (^rotation)(void) =
   ^{
-    if(self.hidden)
-    {
-      [self updateTransformation];
-      [self updateFrames];
-    }
-    else
-    {
-      [UIView animateWithDuration:.28 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:
-      ^{
-        [self updateTransformation];
-        [self updateFrames];
-      } completion:nil];
-    }
-  });
+    int degrees = [UIView _degreesToRotateFromInterfaceOrientation:_currentDeviceOrientation toInterfaceOrientation:newOrientation];
+    self.transform = CGAffineTransformRotate(self.transform, DEGREES_TO_RADIANS(degrees));
+    [self updateFramesForOrientation:newOrientation];
+  };
+
+  if(self.hidden)
+  {
+    rotation();
+  }
+  else
+  {
+    double duration = [UIView _durationForRotationFromInterfaceOrientation:_currentDeviceOrientation toInterfaceOrientation:newOrientation];
+    [UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveLinear animations:rotation completion:nil];
+  }
+
+  _currentDeviceOrientation = newOrientation;
 }
 
 - (void)dispatchNotification:(SPStatusBarNotification*)notification
@@ -188,7 +173,7 @@
       [UIView animateWithDuration:.3 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:
       ^{
         _isPresented = YES;
-        [self updateFrames];
+        [self updateFramesForOrientation:_currentDeviceOrientation];
       }
       completion:^(BOOL finished)
       {
@@ -235,7 +220,7 @@
       [UIView animateWithDuration:.3 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:
       ^{
         _isPresented = NO;
-        [self updateFrames];
+        [self updateFramesForOrientation:_currentDeviceOrientation];
       }
       completion:^(BOOL finished)
       {

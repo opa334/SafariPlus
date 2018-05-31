@@ -25,7 +25,7 @@
 
 /****** Variables ******/
 
-float iOSVersion;
+CGFloat iOSVersion;
 BOOL iPhoneX;
 
 NSBundle* MSBundle = [NSBundle mainBundle];

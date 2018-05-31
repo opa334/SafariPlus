@@ -473,6 +473,9 @@
   if(preferenceManager.topBarNormalTabBarTitleColorEnabled)
   {
     MSHookIvar<UIColor*>(normalStyle, "_itemTitleColor") = [preferenceManager topBarNormalTabBarTitleColor];
+
+    //This filter causes the title color to go weird in some cases, so we just disable it
+    MSHookIvar<id>(normalStyle, "_itemInactiveTitleCompositingFilter") = nil;
   }
 
   return normalStyle;
@@ -485,6 +488,9 @@
   if(preferenceManager.topBarPrivateTabBarTitleColorEnabled)
   {
     MSHookIvar<UIColor*>(privateBrowsingStyle, "_itemTitleColor") = [preferenceManager topBarPrivateTabBarTitleColor];
+
+    //This filter causes the title color to go weird in some cases, so we just disable it
+    MSHookIvar<id>(privateBrowsingStyle, "_itemInactiveTitleCompositingFilter") = nil;
   }
 
   return privateBrowsingStyle;
@@ -497,7 +503,7 @@
 %hook BrowserToolbar
 
 //Bottom Bar Color
-- (id)initWithPlacement:(long long)placement
+- (id)initWithPlacement:(NSInteger)placement
 {
   id orig = %orig;
 
@@ -517,11 +523,7 @@
 {
   if(preferenceManager.topBarNormalTintColorEnabled || preferenceManager.topBarPrivateTintColorEnabled || preferenceManager.bottomBarNormalTintColorEnabled || preferenceManager.bottomBarPrivateTintColorEnabled)
   {
-    #if __LP64__
-    long long placement = MSHookIvar<long long>(self, "_placement");
-    #else
-    long placement = MSHookIvar<long>(self, "_placement");
-    #endif
+    NSInteger placement = MSHookIvar<NSInteger>(self, "_placement");
 
     BOOL privateMode;
     if(iOSVersion >= 10.3)

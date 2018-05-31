@@ -19,7 +19,7 @@
 extern BOOL showAlert;
 extern BOOL iPhoneX;
 extern NSString* defaultDownloadPath;
-extern float iOSVersion;
+extern CGFloat iOSVersion;
 extern SPPreferenceManager* preferenceManager;
 extern SPLocalizationManager* localizationManager;
 extern SPDownloadManager* downloadManager;

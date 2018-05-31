@@ -21,8 +21,6 @@
 #import "../Shared.h"
 #import "libcolorpicker.h"
 
-BOOL fullSafariInstalled;
-
 %hook BrowserToolbar
 
 //Property for downloads button
@@ -61,13 +59,9 @@ BOOL fullSafariInstalled;
           target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
       }
 
-      #if __LP64__
-      long long placement = MSHookIvar<long long>(self, "_placement");
-      #else
-      long placement = MSHookIvar<long>(self, "_placement");
-      #endif
+      NSInteger placement = MSHookIvar<NSInteger>(self, "_placement");
 
-      //Landscape on newer devices, portrait + landscape on iPads
+      //Landscape on newer devices, portrait + landscape on iOS 8 iPads
       if(placement == 0 || (IS_PAD && iOSVersion <= 8))
       {
         //iPads
@@ -103,8 +97,8 @@ BOOL fullSafariInstalled;
           initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
           target:nil action:nil];
 
-        //Full Safari installed
-        if(fullSafariInstalled)
+        //Some tab bar tweak is installed (FullSafari, SafariPad, etc)
+        if(self.browserDelegate.showingTabBar && !IS_PAD)
         {
           orig = [@[orig[1], flexibleItem, flexibleItem,
             orig[4], flexibleItem, orig[7], flexibleItem, orig[10], flexibleItem, self._downloadsItem,
@@ -119,8 +113,7 @@ BOOL fullSafariInstalled;
           {
             if(!addTabItem)
             {
-              // Recreate the "add tab" button for iOS versions that don't do that by default on iPhone models
-              addTabItem = [[NSClassFromString(@"GestureRecognizingBarButtonItem") alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:self.browserDelegate action:@selector(addTabFromButtonBar)];
+              addTabItem = [[%c(GestureRecognizingBarButtonItem) alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:self.browserDelegate action:@selector(addTabFromButtonBar)];
               UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
               recognizer.allowableMovement = 3.0;
               addTabItem.gestureRecognizer = recognizer;
@@ -171,10 +164,3 @@ BOOL fullSafariInstalled;
 }
 
 %end
-
-%ctor
-{
-  //Check if FullSafari is installed
-  fullSafariInstalled = [[NSFileManager defaultManager]
-    fileExistsAtPath:@"/Library/MobileSubstrate/DynamicLibraries/FullSafari.dylib"];
-}

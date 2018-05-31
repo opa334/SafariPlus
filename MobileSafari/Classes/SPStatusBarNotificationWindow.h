@@ -20,7 +20,6 @@
 
 @interface SPStatusBarNotificationWindow : UIWindow
 {
-  CGAffineTransform _baseTransformation;
   BOOL _isPresented;
   BOOL _isBeingPresented;
   BOOL _isBeingDismissed;
@@ -33,8 +32,9 @@
   SPStatusBarNotification* _savedNotification;
 }
 
-- (void)updateTransformation;
-- (void)updateFrames;
+@property (nonatomic) UIInterfaceOrientation currentDeviceOrientation;
+
+- (void)updateFramesForOrientation:(UIInterfaceOrientation)orientation;
 - (void)orientationDidChange;
 
 - (void)dispatchNotification:(SPStatusBarNotification*)notification;

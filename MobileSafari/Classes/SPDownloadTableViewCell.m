@@ -270,7 +270,7 @@
 
 - (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated
 {
-  float progress;
+  CGFloat progress;
   NSString* sizeString = [NSByteCountFormatter stringFromByteCount:currentBytes
     countStyle:NSByteCountFormatterCountStyleFile];
   NSString* percentProgressString;
@@ -283,7 +283,7 @@
   else
   {
     //Calculate progress and create strings for everything
-    progress = (float)currentBytes / (float)totalBytes;
+    progress = (CGFloat)currentBytes / (CGFloat)totalBytes;
     percentProgressString = [NSString
       stringWithFormat:@"%.1f%%", progress * 100];
   }
