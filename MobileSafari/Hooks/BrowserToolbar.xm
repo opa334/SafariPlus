@@ -93,16 +93,31 @@
       //Portrait mode on all iPhones, landscape on smaller iPhones + split view on smaller iPads
       else
       {
-        UIBarButtonItem* flexibleItem = [[UIBarButtonItem alloc]
+        UIBarButtonItem* flexibleSpace = [[UIBarButtonItem alloc]
           initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
           target:nil action:nil];
 
-        //Some tab bar tweak is installed (FullSafari, SafariPad, etc)
-        if(self.browserDelegate.showingTabBar && !IS_PAD)
+        BrowserController* browserController = self.browserDelegate;
+
+        BOOL tabBarTweakActive = NO;
+
+        if(iOSVersion >= 10)
         {
-          orig = [@[orig[1], flexibleItem, flexibleItem,
-            orig[4], flexibleItem, orig[7], flexibleItem, orig[10], flexibleItem, self._downloadsItem,
-            flexibleItem, orig[13]] mutableCopy];
+          tabBarTweakActive = [browserController _shouldShowTabBar] && [browserControllers() count] <= 1;
+        }
+        else
+        {
+          //Unfortunately there isn't a better way to detect this reliably :/
+          [browserController updateUsesTabBar];
+
+          tabBarTweakActive = browserController.tabController.usesTabBar;
+        }
+
+        if(tabBarTweakActive)
+        {
+          orig = [@[orig[1], flexibleSpace, flexibleSpace,
+            orig[4], flexibleSpace, orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
+            flexibleSpace, orig[13]] mutableCopy];
 
           //Add FullSafari button to final array
           //Code from https://github.com/Bensge/FullSafari/blob/master/Tweak.xm
@@ -118,35 +133,33 @@
               recognizer.allowableMovement = 3.0;
               addTabItem.gestureRecognizer = recognizer;
             }
-            [orig addObject:flexibleItem];
+
+            [orig addObject:flexibleSpace];
             [orig addObject:addTabItem];
           }
         }
-        //Full Safari not installed
         else
         {
-          UIBarButtonItem *fixedItem = [[UIBarButtonItem alloc]
+          UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc]
             initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
             target:nil action:nil];
 
-          UIBarButtonItem *fixedItemHalf = [[UIBarButtonItem alloc]
+          UIBarButtonItem *fixedSpaceHalf = [[UIBarButtonItem alloc]
             initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
             target:nil action:nil];
 
-          //Make everything flexible, thanks apple!
-          fixedItem.width = 15;
-          fixedItemHalf.width = 7.5f;
-
-          UIBarButtonItem *fixedItemTwo = [[UIBarButtonItem alloc]
+          UIBarButtonItem *fixedSpaceTwo = [[UIBarButtonItem alloc]
             initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
             target:nil action:nil];
 
-          fixedItemTwo.width = 6;
+          fixedSpace.width = 15;
+          fixedSpaceHalf.width = 7.5f;
+          fixedSpaceTwo.width = 6;
 
-          orig = [@[orig[1], fixedItem, flexibleItem,
-            fixedItemHalf, orig[4], fixedItemHalf, flexibleItem, fixedItemTwo,
-            orig[7], flexibleItem, orig[10], flexibleItem, self._downloadsItem,
-            flexibleItem, orig[13]] mutableCopy];
+          orig = [@[orig[1], fixedSpace, flexibleSpace,
+            fixedSpaceHalf, orig[4], fixedSpaceHalf, flexibleSpace, fixedSpaceTwo,
+            orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
+            flexibleSpace, orig[13]] mutableCopy];
         }
       }
 

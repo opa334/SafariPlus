@@ -269,6 +269,8 @@
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
 - (void)clearAutoFillMessageReceived;
+- (BOOL)_shouldShowTabBar;
+- (void)updateUsesTabBar;
 - (BOOL)isPrivateBrowsingEnabled; //iOS11
 - (void)togglePrivateBrowsingEnabled; //iOS11
 - (void)showFindOnPage; //iOS9
