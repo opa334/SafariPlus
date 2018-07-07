@@ -57,9 +57,17 @@
 {
   if(gestureRecognizer.state == UIGestureRecognizerStateBegan)
   {
+    CompletionListTableViewController* completionTableController;
+
     //Get tableViewController for suggestions
-    CompletionListTableViewController* completionTableController =
-      MSHookIvar<CompletionListTableViewController*>(self, "_completionTableController");
+    if(iOSVersion >= 11.3)
+    {
+      completionTableController = MSHookIvar<CompletionListTableViewController*>(self, "_completionsViewController");
+    }
+    else
+    {
+      completionTableController = MSHookIvar<CompletionListTableViewController*>(self, "_completionTableController");
+    }
 
     //Get tapped CGPoint
     CGPoint p = [gestureRecognizer locationInView:completionTableController.tableView];

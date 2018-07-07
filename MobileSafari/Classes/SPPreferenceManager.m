@@ -81,7 +81,7 @@ void reloadColors()
   _forceModeOnResumeEnabled = NO;
   _forceModeOnResumeFor = 1; //1: Normal Mode, 2: Private Mode
   _forceModeOnExternalLinkEnabled = NO;
-  _forceModeOnResumeFor = 1; //1: Normal Mode, 2: Private Mode
+  _forceModeOnExternalLinkFor = 1; //1: Normal Mode, 2: Private Mode
   _autoCloseTabsEnabled = NO;
   _autoCloseTabsOn = 1; //1: Closed, 2: Minimized
   _autoCloseTabsFor = 1; //1: Active Mode, 2: Normal Mode, 3: Private Mode, 4: Both Modes

@@ -474,6 +474,7 @@ BOOL showAlert = YES;
     desktopButtonSelected = browserControllerForTabDocument(castedSelf).tabController.desktopButtonSelected;
 
     castedSelf.desktopMode = desktopButtonSelected;
+
     if(desktopButtonSelected)
     {
       castedSelf.customUserAgent = desktopUserAgent;

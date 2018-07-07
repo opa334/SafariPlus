@@ -194,7 +194,11 @@ BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* documen
 
 %ctor
 {
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
+  {
+    iOSVersion = 11.3;
+  }
+  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
   {
     iOSVersion = 11;
   }

@@ -23,15 +23,45 @@
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPDownloadInfo.h"
 
-%group iOS11
 %hook AVPlaybackControlsView
 
-%property(nonatomic,retain) AVButton *downloadButton;
+%group iOS11_3_up
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  self = %orig;
+
+  [self setUpDownloadButton];
+
+  return self;
+}
+
+%end
+
+%group iOS11_2_down
 
 - (instancetype)init
 {
   self = %orig;
 
+  [self setUpDownloadButton];
+
+  return self;
+}
+
+%end
+
+%end
+
+%group iOS11
+
+%hook AVPlaybackControlsView
+
+%property(nonatomic,retain) AVButton *downloadButton;
+
+%new
+- (void)setUpDownloadButton
+{
   if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
   {
     self.downloadButton = [[%c(AVButton) alloc] init];
@@ -46,11 +76,9 @@
 
     self.downloadButton.adjustsImageWhenHighlighted = NO;
     [self.downloadButton.widthAnchor constraintEqualToConstant:60].active = true;
-    
+
     self.downloadButton.tintColor = [UIColor colorWithWhite:1 alpha:0.55];
   }
-
-  return self;
 }
 
 - (void)layoutSubviews
@@ -60,9 +88,19 @@
   {
     if([self.delegate.delegate.playerController isKindOfClass:[%c(WebAVPlayerController) class]])
     {
-      if(![self.screenModeControls.contentView.arrangedSubviews containsObject:self.downloadButton])
+      if(iOSVersion >= 11.3)
       {
-        [self.screenModeControls.contentView addArrangedSubview:self.downloadButton];
+        if(![self.screenModeControls.stackView.arrangedSubviews containsObject:self.downloadButton])
+        {
+          [self.screenModeControls.stackView addArrangedSubview:self.downloadButton];
+        }
+      }
+      else
+      {
+        if(![self.screenModeControls.contentView.arrangedSubviews containsObject:self.downloadButton])
+        {
+          [self.screenModeControls.contentView addArrangedSubview:self.downloadButton];
+        }
       }
     }
   }
@@ -178,5 +216,14 @@
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
   {
     %init(iOS11)
+
+    if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
+    {
+      %init(iOS11_3_up)
+    }
+    else
+    {
+      %init(iOS11_2_down)
+    }
   }
 }

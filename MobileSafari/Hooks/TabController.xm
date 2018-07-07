@@ -225,7 +225,14 @@
 
       if(!tabDocument.isHibernated)
       {
-        [tabDocument reload];
+        if(iOSVersion >= 11.3)
+        {
+          [tabDocument _loadURLInternal:[tabDocument URL] userDriven:NO];
+        }
+        else
+        {
+          [tabDocument reload];
+        }
       }
     }
   }

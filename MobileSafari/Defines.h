@@ -44,5 +44,9 @@
 #define kCFCoreFoundationVersionNumber_iOS_11_0 1443.00
 #endif
 
+#ifndef kCFCoreFoundationVersionNumber_iOS_11_3
+#define kCFCoreFoundationVersionNumber_iOS_11_3 1452.23
+#endif
+
 //Used for debugging
 #define DEBUG_CRASH NSMutableArray* arr = (NSMutableArray*)[[NSArray alloc] init]; [arr addObject:@"crash"];

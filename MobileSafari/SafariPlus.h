@@ -194,7 +194,8 @@
 @end
 
 @interface AVBackdropView : UIView
-@property (nonatomic,readonly) AVStackView* contentView;
+@property (nonatomic,readonly) AVStackView* contentView; //iOS 11.0 -> 11.2.6
+@property (nonatomic,readonly) UIStackView* stackView; //iOS 11.3 -> ???
 @end
 
 @interface AVPlayerViewControllerContentView
@@ -208,8 +209,8 @@
 @property (nonatomic,readonly) AVButton* doneButton;
 
 //new
+- (void)setUpDownloadButton;
 @property(nonatomic,retain) AVButton *downloadButton;
-- (void)downloadButtonPressed;
 - (void)downloadButtonPressed;
 - (void)presentErrorAlertWithError:(NSError*)error;
 - (void)presentNotFoundError;
@@ -393,7 +394,7 @@
 + (id)tabDocumentForWKWebView:(id)arg1;
 - (NSURL*)URL;
 - (BOOL)isBlankDocument;
-- (void)_loadURLInternal:(id)arg1 userDriven:(BOOL)arg2;
+- (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2;
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
 - (void)reload;
 - (BOOL)privateBrowsingEnabled;

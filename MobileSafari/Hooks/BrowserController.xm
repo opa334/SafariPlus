@@ -46,7 +46,7 @@
 %new
 - (void)handleGesture:(NSInteger)swipeAction
 {
-  //Some cases need cleaning -> Create bool for that
+  //Some actions need a clean up after being ran
   __block BOOL shouldClean = NO;
 
   switch(swipeAction)
