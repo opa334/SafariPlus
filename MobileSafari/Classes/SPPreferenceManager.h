@@ -24,6 +24,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
   HBPreferences* preferences;
   NSDictionary* colors;
   NSDictionary* otherPlist;
+  NSMutableDictionary* miscPlist;
   #endif
 }
 
@@ -129,5 +130,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 - (void)reloadColors;
 - (void)reloadOtherPlist;
+- (BOOL)isFirstLaunch;
+- (void)reloadMiscPlist;
 
 @end

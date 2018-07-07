@@ -243,6 +243,7 @@
 @property (nonatomic,readonly) ApplicationShortcutController* shortcutController;
 @property (nonatomic,readonly) NSArray* browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
+- (void)handleTwitterAlert;
 //new stuff below
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
 @end

@@ -26,6 +26,7 @@
 #define safariPlusCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
 #define downloadCachePath [safariPlusCachePath stringByAppendingString:@"/downloads.plist"]
 #define desktopButtonStateCachePath [safariPlusCachePath stringByAppendingString:@"/desktopButtonStates.plist"]
+#define miscPlistPath [safariPlusCachePath stringByAppendingString:@"/misc.plist"]
 #define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0

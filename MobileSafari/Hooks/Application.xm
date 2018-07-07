@@ -20,8 +20,61 @@
 #import "../Defines.h"
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPLocalizationManager.h"
 
 %hook Application
+
+%new
+- (void)handleTwitterAlert
+{
+  if([preferenceManager isFirstLaunch])
+  {
+    BrowserController* browserController = browserControllers().firstObject;
+
+    UIAlertController* welcomeAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WELCOME_TITLE"]
+      message:[localizationManager localizedSPStringForKey:@"WELCOME_MESSAGE"]
+      preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
+      style:UIAlertActionStyleDefault
+      handler:nil];
+
+    UIAlertAction* openAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN_TWITTER"]
+      style:UIAlertActionStyleDefault
+      handler:^(UIAlertAction * action)
+    {
+      //Twitter is installed as an application
+      if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]])
+      {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=opa334dev"]];
+      }
+      //Twitter is not installed, open web page
+      else
+      {
+        NSURL* twitterURL = [NSURL URLWithString:@"https://twitter.com/opa334dev"];
+
+        if(iOSVersion >= 10)
+        {
+          [browserController loadURLInNewTab:twitterURL inBackground:NO animated:YES];
+        }
+        else
+        {
+          [browserController loadURLInNewWindow:twitterURL inBackground:NO animated:YES];
+        }
+      }
+    }];
+
+    [welcomeAlert addAction:closeAction];
+    [welcomeAlert addAction:openAction];
+
+    if(iOSVersion >= 9)
+    {
+      welcomeAlert.preferredAction = openAction;
+    }
+
+    [rootViewControllerForBrowserController(browserController) presentViewController:welcomeAlert animated:YES completion:nil];
+  }
+}
 
 %new
 - (void)application:(UIApplication *)application
@@ -135,6 +188,8 @@
       withIntermediateDirectories:NO attributes:nil error:nil];
   }
 
+  [self handleTwitterAlert];
+
   return orig;
 }
 
@@ -176,6 +231,8 @@
     [[NSFileManager defaultManager] createDirectoryAtPath:safariPlusCachePath
       withIntermediateDirectories:NO attributes:nil error:nil];
   }
+
+  [self handleTwitterAlert];
 }
 
 %end
