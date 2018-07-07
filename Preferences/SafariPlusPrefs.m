@@ -165,6 +165,18 @@ void otherPlistChanged()
   [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];
 }
 
+- (void)openTwitter
+{
+	if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]])
+	{
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=opa334dev"]];
+	}
+	else
+	{
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/opa334dev"]];
+	}
+}
+
 - (void)donationLink
 {
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.paypal.me/opa334d"]];

@@ -10,6 +10,7 @@
 "OTHER_ADDONS" = "Andere Erweiterungen";
 "COLOR_SETTINGS" = "Farbeinstellungen";
 "SOURCE_CODE" = "Quellcode";
+"TWITTER" = "Twitter";
 
 "DONATE" = "Spenden";
 "DONATE_FOOTER" = "Wenn dir dieser Tweak gefällt, dann spende doch eine geringe Summe, um mich zu unterstützen! :)";
@@ -195,6 +196,9 @@
 /* In app */
 
 "LOCAL_FILES" = "Lokale Dateien";
+"WELCOME_TITLE" = "Willkommen!";
+"WELCOME_MESSAGE" = "Danke für das Installieren von Safari Plus! Wenn du über die Zukunft des Tweaks auf dem laufenden bleiben willst, folge mir doch auf Twitter! Diese Nachricht wird nie wieder angezeigt, versprochen!";
+"OPEN_TWITTER" = "Öffne Twitter";
 
 /* File picker */
 

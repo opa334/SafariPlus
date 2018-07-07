@@ -108,6 +108,14 @@
 		</dict>
 		<dict>
 			<key>action</key>
+			<string>openTwitter</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>TWITTER</string>
+		</dict>
+		<dict>
+			<key>action</key>
 			<string>donationLink</string>
 			<key>cell</key>
 			<string>PSButtonCell</string>

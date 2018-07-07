@@ -10,6 +10,7 @@
 "OTHER_ADDONS" = "Other Addons";
 "COLOR_SETTINGS" = "Color Settings";
 "SOURCE_CODE" = "Source Code";
+"TWITTER" = "Twitter";
 
 "DONATE" = "Donate";
 "DONATE_FOOTER" = "If you like this tweak, feel free to donate a small amount of money to support me! :)";
@@ -195,6 +196,9 @@
 /* In app */
 
 "LOCAL_FILES" = "Local Files";
+"WELCOME_TITLE" = "Welcome!";
+"WELCOME_MESSAGE" = "Thanks for installing Safari Plus! If you wish to stay updated about the future of this tweak, make sure to follow me on Twitter! This message will not show again (I promise)!";
+"OPEN_TWITTER" = "Open Twitter";
 
 /* File picker */
 
