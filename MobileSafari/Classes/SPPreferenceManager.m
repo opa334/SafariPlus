@@ -280,38 +280,6 @@ void reloadColors()
   colors = [[NSDictionary alloc] initWithContentsOfFile:colorPrefsPath];
 }
 
-- (void)reloadMiscPlist
-{
-  //Get data
-  NSData* miscData = [NSData dataWithContentsOfFile:miscPlistPath];
-
-  if(miscData)
-  {
-    //Unarchive data
-    miscPlist = (NSMutableDictionary*)[NSKeyedUnarchiver unarchiveObjectWithData:miscData];
-  }
-  else
-  {
-    miscPlist = [[NSMutableDictionary alloc] init];
-  }
-}
-
-- (BOOL)isFirstLaunch
-{
-  [self reloadMiscPlist];
-
-  if(![[miscPlist objectForKey:@"firstLaunchSucceeded"] boolValue])
-  {
-    [miscPlist setObject:@YES forKey:@"firstLaunchSucceeded"];
-
-    [[NSKeyedArchiver archivedDataWithRootObject:miscPlist] writeToFile:miscPlistPath atomically:YES];
-
-    return YES;
-  }
-
-  return NO;
-}
-
 - (NSArray*)forceHTTPSExceptions
 {
   return [otherPlist objectForKey:@"ForceHTTPSExceptions"];

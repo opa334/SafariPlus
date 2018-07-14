@@ -18,33 +18,29 @@
 
 #import "../Shared.h"
 #import "SPLocalizationManager.h"
+#import "SPFileManager.h"
 
 @implementation SPFileTableViewCell
 
-- (id)initWithFileURL:(NSURL*)fileURL
+- (instancetype)initWithFilePath:(NSString*)filePath
 {
   self = [super init];
 
+  NSDictionary* attributes = [fileManager attributesOfItemAtPath:filePath error:nil];
+
   //Get filename
-  NSString* fileName = [[[fileURL absoluteString] lastPathComponent] stringByRemovingPercentEncoding];
-
-  //Get defaultManager
-  NSFileManager* fileManager = [NSFileManager defaultManager];
-
-  //Check if URL is file or directory
-  NSNumber* isFile;
-  [fileURL getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
+  NSString* fileName = [[filePath lastPathComponent] stringByRemovingPercentEncoding];
 
   //Set label of cell to filename
   self.textLabel.text = fileName;
 
-  if([isFile boolValue])
+  if([[attributes fileType] isEqualToString:NSFileTypeRegular])
   {
     //URL is file -> set imageView to file icon
     self.imageView.image = [UIImage imageNamed:@"File.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
 
     //Get filesize
-    int64_t fileSize = [[fileManager attributesOfItemAtPath:[fileURL path] error:nil] fileSize];
+    int64_t fileSize = [attributes fileSize];
 
     //Create sizeLabel from filesize and set it to accessoryView
     UILabel* sizeLabel = [[UILabel alloc] init];

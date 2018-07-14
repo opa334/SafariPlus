@@ -18,8 +18,11 @@
 
 #import "Shared.h"
 #import "Defines.h"
+#import "Classes/SPFileManager.h"
 #import "Classes/SPPreferenceManager.h"
 #import "Classes/SPLocalizationManager.h"
+#import "Classes/SPCommunicationManager.h"
+#import "Classes/SPCacheManager.h"
 
 #import <sys/utsname.h>
 
@@ -31,11 +34,12 @@ BOOL iPhoneX;
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
+SPFileManager* fileManager = [SPFileManager sharedInstance];
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
-
-NSString* defaultDownloadPath;
+SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
+SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
 
 /****** Extensions ******/
 
@@ -228,20 +232,4 @@ BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* documen
   NSString* model = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
   #endif
   iPhoneX = [model isEqualToString:@"iPhone10,3"] || [model isEqualToString:@"iPhone10,6"];
-
-  //Check if sandbox is active and set defaultDownloadPath according to that
-  #ifndef SIMJECT
-  NSError* sandboxError;
-  [[NSFileManager defaultManager] contentsOfDirectoryAtPath:@"/var/mobile" error:&sandboxError];
-  if(sandboxError.code == 257)
-  {
-    defaultDownloadPath = [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"];
-  }
-  else
-  {
-    defaultDownloadPath = @"/var/mobile/Downloads";
-  }
-  #else
-  defaultDownloadPath = [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", USER];
-  #endif
 }

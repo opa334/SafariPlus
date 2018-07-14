@@ -47,10 +47,10 @@
 /* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Enhanced Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/var/mobile/Downloads by default, inside sandbox container on electra). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.\n3) If you encounter any issues, you can long press the navigation bar of the downloads menu for 5 seconds to cancel all downloads and clear all temporary files.";
+"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/var/mobile/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.\n3) If you encounter any issues, you can long press the navigation bar of the downloads menu for 5 seconds to cancel all downloads and clear all temporary files.";
 
 "VIDEO_DOWNLOADING" = "Video Downloading";
-"VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save that file, but it does not contain the video.";
+"VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save these files, but they do not contain any video.";
 
 "LINK_DOWNLOAD_OPTIONS_FOOTER" = "Adds options to download a site / an image to the menu that appears when long pressing site elements.";
 "DOWNLOAD_SITE_TO_OPTION" = "'Download Site to...' Option";
@@ -61,7 +61,7 @@
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "Custom Default Path";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\n\nNote: Due to missing root privileges, it's only possible to download files inside the /var (/private/var) directory!";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\n\nNote: It is only possible to download files into writable paths, so anything inside the /var directory should work!";
 
 "PINNED_LOCATIONS_ENABLED" = "Pinned Locations Enabled";
 "PINNED_LOCATIONS" = "Pinned Locations";
@@ -72,10 +72,10 @@
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Only allow downloading while the device is connected to a wifi network.";
 
 "DISABLE_PUSH_NOTIFICATIONS" = "Disable Push Notifications";
-"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "By default, you will recieve a push notification when a download finishes and the app is inactive. This option will disable that.";
+"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "By default, you will recieve a push notification when a download finishes while the app is inactive. This option will disable that.";
 
 "DISABLE_BAR_NOTIFICATIONS" = "Disable Status Bar Notifications";
-"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "By default, you will recieve a status bar notification when a download starts / finishes and the app is active. This option will disable that.";
+"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "By default, you will recieve a status bar notification when a download starts / finishes while the app is active. This option will disable that.";
 
 /* Pinned Locations */
 
@@ -85,7 +85,7 @@
 "PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
 "BROWSE" = "Browse...";
 "CHOOSE_PATH_CONFIRMATION_TITLE" = "Choose Path";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n<pathURL>?";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n%@?";
 
 /* Action Settings */
 
@@ -218,7 +218,7 @@
 "DELETE_FILE" = "Delete File";
 "RENAME_FILE" = "Rename File";
 "WARNING" = "Warning!";
-"DELETE_FILE_MESSAGE" = "Are you sure you want to permanently delete the file <fn>? Recovering it later is not possible!";
+"DELETE_FILE_MESSAGE" = "Are you sure you want to permanently delete the file %@? Recovering it later is not possible!";
 "CLEAR_EVERYTHING_WARNING" = "Are you sure you want to cancel all downloads and clear all temporary files?";
 "DELETE" = "Delete";
 "RENAME" = "Rename";
@@ -238,12 +238,14 @@
 "FILENAME" = "Filename";
 "CLOSE" = "Close";
 "CANCEL_PICKER" = "Cancel Picker";
-"WRONG_PATH_MESSAGE" = "Due to missing root permissions, you can only download to paths inside the /var (/private/var) directory, it's also possible that the rights required to write to the current directory are wrongly configured. If that's the case, you can correct it via Filza (or similar apps). Please choose a different path.";
+"PERMISSION_ERROR_MESSAGE" = "Not enough permissions to write to the selected path. Please select another one.\nNOTE: Normally only paths inside the /var directory are writable! You can also use Filza to inspect / change the permissions of a directory.";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
 "VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";
 "COPY_LINK" = "Copy Link";
 "SIZE_UNKNOWN" = "Unknown Size";
+"MIGRATION_TITLE" = "Migration succeeded";
+"MIGRATION_MESSAGE" = "Gone are the days of being restricted to the sandbox container of Safari! Your downloads have been moved from %@ to %@. You can now download files to any directory you want!";
 
 /* Open in opposite mode */
 

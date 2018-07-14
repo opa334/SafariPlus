@@ -17,6 +17,8 @@
 #import "SPDownloadInfo.h"
 
 #import "SPDownload.h"
+#import "../Shared.h"
+#import "SPFileManager.h"
 
 @implementation SPDownloadInfo
 
@@ -50,26 +52,21 @@
   return self;
 }
 
-- (NSURL*)pathURL
+- (NSString*)path
 {
-  return [_targetPath URLByAppendingPathComponent:_filename];
-}
-
-- (NSString*)pathString
-{
-  return [self pathURL].path;
+  return [_targetPath stringByAppendingPathComponent:_filename];
 }
 
 - (BOOL)fileExists
 {
-  return [[NSFileManager defaultManager] fileExistsAtPath:[self pathString]];
+  return [fileManager fileExistsAtPath:[self path]];
 }
 
 - (void)removeExistingFile
 {
   if([self fileExists])
   {
-    [[NSFileManager defaultManager] removeItemAtPath:[self pathString] error:nil];
+    [fileManager removeItemAtPath:[self path] error:nil];
   }
 }
 @end

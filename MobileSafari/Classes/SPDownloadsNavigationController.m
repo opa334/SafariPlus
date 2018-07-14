@@ -23,6 +23,8 @@
 #import "SPFileBrowserNavigationController.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
+#import "SPCacheManager.h"
+#import "SPFileManager.h"
 
 @implementation SPDownloadsNavigationController
 
@@ -32,6 +34,28 @@
 
   //Set delegate of SPDownloadManager for communication
   downloadManager.navigationControllerDelegate = self;
+
+  if(preferenceManager.customDefaultPathEnabled)
+  {
+    //customDefaultPath enabled -> return custom path if it is valid
+    NSString* path = [NSString stringWithFormat:@"/var%@", preferenceManager.customDefaultPath];
+    BOOL isDir;
+    BOOL exists = [fileManager fileExistsAtPath:path isDirectory:&isDir];
+    if(isDir && exists)
+    {
+      self.startPath = path;
+    }
+    else
+    {
+      self.startPath = defaultDownloadPath;
+    }
+  }
+  else
+  {
+    self.startPath = defaultDownloadPath;
+  }
+
+  self.loadPreviousPathElements = YES;
 
   return self;
 }
@@ -65,7 +89,7 @@
         handler:^(UIAlertAction* action)
       {
         [downloadManager cancelAllDownloads];
-        [downloadManager removeDownloadStorageFile];
+        [cacheManager clearDownloadCache];
         [downloadManager clearTempFiles];
       }];
 
@@ -81,29 +105,7 @@
   }
 }
 
-- (NSURL*)rootPath
-{
-  if(preferenceManager.customDefaultPathEnabled)
-  {
-    //customDefaultPath enabled -> return custom path if it is valid
-    NSURL* path = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/var%@", preferenceManager.customDefaultPath]];
-    BOOL isDir;
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path path] isDirectory:&isDir];
-    if(isDir && exists)
-    {
-      return path;
-    }
-  }
-  //customDefaultPath disabled or invalid -> return default path
-  return [NSURL fileURLWithPath:defaultDownloadPath];
-}
-
-- (BOOL)shouldLoadPreviousPathElements
-{
-  return YES;
-}
-
-- (id)newTableViewControllerWithPath:(NSURL*)path
+- (id)newTableViewControllerWithPath:(NSString*)path
 {
   //return instance of SPDownloadsTableViewController
   return [[SPDownloadsTableViewController alloc] initWithPath:path];

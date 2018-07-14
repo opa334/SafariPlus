@@ -61,7 +61,7 @@
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Standardpfad";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\n\nHINWEIS: Aufgrund von fehlenden Root Rechten, können Downloads nur innerhalb des /var (/private/var) Verzeichnisses abgespeichert werden!";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\n\nHINWEIS: Es werden Schreibrechte benötigt, um ein Verzeichnis herunterzuladen. In der Regel sollte alles innerhalb des /var Verzeichnisses funktionieren.";
 
 "PINNED_LOCATIONS_ENABLED" = "Angepinnte Orte aktivieren";
 "PINNED_LOCATIONS" = "Angepinnte Orte";
@@ -85,7 +85,7 @@
 "PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Pfad";
 "BROWSE" = "Durchsuchen...";
 "CHOOSE_PATH_CONFIRMATION_TITLE" = "Pfad auswählen";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Möchtest du den Pfad\n<pathURL>\nauswählen?";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Möchtest du den Pfad\n%@\nauswählen?";
 
 /* Action Settings */
 
@@ -218,7 +218,7 @@
 "DELETE_FILE" = "Datei löschen";
 "RENAME_FILE" = "Datei umbenennen";
 "WARNING" = "Warnung!";
-"DELETE_FILE_MESSAGE" = "Soll die Datei <fn> wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
+"DELETE_FILE_MESSAGE" = "Soll die Datei %@ wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
 "CLEAR_EVERYTHING_WARNING" = "Sollen alle Downloads abgebrochen und die temporären Dateien bereinigt werden?";
 "DELETE" = "Löschen";
 "DOWNLOAD_STARTED" = "Download gestartet";
@@ -238,12 +238,14 @@
 "FILENAME" = "Dateiname";
 "CLOSE" = "Schließen";
 "CANCEL_PICKER" = "Auswahl abbrechen";
-"WRONG_PATH_MESSAGE" = "Aufgrund von fehlenden Root Rechten, kann nur innerhalb des /var (/private/var) Verzeichnisses heruntergeladen werden, außerdem kann es sein, dass die Zugriffsrechte des aktuellen Verzeichnisses falsch eingestellt sind, dies kann mit Hilfe von Apps wie Filza behoben werden. Bitte wähle einen anderen Pfad.";
+"PERMISSION_ERROR_MESSAGE" = "Keine Schreibrechte für den ausgewählten Pfad. Bitte wähle einen anderen Pfad.\nHINWEIS: In der Regel sind nur Pfade innerhalb des /var Verzeichnisses beschreibbar. Falls sonstige Probleme auftreten, lassen sich die Berechtigungen eines Verzeichnisses via Filza einsehen und ändern.";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
 "VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden, die aktuelle Seite wird wahrscheinlich nicht unterstützt!";
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
+"MIGRATION_TITLE" = "Migration abgeschlossen";
+"MIGRATION_MESSAGE" = "Deine Downloads wurden von %@ zu %@ verschoben. Du kannst nun in alle Order herunterladen, in die du willst! (Vorher war dies nur innerhalb des Sandbox-Containers von Safari möglich).";
 
 /* Open in Opposite Mode */
 

@@ -16,6 +16,17 @@
 
 #import "SafariPlusPrefs.h"
 
+#import "../MobileSafari/Classes/SPLocalizationManager.h"
+#import "SPPDirectoryPickerNavigationController.h"
+#import "../MobileSafari/Enums.h"
+#import "../MobileSafari/Defines.h"
+#import "SPPFileManager.h"
+
+SPPFileManager* fileManager;
+SPLocalizationManager* localizationManager;
+NSBundle* SPBundle;
+NSBundle* MSBundle; //Unused, just here to satisfy the linker
+
 void otherPlistChanged()
 {
 	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.opa334.safariplusprefs/ReloadOtherPlist"), NULL, NULL, true);
@@ -40,7 +51,7 @@ void otherPlistChanged()
 	if(!_specifiers)
 	{
 		_specifiers = [self loadSpecifiersFromPlistName:[self plistName] target:self];
-		[[SPPreferenceLocalizationManager sharedInstance] parseSPLocalizationsForSpecifiers:_specifiers];
+		[localizationManager parseSPLocalizationsForSpecifiers:_specifiers];
 
 		_allSpecifiers = [_specifiers copy];
 		[self removeDisabledGroups:_specifiers];
@@ -116,6 +127,17 @@ void otherPlistChanged()
 
 @implementation SafariPlusRootListController
 
+- (id)init
+{
+	self = [super init];
+
+	fileManager = [SPPFileManager sharedInstance];
+	localizationManager = [SPLocalizationManager sharedInstance];
+	SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/SafariPlus.bundle"];
+
+	return self;
+}
+
 - (NSString*)title
 {
 	return @"Safari Plus";
@@ -140,9 +162,7 @@ void otherPlistChanged()
 {
 	if(!self.headerView)
 	{
-		UIImage* headerImage = [UIImage imageWithContentsOfFile:[NSString
-			stringWithFormat:@"%@/PrefHeader.png", bundlePath]];
-
+		UIImage* headerImage = [UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/SafariPlusPrefs.bundle/PrefHeader.png"];
 		self.headerView = [[UIImageView alloc] initWithImage:headerImage];
 
 		CGFloat aspectRatio = 3.312;
@@ -187,7 +207,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"GENERAL"];
+	return [localizationManager localizedSPStringForKey:@"GENERAL"];
 }
 
 - (NSString*)plistName
@@ -201,7 +221,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"DOWNLOAD_ADDONS"];
+	return [localizationManager localizedSPStringForKey:@"DOWNLOAD_ADDONS"];
 }
 
 - (NSString*)plistName
@@ -219,7 +239,7 @@ void otherPlistChanged()
 	NSMutableArray* titles = [@[@"DOWNLOAD", @"DOWNLOAD_TO"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
+		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -283,31 +303,31 @@ void otherPlistChanged()
 		}
 	}
 
-	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"FORCE_HTTPS_EXCEPTIONS_TITLE"]];
+	[(UINavigationItem *)self.navigationItem setTitle:[localizationManager localizedSPStringForKey:@"FORCE_HTTPS_EXCEPTIONS_TITLE"]];
 	return _specifiers;
 }
 
 - (void)addButtonPressed
 {
-	UIAlertController * addLocationAlert = [UIAlertController alertControllerWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
-											message:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
+	UIAlertController * addLocationAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
+											message:[localizationManager localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
 											preferredStyle:UIAlertControllerStyleAlert];
 
 	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
-		textField.placeholder = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
+		textField.placeholder = [localizationManager localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
 		textField.textColor = [UIColor blackColor];
 		textField.keyboardType = UIKeyboardTypeURL;
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 		textField.borderStyle = UITextBorderStyleNone;
 	}];
 
-	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
 	{
 		[addLocationAlert dismissViewControllerAnimated:YES completion:nil];
 	}]];
 
-	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 	{
 		UITextField * URLField = addLocationAlert.textFields[0];
 
@@ -421,22 +441,22 @@ void otherPlistChanged()
 		}
 	}
 
-	[(UINavigationItem *)self.navigationItem setTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PINNED_LOCATIONS"]];
+	[(UINavigationItem *)self.navigationItem setTitle:[localizationManager localizedSPStringForKey:@"PINNED_LOCATIONS"]];
 	return _specifiers;
 }
 
 - (void)presentAddAlertWithName:(NSString*)name path:(NSString*)path
 {
 	UIAlertController* addLocationAlert = [UIAlertController alertControllerWithTitle:
-		[[SPPreferenceLocalizationManager sharedInstance]
+		[localizationManager
 		localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_TITLE"]
-		message:[[SPPreferenceLocalizationManager sharedInstance]
+		message:[localizationManager
 		localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_MESSAGE"]
 		preferredStyle:UIAlertControllerStyleAlert];
 
 	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
-		textField.placeholder = [[SPPreferenceLocalizationManager sharedInstance]
+		textField.placeholder = [localizationManager
 			localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER"];
 
 		textField.textColor = [UIColor blackColor];
@@ -447,7 +467,7 @@ void otherPlistChanged()
 
 	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
-		textField.placeholder = [[SPPreferenceLocalizationManager sharedInstance]
+		textField.placeholder = [localizationManager
 			localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER"];
 
 		textField.textColor = [UIColor blackColor];
@@ -457,7 +477,7 @@ void otherPlistChanged()
 	}];
 
 	[addLocationAlert addAction:[UIAlertAction actionWithTitle:
-		[[SPPreferenceLocalizationManager sharedInstance]
+		[localizationManager
 		localizedSPStringForKey:@"BROWSE"] style:UIAlertActionStyleDefault
 		handler:^(UIAlertAction *addAction)
 	{
@@ -466,7 +486,7 @@ void otherPlistChanged()
 	}]];
 
 	[addLocationAlert addAction:[UIAlertAction actionWithTitle:
-		[[SPPreferenceLocalizationManager sharedInstance]
+		[localizationManager
 		localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault
 		handler:^(UIAlertAction *addAction)
 	{
@@ -499,9 +519,9 @@ void otherPlistChanged()
 		else
 		{
 			UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:
-				[[SPPreferenceLocalizationManager sharedInstance]
+				[localizationManager
 				localizedSPStringForKey:@"ERROR"]
-				message:[[SPPreferenceLocalizationManager sharedInstance]
+				message:[localizationManager
 				localizedSPStringForKey:@"ERROR_INVALID_NAME_OR_PATH"]
 				preferredStyle:UIAlertControllerStyleAlert];
 
@@ -515,7 +535,7 @@ void otherPlistChanged()
 		}
   }]];
 
-	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
+	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
 	{
 		[addLocationAlert dismissViewControllerAnimated:YES completion:nil];
 	}]];
@@ -530,15 +550,15 @@ void otherPlistChanged()
 
 - (void)openDirectoryPickerWithName:(NSString*)name
 {
-	preferenceDirectoryPickerNavigationController* directoryPicker =
-		[[preferenceDirectoryPickerNavigationController alloc] initWithDelegate:self name:name];
+	SPPDirectoryPickerNavigationController* directoryPicker =
+		[[SPPDirectoryPickerNavigationController alloc] initWithDelegate:self name:name];
 
 	[self presentViewController:directoryPicker animated:YES completion:nil];
 }
 
-- (void)directoryPickerFinishedWithName:(NSString*)name path:(NSURL*)pathURL
+- (void)directoryPickerFinishedWithName:(NSString*)name path:(NSString*)path
 {
-	[self presentAddAlertWithName:name path:[pathURL path]];
+	[self presentAddAlertWithName:name path:path];
 }
 
 - (id)_editButtonBarItem
@@ -572,7 +592,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ACTION_ADDONS"];
+	return [localizationManager localizedSPStringForKey:@"ACTION_ADDONS"];
 }
 
 - (NSString*)plistName
@@ -590,7 +610,7 @@ void otherPlistChanged()
 	NSMutableArray* titles = [@[@"NORMAL_MODE", @"PRIVATE_MODE"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
+		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -605,7 +625,7 @@ void otherPlistChanged()
 	NSMutableArray* titles = [@[@"SAFARI_CLOSED", @"SAFARI_MINIMIZED"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
+		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -620,7 +640,7 @@ void otherPlistChanged()
 	NSMutableArray* titles = [@[@"ACTIVE_MODE", @"NORMAL_MODE", @"PRIVATE_MODE", @"BOTH_MODES"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
+		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -631,7 +651,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"GESTURE_ADDONS"];
+	return [localizationManager localizedSPStringForKey:@"GESTURE_ADDONS"];
 }
 
 - (NSString*)plistName
@@ -649,7 +669,7 @@ void otherPlistChanged()
 	NSMutableArray* titles = [@[@"CLOSE_ACTIVE_TAB", @"OPEN_NEW_TAB", @"DUPLICATE_ACTIVE_TAB", @"CLOSE_ALL_TABS", @"SWITCH_MODE", @"TAB_BACKWARD", @"TAB_FORWARD", @"RELOAD_ACTIVE_TAB", @"REQUEST_DESTKOP_SITE", @"OPEN_FIND_ON_PAGE"] mutableCopy];
 	for(int i = 0; i < titles.count; i++)
 	{
-		titles[i] = [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:titles[i]];
+		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
 	}
 	return titles;
 }
@@ -660,7 +680,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"OTHER_ADDONS"];
+	return [localizationManager localizedSPStringForKey:@"OTHER_ADDONS"];
 }
 
 - (NSString*)plistName
@@ -674,7 +694,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"COLOR_SETTINGS"];
+	return [localizationManager localizedSPStringForKey:@"COLOR_SETTINGS"];
 }
 
 - (NSString*)plistName
@@ -688,7 +708,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL"]];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TOP_BAR"], [localizationManager localizedSPStringForKey:@"NORMAL"]];
 }
 
 - (NSString*)plistName
@@ -702,7 +722,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TOP_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE"]];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TOP_BAR"], [localizationManager localizedSPStringForKey:@"PRIVATE"]];
 }
 
 - (NSString*)plistName
@@ -716,7 +736,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL"]];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"BOTTOM_BAR"], [localizationManager localizedSPStringForKey:@"NORMAL"]];
 }
 
 - (NSString*)plistName
@@ -730,7 +750,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"BOTTOM_BAR"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE"]];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"BOTTOM_BAR"], [localizationManager localizedSPStringForKey:@"PRIVATE"]];
 }
 
 - (NSString*)plistName
@@ -744,7 +764,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NORMAL"]];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TAB_SWITCHER"], [localizationManager localizedSPStringForKey:@"NORMAL"]];
 }
 
 - (NSString*)plistName
@@ -758,7 +778,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"TAB_SWITCHER"], [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"PRIVATE"]];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TAB_SWITCHER"], [localizationManager localizedSPStringForKey:@"PRIVATE"]];
 }
 
 - (NSString*)plistName
@@ -772,7 +792,7 @@ void otherPlistChanged()
 
 - (NSString*)title
 {
-	return [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CREDITS"];
+	return [localizationManager localizedSPStringForKey:@"CREDITS"];
 }
 
 - (NSString*)plistName

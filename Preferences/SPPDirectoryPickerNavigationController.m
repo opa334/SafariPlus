@@ -1,4 +1,4 @@
-// preferenceFileBrowserNavigationController.h
+// SPPDirectoryPickerNavigationController.m
 // (c) 2017 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,11 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "preferenceFileBrowserTableViewController.h"
+#import "SPPDirectoryPickerNavigationController.h"
 
-@interface preferenceFileBrowserNavigationController : UINavigationController {}
-- (id)newTableViewControllerWithPath:(NSURL*)path;
-- (void)reloadAllTableViews;
-- (BOOL)shouldLoadPreviousPathElements;
-- (NSURL*)rootPath;
+@implementation SPPDirectoryPickerNavigationController
+
+- (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate name:(NSString*)name
+{
+  self = [super init];
+  self.pinnedLocationsDelegate = delegate;
+  self.name = name;
+  self.loadPreviousPathElements = YES;
+  self.startPath = @"/var/mobile/";
+  return self;
+}
+
+- (id)newTableViewControllerWithPath:(NSString*)path
+{
+  //return instance of SPPDirectoryPickerTableViewController
+  return [[SPPDirectoryPickerTableViewController alloc] initWithPath:path];
+}
+
 @end

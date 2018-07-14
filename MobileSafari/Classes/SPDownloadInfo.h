@@ -21,7 +21,7 @@
 @property (nonatomic) UIImage* image;
 @property (nonatomic) int64_t filesize;
 @property (nonatomic) NSString* filename;
-@property (nonatomic) NSURL* targetPath;
+@property (nonatomic) NSString* targetPath;
 @property (nonatomic) BOOL customPath;
 @property (nonatomic) BOOL isVideo;
 @property (nonatomic) TabDocument* sourceDocument;
@@ -32,8 +32,7 @@
 - (SPDownloadInfo*)initWithImage:(UIImage*)image;
 - (SPDownloadInfo*)initWithDownload:(SPDownload*)download;
 
-- (NSURL*)pathURL;
-- (NSString*)pathString;
+- (NSString*)path;
 - (BOOL)fileExists;
 - (void)removeExistingFile;
 @end

@@ -22,33 +22,34 @@
 
 - (void)viewDidLoad
 {
-  if(self.shouldLoadPreviousPathElements)
+  if(_loadPreviousPathElements)
   {
-    //shouldLoadPreviousPathElements enabled -> push all previous urls
-    //Get rootURL
-    NSURL* tmpURL = self.rootPath;
+    //loadPreviousPathElements enabled -> push all previous paths
 
-    //Create array for all previous URLs
-    NSMutableArray* URLListArray = [NSMutableArray new];
+    //Create array for all previous paths
+    NSMutableArray* previousPaths = [NSMutableArray new];
 
-    //Get all previous URLs through always removing last past component and save them to array
-    for(int i = 0; i <= [[self.rootPath pathComponents] count] - 1; i++)
+    NSInteger pathComponentCount = [[self.startPath pathComponents] count];
+
+    NSString* workPath = self.startPath;
+
+    //Get all previous paths through always removing last past component and save them to array
+    for(int i = 0; i < pathComponentCount; i++)
     {
-      [URLListArray addObject:tmpURL];
-      tmpURL = [tmpURL URLByDeletingLastPathComponent];
+      [previousPaths addObject:workPath];
+      workPath = [workPath stringByDeletingLastPathComponent];
     }
 
-    //Push all URLs in reverse
-    for(NSURL* URL in [URLListArray reverseObjectEnumerator])
+    //Push all paths in reverse
+    for(NSString* path in [previousPaths reverseObjectEnumerator])
     {
-      [self pushViewController:[self newTableViewControllerWithPath:URL] animated:NO];
+      [self pushViewController:[self newTableViewControllerWithPath:path] animated:NO];
     }
   }
-
   else
   {
-    //shouldLoadPreviousPathElements disabled -> only push specified URL
-    [self pushViewController:[self newTableViewControllerWithPath:self.rootPath] animated:NO];
+    //loadPreviousPathElements disabled -> only start path
+    [self pushViewController:[self newTableViewControllerWithPath:self.startPath] animated:NO];
   }
 
   //Add observer to reload all files if app enters foreground (after being minimized)
@@ -80,22 +81,10 @@
   }
 }
 
-- (id)newTableViewControllerWithPath:(NSURL*)path
+- (id)newTableViewControllerWithPath:(NSString*)path
 {
   //Return instance of SPFileBrowserTableViewController
   return [[SPFileBrowserTableViewController alloc] initWithPath:path];
-}
-
-- (NSURL*)rootPath
-{
-  //Default rootPath is /
-  return [NSURL fileURLWithPath:@"/"];
-}
-
-- (BOOL)shouldLoadPreviousPathElements
-{
-  //Default value for shouldLoadPreviousPathElements is NO
-  return NO;
 }
 
 @end

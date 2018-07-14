@@ -21,6 +21,7 @@
 #import "SPDirectoryPickerTableViewController.h"
 #import "SPDownloadManager.h"
 #import "SPPreferenceManager.h"
+#import "SPFileManager.h"
 
 @implementation SPDirectoryPickerNavigationController
 
@@ -30,32 +31,32 @@
 
   self.downloadInfo = downloadInfo;
 
-  return self;
-}
-
-- (NSURL*)rootPath
-{
   if(preferenceManager.customDefaultPathEnabled)
   {
     //customDefaultPath enabled -> return custom path if it is valid
-    NSURL* path = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/var%@", preferenceManager.customDefaultPath]];
+    NSString* path = [NSString stringWithFormat:@"/var%@", preferenceManager.customDefaultPath];
     BOOL isDir;
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path path] isDirectory:&isDir];
+    BOOL exists = [fileManager fileExistsAtPath:path isDirectory:&isDir];
     if(isDir && exists)
     {
-      return path;
+      self.startPath = path;
+    }
+    else
+    {
+      self.startPath = defaultDownloadPath;
     }
   }
-  //customDefaultPath disabled or invalid -> return default path
-  return [NSURL fileURLWithPath:defaultDownloadPath];
+  else
+  {
+    self.startPath = defaultDownloadPath;
+  }
+
+  self.loadPreviousPathElements = YES;
+
+  return self;
 }
 
-- (BOOL)shouldLoadPreviousPathElements
-{
-  return YES;
-}
-
-- (id)newTableViewControllerWithPath:(NSURL*)path
+- (id)newTableViewControllerWithPath:(NSString*)path
 {
   //return instance of directoryPickerTableViewController
   return [[SPDirectoryPickerTableViewController alloc] initWithPath:path];

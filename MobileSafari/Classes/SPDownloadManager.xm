@@ -24,21 +24,19 @@
 #import "SPDownloadInfo.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
+#import "SPCommunicationManager.h"
+#import "SPCacheManager.h"
 #import "SPStatusBarNotification.h"
 #import "SPStatusBarNotificationWindow.h"
+#import "SPFileManager.h"
 
-#import <AppSupport/CPDistributedMessagingCenter.h>
 #import <WebKit/WKWebView.h>
-
-#if !defined(SIMJECT)
-#import <RocketBootstrap/rocketbootstrap.h>
-#endif
 
 @implementation SPDownloadManager
 
 + (instancetype)sharedInstance
 {
-    static SPDownloadManager *sharedInstance = nil;
+    static SPDownloadManager* sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken,
     ^{
@@ -52,22 +50,40 @@
 {
   self = [super init];
 
-  if(![[NSFileManager defaultManager] fileExistsAtPath:defaultDownloadPath])
+  if([fileManager fileExistsAtPath:oldDownloadPath])
   {
-    //Downloads directory doesn't exist -> create it
-    [[NSFileManager defaultManager] createDirectoryAtPath:defaultDownloadPath
-      withIntermediateDirectories:NO attributes:nil error:nil];
+    NSArray* filePaths = [fileManager contentsOfDirectoryAtPath:oldDownloadPath error:nil];
+
+    for(NSString* filePath in filePaths)
+    {
+      [fileManager moveItemAtPath:[oldDownloadPath stringByAppendingPathComponent:filePath] toPath:[defaultDownloadPath stringByAppendingPathComponent:filePath] error:nil];
+    }
+
+    filePaths = [fileManager contentsOfDirectoryAtPath:oldDownloadPath error:nil];
+
+    if([filePaths count] == 0)
+    {
+      [fileManager removeItemAtPath:oldDownloadPath error:nil];
+    }
+
+    UIAlertController* migrationAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"MIGRATION_TITLE"]
+      message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], oldDownloadPath, defaultDownloadPath]
+      preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"Close"]
+      style:UIAlertActionStyleDefault handler:nil];
+
+    [migrationAlert addAction:closeAction];
+
+    [rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:migrationAlert animated:YES completion:nil];
   }
 
-  self.pendingDownloads = [NSMutableArray new];
-
-  //Create message center to communicate with SpringBoard through RocketBootstrap
-  self.messagingCenter = [%c(CPDistributedMessagingCenter)
-    centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
-
-  #if !defined(SIMJECT)
-  rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
-  #endif
+  if(![fileManager fileExistsAtPath:defaultDownloadPath])
+  {
+    //Downloads directory doesn't exist -> create it
+    [fileManager createDirectoryAtPath:defaultDownloadPath
+      withIntermediateDirectories:NO attributes:nil error:nil];
+  }
 
   if(!preferenceManager.disableBarNotificationsEnabled)
   {
@@ -115,56 +131,40 @@
         SPDownload* download = [self downloadWithTaskIdentifier:task.taskIdentifier];
         download.downloadTask = task;
         [download setTimerEnabled:YES];
-        //NSLog(@"SafariPlus - Reconnected task:%@", task);
       }
       else
       {
         //Count how often didCompleteWithError will get called
         self.errorCount++;
-        //NSLog(@"SafariPlus - Task will error:%@", task);
       }
     }
   }];
-}
-
-- (void)removeDownloadStorageFile
-{
-  if([[NSFileManager defaultManager] fileExistsAtPath:downloadCachePath])
-  {
-    [[NSFileManager defaultManager] removeItemAtPath:downloadCachePath error:nil];
-  }
 }
 
 - (void)clearTempFiles
 {
   //NOTE: Sometimes temp files are saved in /tmp and sometimes in caches
 
-  //NSLog(@"SafariPlus - clearTempFiles");
-
   //Get files in tmp directory
   NSArray* tmpFiles = [[NSFileManager defaultManager]
-    contentsOfDirectoryAtURL:[NSURL fileURLWithPath:NSTemporaryDirectory()]
-    includingPropertiesForKeys:nil
-    options:0
+    contentsOfDirectoryAtPath:NSTemporaryDirectory()
     error:nil];
 
   //Get files in caches directory
   NSArray* cacheFiles = [[NSFileManager defaultManager]
-    contentsOfDirectoryAtURL:[NSURL fileURLWithPath:[NSHomeDirectory()
-    stringByAppendingString:@"/Library/Caches/com.apple.nsurlsessiond/Downloads/com.apple.mobilesafari"]]
-    includingPropertiesForKeys:nil
-    options:0
+    contentsOfDirectoryAtPath:[NSHomeDirectory()
+    stringByAppendingString:@"/Library/Caches/com.apple.nsurlsessiond/Downloads/com.apple.mobilesafari"]
     error:nil];
 
   //Join arrays
   NSArray* files = [tmpFiles arrayByAddingObjectsFromArray:cacheFiles];
 
-  for(NSURL* file in files)
+  for(NSString* file in files)
   {
     if([file.lastPathComponent containsString:@"CFNetworkDownload"])
     {
       //File is cached download -> remove it
-      [[NSFileManager defaultManager] removeItemAtPath:[file path] error:nil];
+      [[NSFileManager defaultManager] removeItemAtPath:file error:nil];
     }
   }
 }
@@ -194,13 +194,11 @@
   {
     if(download.resumeData)
     {
-      //NSLog(@"SafariPlus - started download %@ from resume data", download);
       //Download has resume data -> resume it
       [download startDownloadFromResumeData];
     }
     else
     {
-      //NSLog(@"SafariPlus - started download %@ from beginning", download);
       //Download has no resume data -> start it from the beginning
       [download startDownload];
     }
@@ -219,31 +217,18 @@
 
 - (void)loadDownloadsFromDisk
 {
-  //NSLog(@"SafariPlus - loadDownloadsFromDisk");
-  if([[NSFileManager defaultManager] fileExistsAtPath:downloadCachePath])
+  self.pendingDownloads = [cacheManager loadCachedDownloads];
+
+  for(SPDownload* download in self.pendingDownloads)
   {
-    //Get data from download storage file
-    NSData *data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:downloadCachePath]];
-
-    //Unarchive the data to pendingDownloads
-    self.pendingDownloads = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    for(SPDownload* download in self.pendingDownloads)
-    {
-      //Set downloadManagerDelegate for all downloads
-      download.downloadManagerDelegate = self;
-    }
-
-    //NSLog(@"SafariPlus - Download Storage Exists");
+    //Set downloadManagerDelegate for all downloads
+    download.downloadManagerDelegate = self;
   }
 }
 
 - (void)saveDownloadsToDisk
 {
-  //Create data from pendingDownloads
-  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:self.pendingDownloads];
-
-  //Write data to file
-  [data writeToFile:downloadCachePath atomically:YES];
+  [cacheManager saveCachedDownloads:self.pendingDownloads];
 }
 
 - (void)sendNotificationWithText:(NSString*)text
@@ -263,16 +248,7 @@
     !preferenceManager.disablePushNotificationsEnabled)
   {
     //Application is inactive -> Use push notification if not disabled
-    //Create userInfo to send to SpringBoard
-    NSDictionary* userInfo =
-    @{@"title"    :  @"Safari",
-      @"message"  :  text,
-      @"bundleID" :  @"com.apple.mobilesafari"
-    };
-
-    //Send userInfo to SpringBoard using RocketBootstrap
-    //There it dispatches a notification using libbulletin
-    [self.messagingCenter sendMessageName:@"pushNotification" userInfo:userInfo];
+    [communicationManager dispatchPushNotificationWithIdentifier:@"com.apple.mobilesafari" title:@"Safari" message:text];
   }
 }
 
@@ -283,12 +259,11 @@
   int64_t totalFreeSpace; //Total usable space
 
   NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSDictionary* dictionary = [[NSFileManager defaultManager]
-    attributesOfFileSystemForPath:[paths lastObject] error:nil];
+  NSDictionary* attributes = [fileManager attributesOfFileSystemForPath:[paths lastObject] error:nil];
 
-  if(dictionary)
+  if(attributes)
   {
-    freeSpace = ((NSNumber*)[dictionary objectForKey:NSFileSystemFreeSize]).longLongValue;
+    freeSpace = ((NSNumber*)[attributes objectForKey:NSFileSystemFreeSize]).longLongValue;
   }
 
   for(SPDownload* download in self.pendingDownloads)
@@ -332,33 +307,32 @@
   return nil;
 }
 
-- (NSArray*)downloadsAtURL:(NSURL*)URL
+- (NSArray*)downloadsAtPath:(NSString*)path
 {
   //Create mutable array
-  NSMutableArray* downloadsAtURL = [NSMutableArray new];
+  NSMutableArray* downloadsAtPath = [NSMutableArray new];
 
   for(SPDownload* download in self.pendingDownloads)
   {
-    if([download.targetPath.URLByResolvingSymlinksInPath.path isEqualToString:URL.URLByResolvingSymlinksInPath.path])
+    if([[fileManager resolveSymlinkForPath:download.targetPath] isEqualToString:[fileManager resolveSymlinkForPath:path]])
     {
       //Download is at specified path -> add it to array
-      [downloadsAtURL addObject:download];
+      [downloadsAtPath addObject:download];
     }
   }
 
   //Return array
-  return downloadsAtURL;
+  return downloadsAtPath;
 }
 
-- (BOOL)downloadExistsAtURL:(NSURL*)URL
+- (BOOL)downloadExistsAtPath:(NSString*)path
 {
   for(SPDownload* download in self.pendingDownloads)
   {
     //Get path of download
-    NSURL* pathURL = [download.targetPath URLByAppendingPathComponent:download.filename];
+    NSString* downloadPath = [download.targetPath stringByAppendingPathComponent:download.filename];
 
-    if([pathURL.URLByResolvingSymlinksInPath.path
-      isEqualToString:URL.URLByResolvingSymlinksInPath.path])
+    if([[fileManager resolveSymlinkForPath:downloadPath] isEqualToString:[fileManager resolveSymlinkForPath:path]])
     {
       //Download with path exists
       return YES;
@@ -390,16 +364,15 @@
     if(preferenceManager.customDefaultPathEnabled)
     {
       //Custom default path enabled -> set it as target path
-      downloadInfo.targetPath = [NSURL fileURLWithPath:[@"/var"
-        stringByAppendingString:preferenceManager.customDefaultPath]];
+      downloadInfo.targetPath = [@"/var" stringByAppendingString:preferenceManager.customDefaultPath];
     }
     else
     {
       //Custom default path not enabled -> set path to default
-      downloadInfo.targetPath = [NSURL fileURLWithPath:defaultDownloadPath];
+      downloadInfo.targetPath = defaultDownloadPath;
     }
 
-    if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
+    if([downloadInfo fileExists] || [self downloadExistsAtPath:[downloadInfo path]])
     {
       //File or download exists -> present alert
       [self presentFileExistsAlertWithDownloadInfo:downloadInfo];
@@ -453,7 +426,9 @@
   [downloadInfo removeExistingFile];
 
   //Write image to file
-  [UIImagePNGRepresentation(downloadInfo.image) writeToFile:[downloadInfo pathString] atomically:YES];
+  NSString* tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:[downloadInfo path].lastPathComponent];
+  [UIImagePNGRepresentation(downloadInfo.image) writeToFile:tmpPath atomically:YES];
+  [fileManager moveItemAtPath:tmpPath toPath:[downloadInfo path] error:nil];
 
   //Send notification
   [self sendNotificationWithText:[NSString
@@ -623,7 +598,7 @@
   //Get pinned location names & paths
   NSArray* pinnedLocationNames = [preferenceManager pinnedLocationNames];
   NSArray* pinnedLocationPaths = [preferenceManager pinnedLocationPaths];
-  
+
   UIAlertController* pinnedLocationAlert = [UIAlertController
     alertControllerWithTitle:[localizationManager
     localizedSPStringForKey:@"PINNED_LOCATIONS"] message:nil
@@ -639,7 +614,7 @@
       NSInteger index = [pinnedLocationAlert.actions indexOfObject:action];
 
       //Get path from index
-      __block NSURL* path = [NSURL fileURLWithPath:[pinnedLocationPaths objectAtIndex:index]];
+      __block NSString* path = [pinnedLocationPaths objectAtIndex:index];
 
       //Alert for filename
       UIAlertController* filenameAlert = [UIAlertController
@@ -666,12 +641,7 @@
         downloadInfo.filename = filenameAlert.textFields[0].text;
 
         //Resolve possible symlinks
-        path = path.URLByResolvingSymlinksInPath;
-
-        //Do some magic to fix up the path
-        path = [NSURL fileURLWithPath:[[path path]
-          stringByReplacingOccurrencesOfString:@"/var"
-          withString:@"/private/var"]];
+        path = [fileManager resolveSymlinkForPath:path];
 
         //Set selected path
         downloadInfo.targetPath = path;
@@ -775,7 +745,7 @@
 
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-  if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
+  if([downloadInfo fileExists] || [self downloadExistsAtPath:[downloadInfo path]])
   {
     //File or download already exists -> present file exists alert
     [self presentFileExistsAlertWithDownloadInfo:downloadInfo];
@@ -806,10 +776,10 @@
   [downloadInfo removeExistingFile];
 
   //Get path of desired location
-  NSURL* pathURL = [downloadInfo pathURL];
+  NSString* path = [downloadInfo path];
 
   //Move downloaded file to desired location
-  [[NSFileManager defaultManager] moveItemAtURL:location toURL:pathURL error:nil];
+  [fileManager moveItemAtPath:location.path toPath:path error:nil];
 
   //Dispatch status bar / push notification
   [self sendNotificationWithText:[NSString stringWithFormat:@"%@: %@",
@@ -831,7 +801,6 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
   didCompleteWithError:(NSError *)error
 {
-  //NSLog(@"SafariPlus - %@ didCompleteWithError", task);
   if(error)
   {
     //Get download
@@ -849,8 +818,6 @@
     {
       //Get resumeData
       NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
-
-      //NSLog(@"SafariPlus - Got resumeData %@", resumeData);
 
       //Connect resumeData with download
       download.resumeData = resumeData;

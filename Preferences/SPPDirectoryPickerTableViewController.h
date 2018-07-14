@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "preferenceFileBrowserTableViewController.h"
-#import "preferenceDirectoryPickerNavigationController.h"
-#import "SPPreferenceLocalizationManager.h"
+#import "../MobileSafari/Classes/SPFileBrowserTableViewController.h"
+#import "SPPDirectoryPickerNavigationController.h"
+#import "../MobileSafari/Classes/SPLocalizationManager.h"
 
-@interface preferenceDirectoryPickerTableViewController : preferenceFileBrowserTableViewController {}
-- (BOOL)canDownloadToPath:(NSURL*)pathURL;
+@interface SPPDirectoryPickerTableViewController : SPFileBrowserTableViewController {}
 - (void)chooseButtonPressed;
 @end

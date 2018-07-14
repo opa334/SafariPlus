@@ -87,8 +87,6 @@
   self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession]
     downloadTaskWithResumeData:self.resumeData];
 
-  //NSLog(@"SafariPlus - Got download task %@ for resume data %@", self.downloadTask, self.resumeData);
-
   //Get new identifier
   self.taskIdentifier = self.downloadTask.taskIdentifier;
 

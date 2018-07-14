@@ -21,5 +21,6 @@
 + (instancetype)sharedInstance;
 - (NSString*)localizedSPStringForKey:(NSString*)key;
 - (NSString*)localizedMSStringForKey:(NSString*)key;
+- (void)parseSPLocalizationsForSpecifiers:(NSArray*)specifiers;
 
 @end

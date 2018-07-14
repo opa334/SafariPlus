@@ -59,3 +59,23 @@ enum
   GestureActionRequestDesktopSite = 9,
   GestureActionOpenFindOnPage = 10
 };
+
+//Enum for file operations (When communicating with SpringBoard)
+enum
+{
+	FileOperation_DirectoryContents,
+	FileOperation_DirectoryContents_URL,
+	FileOperation_CreateDirectory,
+	FileOperation_CreateDirectory_URL,
+	FileOperation_MoveItem,
+	FileOperation_MoveItem_URL,
+	FileOperation_RemoveItem,
+	FileOperation_RemoveItem_URL,
+	FileOperation_LinkItem,
+	FileOperation_LinkItem_URL,
+	FileOperation_FileExists,
+	FileOperation_FileExists_isDirectory,
+	FileOperation_Attributes,
+  FileOperation_IsWritable,
+  FileOperation_ResolveSymlinks
+};

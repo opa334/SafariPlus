@@ -21,13 +21,14 @@
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
+#import "../Classes/SPCacheManager.h"
 
 %hook Application
 
 %new
 - (void)handleTwitterAlert
 {
-  if([preferenceManager isFirstLaunch])
+  if([cacheManager firstStart])
   {
     BrowserController* browserController = browserControllers().firstObject;
 
@@ -71,6 +72,8 @@
     {
       welcomeAlert.preferredAction = openAction;
     }
+
+    [cacheManager firstStartDidSucceed];
 
     [rootViewControllerForBrowserController(browserController) presentViewController:welcomeAlert animated:YES completion:nil];
   }
@@ -182,12 +185,6 @@
     downloadManager = [SPDownloadManager sharedInstance];
   }
 
-  if(![[NSFileManager defaultManager] fileExistsAtPath:safariPlusCachePath])
-  {
-    [[NSFileManager defaultManager] createDirectoryAtPath:safariPlusCachePath
-      withIntermediateDirectories:NO attributes:nil error:nil];
-  }
-
   [self handleTwitterAlert];
 
   return orig;
@@ -224,12 +221,6 @@
   if(preferenceManager.enhancedDownloadsEnabled)
   {
     downloadManager = [SPDownloadManager sharedInstance];
-  }
-
-  if(![[NSFileManager defaultManager] fileExistsAtPath:safariPlusCachePath])
-  {
-    [[NSFileManager defaultManager] createDirectoryAtPath:safariPlusCachePath
-      withIntermediateDirectories:NO attributes:nil error:nil];
   }
 
   [self handleTwitterAlert];

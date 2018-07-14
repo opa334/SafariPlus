@@ -20,7 +20,6 @@
 
 @interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, DownloadManagerDelegate>
 @property (nonatomic) NSMutableArray* pendingDownloads;
-@property (nonatomic) CPDistributedMessagingCenter* messagingCenter;
 @property (nonatomic) SPStatusBarNotificationWindow* notificationWindow;
 @property (nonatomic) NSURLSession* downloadSession;
 @property (nonatomic) NSInteger errorCount;
@@ -31,7 +30,6 @@
 + (instancetype)sharedInstance;
 
 - (void)configureSession;
-- (void)removeDownloadStorageFile;
 - (void)clearTempFiles;
 - (void)cancelAllDownloads;
 - (void)resumeDownloadsFromDiskLoad;
@@ -48,8 +46,8 @@
 - (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
 - (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier;
-- (NSMutableArray*)downloadsAtURL:(NSURL*)URL;
-- (BOOL)downloadExistsAtURL:(NSURL*)URL;
+- (NSMutableArray*)downloadsAtPath:(NSString*)path;
+- (BOOL)downloadExistsAtPath:(NSString*)path;
 
 - (void)configureDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo;

@@ -19,6 +19,7 @@
 #import "../Shared.h"
 #import "SPFilePickerNavigationController.h"
 #import "SPLocalizationManager.h"
+#import "SPFileManager.h"
 
 @implementation SPFilePickerTableViewController
 
@@ -43,19 +44,19 @@
 - (void)dismiss
 {
   //Dismiss file picker
-  [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:nil];
+  [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFiles:nil];
 }
 
-- (void)selectedFileAtURL:(NSURL*)fileURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
+- (void)selectedFileAtPath:(NSString*)filePath type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
 {
   //Type 1: file; type 2: directory
   if(type == 1)
   {
     //tapped entry is file -> call delegate to upload file
-    [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFilesAtURL:@[fileURL]];
+    [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFiles:@[[NSURL fileURLWithPath:filePath]]];
   }
 
-  [super selectedFileAtURL:fileURL type:type atIndexPath:indexPath];
+  [super selectedFileAtPath:filePath type:type atIndexPath:indexPath];
 }
 
 - (void)tableWasLongPressed:(UILongPressGestureRecognizer *)gestureRecognizer
@@ -76,11 +77,9 @@
       [self toggleEditing];
 
       //Check if long pressed cell is file
-      NSNumber* isFile;
-      [(NSURL*)_filesAtCurrentPath[indexPath.row] getResourceValue:&isFile
-        forKey:NSURLIsRegularFileKey error:nil];
+      NSDictionary* attributes = [fileManager attributesOfItemAtPath:_filesAtCurrentPath[indexPath.row].path error:nil];
 
-      if([isFile boolValue])
+      if([[attributes fileType] isEqualToString:NSFileTypeRegular])
       {
         //Long pressed cell is file -> select file and update top right button status
         [self.tableView selectRowAtIndexPath:indexPath animated:YES
@@ -135,13 +134,13 @@
   //Store fileURLs into array
   for(NSIndexPath* indexPath in selectedIndexPaths)
   {
-    NSURL* filePath = _filesAtCurrentPath[indexPath.row];
-    [selectedURLs addObject:filePath];
+    NSURL* fileURL = _filesAtCurrentPath[indexPath.row];
+    [selectedURLs addObject:fileURL];
   }
 
   //Call delegate to upload files
   [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate
-    didSelectFilesAtURL:selectedURLs];
+    didSelectFiles:selectedURLs];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

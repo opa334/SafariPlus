@@ -1,4 +1,4 @@
-// preferenceDirectoryPickerNavigationController.h
+// SPCommunicationManager.h
 // (c) 2017 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,16 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "preferenceDirectoryPickerTableViewController.h"
-#import "preferenceFileBrowserNavigationController.h"
+@class CPDistributedMessagingCenter;
 
-@protocol PinnedLocationsDelegate
-@required
-- (void)directoryPickerFinishedWithName:(NSString*)name path:(NSURL*)pathURL;
-@end
+@interface SPCommunicationManager : NSObject
+{
+  CPDistributedMessagingCenter* _messagingCenter;
+}
 
-@interface preferenceDirectoryPickerNavigationController : preferenceFileBrowserNavigationController {}
-@property(nonatomic, weak) id<PinnedLocationsDelegate> pinnedLocationsDelegate;
-@property(nonatomic) NSString* name;
-- (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate name:(NSString*) name;
++ (instancetype)sharedInstance;
+- (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message;
+- (id)executeFileOperationOnSpringBoard:(NSDictionary*)operation;
+
 @end

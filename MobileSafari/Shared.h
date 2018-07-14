@@ -14,15 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class BrowserController, BrowserRootViewController, TabDocument, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SafariWebView;
+@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView;
 
 extern BOOL showAlert;
 extern BOOL iPhoneX;
-extern NSString* defaultDownloadPath;
 extern CGFloat iOSVersion;
+extern SPFileManager* fileManager;
 extern SPPreferenceManager* preferenceManager;
 extern SPLocalizationManager* localizationManager;
 extern SPDownloadManager* downloadManager;
+extern SPCommunicationManager* communicationManager;
+extern SPCacheManager* cacheManager;
 extern NSBundle* SPBundle;
 extern NSBundle* MSBundle;
 

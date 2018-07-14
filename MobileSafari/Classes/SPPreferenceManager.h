@@ -130,7 +130,5 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 - (void)reloadColors;
 - (void)reloadOtherPlist;
-- (BOOL)isFirstLaunch;
-- (void)reloadMiscPlist;
 
 @end

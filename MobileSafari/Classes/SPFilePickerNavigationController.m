@@ -20,7 +20,7 @@
 
 @implementation SPFilePickerNavigationController
 
-- (id)newTableViewControllerWithPath:(NSURL*)path
+- (id)newTableViewControllerWithPath:(NSString*)path
 {
   //return instance of filePickerTableViewController
   return [[SPFilePickerTableViewController alloc] initWithPath:path];

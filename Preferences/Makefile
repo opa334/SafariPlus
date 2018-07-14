@@ -2,7 +2,8 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = SafariPlusPrefs
 SafariPlusPrefs_CFLAGS = -fobjc-arc
-SafariPlusPrefs_FILES = $(wildcard *.m)
+SafariPlusPrefs_FILES = ../MobileSafari/Classes/SPFileBrowserTableViewController.m ../MobileSafari/Classes/SPFileBrowserNavigationController.m ../MobileSafari/Classes/SPFileTableViewCell.m ../MobileSafari/Classes/SPLocalizationManager.m
+SafariPlusPrefs_FILES += $(wildcard *.m)
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
 SafariPlusPrefs_LIBRARIES = colorpicker

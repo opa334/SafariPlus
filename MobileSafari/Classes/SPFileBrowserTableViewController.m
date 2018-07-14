@@ -20,10 +20,11 @@
 #import "SPFileBrowserNavigationController.h"
 #import "SPFileTableViewCell.h"
 #import "SPLocalizationManager.h"
+#import "SPFileManager.h"
 
 @implementation SPFileBrowserTableViewController
 
-- (id)initWithPath:(NSURL*)path
+- (id)initWithPath:(NSString*)path
 {
     self = [super init];
     if(self)
@@ -34,11 +35,7 @@
         self.title = path.lastPathComponent;
 
         //Resolve possible symlinks
-        _currentPath = path.URLByResolvingSymlinksInPath;
-
-        //Do some magic to fix up the path
-        _currentPath = [NSURL fileURLWithPath:[_currentPath.path
-          stringByReplacingOccurrencesOfString:@"/var" withString:@"/private/var"]];
+        _currentPath = [fileManager resolveSymlinkForPath:path];
       }
     }
     return self;
@@ -54,14 +51,10 @@
                   action:@selector(pulledToRefresh)
                 forControlEvents:UIControlEventValueChanged];
 
-  //Create variable for _fileManager
-  _fileManager = [NSFileManager defaultManager];
-
-
   if(!_currentPath)
   {
-    //Üath is not set -> set it to root
-    _currentPath = ((SPFileBrowserNavigationController*)self.navigationController).rootPath;
+    //Path is not set -> set it to root
+    _currentPath = @"/";
   }
 
   //Set rightBarButtonItem
@@ -82,8 +75,8 @@
 - (void)populateDataSources
 {
   //Fetch files from current path into array
-  _filesAtCurrentPath = (NSMutableArray*)[_fileManager
-    contentsOfDirectoryAtURL:_currentPath includingPropertiesForKeys:nil
+  _filesAtCurrentPath = [fileManager
+    contentsOfDirectoryAtURL:[NSURL fileURLWithPath:_currentPath] includingPropertiesForKeys:nil
     options:0 error:nil];
 
   //Sort files alphabetically
@@ -91,7 +84,7 @@
     initWithKey:@"lastPathComponent" ascending:YES
     selector:@selector(caseInsensitiveCompare:)];
 
-  _filesAtCurrentPath = (NSMutableArray*)[_filesAtCurrentPath
+  _filesAtCurrentPath = [_filesAtCurrentPath
     sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
 }
 
@@ -141,7 +134,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
   //Return cell for file
-  return [self newCellWithFileURL:_filesAtCurrentPath[indexPath.row]];
+  return [self newCellWithFilePath:_filesAtCurrentPath[indexPath.row].path];
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -150,10 +143,10 @@
   {
     //tableView is in editing mode -> Make directories unselectable
     NSURL* selectedFile = _filesAtCurrentPath[indexPath.row];
-    NSNumber* isFile;
 
-    [selectedFile getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
-    if(![isFile boolValue])
+    NSDictionary* attributes = [fileManager attributesOfItemAtPath:selectedFile.path error:nil];
+
+    if(![[attributes fileType] isEqualToString:NSFileTypeRegular])
     {
       return nil;
     }
@@ -168,32 +161,31 @@
   {
     //tableView is not in editing mode -> Select file / directory
 
-    NSURL* fileURL = _filesAtCurrentPath[indexPath.row];
-    NSNumber* isFile;
-    [fileURL getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
+    NSString* filePath = _filesAtCurrentPath[indexPath.row].path;
+    NSDictionary* fileAttributes = [fileManager attributesOfItemAtPath:filePath error:nil];
+    NSString* fileType = [fileAttributes objectForKey:NSFileType];
 
     //Tapped entry is file
-    if([isFile boolValue])
+    if([fileType isEqualToString:NSFileTypeRegular])
     {
-      [self selectedFileAtURL:fileURL type:1 atIndexPath:indexPath];
+      [self selectedFileAtPath:filePath type:1 atIndexPath:indexPath];
     }
-    //Tapped entry is directory
+    //Tapped entry is something else
     else
     {
-      [self selectedFileAtURL:fileURL type:2 atIndexPath:indexPath];
+      [self selectedFileAtPath:filePath type:2 atIndexPath:indexPath];
     }
   }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  NSNumber* isFile;
   NSURL* row = _filesAtCurrentPath[indexPath.row];
 
   //Get NSNumber for file / directory
-  [row getResourceValue:&isFile forKey:NSURLIsRegularFileKey error:nil];
+  NSDictionary* attributes = [fileManager attributesOfItemAtPath:row.path error:nil];
 
-  if([isFile boolValue])
+  if([[attributes fileType] isEqualToString:NSFileTypeRegular])
   {
     //file -> can edit
     return YES;
@@ -205,19 +197,19 @@
   }
 }
 
-- (void)selectedFileAtURL:(NSURL*)fileURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
+- (void)selectedFileAtPath:(NSString*)filePath type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
 {
   //Type 1: file; type 2: directory
   if(type == 2)
   {
-    [self.navigationController pushViewController:[(SPFileBrowserNavigationController*)self.navigationController newTableViewControllerWithPath:fileURL] animated:YES];
+    [self.navigationController pushViewController:[(SPFileBrowserNavigationController*)self.navigationController newTableViewControllerWithPath:filePath] animated:YES];
   }
 }
 
-- (id)newCellWithFileURL:(NSURL*)fileURL
+- (id)newCellWithFilePath:(NSString*)filePath
 {
   //Return instance of SPFileTableViewCell
-  return [[SPFileTableViewCell alloc] initWithFileURL:fileURL];
+  return [[SPFileTableViewCell alloc] initWithFilePath:filePath];
 }
 
 @end

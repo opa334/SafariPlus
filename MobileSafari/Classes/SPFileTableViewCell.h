@@ -15,5 +15,5 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @interface SPFileTableViewCell : UITableViewCell {}
-- (id)initWithFileURL:(NSURL*)fileURL;
+- (instancetype)initWithFilePath:(NSString*)filePath;
 @end

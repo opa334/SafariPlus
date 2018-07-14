@@ -14,14 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#define bundlePath @"/Library/PreferenceBundles/SafariPlusPrefs.bundle"
-#define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
 #import <Preferences/PSListController.h>
 #import <Preferences/PSTableCell.h>
 #import <Preferences/PSSpecifier.h>
-#import "SPPreferenceLocalizationManager.h"
-#import "preferenceDirectoryPickerNavigationController.h"
-#import "../MobileSafari/Enums.h"
+#import "Protocols.h"
 
 @interface PSEditableListController : PSListController {}
 - (id)_editButtonBarItem;

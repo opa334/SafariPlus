@@ -1,4 +1,4 @@
-// preferenceFileTableViewCell.h
+// SPPDirectoryPickerNavigationController.h
 // (c) 2017 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,8 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "SPPreferenceLocalizationManager.h"
+#import "SPPDirectoryPickerTableViewController.h"
+#import "../MobileSafari/Classes/SPFileBrowserNavigationController.h"
+#import "Protocols.h"
 
-@interface preferenceFileTableViewCell : UITableViewCell {}
-- (id)initWithFileURL:(NSURL*)fileURL;
+@interface SPPDirectoryPickerNavigationController : SPFileBrowserNavigationController {}
+@property(nonatomic, weak) id<PinnedLocationsDelegate> pinnedLocationsDelegate;
+@property(nonatomic) NSString* name;
+- (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate name:(NSString*)name;
 @end

@@ -22,6 +22,7 @@
 #import "SPDownloadManager.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
+#import "SPFileManager.h"
 
 @implementation SPDirectoryPickerTableViewController
 
@@ -35,7 +36,7 @@
 
 - (void)chooseButtonPressed
 {
-  if([self canDownloadToPath:self.currentPath])
+  if([fileManager isWritableFileAtPath:self.currentPath])
   {
     //Get downloadInfo
     SPDownloadInfo* downloadInfo = ((SPDirectoryPickerNavigationController*)
@@ -106,7 +107,7 @@
     //Path is not writable -> Create error alert
     UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:
       [localizationManager localizedSPStringForKey:@"ERROR"]
-      message:[localizationManager localizedSPStringForKey:@"WRONG_PATH_MESSAGE"]
+      message:[localizationManager localizedSPStringForKey:@"PERMISSION_ERROR_MESSAGE"]
   		preferredStyle:UIAlertControllerStyleAlert];
 
     //Create action to close the alert
@@ -132,14 +133,6 @@
     //Present alert
     [self presentViewController:errorAlert animated:YES completion:nil];
   }
-}
-
-- (BOOL)canDownloadToPath:(NSURL*)pathURL
-{
-  //Check if path is writable and return it
-  NSNumber* writable;
-  [pathURL getResourceValue:&writable forKey:@"NSURLIsWritableKey" error:nil];
-  return [writable boolValue];
 }
 
 @end

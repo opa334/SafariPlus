@@ -17,7 +17,7 @@
 @class SPDownload, SPDownloadInfo;
 
 @protocol filePickerDelegate<NSObject>
-- (void)didSelectFilesAtURL:(NSArray*)URLArray;
+- (void)didSelectFiles:(NSArray*)URLs;
 @end
 
 @protocol DownloadNavigationControllerDelegate

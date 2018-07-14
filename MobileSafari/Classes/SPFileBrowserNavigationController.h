@@ -15,9 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @interface SPFileBrowserNavigationController : UINavigationController {}
-- (id)newTableViewControllerWithPath:(NSURL*)path;
+@property (nonatomic) NSString* startPath;
+@property (nonatomic) BOOL loadPreviousPathElements;
+- (id)newTableViewControllerWithPath:(NSString*)path;
 - (void)reloadTopTableView;
 - (void)reloadAllTableViews;
-- (BOOL)shouldLoadPreviousPathElements;
-- (NSURL*)rootPath;
 @end

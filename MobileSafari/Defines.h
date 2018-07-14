@@ -16,17 +16,18 @@
 
 #if defined(SIMJECT)
 #define SPBundlePath [NSString stringWithFormat:@"%@/layout/Library/Application Support/SafariPlus.bundle", [CUR_DIR stringByDeletingLastPathComponent]]
+#define defaultDownloadPath [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", USER];
 #else
 #define SPBundlePath @"/Library/Application Support/SafariPlus.bundle"
+#define oldDownloadPath [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
+#define defaultDownloadPath @"/var/mobile/Downloads"
 #endif
 
 #define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"
 #define colorPrefsPath @"/var/mobile/Library/Preferences/com.opa334.safaripluscolorprefs.plist"
 #define desktopUserAgent @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4"
-#define safariPlusCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
-#define downloadCachePath [safariPlusCachePath stringByAppendingString:@"/downloads.plist"]
-#define desktopButtonStateCachePath [safariPlusCachePath stringByAppendingString:@"/desktopButtonStates.plist"]
-#define miscPlistPath [safariPlusCachePath stringByAppendingString:@"/misc.plist"]
+#define SPCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari Plus"]
+#define SPDeprecatedCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
 #define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0

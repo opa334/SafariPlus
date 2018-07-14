@@ -19,6 +19,7 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPFilePickerNavigationController.h"
+#import "../Classes/SPFileManager.h"
 #import "../Defines.h"
 #import "../Shared.h"
 
@@ -48,20 +49,28 @@
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)didSelectFilesAtURL:(NSArray*)URLArray
+- (void)didSelectFiles:(NSArray*)URLs
 {
   [self _dismissDisplayAnimated:YES];
 
-  if(!URLArray)
+  if(!URLs)
   {
     [self _cancel];
+    return;
   }
-  else
+
+  [fileManager resetHardLinks];
+
+  NSMutableArray* hardLinkedURLs = [NSMutableArray new];
+
+  for(NSURL* URL in URLs)
   {
-    [self _chooseFiles:URLArray
-      displayString:[((NSURL*)URLArray.firstObject).lastPathComponent
-      stringByRemovingPercentEncoding] iconImage:nil];
+    [hardLinkedURLs addObject:[NSURL fileURLWithPath:[fileManager createHardLinkForFileAtPath:URL.path onlyIfNeeded:YES]]];
   }
+
+  [self _chooseFiles:[hardLinkedURLs copy]
+    displayString:[((NSURL*)hardLinkedURLs.firstObject).lastPathComponent
+    stringByRemovingPercentEncoding] iconImage:nil];
 }
 
 %end
@@ -110,11 +119,11 @@
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)didSelectFilesAtURL:(NSArray*)URLArray
+- (void)didSelectFiles:(NSArray*)URLs
 {
   [self _dismissDisplayAnimated:YES];
 
-  if(!URLArray)
+  if(!URLs)
   {
     [self _cancel];
   }
@@ -125,15 +134,10 @@
     //Mutable array for sandboxed URLs
     NSMutableArray* sandboxedURLs = [NSMutableArray new];
 
-    for(NSURL* URL in URLArray)
+    for(NSURL* URL in URLs)
     {
       //Create URL for tmp location
-      NSURL* sandboxedURL = [NSURL fileURLWithPath:[NSTemporaryDirectory()
-        stringByAppendingPathComponent:URL.lastPathComponent]];
-
-      //Create link to URL
-      [[NSFileManager defaultManager] linkItemAtURL:URL.URLByResolvingSymlinksInPath
-        toURL:sandboxedURL error:nil];
+      NSURL* sandboxedURL = [NSURL fileURLWithPath:[fileManager createHardLinkForFileAtPath:URL.path onlyIfNeeded:NO]];
 
       //Add URL to array
       [sandboxedURLs addObject:sandboxedURL];

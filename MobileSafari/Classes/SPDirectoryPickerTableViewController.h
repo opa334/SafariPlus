@@ -19,6 +19,5 @@
 @class SPFileBrowserTableViewController;
 
 @interface SPDirectoryPickerTableViewController : SPFileBrowserTableViewController
-- (BOOL)canDownloadToPath:(NSURL*)pathURL;
 - (void)chooseButtonPressed;
 @end

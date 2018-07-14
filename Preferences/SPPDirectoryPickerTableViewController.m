@@ -14,42 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "preferenceDirectoryPickerTableViewController.h"
+#import "SPPDirectoryPickerTableViewController.h"
+#import "../MobileSafari/Shared.h"
 
-@implementation preferenceDirectoryPickerTableViewController
+@implementation SPPDirectoryPickerTableViewController
 
 - (UIBarButtonItem*)defaultRightBarButtonItem
 {
   //Create and return UIBarButtonItem to choose current directory
-  return [[UIBarButtonItem alloc] initWithTitle:[[SPPreferenceLocalizationManager sharedInstance]
+  return [[UIBarButtonItem alloc] initWithTitle:[localizationManager
     localizedSPStringForKey:@"CHOOSE"] style:UIBarButtonItemStylePlain
     target:self action:@selector(chooseButtonPressed)];
 }
 
 - (void)chooseButtonPressed
 {
-  if([self canDownloadToPath:self.currentPath])
+  if([[NSFileManager defaultManager] isWritableFileAtPath:self.currentPath])
   {
     //Path is writable -> create alert to pick file name
     UIAlertController * confirmationAlert = [UIAlertController alertControllerWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_TITLE"]
-      message:[[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_MESSAGE"]
-      stringByReplacingOccurrencesOfString:@"<pathURL>" withString:[self.currentPath path]]
+      [localizationManager localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_TITLE"]
+      message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_MESSAGE"], self.currentPath]
   		preferredStyle:UIAlertControllerStyleAlert];
 
     //Create yes action to pick a path
     UIAlertAction* yesAction = [UIAlertAction actionWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"YES"]
+      [localizationManager localizedSPStringForKey:@"YES"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
       {
         //Dismiss picker
         [self dismissViewControllerAnimated:YES completion:
         ^{
           //Get name
-          NSString* name = ((preferenceDirectoryPickerNavigationController*)self.navigationController).name;
+          NSString* name = ((SPPDirectoryPickerNavigationController*)self.navigationController).name;
 
           //Finish picking
-          [((preferenceDirectoryPickerNavigationController*)self.navigationController).pinnedLocationsDelegate
+          [((SPPDirectoryPickerNavigationController*)self.navigationController).pinnedLocationsDelegate
             directoryPickerFinishedWithName:name path:self.currentPath];
         }];
       }];
@@ -59,7 +59,7 @@
 
     //Create no action to continue picking a path
     UIAlertAction* noAction = [UIAlertAction actionWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"NO"]
+      [localizationManager localizedSPStringForKey:@"NO"]
       style:UIAlertActionStyleDefault handler:nil];
 
     //Add action
@@ -67,7 +67,7 @@
 
     //Create action to close the picker
     UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL_PICKER"]
+      [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
     {
       //Dismiss picker
@@ -84,13 +84,13 @@
   {
     //Path is not writable -> Create error alert
     UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"ERROR"]
-      message:[[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"WRONG_PATH_MESSAGE"]
+      [localizationManager localizedSPStringForKey:@"ERROR"]
+      message:[localizationManager localizedSPStringForKey:@"PERMISSION_ERROR_MESSAGE"]
   		preferredStyle:UIAlertControllerStyleAlert];
 
     //Create action to close the alert
     UIAlertAction* closeAction = [UIAlertAction actionWithTitle:
-    [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CLOSE"]
+    [localizationManager localizedSPStringForKey:@"CLOSE"]
     style:UIAlertActionStyleDefault handler:nil];
 
     //Add action
@@ -98,7 +98,7 @@
 
     //Create action to close the picker
     UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-      [[SPPreferenceLocalizationManager sharedInstance] localizedSPStringForKey:@"CANCEL_PICKER"]
+      [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
     {
       //Close picker
@@ -111,13 +111,6 @@
     //Present alert
     [self presentViewController:errorAlert animated:YES completion:nil];
   }
-}
-
-- (BOOL)canDownloadToPath:(NSURL*)pathURL
-{
-  NSNumber* writable;
-  [pathURL getResourceValue:&writable forKey:@"NSURLIsWritableKey" error:nil];
-  return [writable boolValue];
 }
 
 @end

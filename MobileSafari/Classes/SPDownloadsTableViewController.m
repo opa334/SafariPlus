@@ -22,6 +22,7 @@
 #import "SPFileBrowserTableViewController.h"
 #import "SPFileTableViewCell.h"
 #import "SPLocalizationManager.h"
+#import "SPFileManager.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVPlayerViewController.h>
@@ -59,7 +60,7 @@
   [super populateDataSources];
 
   //Repopulate download array
-  self.downloadsAtCurrentPath = [downloadManager downloadsAtURL:self.currentPath];
+  self.downloadsAtCurrentPath = [downloadManager downloadsAtPath:self.currentPath];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -166,23 +167,28 @@
   }
 }
 
-- (void)selectedFileAtURL:(NSURL*)fileURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
+- (void)selectedFileAtPath:(NSString*)filePath type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath
 {
   //Type 1: file; type 2: symlink; type 3: directory
   if(type == 1)
   {
+    //Only cache one hard link at most
+    [fileManager resetHardLinks];
+
+    __block NSString* hardLinkedPath;
+
     //Check if Filza is installed
-    BOOL filzaInstalled = [_fileManager fileExistsAtPath:@"/Applications/Filza.app"];
+    BOOL filzaInstalled = [fileManager fileExistsAtPath:@"/Applications/Filza.app"];
 
     //Get filename for title
-    NSString* filename = [[fileURL lastPathComponent] stringByRemovingPercentEncoding];
+    NSString* filename = [[filePath lastPathComponent] stringByRemovingPercentEncoding];
 
     //Create alertSheet for tapped file
     UIAlertController *openAlert = [UIAlertController alertControllerWithTitle:filename
       message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
     //Get fileUTI
-    CFStringRef fileExtension = (__bridge CFStringRef)[fileURL pathExtension];
+    CFStringRef fileExtension = (__bridge CFStringRef)[filePath pathExtension];
     CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(
       kUTTagClassFilenameExtension, fileExtension, NULL);
 
@@ -193,7 +199,8 @@
         actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
       {
-        [self startPlayerWithMedia:fileURL];
+        hardLinkedPath = [fileManager createHardLinkForFileAtPath:filePath onlyIfNeeded:YES];
+        [self startPlayerWithMedia:[NSURL fileURLWithPath:hardLinkedPath]];
       }];
 
       [openAlert addAction:playAction];
@@ -203,21 +210,11 @@
       localizedSPStringForKey:@"OPEN_IN"]
       style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
     {
-      //Creating temporary link cause we ain't inside sandbox (silly, right?)
-      self.tmpSymlinkURL = [NSURL fileURLWithPath:[NSTemporaryDirectory()
-        stringByAppendingPathComponent:fileURL.lastPathComponent]];
-
-      [[NSFileManager defaultManager] linkItemAtURL:fileURL.URLByResolvingSymlinksInPath
-        toURL:self.tmpSymlinkURL error:nil];
-
-      //No option selected yet
-      self.didSelectOptionFromDocumentController = NO;
+      hardLinkedPath = [fileManager createHardLinkForFileAtPath:filePath onlyIfNeeded:NO];
 
       //Create documentController from selected file and present it
-      self.documentController = [UIDocumentInteractionController
-        interactionControllerWithURL:self.tmpSymlinkURL];
+      self.documentController = [UIDocumentInteractionController interactionControllerWithURL:[NSURL fileURLWithPath:hardLinkedPath]];
 
-      self.documentController.delegate = self;
       [self.documentController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
     }];
 
@@ -230,7 +227,7 @@
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
       {
         //https://stackoverflow.com/a/32145122
-        NSString* filzaPath = [NSString stringWithFormat:@"%@%@", @"filza://view",[fileURL absoluteString]];
+        NSString* filzaPath = [NSString stringWithFormat:@"%@%@", @"filza://view", filePath];
         [self openScheme:filzaPath];
       }];
 
@@ -268,7 +265,7 @@
         style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
       {
         //Rename file
-        [_fileManager moveItemAtPath:[fileURL path] toPath:[[[fileURL path]
+        [fileManager moveItemAtPath:filePath toPath:[[filePath
           stringByDeletingLastPathComponent]
           stringByAppendingPathComponent:selectFilenameController.textFields[0].text]
           error:nil];
@@ -297,8 +294,7 @@
       //Create alert to confirm deletion of file
       UIAlertController* confirmationController = [UIAlertController
         alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
-        message:[[localizationManager localizedSPStringForKey:@"DELETE_FILE_MESSAGE"]
-        stringByReplacingOccurrencesOfString:@"<fn>" withString:filename]
+        message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"DELETE_FILE_MESSAGE"], filename]
         preferredStyle:UIAlertControllerStyleAlert];
 
       //Add cancel option
@@ -314,7 +310,7 @@
         style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
       {
         //Delete file
-        [_fileManager removeItemAtPath:[fileURL path] error:nil];
+        [fileManager removeItemAtPath:filePath error:nil];
 
         //Reload files
         [self reloadDataAndDataSources];
@@ -348,30 +344,7 @@
     //Present open alert
     [self presentViewController:openAlert animated:YES completion:nil];
   }
-  [super selectedFileAtURL:fileURL type:type atIndexPath:indexPath];
-}
-
-//https://stackoverflow.com/a/35619091
-
-- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application
-{
-  //Selected app in open in alert
-  self.didSelectOptionFromDocumentController = YES;
-}
-
-- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application
-{
-  //Link finished importing -> delete link
-  [[NSFileManager defaultManager] removeItemAtURL:self.tmpSymlinkURL error:nil];
-}
-
-- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
-{
-  if(self.didSelectOptionFromDocumentController == NO)
-  {
-    //Cancelled open in menu -> delete link
-    [[NSFileManager defaultManager] removeItemAtURL:self.tmpSymlinkURL error:nil];
-  }
+  [super selectedFileAtPath:filePath type:type atIndexPath:indexPath];
 }
 
 - (void)startPlayerWithMedia:(NSURL*)mediaURL

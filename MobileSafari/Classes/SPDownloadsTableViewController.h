@@ -25,8 +25,6 @@
 @interface SPDownloadsTableViewController : SPFileBrowserTableViewController <UIDocumentInteractionControllerDelegate> {}
 @property (nonatomic) NSMutableArray* downloadsAtCurrentPath;
 @property (nonatomic, strong) UIDocumentInteractionController* documentController;
-@property (nonatomic) NSURL* tmpSymlinkURL;
-@property (nonatomic) BOOL didSelectOptionFromDocumentController;
 - (id)newCellWithDownload:(SPDownload*)download;
 - (void)startPlayerWithMedia:(NSURL*)mediaURL;
 - (void)openScheme:(NSString *)scheme;

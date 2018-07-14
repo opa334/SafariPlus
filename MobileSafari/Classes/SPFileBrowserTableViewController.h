@@ -16,15 +16,14 @@
 
 @interface SPFileBrowserTableViewController : UITableViewController
 {
-  NSMutableArray* _filesAtCurrentPath;
-  NSFileManager* _fileManager;
+  NSArray<NSURL*>* _filesAtCurrentPath;
 }
 
-@property (nonatomic, readonly) NSURL* currentPath;
+@property (nonatomic, readonly) NSString* currentPath;
 - (UIBarButtonItem*)defaultRightBarButtonItem;
-- (id)initWithPath:(NSURL*)path;
-- (void)selectedFileAtURL:(NSURL*)fileURL type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath;
-- (id)newCellWithFileURL:(NSURL*)fileURL;
+- (id)initWithPath:(NSString*)path;
+- (void)selectedFileAtPath:(NSString*)filePath type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath;
+- (id)newCellWithFilePath:(NSString*)filePath;
 - (void)reloadDataAndDataSources;
 - (void)populateDataSources;
 - (void)pulledToRefresh;
