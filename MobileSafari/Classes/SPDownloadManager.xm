@@ -50,6 +50,13 @@
 {
   self = [super init];
 
+  if(![fileManager fileExistsAtPath:defaultDownloadPath])
+  {
+    //Downloads directory doesn't exist -> create it
+    [fileManager createDirectoryAtPath:defaultDownloadPath
+      withIntermediateDirectories:NO attributes:nil error:nil];
+  }
+
   if([fileManager fileExistsAtPath:oldDownloadPath])
   {
     NSArray* filePaths = [fileManager contentsOfDirectoryAtPath:oldDownloadPath error:nil];
@@ -64,25 +71,18 @@
     if([filePaths count] == 0)
     {
       [fileManager removeItemAtPath:oldDownloadPath error:nil];
+
+      UIAlertController* migrationAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"MIGRATION_TITLE"]
+        message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], oldDownloadPath, defaultDownloadPath]
+        preferredStyle:UIAlertControllerStyleAlert];
+
+      UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"Close"]
+        style:UIAlertActionStyleDefault handler:nil];
+
+      [migrationAlert addAction:closeAction];
+
+      [rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:migrationAlert animated:YES completion:nil];
     }
-
-    UIAlertController* migrationAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"MIGRATION_TITLE"]
-      message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], oldDownloadPath, defaultDownloadPath]
-      preferredStyle:UIAlertControllerStyleAlert];
-
-    UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"Close"]
-      style:UIAlertActionStyleDefault handler:nil];
-
-    [migrationAlert addAction:closeAction];
-
-    [rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:migrationAlert animated:YES completion:nil];
-  }
-
-  if(![fileManager fileExistsAtPath:defaultDownloadPath])
-  {
-    //Downloads directory doesn't exist -> create it
-    [fileManager createDirectoryAtPath:defaultDownloadPath
-      withIntermediateDirectories:NO attributes:nil error:nil];
   }
 
   if(!preferenceManager.disableBarNotificationsEnabled)
@@ -91,6 +91,8 @@
     self.notificationWindow = [[SPStatusBarNotificationWindow alloc] init];
   }
 
+  [self verifyDownloadStorageRevision];
+
   //Get downloads from file
   [self loadDownloadsFromDisk];
 
@@ -98,6 +100,16 @@
   [self configureSession];
 
   return self;
+}
+
+- (void)verifyDownloadStorageRevision
+{
+  if([cacheManager downloadStorageRevision] != currentDownloadStorageRevision)
+  {
+    [cacheManager clearDownloadCache];
+
+    [cacheManager setDownloadStorageRevision:currentDownloadStorageRevision];
+  }
 }
 
 - (NSURLSession*)sharedDownloadSession

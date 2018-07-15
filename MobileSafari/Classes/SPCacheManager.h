@@ -30,6 +30,8 @@
 - (BOOL)firstStart;
 - (void)firstStartDidSucceed;
 
+- (NSInteger)downloadStorageRevision;
+- (void)setDownloadStorageRevision:(NSInteger)revision;
 - (NSMutableArray*)loadCachedDownloads;
 - (void)saveCachedDownloads:(NSMutableArray*)cachedDownloads;
 - (void)clearDownloadCache;

@@ -29,6 +29,7 @@
 #define SPCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari Plus"]
 #define SPDeprecatedCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
 #define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define currentDownloadStorageRevision 2
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0
 #define kCFCoreFoundationVersionNumber_iOS_9_0 1223.1

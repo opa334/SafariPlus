@@ -54,6 +54,8 @@
 
 	[self updateExcludedFromBackup];
 
+  [self loadMiscPlist];
+
 	return self;
 }
 
@@ -98,8 +100,6 @@
 
 - (BOOL)firstStart
 {
-	[self loadMiscPlist];
-
 	NSNumber* firstLaunchSucceeded = [_miscPlist objectForKey:@"firstLaunchSucceeded"];
 
 	return ![firstLaunchSucceeded boolValue];
@@ -110,6 +110,20 @@
 	[_miscPlist setObject:@YES forKey:@"firstLaunchSucceeded"];
 
 	[self saveMiscPlist];
+}
+
+- (NSInteger)downloadStorageRevision
+{
+  NSNumber* downloadStorageRevision = [_miscPlist objectForKey:@"downloadStorageRevision"];
+
+  return [downloadStorageRevision intValue];
+}
+
+- (void)setDownloadStorageRevision:(NSInteger)revision
+{
+  [_miscPlist setObject:[NSNumber numberWithInteger:revision] forKey:@"downloadStorageRevision"];
+
+  [self saveMiscPlist];
 }
 
 - (NSMutableArray*)loadCachedDownloads
