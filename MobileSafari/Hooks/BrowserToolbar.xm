@@ -21,6 +21,10 @@
 #import "../Shared.h"
 #import "libcolorpicker.h"
 
+@interface BrowserToolbar (FullSafari)
+@property (nonatomic, retain) UIBarButtonItem *addTabItemManual;
+@end
+
 %hook BrowserToolbar
 
 //Property for downloads button
@@ -119,23 +123,33 @@
             orig[4], flexibleSpace, orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
             flexibleSpace, orig[13]] mutableCopy];
 
-          //Add FullSafari button to final array
-          //Code from https://github.com/Bensge/FullSafari/blob/master/Tweak.xm
-          GestureRecognizingBarButtonItem *addTabItem =
-            MSHookIvar<GestureRecognizingBarButtonItem *>(self, "_addTabItem");
-
-          if(!addTabItem || ![orig containsObject:addTabItem])
+          if(iOSVersion >= 11.2)
           {
-            if(!addTabItem)
+            if([self respondsToSelector:@selector(addTabItemManual)])
             {
-              addTabItem = [[%c(GestureRecognizingBarButtonItem) alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:self.browserDelegate action:@selector(addTabFromButtonBar)];
-              UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
-              recognizer.allowableMovement = 3.0;
-              addTabItem.gestureRecognizer = recognizer;
+              [orig addObject:flexibleSpace];
+              [orig addObject:self.addTabItemManual];
             }
+          }
+          else
+          {
+            //Add FullSafari button to final array
+            //Code from https://github.com/Bensge/FullSafari/blob/master/Tweak.xm
+            GestureRecognizingBarButtonItem *addTabItem =
+              MSHookIvar<GestureRecognizingBarButtonItem *>(self, "_addTabItem");
 
-            [orig addObject:flexibleSpace];
-            [orig addObject:addTabItem];
+            if(!addTabItem || ![orig containsObject:addTabItem])
+            {
+              if(!addTabItem)
+              {
+                addTabItem = [[%c(GestureRecognizingBarButtonItem) alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:self.browserDelegate action:@selector(addTabFromButtonBar)];
+                UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
+                recognizer.allowableMovement = 3.0;
+                addTabItem.gestureRecognizer = recognizer;
+              }
+              [orig addObject:flexibleSpace];
+              [orig addObject:addTabItem];
+            }
           }
         }
         else
