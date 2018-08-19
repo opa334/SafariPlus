@@ -22,6 +22,8 @@
 
 #define DEGREES_TO_RADIANS(degrees)((M_PI * degrees)/180)
 
+#define IS_PAD_OVER_8 (IS_PAD && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+
 @interface UIWindow ()
 - (BOOL)_canAffectStatusBarAppearance;
 - (NSInteger)interfaceOrientation;
@@ -78,7 +80,7 @@
   CGFloat c = self.transform.c;
 
   //Normal
-  if(c == 0 || IS_PAD) //Yes, apparently iPads auto adjust to the orientation (Why???)
+  if(c == 0 || IS_PAD_OVER_8) //Yes, apparently iPads auto adjust to the orientation on iOS 9 and above (Why???)
   {
     if(_isPresented)
     {
@@ -145,7 +147,7 @@
   _currentDeviceOrientation = newOrientation;
 
   //Fuck apple for handling everything different on iPads???
-  if(prevOrientation && !IS_PAD)
+  if(prevOrientation && !IS_PAD_OVER_8)
   {
     int degrees = [UIView _degreesToRotateFromInterfaceOrientation:prevOrientation toInterfaceOrientation:newOrientation];
     self.transform = CGAffineTransformRotate(self.transform, DEGREES_TO_RADIANS(degrees));
