@@ -45,10 +45,11 @@
 %new
 - (void)loadDesktopButtonState
 {
+  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+
   //Load state of desktop button
-  if(iOSVersion >= 10)
+  if([browserController respondsToSelector:@selector(UUID)])
   {
-    BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
     self.desktopButtonSelected = [cacheManager desktopButtonStateForUUID:browserController.UUID];
   }
   else
@@ -60,7 +61,7 @@
 %new
 - (void)saveDesktopButtonState
 {
-  if(iOSVersion >= 10)
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
   {
     //Save state for browserController UUID
     BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
@@ -204,7 +205,7 @@
 
       if(!tabDocument.isHibernated)
       {
-        if(iOSVersion >= 11.3)
+        if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
         {
           [tabDocument _loadURLInternal:[tabDocument URL] userDriven:NO];
         }

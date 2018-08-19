@@ -16,7 +16,7 @@
 
 #if defined(SIMJECT)
 #define SPBundlePath [NSString stringWithFormat:@"%@/layout/Library/Application Support/SafariPlus.bundle", [CUR_DIR stringByDeletingLastPathComponent]]
-#define defaultDownloadPath [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", USER];
+#define defaultDownloadPath [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", USER]
 #else
 #define SPBundlePath @"/Library/Application Support/SafariPlus.bundle"
 #define oldDownloadPath [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
@@ -29,7 +29,7 @@
 #define SPCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari Plus"]
 #define SPDeprecatedCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
 #define IS_PAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
-#define currentDownloadStorageRevision 2
+#define currentDownloadStorageRevision 3
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0
 #define kCFCoreFoundationVersionNumber_iOS_9_0 1223.1
@@ -45,6 +45,10 @@
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_11_0
 #define kCFCoreFoundationVersionNumber_iOS_11_0 1443.00
+#endif
+
+#ifndef kCFCoreFoundationVersionNumber_iOS_11_2
+#define kCFCoreFoundationVersionNumber_iOS_11_2 1450.14
 #endif
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_11_3

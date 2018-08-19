@@ -47,10 +47,14 @@
 /* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Enhanced Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Adds a downloads button to the bottom toolbar that opens a view where you can see the pending and already finished downloads. Makes an alert appear before a download starts that contains options to save the file to a local directory (/var/mobile/Downloads by default). Downloads will continue in background and you will be notified when a download finishes.\n\nNOTES:\n1) It is only possible to download 3 files at the same time, but anything above that will get processed once another pending download finishes.\n2) When Safari is closed from the app switcher, all pending downloads will be 'frozen', they will continue on the next start of Safari.\n3) If you encounter any issues, you can long press the navigation bar of the downloads menu for 5 seconds to cancel all downloads and clear all temporary files.";
+"ENHANCED_DOWNLOADS_FOOTER" = "Adds a button to the bottom toolbar which will open the downloads view. In there you can see and manage pending and already finished downloads. The file browser can be used to access and manage downloaded files. Before a download starts, an alert will appear that contains options to save the file to a local directory (/var/mobile/Downloads by default). Downloads will continue in background and you will be notified when a download finishes. When Safari is closed from the app switcher, all pending downloads will be 'frozen' and will continue on the next start of Safari.";
 
 "VIDEO_DOWNLOADING" = "Video Downloading";
 "VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save these files, but they do not contain any video.";
+
+"DEFAULT_SECTION" = "Default Section";
+"DEFAULT_SECTION_FOOTER" = "Choose the selected section of the download menu when it gets opened. The 'Auto Switch' option will only choose the selected section if there are still active downloads left, otherwise the other section will get selected.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Auto Switch";
 
 "LINK_DOWNLOAD_OPTIONS_FOOTER" = "Adds options to download a site / an image to the menu that appears when long pressing site elements.";
 "DOWNLOAD_SITE_TO_OPTION" = "'Download Site to...' Option";
@@ -199,6 +203,8 @@
 "WELCOME_TITLE" = "Welcome!";
 "WELCOME_MESSAGE" = "Thanks for installing Safari Plus! If you wish to stay updated about the future of this tweak, make sure to follow me on Twitter! This message will not show again (I promise)!";
 "OPEN_TWITTER" = "Open Twitter";
+"COMMUNICATION_ERROR" = "Communication Error";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro.";
 
 /* File picker */
 
@@ -212,14 +218,29 @@
 "DOWNLOAD_TO" = "Download to...";
 "DOWNLOAD_SITE_TO" = "Download Site to...";
 "DOWNLOAD_IMAGE_TO" = "Download Image to...";
+"DOWNLOAD_OVERVIEW" = "Download Overview";
+"DOWNLOADS" = "Downloads";
+"FILE_BROWSER" = "File Browser";
 "OPEN" = "Open";
 "OPEN_IN" = "Open in...";
+"IMPORT_TO_MUSIC_LIBRARY" = "Import to Music Library";
+"SAVE_TO_MEDIA_LIBRARY" = "Save to Media Library";
+"CLEAR" = "Clear";
+"CANCEL_ALL_DOWNLOADS" = "Cancel All Downloads";
+"CLEAR_DOWNLOAD_HISTORY" = "Clear Download History";
+"CLEAR_EVERYTHING" = "Clear Everything";
+"CLEAR_EVERYTHING_WARNING" = "Are you sure you want to cancel all downloads and clear the download history and all temporary files?";
+"CREATE_DIRECTORY" = "Create Directory";
+"DIRECTORY_NAME" = "Directory Name";
+"CREATE" = "Create";
 "SHOW_IN_FILZA" = "Show in Filza";
 "DELETE_FILE" = "Delete File";
+"DELETE_DIRECTORY" = "Delete Directory";
 "RENAME_FILE" = "Rename File";
+"RENAME_DIRECTORY" = "Rename Directory";
 "WARNING" = "Warning!";
 "DELETE_FILE_MESSAGE" = "Are you sure you want to permanently delete the file %@? Recovering it later is not possible!";
-"CLEAR_EVERYTHING_WARNING" = "Are you sure you want to cancel all downloads and clear all temporary files?";
+"DELETE_DIRECTORY_MESSAGE" = "Are you sure you want to permanently delete the directory %@ and it's contents? Recovering it later is not possible!";
 "DELETE" = "Delete";
 "RENAME" = "Rename";
 "DOWNLOAD_STARTED" = "Download started";
@@ -231,6 +252,7 @@
 "REPLACE_FILE" = "Replace File";
 "CHANGE_PATH" = "Change Download Path";
 "PENDING_DOWNLOADS" = "Pending Downloads";
+"DOWNLOAD_HISTORY" = "Download History";
 "FILES" = "Files";
 "CHOOSE" = "Choose";
 "START_DOWNLOAD" = "Start Download";

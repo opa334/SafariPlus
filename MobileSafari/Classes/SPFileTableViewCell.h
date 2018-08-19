@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@interface SPFileTableViewCell : UITableViewCell {}
-- (instancetype)initWithFilePath:(NSString*)filePath;
+@class SPFile;
+
+@interface SPFileTableViewCell : UITableViewCell
+- (void)applyFile:(SPFile*)file;
 @end

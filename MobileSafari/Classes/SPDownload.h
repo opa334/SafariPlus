@@ -24,7 +24,7 @@
 @property (nonatomic) UIImage* image;
 @property (nonatomic) int64_t filesize;
 @property (nonatomic) NSString* filename;
-@property (nonatomic) NSString* targetPath;
+@property (nonatomic) NSURL* targetURL;
 @property (nonatomic) BOOL paused;
 @property (nonatomic) NSTimeInterval lastSpeedRefreshTime;
 @property (nonatomic) NSTimer* speedTimer;
@@ -36,15 +36,20 @@
 @property (nonatomic) NSUInteger taskIdentifier;
 @property (nonatomic) NSURLSessionDownloadTask* downloadTask;
 
+@property (nonatomic) BOOL didFinish;
+@property (nonatomic) BOOL wasCancelled;
+
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
-@property (nonatomic, weak) id<DownloadCellDelegate> cellDelegate;
+@property (nonatomic, weak) id<DownloadCellDelegate> browserCellDelegate;
+@property (nonatomic, weak) id<DownloadCellDelegate> listCellDelegate;
 
 - (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
 - (void)startDownload;
-- (void)startDownloadFromResumeData;
+- (void)parseResumeData;
 - (void)setPaused:(BOOL)paused;
 - (void)cancelDownload;
+- (void)setPaused:(BOOL)paused forced:(BOOL)forced;
 
 - (void)setTimerEnabled:(BOOL)enabled;
 - (void)updateDownloadSpeed;

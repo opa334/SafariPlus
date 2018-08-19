@@ -66,7 +66,7 @@
       NSInteger placement = MSHookIvar<NSInteger>(self, "_placement");
 
       //Landscape on newer devices, portrait + landscape on iOS 8 iPads
-      if(placement == 0 || (IS_PAD && iOSVersion <= 8))
+      if(placement == 0 || (IS_PAD && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0))
       {
         //iPads
         if(IS_PAD)
@@ -105,7 +105,7 @@
 
         BOOL tabBarTweakActive = NO;
 
-        if(iOSVersion >= 10)
+        if([browserController respondsToSelector:@selector(_shouldShowTabBar)])
         {
           tabBarTweakActive = [browserController _shouldShowTabBar] && [browserControllers() count] <= 1;
         }
@@ -123,7 +123,7 @@
             orig[4], flexibleSpace, orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
             flexibleSpace, orig[13]] mutableCopy];
 
-          if(iOSVersion >= 11.2)
+          if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_2)
           {
             if([self respondsToSelector:@selector(addTabItemManual)])
             {
@@ -135,8 +135,7 @@
           {
             //Add FullSafari button to final array
             //Code from https://github.com/Bensge/FullSafari/blob/master/Tweak.xm
-            GestureRecognizingBarButtonItem *addTabItem =
-              MSHookIvar<GestureRecognizingBarButtonItem *>(self, "_addTabItem");
+            GestureRecognizingBarButtonItem *addTabItem = [self valueForKey:@"_addTabItem"];
 
             if(!addTabItem || ![orig containsObject:addTabItem])
             {

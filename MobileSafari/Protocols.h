@@ -22,13 +22,17 @@
 
 @protocol DownloadNavigationControllerDelegate
 @required
-- (void)reloadTopTableView;
+- (void)reloadBrowser;
+- (void)reloadDownloadList;
+- (void)reloadEverything;
 @end
 
 @protocol DownloadCellDelegate
 @required
+@property(nonatomic) BOOL paused;
 - (void)updateDownloadSpeed:(int64_t)bytesPerSecond;
 - (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated;
+- (void)setFilesize:(int64_t)filesize;
 @end
 
 @protocol DownloadManagerDelegate
@@ -44,5 +48,7 @@
 @required
 - (void)setPaused:(BOOL)paused;
 - (void)cancelDownload;
-- (void)setCellDelegate:(id<DownloadCellDelegate>)cellDelegate;
+@optional
+- (void)setBrowserCellDelegate:(id<DownloadCellDelegate>)cellDelegate;
+- (void)setListCellDelegate:(id<DownloadCellDelegate>)listDelegate;
 @end

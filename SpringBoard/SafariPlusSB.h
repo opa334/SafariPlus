@@ -19,7 +19,58 @@
 #endif
 #import <AppSupport/CPDistributedMessagingCenter.h>
 
+@class SSDownload, SSDownloadMetadata, SSDownloadQueue;
+
 @interface JBBulletinManager : NSObject
 + (id)sharedInstance;
 - (id)showBulletinWithTitle:(NSString *)title message:(NSString *)message bundleID:(NSString *)bundleID;
+@end
+
+@interface SBApplicationInfo : NSObject
+@property (nonatomic,retain,readonly) NSURL* executableURL;
+@property (nonatomic,retain,readonly) NSURL* bundleContainerURL;
+@property (nonatomic,retain,readonly) NSURL* dataContainerURL;
+@property (nonatomic,retain,readonly) NSURL* sandboxURL;
+@property (nonatomic,copy,readonly) NSString* displayName;
+@end
+
+@interface SBApplication : NSObject
+@property (nonatomic, readonly) SBApplicationInfo* info; //iOS 11 and above
+- (SBApplicationInfo*)_appInfo; //iOS 10 and below
+@end
+
+@interface SBApplicationController : NSObject
++ (instancetype)sharedInstance;
+- (NSArray<SBApplication*>*)allApplications;
+@end
+
+@interface SSDownload : NSObject
+@property (nonatomic,copy) SSDownloadMetadata* metadata;
+- (instancetype)initWithDownloadMetadata:(SSDownloadMetadata*)downloadMetadata;
+- (void)setDownloadHandler:(id)arg1 completionBlock:(/*^block*/id)arg2;
+@end
+
+@interface SSDownloadMetadata : NSObject
+@property (retain) NSString* kind;
+@property (retain) NSURL* primaryAssetURL;
+@property (copy) NSString* artistName;
+@property (retain) NSURL* thumbnailImageURL;
+@property (retain) NSString* title;
+@property (copy) NSString* shortDescription;
+@property (copy) NSString* longDescription;
+@property (retain) NSString* genre;
+@property (retain) NSDate* releaseDate;
+@property (retain) NSNumber* releaseYear;
+@property (retain) NSString* copyright;
+- (void)setCollectionName:(NSString*)collectionName;
+- (void)setDurationInMilliseconds:(NSNumber*)durationInMilliseconds;
+- (void)setPurchaseDate:(NSDate*)purchaseDate;
+- (void)setViewStoreItemURL:(NSURL*)itemURL;
+@end
+
+@interface SSDownloadQueue : NSObject
+@property (readonly) NSSet* downloadKinds;
++ (NSSet*)mediaDownloadKinds;
+- (instancetype)initWithDownloadKinds:(NSSet*)downloadKinds;
+- (BOOL)addDownload:(SSDownload*)download;
 @end

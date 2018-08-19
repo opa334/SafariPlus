@@ -18,7 +18,6 @@
 
 extern BOOL showAlert;
 extern BOOL iPhoneX;
-extern CGFloat iOSVersion;
 extern SPFileManager* fileManager;
 extern SPPreferenceManager* preferenceManager;
 extern SPLocalizationManager* localizationManager;
@@ -35,6 +34,8 @@ extern NSArray<SafariWebView*>* activeWebViews();
 extern BrowserController* browserControllerForTabDocument(TabDocument* document);
 extern BrowserRootViewController* rootViewControllerForBrowserController(BrowserController* controller);
 extern BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document);
+extern void addToDict(NSMutableDictionary* dict, NSObject* object, NSString* key);
+extern void sendSimpleAlert(NSString* title, NSString* message);
 extern void loadOtherPlist();
 extern void saveOtherPlist();
 
@@ -48,4 +49,17 @@ extern void saveOtherPlist();
 
 @interface NSString (Strip)
 - (NSString*)stringStrippedByStrings:(NSArray<NSString*>*)strings;
+@end
+
+@interface NSString (UUID)
+- (BOOL)isUUID;
+@end
+
+//http://commandshift.co.uk/blog/2013/01/31/visual-format-language-for-autolayout/
+@interface UIView (Autolayout)
++ (id)autolayoutView;
+@end
+
+@interface UITableViewController (FooterFix)
+- (void)fixFooterColors;
 @end

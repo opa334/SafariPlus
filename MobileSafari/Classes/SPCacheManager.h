@@ -32,8 +32,8 @@
 
 - (NSInteger)downloadStorageRevision;
 - (void)setDownloadStorageRevision:(NSInteger)revision;
-- (NSMutableArray*)loadCachedDownloads;
-- (void)saveCachedDownloads:(NSMutableArray*)cachedDownloads;
+- (NSDictionary*)loadDownloadCache;
+- (void)saveDownloadCache:(NSDictionary*)downloadCache;
 - (void)clearDownloadCache;
 
 - (void)loadDesktopButtonStates;

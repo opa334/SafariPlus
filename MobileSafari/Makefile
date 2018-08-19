@@ -4,9 +4,7 @@ TWEAK_NAME = SafariPlus
 SafariPlus_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
 SafariPlus_FILES = SafariPlus.xm
 SafariPlus_FILES += $(wildcard Hooks/*.xm)
-SafariPlus_FILES += $(wildcard Classes/*.xm)
-SafariPlus_FILES += $(wildcard Classes/*.m)
-SafariPlus_FILES += $(wildcard Lib/*.m)
+SafariPlus_FILES += $(wildcard Classes/*.mm)
 
 ifeq ($(SIMJECT),1)
 	dir_string := @"\"$(CURDIR)\""

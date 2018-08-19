@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class CPDistributedMessagingCenter;
+@class CPDistributedMessagingCenter, SPMusicImport;
 
 @interface SPCommunicationManager : NSObject
 {
@@ -22,7 +22,10 @@
 }
 
 + (instancetype)sharedInstance;
+- (BOOL)testConnection;
 - (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message;
-- (id)executeFileOperationOnSpringBoard:(NSDictionary*)operation;
+- (NSDictionary*)executeFileOperationOnSpringBoard:(NSDictionary*)operation;
+//- (void)importMusic:(SPMusicImport*)musicImport;
+- (NSString*)applicationDisplayNameForURL:(NSURL*)URL;
 
 @end

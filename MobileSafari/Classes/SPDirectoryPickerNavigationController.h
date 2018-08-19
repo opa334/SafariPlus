@@ -18,7 +18,7 @@
 
 @class SPDownloadInfo;
 
-@interface SPDirectoryPickerNavigationController : SPFileBrowserNavigationController {}
+@interface SPDirectoryPickerNavigationController : SPFileBrowserNavigationController
 @property (nonatomic) SPDownloadInfo* downloadInfo;
-- (id)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 @end

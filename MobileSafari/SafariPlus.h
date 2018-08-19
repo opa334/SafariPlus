@@ -43,6 +43,19 @@
 - (UIImage*)_flatImageWithColor:(UIColor*)color;
 @end
 
+@interface _UINavigationControllerPalette : UIView
+- (BOOL)isAttached;
+@end
+
+@interface UINavigationController(Private)
+- (id)paletteForEdge:(NSUInteger)arg1 size:(CGSize)arg2;
+- (void)attachPalette:(id)arg1 isPinned:(BOOL)arg2;
+@end
+
+@interface UISegmentedControl(Private)
++ (double)defaultHeightForStyle:(NSInteger)arg1 size:(int)arg2;
+@end
+
 /**** WebKit ****/
 
 @interface WKNavigationAction ()
@@ -243,8 +256,9 @@
 @property (nonatomic,readonly) ApplicationShortcutController* shortcutController;
 @property (nonatomic,readonly) NSArray* browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
-- (void)handleTwitterAlert;
 //new stuff below
+- (void)handleTwitterAlert;
+- (void)handleSBConnectionTest;
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
 @end
 
@@ -273,6 +287,7 @@
 - (void)clearAutoFillMessageReceived;
 - (BOOL)_shouldShowTabBar;
 - (void)updateUsesTabBar;
+- (void)setFavoritesState:(int)arg1 animated:(BOOL)arg2;
 - (BOOL)isPrivateBrowsingEnabled; //iOS11
 - (void)togglePrivateBrowsingEnabled; //iOS11
 - (void)showFindOnPage; //iOS9

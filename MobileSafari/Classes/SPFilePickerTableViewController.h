@@ -16,8 +16,7 @@
 
 #import "SPFileBrowserTableViewController.h"
 
-@interface SPFilePickerTableViewController : SPFileBrowserTableViewController {}
-- (void)tableWasLongPressed:(UILongPressGestureRecognizer *)gestureRecognizer;
+@interface SPFilePickerTableViewController : SPFileBrowserTableViewController
 - (void)toggleEditing;
 - (void)uploadSelectedItems;
 - (void)updateTopRightButtonAvailability;

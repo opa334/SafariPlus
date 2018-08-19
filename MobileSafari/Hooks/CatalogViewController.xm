@@ -18,6 +18,7 @@
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Shared.h"
+#import "../Defines.h"
 
 //Long press on Search / Site suggestions
 %hook CatalogViewController
@@ -60,7 +61,7 @@
     CompletionListTableViewController* completionTableController;
 
     //Get tableViewController for suggestions
-    if(iOSVersion >= 11.3)
+    if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
     {
       completionTableController = MSHookIvar<CompletionListTableViewController*>(self, "_completionsViewController");
     }

@@ -20,7 +20,7 @@
 #import "../Enums.h"
 #import "../Shared.h"
 #import "../Classes/SPPreferenceManager.h"
-#import "../Classes/SPDownloadsNavigationController.h"
+#import "../Classes/SPDownloadNavigationController.h"
 
 %hook BrowserController
 
@@ -33,11 +33,11 @@
 %new
 - (void)downloadsFromButtonBar
 {
-  //Create SPDownloadsNavigationController
-  SPDownloadsNavigationController* downloadsController =
-    [[SPDownloadsNavigationController alloc] init];
+  //Create SPDownloadNavigationController
+  SPDownloadNavigationController* downloadsController =
+    [[SPDownloadNavigationController alloc] init];
 
-  //Present SPDownloadsNavigationController
+  //Present SPDownloadNavigationController
   [rootViewControllerForBrowserController(self) presentViewController:downloadsController
     animated:YES completion:nil];
 }
@@ -58,7 +58,7 @@
 
     case GestureActionOpenNewTab:
     {
-      if(iOSVersion >= 9)
+      if([self.tabController respondsToSelector:@selector(newTab)])
       {
         [self.tabController newTab];
       }
@@ -71,12 +71,12 @@
 
     case GestureActionDuplicateActiveTab:
     {
-      if(iOSVersion >= 10)
+      if([self respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
       {
         [self loadURLInNewTab:[self.tabController.activeTabDocument URL]
           inBackground:preferenceManager.gestureBackground animated:YES];
       }
-      else //iOS 8, 9
+      else
       {
         [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
           inBackground:preferenceManager.gestureBackground animated:YES];
@@ -161,7 +161,7 @@
 
     case GestureActionRequestDesktopSite:
     {
-      if(iOSVersion > 8)
+      if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
       {
         [self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
       }
@@ -172,21 +172,18 @@
       break;
     }
 
+    //Not available on iOS 8
     case GestureActionOpenFindOnPage:
     {
-      //Not available on iOS 8
-      if(iOSVersion != 8)
+      if([self.tabController.activeTabDocument respondsToSelector:@selector(findOnPageView)])
       {
-        if(iOSVersion >= 10)
-        {
-          [self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
-          [self.tabController.activeTabDocument.findOnPageView showFindOnPage];
-        }
-        else //iOS 9
-        {
-          self.shouldFocusFindOnPageTextField = YES;
-          [self showFindOnPage];
-        }
+        [self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
+        [self.tabController.activeTabDocument.findOnPageView showFindOnPage];
+      }
+      else if([self respondsToSelector:@selector(shouldFocusFindOnPageTextField)])
+      {
+        self.shouldFocusFindOnPageTextField = YES;
+        [self showFindOnPage];
       }
       break;
     }
@@ -197,7 +194,7 @@
   if(shouldClean && privateBrowsingEnabled(self))
   {
     //Remove private mode message
-    if(iOSVersion >= 11)
+    if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView:animated:)])
     {
       [self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
         animated:NO];
@@ -303,7 +300,7 @@
     togglePrivateBrowsing(self);
 
     //Hide private mode notice
-    if(iOSVersion >= 11)
+    if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView::)])
     {
       [self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
         animated:NO];

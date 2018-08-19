@@ -526,13 +526,13 @@
     NSInteger placement = MSHookIvar<NSInteger>(self, "_placement");
 
     BOOL privateMode;
-    if(iOSVersion >= 10.3)
+    if([self respondsToSelector:@selector(hasDarkBackground)])
     {
-      privateMode = MSHookIvar<BOOL>(self, "_usesDarkTheme");
+      privateMode = self.hasDarkBackground;
     }
     else
     {
-      privateMode = self.hasDarkBackground;
+      privateMode = MSHookIvar<BOOL>(self, "_usesDarkTheme");
     }
 
     if(placement == 0)

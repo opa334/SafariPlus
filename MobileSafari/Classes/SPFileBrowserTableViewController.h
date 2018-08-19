@@ -14,18 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@interface SPFileBrowserTableViewController : UITableViewController
-{
-  NSArray<NSURL*>* _filesAtCurrentPath;
-}
+@class SPFile;
 
-@property (nonatomic, readonly) NSString* currentPath;
-- (UIBarButtonItem*)defaultRightBarButtonItem;
-- (id)initWithPath:(NSString*)path;
-- (void)selectedFileAtPath:(NSString*)filePath type:(NSInteger)type atIndexPath:(NSIndexPath*)indexPath;
-- (id)newCellWithFilePath:(NSString*)filePath;
-- (void)reloadDataAndDataSources;
-- (void)populateDataSources;
-- (void)pulledToRefresh;
+@interface SPFileBrowserTableViewController : UITableViewController
+
+@property(nonatomic) NSURL* directoryURL;
+@property(nonatomic) NSArray<SPFile*>* filesAtCurrentURL;
+@property(nonatomic) UILongPressGestureRecognizer* longPressRecognizer;
+
+- (instancetype)initWithDirectoryURL:(NSURL*)directoryURL;
+- (BOOL)loadContents;
+- (void)reload;
+- (void)setUpRightBarButtonItems;
 - (void)dismiss;
+- (void)didLongPressTable:(UILongPressGestureRecognizer*)gestureRecognizer;
+- (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath;
+- (void)didLongPressFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath;
+
 @end

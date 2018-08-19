@@ -14,16 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#ifdef SIMJECT
+typedef NSString *NSURLResourceKey;
+typedef NSString *NSFileAttributeKey;
+#endif
+
 @interface SPFileManager : NSFileManager
 {
-	NSString* _hardLinkPath;
+	NSURL* _hardLinkURL;
+	UIImage* _fileIcon;
+	UIImage* _directoryIcon;
 }
 
 @property(nonatomic) BOOL isSandboxed;
 
 + (instancetype)sharedInstance;
+#ifndef PREFERENCES
 - (void)resetHardLinks;
-- (NSString*)createHardLinkForFileAtPath:(NSString*)path onlyIfNeeded:(BOOL)needed;
+- (NSURL*)createHardLinkForFileAtURL:(NSURL*)url onlyIfNeeded:(BOOL)needed;
+- (BOOL)isSandboxedPath:(NSString*)path;
+- (BOOL)isSandboxedURL:(NSURL*)url;
+#endif
+- (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error;
+- (BOOL)isDirectoryAtURL:(NSURL*)url error:(NSError**)error;
+- (BOOL)URLResourceValue:(id*)value forKey:(NSURLResourceKey)key forURL:(NSURL*)url error:(NSError**)error;
 - (NSString*)resolveSymlinkForPath:(NSString*)path;
+- (NSURL*)resolveSymlinkForURL:(NSURL*)url;
+- (UIImage*)fileIcon;
+- (UIImage*)directoryIcon;
 
 @end

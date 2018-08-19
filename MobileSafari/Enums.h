@@ -74,8 +74,12 @@ enum
 	FileOperation_LinkItem,
 	FileOperation_LinkItem_URL,
 	FileOperation_FileExists,
-	FileOperation_FileExists_isDirectory,
+  FileOperation_FileExists_URL,
+	FileOperation_FileExists_IsDirectory,
+  FileOperation_IsDirectory_URL,
 	FileOperation_Attributes,
+  FileOperation_ResourceValue_URL,
   FileOperation_IsWritable,
-  FileOperation_ResolveSymlinks
+  FileOperation_ResolveSymlinks,
+  FileOperation_ResolveSymlinks_URL
 };

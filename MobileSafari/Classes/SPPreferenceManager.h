@@ -42,6 +42,8 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 @property(nonatomic, readonly) BOOL enhancedDownloadsEnabled;
 @property(nonatomic, readonly) BOOL videoDownloadingEnabled;
+@property(nonatomic, readonly) NSInteger defaultDownloadSection;
+@property(nonatomic, readonly) BOOL defaultDownloadSectionAutoSwitchEnabled;
 @property(nonatomic, readonly) BOOL downloadSiteToActionEnabled;
 @property(nonatomic, readonly) BOOL downloadImageToActionEnabled;
 @property(nonatomic, readonly) BOOL instantDownloadsEnabled;

@@ -16,25 +16,37 @@
 
 #import "../Protocols.h"
 
-@class CPDistributedMessagingCenter, SPStatusBarNotificationWindow;
+@class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload;
 
 @interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, DownloadManagerDelegate>
-@property (nonatomic) NSMutableArray* pendingDownloads;
+@property (nonatomic) NSMutableArray<SPDownload*>* pendingDownloads;
+@property (nonatomic) NSMutableArray<SPDownload*>* finishedDownloads;
 @property (nonatomic) SPStatusBarNotificationWindow* notificationWindow;
 @property (nonatomic) NSURLSession* downloadSession;
 @property (nonatomic) NSInteger errorCount;
 @property (nonatomic) NSInteger processedErrorCount;
+@property (nonatomic) NSURL* defaultDownloadURL;
+@property (copy) void (^applicationBackgroundSessionCompletionHandler)();
 
 @property (nonatomic, weak) id<DownloadNavigationControllerDelegate> navigationControllerDelegate;
 
 + (instancetype)sharedInstance;
 
+- (void)setUpDefaultDownloadURL;
+- (BOOL)createDownloadDirectoryIfNeeded;
+- (void)migrateFromSandbox;
+
 - (void)verifyDownloadStorageRevision;
 - (void)configureSession;
 - (void)clearTempFiles;
 - (void)cancelAllDownloads;
+- (void)clearDownloadHistory;
 - (void)resumeDownloadsFromDiskLoad;
 - (void)forceCancelDownload:(SPDownload*)download;
+
+- (void)downloadFinished:(SPDownload*)download;
+- (void)removeDownloadFromHistory:(SPDownload*)download;
+- (void)removeTemporaryFileForResumeData:(NSData*)resumeData;
 
 - (void)loadDownloadsFromDisk;
 - (void)saveDownloadsToDisk;
@@ -47,8 +59,8 @@
 - (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
 - (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier;
-- (NSMutableArray*)downloadsAtPath:(NSString*)path;
-- (BOOL)downloadExistsAtPath:(NSString*)path;
+- (NSMutableArray*)downloadsAtURL:(NSURL*)url;
+- (BOOL)downloadExistsAtURL:(NSURL*)url;
 
 - (void)configureDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo;

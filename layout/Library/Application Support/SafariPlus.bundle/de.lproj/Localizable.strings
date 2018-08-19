@@ -47,10 +47,14 @@
 /* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Downloads Button zur unteren Leiste hinzu, welcher eine Ansicht öffnet, in der man die ausstehenden und die bereits fertiggestellten Downloads einsehen kann. Zusätzlich wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /var/mobile/Downloads/, innerhalb des Sandbox-Containers bei Electra). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde.\n\nHINWEISE:\n1.) Es sind nur 3 Downloads parallel möglich, alle weiteren Downloads werden allerdings nacheinander abgearbeitet, sobald ein ausstehender Download fertiggestellt wird.\n2.) Beim Schließen von Safari im App Switcher werden alle austehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.\n3) Falls Probleme auftreten, ist es möglich die obere Leiste des Download Menüs für 5 Sekunden zu berühren, um alle Downloads zu beenden und die temporären Dateien zu bereinigen.";
+"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Button zur unteren Leiste hinzu, welcher die Download Ansicht öffnet. In dieser lassen sich ausstehende und bereits fertiggestellte Downloads einsehen und verwalten. Über den Dateibrowser lassen sich die Dateien verwalten. Außerdem wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /var/mobile/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde. Wenn Safari über den App Switcher geschlossen wird, werden alle ausstehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.";
 
 "VIDEO_DOWNLOADING" = "Video Downloads";
 "VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\n\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
+
+"DEFAULT_SECTION" = "Standardsektion";
+"DEFAULT_SECTION_FOOTER" = "Wähle die standardmäßig beim Öffnen des Download-Menüs ausgewählte Sektion aus. Die 'Automatisches Wechseln' Option wählt die angegebene Sektion nur dann aus, wenn noch aktive Downloads existieren, andernfalls wird die jeweils andere Sektion ausgewählt.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Automatisches Wechseln";
 
 "LINK_DOWNLOAD_OPTIONS_FOOTER" = "Fügt Optionen zum Herunterladen einer Seite / eines Bildes zum Menü hinzu, welches beim langen gedrückt halten eines Seitenelements erscheint.";
 "DOWNLOAD_SITE_TO_OPTION" = "'Seite herunterladen nach ...' Option";
@@ -199,6 +203,8 @@
 "WELCOME_TITLE" = "Willkommen!";
 "WELCOME_MESSAGE" = "Danke für das Installieren von Safari Plus! Wenn du über die Zukunft des Tweaks auf dem laufenden bleiben willst, folge mir doch auf Twitter! Diese Nachricht wird nie wieder angezeigt, versprochen!";
 "OPEN_TWITTER" = "Öffne Twitter";
+"COMMUNICATION_ERROR" = "Kommunikationsfehler";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde.";
 
 /* File picker */
 
@@ -212,14 +218,29 @@
 "DOWNLOAD_TO" = "Herunterladen nach ...";
 "DOWNLOAD_SITE_TO" = "Seite herunterladen nach ...";
 "DOWNLOAD_IMAGE_TO" = "Bild herunterladen nach ...";
+"DOWNLOAD_OVERVIEW" = "Download Übersicht";
+"DOWNLOADS" = "Downloads";
+"FILE_BROWSER" = "Dateibrowser";
 "OPEN" = "Öffnen";
 "OPEN_IN" = "Öffnen in ...";
+"IMPORT_TO_MUSIC_LIBRARY" = "Import in die Musikbibliothek";
+"SAVE_TO_MEDIA_LIBRARY" = "In die Mediathek speichern";
+"CLEAR" = "Leeren";
+"CANCEL_ALL_DOWNLOADS" = "Alle Downloads abbrechen";
+"CLEAR_DOWNLOAD_HISTORY" = "Download Verlauf leeren";
+"CLEAR_EVERYTHING" = "Alles bereinigen";
+"CLEAR_EVERYTHING_WARNING" = "Sollen alle Downloads abgebrochen, der Download Verlauf geleert und die temporären Dateien bereinigt werden?";
+"CREATE_DIRECTORY" = "Ordner erstellen";
+"DIRECTORY_NAME" = "Ordnername";
+"CREATE" = "Erstellen";
 "SHOW_IN_FILZA" = "In Filza anzeigen";
 "DELETE_FILE" = "Datei löschen";
+"DELETE_DIRECTORY" = "Ordner löschen";
 "RENAME_FILE" = "Datei umbenennen";
+"RENAME_DIRECTORY" = "Ordner umbenennen";
 "WARNING" = "Warnung!";
 "DELETE_FILE_MESSAGE" = "Soll die Datei %@ wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
-"CLEAR_EVERYTHING_WARNING" = "Sollen alle Downloads abgebrochen und die temporären Dateien bereinigt werden?";
+"DELETE_DIRECTORY_MESSAGE" = "Soll der Ordner %@ und dessen Inhalt wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
 "DELETE" = "Löschen";
 "DOWNLOAD_STARTED" = "Download gestartet";
 "RENAME" = "Umbenennen";
@@ -231,6 +252,7 @@
 "REPLACE_FILE" = "Datei ersetzen";
 "CHANGE_PATH" = "Download-Pfad ändern";
 "PENDING_DOWNLOADS" = "Ausstehende Downloads";
+"DOWNLOAD_HISTORY" = "Download Verlauf";
 "FILES" = "Dateien";
 "CHOOSE" = "Auswählen";
 "START_DOWNLOAD" = "Download starten";

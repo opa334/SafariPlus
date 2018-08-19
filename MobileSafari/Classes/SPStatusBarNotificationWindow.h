@@ -34,7 +34,7 @@
 
 @property (nonatomic) UIInterfaceOrientation currentDeviceOrientation;
 
-- (void)updateFramesForOrientation:(UIInterfaceOrientation)orientation;
+- (void)updateFramesForTransform;
 - (void)orientationDidChange;
 
 - (void)dispatchNotification:(SPStatusBarNotification*)notification;

@@ -14,10 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@interface SPFileBrowserNavigationController : UINavigationController {}
-@property (nonatomic) NSString* startPath;
-@property (nonatomic) BOOL loadPreviousPathElements;
-- (id)newTableViewControllerWithPath:(NSString*)path;
-- (void)reloadTopTableView;
-- (void)reloadAllTableViews;
+@interface SPFileBrowserNavigationController : UINavigationController
+@property(nonatomic) BOOL loadParentDirectories;
+@property(nonatomic) NSURL* startURL;
+
+- (void)setUpTableViewControllers;
+- (NSArray*)tableViewControllersForDirectory:(NSURL*)directoryURL recursive:(BOOL)recursive;
+
+- (void)reloadBrowser;
+- (void)reloadEverything;
+
+- (Class)tableControllerClass;
+
 @end

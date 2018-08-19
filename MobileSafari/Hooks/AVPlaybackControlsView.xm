@@ -88,19 +88,20 @@
   {
     if([self.delegate.delegate.playerController isKindOfClass:[%c(WebAVPlayerController) class]])
     {
-      if(iOSVersion >= 11.3)
+      UIStackView* stackView;
+
+      if([self.screenModeControls respondsToSelector:@selector(stackView)])
       {
-        if(![self.screenModeControls.stackView.arrangedSubviews containsObject:self.downloadButton])
-        {
-          [self.screenModeControls.stackView addArrangedSubview:self.downloadButton];
-        }
+        stackView = self.screenModeControls.stackView;
       }
       else
       {
-        if(![self.screenModeControls.contentView.arrangedSubviews containsObject:self.downloadButton])
-        {
-          [self.screenModeControls.contentView addArrangedSubview:self.downloadButton];
-        }
+        stackView = self.screenModeControls.contentView;
+      }
+
+      if(![stackView.arrangedSubviews containsObject:self.downloadButton])
+      {
+        [stackView addArrangedSubview:self.downloadButton];
       }
     }
   }

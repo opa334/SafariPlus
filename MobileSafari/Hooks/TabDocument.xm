@@ -99,11 +99,17 @@ BOOL showAlert = YES;
           //Toggle browsing mode
           togglePrivateBrowsing(browserController);
 
-          [NSTimer scheduledTimerWithTimeInterval:0.1
-            target:[NSBlockOperation blockOperationWithBlock:^
+          //After 0.1 seconds, open URL in new tab
+          dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(),
+          ^{
+            if([browserController.tabController.activeTabDocument isBlankDocument])
             {
-              //After 0.1 seconds, open URL in new tab
-              if(iOSVersion >= 10)
+              [browserController setFavoritesState:0 animated:YES]; //Dismisses the bookmark favorites grid view
+              [browserController.tabController.activeTabDocument loadURL:element.URL userDriven:NO];
+            }
+            else
+            {
+              if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
               {
                 [browserController loadURLInNewTab:element.URL inBackground:NO];
               }
@@ -111,10 +117,8 @@ BOOL showAlert = YES;
               {
                 [browserController loadURLInNewWindow:element.URL inBackground:NO];
               }
-            }]
-            selector:@selector(main)
-            userInfo:nil
-            repeats:NO];
+            }
+          });
         }];
 
         [actions insertObject:openInOppositeModeAction atIndex:2];
@@ -130,7 +134,7 @@ BOOL showAlert = YES;
             localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:
           ^{
             //Open URL in new tab
-            if(iOSVersion >= 10)
+            if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
             {
               [browserController loadURLInNewTab:element.URL inBackground:NO];
             }
@@ -170,18 +174,7 @@ BOOL showAlert = YES;
           [downloadManager configureDownloadWithInfo:downloadInfo];
         }];
 
-        if(iOSVersion <= 9)
-        {
-          if(element.type == ElementInfoImage)
-          {
-            [actions insertObject:downloadSiteToAction atIndex:[actions count] - 2];
-          }
-          else
-          {
-            [actions addObject:downloadSiteToAction];
-          }
-        }
-        else
+        if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
         {
           if(element.type == ElementInfoImage)
           {
@@ -190,6 +183,17 @@ BOOL showAlert = YES;
           else
           {
             [actions insertObject:downloadSiteToAction atIndex:[actions count] - 1];
+          }
+        }
+        else
+        {
+          if(element.type == ElementInfoImage)
+          {
+            [actions insertObject:downloadSiteToAction atIndex:[actions count] - 2];
+          }
+          else
+          {
+            [actions addObject:downloadSiteToAction];
           }
         }
       }
@@ -533,14 +537,14 @@ BOOL showAlert = YES;
         BOOL inBackground = preferenceManager.alwaysOpenNewTabInBackgroundEnabled;
 
         //Load URL in new tab
-        if(iOSVersion <= 9)
+        if([controller respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
         {
-          [controller loadURLInNewWindow:navigationAction.request.URL
+          [controller loadURLInNewTab:navigationAction.request.URL
             inBackground:inBackground animated:YES];
         }
         else
         {
-          [controller loadURLInNewTab:navigationAction.request.URL
+          [controller loadURLInNewWindow:navigationAction.request.URL
             inBackground:inBackground animated:YES];
         }
 

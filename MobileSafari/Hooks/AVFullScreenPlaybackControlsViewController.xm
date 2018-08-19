@@ -68,7 +68,7 @@
       {
         CGFloat x = self.view.frame.size.width - 81;
 
-        if(iOSVersion > 8)
+        if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
         {
           if(MSHookIvar<BOOL>(self, "_pictureInPictureButtonEnabled"))
           {
@@ -99,7 +99,7 @@
 {
   NSString* getVideoURL;
 
-  if(iOSVersion <= 9)
+  if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
   {
     //For some reason for loops have issues prior to iOS 10 (or I'm just stupid lol)
     getVideoURL = [NSString stringWithFormat:

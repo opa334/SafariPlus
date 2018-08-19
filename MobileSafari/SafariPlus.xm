@@ -28,7 +28,6 @@
 
 /****** Variables ******/
 
-CGFloat iOSVersion;
 BOOL iPhoneX;
 
 NSBundle* MSBundle = [NSBundle mainBundle];
@@ -93,6 +92,33 @@ SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
 }
 @end
 
+@implementation NSString (UUID)
+- (BOOL)isUUID
+{
+  return (bool)[[NSUUID alloc] initWithUUIDString:self];
+}
+@end
+
+@implementation UIView (Autolayout)
++ (id)autolayoutView
+{
+    UIView *view = [self new];
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    return view;
+}
+@end
+
+@implementation UITableViewController (FooterFix)
+- (void)fixFooterColors
+{
+  for(int i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
+  {
+    UITableViewHeaderFooterView* footerView = [self.tableView headerViewForSection:i];
+    footerView.backgroundView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
+  }
+}
+@end
+
 /****** Useful functions ******/
 
 //Return current browsing status
@@ -100,7 +126,7 @@ BOOL privateBrowsingEnabled(BrowserController* controller)
 {
   BOOL privateBrowsingEnabled;
 
-  if(iOSVersion >= 10.3)
+  if([controller respondsToSelector:@selector(isPrivateBrowsingEnabled)])
   {
     privateBrowsingEnabled = [controller isPrivateBrowsingEnabled];
   }
@@ -115,7 +141,7 @@ BOOL privateBrowsingEnabled(BrowserController* controller)
 //Toggle private mode
 void togglePrivateBrowsing(BrowserController* controller)
 {
-  if(iOSVersion >= 10.3)
+  if([controller respondsToSelector:@selector(togglePrivateBrowsingEnabled)])
   {
     [controller togglePrivateBrowsingEnabled];
   }
@@ -141,13 +167,15 @@ NSArray<BrowserController*>* browserControllers()
 {
   NSArray* browserControllers;
 
-  if(iOSVersion >= 10)
+  Application* sharedApplication = (Application*)[%c(Application) sharedApplication];
+
+  if([sharedApplication respondsToSelector:@selector(browserControllers)])
   {
-    browserControllers = ((Application*)[UIApplication sharedApplication]).browserControllers;
+    browserControllers = sharedApplication.browserControllers;
   }
   else //8,9
   {
-    browserControllers = @[MSHookIvar<BrowserController*>((Application*)[%c(Application) sharedApplication],"_controller")];
+    browserControllers = @[MSHookIvar<BrowserController*>(sharedApplication,"_controller")];
   }
 
   return browserControllers;
@@ -158,7 +186,7 @@ BrowserController* browserControllerForTabDocument(TabDocument* document)
 {
   BrowserController* browserController;
 
-  if(iOSVersion >= 10)
+  if([document respondsToSelector:@selector(browserController)])
   {
     browserController = document.browserController;
   }
@@ -175,7 +203,7 @@ BrowserRootViewController* rootViewControllerForBrowserController(BrowserControl
 {
   BrowserRootViewController* rootViewController;
 
-  if(iOSVersion >= 10)
+  if([controller respondsToSelector:@selector(rootViewController)])
   {
     rootViewController = controller.rootViewController;
   }
@@ -194,35 +222,34 @@ BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* documen
   return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
 }
 
-/****** Version and device detection ******/
+//Only add object to dict if it's not nil
+void addToDict(NSMutableDictionary* dict, NSObject* object, NSString* key)
+{
+  if(object)
+  {
+    [dict setObject:object forKey:key];
+  }
+}
+
+//Send a simple alert that just has a close button with title and message
+void sendSimpleAlert(NSString* title, NSString* message)
+{
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
+    message:message
+    preferredStyle:UIAlertControllerStyleAlert];
+
+  UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
+    style:UIAlertActionStyleDefault handler:nil];
+
+  [alert addAction:closeAction];
+
+  [rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:alert animated:YES completion:nil];
+}
+
+/****** Device detection ******/
 
 %ctor
 {
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
-  {
-    iOSVersion = 11.3;
-  }
-  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
-  {
-    iOSVersion = 11;
-  }
-  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_3)
-  {
-    iOSVersion = 10.3;
-  }
-  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
-  {
-    iOSVersion = 10;
-  }
-  else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-  {
-    iOSVersion = 9;
-  }
-  else if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_8_0)
-  {
-    iOSVersion = 8;
-  }
-
   //Detection of iPhone X (Needs special treatment in some cases)
   #ifdef SIMJECT
   NSString* model = NSProcessInfo.processInfo.environment[@"SIMULATOR_MODEL_IDENTIFIER"];

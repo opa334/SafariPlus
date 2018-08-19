@@ -22,6 +22,7 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPCacheManager.h"
+#import "../Classes/SPCommunicationManager.h"
 
 %hook Application
 
@@ -54,7 +55,7 @@
       {
         NSURL* twitterURL = [NSURL URLWithString:@"https://twitter.com/opa334dev"];
 
-        if(iOSVersion >= 10)
+        if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
         {
           [browserController loadURLInNewTab:twitterURL inBackground:NO animated:YES];
         }
@@ -68,7 +69,7 @@
     [welcomeAlert addAction:closeAction];
     [welcomeAlert addAction:openAction];
 
-    if(iOSVersion >= 9)
+    if([welcomeAlert respondsToSelector:@selector(preferredAction)])
     {
       welcomeAlert.preferredAction = openAction;
     }
@@ -79,20 +80,20 @@
   }
 }
 
+//Tests whether Safari is able to communicate with SpringBoard
 %new
-- (void)application:(UIApplication *)application
-  handleEventsForBackgroundURLSession:(NSString *)identifier
-  completionHandler:(void (^)(void))completionHandler
+- (void)handleSBConnectionTest
 {
-  //The bare existence of this method causes background downloads to finish properly...
-  //didFinishDownloadingToURL gets called, don't ask me why tho :D
-  //Otherwise files would only be moved on the next app-resume
-  //I presume the application only gets resumed if this method exists
+  if(![communicationManager testConnection])
+  {
+    sendSimpleAlert([localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR"], [localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR_DESCRIPTION"]);
+  }
+}
 
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    completionHandler();
-  });
+%new
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+{
+  downloadManager.applicationBackgroundSessionCompletionHandler = completionHandler;
 }
 
 //Auto switch mode on app resume
@@ -186,6 +187,7 @@
   }
 
   [self handleTwitterAlert];
+  [self handleSBConnectionTest];
 
   return orig;
 }
@@ -224,6 +226,7 @@
   }
 
   [self handleTwitterAlert];
+  [self handleSBConnectionTest];
 }
 
 %end
