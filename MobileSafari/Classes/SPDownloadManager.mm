@@ -89,15 +89,13 @@
 
 - (BOOL)createDownloadDirectoryIfNeeded
 {
-  BOOL success = NO;
-
   if(![fileManager fileExistsAtURL:self.defaultDownloadURL error:nil] || ![fileManager isDirectoryAtURL:self.defaultDownloadURL error:nil])
   {
     //Downloads directory doesn't exist -> try to create it
-    success = [fileManager createDirectoryAtURL:self.defaultDownloadURL withIntermediateDirectories:YES attributes:nil error:nil];
+    return [fileManager createDirectoryAtURL:self.defaultDownloadURL withIntermediateDirectories:YES attributes:nil error:nil];
   }
 
-  return success;
+  return YES;
 }
 
 - (void)migrateFromSandbox
