@@ -316,10 +316,7 @@
 
       //Add cancel option
       UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
-        style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
-      {
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-      }];
+        style:UIAlertActionStyleCancel handler:nil];
 
       [longPressAlert addAction:cancelAction];
 
@@ -458,7 +455,10 @@
     //Add cancel option
     UIAlertAction *cancelAction = [UIAlertAction
       actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
-      style:UIAlertActionStyleDefault handler:nil];
+      style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+    {
+      [self unselectRow];
+    }];
 
     [selectFilenameController addAction:cancelAction];
 
@@ -515,7 +515,10 @@
     //Add cancel option
     UIAlertAction *cancelAction = [UIAlertAction
       actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
-      style:UIAlertActionStyleDefault handler:nil];
+      style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+    {
+      [self unselectRow];
+    }];
 
     [confirmationController addAction:cancelAction];
 
