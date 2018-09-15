@@ -101,13 +101,9 @@ NSDictionary* userInfo = @{@"data" : serializedImport};
 [_messagingCenter sendMessageName:@"com.opa334.SafariPlus.importToMusicLibrary" userInfo:userInfo];
 }*/
 
-//Get display name for a passed URL (Resolves the app UUIDs to display names), works for cache and bundle paths
-- (NSString*)applicationDisplayNameForURL:(NSURL*)URL
+- (NSDictionary*)applicationDisplayNamesForPaths
 {
-  NSData* serializedUserInfo = [NSKeyedArchiver archivedDataWithRootObject:@{@"URL" : URL}];
-  NSDictionary* userInfo = @{@"data" : serializedUserInfo};
-
-  return [[_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.getApplicationDisplayName" userInfo:userInfo] objectForKey:@"displayName"];
+  return [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.getApplicationDisplayNames" userInfo:nil];
 }
 
 #else
@@ -117,13 +113,11 @@ NSDictionary* userInfo = @{@"data" : serializedImport};
   return YES;
 }
 
-//Dispatch libbulletin notification via SpringBoard
 - (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message
 {
 
 }
 
-//Executes file operation unsandboxed via SpringBoard
 - (NSDictionary*)executeFileOperationOnSpringBoard:(NSDictionary*)operation
 {
   return nil;
@@ -134,8 +128,7 @@ NSDictionary* userInfo = @{@"data" : serializedImport};
 
 }*/
 
-//Get display name for a passed URL (Resolves the app UUIDs to display names), works for cache and bundle paths
-- (NSString*)applicationDisplayNameForURL:(NSURL*)URL
+- (NSDictionary*)applicationDisplayNamesForPaths
 {
   return nil;
 }

@@ -17,12 +17,19 @@
 #import "SPPDirectoryPickerTableViewController.h"
 #import "../MobileSafari/Shared.h"
 
+@implementation UITableViewController (FooterFix)
+- (void)fixFooterColors
+{
+
+}
+@end
+
 @implementation SPPDirectoryPickerTableViewController
 
-- (UIBarButtonItem*)rightBarButtonItem
+- (void)setUpRightBarButtonItems
 {
-  //Create and return UIBarButtonItem to choose current directory
-  return [[UIBarButtonItem alloc] initWithTitle:[localizationManager
+  //UIBarButtonItem to choose current directory
+  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
     localizedSPStringForKey:@"CHOOSE"] style:UIBarButtonItemStylePlain
     target:self action:@selector(chooseButtonPressed)];
 }

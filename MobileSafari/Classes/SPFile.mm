@@ -35,7 +35,7 @@
   #ifndef PREFERENCES
   if([_name isUUID])
   {
-    _applicationDisplayName = [communicationManager applicationDisplayNameForURL:_fileURL];
+    _applicationDisplayName = [fileManager applicationDisplayNameForURL:_fileURL];
   }
   #endif
 

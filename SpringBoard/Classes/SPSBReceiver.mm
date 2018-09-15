@@ -45,8 +45,8 @@
   /*[_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.importToMusicLibrary" target:self
     selector:@selector(importToMusicLibrary:withUserInfo:)];*/
 
-  [_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.getApplicationDisplayName" target:self
-    selector:@selector(getApplicationDisplayName:withUserInfo:)];
+  [_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.getApplicationDisplayNames" target:self
+    selector:@selector(getApplicationDisplayNames:withUserInfo:)];
 
   return self;
 }
@@ -256,60 +256,44 @@
   return nil;
 }*/
 
-//Get the application display name for an URL (To show it instead of the UUID)
-- (NSDictionary*)getApplicationDisplayName:(NSString*)name withUserInfo:(NSDictionary*)serializedUserInfo
+//Returns a dictionary with display names with the paths being the keys
+- (NSDictionary*)getApplicationDisplayNames:(NSString*)name withUserInfo:(NSDictionary*)userInfo
 {
-  NSDictionary* userInfo = [NSKeyedUnarchiver unarchiveObjectWithData:[serializedUserInfo objectForKey:@"data"]];
+  NSMutableDictionary* displayNamesForPaths = [NSMutableDictionary new];
 
-  if(!_displayNamesForPaths)
+  for(SBApplication* app in [[NSClassFromString(@"SBApplicationController") sharedInstance] allApplications])
   {
-    NSMutableDictionary* _displayNamesForPathsM = [NSMutableDictionary new];
+    SBApplicationInfo* appInfo;
 
-    for(SBApplication* app in [[NSClassFromString(@"SBApplicationController") sharedInstance] allApplications])
+    if([app respondsToSelector:@selector(info)])
     {
-      SBApplicationInfo* appInfo;
-
-      if([app respondsToSelector:@selector(info)])
-      {
-        appInfo = app.info;
-      }
-      else
-      {
-        appInfo = [app _appInfo];
-      }
-
-      NSString* currentDisplayName = appInfo.displayName;
-
-      if(currentDisplayName)
-      {
-        NSString* currentSandboxPath = appInfo.sandboxURL.path;
-        NSString* currentBundleContainerPath = appInfo.bundleContainerURL.path;
-
-        if(currentSandboxPath)
-        {
-          [_displayNamesForPathsM setObject:currentDisplayName forKey:currentSandboxPath];
-        }
-
-        if(currentBundleContainerPath)
-        {
-          [_displayNamesForPathsM setObject:currentDisplayName forKey:currentBundleContainerPath];
-        }
-      }
+      appInfo = app.info;
+    }
+    else
+    {
+      appInfo = [app _appInfo];
     }
 
-    _displayNamesForPaths = [_displayNamesForPathsM copy];
+    NSString* currentDisplayName = appInfo.displayName;
+
+    if(currentDisplayName)
+    {
+      NSString* currentSandboxPath = appInfo.sandboxURL.path;
+      NSString* currentBundleContainerPath = appInfo.bundleContainerURL.path;
+
+      if(currentSandboxPath)
+      {
+        [displayNamesForPaths setObject:currentDisplayName forKey:currentSandboxPath];
+      }
+
+      if(currentBundleContainerPath)
+      {
+        [displayNamesForPaths setObject:currentDisplayName forKey:currentBundleContainerPath];
+      }
+    }
   }
 
-  NSString* pathToResolve = ((NSURL*)[userInfo objectForKey:@"URL"]).path;
-
-  NSString* displayName = [_displayNamesForPaths objectForKey:pathToResolve];
-
-  if(displayName)
-  {
-    return @{@"displayName" : displayName};
-  }
-
-  return nil;
+  return [displayNamesForPaths copy];
 }
 
 @end

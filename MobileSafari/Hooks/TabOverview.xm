@@ -19,6 +19,20 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Shared.h"
 
+%hook UIView
+
++ (void)animateWithDuration:(NSTimeInterval)duration
+                      delay:(NSTimeInterval)delay
+                    options:(UIViewAnimationOptions)options
+                 animations:(void (^)(void))animations
+                 completion:(void (^)(BOOL finished))completion
+                 {
+                   NSLog(@"animateWithDuration:%lf delay:%lf options:%lli", (double)duration, (double)delay, (long long)options);
+                   %orig;
+                 }
+
+%end
+
 %hook TabOverview
 
 //Property for landscape desktop button
@@ -30,6 +44,11 @@
   %orig;
   if(preferenceManager.desktopButtonEnabled)
   {
+    UISearchBar* searchBar = MSHookIvar<UISearchBar*>(self, "_searchBar");
+    UIView* superview = [self.privateBrowsingButton superview];
+
+    BOOL desktopButtonAdded = NO;
+
     if(!self.desktopModeButton)
     {
       //desktopButton not created yet -> create and configure it
@@ -62,20 +81,52 @@
       }
     }
 
-    CGFloat offset = 30;
-    if(iPhoneX)
+    if(![self.desktopModeButton isDescendantOfView:superview])
     {
-      offset = offset * 1.75;
+      desktopButtonAdded = YES;
+
+      CGFloat offset = 30;
+      if(iPhoneX)
+      {
+        offset = offset * 1.75;
+      }
+
+      self.desktopModeButton.frame = CGRectMake(
+        self.privateBrowsingButton.frame.origin.x - (offset + self.privateBrowsingButton.frame.size.height),
+        self.privateBrowsingButton.frame.origin.y,
+        self.privateBrowsingButton.frame.size.height,
+        self.privateBrowsingButton.frame.size.height);
+
+      //Add desktopButton to top bar
+      [superview addSubview:self.desktopModeButton];
     }
 
-    self.desktopModeButton.frame = CGRectMake(
-      self.privateBrowsingButton.frame.origin.x - (offset + self.privateBrowsingButton.frame.size.height),
-      self.privateBrowsingButton.frame.origin.y,
-      self.privateBrowsingButton.frame.size.height,
-      self.privateBrowsingButton.frame.size.height);
+    if([searchBar isFirstResponder])
+    {
+      if(self.desktopModeButton.enabled)
+      {
+        self.desktopModeButton.enabled = NO;
 
-    //Add desktopButton to top bar
-    [[self.privateBrowsingButton superview] addSubview:self.desktopModeButton];
+        [UIView animateWithDuration:0.35 delay:0 options:327682
+        animations:^
+        {
+          self.desktopModeButton.alpha = 0.0;
+        } completion:nil];
+      }
+    }
+    else if(!desktopButtonAdded)
+    {
+      if(!self.desktopModeButton.enabled)
+      {
+        self.desktopModeButton.enabled = YES;
+
+        [UIView animateWithDuration:0.35 delay:0 options:327682
+        animations:^
+        {
+          self.desktopModeButton.alpha = 1.0;
+        } completion:nil];
+      }      
+    }
   }
 }
 

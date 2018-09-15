@@ -74,6 +74,8 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
   _hardLinkURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"hardLink"]];
 
+  _displayNamesForPaths = [communicationManager applicationDisplayNamesForPaths];
+
   [self resetHardLinks];
 
   return self;
@@ -97,6 +99,11 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
   }
 }
 
+- (NSString*)applicationDisplayNameForURL:(NSURL*)URL
+{
+  return [_displayNamesForPaths objectForKey:URL.path];
+}
+
 - (NSURL*)createHardLinkForFileAtURL:(NSURL*)url onlyIfNeeded:(BOOL)needed
 {
   if(_isSandboxed || !needed)
@@ -118,16 +125,12 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
   NSString* resolvedPath = path.stringByStandardizingPath;
   return [resolvedPath hasPrefix:NSHomeDirectory().stringByStandardizingPath];
-  /*NSString* resolvedPath = [self resolveSymlinkForPath:path.stringByStandardizingPath];
-  return [resolvedPath hasPrefix:[self resolveSymlinkForPath:NSHomeDirectory().stringByStandardizingPath]];*/
 }
 
 - (BOOL)isSandboxedURL:(NSURL*)url
 {
   NSString* resolvedPath = url.URLByStandardizingPath.path;
   return [resolvedPath hasPrefix:NSHomeDirectory().stringByStandardizingPath];
-  /*NSString* resolvedPath = [self resolveSymlinkForPath:url.URLByStandardizingPath.path];
-  return [resolvedPath hasPrefix:[self resolveSymlinkForPath:NSHomeDirectory().stringByStandardizingPath]];*/
 }
 
 #endif

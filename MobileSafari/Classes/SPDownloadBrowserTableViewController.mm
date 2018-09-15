@@ -233,7 +233,7 @@
 
     if([file conformsTo:kUTTypeAudiovisualContent] || [file conformsTo:kUTTypeImage])
     {
-      NSURL* hardLinkedURL = [fileManager createHardLinkForFileAtURL:file.fileURL onlyIfNeeded:NO];
+      NSURL* hardLinkedURL = [fileManager createHardLinkForFileAtURL:file.fileURL onlyIfNeeded:YES];
 
       if([file conformsTo:kUTTypeAudiovisualContent])
       {
@@ -360,7 +360,7 @@
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller
 {
   [self unselectRow];
-  [fileManager resetHardLinks];
+  //[fileManager resetHardLinks];
 }
 
 //We use the lowest level api here because PHPhotoLibrary requires a description key that I cannot provide, I'm suprised that this actually works (it probably does because Safari has an entitlement)
@@ -557,7 +557,7 @@
   AVPlayer* player = [AVPlayer playerWithURL:mediaURL];
 
   //Create AVPlayerController
-  AVPlayerViewController *playerViewController = [AVPlayerViewController new];
+  AVPlayerViewController* playerViewController = [AVPlayerViewController new];
 
   //Link AVPlayer and AVPlayerController
   playerViewController.player = player;

@@ -22,6 +22,7 @@
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
+#import "../Classes/AVActivityButton.h"
 
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVPlayer.h>
@@ -29,13 +30,18 @@
 #import <AVKit/AVPlayerViewController.h>
 #import <WebKit/WKNavigationResponse.h>
 
+@interface UIView ()
+- (void)_setDrawsAsBackdropOverlay:(BOOL)arg1;
+@end
+
 %group iOS10Down
 
 %hook AVFullScreenPlaybackControlsViewController
 
-%property(nonatomic,retain) AVButton *downloadButton;
+%property(nonatomic,retain) AVActivityButton *downloadButton;
+%property(nonatomic,retain) NSMutableArray *additionalLayoutConstraints;
 
-- (void)viewDidLayoutSubviews
+- (void)loadView
 {
   %orig;
 
@@ -47,175 +53,89 @@
     //Check if video is online (and not a local file)
     if(![currentPlayerAsset isKindOfClass:AVURLAsset.class])
     {
-      if(!self.downloadButton)
-      {
-        self.downloadButton = [%c(AVButton) buttonWithType:UIButtonTypeCustom];
-        UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
-        [self.downloadButton setImage:buttonImage forState:UIControlStateNormal];
-        [self.downloadButton setImage:[UIImage inverseColor:buttonImage] forState:UIControlStateHighlighted];
+      self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
+      self.downloadButton.translatesAutoresizingMaskIntoConstraints = NO;
+      UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+      [self.downloadButton setImage:buttonImage forState:UIControlStateNormal];
+      [self.downloadButton setImage:[UIImage inverseColor:buttonImage] forState:UIControlStateHighlighted];
+      [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+      [self.downloadButton _setDrawsAsBackdropOverlay:YES];
 
-        [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        [self.view addSubview:self.downloadButton];
-      }
+      UIView* lowerControlsRightSubContainerView = MSHookIvar<UIView*>(self, "_lowerControlsRightSubContainerView");
+      UIView* backdropContentView = [lowerControlsRightSubContainerView superview];
 
-      CGFloat height = [UIScreen mainScreen].bounds.size.height;
-
-      CGSize buttonSize = CGSizeMake(20.6667, 22);
-      CGPoint buttonPosition;
-
-      //Plus devices: Landscape; iPad: Portrait + Landscape
-      if(IS_PAD || (UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation) && height == 414))
-      {
-        CGFloat x = self.view.frame.size.width - 81;
-
-        if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-        {
-          if(MSHookIvar<BOOL>(self, "_pictureInPictureButtonEnabled"))
-          {
-            x = x - 52.3334;
-          }
-        }
-
-        if(!MSHookIvar<UIButton*>(self, "_mediaSelectionButton").hidden)
-        {
-          x = x - 47;
-        }
-
-        buttonPosition = CGPointMake(x, self.view.frame.size.height - 37);
-      }
-      //Plus devices: Portrait; All other devices except iPad: Portrait + Landscape
-      else
-      {
-        buttonPosition = CGPointMake(self.view.frame.size.width - 35.75, self.view.frame.size.height - 69);
-      }
-
-      self.downloadButton.frame = CGRectMake(buttonPosition.x, buttonPosition.y, buttonSize.width, buttonSize.height);
+      [backdropContentView addSubview:self.downloadButton];
     }
+  }
+}
+
+- (void)updateViewConstraints
+{
+  %orig;
+
+  if(self.downloadButton)
+  {
+    BOOL bottomControlsSingleRowLayoutPossible = MSHookIvar<BOOL>(self, "_bottomControlsSingleRowLayoutPossible");
+    UIView* lowerControlsRightSubContainerView = MSHookIvar<UIView*>(self, "_lowerControlsRightSubContainerView");
+    UIView* backdropContentView = [lowerControlsRightSubContainerView superview];
+
+    if(!self.additionalLayoutConstraints)
+    {
+      self.additionalLayoutConstraints = [NSMutableArray new];
+    }
+    else
+    {
+      [backdropContentView removeConstraints:self.additionalLayoutConstraints];
+      [self.additionalLayoutConstraints removeAllObjects];
+    }
+
+    NSDictionary* views =
+    @{
+      @"downloadButton" : self.downloadButton,
+      @"lowerControlsRightSubContainerView" : lowerControlsRightSubContainerView
+    };
+
+    if(bottomControlsSingleRowLayoutPossible)
+    {
+      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[downloadButton(22)]-25-[lowerControlsRightSubContainerView]" options:0 metrics:nil views:views]];
+      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-14-[downloadButton(22)]" options:0 metrics:nil views:views]];
+    }
+    else
+    {
+      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[downloadButton(22)]-15-|" options:0 metrics:nil views:views]];
+      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-11-[downloadButton(22)]" options:0 metrics:nil views:views]];
+    }
+
+    [backdropContentView addConstraints:self.additionalLayoutConstraints];
   }
 }
 
 %new
 - (void)downloadButtonPressed
 {
-  NSString* getVideoURL;
+  SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
+  downloadInfo.sourceVideo = self;
+  downloadInfo.presentationController = self;
+  downloadInfo.sourceRect = self.downloadButton.frame;
 
-  if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
+  [downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
+}
+
+%new
+- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
+{
+  WebAVPlayerController* playerController = (WebAVPlayerController*)self.playerController;
+
+  if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
   {
-    //For some reason for loops have issues prior to iOS 10 (or I'm just stupid lol)
-    getVideoURL = [NSString stringWithFormat:
-    @"var videos = document.querySelectorAll('video');"
-    @"var i = 0;"
-    @"while(i < videos.length)"
-    @"{"
-      @"if(videos[i].webkitDisplayingFullscreen)"
-      @"{"
-        @"videos[i].currentSrc;"
-        @"break;"
-      @"}"
-      @"i++;"
-    @"}"];
+    [playerController play:nil];
+    [playerController pause:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
   }
   else
   {
-    getVideoURL = [NSString stringWithFormat:
-    @"var videos = document.querySelectorAll('video');"
-    @"for(var video of videos)"
-    @"{"
-      @"if(video.webkitDisplayingFullscreen)"
-      @"{"
-        @"video.currentSrc;"
-      @"}"
-    @"}"];
+    completion();
   }
-
-  NSArray<SafariWebView*>* webViews = activeWebViews();
-
-  unsigned int webViewCount = [webViews count];
-  __block unsigned int webViewPos = 0;
-  __block NSError* _error;
-
-  //Check all active webViews (2 at most) for the video URL
-  for(SafariWebView* webView in webViews)
-  {
-    [webView evaluateJavaScript:getVideoURL completionHandler:^(id result, NSError *error)
-    {
-      webViewPos++;
-      if(result)
-      {
-        NSURL* videoURL = [NSURL URLWithString:result];
-        NSURLRequest* request = [NSURLRequest requestWithURL:videoURL];
-
-        SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
-        downloadInfo.filename = [videoURL lastPathComponent];
-        downloadInfo.isVideo = YES;
-        downloadInfo.presentationController = self;
-        downloadInfo.sourceRect = self.downloadButton.frame;
-
-        [downloadManager presentDownloadAlertWithDownloadInfo:downloadInfo];
-      }
-      else if(error)
-      {
-        _error = error;
-        if(webViewPos == webViewCount)
-        {
-          [self presentErrorAlertWithError:error];
-        }
-      }
-      else if(webViewPos == webViewCount)
-      {
-        if(_error)
-        {
-          [self presentErrorAlertWithError:_error];
-        }
-        else
-        {
-          [self presentNotFoundError];
-        }
-      }
-    }];
-  }
-}
-
-%new
-- (void)presentErrorAlertWithError:(NSError*)error
-{
-  UIAlertController *errorAlert = [UIAlertController
-    alertControllerWithTitle:[localizationManager
-    localizedSPStringForKey:@"ERROR"] message:[NSString
-    stringWithFormat:@"%@", error.userInfo]
-    preferredStyle:UIAlertControllerStyleAlert];
-
-  UIAlertAction *closeAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLOSE"]
-    style:UIAlertActionStyleCancel handler:nil];
-
-  [errorAlert addAction:closeAction];
-
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    [self presentViewController:errorAlert animated:YES completion:nil];;
-  });
-}
-
-%new
-- (void)presentNotFoundError
-{
-  UIAlertController *errorAlert = [UIAlertController
-    alertControllerWithTitle:[localizationManager
-    localizedSPStringForKey:@"ERROR"] message:[localizationManager
-    localizedSPStringForKey:@"VIDEO_URL_NOT_FOUND"]
-    preferredStyle:UIAlertControllerStyleAlert];
-
-  UIAlertAction *closeAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLOSE"]
-    style:UIAlertActionStyleCancel handler:nil];
-
-  [errorAlert addAction:closeAction];
-
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    [self presentViewController:errorAlert animated:YES completion:nil];
-  });
 }
 
 %end

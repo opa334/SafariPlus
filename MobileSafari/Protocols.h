@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPDownload, SPDownloadInfo;
+@class SPDownload, SPDownloadInfo, AVActivityButton;
 
 @protocol filePickerDelegate<NSObject>
 - (void)didSelectFiles:(NSArray*)URLs;
@@ -51,4 +51,10 @@
 @optional
 - (void)setBrowserCellDelegate:(id<DownloadCellDelegate>)cellDelegate;
 - (void)setListCellDelegate:(id<DownloadCellDelegate>)listDelegate;
+@end
+
+@protocol SourceVideoDelegate
+@required
+@property(nonatomic,retain) AVActivityButton* downloadButton;
+- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion;
 @end

@@ -22,6 +22,7 @@
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPDownloadInfo.h"
+#import "../Classes/AVActivityButton.h"
 
 %hook AVPlaybackControlsView
 
@@ -54,17 +55,16 @@
 %end
 
 %group iOS11
-
 %hook AVPlaybackControlsView
 
-%property(nonatomic,retain) AVButton *downloadButton;
+%property(nonatomic,retain) AVActivityButton *downloadButton;
 
 %new
 - (void)setUpDownloadButton
 {
   if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
   {
-    self.downloadButton = [[%c(AVButton) alloc] init];
+    self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
 
     [self.downloadButton setImage:[[UIImage imageNamed:@"VideoDownloadButton.png"
       inBundle:SPBundle compatibleWithTraitCollection:nil]
@@ -110,103 +110,29 @@
 %new
 - (void)downloadButtonPressed
 {
-  NSString* getVideoURL = [NSString stringWithFormat:
-  @"var videos = document.querySelectorAll('video');"
-  @"for(var video of videos)"
-  @"{"
-    @"if(video.webkitDisplayingFullscreen)"
-    @"{"
-      @"video.currentSrc;"
-    @"}"
-  @"}"];
+  SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
+  downloadInfo.sourceVideo = self;
+  downloadInfo.presentationController = self.delegate.delegate.playerViewController.fullScreenViewController;
+  downloadInfo.sourceRect = [self.screenModeControls.contentView convertRect:self.downloadButton.frame toView:self.delegate.delegate.playerViewController.fullScreenViewController.view];
 
-  NSArray<SafariWebView*>* webViews = activeWebViews();
+  [downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
+}
 
-  unsigned int webViewCount = [webViews count];
-  __block unsigned int webViewPos = 0;
-  __block NSError* _error;
+%new
+- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
+{
+  WebAVPlayerController* playerController = (WebAVPlayerController*)self.delegate.delegate.playerController;
 
-  for(SafariWebView* webView in webViews)
+  if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
   {
-    [webView evaluateJavaScript:getVideoURL completionHandler:^(id result, NSError *error)
-    {
-      webViewPos++;
-      if(result)
-      {
-        NSURL* videoURL = [NSURL URLWithString:result];
-        NSURLRequest* request = [NSURLRequest requestWithURL:videoURL];
-
-        SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:request];
-        downloadInfo.filename = [videoURL lastPathComponent];
-        downloadInfo.isVideo = YES;
-        downloadInfo.presentationController = self.delegate.delegate.playerViewController.fullScreenViewController;
-        downloadInfo.sourceRect = [self.screenModeControls.contentView convertRect:self.downloadButton.frame toView:self.delegate.delegate.playerViewController.fullScreenViewController.view];
-
-        [downloadManager presentDownloadAlertWithDownloadInfo:downloadInfo];
-      }
-      else if(error)
-      {
-        _error = error;
-        if(webViewPos == webViewCount)
-        {
-          [self presentErrorAlertWithError:error];
-        }
-      }
-      else if(webViewPos == webViewCount)
-      {
-        if(_error)
-        {
-          [self presentErrorAlertWithError:_error];
-        }
-        else
-        {
-          [self presentNotFoundError];
-        }
-      }
-    }];
+    [playerController play:nil];
+    [playerController pause:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
   }
-}
-
-%new
-- (void)presentErrorAlertWithError:(NSError*)error
-{
-  UIAlertController *errorAlert = [UIAlertController
-    alertControllerWithTitle:[localizationManager
-    localizedSPStringForKey:@"ERROR"] message:[NSString
-    stringWithFormat:@"%@", error.userInfo]
-    preferredStyle:UIAlertControllerStyleAlert];
-
-  UIAlertAction *closeAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLOSE"]
-    style:UIAlertActionStyleCancel handler:nil];
-
-  [errorAlert addAction:closeAction];
-
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    [self.delegate.delegate.playerViewController.fullScreenViewController presentViewController:errorAlert animated:YES completion:nil];;
-  });
-}
-
-%new
-- (void)presentNotFoundError
-{
-  UIAlertController *errorAlert = [UIAlertController
-    alertControllerWithTitle:[localizationManager
-    localizedSPStringForKey:@"ERROR"] message:[localizationManager
-    localizedSPStringForKey:@"VIDEO_URL_NOT_FOUND"]
-    preferredStyle:UIAlertControllerStyleAlert];
-
-  UIAlertAction *closeAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLOSE"]
-    style:UIAlertActionStyleCancel handler:nil];
-
-  [errorAlert addAction:closeAction];
-
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    [self.delegate.delegate.playerViewController.fullScreenViewController presentViewController:errorAlert animated:YES completion:nil];
-  });
+  else
+  {
+    completion();
+  }
 }
 
 %end

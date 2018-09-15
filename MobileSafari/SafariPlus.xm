@@ -33,11 +33,11 @@ BOOL iPhoneX;
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
+SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
 SPFileManager* fileManager = [SPFileManager sharedInstance];
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
-SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
 
 /****** Extensions ******/

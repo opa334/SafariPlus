@@ -23,7 +23,7 @@
 #import <WebKit/WKWebView.h>
 #import "Protocols.h"
 
-@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 
@@ -87,6 +87,16 @@
 @interface _WKElementAction : NSObject {}
 + (id)elementActionWithTitle:(id)arg1 actionHandler:(id)arg2;
 @end
+
+/**** MediaRemote ****/
+extern "C"
+{
+
+extern CFStringRef kMRMediaRemoteNowPlayingInfoTitle;
+typedef void (^MRMediaRemoteGetNowPlayingInfoCompletion)(CFDictionaryRef information);
+void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowPlayingInfoCompletion completion);
+
+}
 
 /**** SafariServices ****/
 
@@ -176,17 +186,16 @@
 @property (nonatomic, retain) AVPlayerController* playerController;
 - (BOOL)isPlaying;
 - (void)setPlaying:(BOOL)arg1;
-//new methods below
-- (void)downloadButtonPressed;
-- (void)presentErrorAlertWithError:(NSError*)error;
-- (void)presentNotFoundError;
 @end
 
 @interface AVButton : UIButton
 @end
 
-@interface AVFullScreenPlaybackControlsViewController : AVPlaybackControlsViewController
-@property (nonatomic, retain) AVButton* downloadButton; //new
+@interface AVFullScreenPlaybackControlsViewController : AVPlaybackControlsViewController <SourceVideoDelegate>
+//new
+@property (nonatomic, retain) AVActivityButton* downloadButton;
+@property (nonatomic, retain) NSMutableArray* additionalLayoutConstraints;
+- (void)downloadButtonPressed;
 @end
 
 //iOS 11
@@ -195,7 +204,15 @@
 @property (nonatomic,readonly) UIViewController* fullScreenViewController;
 @end
 
+@interface AVValueTiming : NSObject
+@property (nonatomic,readonly) double anchorTimeStamp;
+@end
+
 @interface WebAVPlayerController : NSObject
+@property (getter=isPlaying) BOOL playing;
+@property (retain) AVValueTiming* timing;
+- (void)play:(id)arg1;
+- (void)pause:(id)arg1;
 @end
 
 @interface AVPlaybackControlsController : NSObject
@@ -208,26 +225,22 @@
 
 @interface AVBackdropView : UIView
 @property (nonatomic,readonly) AVStackView* contentView; //iOS 11.0 -> 11.2.6
-@property (nonatomic,readonly) UIStackView* stackView; //iOS 11.3 -> ???
+@property (nonatomic,readonly) UIStackView* stackView; //iOS 11.3 and above
 @end
 
 @interface AVPlayerViewControllerContentView
 @property (assign,nonatomic) AVPlaybackControlsController* delegate;
 @end
 
-@interface AVPlaybackControlsView : UIView
+@interface AVPlaybackControlsView : UIView <SourceVideoDelegate>
 @property (assign,nonatomic) AVPlayerViewControllerContentView* delegate;
 @property (nonatomic,readonly) AVBackdropView* screenModeControls;
 @property (assign,getter=isDoubleRowLayoutEnabled,nonatomic) bool doubleRowLayoutEnabled;
 @property (nonatomic,readonly) AVButton* doneButton;
-
 //new
-- (void)setUpDownloadButton;
-@property(nonatomic,retain) AVButton *downloadButton;
+@property(nonatomic,retain) AVActivityButton* downloadButton;
 - (void)downloadButtonPressed;
-- (void)presentErrorAlertWithError:(NSError*)error;
-- (void)presentNotFoundError;
-
+- (void)setUpDownloadButton;
 @end
 
 /**** Safari ****/
@@ -272,9 +285,11 @@
 @property (nonatomic,readonly) BrowserRootViewController* rootViewController;
 @property (nonatomic,readonly) NSUUID * UUID;
 @property (readonly, nonatomic) NavigationBar* navigationBar;
-@property (nonatomic,readonly) BrowserToolbar * activeToolbar;
+@property (nonatomic,readonly) BrowserToolbar* activeToolbar;
+@property(readonly, nonatomic) BrowserToolbar* topToolbar;
 @property (nonatomic, getter=isShowingTabBar) BOOL showingTabBar;
 @property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
+@property(readonly, nonatomic, getter=isFavoritesFieldFocused) BOOL favoritesFieldFocused;
 - (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;

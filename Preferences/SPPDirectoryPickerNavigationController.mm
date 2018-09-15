@@ -20,11 +20,12 @@
 
 - (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate name:(NSString*)name
 {
-  self = [super init];
   self.pinnedLocationsDelegate = delegate;
   self.name = name;
   self.loadParentDirectories = YES;
   self.startURL = [NSURL fileURLWithPath:@"/var/mobile/"];
+
+  self = [super init];
   return self;
 }
 

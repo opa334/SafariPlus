@@ -18,7 +18,7 @@
 
 @class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload;
 
-@interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, DownloadManagerDelegate>
+@interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, DownloadManagerDelegate>
 @property (nonatomic) NSMutableArray<SPDownload*>* pendingDownloads;
 @property (nonatomic) NSMutableArray<SPDownload*>* finishedDownloads;
 @property (nonatomic) SPStatusBarNotificationWindow* notificationWindow;
@@ -26,6 +26,7 @@
 @property (nonatomic) NSInteger errorCount;
 @property (nonatomic) NSInteger processedErrorCount;
 @property (nonatomic) NSURL* defaultDownloadURL;
+@property (nonatomic) SPDownloadInfo* processedVideoDownloadInfo;
 @property (copy) void (^applicationBackgroundSessionCompletionHandler)();
 
 @property (nonatomic, weak) id<DownloadNavigationControllerDelegate> navigationControllerDelegate;
@@ -65,6 +66,8 @@
 - (void)configureDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)saveImageWithInfo:(SPDownloadInfo*)downloadInfo;
+- (void)prepareVideoDownloadForDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)prepareDownloadFromRequestForDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
 - (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
@@ -72,5 +75,6 @@
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)presentVideoURLNotFoundErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 @end

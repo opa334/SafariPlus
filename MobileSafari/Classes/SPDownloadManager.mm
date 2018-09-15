@@ -19,6 +19,7 @@
 #import "../Defines.h"
 #import "../SafariPlus.h"
 #import "../Shared.h"
+#import "../Classes/AVActivityButton.h"
 #import "SPDirectoryPickerNavigationController.h"
 #import "SPDownload.h"
 #import "SPDownloadInfo.h"
@@ -294,7 +295,16 @@
 
   NSString* filename = [resumeDataDict objectForKey:@"NSURLSessionResumeInfoTempFileName"];
 
-  NSURL* tmpFileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:filename]];
+  NSURL* tmpFileURL;
+
+  if(filename)
+  {
+    tmpFileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:filename]];
+  }
+  else
+  {
+    tmpFileURL = [NSURL fileURLWithPath:[resumeDataDict objectForKey:@"NSURLSessionResumeInfoLocalPath"]];
+  }
 
   [fileManager removeItemAtURL:tmpFileURL error:nil];
 }
@@ -560,6 +570,11 @@
 
 - (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
+  if(downloadInfo.sourceVideo)
+  {
+    [downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+  }
+
   if(preferenceManager.instantDownloadsEnabled)
   {
     if(preferenceManager.instantDownloadsOption == 1)
@@ -631,7 +646,7 @@
     [downloadAlert addAction:downloadToAction];
 
     //Copy link options (only on videos)
-    if(downloadInfo.isVideo)
+    if(downloadInfo.sourceVideo)
     {
       UIAlertAction *copyLinkAction = [UIAlertAction
         actionWithTitle:[localizationManager
@@ -668,6 +683,111 @@
     [downloadAlert addAction:cancelAction];
 
     [self presentViewController:downloadAlert withDownloadInfo:downloadInfo];
+  }
+}
+
+- (void)prepareVideoDownloadForDownloadInfo:(SPDownloadInfo*)downloadInfo
+{
+  if(downloadInfo.sourceVideo)
+  {
+    [downloadInfo.sourceVideo.downloadButton setSpinning:YES];
+  }
+
+  NSString* fetchVideoURL = [NSString stringWithFormat:
+    @"var videos = document.querySelectorAll('video');"
+    @"var i = 0;"
+    @"while(i < videos.length)"
+    @"{"
+      @"if(videos[i].webkitDisplayingFullscreen)"
+      @"{"
+        @"videos[i].currentSrc;"
+        @"break;"
+      @"}"
+      @"i++;"
+    @"}"];
+
+  NSArray<SafariWebView*>* webViews = activeWebViews();
+
+  unsigned int webViewCount = [webViews count];
+  __block unsigned int webViewPos = 0;
+  __weak SPDownloadInfo* _downloadInfo = downloadInfo;
+
+  //Check all active webViews (2 at most) for the video URL
+  for(SafariWebView* webView in webViews)
+  {
+    [webView evaluateJavaScript:fetchVideoURL completionHandler:^(id result, NSError *error)
+    {
+      webViewPos++;
+      if(result)
+      {
+        NSURL* videoURL = [NSURL URLWithString:result];
+        downloadInfo.request = [NSURLRequest requestWithURL:videoURL];
+
+        [downloadManager prepareDownloadFromRequestForDownloadInfo:downloadInfo];
+      }
+      else if(webViewPos == webViewCount)
+      {
+        [_downloadInfo.sourceVideo setBackgroundPlaybackActiveWithCompletion:^
+        {
+          MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information)
+          {
+            NSDictionary* info = (__bridge NSDictionary*)(information);
+
+            //This whole method of retrieving the video url only works because it is set as the title by Safari / WebKit, hopefully that doesn't change in the future
+            NSURL* videoURL = [NSURL URLWithString:[info objectForKey:(__bridge NSString*)(kMRMediaRemoteNowPlayingInfoTitle)]];
+
+            if(videoURL)
+            {
+              _downloadInfo.request = [NSURLRequest requestWithURL:videoURL];
+
+              [downloadManager prepareDownloadFromRequestForDownloadInfo:downloadInfo];
+            }
+            else
+            {
+              if(downloadInfo.sourceVideo)
+              {
+                [downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+              }
+              [self presentVideoURLNotFoundErrorWithDownloadInfo:downloadInfo];
+            }
+          });
+        }];
+      }
+    }];
+  }
+}
+
+- (void)prepareDownloadFromRequestForDownloadInfo:(SPDownloadInfo*)downloadInfo
+{
+  if(!self.processedVideoDownloadInfo)
+  {
+    NSURLSession* session = self.downloadSession;
+
+    NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:downloadInfo.request];
+
+    self.processedVideoDownloadInfo = downloadInfo;
+
+    [dataTask resume];
+
+    //After 5 seconds we cancel the task and just use the unresolved downloadInfo if it didn't finish resolving it yet
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+    {
+      if(self.processedVideoDownloadInfo)
+      {
+        [dataTask cancel];
+        self.processedVideoDownloadInfo = nil;
+
+        if(downloadInfo.sourceVideo)
+        {
+          [downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+        }
+
+        //Sometimes this name will be accurate, sometimes not
+        downloadInfo.filename = [downloadInfo.request.URL lastPathComponent];
+
+        [self presentDownloadAlertWithDownloadInfo:downloadInfo];
+      }
+    });
   }
 }
 
@@ -829,6 +949,26 @@
   [self presentViewController:errorAlert withDownloadInfo:downloadInfo];
 }
 
+- (void)presentVideoURLNotFoundErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo
+{
+  UIAlertController *errorAlert = [UIAlertController
+    alertControllerWithTitle:[localizationManager
+    localizedSPStringForKey:@"ERROR"] message:[localizationManager
+    localizedSPStringForKey:@"VIDEO_URL_NOT_FOUND"]
+    preferredStyle:UIAlertControllerStyleAlert];
+
+  UIAlertAction *closeAction = [UIAlertAction actionWithTitle:[localizationManager
+    localizedSPStringForKey:@"CLOSE"]
+    style:UIAlertActionStyleCancel handler:nil];
+
+  [errorAlert addAction:closeAction];
+
+  dispatch_async(dispatch_get_main_queue(),
+  ^{
+    [downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+  });
+}
+
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
   if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
@@ -936,6 +1076,23 @@
 
   //Send data to download
   [targetDownload updateProgress:totalBytesWritten totalFilesize:totalBytesExpectedToWrite];
+}
+
+//Get response for the request and present the download alert
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
+{
+  completionHandler(NSURLSessionResponseCancel);
+
+  if(response)
+  {
+    SPDownloadInfo* downloadInfo = self.processedVideoDownloadInfo;
+    self.processedVideoDownloadInfo = nil;
+
+    downloadInfo.filesize = response.expectedContentLength;
+    downloadInfo.filename = response.suggestedFilename;
+
+    [self presentDownloadAlertWithDownloadInfo:downloadInfo];
+  }
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session

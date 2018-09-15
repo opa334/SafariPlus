@@ -24,6 +24,7 @@ typedef NSString *NSFileAttributeKey;
 	NSURL* _hardLinkURL;
 	UIImage* _fileIcon;
 	UIImage* _directoryIcon;
+	NSDictionary* _displayNamesForPaths;
 }
 
 @property(nonatomic) BOOL isSandboxed;
@@ -34,6 +35,7 @@ typedef NSString *NSFileAttributeKey;
 - (NSURL*)createHardLinkForFileAtURL:(NSURL*)url onlyIfNeeded:(BOOL)needed;
 - (BOOL)isSandboxedPath:(NSString*)path;
 - (BOOL)isSandboxedURL:(NSURL*)url;
+- (NSString*)applicationDisplayNameForURL:(NSURL*)URL;
 #endif
 - (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error;
 - (BOOL)isDirectoryAtURL:(NSURL*)url error:(NSError**)error;

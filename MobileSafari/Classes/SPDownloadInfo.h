@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#import "../Protocols.h"
+
 @class SPDownload, TabDocument;
 
 @interface SPDownloadInfo : NSObject
@@ -23,7 +25,7 @@
 @property (nonatomic) NSString* filename;
 @property (nonatomic) NSURL* targetURL;
 @property (nonatomic) BOOL customPath;
-@property (nonatomic) BOOL isVideo;
+@property (nonatomic) id<SourceVideoDelegate> sourceVideo;
 @property (nonatomic) TabDocument* sourceDocument;
 @property (nonatomic) UIViewController* presentationController;
 @property (nonatomic) CGRect sourceRect;

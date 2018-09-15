@@ -5,6 +5,7 @@ SafariPlus_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
 SafariPlus_FILES = SafariPlus.xm
 SafariPlus_FILES += $(wildcard Hooks/*.xm)
 SafariPlus_FILES += $(wildcard Classes/*.mm)
+SafariPlus_FILES += $(wildcard Classes/*.xm)
 
 ifeq ($(SIMJECT),1)
 	dir_string := @"\"$(CURDIR)\""
@@ -14,5 +15,7 @@ else
 	SafariPlus_EXTRA_FRAMEWORKS += Cephei
 	SafariPlus_LIBRARIES = colorpicker rocketbootstrap
 endif
+
+SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote
 
 include $(THEOS_MAKE_PATH)/tweak.mk

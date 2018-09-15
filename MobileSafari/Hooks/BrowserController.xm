@@ -421,11 +421,41 @@
 %end
 %end
 
+%group iOS11_3Up
+%hook BrowserController
+- (void)updateButtons
+{
+  %orig;
+
+  if(self.topToolbar)
+  {
+    BOOL enabled;
+
+    if(self.favoritesFieldFocused)
+    {
+      enabled = NO;
+    }
+    else
+    {
+      enabled = MSHookIvar<BOOL>(self, "_shouldDisableToolbarForCatalogViewControllerPopover") == NO;
+    }
+
+    [self.topToolbar setDownloadsEnabled:enabled];
+  }
+}
+%end
+%end
+
 %ctor
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
     %init(iOS9Up);
+  }
+
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
+  {
+    %init(iOS11_3Up);
   }
 
   %init();
