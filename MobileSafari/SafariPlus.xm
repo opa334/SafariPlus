@@ -28,7 +28,7 @@
 
 /****** Variables ******/
 
-BOOL iPhoneX;
+BOOL edgeToEdgeDisplay;
 
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
@@ -250,7 +250,7 @@ void sendSimpleAlert(NSString* title, NSString* message)
 
 %ctor
 {
-  //Detection of iPhone X (Needs special treatment in some cases)
+  //Detection of iPhone X and above (Needs special treatment in some cases)
   #ifdef SIMJECT
   NSString* model = NSProcessInfo.processInfo.environment[@"SIMULATOR_MODEL_IDENTIFIER"];
   #else
@@ -258,5 +258,5 @@ void sendSimpleAlert(NSString* title, NSString* message)
   uname(&systemInfo);
   NSString* model = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
   #endif
-  iPhoneX = [model isEqualToString:@"iPhone10,3"] || [model isEqualToString:@"iPhone10,6"];
+  edgeToEdgeDisplay = [model isEqualToString:@"iPhone10,3"] || [model isEqualToString:@"iPhone10,6"] || [model containsString:@"iPhone11,"];
 }

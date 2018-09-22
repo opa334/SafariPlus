@@ -66,7 +66,7 @@
 
 - (void)updateFramesForTransform
 {
-  if(iPhoneX && !UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation))
+  if(edgeToEdgeDisplay && !UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation))
   {
     _barHeight = 50;
   }

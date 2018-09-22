@@ -72,7 +72,7 @@
       desktopButtonAdded = YES;
 
       CGFloat offset = 30;
-      if(iPhoneX)
+      if(edgeToEdgeDisplay)
       {
         offset = offset * 1.75;
       }
