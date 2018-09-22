@@ -144,6 +144,7 @@
 "SIZE_UNKNOWN"="Taille inconnue";
 "SOURCE_CODE"="Code source";
 "START_DOWNLOAD"="Démarrer le téléchargement";
+"STATUS_BAR_COLOR" = "Couleur de la barre d'état";
 "SUPPRESS_MAILTO_DIALOG"="(iOS 10+) Supprimer la boîte de dialogue Mailto";
 "SUPPRESS_MAILTO_DIALOG_FOOTER"="Supprime la boîte de dialogue qui apparaît sur iOS 10 et les versions supérieures lorsqu'une URL ´mailto: <email>´ est accessible.";
 "SWIPE_DOWN_GESTURE"="Le geste, glisser vers le bas";

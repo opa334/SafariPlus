@@ -85,6 +85,44 @@
 			<string>PSGroupCell</string>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>topBarNormalStatusBarStyleEnabled</string>
+			<key>label</key>
+			<string>STATUS_BAR_COLOR</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>key</key>
+			<string>topBarNormalStatusBarStyle</string>
+			<key>titlesDataSource</key>
+			<string>statusBarColorTitles</string>
+			<key>valuesDataSource</key>
+			<string>statusBarColorValues</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
 			<string>TAB_BAR_NOTE</string>
 		</dict>

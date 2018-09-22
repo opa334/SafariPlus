@@ -19,20 +19,6 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Shared.h"
 
-%hook UIView
-
-+ (void)animateWithDuration:(NSTimeInterval)duration
-                      delay:(NSTimeInterval)delay
-                    options:(UIViewAnimationOptions)options
-                 animations:(void (^)(void))animations
-                 completion:(void (^)(BOOL finished))completion
-                 {
-                   NSLog(@"animateWithDuration:%lf delay:%lf options:%lli", (double)duration, (double)delay, (long long)options);
-                   %orig;
-                 }
-
-%end
-
 %hook TabOverview
 
 //Property for landscape desktop button
@@ -125,7 +111,7 @@
         {
           self.desktopModeButton.alpha = 1.0;
         } completion:nil];
-      }      
+      }
     }
   }
 }

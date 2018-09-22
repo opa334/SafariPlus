@@ -177,6 +177,7 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 
 "TINT_COLOR" = "Renk tonu";
 "BACKGROUND_COLOR" = "Arka plan rengi";
+"STATUS_BAR_COLOR" = "Durum Çubuğunun Rengi";
 "TAB_BAR_TITLE_COLOR" = "Sekme Çubuğu Rengi";
 "TAB_BAR_BACKGROUND_COLOR" = "Sekme Çubuğu Arkaplan Rengi";
 "URL_FONT_COLOR" = "URL Yazı Rengi";

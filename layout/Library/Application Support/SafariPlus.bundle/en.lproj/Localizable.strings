@@ -177,6 +177,7 @@
 
 "TINT_COLOR" = "Tint Color";
 "BACKGROUND_COLOR" = "Background Color";
+"STATUS_BAR_COLOR" = "Status Bar Color";
 "TAB_BAR_TITLE_COLOR" = "Tab Bar Title Color";
 "TAB_BAR_BACKGROUND_COLOR" = "Tab Bar Background Color";
 "URL_FONT_COLOR" = "URL Font Color";

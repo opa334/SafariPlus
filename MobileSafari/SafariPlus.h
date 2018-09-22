@@ -290,6 +290,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic, getter=isShowingTabBar) BOOL showingTabBar;
 @property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
 @property(readonly, nonatomic, getter=isFavoritesFieldFocused) BOOL favoritesFieldFocused;
+@property(readonly, nonatomic, getter=isShowingTabView) BOOL showingTabView;
 - (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
@@ -320,7 +321,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)autoCloseAction;
 @end
 
-@interface BrowserRootViewController : UIViewController {} //added delegate
+@interface BrowserRootViewController : UIViewController {}
+@property (nonatomic,weak,readonly) BrowserController* browserController;
 @end
 
 @interface BrowserToolbar : _SFToolbar {}

@@ -30,7 +30,7 @@
 
   _fileURL = fileURL;
 
-  _name = [_fileURL lastPathComponent].stringByRemovingPercentEncoding;
+  _name = [_fileURL lastPathComponent];
 
   #ifndef PREFERENCES
   if([_name isUUID])

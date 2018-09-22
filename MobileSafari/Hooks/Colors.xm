@@ -570,6 +570,54 @@
 
 %end
 
+%hook BrowserRootViewController
+
+- (void)setPreferredStatusBarStyle:(UIStatusBarStyle)statusBarStyle
+{
+  if([preferenceManager topBarNormalStatusBarStyleEnabled] || [preferenceManager topBarPrivateStatusBarStyleEnabled])
+  {
+    BrowserController* browserController;
+
+    if([self respondsToSelector:@selector(browserController)])
+    {
+      browserController = self.browserController;
+    }
+    else
+    {
+      browserController = browserControllers().firstObject;
+    }
+
+    BOOL showingTabView;
+
+    if([browserController respondsToSelector:@selector(isShowingTabView)])
+    {
+      showingTabView = browserController.showingTabView;
+    }
+    else
+    {
+      showingTabView = MSHookIvar<BOOL>(browserController, "_showingTabView");
+    }
+
+    if(!showingTabView)
+    {
+      BOOL privateMode = (statusBarStyle == UIStatusBarStyleLightContent);
+
+      if(!privateMode && [preferenceManager topBarNormalStatusBarStyleEnabled])
+      {
+        return %orig([preferenceManager topBarNormalStatusBarStyle]);
+      }
+      else if(privateMode && [preferenceManager topBarPrivateStatusBarStyleEnabled])
+      {
+        return %orig([preferenceManager topBarPrivateStatusBarStyle]);
+      }
+    }
+  }
+
+  return %orig;
+}
+
+%end
+
 %ctor
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)

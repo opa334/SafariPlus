@@ -177,6 +177,7 @@
 
 "TINT_COLOR" = "Akzentfarbe";
 "BACKGROUND_COLOR" = "Hintergrundfarbe";
+"STATUS_BAR_COLOR" = "Farbe der Statusleiste";
 "TAB_BAR_TITLE_COLOR" = "Schriftfarbe der Tab Leiste";
 "TAB_BAR_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Leiste";
 "URL_FONT_COLOR" = "URL Schriftfarbe";

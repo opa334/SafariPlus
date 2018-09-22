@@ -726,6 +726,23 @@ void otherPlistChanged()
 	return @"TopBarNormalColorPrefs";
 }
 
+- (NSArray*)statusBarColorTitles
+{
+	NSMutableArray* titles = [@[@"BLACK", @"WHITE"] mutableCopy];
+
+	for(int i = 0; i < titles.count; i++)
+	{
+		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
+	}
+
+	return titles;
+}
+
+- (NSArray*)statusBarColorValues
+{
+	return @[@(UIStatusBarStyleDefault), @(UIStatusBarStyleLightContent)];
+}
+
 @end
 
 @implementation TopBarPrivateColorPrefsController
@@ -738,6 +755,23 @@ void otherPlistChanged()
 - (NSString*)plistName
 {
 	return @"TopBarPrivateColorPrefs";
+}
+
+- (NSArray*)statusBarColorTitles
+{
+	NSMutableArray* titles = [@[@"BLACK", @"WHITE"] mutableCopy];
+
+	for(int i = 0; i < titles.count; i++)
+	{
+		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
+	}
+
+	return titles;
+}
+
+- (NSArray*)statusBarColorValues
+{
+	return @[@(UIStatusBarStyleDefault), @(UIStatusBarStyleLightContent)];
 }
 
 @end
