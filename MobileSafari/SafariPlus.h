@@ -27,15 +27,21 @@
 
 /**** General stuff ****/
 
-@interface _UIBackdropView : UIView {}
-@property (nonatomic, retain) UIView *contentView;
-@property (nonatomic, retain) UIView *grayscaleTintView;
+@interface LSAppLink : NSObject
+@property (assign) NSInteger openStrategy;
++ (void)getAppLinkWithURL:(id)arg1 completionHandler:(void (^)(LSAppLink*,NSError*))arg2;
+- (void)openInWebBrowser:(BOOL)arg1 setOpenStrategy:(NSInteger)arg2 webBrowserState:(id)arg3 completionHandler:(id)arg4;
+@end
+
+@interface _UIBackdropView : UIView
+@property (nonatomic, retain) UIView* contentView;
+@property (nonatomic, retain) UIView* grayscaleTintView;
 @end
 
 @interface _UIBackdropViewSettings : NSObject
 @end
 
-@interface _UIBarBackground : UIView {}
+@interface _UIBarBackground : UIView
 @property (nonatomic,retain) UIView* customBackgroundView;
 @end
 
@@ -60,6 +66,7 @@
 
 @interface WKNavigationAction ()
 @property (getter=_isUserInitiated, nonatomic, readonly) bool _userInitiated;
+@property (nonatomic,readonly) BOOL _shouldOpenAppLinks;
 @end
 
 @interface WKNavigationResponse ()
@@ -77,7 +84,7 @@
 @end
 
 @interface _WKActivatedElementInfo : NSObject {}
-@property (nonatomic, readonly) NSURL *URL;
+@property (nonatomic, readonly) NSURL* URL;
 @property (nonatomic,readonly) NSInteger type;
 @property (nonatomic,copy,readonly) UIImage* image;
 @property (nonatomic,readonly) NSString* ID;
@@ -148,9 +155,9 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface _SFNavigationBarURLButton : UIButton {} //iOS 9 + 10
 //new stuff below
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
 @end
 
 @interface _SFReloadOptionsController : NSObject {}
@@ -178,7 +185,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 /**** AVKit ****/
 
 @interface AVPlayerController : UIResponder
-@property (nonatomic, retain) AVPlayer *player;
+@property (nonatomic, retain) AVPlayer* player;
 @end
 
 @interface AVPlaybackControlsViewController : UIViewController
@@ -272,7 +279,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 //new stuff below
 - (void)handleTwitterAlert;
 - (void)handleSBConnectionTest;
-- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler;
+- (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void (^)(void))completionHandler;
 @end
 
 @interface ApplicationShortcutController : NSObject {}
@@ -283,7 +290,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic,readonly) TabController* tabController;
 @property (nonatomic,readonly) BrowserToolbar* bottomToolbar;
 @property (nonatomic,readonly) BrowserRootViewController* rootViewController;
-@property (nonatomic,readonly) NSUUID * UUID;
+@property (nonatomic,readonly) NSUUID* UUID;
 @property (readonly, nonatomic) NavigationBar* navigationBar;
 @property (nonatomic,readonly) BrowserToolbar* activeToolbar;
 @property(readonly, nonatomic) BrowserToolbar* topToolbar;
@@ -311,9 +318,9 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3; //iOS9
 - (void)newTabKeyPressed; //iOS8
 //new stuff below
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
 - (void)handleGesture:(NSInteger)swipeAction;
 - (void)downloadsFromButtonBar;
 - (void)clearData;
@@ -337,7 +344,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {}
 @property (nonatomic,retain) UnifiedField* textField;
--  (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+-  (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (id)_completionItemAtIndexPath:(id)arg1;
 - (void)_textFieldEditingChanged;
 @end
@@ -351,8 +358,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface GestureRecognizingBarButtonItem : UIBarButtonItem {}
 @property (nonatomic,retain) UIGestureRecognizer* gestureRecognizer;
-- (void)setGestureRecognizer:(UIGestureRecognizer *)arg1;
-- (UIGestureRecognizer *)gestureRecognizer;
+- (void)setGestureRecognizer:(UIGestureRecognizer*)arg1;
+- (UIGestureRecognizer*)gestureRecognizer;
 - (void)setView:(id)arg1;
 @end
 
@@ -365,14 +372,14 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface NavigationBarBackdrop : _UIBackdropView
-@property(nonatomic) NavigationBar *navigationBar;
+@property(nonatomic) NavigationBar* navigationBar;
 @end
 
 @interface NavigationBarURLButton : UIView {} //iOS 8
 //new stuff below
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
+@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
 @property(nonatomic, weak) NavigationBar* delegate;
 @end
 
@@ -380,7 +387,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface SearchSuggestion : NSObject {}
-- (NSString *)string;
+- (NSString*)string;
 @end
 
 @interface TabBar : UIView
@@ -407,7 +414,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)newTab;
 //new stuff below
 @property (assign,nonatomic) BOOL desktopButtonSelected;
-@property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
+@property (nonatomic,retain) UIButton* tiltedTabViewDesktopModeButton;
 - (void)loadDesktopButtonState;
 - (void)saveDesktopButtonState;
 - (void)updateUserAgents;
@@ -439,6 +446,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (BOOL)isHibernated;
+- (void)_openAppLinkInApp:(id)arg1 fromOriginalRequest:(id)arg2 updateAppLinkStrategy:(_Bool)arg3 webBrowserState:(id)arg4 completionHandler:(id)arg5;
 - (void)requestDesktopSite; //iOS 8
 //new stuff below
 - (void)updateDesktopMode;
@@ -451,7 +459,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface TabOverview : UIView {}
-@property(readonly, nonatomic) UIButton *addTabButton;
+@property(readonly, nonatomic) UIButton* addTabButton;
 @property(nonatomic,readonly) UIButton* privateBrowsingButton;
 @property(nonatomic, weak) TabController* delegate;
 //new stuff below
@@ -465,7 +473,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface TabOverviewItemLayoutInfo : NSObject
-@property (nonatomic,retain) TabOverviewItemView * itemView;
+@property (nonatomic,retain) TabOverviewItemView* itemView;
 @end
 
 @interface TiltedTabView : UIView {}

@@ -25,6 +25,7 @@
 #import "../Shared.h"
 #import "../Enums.h"
 
+#import <WebKit/WKFrameInfo.h>
 #import <WebKit/WKNavigationAction.h>
 #import <WebKit/WKNavigationDelegate.h>
 
@@ -57,6 +58,17 @@ BOOL showAlert = YES;
 %end
 
 %group iOS9Up
+
+/*%hook LSAppLink
+
+- (void)openInWebBrowser:(BOOL)arg1 setOpenStrategy:(long long)arg2 webBrowserState:(id)arg3 completionHandler:(id)arg4
+{
+  NSLog(@"openInWebBrowser:%i setOpenStrategy:%lli webBrowserState:%@ completionHandler:%@", arg1, arg2, arg3, arg4);
+  %orig;
+}
+
+%end*/
+
 %hook TabDocument
 
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
@@ -525,12 +537,48 @@ BOOL showAlert = YES;
       //Stripped string of new url
       NSString* newStripped = [navigationAction.request.URL.absoluteString stringStrippedByStrings:@[@"#",@"?"]];
 
-      if(![newStripped isEqualToString:oldStripped])
+      if(![newStripped isEqualToString:oldStripped]) //Link doesn't contain current URL
       {
-        //Link doesn't contain current URL -> Open in new tab
-
         //Cancel site load
         decisionHandler(WKNavigationResponsePolicyCancel);
+
+        //Correctly handle launching external applications if needed
+        if(NSClassFromString(@"LSAppLink"))
+        {
+          if(navigationAction._shouldOpenAppLinks && navigationAction.targetFrame.isMainFrame)
+          {
+            __block LSAppLink *appLink;
+
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+            [%c(LSAppLink) getAppLinkWithURL:navigationAction.request.URL completionHandler:^(LSAppLink* _appLink, NSError* error)
+            {
+              appLink = _appLink;
+
+              dispatch_semaphore_signal(semaphore);
+            }];
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+            if(appLink.openStrategy == 2) //1: Open in browser, 2: Open in app (NO WARRANTY IMPLIED)
+            {
+              NSDictionary* browserState = @
+              {
+                @"browserReuseTab" : @1,
+                @"updateAppLinkOpenStrategy" : @YES
+              };
+
+              if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)]) //Works on iOS 11
+              {
+                [castedSelf _openAppLinkInApp:appLink fromOriginalRequest:navigationAction.request updateAppLinkStrategy:YES webBrowserState:browserState completionHandler:nil];
+              }
+              else //Works on iOS 10 and 9
+              {
+                [appLink openInWebBrowser:NO setOpenStrategy:2 webBrowserState:browserState completionHandler:nil];
+              }
+
+              return;
+            }
+          }
+        }
 
         BrowserController* controller = browserControllerForTabDocument(castedSelf);
 
