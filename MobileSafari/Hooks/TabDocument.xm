@@ -58,17 +58,6 @@ BOOL showAlert = YES;
 %end
 
 %group iOS9Up
-
-/*%hook LSAppLink
-
-- (void)openInWebBrowser:(BOOL)arg1 setOpenStrategy:(long long)arg2 webBrowserState:(id)arg3 completionHandler:(id)arg4
-{
-  NSLog(@"openInWebBrowser:%i setOpenStrategy:%lli webBrowserState:%@ completionHandler:%@", arg1, arg2, arg3, arg4);
-  %orig;
-}
-
-%end*/
-
 %hook TabDocument
 
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
