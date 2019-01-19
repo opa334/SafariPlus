@@ -107,6 +107,7 @@
 
 - (void)setPaused:(BOOL)paused forced:(BOOL)forced
 {
+  dlogDownload(self, [NSString stringWithFormat:@"setPaused:%i forced:%i", paused, forced]);
   if((paused != _paused) || forced)
   {
     if(paused)
@@ -177,6 +178,8 @@
   {
     _filesize = filesize;
 
+    dlogDownload(self, @"setFilesize");
+
     //Also update size of info
     self.orgInfo.filesize = filesize;
 
@@ -192,6 +195,8 @@
 {
   self.didFinish = YES;
   self.wasCancelled = YES;
+
+  dlogDownload(self, @"cancelDownload");
 
   if(self.downloadTask)
   {
@@ -210,6 +215,7 @@
 
 - (void)setTimerEnabled:(BOOL)enabled
 {
+  dlogDownload(self, [NSString stringWithFormat:@"setTimerEnabled:%i", enabled]);
   if(enabled && !self.paused && ![self.speedTimer isValid])
   {
     dispatch_async(dispatch_get_main_queue(),
@@ -251,6 +257,7 @@
 
 - (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize
 {
+  dlog(@"%@ / %llu - updateProgress", self.filename, (unsigned long long)self.taskIdentifier);
   //Verify filesize
   if(self.filesize != filesize)
   {

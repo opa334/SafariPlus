@@ -220,6 +220,9 @@
 
 - (void)cancelAllDownloads
 {
+  dlog(@"cancelAllDownloads");
+  dlogDownloadManager();
+
   //Cancel all downloads
   for(SPDownload* download in [self.pendingDownloads reverseObjectEnumerator])
   {
@@ -247,6 +250,9 @@
 
 - (void)resumeDownloadsFromDiskLoad
 {
+  dlog(@"resumeDownloadsFromDiskLoad");
+  dlogDownloadManager();
+
   //Resume / Start all downloads
   for(SPDownload* download in self.pendingDownloads)
   {
@@ -256,6 +262,9 @@
 
 - (void)forceCancelDownload:(SPDownload*)download
 {
+  dlog(@"forceCancelDownload");
+  dlogDownloadManager();
+
   [self downloadFinished:download];
 
   //Reload table
@@ -265,6 +274,9 @@
 
 - (void)downloadFinished:(SPDownload*)download
 {
+  dlog(@"downloadFinished");
+  dlogDownloadManager();
+
   if(download.resumeData)
   {
     [self removeTemporaryFileForResumeData:download.resumeData];
@@ -278,6 +290,9 @@
 
 - (void)removeDownloadFromHistory:(SPDownload*)download
 {
+  dlog(@"removeDownloadFromHistory");
+  dlogDownloadManager();
+
   [self.finishedDownloads removeObject:download];
 
   [self saveDownloadsToDisk];
@@ -288,6 +303,9 @@
 //Removes the temp file after a download has been cancelled
 - (void)removeTemporaryFileForResumeData:(NSData*)resumeData
 {
+  dlog(@"removeTemporaryFileForResumeData");
+  dlogDownloadManager();
+
   //Parse resumeData
   NSDictionary* resumeDataDict = [NSPropertyListSerialization
     propertyListWithData:resumeData options:NSPropertyListImmutable
@@ -311,6 +329,8 @@
 
 - (void)loadDownloadsFromDisk
 {
+  dlog(@"loadDownloadsFromDisk");
+
   NSDictionary* downloadCache = [cacheManager loadDownloadCache];
 
   self.pendingDownloads = [downloadCache objectForKey:@"pendingDownloads"];
@@ -330,6 +350,8 @@
     //Set downloadManagerDelegate for all downloads
     download.downloadManagerDelegate = self;
   }
+
+  dlogDownloadManager();
 }
 
 - (void)saveDownloadsToDisk
@@ -450,6 +472,8 @@
 
 - (void)configureDownloadWithInfo:(SPDownloadInfo*)downloadInfo
 {
+  dlogDownloadInfo(downloadInfo, @"configureDownloadWithInfo");
+
   if(downloadInfo.customPath)
   {
     //Check if downloadInfo needs a custom path
@@ -488,6 +512,9 @@
 
 - (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo
 {
+  dlogDownloadInfo(downloadInfo, @"startDownloadWithInfo");
+  dlogDownloadManager();
+
   if(downloadInfo.image)
   {
     //Download is image -> Save it directly
@@ -514,6 +541,8 @@
     [self sendNotificationWithText:[NSString stringWithFormat:@"%@: %@",
       [localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"], downloadInfo.filename]];
   }
+
+  dlogDownloadManager();
 }
 
 - (void)saveImageWithInfo:(SPDownloadInfo*)downloadInfo
@@ -759,6 +788,9 @@
 
 - (void)prepareDownloadFromRequestForDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
+  dlogDownloadInfo(downloadInfo, @"prepareDownloadFromRequestForDownloadInfo");
+  dlogDownloadManager();
+
   if(!self.processedVideoDownloadInfo)
   {
     NSURLSession* session = self.downloadSession;
@@ -992,6 +1024,9 @@
   downloadTask:(NSURLSessionDownloadTask *)downloadTask
   didFinishDownloadingToURL:(NSURL *)location
 {
+  dlog(@"URLSession:%@ downloadTask:%@ didFinishDownloadingToURL:%@", session, downloadTask, location);
+  dlogDownloadManager();
+
   //Get finished download
   SPDownload* download = [self downloadWithTaskIdentifier:downloadTask.taskIdentifier];
 
@@ -1024,6 +1059,9 @@
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
   didCompleteWithError:(NSError *)error
 {
+  dlog(@"URLSession:%@ task:%@ didCompleteWithError:%@", session, task, error);
+  dlogDownloadManager();
+
   if(error)
   {
     //Get download
@@ -1081,6 +1119,9 @@
 //Get response for the request and present the download alert
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
 {
+  dlog(@"URLSession:%@ session:%@ didReceiveResponse:%@", session, dataTask, response);
+  dlogDownloadManager();
+
   completionHandler(NSURLSessionResponseCancel);
 
   if(response)
@@ -1097,6 +1138,9 @@
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
 {
+  dlog(@"URLSessionDidFinishEventsForBackgroundURLSession:%@", session);
+  dlogDownloadManager();
+
   if(self.applicationBackgroundSessionCompletionHandler)
   {
     void (^completionHandler)() = self.applicationBackgroundSessionCompletionHandler;

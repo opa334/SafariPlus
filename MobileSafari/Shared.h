@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView;
+@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView;
 
 extern BOOL showAlert;
 extern BOOL edgeToEdgeDisplay;
@@ -38,6 +38,28 @@ extern void addToDict(NSMutableDictionary* dict, NSObject* object, NSString* key
 extern void sendSimpleAlert(NSString* title, NSString* message);
 extern void loadOtherPlist();
 extern void saveOtherPlist();
+
+#ifdef DEBUG_LOGGING
+
+extern void initDebug();
+extern void intDlog(NSString* fString, ...);
+extern void intDlogDownload(SPDownload* download, NSString* message);
+extern void intDlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message);
+extern void intDlogDownloadManager();
+
+#define dlog(args...) intDlog(args)
+#define dlogDownload(args...) intDlogDownload(args)
+#define dlogDownloadInfo(args...) intDlogDownloadInfo(args)
+#define dlogDownloadManager() intDlogDownloadManager()
+
+#else
+
+#define dlog(args...)
+#define dlogDownload(args...)
+#define dlogDownloadInfo(args...)
+#define dlogDownloadManager()
+
+#endif
 
 @interface UIImage (ColorInverse)
 + (UIImage *)inverseColor:(UIImage *)image;

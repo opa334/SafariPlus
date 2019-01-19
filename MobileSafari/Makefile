@@ -16,6 +16,10 @@ else
 	SafariPlus_LIBRARIES = colorpicker rocketbootstrap
 endif
 
+ifeq ($(DEBUG_LOGGING),1)
+	SafariPlus_CFLAGS += -D DEBUG_LOGGING=1
+endif
+
 SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote
 
 include $(THEOS_MAKE_PATH)/tweak.mk

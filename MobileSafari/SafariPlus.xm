@@ -40,6 +40,123 @@ SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstan
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
 
+#ifdef DEBUG_LOGGING
+
+#import "Classes/SPDownload.h"
+#import "Classes/SPDownloadInfo.h"
+#import "Classes/SPDownloadManager.h"
+
+NSFileHandle* debugLogFileHandle;
+
+void initDebug()
+{
+  NSString* dateString;
+
+  NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+  dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+  dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+  dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+
+  dateString = [dateFormatter stringFromDate:[NSDate date]];
+
+  NSString* debugLogDirectoryPath = [SPCachePath stringByAppendingString:@"/Logs"];
+
+  NSString* debugLogPath = [NSString stringWithFormat:@"%@/%@.log", debugLogDirectoryPath, dateString];
+
+  if(![[NSFileManager defaultManager] fileExistsAtPath:debugLogDirectoryPath])
+  {
+    [[NSFileManager defaultManager] createDirectoryAtPath:debugLogDirectoryPath withIntermediateDirectories:YES attributes:nil error:nil];
+  }
+
+  if(![[NSFileManager defaultManager] fileExistsAtPath:debugLogPath])
+  {
+    [[NSFileManager defaultManager] createFileAtPath:debugLogPath contents:nil attributes:nil];
+  }
+
+  debugLogFileHandle = [NSFileHandle fileHandleForWritingAtPath:debugLogPath];
+  [debugLogFileHandle seekToEndOfFile];
+}
+
+void intDlog(NSString* fString, ...)
+{
+  va_list va;
+  va_start(va, fString);
+  NSString* msg = [[NSString alloc] initWithFormat:fString arguments:va];
+  va_end(va);
+
+  [debugLogFileHandle writeData:[[msg stringByAppendingString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+  NSLog(@"%@", msg);
+}
+
+void intDlogDownload(SPDownload* download, NSString* message)
+{
+  dlog(@"----------");
+  dlog(@"DOWNLOAD %@", download);
+  dlog(message);
+  dlog(@"----------");
+  dlog(@"request: %@", download.request);
+  dlog(@"image: %@", download.image);
+  dlog(@"filesize: %lli", download.filesize);
+  dlog(@"filename: %@", download.filename);
+  dlog(@"targetURL: %@", download.targetURL);
+  dlog(@"paused: %i", download.paused);
+  dlog(@"lastSpeedRefreshTime: %llu", download.lastSpeedRefreshTime);
+  dlog(@"speedTimer: %@", download.speedTimer);
+  dlog(@"startBytes: %lli", download.startBytes);
+  dlog(@"totalBytesWritten: %lli", download.totalBytesWritten);
+  dlog(@"bytesPerSecond: %lli", download.bytesPerSecond);
+  dlog(@"resumeData length: %llu", (unsigned long long)download.resumeData.length);
+  dlog(@"paused: %llu", (unsigned long long)download.taskIdentifier);
+  dlog(@"downloadTask: %@", download.downloadTask);
+  dlog(@"didFinish: %i", download.didFinish);
+  dlog(@"wasCancelled: %i", download.wasCancelled);
+  dlog(@"downloadManagerDelegate: %@", download.downloadManagerDelegate);
+  dlog(@"browserCellDelegate: %@", download.browserCellDelegate);
+  dlog(@"listCellDelegate: %@", download.listCellDelegate);
+  dlog(@"----------");
+}
+
+void intDlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message)
+{
+  dlog(@"----------");
+  dlog(@"DOWNLOADINFO %@", downloadInfo);
+  dlog(message);
+  dlog(@"----------");
+  dlog(@"request: %@", downloadInfo.request);
+  dlog(@"image: %@", downloadInfo.image);
+  dlog(@"filesize: %lli", downloadInfo.filesize);
+  dlog(@"filename: %@", downloadInfo.filename);
+  dlog(@"targetURL: %@", downloadInfo.targetURL);
+  dlog(@"customPath: %i", downloadInfo.customPath);
+  dlog(@"sourceVideo: %@", downloadInfo.sourceVideo);
+  dlog(@"sourceDocument: %@", downloadInfo.sourceDocument);
+  dlog(@"presentationController: %@", downloadInfo.presentationController);
+  dlog(@"sourceRect: %@", NSStringFromCGRect(downloadInfo.sourceRect));
+  dlog(@"----------");
+}
+
+void intDlogDownloadManager()
+{
+  dlog(@"----------");
+  dlog(@"DOWNLOADMANAGER %@", downloadManager);
+  dlog(@"----------");
+  dlog(@"pendingDownloads: %@", downloadManager.pendingDownloads);
+  dlog(@"finishedDownloads: %@", downloadManager.finishedDownloads);
+  dlog(@"notificationWindow: %@", downloadManager.notificationWindow);
+  dlog(@"downloadSession: %@", downloadManager.downloadSession);
+  dlog(@"errorCount: %lli", downloadManager.errorCount);
+  dlog(@"processedErrorCount: %lli", downloadManager.processedErrorCount);
+  dlog(@"defaultDownloadURL: %@", downloadManager.defaultDownloadURL);
+  dlog(@"processedVideoDownloadInfo: %@", downloadManager.processedVideoDownloadInfo);
+  [downloadManager.downloadSession getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> *tasks)
+  {
+    dlog(@"tasks: %@", tasks);
+  }];
+  dlog(@"----------");
+}
+
+#endif
+
 /****** Extensions ******/
 
 //https://stackoverflow.com/a/22669888
@@ -250,13 +367,7 @@ void sendSimpleAlert(NSString* title, NSString* message)
 
 %ctor
 {
-  //Detection of iPhone X and above (Needs special treatment in some cases)
-  #ifdef SIMJECT
-  NSString* model = NSProcessInfo.processInfo.environment[@"SIMULATOR_MODEL_IDENTIFIER"];
-  #else
-  struct utsname systemInfo;
-  uname(&systemInfo);
-  NSString* model = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+  #ifdef DEBUG_LOGGING
+  initDebug();
   #endif
-  edgeToEdgeDisplay = [model isEqualToString:@"iPhone10,3"] || [model isEqualToString:@"iPhone10,6"] || [model containsString:@"iPhone11,"];
 }
