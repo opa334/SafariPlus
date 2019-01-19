@@ -17,7 +17,6 @@
 @class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView;
 
 extern BOOL showAlert;
-extern BOOL edgeToEdgeDisplay;
 extern SPFileManager* fileManager;
 extern SPPreferenceManager* preferenceManager;
 extern SPLocalizationManager* localizationManager;

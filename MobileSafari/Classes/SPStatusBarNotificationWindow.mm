@@ -66,13 +66,15 @@
 
 - (void)updateFramesForTransform
 {
-  if(edgeToEdgeDisplay && !UIDeviceOrientationIsLandscape(UIDevice.currentDevice.orientation))
+  _barHeight = 20;
+
+  if([[UIApplication sharedApplication].keyWindow respondsToSelector:@selector(safeAreaInsets)])
   {
-    _barHeight = 50;
-  }
-  else
-  {
-    _barHeight = 20;
+    double safeTop = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+    if(safeTop > 0)
+    {
+      _barHeight += (safeTop - 14);
+    }
   }
 
   CGSize screenSize = [UIScreen mainScreen].bounds.size;

@@ -18,6 +18,10 @@
 
 @class SPStatusBarNotification, SPStatusBarTextView;
 
+@interface UIView(iOS11)
+@property(nonatomic, readonly) UIEdgeInsets safeAreaInsets;
+@end
+
 @interface SPStatusBarNotificationWindow : UIWindow
 {
   BOOL _isPresented;

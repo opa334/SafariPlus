@@ -28,8 +28,6 @@
 
 /****** Variables ******/
 
-BOOL edgeToEdgeDisplay;
-
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 

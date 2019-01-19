@@ -67,25 +67,22 @@
       }
     }
 
+    //Desktop button is not added to top bar yet -> Add it
     if(![self.desktopModeButton isDescendantOfView:superview])
     {
       desktopButtonAdded = YES;
-
-      CGFloat offset = 30;
-      if(edgeToEdgeDisplay)
-      {
-        offset = offset * 1.75;
-      }
-
-      self.desktopModeButton.frame = CGRectMake(
-        self.privateBrowsingButton.frame.origin.x - (offset + self.privateBrowsingButton.frame.size.height),
-        self.privateBrowsingButton.frame.origin.y,
-        self.privateBrowsingButton.frame.size.height,
-        self.privateBrowsingButton.frame.size.height);
-
-      //Add desktopButton to top bar
       [superview addSubview:self.desktopModeButton];
     }
+
+    //Update position
+
+    CGFloat gap = self.addTabButton.frame.origin.x - (self.privateBrowsingButton.frame.origin.x + self.privateBrowsingButton.frame.size.width);
+
+    self.desktopModeButton.frame = CGRectMake(
+      self.privateBrowsingButton.frame.origin.x - (gap + self.privateBrowsingButton.frame.size.height),
+      self.privateBrowsingButton.frame.origin.y,
+      self.privateBrowsingButton.frame.size.height,
+      self.privateBrowsingButton.frame.size.height);
 
     if([searchBar isFirstResponder])
     {
