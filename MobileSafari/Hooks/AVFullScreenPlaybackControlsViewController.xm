@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+//Hooks for iOS 10 and below
+
 #import "../SafariPlus.h"
 
 #import "../Shared.h"
@@ -33,8 +35,6 @@
 @interface UIView ()
 - (void)_setDrawsAsBackdropOverlay:(BOOL)arg1;
 @end
-
-%group iOS10Down
 
 %hook AVFullScreenPlaybackControlsViewController
 
@@ -139,12 +139,11 @@
 }
 
 %end
-%end
 
-%ctor
+void initAVFullScreenPlaybackControlsViewController()
 {
   if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
   {
-    %init(iOS10Down)
+    %init();
   }
 }

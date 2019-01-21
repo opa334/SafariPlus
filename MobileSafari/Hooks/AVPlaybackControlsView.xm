@@ -26,37 +26,6 @@
 
 %hook AVPlaybackControlsView
 
-%group iOS11_3_up
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-  self = %orig;
-
-  [self setUpDownloadButton];
-
-  return self;
-}
-
-%end
-
-%group iOS11_2_down
-
-- (instancetype)init
-{
-  self = %orig;
-
-  [self setUpDownloadButton];
-
-  return self;
-}
-
-%end
-
-%end
-
-%group iOS11
-%hook AVPlaybackControlsView
-
 %property(nonatomic,retain) AVActivityButton *downloadButton;
 
 %new
@@ -135,14 +104,39 @@
   }
 }
 
-%end
+%group iOS11_3_up
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  self = %orig;
+
+  [self setUpDownloadButton];
+
+  return self;
+}
+
 %end
 
-%ctor
+%group iOS11_2_down
+
+- (instancetype)init
+{
+  self = %orig;
+
+  [self setUpDownloadButton];
+
+  return self;
+}
+
+%end
+
+%end
+
+void initAVPlaybackControlsView()
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
   {
-    %init(iOS11)
+    %init()
 
     if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
     {

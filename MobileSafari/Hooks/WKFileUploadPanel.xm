@@ -23,9 +23,26 @@
 #import "../Defines.h"
 #import "../Shared.h"
 
-%group iOS9Up
-
 %hook WKFileUploadPanel
+
+//Present file picker
+%new
+- (void)_showFilePicker
+{
+  SPFilePickerNavigationController* navController = [[%c(SPFilePickerNavigationController) alloc] init];
+  navController.filePickerDelegate = self;
+
+  if(IS_PAD)
+  {
+    [self _presentPopoverWithContentViewController:navController animated:YES];
+  }
+  else
+  {
+    [self _presentFullscreenViewController:navController animated:YES];
+  }
+}
+
+%group iOS9Up
 
 //Add button to document menu
 - (void)_showDocumentPickerMenu
@@ -75,11 +92,7 @@
 
 %end
 
-%end
-
 %group iOS8
-
-%hook WKFileUploadPanel
 
 - (void)_showPhotoPickerWithSourceType:(int)arg1
 {
@@ -154,28 +167,7 @@
 
 %end
 
-%hook WKFileUploadPanel
-
-//Present file picker
-%new
-- (void)_showFilePicker
-{
-  SPFilePickerNavigationController* navController = [[%c(SPFilePickerNavigationController) alloc] init];
-  navController.filePickerDelegate = self;
-
-  if(IS_PAD)
-  {
-    [self _presentPopoverWithContentViewController:navController animated:YES];
-  }
-  else
-  {
-    [self _presentFullscreenViewController:navController animated:YES];
-  }
-}
-
-%end
-
-%ctor
+void initWKFileUploadPanel()
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
@@ -185,5 +177,6 @@
   {
     %init(iOS8);
   }
-  %init;
+
+  %init();
 }

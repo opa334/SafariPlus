@@ -81,7 +81,6 @@
         [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
           inBackground:preferenceManager.gestureBackground animated:YES];
       }
-
       break;
     }
 
@@ -96,8 +95,8 @@
     {
       togglePrivateBrowsing(self);
       shouldClean = YES;
+      break;
     }
-    break;
 
     case GestureActionSwitchTabBackwards:
     {
@@ -191,6 +190,7 @@
     default:
     break;
   }
+
   if(shouldClean && privateBrowsingEnabled(self))
   {
     //Remove private mode message
@@ -223,61 +223,66 @@
   switch(preferenceManager.autoCloseTabsFor)
   {
     case CloseTabActionFromActiveMode:
-    //Close tabs from active surfing mode
-    [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    break;
-
+    {
+      //Close tabs from active surfing mode
+      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      break;
+    }
     case CloseTabActionFromNormalMode:
-    if(privateBrowsingEnabled(self))
     {
-      //Surfing mode is private -> switch to normal mode
-      togglePrivateBrowsing(self);
+      if(privateBrowsingEnabled(self))
+      {
+        //Surfing mode is private -> switch to normal mode
+        togglePrivateBrowsing(self);
 
-      //Close tabs from normal mode
-      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+        //Close tabs from normal mode
+        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-      //Switch back to private mode
-      togglePrivateBrowsing(self);
+        //Switch back to private mode
+        togglePrivateBrowsing(self);
+      }
+      else
+      {
+        //Surfing mode is normal -> close tabs
+        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      }
+      break;
     }
-    else
-    {
-      //Surfing mode is normal -> close tabs
-      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    }
-    break;
-
     case CloseTabActionFromPrivateMode:
-    if(!privateBrowsingEnabled(self))
     {
-      //Surfing mode is normal -> switch to private mode
-      togglePrivateBrowsing(self);
+      if(!privateBrowsingEnabled(self))
+      {
+        //Surfing mode is normal -> switch to private mode
+        togglePrivateBrowsing(self);
 
-      //Close tabs from private mode
-      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+        //Close tabs from private mode
+        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-      //Switch back to normal mode
-      togglePrivateBrowsing(self);
+        //Switch back to normal mode
+        togglePrivateBrowsing(self);
+      }
+      else
+      {
+        //Surfing mode is private -> close tabs
+        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      }
+      break;
     }
-    else
-    {
-      //Surfing mode is private -> close tabs
-      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-    }
-    break;
-
     case CloseTabActionFromBothModes: //Both modes
-    //Close tabs from active surfing mode
-    [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+    {
+      //Close tabs from active surfing mode
+      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-    //Switch mode
-    togglePrivateBrowsing(self);
+      //Switch mode
+      togglePrivateBrowsing(self);
 
-    //Close tabs from other surfing mode
-    [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+      //Close tabs from other surfing mode
+      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-    //Switch back
-    togglePrivateBrowsing(self);
-    break;
+      //Switch back
+      togglePrivateBrowsing(self);
+      break;
+    }
 
     default:
     break;
@@ -386,26 +391,29 @@
   switch(swipe.direction)
   {
     case UISwipeGestureRecognizerDirectionLeft:
-    //Bar swiped left -> handle swipe
-    [self handleGesture:preferenceManager.URLLeftSwipeAction];
-    break;
+    {
+      //Bar swiped left -> handle swipe
+      [self handleGesture:preferenceManager.URLLeftSwipeAction];
+      break;
+    }
 
     case UISwipeGestureRecognizerDirectionRight:
-    //Bar swiped right -> handle swipe
-    [self handleGesture:preferenceManager.URLRightSwipeAction];
-    break;
+    {
+      //Bar swiped right -> handle swipe
+      [self handleGesture:preferenceManager.URLRightSwipeAction];
+      break;
+    }
 
     case UISwipeGestureRecognizerDirectionDown:
-    //Bar swiped down -> handle swipe
-    [self handleGesture:preferenceManager.URLDownSwipeAction];
-    break;
+    {
+      //Bar swiped down -> handle swipe
+      [self handleGesture:preferenceManager.URLDownSwipeAction];
+      break;
+    }
   }
 }
 
-%end
-
 %group iOS9Up
-%hook BrowserController
 
 //Auto switch mode on external URL opened
 - (NSURL*)handleExternalURL:(NSURL*)URL
@@ -419,10 +427,9 @@
 }
 
 %end
-%end
 
 %group iOS11_3Up
-%hook BrowserController
+
 - (void)updateButtons
 {
   %orig;
@@ -443,10 +450,12 @@
     [self.topToolbar setDownloadsEnabled:enabled];
   }
 }
-%end
+
 %end
 
-%ctor
+%end
+
+void initBrowserController()
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {

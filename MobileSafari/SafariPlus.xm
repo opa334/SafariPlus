@@ -361,11 +361,27 @@ void sendSimpleAlert(NSString* title, NSString* message)
   [rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:alert animated:YES completion:nil];
 }
 
-/****** Device detection ******/
+/****** One constructor that inits all hooks ******/
+
+extern void initApplication();
+extern void initAVFullScreenPlaybackControlsViewController();
+extern void initAVPlaybackControlsView();
+extern void initBrowserController();
+extern void initColors();
+extern void initTabDocument();
+extern void initWKFileUploadPanel();
 
 %ctor
 {
   #ifdef DEBUG_LOGGING
   initDebug();
   #endif
+
+  initApplication();
+  initAVFullScreenPlaybackControlsViewController();
+  initAVPlaybackControlsView();
+  initBrowserController();
+  initColors();
+  initTabDocument();
+  initWKFileUploadPanel();
 }

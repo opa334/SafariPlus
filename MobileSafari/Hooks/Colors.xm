@@ -618,7 +618,7 @@
 
 %end
 
-%ctor
+void initColors()
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
@@ -647,5 +647,5 @@
     %init(iOS10Down)
   }
 
-  %init;
+  %init();
 }

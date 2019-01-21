@@ -162,10 +162,7 @@
   %orig;
 }
 
-%end
-
 %group iOS9Up
-%hook Application
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
@@ -193,10 +190,8 @@
 }
 
 %end
-%end
 
 %group iOS8
-%hook Application
 
 - (void)applicationOpenURL:(NSURL*)URL
 {
@@ -230,9 +225,10 @@
 }
 
 %end
+
 %end
 
-%ctor
+void initApplication()
 {
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
@@ -242,5 +238,6 @@
   {
     %init(iOS8);
   }
-  %init;
+
+  %init();
 }
