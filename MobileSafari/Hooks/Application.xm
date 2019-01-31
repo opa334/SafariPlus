@@ -162,6 +162,20 @@
   %orig;
 }
 
+%group iOS10Up
+
+- (BOOL)canAddNewTabForPrivateBrowsing:(BOOL)privateBrowsing
+{
+  if(preferenceManager.removeTabLimit)
+  {
+    return YES;
+  }
+
+  return %orig;
+}
+
+%end
+
 %group iOS9Up
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
@@ -230,6 +244,11 @@
 
 void initApplication()
 {
+  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
+  {
+    %init(iOS10Up);
+  }
+
   if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
   {
     %init(iOS9Up);

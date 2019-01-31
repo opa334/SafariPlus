@@ -18,7 +18,6 @@
 #import <AppSupport/CPDistributedMessagingCenter.h>
 #import "../Shared.h"
 #import "SPFileManager.h"
-#import "SPMusicImport.h"
 
 #if !defined(SIMJECT)
 #import <RocketBootstrap/rocketbootstrap.h>
@@ -93,14 +92,6 @@
   return response;
 }
 
-/*- (void)importMusic:(SPMusicImport*)musicImport
-{
-NSData* serializedImport = [NSKeyedArchiver archivedDataWithRootObject:[musicImport dictionary]];
-NSDictionary* userInfo = @{@"data" : serializedImport};
-
-[_messagingCenter sendMessageName:@"com.opa334.SafariPlus.importToMusicLibrary" userInfo:userInfo];
-}*/
-
 - (NSDictionary*)applicationDisplayNamesForPaths
 {
   return [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.getApplicationDisplayNames" userInfo:nil];
@@ -122,11 +113,6 @@ NSDictionary* userInfo = @{@"data" : serializedImport};
 {
   return nil;
 }
-
-/*- (void)importMusic:(SPMusicImport*)musicImport
-{
-
-}*/
 
 - (NSDictionary*)applicationDisplayNamesForPaths
 {

@@ -217,6 +217,21 @@
     }
   }
 }
+
+%group iOS9Down
+
+- (BOOL)canAddNewTab
+{
+  if(preferenceManager.removeTabLimit)
+  {
+    return YES;
+  }
+
+  return %orig;
+}
+
+%end
+
 /*
 //Lock tabs (Prevent them from being closable)
 - (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
@@ -241,3 +256,13 @@
 */
 
 %end
+
+void initTabController()
+{
+  if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
+  {
+    %init(iOS9Down);
+  }
+  
+  %init();
+}

@@ -71,6 +71,8 @@ enum
 	FileOperation_MoveItem_URL,
 	FileOperation_RemoveItem,
 	FileOperation_RemoveItem_URL,
+  FileOperation_CopyItem,
+  FileOperation_CopyItem_URL,
 	FileOperation_LinkItem,
 	FileOperation_LinkItem_URL,
 	FileOperation_FileExists,

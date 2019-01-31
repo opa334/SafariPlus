@@ -20,6 +20,7 @@
 #import "SPCommunicationManager.h"
 #endif
 
+#import "../Defines.h"
 #import "../Shared.h"
 #import "../Enums.h"
 
@@ -312,6 +313,50 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
   #endif
 
   return [super removeItemAtURL:URL error:error];
+}
+
+- (BOOL)copyItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error
+{
+  #ifndef PREFERENCES
+  if(_isSandboxed)
+  {
+    if(![self isSandboxedPath:srcPath] || ![self isSandboxedPath:dstPath])
+    {
+      NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_CopyItem];
+
+      NSMutableDictionary* operation = [NSMutableDictionary new];
+      addToDict(operation, operationType, @"operationType");
+      addToDict(operation, srcPath, @"srcPath");
+      addToDict(operation, dstPath, @"dstPath");
+
+      return [[execute(operation, error) objectForKey:@"return"] boolValue];
+    }
+  }
+  #endif
+
+  return [super copyItemAtPath:srcPath toPath:dstPath error:error];
+}
+
+- (BOOL)copyItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error
+{
+  #ifndef PREFERENCES
+  if(_isSandboxed)
+  {
+    if(![self isSandboxedURL:srcURL] || ![self isSandboxedURL:dstURL])
+    {
+      NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_CopyItem_URL];
+
+      NSMutableDictionary* operation = [NSMutableDictionary new];
+      addToDict(operation, operationType, @"operationType");
+      addToDict(operation, srcURL, @"srcURL");
+      addToDict(operation, dstURL, @"dstURL");
+
+      return [[execute(operation, error) objectForKey:@"return"] boolValue];
+    }
+  }
+  #endif
+
+  return [super copyItemAtURL:srcURL toURL:dstURL error:error];
 }
 
 - (BOOL)linkItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error

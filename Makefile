@@ -1,9 +1,6 @@
 export SIMJECT ?= 0
 export DEBUG_LOGGING ?= 0
 
-#export DEBUG_LOGGING = $(DEBUG_LOGGING)
-#export SIMJECT = $(SIMJECT)
-
 ifeq ($(SIMJECT),1)
 	export TARGET = simulator:clang:9.2:8.0
 	export ARCHS = x86_64 i386

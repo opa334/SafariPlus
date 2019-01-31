@@ -391,10 +391,14 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface TabBar : UIView
-@property(nonatomic) TabController* delegate;
+@property(nonatomic) NSUInteger barStyle; //iOS 8
 @end
 
 @interface TabBarStyle : NSObject
+@end
+
+@interface TabBarItemView : UIView
+@property(nonatomic, getter=isActive) BOOL active;
 @end
 
 @interface TabController : NSObject {}

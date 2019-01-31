@@ -140,7 +140,7 @@
 			<key>label</key>
 			<string>TAB_BAR_TITLE_COLOR</string>
 			<key>nestedEntryCount</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -152,7 +152,7 @@
 				<key>PostNotification</key>
 				<string>com.opa334.safaripluscolorprefs/ReloadPrefs</string>
 				<key>alpha</key>
-				<false/>
+				<true/>
 				<key>defaults</key>
 				<string>com.opa334.safaripluscolorprefs</string>
 				<key>fallback</key>
@@ -160,6 +160,32 @@
 				<key>key</key>
 				<string>topBarNormalTabBarTitleColor</string>
 			</dict>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>label</key>
+			<string>INACTIVE_TITLE_OPACITY</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>0.4</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>isSegmented</key>
+			<string>0</string>
+			<key>key</key>
+			<string>topBarNormalTabBarInactiveTitleOpacity</string>
+			<key>max</key>
+			<string>1</string>
+			<key>min</key>
+			<string>0</string>
+			<key>showValue</key>
+			<string>1</string>
 		</dict>
 		<dict>
 			<key>cell</key>

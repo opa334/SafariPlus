@@ -40,6 +40,7 @@
 - (void)verifyDownloadStorageRevision;
 - (void)configureSession;
 - (void)clearTempFiles;
+- (void)clearTempFilesIgnorePendingDownloads:(BOOL)ignorePendingDownloads;
 - (void)cancelAllDownloads;
 - (void)clearDownloadHistory;
 - (void)resumeDownloadsFromDiskLoad;
@@ -47,6 +48,7 @@
 
 - (void)downloadFinished:(SPDownload*)download;
 - (void)removeDownloadFromHistory:(SPDownload*)download;
+- (NSString*)pathForResumeData:(NSData*)resumeData;
 - (void)removeTemporaryFileForResumeData:(NSData*)resumeData;
 
 - (void)loadDownloadsFromDisk;

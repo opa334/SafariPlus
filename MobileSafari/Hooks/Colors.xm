@@ -432,6 +432,57 @@
 //Tab Bar Title Color
 %hook TabBarItemView
 
+- (void)_updateTitleBlends
+{
+  %orig;
+
+  if(preferenceManager.topBarNormalTabBarTitleColorEnabled || preferenceManager.topBarPrivateTabBarTitleColorEnabled)
+  {
+    TabBar* tabBar = MSHookIvar<TabBar*>(self, "_tabBar");
+    UILabel* titleLabel = MSHookIvar<UILabel*>(self, "_titleLabel");
+    UILabel* titleOverlayLabel = MSHookIvar<UILabel*>(self, "_titleOverlayLabel");
+
+    if(preferenceManager.topBarNormalTabBarTitleColorEnabled && tabBar.barStyle == 0)
+    {
+      [titleLabel.layer setCompositingFilter:nil];
+
+      if(self.active)
+      {
+        CGFloat activeTitleAlpha = 1.0;
+
+        [[preferenceManager topBarNormalTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+
+        titleLabel.alpha = activeTitleAlpha;
+        titleOverlayLabel.alpha = activeTitleAlpha;
+      }
+      else
+      {
+        titleLabel.alpha = [preferenceManager topBarNormalTabBarInactiveTitleOpacity];
+        titleOverlayLabel.alpha = [preferenceManager topBarNormalTabBarInactiveTitleOpacity];
+      }
+    }
+    else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
+    {
+      [titleLabel.layer setCompositingFilter:nil];
+
+      if(self.active)
+      {
+        CGFloat activeTitleAlpha = 1.0;
+
+        [[preferenceManager topBarPrivateTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+
+        titleLabel.alpha = activeTitleAlpha;
+        titleOverlayLabel.alpha = activeTitleAlpha;
+      }
+      else
+      {
+        titleLabel.alpha = [preferenceManager topBarPrivateTabBarInactiveTitleOpacity];
+        titleOverlayLabel.alpha = [preferenceManager topBarPrivateTabBarInactiveTitleOpacity];
+      }
+    }
+  }
+}
+
 - (void)_layoutTitleLabelUsingCachedTruncation
 {
   %orig;
@@ -439,20 +490,15 @@
   if(preferenceManager.topBarNormalTabBarTitleColorEnabled || preferenceManager.topBarPrivateTabBarTitleColorEnabled)
   {
     TabBar* tabBar = MSHookIvar<TabBar*>(self, "_tabBar");
-
-    BrowserController* browserController = MSHookIvar<BrowserController*>(tabBar.delegate, "_browserController");
-
-    BOOL privateMode = privateBrowsingEnabled(browserController);
-
     UILabel* titleLabel = MSHookIvar<UILabel*>(self, "_titleLabel");
 
-    if(preferenceManager.topBarNormalTabBarTitleColorEnabled && !privateMode)
+    if(preferenceManager.topBarNormalTabBarTitleColorEnabled && tabBar.barStyle == 0)
     {
-      titleLabel.textColor = [preferenceManager topBarNormalTabBarTitleColor];
+      titleLabel.textColor = [[preferenceManager topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
     }
-    else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && privateMode)
+    else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
     {
-      titleLabel.textColor = [preferenceManager topBarPrivateTabBarTitleColor];
+      titleLabel.textColor = [[preferenceManager topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
     }
   }
 }
@@ -472,7 +518,16 @@
 
   if(preferenceManager.topBarNormalTabBarTitleColorEnabled)
   {
-    MSHookIvar<UIColor*>(normalStyle, "_itemTitleColor") = [preferenceManager topBarNormalTabBarTitleColor];
+    UIColor* topBarNormalTabBarTitleColor = [preferenceManager topBarNormalTabBarTitleColor];
+
+    MSHookIvar<UIColor*>(normalStyle, "_itemTitleColor") = [topBarNormalTabBarTitleColor colorWithAlphaComponent:1.0];
+
+    CGFloat activeTitleAlpha = 1.0;
+
+    [topBarNormalTabBarTitleColor getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+
+    MSHookIvar<CGFloat>(normalStyle, "_itemActiveTitleAlpha") = activeTitleAlpha;
+    MSHookIvar<CGFloat>(normalStyle, "_itemInactiveTitleAlpha") = preferenceManager.topBarNormalTabBarInactiveTitleOpacity;
 
     //This filter causes the title color to go weird in some cases, so we just disable it
     MSHookIvar<id>(normalStyle, "_itemInactiveTitleCompositingFilter") = nil;
@@ -487,7 +542,16 @@
 
   if(preferenceManager.topBarPrivateTabBarTitleColorEnabled)
   {
-    MSHookIvar<UIColor*>(privateBrowsingStyle, "_itemTitleColor") = [preferenceManager topBarPrivateTabBarTitleColor];
+    UIColor* topBarPrivateTabBarTitleColor = [preferenceManager topBarPrivateTabBarTitleColor];
+
+    MSHookIvar<UIColor*>(privateBrowsingStyle, "_itemTitleColor") = [topBarPrivateTabBarTitleColor colorWithAlphaComponent:1.0];
+
+    CGFloat activeTitleAlpha = 1.0;
+
+    [topBarPrivateTabBarTitleColor getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+
+    MSHookIvar<CGFloat>(privateBrowsingStyle, "_itemActiveTitleAlpha") = activeTitleAlpha;
+    MSHookIvar<CGFloat>(privateBrowsingStyle, "_itemInactiveTitleAlpha") = preferenceManager.topBarPrivateTabBarInactiveTitleOpacity;
 
     //This filter causes the title color to go weird in some cases, so we just disable it
     MSHookIvar<id>(privateBrowsingStyle, "_itemInactiveTitleCompositingFilter") = nil;

@@ -153,6 +153,9 @@
 "FULLSCREEN_SCROLLING_FOOTER" = "Hides the complete top bar when scrolling down.\n\nNOTE: Does not work on iOS 8!";
 "FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
 
+"REMOVE_TAB_LIMIT" = "Remove Tab Limit";
+"REMOVE_TAB_LIMIT_FOOTER" = "Disables the imposed tab limit that varies based on iOS version and device. There is probably a reason why Apple has decided to enforce a tab limit, use on your own risk.";
+
 "LOCK_BARS" = "Lock Bars";
 "LOCK_BARS_FOOTER" = "Locks the bottom and the top bar in place, so they won't get hidden anymore when the page is being scrolled down.";
 
@@ -179,6 +182,7 @@
 "BACKGROUND_COLOR" = "Background Color";
 "STATUS_BAR_COLOR" = "Status Bar Color";
 "TAB_BAR_TITLE_COLOR" = "Tab Bar Title Color";
+"INACTIVE_TITLE_OPACITY" = "Inactive Title Opacity";
 "TAB_BAR_BACKGROUND_COLOR" = "Tab Bar Background Color";
 "URL_FONT_COLOR" = "URL Font Color";
 "PROGRESS_BAR_COLOR" = "Progress Bar Color";
@@ -229,8 +233,9 @@
 "CLEAR" = "Clear";
 "CANCEL_ALL_DOWNLOADS" = "Cancel All Downloads";
 "CLEAR_DOWNLOAD_HISTORY" = "Clear Download History";
+"CLEAR_TEMPORARY_DATA" = "Clear Temporary Data";
 "CLEAR_EVERYTHING" = "Clear Everything";
-"CLEAR_EVERYTHING_WARNING" = "Are you sure you want to cancel all downloads and clear the download history and all temporary files?";
+"CLEAR_EVERYTHING_WARNING" = "Are you sure you want to cancel all downloads, clear the download history and all temporary data?";
 "CREATE_DIRECTORY" = "Create Directory";
 "DIRECTORY_NAME" = "Directory Name";
 "CREATE" = "Create";

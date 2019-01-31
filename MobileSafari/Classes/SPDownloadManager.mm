@@ -188,6 +188,11 @@
 
 - (void)clearTempFiles
 {
+  [self clearTempFilesIgnorePendingDownloads:NO];
+}
+
+- (void)clearTempFilesIgnorePendingDownloads:(BOOL)ignorePendingDownloads
+{
   //NOTE: Sometimes temp files are saved in /tmp and sometimes in caches
 
   //Get files in tmp directory
@@ -212,8 +217,30 @@
   {
     if([fileURL.lastPathComponent containsString:@"CFNetworkDownload"])
     {
-      //File is cached download -> remove it
-      [[NSFileManager defaultManager] removeItemAtURL:fileURL error:nil];
+      BOOL shouldDelete = YES;
+
+      if(ignorePendingDownloads)
+      {
+        for(SPDownload* download in self.pendingDownloads)
+        {
+          if(download.resumeData)
+          {
+            NSString* tmpPath = [self pathForResumeData:download.resumeData];
+
+            if([tmpPath isEqualToString:[fileURL path]])
+            {
+              shouldDelete = NO;
+              break;
+            }
+          }
+        }
+      }
+
+      if(shouldDelete)
+      {
+        //File is cached download -> remove it
+        [[NSFileManager defaultManager] removeItemAtURL:fileURL error:nil];
+      }
     }
   }
 }
@@ -300,12 +327,9 @@
   [self.navigationControllerDelegate reloadDownloadList];
 }
 
-//Removes the temp file after a download has been cancelled
-- (void)removeTemporaryFileForResumeData:(NSData*)resumeData
+//Retrieves temp path from resumeData
+- (NSString*)pathForResumeData:(NSData*)resumeData
 {
-  dlog(@"removeTemporaryFileForResumeData");
-  dlogDownloadManager();
-
   //Parse resumeData
   NSDictionary* resumeDataDict = [NSPropertyListSerialization
     propertyListWithData:resumeData options:NSPropertyListImmutable
@@ -313,16 +337,23 @@
 
   NSString* filename = [resumeDataDict objectForKey:@"NSURLSessionResumeInfoTempFileName"];
 
-  NSURL* tmpFileURL;
-
   if(filename)
   {
-    tmpFileURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingString:filename]];
+    return [NSTemporaryDirectory() stringByAppendingString:filename];
   }
   else
   {
-    tmpFileURL = [NSURL fileURLWithPath:[resumeDataDict objectForKey:@"NSURLSessionResumeInfoLocalPath"]];
+    return [resumeDataDict objectForKey:@"NSURLSessionResumeInfoLocalPath"];
   }
+}
+
+//Removes the temp file after a download has been cancelled
+- (void)removeTemporaryFileForResumeData:(NSData*)resumeData
+{
+  dlog(@"removeTemporaryFileForResumeData");
+  dlogDownloadManager();
+
+  NSURL* tmpFileURL = [NSURL fileURLWithPath:[self pathForResumeData:resumeData]];
 
   [fileManager removeItemAtURL:tmpFileURL error:nil];
 }

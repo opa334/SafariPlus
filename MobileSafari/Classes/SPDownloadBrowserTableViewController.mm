@@ -27,7 +27,6 @@
 #import "SPCommunicationManager.h"
 #import "SPFileManager.h"
 #import "SPFile.h"
-#import "SPMusicImport.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVPlayerViewController.h>
@@ -398,9 +397,7 @@
     localizedSPStringForKey:@"IMPORT_TO_MUSIC_LIBRARY"]
     style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
   {
-    SPMusicImport* import = [[SPMusicImport alloc] initWithURL:[NSURL URLWithString:@"http://gecko-oberhausen.net/track01.mp3"]];
 
-    [communicationManager importMusic:import];
   }];
 }*/
 

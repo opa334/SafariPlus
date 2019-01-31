@@ -368,6 +368,7 @@ extern void initAVFullScreenPlaybackControlsViewController();
 extern void initAVPlaybackControlsView();
 extern void initBrowserController();
 extern void initColors();
+extern void initTabController();
 extern void initTabDocument();
 extern void initWKFileUploadPanel();
 
@@ -382,6 +383,7 @@ extern void initWKFileUploadPanel();
   initAVPlaybackControlsView();
   initBrowserController();
   initColors();
+  initTabController();
   initTabDocument();
   initWKFileUploadPanel();
 }

@@ -25,7 +25,6 @@
 - (BOOL)testConnection;
 - (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message;
 - (NSDictionary*)executeFileOperationOnSpringBoard:(NSDictionary*)operation;
-//- (void)importMusic:(SPMusicImport*)musicImport;
 - (NSDictionary*)applicationDisplayNamesForPaths;
 
 @end

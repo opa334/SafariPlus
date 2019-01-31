@@ -68,7 +68,7 @@
 }
 
 //Calls NSFileManager to execute the passed file operation
-//Safari is sandboxed on Electra, SpringBoard isn't. Therefore we let it do all of the file related operations.
+//Safari is sandboxed on modern kppless jailbreaks (Electra / unc0ver), SpringBoard isn't. Therefore we let it do all of the file related operations.
 - (NSDictionary*)handleFileOperation:(NSString*)name withUserInfo:(NSDictionary*)serializedUserInfo
 {
   NSDictionary* userInfo = [NSKeyedUnarchiver unarchiveObjectWithData:[serializedUserInfo objectForKey:@"data"]];
@@ -121,6 +121,16 @@
     case FileOperation_RemoveItem_URL:
     {
       ret = [NSNumber numberWithBool:[fileManager removeItemAtURL:[userInfo objectForKey:@"URL"] error:&error]];
+      break;
+    }
+    case FileOperation_CopyItem:
+    {
+      ret = [NSNumber numberWithBool:[fileManager copyItemAtPath:[userInfo objectForKey:@"srcPath"] toPath:[userInfo objectForKey:@"dstPath"] error:&error]];
+      break;
+    }
+    case FileOperation_CopyItem_URL:
+    {
+      ret = [NSNumber numberWithBool:[fileManager copyItemAtURL:[userInfo objectForKey:@"srcURL"] toURL:[userInfo objectForKey:@"dstURL"] error:&error]];
       break;
     }
     case FileOperation_LinkItem:
@@ -209,10 +219,12 @@
   return serializedRetDict;
 }
 
-//Import to music library (Not working)
+//Import to music library
 /*- (NSDictionary*)importToMusicLibrary:(NSString*)name withUserInfo:(NSDictionary*)serializedUserInfo
 {
   NSDictionary* userInfo = [NSKeyedUnarchiver unarchiveObjectWithData:[serializedUserInfo objectForKey:@"data"]];
+
+  NSURL* musicURL = [userInfo objectForKey:@"musicURL"];
 
   SSDownloadMetadata* downloadMetadata = [[SSDownloadMetadata alloc] init];
 

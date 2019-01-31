@@ -153,6 +153,9 @@
 "FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.\n\nHINWEIS: Nicht kompatibel mit iOS 8!";
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
 
+"REMOVE_TAB_LIMIT" = "Tab Limit entfernen";
+"REMOVE_TAB_LIMIT_FOOTER" = "Deaktiviert das Tab Limit, welches abhängig von iOS Version und Gerät varriert. Apple wird wahrscheinlich Gründe für das Tab Limit haben, Benutzung auf eigene Gefahr.";
+
 "LOCK_BARS" = "Leisten sperren";
 "LOCK_BARS_FOOTER" = "Sperrt die obere und die untere Leiste, sodass diese nicht mehr verschwinden, wenn die Seite nach unten gescrollt wird.";
 
@@ -179,6 +182,7 @@
 "BACKGROUND_COLOR" = "Hintergrundfarbe";
 "STATUS_BAR_COLOR" = "Farbe der Statusleiste";
 "TAB_BAR_TITLE_COLOR" = "Schriftfarbe der Tab Leiste";
+"INACTIVE_TITLE_OPACITY" = "Deckkraft der inaktiven Titel";
 "TAB_BAR_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Leiste";
 "URL_FONT_COLOR" = "URL Schriftfarbe";
 "PROGRESS_BAR_COLOR" = "Farbe des Ladebalkens";
@@ -229,8 +233,9 @@
 "CLEAR" = "Leeren";
 "CANCEL_ALL_DOWNLOADS" = "Alle Downloads abbrechen";
 "CLEAR_DOWNLOAD_HISTORY" = "Download Verlauf leeren";
+"CLEAR_TEMPORARY_DATA" = "Temporäre Daten bereinigen";
 "CLEAR_EVERYTHING" = "Alles bereinigen";
-"CLEAR_EVERYTHING_WARNING" = "Sollen alle Downloads abgebrochen, der Download Verlauf geleert und die temporären Dateien bereinigt werden?";
+"CLEAR_EVERYTHING_WARNING" = "Sollen alle Downloads abgebrochen, der Download Verlauf geleert und die temporären Daten bereinigt werden?";
 "CREATE_DIRECTORY" = "Ordner erstellen";
 "DIRECTORY_NAME" = "Ordnername";
 "CREATE" = "Erstellen";

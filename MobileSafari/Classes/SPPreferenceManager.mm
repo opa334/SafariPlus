@@ -100,6 +100,7 @@ void reloadColors()
   _URLDownSwipeAction = 5;
 
   _fullscreenScrollingEnabled = YES;
+  _removeTabLimit = NO;
   _disablePrivateMode = NO;
   _alwaysOpenNewTabEnabled = NO;
   _alwaysOpenNewTabInBackgroundEnabled = NO;
@@ -111,7 +112,8 @@ void reloadColors()
   _topBarNormalProgressBarColorEnabled = NO;
   _topBarNormalLockIconColorEnabled = NO;
   _topBarNormalReloadButtonColorEnabled = NO;
-  _topBarNormalTabBarTitleColorEnabled = NO;
+  _topBarNormalTabBarTitleColorEnabled = YES;
+  _topBarNormalTabBarInactiveTitleOpacity = 0.4;
   _bottomBarNormalTintColorEnabled = NO;
   _bottomBarNormalBackgroundColorEnabled = NO;
   _tabTitleBarNormalTextColorEnabled = NO;
@@ -124,6 +126,7 @@ void reloadColors()
   _topBarPrivateLockIconColorEnabled = NO;
   _topBarPrivateReloadButtonColorEnabled = NO;
   _topBarPrivateTabBarTitleColorEnabled = NO;
+  _topBarPrivateTabBarInactiveTitleOpacity = 0.6;
   _bottomBarPrivateTintColorEnabled = NO;
   _bottomBarPrivateBackgroundColorEnabled = NO;
   _tabTitleBarPrivateTextColorEnabled = NO;
@@ -178,6 +181,7 @@ void reloadColors()
   [preferences registerBool:&_gestureBackground default:NO forKey:@"gestureBackground"];
 
   [preferences registerBool:&_fullscreenScrollingEnabled default:NO forKey:@"fullscreenScrollingEnabled"];
+  [preferences registerBool:&_removeTabLimit default:NO forKey:@"removeTabLimit"];
   [preferences registerBool:&_lockBars default:NO forKey:@"lockBars"];
   [preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
   [preferences registerBool:&_alwaysOpenNewTabEnabled default:NO forKey:@"alwaysOpenNewTabEnabled"];
@@ -189,6 +193,7 @@ void reloadColors()
   [preferences registerBool:&_topBarNormalStatusBarStyleEnabled default:UIStatusBarStyleDefault forKey:@"topBarNormalStatusBarStyleEnabled"];
   [preferences registerInteger:&_topBarNormalStatusBarStyle default:NO forKey:@"topBarNormalStatusBarStyle"];
   [preferences registerBool:&_topBarNormalTabBarTitleColorEnabled default:NO forKey:@"topBarNormalTabBarTitleColorEnabled"];
+  [preferences registerFloat:&_topBarNormalTabBarInactiveTitleOpacity default:0.4 forKey:@"topBarNormalTabBarInactiveTitleOpacity"];
   [preferences registerBool:&_topBarNormalURLFontColorEnabled default:NO forKey:@"topBarNormalURLFontColorEnabled"];
   [preferences registerBool:&_topBarNormalProgressBarColorEnabled default:NO forKey:@"topBarNormalProgressBarColorEnabled"];
   [preferences registerBool:&_topBarNormalLockIconColorEnabled default:NO forKey:@"topBarNormalLockIconColorEnabled"];
@@ -203,6 +208,7 @@ void reloadColors()
   [preferences registerBool:&_topBarPrivateStatusBarStyleEnabled default:NO forKey:@"topBarPrivateStatusBarStyleEnabled"];
   [preferences registerInteger:&_topBarPrivateStatusBarStyle default:UIStatusBarStyleLightContent forKey:@"topBarPrivateStatusBarStyle"];
   [preferences registerBool:&_topBarPrivateTabBarTitleColorEnabled default:NO forKey:@"topBarPrivateTabBarTitleColorEnabled"];
+  [preferences registerFloat:&_topBarPrivateTabBarInactiveTitleOpacity default:0.2 forKey:@"topBarPrivateTabBarInactiveTitleOpacity"];
   [preferences registerBool:&_topBarPrivateURLFontColorEnabled default:NO forKey:@"topBarPrivateURLFontColorEnabled"];
   [preferences registerBool:&_topBarPrivateProgressBarColorEnabled default:NO forKey:@"topBarPrivateProgressBarColorEnabled"];
   [preferences registerBool:&_topBarPrivateLockIconColorEnabled default:NO forKey:@"topBarPrivateLockIconColorEnabled"];
@@ -255,7 +261,7 @@ void reloadColors()
 - (UIColor*)topBarNormalProgressBarColor { return [UIColor redColor]; }
 - (UIColor*)topBarNormalLockIconColor { return [UIColor redColor]; }
 - (UIColor*)topBarNormalReloadButtonColor { return [UIColor redColor]; }
-- (UIColor*)topBarNormalTabBarTitleColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalTabBarTitleColor { return [[UIColor redColor] colorWithAlphaComponent:0.8]; }
 - (UIColor*)bottomBarNormalTintColor { return [UIColor redColor]; }
 - (UIColor*)bottomBarNormalBackgroundColor { return [UIColor redColor]; }
 - (UIColor*)tabTitleBarNormalTextColor { return [UIColor redColor]; }
@@ -268,7 +274,7 @@ void reloadColors()
 - (UIColor*)topBarPrivateProgressBarColor { return [UIColor redColor]; }
 - (UIColor*)topBarPrivateLockIconColor { return [UIColor redColor]; }
 - (UIColor*)topBarPrivateReloadButtonColor { return [UIColor redColor]; }
-- (UIColor*)topBarPrivateTabBarTitleColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateTabBarTitleColor { return [[UIColor redColor] colorWithAlphaComponent:0.8]; }
 - (UIColor*)bottomBarPrivateTintColor { return [UIColor redColor]; }
 - (UIColor*)bottomBarPrivateBackgroundColor { return [UIColor redColor]; }
 - (UIColor*)tabTitleBarPrivateTextColor { return [UIColor redColor]; }

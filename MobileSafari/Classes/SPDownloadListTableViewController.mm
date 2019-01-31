@@ -130,6 +130,15 @@
 
   [clearAlert addAction:clearHistoryAction];
 
+  UIAlertAction* clearTempFilesAction = [UIAlertAction actionWithTitle:[localizationManager
+    localizedSPStringForKey:@"CLEAR_TEMPORARY_DATA"] style:UIAlertActionStyleDestructive
+    handler:^(UIAlertAction* action)
+  {
+    [downloadManager clearTempFilesIgnorePendingDownloads:YES];
+  }];
+
+  [clearAlert addAction:clearTempFilesAction];
+
   UIAlertAction* clearEverythingAction = [UIAlertAction actionWithTitle:[localizationManager
     localizedSPStringForKey:@"CLEAR_EVERYTHING"] style:UIAlertActionStyleDestructive
     handler:^(UIAlertAction* action)
