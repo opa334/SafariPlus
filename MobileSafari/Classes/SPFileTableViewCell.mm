@@ -25,53 +25,53 @@
 
 - (void)applyFile:(SPFile*)file
 {
-  //Set label of cell to filename
-  self.textLabel.attributedText = file.cellTitle;
+	//Set label of cell to filename
+	self.textLabel.attributedText = file.cellTitle;
 
-  if(file.isRegularFile)
-  {
-    //URL is file -> set imageView to file icon
-    self.imageView.image = [fileManager fileIcon];
+	if(file.isRegularFile)
+	{
+		//URL is file -> set imageView to file icon
+		self.imageView.image = [fileManager fileIcon];
 
-    //Remove possibly reused arrow on the right
-    self.accessoryType = UITableViewCellAccessoryNone;
+		//Remove possibly reused arrow on the right
+		self.accessoryType = UITableViewCellAccessoryNone;
 
-    //Create sizeLabel from filesize and set it to accessoryView
-    UILabel* sizeLabel = [[UILabel alloc] init];
-    sizeLabel.text = [NSByteCountFormatter stringFromByteCount:file.size countStyle:NSByteCountFormatterCountStyleFile];
-    sizeLabel.textColor = [UIColor lightGrayColor];
-    sizeLabel.font = [sizeLabel.font fontWithSize:10];
-    sizeLabel.textAlignment = NSTextAlignmentCenter;
-    sizeLabel.frame = CGRectMake(0,0, sizeLabel.intrinsicContentSize.width, 15);
-    self.accessoryView = sizeLabel;
-  }
-  else
-  {
-    //URL is directory -> set imageView to directory icon
-    self.imageView.image = [fileManager directoryIcon];
+		//Create sizeLabel from filesize and set it to accessoryView
+		UILabel* sizeLabel = [[UILabel alloc] init];
+		sizeLabel.text = [NSByteCountFormatter stringFromByteCount:file.size countStyle:NSByteCountFormatterCountStyleFile];
+		sizeLabel.textColor = [UIColor lightGrayColor];
+		sizeLabel.font = [sizeLabel.font fontWithSize:10];
+		sizeLabel.textAlignment = NSTextAlignmentCenter;
+		sizeLabel.frame = CGRectMake(0,0, sizeLabel.intrinsicContentSize.width, 15);
+		self.accessoryView = sizeLabel;
+	}
+	else
+	{
+		//URL is directory -> set imageView to directory icon
+		self.imageView.image = [fileManager directoryIcon];
 
-    //Set accessoryType to disclosureIndicator (arrow to the right)
-    self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+		//Set accessoryType to disclosureIndicator (arrow to the right)
+		self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
-    //Remove possibly existing accessoryView
-    self.accessoryView = nil;
-  }
+		//Remove possibly existing accessoryView
+		self.accessoryView = nil;
+	}
 
-  if(file.isHidden)
-  {
-    //File is hidden -> modify alpha
-    self.imageView.alpha = 0.4;
-    self.textLabel.alpha = 0.4;
-  }
-  else
-  {
-    //File is not hidden -> Set alpha to normal values (after cell reuse)
-    self.imageView.alpha = 1;
-    self.textLabel.alpha = 1;
-  }
+	if(file.isHidden)
+	{
+		//File is hidden -> modify alpha
+		self.imageView.alpha = 0.4;
+		self.textLabel.alpha = 0.4;
+	}
+	else
+	{
+		//File is not hidden -> Set alpha to normal values (after cell reuse)
+		self.imageView.alpha = 1;
+		self.textLabel.alpha = 1;
+	}
 
-  //Enable seperators between imageViews
-  [self setSeparatorInset:UIEdgeInsetsZero];
+	//Enable seperators between imageViews
+	[self setSeparatorInset:UIEdgeInsetsZero];
 }
 
 @end

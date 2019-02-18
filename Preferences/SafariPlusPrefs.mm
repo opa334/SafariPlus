@@ -25,7 +25,7 @@
 SPFileManager* fileManager;
 SPLocalizationManager* localizationManager;
 NSBundle* SPBundle;
-NSBundle* MSBundle; //Unused, just here to satisfy the linker
+NSBundle* MSBundle;	//Unused, just here to satisfy the linker
 
 void otherPlistChanged()
 {
@@ -153,7 +153,7 @@ void otherPlistChanged()
 	if(section == 0)
 	{
 		return self.headerView;
-  }
+	}
 
 	return nil;
 }
@@ -182,7 +182,7 @@ void otherPlistChanged()
 
 - (void)sourceLink
 {
-  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];
 }
 
 - (void)openTwitter
@@ -288,24 +288,24 @@ void otherPlistChanged()
 		_specifiers = [NSMutableArray new];
 
 		PSSpecifier* URLListGroup = [PSSpecifier preferenceSpecifierNamed:@""
-									target:self
-									set:nil
-									get:nil
-									detail:nil
-									cell:PSGroupCell
-									edit:nil];
+					     target:self
+					     set:nil
+					     get:nil
+					     detail:nil
+					     cell:PSGroupCell
+					     edit:nil];
 
 		[_specifiers addObject:URLListGroup];
 
 		for(NSString* exception in ForceHTTPSExceptions)
 		{
 			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:exception
-									target:self
-										set:nil
-										get:nil
-									detail:nil
-										cell:PSStaticTextCell
-										edit:nil];
+						  target:self
+						  set:nil
+						  get:nil
+						  detail:nil
+						  cell:PSStaticTextCell
+						  edit:nil];
 
 			[specifier setProperty:@YES forKey:@"enabled"];
 
@@ -320,8 +320,8 @@ void otherPlistChanged()
 - (void)addButtonPressed
 {
 	UIAlertController * addLocationAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_TITLE"]
-											message:[localizationManager localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
-											preferredStyle:UIAlertControllerStyleAlert];
+						message:[localizationManager localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_MESSAGE"]
+						preferredStyle:UIAlertControllerStyleAlert];
 
 	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
@@ -345,18 +345,18 @@ void otherPlistChanged()
 		[plist writeToFile:otherPlistPath atomically:YES];
 
 		PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:URLField.text
-									target:self
-									set:@selector(setPreferenceValue:specifier:)
-									get:@selector(readPreferenceValue:)
-									detail:nil
-									cell:PSStaticTextCell
-									edit:nil];
+					  target:self
+					  set:@selector(setPreferenceValue:specifier:)
+					  get:@selector(readPreferenceValue:)
+					  detail:nil
+					  cell:PSStaticTextCell
+					  edit:nil];
 
 		[specifier setProperty:@YES forKey:@"enabled"];
 		[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
 
 		otherPlistChanged();
-  }]];
+	}]];
 
 	[self presentViewController:addLocationAlert animated:YES completion:nil];
 }
@@ -426,24 +426,24 @@ void otherPlistChanged()
 		_specifiers = [NSMutableArray new];
 
 		PSSpecifier* LocationListGroup = [PSSpecifier preferenceSpecifierNamed:@""
-									target:self
-									set:nil
-									get:nil
-									detail:nil
-									cell:PSGroupCell
-									edit:nil];
+						  target:self
+						  set:nil
+						  get:nil
+						  detail:nil
+						  cell:PSGroupCell
+						  edit:nil];
 
 		[_specifiers addObject:LocationListGroup];
 
 		for(NSString* PinnedLocationName in PinnedLocationNames)
 		{
 			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:PinnedLocationName
-									target:self
-										set:nil
-										get:nil
-									detail:nil
-										cell:PSStaticTextCell
-										edit:nil];
+						  target:self
+						  set:nil
+						  get:nil
+						  detail:nil
+						  cell:PSStaticTextCell
+						  edit:nil];
 
 			[specifier setProperty:@YES forKey:@"enabled"];
 
@@ -458,16 +458,16 @@ void otherPlistChanged()
 - (void)presentAddAlertWithName:(NSString*)name path:(NSString*)path
 {
 	UIAlertController* addLocationAlert = [UIAlertController alertControllerWithTitle:
-		[localizationManager
-		localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_TITLE"]
-		message:[localizationManager
-		localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_MESSAGE"]
-		preferredStyle:UIAlertControllerStyleAlert];
+					       [localizationManager
+						localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_TITLE"]
+					       message:[localizationManager
+							localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_MESSAGE"]
+					       preferredStyle:UIAlertControllerStyleAlert];
 
 	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
 		textField.placeholder = [localizationManager
-			localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER"];
+					 localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER"];
 
 		textField.textColor = [UIColor blackColor];
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -478,7 +478,7 @@ void otherPlistChanged()
 	[addLocationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
 		textField.placeholder = [localizationManager
-			localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER"];
+					 localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER"];
 
 		textField.textColor = [UIColor blackColor];
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -487,24 +487,24 @@ void otherPlistChanged()
 	}];
 
 	[addLocationAlert addAction:[UIAlertAction actionWithTitle:
-		[localizationManager
-		localizedSPStringForKey:@"BROWSE"] style:UIAlertActionStyleDefault
-		handler:^(UIAlertAction *addAction)
+				     [localizationManager
+				      localizedSPStringForKey:@"BROWSE"] style:UIAlertActionStyleDefault
+				     handler:^(UIAlertAction *addAction)
 	{
 		NSString* name = addLocationAlert.textFields[0].text;
 		[self openDirectoryPickerWithName:name];
 	}]];
 
 	[addLocationAlert addAction:[UIAlertAction actionWithTitle:
-		[localizationManager
-		localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault
-		handler:^(UIAlertAction *addAction)
+				     [localizationManager
+				      localizedSPStringForKey:@"ADD"] style:UIAlertActionStyleDefault
+				     handler:^(UIAlertAction *addAction)
 	{
 		NSString* name = addLocationAlert.textFields[0].text;
 		NSString* path = addLocationAlert.textFields[1].text;
 
 		BOOL isDir;
-    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
 
 		if(![name isEqualToString:@""] && ![path isEqualToString:@""] && exists && isDir)
 		{
@@ -514,12 +514,12 @@ void otherPlistChanged()
 			[plist writeToFile:otherPlistPath atomically:YES];
 
 			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:name
-										target:self
-										set:@selector(setPreferenceValue:specifier:)
-										get:@selector(readPreferenceValue:)
-										detail:nil
-										cell:PSStaticTextCell
-										edit:nil];
+						  target:self
+						  set:@selector(setPreferenceValue:specifier:)
+						  get:@selector(readPreferenceValue:)
+						  detail:nil
+						  cell:PSStaticTextCell
+						  edit:nil];
 
 			[specifier setProperty:@YES forKey:@"enabled"];
 			[self insertSpecifier:specifier atEndOfGroup:0 animated:YES];
@@ -529,21 +529,21 @@ void otherPlistChanged()
 		else
 		{
 			UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:
-				[localizationManager
-				localizedSPStringForKey:@"ERROR"]
-				message:[localizationManager
-				localizedSPStringForKey:@"ERROR_INVALID_NAME_OR_PATH"]
-				preferredStyle:UIAlertControllerStyleAlert];
+							 [localizationManager
+							  localizedSPStringForKey:@"ERROR"]
+							 message:[localizationManager
+								  localizedSPStringForKey:@"ERROR_INVALID_NAME_OR_PATH"]
+							 preferredStyle:UIAlertControllerStyleAlert];
 
 			UIAlertAction* okAction = [UIAlertAction actionWithTitle:@"OK"
-				style:UIAlertActionStyleDefault
-				handler:nil];
+						   style:UIAlertActionStyleDefault
+						   handler:nil];
 
 			[errorAlert addAction:okAction];
 
 			[self presentViewController:errorAlert animated:YES completion:nil];
 		}
-  }]];
+	}]];
 
 	[addLocationAlert addAction:[UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleDefault handler:^(UIAlertAction *cancelAction)
 	{
@@ -846,7 +846,7 @@ void otherPlistChanged()
 
 - (void)WatusiLink
 {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.reddit.com/r/jailbreak/comments/6f7zdn/release_watusi_2_your_allinone_tweak_for_whatsapp/"]];
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.reddit.com/r/jailbreak/comments/6f7zdn/release_watusi_2_your_allinone_tweak_for_whatsapp/"]];
 }
 
 @end

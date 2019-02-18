@@ -20,7 +20,7 @@
 
 @interface SPDownloadTableViewCell : UITableViewCell <DownloadCellDelegate>
 {
-  NSString* _filename;
+	NSString* _filename;
 }
 
 @property (nonatomic) UIProgressView* progressView;

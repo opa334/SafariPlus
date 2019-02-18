@@ -28,99 +28,99 @@
 
 - (void)setUpRightBarButtonItems
 {
-  //UIBarButtonItem to choose current directory
-  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
-    localizedSPStringForKey:@"CHOOSE"] style:UIBarButtonItemStylePlain
-    target:self action:@selector(chooseButtonPressed)];
+	//UIBarButtonItem to choose current directory
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
+											 localizedSPStringForKey:@"CHOOSE"] style:UIBarButtonItemStylePlain
+						  target:self action:@selector(chooseButtonPressed)];
 }
 
 - (void)chooseButtonPressed
 {
-  NSNumber* isWritable;
-  [self.directoryURL getResourceValue:&isWritable forKey:NSURLIsWritableKey error:nil];
+	NSNumber* isWritable;
+	[self.directoryURL getResourceValue:&isWritable forKey:NSURLIsWritableKey error:nil];
 
-  if([isWritable boolValue])
-  {
-    //Path is writable -> create alert to pick file name
-    UIAlertController * confirmationAlert = [UIAlertController alertControllerWithTitle:
-      [localizationManager localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_TITLE"]
-      message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_MESSAGE"], self.directoryURL.path]
-  		preferredStyle:UIAlertControllerStyleAlert];
+	if([isWritable boolValue])
+	{
+		//Path is writable -> create alert to pick file name
+		UIAlertController * confirmationAlert = [UIAlertController alertControllerWithTitle:
+							 [localizationManager localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_TITLE"]
+							 message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CHOOSE_PATH_CONFIRMATION_MESSAGE"], self.directoryURL.path]
+							 preferredStyle:UIAlertControllerStyleAlert];
 
-    //Create yes action to pick a path
-    UIAlertAction* yesAction = [UIAlertAction actionWithTitle:
-      [localizationManager localizedSPStringForKey:@"YES"]
-      style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
-      {
-        //Dismiss picker
-        [self dismissViewControllerAnimated:YES completion:
-        ^{
-          //Get name
-          NSString* name = ((SPPDirectoryPickerNavigationController*)self.navigationController).name;
+		//Create yes action to pick a path
+		UIAlertAction* yesAction = [UIAlertAction actionWithTitle:
+					    [localizationManager localizedSPStringForKey:@"YES"]
+					    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+		{
+			//Dismiss picker
+			[self dismissViewControllerAnimated:YES completion:^
+			{
+				//Get name
+				NSString* name = ((SPPDirectoryPickerNavigationController*)self.navigationController).name;
 
-          //Finish picking
-          [((SPPDirectoryPickerNavigationController*)self.navigationController).pinnedLocationsDelegate
-            directoryPickerFinishedWithName:name path:self.directoryURL.path];
-        }];
-      }];
+				//Finish picking
+				[((SPPDirectoryPickerNavigationController*)self.navigationController).pinnedLocationsDelegate
+				 directoryPickerFinishedWithName:name path:self.directoryURL.path];
+			}];
+		}];
 
-    [confirmationAlert addAction:yesAction];
+		[confirmationAlert addAction:yesAction];
 
 
-    //Create no action to continue picking a path
-    UIAlertAction* noAction = [UIAlertAction actionWithTitle:
-      [localizationManager localizedSPStringForKey:@"NO"]
-      style:UIAlertActionStyleDefault handler:nil];
+		//Create no action to continue picking a path
+		UIAlertAction* noAction = [UIAlertAction actionWithTitle:
+					   [localizationManager localizedSPStringForKey:@"NO"]
+					   style:UIAlertActionStyleDefault handler:nil];
 
-    //Add action
-    [confirmationAlert addAction:noAction];
+		//Add action
+		[confirmationAlert addAction:noAction];
 
-    //Create action to close the picker
-    UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-      [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
-      style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
-    {
-      //Dismiss picker
-      [self dismiss];
-    }];
+		//Create action to close the picker
+		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
+						    [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
+						    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+		{
+			//Dismiss picker
+			[self dismiss];
+		}];
 
-    //Add action
-    [confirmationAlert addAction:closePickerAction];
+		//Add action
+		[confirmationAlert addAction:closePickerAction];
 
-    //Present alert
-    [self presentViewController:confirmationAlert animated:YES completion:nil];
-  }
-  else
-  {
-    //Path is not writable -> Create error alert
-    UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:
-      [localizationManager localizedSPStringForKey:@"ERROR"]
-      message:[localizationManager localizedSPStringForKey:@"PERMISSION_ERROR_MESSAGE"]
-  		preferredStyle:UIAlertControllerStyleAlert];
+		//Present alert
+		[self presentViewController:confirmationAlert animated:YES completion:nil];
+	}
+	else
+	{
+		//Path is not writable -> Create error alert
+		UIAlertController * errorAlert = [UIAlertController alertControllerWithTitle:
+						  [localizationManager localizedSPStringForKey:@"ERROR"]
+						  message:[localizationManager localizedSPStringForKey:@"PERMISSION_ERROR_MESSAGE"]
+						  preferredStyle:UIAlertControllerStyleAlert];
 
-    //Create action to close the alert
-    UIAlertAction* closeAction = [UIAlertAction actionWithTitle:
-    [localizationManager localizedSPStringForKey:@"CLOSE"]
-    style:UIAlertActionStyleDefault handler:nil];
+		//Create action to close the alert
+		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:
+					      [localizationManager localizedSPStringForKey:@"CLOSE"]
+					      style:UIAlertActionStyleDefault handler:nil];
 
-    //Add action
-    [errorAlert addAction:closeAction];
+		//Add action
+		[errorAlert addAction:closeAction];
 
-    //Create action to close the picker
-    UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-      [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
-      style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
-    {
-      //Close picker
-      [self dismiss];
-    }];
+		//Create action to close the picker
+		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
+						    [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
+						    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+		{
+			//Close picker
+			[self dismiss];
+		}];
 
-    //Add action
-    [errorAlert addAction:closePickerAction];
+		//Add action
+		[errorAlert addAction:closePickerAction];
 
-    //Present alert
-    [self presentViewController:errorAlert animated:YES completion:nil];
-  }
+		//Present alert
+		[self presentViewController:errorAlert animated:YES completion:nil];
+	}
 }
 
 @end

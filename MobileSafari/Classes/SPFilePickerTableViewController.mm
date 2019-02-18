@@ -26,130 +26,130 @@
 
 - (void)viewDidLoad
 {
-  [super viewDidLoad];
+	[super viewDidLoad];
 
-  //Activate checkmarks on the left while editing
-  self.tableView.allowsMultipleSelectionDuringEditing = YES;
+	//Activate checkmarks on the left while editing
+	self.tableView.allowsMultipleSelectionDuringEditing = YES;
 }
 
 - (void)dismiss
 {
-  //Dismiss file picker
-  [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFiles:nil];
+	//Dismiss file picker
+	[((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate filePicker:(SPFilePickerNavigationController*)self.navigationController didSelectFiles:nil];
 }
 
 - (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
-  if(file.isRegularFile)
-  {
-    //tapped entry is file -> call delegate to upload file
-    [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate didSelectFiles:@[file.fileURL]];
-  }
+	if(file.isRegularFile)
+	{
+		//tapped entry is file -> call delegate to upload file
+		[((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate filePicker:(SPFilePickerNavigationController*)self.navigationController didSelectFiles:@[file.fileURL]];
+	}
 
-  [super didSelectFile:file atIndexPath:indexPath];
+	[super didSelectFile:file atIndexPath:indexPath];
 }
 
 - (void)didLongPressFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
-  if(!self.tableView.editing && file.isRegularFile)
-  {
-    //Toggle editing mode
-    [self toggleEditing];
+	if(!self.tableView.editing && file.isRegularFile)
+	{
+		//Toggle editing mode
+		[self toggleEditing];
 
-    //Select file
-    [self.tableView selectRowAtIndexPath:indexPath animated:YES
-      scrollPosition:UITableViewScrollPositionNone];
+		//Select file
+		[self.tableView selectRowAtIndexPath:indexPath animated:YES
+		 scrollPosition:UITableViewScrollPositionNone];
 
-    //Update top right button status
-    [self updateTopRightButtonAvailability];
-  }
+		//Update top right button status
+		[self updateTopRightButtonAvailability];
+	}
 }
 
 - (void)toggleEditing
 {
-  //Toggle editing
-  [self.tableView setEditing:!self.tableView.editing animated:YES];
+	//Toggle editing
+	[self.tableView setEditing:!self.tableView.editing animated:YES];
 
-  if(self.tableView.editing)
-  {
-    //Entered editing mode -> change top buttons
-    UIBarButtonItem* cancelItem = [[UIBarButtonItem alloc]
-      initWithTitle:[localizationManager
-      localizedSPStringForKey:@"CANCEL"]
-      style:UIBarButtonItemStylePlain
-      target:self action:@selector(toggleEditing)];
+	if(self.tableView.editing)
+	{
+		//Entered editing mode -> change top buttons
+		UIBarButtonItem* cancelItem = [[UIBarButtonItem alloc]
+					       initWithTitle:[localizationManager
+							      localizedSPStringForKey:@"CANCEL"]
+					       style:UIBarButtonItemStylePlain
+					       target:self action:@selector(toggleEditing)];
 
-    UIBarButtonItem* uploadItem = [[UIBarButtonItem alloc]
-      initWithTitle:[localizationManager
-      localizedSPStringForKey:@"UPLOAD"]
-      style:UIBarButtonItemStylePlain
-      target:self action:@selector(uploadSelectedItems)];
+		UIBarButtonItem* uploadItem = [[UIBarButtonItem alloc]
+					       initWithTitle:[localizationManager
+							      localizedSPStringForKey:@"UPLOAD"]
+					       style:UIBarButtonItemStylePlain
+					       target:self action:@selector(uploadSelectedItems)];
 
-    self.navigationItem.leftBarButtonItem = cancelItem;
-    self.navigationItem.rightBarButtonItem = uploadItem;
+		self.navigationItem.leftBarButtonItem = cancelItem;
+		self.navigationItem.rightBarButtonItem = uploadItem;
 
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-  }
-  else
-  {
-    //Exited editing mode -> revert top buttons
-    self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
-    [self setUpRightBarButtonItems];
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-  }
+		self.navigationItem.rightBarButtonItem.enabled = NO;
+	}
+	else
+	{
+		//Exited editing mode -> revert top buttons
+		self.navigationItem.leftBarButtonItem = self.navigationItem.backBarButtonItem;
+		[self setUpRightBarButtonItems];
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+	}
 }
 
 - (void)uploadSelectedItems
 {
-  //Get selected items
-  NSArray* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
-  NSMutableArray* selectedURLs = [NSMutableArray new];
+	//Get selected items
+	NSArray* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
+	NSMutableArray* selectedURLs = [NSMutableArray new];
 
-  //Store fileURLs into array
-  for(NSIndexPath* indexPath in selectedIndexPaths)
-  {
-    NSURL* fileURL = self.filesAtCurrentURL[indexPath.row].fileURL;
-    [selectedURLs addObject:fileURL];
-  }
+	//Store fileURLs into array
+	for(NSIndexPath* indexPath in selectedIndexPaths)
+	{
+		NSURL* fileURL = self.filesAtCurrentURL[indexPath.row].fileURL;
+		[selectedURLs addObject:fileURL];
+	}
 
-  //Call delegate to upload files
-  [((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate
-    didSelectFiles:selectedURLs];
+	//Call delegate to upload files
+	[((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate filePicker:(SPFilePickerNavigationController*)self.navigationController
+	 didSelectFiles:selectedURLs];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+	[super tableView:tableView didSelectRowAtIndexPath:indexPath];
 
-  [self updateTopRightButtonAvailability];
+	[self updateTopRightButtonAvailability];
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  [self updateTopRightButtonAvailability];
+	[self updateTopRightButtonAvailability];
 }
 
 - (void)updateTopRightButtonAvailability
 {
-  if(self.tableView.editing)
-  {
-    NSArray *selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
-    if([selectedIndexPaths count] <= 0)
-    {
-      //Count of selected files is 0 -> disable button
-      self.navigationItem.rightBarButtonItem.enabled = NO;
-    }
-    else
-    {
-      //Count of selected files is 1 or more -> enable button
-      self.navigationItem.rightBarButtonItem.enabled = YES;
-    }
-  }
-  else
-  {
-    //TableView is not in editing mode -> enable button
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-  }
+	if(self.tableView.editing)
+	{
+		NSArray *selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
+		if([selectedIndexPaths count] <= 0)
+		{
+			//Count of selected files is 0 -> disable button
+			self.navigationItem.rightBarButtonItem.enabled = NO;
+		}
+		else
+		{
+			//Count of selected files is 1 or more -> enable button
+			self.navigationItem.rightBarButtonItem.enabled = YES;
+		}
+	}
+	else
+	{
+		//TableView is not in editing mode -> enable button
+		self.navigationItem.rightBarButtonItem.enabled = YES;
+	}
 }
 
 @end

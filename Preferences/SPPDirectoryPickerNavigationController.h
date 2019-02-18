@@ -18,8 +18,8 @@
 #import "../MobileSafari/Classes/SPFileBrowserNavigationController.h"
 #import "Protocols.h"
 
-@interface SPPDirectoryPickerNavigationController : SPFileBrowserNavigationController {}
-@property(nonatomic, weak) id<PinnedLocationsDelegate> pinnedLocationsDelegate;
-@property(nonatomic) NSString* name;
+@interface SPPDirectoryPickerNavigationController : SPFileBrowserNavigationController
+@property (nonatomic, weak) id<PinnedLocationsDelegate> pinnedLocationsDelegate;
+@property (nonatomic) NSString* name;
 - (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate name:(NSString*)name;
 @end

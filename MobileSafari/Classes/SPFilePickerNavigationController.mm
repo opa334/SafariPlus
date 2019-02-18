@@ -22,13 +22,13 @@
 
 - (instancetype)init
 {
-  self.startURL = [NSURL fileURLWithPath:@"/"];
-  return [super init];
+	self.startURL = [NSURL fileURLWithPath:@"/"];
+	return [super init];
 }
 
 - (Class)tableControllerClass
 {
-  return [SPFilePickerTableViewController class];
+	return [SPFilePickerTableViewController class];
 }
 
 @end

@@ -28,6 +28,7 @@ extern NSBundle* MSBundle;
 
 extern BOOL privateBrowsingEnabled(BrowserController* controller);
 extern void togglePrivateBrowsing(BrowserController* controller);
+extern void setPrivateBrowsing(BrowserController* controller, BOOL enabled, void (^completion)(void));
 extern NSArray<BrowserController*>* browserControllers();
 extern NSArray<SafariWebView*>* activeWebViews();
 extern BrowserController* browserControllerForTabDocument(TabDocument* document);
@@ -35,6 +36,7 @@ extern BrowserRootViewController* rootViewControllerForBrowserController(Browser
 extern BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document);
 extern void addToDict(NSMutableDictionary* dict, NSObject* object, NSString* key);
 extern void sendSimpleAlert(NSString* title, NSString* message);
+extern NSDictionary* decodeResumeData12(NSData* resumeData);
 extern void loadOtherPlist();
 extern void saveOtherPlist();
 
@@ -46,16 +48,16 @@ extern void intDlogDownload(SPDownload* download, NSString* message);
 extern void intDlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message);
 extern void intDlogDownloadManager();
 
-#define dlog(args...) intDlog(args)
-#define dlogDownload(args...) intDlogDownload(args)
-#define dlogDownloadInfo(args...) intDlogDownloadInfo(args)
+#define dlog(args ...) intDlog(args)
+#define dlogDownload(args ...) intDlogDownload(args)
+#define dlogDownloadInfo(args ...) intDlogDownloadInfo(args)
 #define dlogDownloadManager() intDlogDownloadManager()
 
 #else
 
-#define dlog(args...)
-#define dlogDownload(args...)
-#define dlogDownloadInfo(args...)
+#define dlog(args ...)
+#define dlogDownload(args ...)
+#define dlogDownloadInfo(args ...)
 #define dlogDownloadManager()
 
 #endif

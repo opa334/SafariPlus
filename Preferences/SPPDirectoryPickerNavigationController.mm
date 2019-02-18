@@ -20,19 +20,19 @@
 
 - (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate name:(NSString*)name
 {
-  self.pinnedLocationsDelegate = delegate;
-  self.name = name;
-  self.loadParentDirectories = YES;
-  self.startURL = [NSURL fileURLWithPath:@"/var/mobile/"];
+	self.pinnedLocationsDelegate = delegate;
+	self.name = name;
+	self.loadParentDirectories = YES;
+	self.startURL = [NSURL fileURLWithPath:@"/var/mobile/"];
 
-  self = [super init];
-  return self;
+	self = [super init];
+	return self;
 }
 
 - (Class)tableControllerClass
 {
-  //return class of SPPDirectoryPickerTableViewController
-  return [SPPDirectoryPickerTableViewController class];
+	//return class of SPPDirectoryPickerTableViewController
+	return [SPPDirectoryPickerTableViewController class];
 }
 
 @end

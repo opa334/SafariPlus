@@ -26,83 +26,83 @@
 
 - (instancetype)initWithFileURL:(NSURL*)fileURL
 {
-  self = [super init];
+	self = [super init];
 
-  _fileURL = fileURL;
+	_fileURL = fileURL;
 
-  _name = [_fileURL lastPathComponent];
+	_name = [_fileURL lastPathComponent];
 
   #ifndef PREFERENCES
-  if([_name isUUID])
-  {
-    _applicationDisplayName = [fileManager applicationDisplayNameForURL:_fileURL];
-  }
+	if([_name isUUID])
+	{
+		_applicationDisplayName = [fileManager applicationDisplayNameForURL:_fileURL];
+	}
   #endif
 
-  if(_applicationDisplayName)
-  {
-    NSMutableAttributedString* cellTitleM = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)", _applicationDisplayName, _name]];
+	if(_applicationDisplayName)
+	{
+		NSMutableAttributedString* cellTitleM = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)", _applicationDisplayName, _name]];
 
-    NSDictionary* appNameAttributes =
-    @{
-      NSForegroundColorAttributeName : [UIColor colorWithRed:50.0f/255.0f green:100.0f/255.0f blue:150.0f/255.0f alpha:1.0f]
-    };
+		NSDictionary* appNameAttributes =
+			@{
+				NSForegroundColorAttributeName : [UIColor colorWithRed:50.0f/255.0f green:100.0f/255.0f blue:150.0f/255.0f alpha:1.0f]
+		};
 
-    NSRange range = NSMakeRange(0, [_applicationDisplayName length]);
+		NSRange range = NSMakeRange(0, [_applicationDisplayName length]);
 
-    [cellTitleM setAttributes:appNameAttributes range:range];
+		[cellTitleM setAttributes:appNameAttributes range:range];
 
-    _cellTitle = [cellTitleM copy];
-  }
-  else
-  {
-    _cellTitle = [[NSAttributedString alloc] initWithString:_name];
-  }
+		_cellTitle = [cellTitleM copy];
+	}
+	else
+	{
+		_cellTitle = [[NSAttributedString alloc] initWithString:_name];
+	}
 
-  NSNumber* isRegularFile;
-  [fileManager URLResourceValue:&isRegularFile forKey:NSURLIsRegularFileKey forURL:_fileURL error:nil];
-  _isRegularFile = [isRegularFile boolValue];
+	NSNumber* isRegularFile;
+	[fileManager URLResourceValue:&isRegularFile forKey:NSURLIsRegularFileKey forURL:_fileURL error:nil];
+	_isRegularFile = [isRegularFile boolValue];
 
-  NSNumber* size;
-  [fileManager URLResourceValue:&size forKey:NSURLFileSizeKey forURL:_fileURL error:nil];
-  _size = [size longLongValue];
+	NSNumber* size;
+	[fileManager URLResourceValue:&size forKey:NSURLFileSizeKey forURL:_fileURL error:nil];
+	_size = [size longLongValue];
 
-  NSNumber* isWritable;
-  [fileManager URLResourceValue:&isWritable forKey:NSURLIsWritableKey forURL:_fileURL error:nil];
-  _isWritable = [isWritable boolValue];
+	NSNumber* isWritable;
+	[fileManager URLResourceValue:&isWritable forKey:NSURLIsWritableKey forURL:_fileURL error:nil];
+	_isWritable = [isWritable boolValue];
 
-  _isHidden = [[fileURL lastPathComponent] hasPrefix:@"."];
+	_isHidden = [[fileURL lastPathComponent] hasPrefix:@"."];
 
-  CFStringRef fileExtension = (__bridge CFStringRef)[_fileURL pathExtension];
-  _fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+	CFStringRef fileExtension = (__bridge CFStringRef)[_fileURL pathExtension];
+	_fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
 
-  return self;
+	return self;
 }
 
 - (BOOL)conformsTo:(CFStringRef)UTI
 {
-  return UTTypeConformsTo(_fileUTI, UTI);
+	return UTTypeConformsTo(_fileUTI, UTI);
 }
 
 - (BOOL)isEqual:(id)object
 {
-  if([object isKindOfClass:[SPFile class]])
-  {
-    SPFile* file = (SPFile*)object;
+	if([object isKindOfClass:[SPFile class]])
+	{
+		SPFile* file = (SPFile*)object;
 
-    if([self.fileURL.absoluteString isEqualToString:file.fileURL.absoluteString])
-    {
-      if([self.name isEqualToString:file.name])
-      {
-        if(self.size == file.size)
-        {
-          return YES;
-        }
-      }
-    }
-  }
+		if([self.fileURL.absoluteString isEqualToString:file.fileURL.absoluteString])
+		{
+			if([self.name isEqualToString:file.name])
+			{
+				if(self.size == file.size)
+				{
+					return YES;
+				}
+			}
+		}
+	}
 
-  return NO;
+	return NO;
 }
 
 @end

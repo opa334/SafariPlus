@@ -21,11 +21,11 @@
 
 @interface SPDownloadNavigationController : SPFileBrowserNavigationController <DownloadNavigationControllerDelegate>
 {
-  UISegmentedControl* _segmentedControl;
-  NSInteger _previousSelectedIndex;
-  _UINavigationControllerPalette* _palette;
-  NSArray<SPDownloadBrowserTableViewController*>* _browserTableViewControllers;
-  NSArray<SPDownloadListTableViewController*>* _listTableViewControllers;
+	UISegmentedControl* _segmentedControl;
+	NSInteger _previousSelectedIndex;
+	_UINavigationControllerPalette* _palette;
+	NSArray<SPDownloadBrowserTableViewController*>* _browserTableViewControllers;
+	NSArray<SPDownloadListTableViewController*>* _listTableViewControllers;
 }
 
 - (void)setUpSegmentedControl;

@@ -29,28 +29,28 @@
 
 + (instancetype)sharedInstance
 {
-    static SPCommunicationManager* sharedInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken,
-    ^{
-      //Initialise instance
-      sharedInstance = [[SPCommunicationManager alloc] init];
-    });
+	static SPCommunicationManager* sharedInstance = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^
+	{
+		//Initialise instance
+		sharedInstance = [[SPCommunicationManager alloc] init];
+	});
 
-    return sharedInstance;
+	return sharedInstance;
 }
 
 - (instancetype)init
 {
-  self = [super init];
+	self = [super init];
 
-  _messagingCenter = [NSClassFromString(@"CPDistributedMessagingCenter") centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
+	_messagingCenter = [NSClassFromString(@"CPDistributedMessagingCenter") centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
 
   #if !defined(SIMJECT)
-  rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
+	rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
   #endif
 
-  return self;
+	return self;
 }
 
 #if !defined(SIMJECT)
@@ -58,50 +58,50 @@
 //Check if communication with SpringBoard works
 - (BOOL)testConnection
 {
-  NSDictionary* userInfo = @{@"message" : @"hello"};
-  NSDictionary* response = [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.testConnection" userInfo:userInfo];
+	NSDictionary* userInfo = @{@"message" : @"hello"};
+	NSDictionary* response = [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.testConnection" userInfo:userInfo];
 
-  return [[response objectForKey:@"message"] isEqualToString:@"hello"];
+	return [[response objectForKey:@"message"] isEqualToString:@"hello"];
 }
 
 //Dispatch libbulletin notification via SpringBoard
 - (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message
 {
-  //Create userInfo to send to SpringBoard
-  NSDictionary* userInfo =
-  @{
-    @"bundleIdentifier" : bundleIdentifier,
-    @"title"            : title,
-    @"message"          : message
-  };
+	//Create userInfo to send to SpringBoard
+	NSDictionary* userInfo =
+		@{
+			@"bundleIdentifier" : bundleIdentifier,
+			@"title"            : title,
+			@"message"          : message
+	};
 
-  [_messagingCenter sendMessageName:@"com.opa334.SafariPlus.pushNotification" userInfo:userInfo];
+	[_messagingCenter sendMessageName:@"com.opa334.SafariPlus.pushNotification" userInfo:userInfo];
 }
 
 //Executes file operation unsandboxed via SpringBoard
 - (NSDictionary*)executeFileOperationOnSpringBoard:(NSDictionary*)operation
 {
-  //Serialize operation so we pass any object we want (NSURLs would cause a crash otherwise)
-  NSData* serializedOperation = [NSKeyedArchiver archivedDataWithRootObject:operation];
-  NSDictionary* operationDict = @{@"data" : serializedOperation};
+	//Serialize operation so we pass any object we want (NSURLs would cause a crash otherwise)
+	NSData* serializedOperation = [NSKeyedArchiver archivedDataWithRootObject:operation];
+	NSDictionary* operationDict = @{@"data" : serializedOperation};
 
-  NSDictionary* serializedResponse = [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.fileOperation" userInfo:operationDict];
+	NSDictionary* serializedResponse = [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.fileOperation" userInfo:operationDict];
 
-  NSDictionary* response = [NSKeyedUnarchiver unarchiveObjectWithData:[serializedResponse objectForKey:@"data"]];
+	NSDictionary* response = [NSKeyedUnarchiver unarchiveObjectWithData:[serializedResponse objectForKey:@"data"]];
 
-  return response;
+	return response;
 }
 
 - (NSDictionary*)applicationDisplayNamesForPaths
 {
-  return [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.getApplicationDisplayNames" userInfo:nil];
+	return [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.getApplicationDisplayNames" userInfo:nil];
 }
 
 #else
 
 - (BOOL)testConnection
 {
-  return YES;
+	return YES;
 }
 
 - (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message
@@ -111,12 +111,12 @@
 
 - (NSDictionary*)executeFileOperationOnSpringBoard:(NSDictionary*)operation
 {
-  return nil;
+	return nil;
 }
 
 - (NSDictionary*)applicationDisplayNamesForPaths
 {
-  return nil;
+	return nil;
 }
 
 #endif

@@ -19,7 +19,7 @@
 #import <Preferences/PSSpecifier.h>
 #import "Protocols.h"
 
-@interface PSEditableListController : PSListController {}
+@interface PSEditableListController : PSListController
 - (id)_editButtonBarItem;
 - (BOOL)performDeletionActionForSpecifier:(id)arg1;
 @end
@@ -27,7 +27,7 @@
 //Parses nestedEntryCount property for more dynamic preferences (also localizes specifiers)
 @interface SPListController : PSListController
 {
-  NSArray* _allSpecifiers;
+	NSArray* _allSpecifiers;
 }
 
 - (NSString*)plistName;
@@ -36,62 +36,75 @@
 @end
 
 @interface SafariPlusRootListController : SPListController<UITableViewDelegate>
-@property(nonatomic) UIImageView* headerView;
+@property (nonatomic) UIImageView* headerView;
 @end
 
-@interface GeneralPrefsController : SPListController {}
+@interface GeneralPrefsController : SPListController {
+}
 @end
 
-@interface DownloadPrefsController : SPListController {}
+@interface DownloadPrefsController : SPListController {
+}
 @end
 
 @interface ExceptionsController : PSEditableListController
 {
-  NSMutableDictionary *plist;
-  NSMutableArray *ForceHTTPSExceptions;
+	NSMutableDictionary *plist;
+	NSMutableArray *ForceHTTPSExceptions;
 }
 @end
 
 @interface PinnedLocationsController : PSEditableListController<PinnedLocationsDelegate>
 {
-  NSMutableDictionary *plist;
-  NSMutableArray *PinnedLocationNames;
-  NSMutableArray *PinnedLocationPaths;
+	NSMutableDictionary *plist;
+	NSMutableArray *PinnedLocationNames;
+	NSMutableArray *PinnedLocationPaths;
 }
 - (void)openDirectoryPickerWithName:(NSString*)name;
 @end
 
-@interface ActionPrefsController : SPListController {}
+@interface ActionPrefsController : SPListController {
+}
 @end
 
-@interface GesturePrefsController : SPListController {}
+@interface GesturePrefsController : SPListController {
+}
 @end
 
-@interface OtherPrefsController : SPListController {}
+@interface OtherPrefsController : SPListController {
+}
 @end
 
-@interface ColorOverviewPrefsController : SPListController {}
+@interface ColorOverviewPrefsController : SPListController {
+}
 @end
 
-@interface TopBarNormalColorPrefsController : SPListController {}
+@interface TopBarNormalColorPrefsController : SPListController {
+}
 @end
 
-@interface BottomBarNormalColorPrefsController : SPListController {}
+@interface BottomBarNormalColorPrefsController : SPListController {
+}
 @end
 
-@interface TabSwitcherNormalColorPrefsController : SPListController {}
+@interface TabSwitcherNormalColorPrefsController : SPListController {
+}
 @end
 
-@interface TopBarPrivateColorPrefsController : SPListController {}
+@interface TopBarPrivateColorPrefsController : SPListController {
+}
 @end
 
-@interface BottomBarPrivateColorPrefsController : SPListController {}
+@interface BottomBarPrivateColorPrefsController : SPListController {
+}
 @end
 
-@interface TabSwitcherPrivateColorPrefsController : SPListController {}
+@interface TabSwitcherPrivateColorPrefsController : SPListController {
+}
 @end
 
-@interface CreditsController : SPListController {}
+@interface CreditsController : SPListController {
+}
 @end
 
 @protocol PreferencesTableCustomView
@@ -102,7 +115,7 @@
 @end
 
 @interface SafariPlusHeaderCell : PSTableCell <PreferencesTableCustomView> {
-  UIImage *headerImage;
-  UIImageView *headerImageView;
+	UIImage *headerImage;
+	UIImageView *headerImageView;
 }
 @end

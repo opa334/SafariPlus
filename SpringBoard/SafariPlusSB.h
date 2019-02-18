@@ -35,8 +35,8 @@
 @end
 
 @interface SBApplication : NSObject
-@property (nonatomic, readonly) SBApplicationInfo* info; //iOS 11 and above
-- (SBApplicationInfo*)_appInfo; //iOS 10 and below
+@property (nonatomic, readonly) SBApplicationInfo* info;//iOS 11 and above
+- (SBApplicationInfo*)_appInfo;	//iOS 10 and below
 @end
 
 @interface SBApplicationController : NSObject
@@ -47,7 +47,7 @@
 @interface SSDownload : NSObject
 @property (nonatomic,copy) SSDownloadMetadata* metadata;
 - (instancetype)initWithDownloadMetadata:(SSDownloadMetadata*)downloadMetadata;
-- (void)setDownloadHandler:(id)arg1 completionBlock:(/*^block*/id)arg2;
+- (void)setDownloadHandler:(id)arg1 completionBlock:(/*^block*/ id)arg2;
 @end
 
 @interface SSDownloadMetadata : NSObject

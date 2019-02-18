@@ -23,11 +23,11 @@ SPSBReceiver* receiver;
 //Use rocketbootstrap to recieve messages through CPDistributedMessagingCenter
 - (id)init
 {
-  id orig = %orig;
+	id orig = %orig;
 
-  receiver = [[SPSBReceiver alloc] init];
+	receiver = [[SPSBReceiver alloc] init];
 
-  return orig;
+	return orig;
 }
 
 %end

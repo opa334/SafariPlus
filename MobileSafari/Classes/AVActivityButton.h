@@ -1,7 +1,7 @@
 #import "../SafariPlus.h"
 
 @interface AVActivityButton : AVButton
-@property(nonatomic) UIActivityIndicatorView* activityIndicatorView;
+@property (nonatomic) UIActivityIndicatorView* activityIndicatorView;
 
 - (BOOL)spinning;
 - (void)setSpinning:(BOOL)spinning;

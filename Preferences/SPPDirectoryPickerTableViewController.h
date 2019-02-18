@@ -18,6 +18,6 @@
 #import "SPPDirectoryPickerNavigationController.h"
 #import "../MobileSafari/Classes/SPLocalizationManager.h"
 
-@interface SPPDirectoryPickerTableViewController : SPFileBrowserTableViewController {}
+@interface SPPDirectoryPickerTableViewController : SPFileBrowserTableViewController
 - (void)chooseButtonPressed;
 @end

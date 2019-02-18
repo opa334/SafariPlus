@@ -24,49 +24,49 @@
 
 - (SPDownloadInfo*)initWithRequest:(NSURLRequest*)request
 {
-  self = [super init];
+	self = [super init];
 
-  _request = request;
+	_request = request;
 
-  return self;
+	return self;
 }
 
 - (SPDownloadInfo*)initWithImage:(UIImage*)image
 {
-  self = [super init];
+	self = [super init];
 
-  _image = image;
+	_image = image;
 
-  return self;
+	return self;
 }
 
 - (SPDownloadInfo*)initWithDownload:(SPDownload*)download
 {
-  self = [super init];
+	self = [super init];
 
-  _request = download.request;
-  _filesize = download.filesize;
-  _filename = download.filename;
-  _targetURL = download.targetURL;
+	_request = download.request;
+	_filesize = download.filesize;
+	_filename = download.filename;
+	_targetURL = download.targetURL;
 
-  return self;
+	return self;
 }
 
 - (NSURL*)pathURL
 {
-  return [_targetURL URLByAppendingPathComponent:_filename];
+	return [_targetURL URLByAppendingPathComponent:_filename];
 }
 
 - (BOOL)fileExists
 {
-  return [fileManager fileExistsAtURL:[self pathURL] error:nil];
+	return [fileManager fileExistsAtURL:[self pathURL] error:nil];
 }
 
 - (void)removeExistingFile
 {
-  if([self fileExists])
-  {
-    [fileManager removeItemAtURL:[self pathURL] error:nil];
-  }
+	if([self fileExists])
+	{
+		[fileManager removeItemAtURL:[self pathURL] error:nil];
+	}
 }
 @end

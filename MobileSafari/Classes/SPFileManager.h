@@ -27,7 +27,7 @@ typedef NSString *NSFileAttributeKey;
 	NSDictionary* _displayNamesForPaths;
 }
 
-@property(nonatomic) BOOL isSandboxed;
+@property (nonatomic) BOOL isSandboxed;
 
 + (instancetype)sharedInstance;
 #ifndef PREFERENCES

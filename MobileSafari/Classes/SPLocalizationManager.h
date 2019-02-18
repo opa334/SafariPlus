@@ -16,7 +16,7 @@
 
 @class SPLocalizationManager;
 
-@interface SPLocalizationManager : NSObject {}
+@interface SPLocalizationManager : NSObject
 
 + (instancetype)sharedInstance;
 - (NSString*)localizedSPStringForKey:(NSString*)key;

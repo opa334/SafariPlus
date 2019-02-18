@@ -26,6 +26,14 @@
 
 #import <sys/utsname.h>
 
+@interface NSKeyedUnarchiver ()
++ (id)unarchivedObjectOfClass:(Class)cls fromData:(NSData *)data error:(NSError * _Nullable *)error;
+#ifdef SIMJECT
+- (void)setDecodingFailurePolicy:(long long)arg1;
+#endif
+- (id)initForReadingFromData:(id)arg1 error:(id*)arg2;
+@end
+
 /****** Variables ******/
 
 NSBundle* MSBundle = [NSBundle mainBundle];
@@ -48,109 +56,109 @@ NSFileHandle* debugLogFileHandle;
 
 void initDebug()
 {
-  NSString* dateString;
+	NSString* dateString;
 
-  NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-  dateFormatter.dateStyle = NSDateFormatterMediumStyle;
-  dateFormatter.timeStyle = NSDateFormatterMediumStyle;
-  dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
+	NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+	dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+	dateFormatter.timeStyle = NSDateFormatterMediumStyle;
+	dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US"];
 
-  dateString = [dateFormatter stringFromDate:[NSDate date]];
+	dateString = [dateFormatter stringFromDate:[NSDate date]];
 
-  NSString* debugLogDirectoryPath = [SPCachePath stringByAppendingString:@"/Logs"];
+	NSString* debugLogDirectoryPath = [SPCachePath stringByAppendingString:@"/Logs"];
 
-  NSString* debugLogPath = [NSString stringWithFormat:@"%@/%@.log", debugLogDirectoryPath, dateString];
+	NSString* debugLogPath = [NSString stringWithFormat:@"%@/%@.log", debugLogDirectoryPath, dateString];
 
-  if(![[NSFileManager defaultManager] fileExistsAtPath:debugLogDirectoryPath])
-  {
-    [[NSFileManager defaultManager] createDirectoryAtPath:debugLogDirectoryPath withIntermediateDirectories:YES attributes:nil error:nil];
-  }
+	if(![[NSFileManager defaultManager] fileExistsAtPath:debugLogDirectoryPath])
+	{
+		[[NSFileManager defaultManager] createDirectoryAtPath:debugLogDirectoryPath withIntermediateDirectories:YES attributes:nil error:nil];
+	}
 
-  if(![[NSFileManager defaultManager] fileExistsAtPath:debugLogPath])
-  {
-    [[NSFileManager defaultManager] createFileAtPath:debugLogPath contents:nil attributes:nil];
-  }
+	if(![[NSFileManager defaultManager] fileExistsAtPath:debugLogPath])
+	{
+		[[NSFileManager defaultManager] createFileAtPath:debugLogPath contents:nil attributes:nil];
+	}
 
-  debugLogFileHandle = [NSFileHandle fileHandleForWritingAtPath:debugLogPath];
-  [debugLogFileHandle seekToEndOfFile];
+	debugLogFileHandle = [NSFileHandle fileHandleForWritingAtPath:debugLogPath];
+	[debugLogFileHandle seekToEndOfFile];
 }
 
 void intDlog(NSString* fString, ...)
 {
-  va_list va;
-  va_start(va, fString);
-  NSString* msg = [[NSString alloc] initWithFormat:fString arguments:va];
-  va_end(va);
+	va_list va;
+	va_start(va, fString);
+	NSString* msg = [[NSString alloc] initWithFormat:fString arguments:va];
+	va_end(va);
 
-  [debugLogFileHandle writeData:[[msg stringByAppendingString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-  NSLog(@"%@", msg);
+	[debugLogFileHandle writeData:[[msg stringByAppendingString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+	NSLog(@"%@", msg);
 }
 
 void intDlogDownload(SPDownload* download, NSString* message)
 {
-  dlog(@"----------");
-  dlog(@"DOWNLOAD %@", download);
-  dlog(message);
-  dlog(@"----------");
-  dlog(@"request: %@", download.request);
-  dlog(@"image: %@", download.image);
-  dlog(@"filesize: %lli", download.filesize);
-  dlog(@"filename: %@", download.filename);
-  dlog(@"targetURL: %@", download.targetURL);
-  dlog(@"paused: %i", download.paused);
-  dlog(@"lastSpeedRefreshTime: %llu", download.lastSpeedRefreshTime);
-  dlog(@"speedTimer: %@", download.speedTimer);
-  dlog(@"startBytes: %lli", download.startBytes);
-  dlog(@"totalBytesWritten: %lli", download.totalBytesWritten);
-  dlog(@"bytesPerSecond: %lli", download.bytesPerSecond);
-  dlog(@"resumeData length: %llu", (unsigned long long)download.resumeData.length);
-  dlog(@"paused: %llu", (unsigned long long)download.taskIdentifier);
-  dlog(@"downloadTask: %@", download.downloadTask);
-  dlog(@"didFinish: %i", download.didFinish);
-  dlog(@"wasCancelled: %i", download.wasCancelled);
-  dlog(@"downloadManagerDelegate: %@", download.downloadManagerDelegate);
-  dlog(@"browserCellDelegate: %@", download.browserCellDelegate);
-  dlog(@"listCellDelegate: %@", download.listCellDelegate);
-  dlog(@"----------");
+	dlog(@"----------");
+	dlog(@"DOWNLOAD %@", download);
+	dlog(message);
+	dlog(@"----------");
+	dlog(@"request: %@", download.request);
+	dlog(@"image: %@", download.image);
+	dlog(@"filesize: %lli", download.filesize);
+	dlog(@"filename: %@", download.filename);
+	dlog(@"targetURL: %@", download.targetURL);
+	dlog(@"paused: %i", download.paused);
+	dlog(@"lastSpeedRefreshTime: %llu", download.lastSpeedRefreshTime);
+	dlog(@"speedTimer: %@", download.speedTimer);
+	dlog(@"startBytes: %lli", download.startBytes);
+	dlog(@"totalBytesWritten: %lli", download.totalBytesWritten);
+	dlog(@"bytesPerSecond: %lli", download.bytesPerSecond);
+	dlog(@"resumeData length: %llu", (unsigned long long)download.resumeData.length);
+	dlog(@"paused: %llu", (unsigned long long)download.taskIdentifier);
+	dlog(@"downloadTask: %@", download.downloadTask);
+	dlog(@"didFinish: %i", download.didFinish);
+	dlog(@"wasCancelled: %i", download.wasCancelled);
+	dlog(@"downloadManagerDelegate: %@", download.downloadManagerDelegate);
+	dlog(@"browserCellDelegate: %@", download.browserCellDelegate);
+	dlog(@"listCellDelegate: %@", download.listCellDelegate);
+	dlog(@"----------");
 }
 
 void intDlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message)
 {
-  dlog(@"----------");
-  dlog(@"DOWNLOADINFO %@", downloadInfo);
-  dlog(message);
-  dlog(@"----------");
-  dlog(@"request: %@", downloadInfo.request);
-  dlog(@"image: %@", downloadInfo.image);
-  dlog(@"filesize: %lli", downloadInfo.filesize);
-  dlog(@"filename: %@", downloadInfo.filename);
-  dlog(@"targetURL: %@", downloadInfo.targetURL);
-  dlog(@"customPath: %i", downloadInfo.customPath);
-  dlog(@"sourceVideo: %@", downloadInfo.sourceVideo);
-  dlog(@"sourceDocument: %@", downloadInfo.sourceDocument);
-  dlog(@"presentationController: %@", downloadInfo.presentationController);
-  dlog(@"sourceRect: %@", NSStringFromCGRect(downloadInfo.sourceRect));
-  dlog(@"----------");
+	dlog(@"----------");
+	dlog(@"DOWNLOADINFO %@", downloadInfo);
+	dlog(message);
+	dlog(@"----------");
+	dlog(@"request: %@", downloadInfo.request);
+	dlog(@"image: %@", downloadInfo.image);
+	dlog(@"filesize: %lli", downloadInfo.filesize);
+	dlog(@"filename: %@", downloadInfo.filename);
+	dlog(@"targetURL: %@", downloadInfo.targetURL);
+	dlog(@"customPath: %i", downloadInfo.customPath);
+	dlog(@"sourceVideo: %@", downloadInfo.sourceVideo);
+	dlog(@"sourceDocument: %@", downloadInfo.sourceDocument);
+	dlog(@"presentationController: %@", downloadInfo.presentationController);
+	dlog(@"sourceRect: %@", NSStringFromCGRect(downloadInfo.sourceRect));
+	dlog(@"----------");
 }
 
 void intDlogDownloadManager()
 {
-  dlog(@"----------");
-  dlog(@"DOWNLOADMANAGER %@", downloadManager);
-  dlog(@"----------");
-  dlog(@"pendingDownloads: %@", downloadManager.pendingDownloads);
-  dlog(@"finishedDownloads: %@", downloadManager.finishedDownloads);
-  dlog(@"notificationWindow: %@", downloadManager.notificationWindow);
-  dlog(@"downloadSession: %@", downloadManager.downloadSession);
-  dlog(@"errorCount: %lli", downloadManager.errorCount);
-  dlog(@"processedErrorCount: %lli", downloadManager.processedErrorCount);
-  dlog(@"defaultDownloadURL: %@", downloadManager.defaultDownloadURL);
-  dlog(@"processedVideoDownloadInfo: %@", downloadManager.processedVideoDownloadInfo);
-  [downloadManager.downloadSession getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> *tasks)
-  {
-    dlog(@"tasks: %@", tasks);
-  }];
-  dlog(@"----------");
+	dlog(@"----------");
+	dlog(@"DOWNLOADMANAGER %@", downloadManager);
+	dlog(@"----------");
+	dlog(@"pendingDownloads: %@", downloadManager.pendingDownloads);
+	dlog(@"finishedDownloads: %@", downloadManager.finishedDownloads);
+	dlog(@"notificationWindow: %@", downloadManager.notificationWindow);
+	dlog(@"downloadSession: %@", downloadManager.downloadSession);
+	dlog(@"errorCount: %lli", downloadManager.errorCount);
+	dlog(@"processedErrorCount: %lli", downloadManager.processedErrorCount);
+	dlog(@"defaultDownloadURL: %@", downloadManager.defaultDownloadURL);
+	dlog(@"processedVideoDownloadInfo: %@", downloadManager.processedVideoDownloadInfo);
+	[downloadManager.downloadSession getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> *tasks)
+	{
+		dlog(@"tasks: %@", tasks);
+	}];
+	dlog(@"----------");
 }
 
 #endif
@@ -162,11 +170,11 @@ void intDlogDownloadManager()
 
 + (UIImage *)inverseColor:(UIImage *)image
 {
-  CIImage *coreImage = [CIImage imageWithCGImage:image.CGImage];
-  CIFilter *filter = [CIFilter filterWithName:@"CIColorInvert"];
-  [filter setValue:coreImage forKey:kCIInputImageKey];
-  CIImage *result = [filter valueForKey:kCIOutputImageKey];
-  return [UIImage imageWithCIImage:result scale:image.scale orientation:image.imageOrientation];
+	CIImage *coreImage = [CIImage imageWithCGImage:image.CGImage];
+	CIFilter *filter = [CIFilter filterWithName:@"CIColorInvert"];
+	[filter setValue:coreImage forKey:kCIInputImageKey];
+	CIImage *result = [filter valueForKey:kCIOutputImageKey];
+	return [UIImage imageWithCIImage:result scale:image.scale orientation:image.imageOrientation];
 }
 
 @end
@@ -176,17 +184,17 @@ void intDlogDownloadManager()
 //Convert http url into https url
 - (NSURL*)httpsURL
 {
-  //Get URL components
-  NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:self
-    resolvingAgainstBaseURL:NO];
+	//Get URL components
+	NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:self
+					  resolvingAgainstBaseURL:NO];
 
-  if([self.scheme isEqualToString:@"http"])
-  {
-    //Change scheme to https
-    URLComponents.scheme = @"https";
-  }
+	if([self.scheme isEqualToString:@"http"])
+	{
+		//Change scheme to https
+		URLComponents.scheme = @"https";
+	}
 
-  return URLComponents.URL;
+	return URLComponents.URL;
 }
 
 @end
@@ -194,43 +202,43 @@ void intDlogDownloadManager()
 @implementation NSString (Strip)
 - (NSString*)stringStrippedByStrings:(NSArray<NSString*>*)strings
 {
-  NSString* strippedString = self;
-  NSArray* tmpArray;
+	NSString* strippedString = self;
+	NSArray* tmpArray;
 
-  for(NSString* string in strings)
-  {
-    tmpArray = [strippedString componentsSeparatedByString:string];
-    strippedString = tmpArray.firstObject;
-  }
+	for(NSString* string in strings)
+	{
+		tmpArray = [strippedString componentsSeparatedByString:string];
+		strippedString = tmpArray.firstObject;
+	}
 
-  return strippedString;
+	return strippedString;
 }
 @end
 
 @implementation NSString (UUID)
 - (BOOL)isUUID
 {
-  return (bool)[[NSUUID alloc] initWithUUIDString:self];
+	return (bool)[[NSUUID alloc] initWithUUIDString:self];
 }
 @end
 
 @implementation UIView (Autolayout)
 + (id)autolayoutView
 {
-    UIView *view = [self new];
-    view.translatesAutoresizingMaskIntoConstraints = NO;
-    return view;
+	UIView *view = [self new];
+	view.translatesAutoresizingMaskIntoConstraints = NO;
+	return view;
 }
 @end
 
 @implementation UITableViewController (FooterFix)
 - (void)fixFooterColors
 {
-  for(int i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
-  {
-    UITableViewHeaderFooterView* footerView = [self.tableView headerViewForSection:i];
-    footerView.backgroundView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
-  }
+	for(int i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
+	{
+		UITableViewHeaderFooterView* footerView = [self.tableView headerViewForSection:i];
+		footerView.backgroundView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
+	}
 }
 @end
 
@@ -239,126 +247,166 @@ void intDlogDownloadManager()
 //Return current browsing status
 BOOL privateBrowsingEnabled(BrowserController* controller)
 {
-  BOOL privateBrowsingEnabled;
+	BOOL privateBrowsingEnabled;
 
-  if([controller respondsToSelector:@selector(isPrivateBrowsingEnabled)])
-  {
-    privateBrowsingEnabled = [controller isPrivateBrowsingEnabled];
-  }
-  else
-  {
-    privateBrowsingEnabled = controller.privateBrowsingEnabled;
-  }
+	if([controller respondsToSelector:@selector(isPrivateBrowsingEnabled)])
+	{
+		privateBrowsingEnabled = [controller isPrivateBrowsingEnabled];
+	}
+	else
+	{
+		privateBrowsingEnabled = controller.privateBrowsingEnabled;
+	}
 
-  return privateBrowsingEnabled;
+	return privateBrowsingEnabled;
 }
 
 //Toggle private mode
 void togglePrivateBrowsing(BrowserController* controller)
 {
-  if([controller respondsToSelector:@selector(togglePrivateBrowsingEnabled)])
-  {
-    [controller togglePrivateBrowsingEnabled];
-  }
-  else
-  {
-    [controller togglePrivateBrowsing];
-  }
+	if([controller respondsToSelector:@selector(togglePrivateBrowsingEnabled)])
+	{
+		[controller togglePrivateBrowsingEnabled];
+	}
+	else
+	{
+		[controller togglePrivateBrowsing];
+	}
+}
+
+void setPrivateBrowsing(BrowserController* controller, BOOL enabled, void (^completion)(void))
+{
+	if([controller respondsToSelector:@selector(_setPrivateBrowsingEnabled:showModalAuthentication:completion:)])
+	{
+		[controller _setPrivateBrowsingEnabled:enabled showModalAuthentication:NO completion:completion];
+	}
+	else	//if that method does not exists, toggling is the only way to properly switch between browsing modes
+	{
+		BOOL privateBrowsing = privateBrowsingEnabled(controller);
+		if(privateBrowsing != enabled)
+		{
+			togglePrivateBrowsing(controller);
+		}
+		if(completion)
+		{
+			//It takes about 0.1 seconds to switch between browsing modes
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
+		}
+	}
 }
 
 //Get active webViews
 NSArray<SafariWebView*>* activeWebViews()
 {
-  NSMutableArray<SafariWebView*>* webViews = [NSMutableArray new];
-  for(BrowserController* controller in browserControllers())
-  {
-    [webViews addObject:controller.tabController.activeTabDocument.webView];
-  }
-  return [webViews copy];
+	NSMutableArray<SafariWebView*>* webViews = [NSMutableArray new];
+	for(BrowserController* controller in browserControllers())
+	{
+		[webViews addObject:controller.tabController.activeTabDocument.webView];
+	}
+	return [webViews copy];
 }
 
 //Return array of all browsercontrollers
 NSArray<BrowserController*>* browserControllers()
 {
-  NSArray* browserControllers;
+	NSArray* browserControllers;
 
-  Application* sharedApplication = (Application*)[%c(Application) sharedApplication];
+	Application* sharedApplication = (Application*)[%c(Application) sharedApplication];
 
-  if([sharedApplication respondsToSelector:@selector(browserControllers)])
-  {
-    browserControllers = sharedApplication.browserControllers;
-  }
-  else //8,9
-  {
-    browserControllers = @[MSHookIvar<BrowserController*>(sharedApplication,"_controller")];
-  }
+	if([sharedApplication respondsToSelector:@selector(browserControllers)])
+	{
+		browserControllers = sharedApplication.browserControllers;
+	}
+	else	//8,9
+	{
+		browserControllers = @[MSHookIvar<BrowserController*>(sharedApplication,"_controller")];
+	}
 
-  return browserControllers;
+	return browserControllers;
 }
 
 //Get browserController from tabDocument
 BrowserController* browserControllerForTabDocument(TabDocument* document)
 {
-  BrowserController* browserController;
+	BrowserController* browserController;
 
-  if([document respondsToSelector:@selector(browserController)])
-  {
-    browserController = document.browserController;
-  }
-  else
-  {
-    browserController = MSHookIvar<BrowserController*>(document, "_browserController");
-  }
+	if([document respondsToSelector:@selector(browserController)])
+	{
+		browserController = document.browserController;
+	}
+	else
+	{
+		browserController = MSHookIvar<BrowserController*>(document, "_browserController");
+	}
 
-  return browserController;
+	return browserController;
 }
 
 //Get rootViewController from browserController
 BrowserRootViewController* rootViewControllerForBrowserController(BrowserController* controller)
 {
-  BrowserRootViewController* rootViewController;
+	BrowserRootViewController* rootViewController;
 
-  if([controller respondsToSelector:@selector(rootViewController)])
-  {
-    rootViewController = controller.rootViewController;
-  }
-  else
-  {
-    rootViewController = MSHookIvar<BrowserRootViewController*>(controller, "_rootViewController");
-  }
+	if([controller respondsToSelector:@selector(rootViewController)])
+	{
+		rootViewController = controller.rootViewController;
+	}
+	else
+	{
+		rootViewController = MSHookIvar<BrowserRootViewController*>(controller, "_rootViewController");
+	}
 
-  return rootViewController;
+	return rootViewController;
 }
 
 
 //Get rootViewController from tabDocument
 BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document)
 {
-  return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
+	return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
 }
 
 //Only add object to dict if it's not nil
 void addToDict(NSMutableDictionary* dict, NSObject* object, NSString* key)
 {
-  if(object)
-  {
-    [dict setObject:object forKey:key];
-  }
+	if(object)
+	{
+		[dict setObject:object forKey:key];
+	}
 }
 
 //Send a simple alert that just has a close button with title and message
 void sendSimpleAlert(NSString* title, NSString* message)
 {
-  UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
-    message:message
-    preferredStyle:UIAlertControllerStyleAlert];
+	UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
+				    message:message
+				    preferredStyle:UIAlertControllerStyleAlert];
 
-  UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
-    style:UIAlertActionStyleDefault handler:nil];
+	UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
+				      style:UIAlertActionStyleDefault handler:nil];
 
-  [alert addAction:closeAction];
+	[alert addAction:closeAction];
 
-  [rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:alert animated:YES completion:nil];
+	[rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:alert animated:YES completion:nil];
+}
+
+//I literally had to reverse engineer CFNetwork / Foundation to figure out how to unarchive the resume data on iOS 12, no joke
+NSDictionary* decodeResumeData12(NSData* resumeData)
+{
+	NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:resumeData error:nil];
+	[unarchiver setDecodingFailurePolicy:NO];
+	id obj = [unarchiver decodeObjectOfClasses:[[NSSet alloc] initWithArray:@[[NSString class],[NSNumber class],[NSURL class],[NSURLRequest class],[NSArray class],[NSData class],[NSDictionary class]]] forKey:@"NSKeyedArchiveRootObjectKey"];
+
+	[unarchiver finishDecoding];
+
+	if([obj isKindOfClass:[NSDictionary class]])
+	{
+		return (NSDictionary*)obj;
+	}
+	else
+	{
+		return nil;
+	}
 }
 
 /****** One constructor that inits all hooks ******/
@@ -368,6 +416,7 @@ extern void initAVFullScreenPlaybackControlsViewController();
 extern void initAVPlaybackControlsView();
 extern void initBrowserController();
 extern void initColors();
+extern void initFeatureManager();
 extern void initTabController();
 extern void initTabDocument();
 extern void initWKFileUploadPanel();
@@ -375,15 +424,16 @@ extern void initWKFileUploadPanel();
 %ctor
 {
   #ifdef DEBUG_LOGGING
-  initDebug();
+	initDebug();
   #endif
 
-  initApplication();
-  initAVFullScreenPlaybackControlsViewController();
-  initAVPlaybackControlsView();
-  initBrowserController();
-  initColors();
-  initTabController();
-  initTabDocument();
-  initWKFileUploadPanel();
+	initApplication();
+	initAVFullScreenPlaybackControlsViewController();
+	initAVPlaybackControlsView();
+	initBrowserController();
+	initColors();
+	initFeatureManager();
+	initTabController();
+	initTabDocument();
+	initWKFileUploadPanel();
 }

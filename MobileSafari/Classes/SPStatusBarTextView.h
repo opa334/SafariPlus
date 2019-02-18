@@ -20,7 +20,7 @@
 
 @interface SPStatusBarTextView : UIView
 {
-  UILabel* _textLabel;
+	UILabel* _textLabel;
 }
 
 - (void)setCurrentNotification:(SPStatusBarNotification*)notification;

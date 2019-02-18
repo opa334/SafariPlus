@@ -27,122 +27,122 @@
 //Desktop mode button: Landscape
 - (void)layoutSubviews
 {
-  %orig;
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    UISearchBar* searchBar = MSHookIvar<UISearchBar*>(self, "_searchBar");
-    UIView* superview = [self.privateBrowsingButton superview];
+	%orig;
+	if(preferenceManager.desktopButtonEnabled)
+	{
+		UISearchBar* searchBar = MSHookIvar<UISearchBar*>(self, "_searchBar");
+		UIView* superview = [self.privateBrowsingButton superview];
 
-    BOOL desktopButtonAdded = NO;
+		BOOL desktopButtonAdded = NO;
 
-    if(!self.desktopModeButton)
-    {
-      //desktopButton not created yet -> create and configure it
-      self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		if(!self.desktopModeButton)
+		{
+			//desktopButton not created yet -> create and configure it
+			self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
-      UIImage* inactiveImage = [UIImage
-        imageNamed:@"DesktopButton.png" inBundle:SPBundle
-        compatibleWithTraitCollection:nil];
+			UIImage* inactiveImage = [UIImage
+						  imageNamed:@"DesktopButton.png" inBundle:SPBundle
+						  compatibleWithTraitCollection:nil];
 
-      UIImage* activeImage = [UIImage inverseColor:inactiveImage];
+			UIImage* activeImage = [UIImage inverseColor:inactiveImage];
 
-      [self.desktopModeButton setImage:inactiveImage
-        forState:UIControlStateNormal];
+			[self.desktopModeButton setImage:inactiveImage
+			 forState:UIControlStateNormal];
 
-      [self.desktopModeButton setImage:activeImage
-        forState:UIControlStateSelected];
+			[self.desktopModeButton setImage:activeImage
+			 forState:UIControlStateSelected];
 
-      self.desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-      self.desktopModeButton.layer.cornerRadius = 4;
-      self.desktopModeButton.adjustsImageWhenHighlighted = true;
+			self.desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
+			self.desktopModeButton.layer.cornerRadius = 4;
+			self.desktopModeButton.adjustsImageWhenHighlighted = true;
 
-      [self.desktopModeButton addTarget:self
-        action:@selector(desktopModeButtonPressed)
-        forControlEvents:UIControlEventTouchUpInside];
+			[self.desktopModeButton addTarget:self
+			 action:@selector(desktopModeButtonPressed)
+			 forControlEvents:UIControlEventTouchUpInside];
 
-      if(self.delegate.desktopButtonSelected)
-      {
-        self.desktopModeButton.selected = YES;
-        self.desktopModeButton.backgroundColor = [UIColor whiteColor];
-      }
-    }
+			if(self.delegate.desktopButtonSelected)
+			{
+				self.desktopModeButton.selected = YES;
+				self.desktopModeButton.backgroundColor = [UIColor whiteColor];
+			}
+		}
 
-    //Desktop button is not added to top bar yet -> Add it
-    if(![self.desktopModeButton isDescendantOfView:superview])
-    {
-      desktopButtonAdded = YES;
-      [superview addSubview:self.desktopModeButton];
-    }
+		//Desktop button is not added to top bar yet -> Add it
+		if(![self.desktopModeButton isDescendantOfView:superview])
+		{
+			desktopButtonAdded = YES;
+			[superview addSubview:self.desktopModeButton];
+		}
 
-    //Update position
+		//Update position
 
-    CGFloat gap = self.addTabButton.frame.origin.x - (self.privateBrowsingButton.frame.origin.x + self.privateBrowsingButton.frame.size.width);
+		CGFloat gap = self.addTabButton.frame.origin.x - (self.privateBrowsingButton.frame.origin.x + self.privateBrowsingButton.frame.size.width);
 
-    self.desktopModeButton.frame = CGRectMake(
-      self.privateBrowsingButton.frame.origin.x - (gap + self.privateBrowsingButton.frame.size.height),
-      self.privateBrowsingButton.frame.origin.y,
-      self.privateBrowsingButton.frame.size.height,
-      self.privateBrowsingButton.frame.size.height);
+		self.desktopModeButton.frame = CGRectMake(
+			self.privateBrowsingButton.frame.origin.x - (gap + self.privateBrowsingButton.frame.size.height),
+			self.privateBrowsingButton.frame.origin.y,
+			self.privateBrowsingButton.frame.size.height,
+			self.privateBrowsingButton.frame.size.height);
 
-    if([searchBar isFirstResponder])
-    {
-      if(self.desktopModeButton.enabled)
-      {
-        self.desktopModeButton.enabled = NO;
+		if([searchBar isFirstResponder])
+		{
+			if(self.desktopModeButton.enabled)
+			{
+				self.desktopModeButton.enabled = NO;
 
-        [UIView animateWithDuration:0.35 delay:0 options:327682
-        animations:^
-        {
-          self.desktopModeButton.alpha = 0.0;
-        } completion:nil];
-      }
-    }
-    else if(!desktopButtonAdded)
-    {
-      if(!self.desktopModeButton.enabled)
-      {
-        self.desktopModeButton.enabled = YES;
+				[UIView animateWithDuration:0.35 delay:0 options:327682
+				 animations:^
+				{
+					self.desktopModeButton.alpha = 0.0;
+				} completion:nil];
+			}
+		}
+		else if(!desktopButtonAdded)
+		{
+			if(!self.desktopModeButton.enabled)
+			{
+				self.desktopModeButton.enabled = YES;
 
-        [UIView animateWithDuration:0.35 delay:0 options:327682
-        animations:^
-        {
-          self.desktopModeButton.alpha = 1.0;
-        } completion:nil];
-      }
-    }
-  }
+				[UIView animateWithDuration:0.35 delay:0 options:327682
+				 animations:^
+				{
+					self.desktopModeButton.alpha = 1.0;
+				} completion:nil];
+			}
+		}
+	}
 }
 
 %new
 - (void)desktopModeButtonPressed
 {
-  if(self.delegate.desktopButtonSelected)
-  {
-    //Deselect desktop button
-    self.delegate.desktopButtonSelected = NO;
-    self.desktopModeButton.selected = NO;
+	if(self.delegate.desktopButtonSelected)
+	{
+		//Deselect desktop button
+		self.delegate.desktopButtonSelected = NO;
+		self.desktopModeButton.selected = NO;
 
-    //Remove white color with animation
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.3];
-    self.desktopModeButton.backgroundColor = [UIColor clearColor];
-    [UIView commitAnimations];
-  }
-  else
-  {
-    //Select desktop button
-    self.delegate.desktopButtonSelected = YES;
-    self.desktopModeButton.selected = YES;
+		//Remove white color with animation
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.3];
+		self.desktopModeButton.backgroundColor = [UIColor clearColor];
+		[UIView commitAnimations];
+	}
+	else
+	{
+		//Select desktop button
+		self.delegate.desktopButtonSelected = YES;
+		self.desktopModeButton.selected = YES;
 
-    //Set color to white
-    self.desktopModeButton.backgroundColor = [UIColor whiteColor];
-  }
+		//Set color to white
+		self.desktopModeButton.backgroundColor = [UIColor whiteColor];
+	}
 
-  //Reload tabs
-  [self.delegate updateUserAgents];
+	//Reload tabs
+	[self.delegate updateUserAgents];
 
-  //Write button state to plist
-  [self.delegate saveDesktopButtonState];
+	//Write button state to plist
+	[self.delegate saveDesktopButtonState];
 }
 
 %end

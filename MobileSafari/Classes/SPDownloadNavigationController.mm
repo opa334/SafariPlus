@@ -32,121 +32,121 @@
 
 - (id)init
 {
-  self.startURL = downloadManager.defaultDownloadURL;
-  self.loadParentDirectories = YES;
+	self.startURL = downloadManager.defaultDownloadURL;
+	self.loadParentDirectories = YES;
 
-  self = [super init];
+	self = [super init];
 
-  if(preferenceManager.defaultDownloadSectionAutoSwitchEnabled)
-  {
-    if([downloadManager.pendingDownloads count] > 0)
-    {
-      _previousSelectedIndex = preferenceManager.defaultDownloadSection;
-    }
-    else
-    {
-      _previousSelectedIndex = ~preferenceManager.defaultDownloadSection & 1;
-    }
-  }
-  else
-  {
-    _previousSelectedIndex = preferenceManager.defaultDownloadSection;
-  }
+	if(preferenceManager.defaultDownloadSectionAutoSwitchEnabled)
+	{
+		if([downloadManager.pendingDownloads count] > 0)
+		{
+			_previousSelectedIndex = preferenceManager.defaultDownloadSection;
+		}
+		else
+		{
+			_previousSelectedIndex = ~preferenceManager.defaultDownloadSection & 1;
+		}
+	}
+	else
+	{
+		_previousSelectedIndex = preferenceManager.defaultDownloadSection;
+	}
 
-  [self setUpPalette];
+	[self setUpPalette];
 
-  //Set delegate of SPDownloadManager for communication
-  downloadManager.navigationControllerDelegate = self;
+	//Set delegate of SPDownloadManager for communication
+	downloadManager.navigationControllerDelegate = self;
 
-  return self;
+	return self;
 }
 
 - (void)setUpTableViewControllers
 {
-  _browserTableViewControllers = [self tableViewControllersForDirectory:self.startURL recursive:self.loadParentDirectories];
-  _listTableViewControllers = @[[[SPDownloadListTableViewController alloc] init]];
+	_browserTableViewControllers = [self tableViewControllersForDirectory:self.startURL recursive:self.loadParentDirectories];
+	_listTableViewControllers = @[[[SPDownloadListTableViewController alloc] init]];
 }
 
 - (void)setUpSegmentedControl
 {
-  _segmentedControl = [[UISegmentedControl alloc] initWithItems:@[[localizationManager localizedSPStringForKey:@"FILE_BROWSER"], [localizationManager localizedSPStringForKey:@"DOWNLOADS"]]];
-  [_segmentedControl addTarget:self action:@selector(segmentedControlValueDidChange:) forControlEvents:UIControlEventValueChanged];
-  _segmentedControl.translatesAutoresizingMaskIntoConstraints = NO;
-  _segmentedControl.selectedSegmentIndex = _previousSelectedIndex;
+	_segmentedControl = [[UISegmentedControl alloc] initWithItems:@[[localizationManager localizedSPStringForKey:@"FILE_BROWSER"], [localizationManager localizedSPStringForKey:@"DOWNLOADS"]]];
+	[_segmentedControl addTarget:self action:@selector(segmentedControlValueDidChange:) forControlEvents:UIControlEventValueChanged];
+	_segmentedControl.translatesAutoresizingMaskIntoConstraints = NO;
+	_segmentedControl.selectedSegmentIndex = _previousSelectedIndex;
 
-  [self segmentedControlValueDidChange:_segmentedControl];
+	[self segmentedControlValueDidChange:_segmentedControl];
 }
 
 - (void)setUpPalette
 {
-  [self setUpSegmentedControl];
+	[self setUpSegmentedControl];
 
-  _palette = [self paletteForEdge:2 size:CGSizeMake(CGRectGetWidth(self.view.bounds), 41)];
+	_palette = [self paletteForEdge:2 size:CGSizeMake(CGRectGetWidth(self.view.bounds), 41)];
 
-  [_palette addSubview:_segmentedControl];
+	[_palette addSubview:_segmentedControl];
 
-  NSDictionary *views = NSDictionaryOfVariableBindings(_segmentedControl);
+	NSDictionary *views = NSDictionaryOfVariableBindings(_segmentedControl);
 
-  [_palette addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-8-[_segmentedControl]-8-|" options:0 metrics:nil views:views]];
-  [_palette addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_segmentedControl]-12-|" options:0 metrics:nil views:views]];
+	[_palette addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-8-[_segmentedControl]-8-|" options:0 metrics:nil views:views]];
+	[_palette addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[_segmentedControl]-12-|" options:0 metrics:nil views:views]];
 
-  [self attachPalette:_palette isPinned:YES];
+	[self attachPalette:_palette isPinned:YES];
 }
 
 - (void)openDirectoryInBrowser:(NSURL*)directoryURL
 {
-  _browserTableViewControllers = [self tableViewControllersForDirectory:directoryURL recursive:YES];
-  _segmentedControl.selectedSegmentIndex = 0;
-  [self segmentedControlValueDidChange:_segmentedControl];
+	_browserTableViewControllers = [self tableViewControllersForDirectory:directoryURL recursive:YES];
+	_segmentedControl.selectedSegmentIndex = 0;
+	[self segmentedControlValueDidChange:_segmentedControl];
 }
 
 - (void)segmentedControlValueDidChange:(UISegmentedControl *)segmentedControl
 {
-  if(segmentedControl.selectedSegmentIndex == 0)
-  {
-    if(_previousSelectedIndex == 1)
-    {
-      _listTableViewControllers = self.viewControllers;
-    }
+	if(segmentedControl.selectedSegmentIndex == 0)
+	{
+		if(_previousSelectedIndex == 1)
+		{
+			_listTableViewControllers = self.viewControllers;
+		}
 
-    [self setViewControllers:_browserTableViewControllers animated:NO];
-  }
-  else
-  {
-    if(_previousSelectedIndex == 0)
-    {
-      _browserTableViewControllers = self.viewControllers;
-    }
+		[self setViewControllers:_browserTableViewControllers animated:NO];
+	}
+	else
+	{
+		if(_previousSelectedIndex == 0)
+		{
+			_browserTableViewControllers = self.viewControllers;
+		}
 
-    [self setViewControllers:_listTableViewControllers animated:NO];
-  }
+		[self setViewControllers:_listTableViewControllers animated:NO];
+	}
 
-  _previousSelectedIndex = segmentedControl.selectedSegmentIndex;
+	_previousSelectedIndex = segmentedControl.selectedSegmentIndex;
 }
 
 - (void)reloadBrowser
 {
-  [_browserTableViewControllers.lastObject reload];
+	[_browserTableViewControllers.lastObject reload];
 }
 
 - (void)reloadEverything
 {
-  for(SPFileBrowserTableViewController* viewController in _browserTableViewControllers)
-  {
-    [viewController reload];
-  }
+	for(SPFileBrowserTableViewController* viewController in _browserTableViewControllers)
+	{
+		[viewController reload];
+	}
 
-  [self reloadDownloadList];
+	[self reloadDownloadList];
 }
 
 - (void)reloadDownloadList
 {
-  [_listTableViewControllers.firstObject reload];
+	[_listTableViewControllers.firstObject reload];
 }
 
 - (Class)tableControllerClass
 {
-  return [SPDownloadBrowserTableViewController class];
+	return [SPDownloadBrowserTableViewController class];
 }
 
 @end

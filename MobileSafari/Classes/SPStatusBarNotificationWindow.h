@@ -18,22 +18,22 @@
 
 @class SPStatusBarNotification, SPStatusBarTextView;
 
-@interface UIView(iOS11)
-@property(nonatomic, readonly) UIEdgeInsets safeAreaInsets;
+@interface UIView (iOS11)
+@property (nonatomic, readonly) UIEdgeInsets safeAreaInsets;
 @end
 
 @interface SPStatusBarNotificationWindow : UIWindow
 {
-  BOOL _isPresented;
-  BOOL _isBeingPresented;
-  BOOL _isBeingDismissed;
-  BOOL _shouldImmediatelyDismiss;
-  BOOL _shouldImmediatelyPresent;
-  CGFloat _barHeight;
-  SPStatusBarTextView* _textView;
-  NSTimer* _timer;
-  void (^_savedBlock)(void);
-  SPStatusBarNotification* _savedNotification;
+	BOOL _isPresented;
+	BOOL _isBeingPresented;
+	BOOL _isBeingDismissed;
+	BOOL _shouldImmediatelyDismiss;
+	BOOL _shouldImmediatelyPresent;
+	CGFloat _barHeight;
+	SPStatusBarTextView* _textView;
+	NSTimer* _timer;
+	void (^_savedBlock)(void);
+	SPStatusBarNotification* _savedNotification;
 }
 
 @property (nonatomic) UIInterfaceOrientation currentDeviceOrientation;
@@ -42,9 +42,9 @@
 - (void)orientationDidChange;
 
 - (void)dispatchNotification:(SPStatusBarNotification*)notification;
-- (void)dispatchNotification:(SPStatusBarNotification*)notification completion:(void(^)(void))completion;
+- (void)dispatchNotification:(SPStatusBarNotification*)notification completion:(void (^)(void))completion;
 
 - (void)dismiss;
-- (void)dismissWithCompletion:(void(^)(void))completion;
+- (void)dismissWithCompletion:(void (^)(void))completion;
 
 @end

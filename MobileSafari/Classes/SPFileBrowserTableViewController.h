@@ -18,15 +18,16 @@
 
 @interface SPFileBrowserTableViewController : UITableViewController
 
-@property(nonatomic) NSURL* directoryURL;
-@property(nonatomic) NSArray<SPFile*>* filesAtCurrentURL;
-@property(nonatomic) UILongPressGestureRecognizer* longPressRecognizer;
+@property (nonatomic) NSURL* directoryURL;
+@property (nonatomic) NSArray<SPFile*>* filesAtCurrentURL;
+@property (nonatomic) UILongPressGestureRecognizer* longPressRecognizer;
 
 - (instancetype)initWithDirectoryURL:(NSURL*)directoryURL;
 - (BOOL)loadContents;
 - (void)reload;
 - (void)setUpRightBarButtonItems;
 - (void)dismiss;
+- (NSInteger)fileSection;
 - (void)didLongPressTable:(UILongPressGestureRecognizer*)gestureRecognizer;
 - (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath;
 - (void)didLongPressFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath;

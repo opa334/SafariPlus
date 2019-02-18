@@ -45,7 +45,7 @@
 @property (nonatomic,retain) UIView* customBackgroundView;
 @end
 
-@interface UIImage(Private)
+@interface UIImage (Private)
 - (UIImage*)_flatImageWithColor:(UIColor*)color;
 @end
 
@@ -53,12 +53,12 @@
 - (BOOL)isAttached;
 @end
 
-@interface UINavigationController(Private)
+@interface UINavigationController (Private)
 - (id)paletteForEdge:(NSUInteger)arg1 size:(CGSize)arg2;
 - (void)attachPalette:(id)arg1 isPinned:(BOOL)arg2;
 @end
 
-@interface UISegmentedControl(Private)
+@interface UISegmentedControl (Private)
 + (double)defaultHeightForStyle:(NSInteger)arg1 size:(int)arg2;
 @end
 
@@ -73,17 +73,17 @@
 @property (nonatomic,readonly) NSURLRequest* _request;
 @end
 
-@interface WKFileUploadPanel <filePickerDelegate> {}
+@interface WKFileUploadPanel <filePickerDelegate>
 - (void)_presentPopoverWithContentViewController:(id)arg1 animated:(BOOL)arg2;
 - (void)_presentFullscreenViewController:(id)arg1 animated:(BOOL)arg2;
 - (void)_dismissDisplayAnimated:(BOOL)arg1;
 - (void)_chooseFiles:(id)arg1 displayString:(id)arg2 iconImage:(id)arg3;
 - (void)_showFilePicker;
 - (void)_cancel;
-- (void)_showMediaSourceSelectionSheet; //iOS8
+- (void)_showMediaSourceSelectionSheet;	//iOS8
 @end
 
-@interface _WKActivatedElementInfo : NSObject {}
+@interface _WKActivatedElementInfo : NSObject
 @property (nonatomic, readonly) NSURL* URL;
 @property (nonatomic,readonly) NSInteger type;
 @property (nonatomic,copy,readonly) UIImage* image;
@@ -91,7 +91,7 @@
 @property (nonatomic,readonly) NSString* title;
 @end
 
-@interface _WKElementAction : NSObject {}
+@interface _WKElementAction : NSObject
 + (id)elementActionWithTitle:(id)arg1 actionHandler:(id)arg2;
 @end
 
@@ -107,70 +107,70 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 /**** SafariServices ****/
 
-@interface SFCrossfadingLabel : UILabel {}
+@interface SFCrossfadingLabel : UILabel
 @end
 
-@interface _SFBookmarkInfoViewController : UITableViewController {}
+@interface _SFBookmarkInfoViewController : UITableViewController
 @end
 
-@interface _SFBrowserSavedState : NSObject {}
+@interface _SFBrowserSavedState : NSObject
 @end
 
-@interface _SFDialog : NSObject {}
+@interface _SFDialog : NSObject
 @property (nonatomic,copy,readonly) NSString* defaultText;
 - (void)finishWithPrimaryAction:(BOOL)arg1 text:(id)arg2;
 @end
 
-@interface _SFDialogController : NSObject {}
+@interface _SFDialogController : NSObject
 - (void)_dismissDialog;
 @end
 
-@interface _SFDimmingButton : UIButton {}
+@interface _SFDimmingButton : UIButton
 @end
 
 
-@interface _SFDownloadController : NSObject {}
+@interface _SFDownloadController : NSObject
 - (void)_beginDownloadBackgroundTask:(id)arg1;
 @end
 
-@interface _SFFindOnPageView : UIView {}
+@interface _SFFindOnPageView : UIView
 - (void)setShouldFocusTextField:(BOOL)arg1;
 - (void)showFindOnPage;
 @end
 
-@interface _SFFluidProgressView : UIView {}
+@interface _SFFluidProgressView : UIView
 @property (nonatomic,retain) UIColor* progressBarFillColor;
 @end
 
-@interface _SFSiteIconView : UIImageView {}
+@interface _SFSiteIconView : UIImageView
 @end
 
-@interface _SFNavigationBar : UIView {}
+@interface _SFNavigationBar : UIView
 @property (nonatomic, weak) BrowserController* delegate;
 @end
 
-@interface _SFNavigationBarBackdrop : _UIBackdropView {}
+@interface _SFNavigationBarBackdrop : _UIBackdropView
 @property (assign,nonatomic) NavigationBar* navigationBar;
 @end
 
-@interface _SFNavigationBarURLButton : UIButton {} //iOS 9 + 10
+@interface _SFNavigationBarURLButton : UIButton								//iOS 9 + 10
 //new stuff below
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
 @end
 
-@interface _SFReloadOptionsController : NSObject {}
+@interface _SFReloadOptionsController : NSObject
 @property (nonatomic,readonly) BOOL loadedUsingDesktopUserAgent;
 - (void)requestDesktopSiteWithURL:(id)arg1;
 - (void)requestDesktopSite;
 @end
 
-@interface _SFTabStateData : NSObject {}
+@interface _SFTabStateData : NSObject
 - (BOOL)privateBrowsing;
 @end
 
-@interface _SFToolbar : UIToolbar {}
+@interface _SFToolbar : UIToolbar
 @property (nonatomic) UIColor* tintColor;
 @property (nonatomic,readonly) NSInteger toolbarSize;
 @end
@@ -178,7 +178,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 /**** SafariShared ****/
 
-@interface WBSBookmarkAndHistoryCompletionMatch : NSObject {}
+@interface WBSBookmarkAndHistoryCompletionMatch : NSObject
 - (id)originalURLString;
 @end
 
@@ -196,6 +196,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface AVButton : UIButton
+@property (assign,nonatomic) CGSize extrinsicContentSize;
+@property (assign,getter=isIncluded,nonatomic) BOOL included;
 @end
 
 @interface AVFullScreenPlaybackControlsViewController : AVPlaybackControlsViewController <SourceVideoDelegate>
@@ -231,8 +233,12 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface AVBackdropView : UIView
-@property (nonatomic,readonly) AVStackView* contentView; //iOS 11.0 -> 11.2.6
-@property (nonatomic,readonly) UIStackView* stackView; //iOS 11.3 and above
+@property (nonatomic,readonly) AVStackView* contentView;//iOS 11.0 -> 11.2.6
+@property (nonatomic,readonly) UIStackView* stackView;	//iOS 11.3 and above
+@end
+
+@interface AVTransportControlsView : UIView
+@property (assign,nonatomic) AVPlaybackControlsController* delegate;
 @end
 
 @interface AVPlayerViewControllerContentView
@@ -241,11 +247,12 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface AVPlaybackControlsView : UIView <SourceVideoDelegate>
 @property (assign,nonatomic) AVPlayerViewControllerContentView* delegate;
+@property (nonatomic,readonly) AVTransportControlsView* transportControlsView;
 @property (nonatomic,readonly) AVBackdropView* screenModeControls;
 @property (assign,getter=isDoubleRowLayoutEnabled,nonatomic) bool doubleRowLayoutEnabled;
 @property (nonatomic,readonly) AVButton* doneButton;
 //new
-@property(nonatomic,retain) AVActivityButton* downloadButton;
+@property (nonatomic,retain) AVActivityButton* downloadButton;
 - (void)downloadButtonPressed;
 - (void)setUpDownloadButton;
 @end
@@ -272,7 +279,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)downloadsFromButtonBar;
 @end
 
-@interface Application : UIApplication <UIApplicationDelegate> {}
+@interface Application : UIApplication <UIApplicationDelegate>
 @property (nonatomic,readonly) ApplicationShortcutController* shortcutController;
 @property (nonatomic,readonly) NSArray* browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
@@ -282,22 +289,22 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void (^)(void))completionHandler;
 @end
 
-@interface ApplicationShortcutController : NSObject {}
+@interface ApplicationShortcutController : NSObject
 @property (assign,nonatomic) BrowserController* browserController;
 @end
 
-@interface BrowserController : UIResponder <BrowserToolbarDelegate> {}
+@interface BrowserController : UIResponder <BrowserToolbarDelegate>
 @property (nonatomic,readonly) TabController* tabController;
 @property (nonatomic,readonly) BrowserToolbar* bottomToolbar;
 @property (nonatomic,readonly) BrowserRootViewController* rootViewController;
 @property (nonatomic,readonly) NSUUID* UUID;
 @property (readonly, nonatomic) NavigationBar* navigationBar;
 @property (nonatomic,readonly) BrowserToolbar* activeToolbar;
-@property(readonly, nonatomic) BrowserToolbar* topToolbar;
+@property (readonly, nonatomic) BrowserToolbar* topToolbar;
 @property (nonatomic, getter=isShowingTabBar) BOOL showingTabBar;
-@property (nonatomic) BOOL shouldFocusFindOnPageTextField; //iOS9
-@property(readonly, nonatomic, getter=isFavoritesFieldFocused) BOOL favoritesFieldFocused;
-@property(readonly, nonatomic, getter=isShowingTabView) BOOL showingTabView;
+@property (nonatomic) BOOL shouldFocusFindOnPageTextField;	//iOS9
+@property (readonly, nonatomic, getter=isFavoritesFieldFocused) BOOL favoritesFieldFocused;
+@property (readonly, nonatomic, getter=isShowingTabView) BOOL showingTabView;
 - (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
@@ -311,16 +318,18 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (BOOL)_shouldShowTabBar;
 - (void)updateUsesTabBar;
 - (void)setFavoritesState:(int)arg1 animated:(BOOL)arg2;
-- (BOOL)isPrivateBrowsingEnabled; //iOS11
-- (void)togglePrivateBrowsingEnabled; //iOS11
-- (void)showFindOnPage; //iOS9
-- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2; //iOS9
-- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3; //iOS9
-- (void)newTabKeyPressed; //iOS8
+- (BOOL)isPrivateBrowsingAvailable;
+- (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(_Bool)arg2 completion:(void (^)(void))arg3;		//iOS11
+- (BOOL)isPrivateBrowsingEnabled;	//iOS11
+- (void)togglePrivateBrowsingEnabled;	//iOS11
+- (void)showFindOnPage;	//iOS9
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;	//iOS9
+- (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;	//iOS9
+- (void)newTabKeyPressed;	//iOS8
 //new stuff below
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
 - (void)handleGesture:(NSInteger)swipeAction;
 - (void)downloadsFromButtonBar;
 - (void)clearData;
@@ -328,84 +337,84 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)autoCloseAction;
 @end
 
-@interface BrowserRootViewController : UIViewController {}
+@interface BrowserRootViewController : UIViewController
 @property (nonatomic,weak,readonly) BrowserController* browserController;
 @end
 
-@interface BrowserToolbar : _SFToolbar {}
+@interface BrowserToolbar : _SFToolbar
 @property (assign,nonatomic) BrowserController* browserDelegate;
 @property (nonatomic,retain) UIToolbar* replacementToolbar;
-@property(nonatomic) BOOL hasDarkBackground; //iOS8
+@property (nonatomic) BOOL hasDarkBackground;	//iOS8
 - (void)updateTintColor;
 //new stuff below
 @property (nonatomic,retain) UIBarButtonItem* _downloadsItem;
 - (void)setDownloadsEnabled:(BOOL)enabled;
 @end
 
-@interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate> {}
+@interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic,retain) UnifiedField* textField;
 -  (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (id)_completionItemAtIndexPath:(id)arg1;
 - (void)_textFieldEditingChanged;
 @end
 
-@interface CompletionListTableViewController : UITableViewController {}
+@interface CompletionListTableViewController : UITableViewController
 @end
 
 
-@interface FindOnPageView : _SFFindOnPageView {}
+@interface FindOnPageView : _SFFindOnPageView
 @end
 
-@interface GestureRecognizingBarButtonItem : UIBarButtonItem {}
+@interface GestureRecognizingBarButtonItem : UIBarButtonItem
 @property (nonatomic,retain) UIGestureRecognizer* gestureRecognizer;
 - (void)setGestureRecognizer:(UIGestureRecognizer*)arg1;
 - (UIGestureRecognizer*)gestureRecognizer;
 - (void)setView:(id)arg1;
 @end
 
-@interface NavigationBar : _SFNavigationBar {}
+@interface NavigationBar : _SFNavigationBar
 @property (nonatomic,readonly) UnifiedField* textField;
-@property(nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
+@property (nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
 - (UIImage*)_lockImageWithTint:(UIColor*)tint usingMiniatureVersion:(BOOL)miniatureVersion;
 - (void)_updateControlTints;
 - (UIColor*)_placeholderColor;
 @end
 
 @interface NavigationBarBackdrop : _UIBackdropView
-@property(nonatomic) NavigationBar* navigationBar;
+@property (nonatomic) NavigationBar* navigationBar;
 @end
 
-@interface NavigationBarURLButton : UIView {} //iOS 8
+@interface NavigationBarURLButton : UIView						//iOS 8
 //new stuff below
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
-@property(nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
-@property(nonatomic, weak) NavigationBar* delegate;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
+@property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
+@property (nonatomic, weak) NavigationBar* delegate;
 @end
 
-@interface SafariWebView : WKWebView {}
+@interface SafariWebView : WKWebView
 @end
 
-@interface SearchSuggestion : NSObject {}
+@interface SearchSuggestion : NSObject
 - (NSString*)string;
 @end
 
 @interface TabBar : UIView
-@property(nonatomic) NSUInteger barStyle; //iOS 8
+@property (nonatomic) NSUInteger barStyle;	//iOS 8
 @end
 
 @interface TabBarStyle : NSObject
 @end
 
 @interface TabBarItemView : UIView
-@property(nonatomic, getter=isActive) BOOL active;
+@property (nonatomic, getter=isActive) BOOL active;
 @end
 
-@interface TabController : NSObject {}
+@interface TabController : NSObject
 @property (nonatomic,copy,readonly) NSArray* tabDocuments;
 @property (nonatomic,copy,readonly) NSArray* privateTabDocuments;
 @property (nonatomic,copy,readonly) NSArray* allTabDocuments;
-@property (nonatomic,copy,readonly) NSArray* currentTabDocuments; //iOS 10 only
+@property (nonatomic,copy,readonly) NSArray* currentTabDocuments;	//iOS 10 only
 @property (nonatomic,retain,readonly) TiltedTabView* tiltedTabView;
 @property (nonatomic,retain) TabDocument* activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview* tabOverview;
@@ -424,7 +433,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)updateUserAgents;
 @end
 
-@interface TabDocument : NSObject {}
+@interface TabDocument : NSObject
 @property (assign,nonatomic) BrowserController* browserController;
 @property (nonatomic,readonly) _SFReloadOptionsController* reloadOptionsController;
 @property (nonatomic,readonly) _SFTabStateData* tabStateData;
@@ -451,21 +460,21 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (BOOL)isHibernated;
 - (void)_openAppLinkInApp:(id)arg1 fromOriginalRequest:(id)arg2 updateAppLinkStrategy:(_Bool)arg3 webBrowserState:(id)arg4 completionHandler:(id)arg5;
-- (void)requestDesktopSite; //iOS 8
+- (void)requestDesktopSite;	//iOS 8
 //new stuff below
 - (void)updateDesktopMode;
 - (BOOL)shouldRequestHTTPS:(NSURL*)URL;
-@property(nonatomic) BOOL desktopMode;
+@property (nonatomic) BOOL desktopMode;
 @end
 
 //iOS 8
-@interface TabDocumentWK2 : TabDocument {}
+@interface TabDocumentWK2 : TabDocument
 @end
 
-@interface TabOverview : UIView {}
-@property(readonly, nonatomic) UIButton* addTabButton;
-@property(nonatomic,readonly) UIButton* privateBrowsingButton;
-@property(nonatomic, weak) TabController* delegate;
+@interface TabOverview : UIView
+@property (readonly, nonatomic) UIButton* addTabButton;
+@property (nonatomic,readonly) UIButton* privateBrowsingButton;
+@property (nonatomic, weak) TabController* delegate;
 //new stuff below
 @property (nonatomic, retain) UIButton* desktopModeButton;
 - (void)userAgentButtonLandscapePressed;
@@ -480,16 +489,16 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic,retain) TabOverviewItemView* itemView;
 @end
 
-@interface TiltedTabView : UIView {}
+@interface TiltedTabView : UIView
 @property (nonatomic,weak) BrowserController* delegate;
 - (void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
-- (void)setShowsPrivateBrowsingExplanationView:(BOOL)arg1 animated:(BOOL)arg2; //iOS 11
+- (void)setShowsPrivateBrowsingExplanationView:(BOOL)arg1 animated:(BOOL)arg2;	//iOS 11
 @end
 
 @interface TabThumbnailHeaderView : UIView
 @end
 
-@interface TabThumbnailView : UIView {}
+@interface TabThumbnailView : UIView
 @property (nonatomic,readonly) UIButton* closeButton;
 @property (nonatomic) BOOL usesDarkTheme;
 //@property(nonatomic, assign) BOOL isLocked; //new
@@ -503,7 +512,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @interface TiltedTabThumbnailView : TabThumbnailView
 @end
 
-@interface TiltedTabItem : NSObject {}
+@interface TiltedTabItem : NSObject
 @property (nonatomic,readonly) TiltedTabItemLayoutInfo* layoutInfo;
 @property (nonatomic,weak) TiltedTabView* tiltedTabView;
 @end
@@ -512,7 +521,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic,retain) TiltedTabThumbnailView* contentView;
 @end
 
-@interface UnifiedField : UITextField {}
+@interface UnifiedField : UITextField
 - (void)_textDidChangeFromTyping;
 - (void)setText:(id)arg1;
 - (void)setInteractionTintColor:(UIColor*)interactionTintColor;

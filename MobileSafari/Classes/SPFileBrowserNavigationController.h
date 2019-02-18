@@ -15,8 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @interface SPFileBrowserNavigationController : UINavigationController
-@property(nonatomic) BOOL loadParentDirectories;
-@property(nonatomic) NSURL* startURL;
+@property (nonatomic) BOOL loadParentDirectories;
+@property (nonatomic) NSURL* startURL;
 
 - (void)setUpTableViewControllers;
 - (NSArray*)tableViewControllersForDirectory:(NSURL*)directoryURL recursive:(BOOL)recursive;

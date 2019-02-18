@@ -33,422 +33,450 @@
 %new
 - (void)downloadsFromButtonBar
 {
-  //Create SPDownloadNavigationController
-  SPDownloadNavigationController* downloadsController =
-    [[SPDownloadNavigationController alloc] init];
+	//Create SPDownloadNavigationController
+	SPDownloadNavigationController* downloadsController =
+		[[SPDownloadNavigationController alloc] init];
 
-  //Present SPDownloadNavigationController
-  [rootViewControllerForBrowserController(self) presentViewController:downloadsController
-    animated:YES completion:nil];
+	//Present SPDownloadNavigationController
+	[rootViewControllerForBrowserController(self) presentViewController:downloadsController
+	 animated:YES completion:nil];
 }
 
 //URL Swipe actions
 %new
-- (void)handleGesture:(NSInteger)swipeAction
+- (void)handleGesture: (NSInteger)swipeAction
 {
-  //Some actions need a clean up after being ran
-  __block BOOL shouldClean = NO;
+	//Some actions need a clean up after being ran
+	__block BOOL shouldClean = NO;
 
-  switch(swipeAction)
-  {
-    case GestureActionCloseActiveTab:
-    [self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
-    shouldClean = YES;
-    break;
+	switch(swipeAction)
+	{
+	case GestureActionCloseActiveTab:
+		[self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
+		shouldClean = YES;
+		break;
 
-    case GestureActionOpenNewTab:
-    {
-      if([self.tabController respondsToSelector:@selector(newTab)])
-      {
-        [self.tabController newTab];
-      }
-      else //iOS 8
-      {
-        [self newTabKeyPressed];
-      }
-      break;
-    }
+	case GestureActionOpenNewTab:
+	{
+		if([self.tabController respondsToSelector:@selector(newTab)])
+		{
+			[self.tabController newTab];
+		}
+		else	//iOS 8
+		{
+			[self newTabKeyPressed];
+		}
+		break;
+	}
 
-    case GestureActionDuplicateActiveTab:
-    {
-      if([self respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
-      {
-        [self loadURLInNewTab:[self.tabController.activeTabDocument URL]
-          inBackground:preferenceManager.gestureBackground animated:YES];
-      }
-      else
-      {
-        [self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
-          inBackground:preferenceManager.gestureBackground animated:YES];
-      }
-      break;
-    }
+	case GestureActionDuplicateActiveTab:
+	{
+		if([self respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
+		{
+			[self loadURLInNewTab:[self.tabController.activeTabDocument URL]
+			 inBackground:preferenceManager.gestureBackground animated:YES];
+		}
+		else
+		{
+			[self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
+			 inBackground:preferenceManager.gestureBackground animated:YES];
+		}
+		break;
+	}
 
-    case GestureActionCloseAllTabs:
-    {
-      [self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
-      shouldClean = YES;
-      break;
-    }
+	case GestureActionCloseAllTabs:
+	{
+		[self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
+		shouldClean = YES;
+		break;
+	}
 
-    case GestureActionSwitchMode:
-    {
-      togglePrivateBrowsing(self);
-      shouldClean = YES;
-      break;
-    }
+	case GestureActionSwitchMode:
+	{
+		if([self isPrivateBrowsingAvailable] || privateBrowsingEnabled(self))
+		{
+			togglePrivateBrowsing(self);
+			shouldClean = YES;
+		}
+		break;
+	}
 
-    case GestureActionSwitchTabBackwards:
-    {
-      NSArray* activeTabs;
+	case GestureActionSwitchTabBackwards:
+	{
+		NSArray* activeTabs;
 
-      if(privateBrowsingEnabled(self))
-      {
-        //Private mode enabled -> set currentTabs to tabs of private mode
-        activeTabs = self.tabController.privateTabDocuments;
-      }
-      else
-      {
-        //Private mode disabled -> set currentTabs to tabs of normal mode
-        activeTabs = self.tabController.tabDocuments;
-      }
+		if(privateBrowsingEnabled(self))
+		{
+			//Private mode enabled -> set currentTabs to tabs of private mode
+			activeTabs = self.tabController.privateTabDocuments;
+		}
+		else
+		{
+			//Private mode disabled -> set currentTabs to tabs of normal mode
+			activeTabs = self.tabController.tabDocuments;
+		}
 
-      //Get index of previous tab
-      NSInteger tabIndex = [activeTabs indexOfObject:
-        self.tabController.activeTabDocument] - 1;
+		//Get index of previous tab
+		NSInteger tabIndex = [activeTabs indexOfObject:
+				      self.tabController.activeTabDocument] - 1;
 
-      if(tabIndex >= 0)
-      {
-        //tabIndex is greater than 0 -> switch to previous tab
-        [self.tabController setActiveTabDocument: activeTabs[tabIndex] animated:NO];
-      }
-      break;
-    }
+		if(tabIndex >= 0)
+		{
+			//tabIndex is greater than 0 -> switch to previous tab
+			[self.tabController setActiveTabDocument:activeTabs[tabIndex] animated:NO];
+		}
+		break;
+	}
 
-    case GestureActionSwitchTabForwards:
-    {
-      NSArray* activeTabs;
+	case GestureActionSwitchTabForwards:
+	{
+		NSArray* activeTabs;
 
-      if(privateBrowsingEnabled(self))
-      {
-        //Private mode enabled -> set currentTabs to tabs of private mode
-        activeTabs = self.tabController.privateTabDocuments;
-      }
-      else
-      {
-        //Private mode disabled -> set currentTabs to tabs of normal mode
-        activeTabs = self.tabController.tabDocuments;
-      }
+		if(privateBrowsingEnabled(self))
+		{
+			//Private mode enabled -> set currentTabs to tabs of private mode
+			activeTabs = self.tabController.privateTabDocuments;
+		}
+		else
+		{
+			//Private mode disabled -> set currentTabs to tabs of normal mode
+			activeTabs = self.tabController.tabDocuments;
+		}
 
-      //Get index of next tab
-      NSInteger tabIndex = [activeTabs indexOfObject:
-        self.tabController.activeTabDocument] + 1;
+		//Get index of next tab
+		NSInteger tabIndex = [activeTabs indexOfObject:
+				      self.tabController.activeTabDocument] + 1;
 
-      if(tabIndex < [activeTabs count])
-      {
-        //tabIndex is not bigger than array -> switch to next tab
-        [self.tabController setActiveTabDocument:activeTabs[tabIndex] animated:NO];
-      }
-      break;
-    }
+		if(tabIndex < [activeTabs count])
+		{
+			//tabIndex is not bigger than array -> switch to next tab
+			[self.tabController setActiveTabDocument:activeTabs[tabIndex] animated:NO];
+		}
+		break;
+	}
 
-    case GestureActionReloadActiveTab:
-    {
-      [self.tabController.activeTabDocument reload];
-      break;
-    }
+	case GestureActionReloadActiveTab:
+	{
+		[self.tabController.activeTabDocument reload];
+		break;
+	}
 
-    case GestureActionRequestDesktopSite:
-    {
-      if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
-      {
-        [self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
-      }
-      else
-      {
-        [self.tabController.activeTabDocument requestDesktopSite];
-      }
-      break;
-    }
+	case GestureActionRequestDesktopSite:
+	{
+		if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
+		{
+			[self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+		}
+		else
+		{
+			[self.tabController.activeTabDocument requestDesktopSite];
+		}
+		break;
+	}
 
-    //Not available on iOS 8
-    case GestureActionOpenFindOnPage:
-    {
-      if([self.tabController.activeTabDocument respondsToSelector:@selector(findOnPageView)])
-      {
-        [self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
-        [self.tabController.activeTabDocument.findOnPageView showFindOnPage];
-      }
-      else if([self respondsToSelector:@selector(shouldFocusFindOnPageTextField)])
-      {
-        self.shouldFocusFindOnPageTextField = YES;
-        [self showFindOnPage];
-      }
-      break;
-    }
+	//Not available on iOS 8
+	case GestureActionOpenFindOnPage:
+	{
+		if([self.tabController.activeTabDocument respondsToSelector:@selector(findOnPageView)])
+		{
+			[self.tabController.activeTabDocument.findOnPageView setShouldFocusTextField:YES];
+			[self.tabController.activeTabDocument.findOnPageView showFindOnPage];
+		}
+		else if([self respondsToSelector:@selector(shouldFocusFindOnPageTextField)])
+		{
+			self.shouldFocusFindOnPageTextField = YES;
+			[self showFindOnPage];
+		}
+		break;
+	}
 
-    default:
-    break;
-  }
+	default:
+		break;
+	}
 
-  if(shouldClean && privateBrowsingEnabled(self))
-  {
-    //Remove private mode message
-    if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView:animated:)])
-    {
-      [self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
-        animated:NO];
-    }
-    else
-    {
-      [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
-    }
-  }
+	if(shouldClean && privateBrowsingEnabled(self))
+	{
+		//Remove private mode message
+		if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView:animated:)])
+		{
+			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
+			 animated:NO];
+		}
+		else
+		{
+			[self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+		}
+	}
 }
 
 %new
 - (void)clearData
 {
-  //Clear history
-  [self clearHistoryMessageReceived];
+	//Clear history
+	[self clearHistoryMessageReceived];
 
-  //Clear autoFill stuff
-  [self clearAutoFillMessageReceived];
+	//Clear autoFill stuff
+	[self clearAutoFillMessageReceived];
 }
 
 //Used to close tabs based on the setting
 %new
 - (void)autoCloseAction
 {
-  switch(preferenceManager.autoCloseTabsFor)
-  {
-    case CloseTabActionFromActiveMode:
-    {
-      //Close tabs from active surfing mode
-      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-      break;
-    }
-    case CloseTabActionFromNormalMode:
-    {
-      if(privateBrowsingEnabled(self))
-      {
-        //Surfing mode is private -> switch to normal mode
-        togglePrivateBrowsing(self);
+	switch(preferenceManager.autoCloseTabsFor)
+	{
+	case CloseTabActionFromActiveMode:
+	{
+		//Close tabs from active surfing mode
+		[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+		break;
+	}
+	case CloseTabActionFromNormalMode:
+	{
+		if(privateBrowsingEnabled(self))
+		{
+			//Surfing mode is private -> switch to normal mode
+			togglePrivateBrowsing(self);
 
-        //Close tabs from normal mode
-        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+			//Close tabs from normal mode
+			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-        //Switch back to private mode
-        togglePrivateBrowsing(self);
-      }
-      else
-      {
-        //Surfing mode is normal -> close tabs
-        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-      }
-      break;
-    }
-    case CloseTabActionFromPrivateMode:
-    {
-      if(!privateBrowsingEnabled(self))
-      {
-        //Surfing mode is normal -> switch to private mode
-        togglePrivateBrowsing(self);
+			//Switch back to private mode
+			togglePrivateBrowsing(self);
+		}
+		else
+		{
+			//Surfing mode is normal -> close tabs
+			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+		}
+		break;
+	}
+	case CloseTabActionFromPrivateMode:
+	{
+		if(!privateBrowsingEnabled(self))
+		{
+			//Surfing mode is normal -> switch to private mode
+			togglePrivateBrowsing(self);
 
-        //Close tabs from private mode
-        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+			//Close tabs from private mode
+			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-        //Switch back to normal mode
-        togglePrivateBrowsing(self);
-      }
-      else
-      {
-        //Surfing mode is private -> close tabs
-        [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-      }
-      break;
-    }
-    case CloseTabActionFromBothModes: //Both modes
-    {
-      //Close tabs from active surfing mode
-      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+			//Switch back to normal mode
+			togglePrivateBrowsing(self);
+		}
+		else
+		{
+			//Surfing mode is private -> close tabs
+			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+		}
+		break;
+	}
+	case CloseTabActionFromBothModes:	//Both modes
+	{
+		//Close tabs from active surfing mode
+		[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-      //Switch mode
-      togglePrivateBrowsing(self);
+		//Switch mode
+		togglePrivateBrowsing(self);
 
-      //Close tabs from other surfing mode
-      [self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+		//Close tabs from other surfing mode
+		[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
 
-      //Switch back
-      togglePrivateBrowsing(self);
-      break;
-    }
+		//Switch back
+		togglePrivateBrowsing(self);
+		break;
+	}
 
-    default:
-    break;
-  }
+	default:
+		break;
+	}
 }
 
 //Used to switch mode based on the setting
 %new
-- (void)modeSwitchAction:(int)switchToMode
+- (void)modeSwitchAction: (int)switchToMode
 {
-  if(switchToMode == ModeSwitchActionNormalMode && privateBrowsingEnabled(self))
-  {
-    //Private browsing mode is active -> toggle browsing mode
-    togglePrivateBrowsing(self);
-  }
+	if(switchToMode == ModeSwitchActionNormalMode)
+	{
+		//Private browsing mode is active -> toggle browsing mode
+		togglePrivateBrowsing(self);
+	}
 
-  else if(switchToMode == ModeSwitchActionPrivateMode  && !privateBrowsingEnabled(self))
-  {
-    //Normal browsing mode is active -> toggle browsing mode
-    togglePrivateBrowsing(self);
+	else if(switchToMode == ModeSwitchActionPrivateMode && [self isPrivateBrowsingAvailable])
+	{
+		//Normal browsing mode is active -> toggle browsing mode
+		togglePrivateBrowsing(self);
 
-    //Hide private mode notice
-    if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView::)])
-    {
-      [self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
-        animated:NO];
-    }
-    else
-    {
-      [self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
-    }
-  }
+		//Hide private mode notice
+		if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView:animated:)])
+		{
+			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
+			 animated:NO];
+		}
+		else
+		{
+			[self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
+		}
+	}
 }
 
 //Full screen scrolling
 - (BOOL)_isVerticallyConstrained
 {
-  return (preferenceManager.fullscreenScrollingEnabled) ? YES : %orig;
+	return (preferenceManager.fullscreenScrollingEnabled) ? YES : %orig;
 }
 
 //Fully disable private mode
 - (BOOL)isPrivateBrowsingAvailable
 {
-  return (preferenceManager.disablePrivateMode) ? NO : %orig;
+	return (preferenceManager.disablePrivateMode) ? NO : %orig;
 }
 
 
-- (BOOL)dynamicBarAnimator:(id)arg1 canHideBarsByDraggingWithOffset:(CGFloat)arg2
+- (BOOL)dynamicBarAnimator: (id)arg1 canHideBarsByDraggingWithOffset: (CGFloat)arg2
 {
-  return (preferenceManager.lockBars) ? NO : %orig;
+	return (preferenceManager.lockBars) ? NO : %orig;
 }
 
 - (void)_initSubviews
 {
-  %orig;
-  if(preferenceManager.URLLeftSwipeGestureEnabled || preferenceManager.URLRightSwipeGestureEnabled
-    || preferenceManager.URLDownSwipeGestureEnabled)
-  {
-    _SFNavigationBarURLButton* URLButton = MSHookIvar<_SFNavigationBarURLButton*>(self.navigationBar, "_URLOutline");
+	%orig;
+	if(preferenceManager.URLLeftSwipeGestureEnabled || preferenceManager.URLRightSwipeGestureEnabled
+	   || preferenceManager.URLDownSwipeGestureEnabled)
+	{
+		_SFNavigationBarURLButton* URLButton = MSHookIvar<_SFNavigationBarURLButton*>(self.navigationBar, "_URLOutline");
 
-    if(preferenceManager.URLLeftSwipeGestureEnabled)
-    {
-      //Create gesture recognizer
-      self.URLBarSwipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc]
-        initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+		if(preferenceManager.URLLeftSwipeGestureEnabled)
+		{
+			//Create gesture recognizer
+			self.URLBarSwipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+								 initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
 
-      //Set swipe direction to left
-      self.URLBarSwipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+			//Set swipe direction to left
+			self.URLBarSwipeLeftGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
 
-      //Add gestureRecognizer
-      [URLButton addGestureRecognizer:self.URLBarSwipeLeftGestureRecognizer];
-    }
+			//Add gestureRecognizer
+			[URLButton addGestureRecognizer:self.URLBarSwipeLeftGestureRecognizer];
+		}
 
-    if(preferenceManager.URLRightSwipeGestureEnabled && !self.URLBarSwipeRightGestureRecognizer)
-    {
-      //Create gesture recognizer
-      self.URLBarSwipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc]
-        initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+		if(preferenceManager.URLRightSwipeGestureEnabled && !self.URLBarSwipeRightGestureRecognizer)
+		{
+			//Create gesture recognizer
+			self.URLBarSwipeRightGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+								  initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
 
-      //Set swipe direction to right
-      self.URLBarSwipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+			//Set swipe direction to right
+			self.URLBarSwipeRightGestureRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 
-      //Add gestureRecognizer
-      [URLButton addGestureRecognizer:self.URLBarSwipeRightGestureRecognizer];
-    }
+			//Add gestureRecognizer
+			[URLButton addGestureRecognizer:self.URLBarSwipeRightGestureRecognizer];
+		}
 
-    if(preferenceManager.URLDownSwipeGestureEnabled && !self.URLBarSwipeDownGestureRecognizer)
-    {
-      //Create gesture recognizer
-      self.URLBarSwipeDownGestureRecognizer = [[UISwipeGestureRecognizer alloc]
-        initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
+		if(preferenceManager.URLDownSwipeGestureEnabled && !self.URLBarSwipeDownGestureRecognizer)
+		{
+			//Create gesture recognizer
+			self.URLBarSwipeDownGestureRecognizer = [[UISwipeGestureRecognizer alloc]
+								 initWithTarget:self action:@selector(navigationBarURLWasSwiped:)];
 
-      //Set swipe direction to down
-      self.URLBarSwipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+			//Set swipe direction to down
+			self.URLBarSwipeDownGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
 
-      //Add gestureRecognizer
-      [URLButton addGestureRecognizer:self.URLBarSwipeDownGestureRecognizer];
-    }
-  }
+			//Add gestureRecognizer
+			[URLButton addGestureRecognizer:self.URLBarSwipeDownGestureRecognizer];
+		}
+	}
 }
 
 //Call method based on the direction of the url bar swipe
 %new
-- (void)navigationBarURLWasSwiped:(UISwipeGestureRecognizer*)swipe
+- (void)navigationBarURLWasSwiped: (UISwipeGestureRecognizer*)swipe
 {
-  switch(swipe.direction)
-  {
-    case UISwipeGestureRecognizerDirectionLeft:
-    {
-      //Bar swiped left -> handle swipe
-      [self handleGesture:preferenceManager.URLLeftSwipeAction];
-      break;
-    }
+	switch(swipe.direction)
+	{
+	case UISwipeGestureRecognizerDirectionLeft:
+	{
+		//Bar swiped left -> handle swipe
+		[self handleGesture:preferenceManager.URLLeftSwipeAction];
+		break;
+	}
 
-    case UISwipeGestureRecognizerDirectionRight:
-    {
-      //Bar swiped right -> handle swipe
-      [self handleGesture:preferenceManager.URLRightSwipeAction];
-      break;
-    }
+	case UISwipeGestureRecognizerDirectionRight:
+	{
+		//Bar swiped right -> handle swipe
+		[self handleGesture:preferenceManager.URLRightSwipeAction];
+		break;
+	}
 
-    case UISwipeGestureRecognizerDirectionDown:
-    {
-      //Bar swiped down -> handle swipe
-      [self handleGesture:preferenceManager.URLDownSwipeAction];
-      break;
-    }
-  }
+	case UISwipeGestureRecognizerDirectionDown:
+	{
+		//Bar swiped down -> handle swipe
+		[self handleGesture:preferenceManager.URLDownSwipeAction];
+		break;
+	}
+	}
 }
 
 %group iOS9Up
 
 //Auto switch mode on external URL opened
-- (NSURL*)handleExternalURL:(NSURL*)URL
+- (NSURL*)handleExternalURL: (NSURL*)URL
 {
-  if(URL && preferenceManager.forceModeOnExternalLinkEnabled)
-  {
-    [self modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
-  }
+	if(URL && preferenceManager.forceModeOnExternalLinkEnabled)
+	{
+		[self modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
+	}
 
-  return %orig;
+	return %orig;
 }
 
 %end
 
-%group iOS11_3Up
+%group iOS11_3_to_12
 
 - (void)updateButtons
 {
-  %orig;
+	%orig;
 
-  if(self.topToolbar)
-  {
-    BOOL enabled;
+	if(self.topToolbar)
+	{
+		BOOL enabled;
 
-    if(self.favoritesFieldFocused)
-    {
-      enabled = NO;
-    }
-    else
-    {
-      enabled = MSHookIvar<BOOL>(self, "_shouldDisableToolbarForCatalogViewControllerPopover") == NO;
-    }
+		if(self.favoritesFieldFocused)
+		{
+			enabled = NO;
+		}
+		else
+		{
+			enabled = MSHookIvar<BOOL>(self, "_shouldDisableToolbarForCatalogViewControllerPopover") == NO;
+		}
 
-    [self.topToolbar setDownloadsEnabled:enabled];
-  }
+		[self.topToolbar setDownloadsEnabled:enabled];
+	}
+}
+
+%end
+
+%group iOS12Up
+
+- (void)_updateButtonsAnimatingTabBar: (BOOL)arg1
+{
+	%orig;
+
+	if(self.topToolbar)
+	{
+		BOOL enabled;
+
+		if(self.favoritesFieldFocused)
+		{
+			enabled = NO;
+		}
+		else
+		{
+			enabled = MSHookIvar<BOOL>(self, "_shouldDisableToolbarForCatalogViewControllerPopover") == NO;
+		}
+
+		[self.topToolbar setDownloadsEnabled:enabled];
+	}
 }
 
 %end
@@ -457,15 +485,22 @@
 
 void initBrowserController()
 {
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-  {
-    %init(iOS9Up);
-  }
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+	{
+		%init(iOS9Up);
+	}
 
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
-  {
-    %init(iOS11_3Up);
-  }
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
+	{
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+		{
+			%init(iOS12Up);
+		}
+		else
+		{
+			%init(iOS11_3_to_12);
+		}
+	}
 
-  %init();
+	%init();
 }

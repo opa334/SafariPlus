@@ -25,244 +25,267 @@
 %hook TabController
 
 //BOOL for desktop button selection
-%property (nonatomic,retain) BOOL desktopButtonSelected;
+%property (nonatomic,assign) BOOL desktopButtonSelected;
 
 //Property for desktop button in portrait
 %property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
 
 - (TabController*)initWithBrowserController:(BrowserController*)browserController
 {
-  id orig = %orig;
+	id orig = %orig;
 
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    [self loadDesktopButtonState];
-  }
+	if(preferenceManager.desktopButtonEnabled)
+	{
+		[self loadDesktopButtonState];
+	}
 
-  return orig;
+	return orig;
+}
+
+- (void)_updateTiltedTabViewPrivateBrowsingButtonVisibility
+{
+	%orig;
+	NSLog(@"_updateTiltedTabViewPrivateBrowsingButtonVisibility");
 }
 
 %new
 - (void)loadDesktopButtonState
 {
-  BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+	BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
 
-  //Load state of desktop button
-  if([browserController respondsToSelector:@selector(UUID)])
-  {
-    self.desktopButtonSelected = [cacheManager desktopButtonStateForUUID:browserController.UUID];
-  }
-  else
-  {
-    self.desktopButtonSelected = [cacheManager desktopButtonStateForUUID:nil];
-  }
+	//Load state of desktop button
+	if([browserController respondsToSelector:@selector(UUID)])
+	{
+		self.desktopButtonSelected = [cacheManager desktopButtonStateForUUID:browserController.UUID];
+	}
+	else
+	{
+		self.desktopButtonSelected = [cacheManager desktopButtonStateForUUID:nil];
+	}
 }
 
 %new
 - (void)saveDesktopButtonState
 {
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
-  {
-    //Save state for browserController UUID
-    BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
-    [cacheManager setDesktopButtonState:self.desktopButtonSelected forUUID:browserController.UUID];
-  }
-  else
-  {
-    //Save global state (iOS 9 and below can't have multiple browserControllers)
-    [cacheManager setDesktopButtonState:self.desktopButtonSelected forUUID:nil];
-  }
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
+	{
+		//Save state for browserController UUID
+		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+		[cacheManager setDesktopButtonState:self.desktopButtonSelected forUUID:browserController.UUID];
+	}
+	else
+	{
+		//Save global state (iOS 9 and below can't have multiple browserControllers)
+		[cacheManager setDesktopButtonState:self.desktopButtonSelected forUUID:nil];
+	}
 }
 
 //Set state of desktop button
-- (void)tiltedTabViewDidPresent:(id)arg1
+- (void)tiltedTabViewDidPresent: (id)arg1
 {
-  %orig;
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    if(self.desktopButtonSelected)
-    {
-      //desktop button should be selected -> Select it
-      self.tiltedTabViewDesktopModeButton.selected = YES;
-      self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
-    }
-    else
-    {
-      //desktop button should not be selected -> Unselect it
-      self.tiltedTabViewDesktopModeButton.selected = NO;
-      self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
-    }
-  }
+	%orig;
+	if(preferenceManager.desktopButtonEnabled)
+	{
+		if(self.desktopButtonSelected)
+		{
+			//desktop button should be selected -> Select it
+			self.tiltedTabViewDesktopModeButton.selected = YES;
+			self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
+		}
+		else
+		{
+			//desktop button should not be selected -> Unselect it
+			self.tiltedTabViewDesktopModeButton.selected = NO;
+			self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
+		}
+	}
 }
 
 //Desktop mode button: Portrait
 - (NSArray *)tiltedTabViewToolbarItems
 {
-  if(preferenceManager.desktopButtonEnabled)
-  {
-    NSArray* old = %orig;
+	if(preferenceManager.desktopButtonEnabled)
+	{
+		NSArray* old = %orig;
 
-    if(!self.tiltedTabViewDesktopModeButton)
-    {
-      //desktopButton not created yet -> create and configure it
-      self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+		if(!self.tiltedTabViewDesktopModeButton)
+		{
+			//desktopButton not created yet -> create and configure it
+			self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 
-      UIImage* inactiveImage = [UIImage
-        imageNamed:@"DesktopButton.png" inBundle:SPBundle
-        compatibleWithTraitCollection:nil];
+			UIImage* inactiveImage = [UIImage
+						  imageNamed:@"DesktopButton.png" inBundle:SPBundle
+						  compatibleWithTraitCollection:nil];
 
-      UIImage* activeImage = [UIImage inverseColor:inactiveImage];
+			UIImage* activeImage = [UIImage inverseColor:inactiveImage];
 
-      [self.tiltedTabViewDesktopModeButton setImage:inactiveImage
-        forState:UIControlStateNormal];
+			[self.tiltedTabViewDesktopModeButton setImage:inactiveImage
+			 forState:UIControlStateNormal];
 
-      [self.tiltedTabViewDesktopModeButton setImage:activeImage
-        forState:UIControlStateSelected];
+			[self.tiltedTabViewDesktopModeButton setImage:activeImage
+			 forState:UIControlStateSelected];
 
-      self.tiltedTabViewDesktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
-      self.tiltedTabViewDesktopModeButton.layer.cornerRadius = 4;
-      self.tiltedTabViewDesktopModeButton.adjustsImageWhenHighlighted = true;
+			self.tiltedTabViewDesktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
+			self.tiltedTabViewDesktopModeButton.layer.cornerRadius = 4;
+			self.tiltedTabViewDesktopModeButton.adjustsImageWhenHighlighted = true;
 
-      [self.tiltedTabViewDesktopModeButton addTarget:self
-        action:@selector(tiltedTabViewDesktopModeButtonPressed)
-        forControlEvents:UIControlEventTouchUpInside];
+			[self.tiltedTabViewDesktopModeButton addTarget:self
+			 action:@selector(tiltedTabViewDesktopModeButtonPressed)
+			 forControlEvents:UIControlEventTouchUpInside];
 
-      self.tiltedTabViewDesktopModeButton.frame = CGRectMake(0, 0, 27.5, 27.5);
+			self.tiltedTabViewDesktopModeButton.frame = CGRectMake(0, 0, 27.5, 27.5);
 
-      if(self.desktopButtonSelected)
-      {
-        self.tiltedTabViewDesktopModeButton.selected = YES;
-        self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
-      }
-    }
+			if(self.desktopButtonSelected)
+			{
+				self.tiltedTabViewDesktopModeButton.selected = YES;
+				self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
+			}
+		}
 
-    //Create empty space button to align the bottom toolbar perfectly
-    UIButton* emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
-    emptySpace.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
-    emptySpace.layer.cornerRadius = 4;
-    emptySpace.frame = CGRectMake(0, 0, 27.5, 27.5);
+		//Create empty space button to align the bottom toolbar perfectly
+		UIButton* emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
+		emptySpace.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
+		emptySpace.layer.cornerRadius = 4;
+		emptySpace.frame = CGRectMake(0, 0, 27.5, 27.5);
 
-    //Create UIBarButtonItem from space
-    UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithCustomView:emptySpace];
+		//Create UIBarButtonItem from space
+		UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithCustomView:emptySpace];
 
-    //Create flexible UIBarButtonItem
-    UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc]
-      initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-      target:nil action:nil];
+		//Create flexible UIBarButtonItem
+		UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc]
+						 initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+						 target:nil action:nil];
 
-    //Create UIBarButtonItem for desktopButton
-    UIBarButtonItem *desktopBarButton = [[UIBarButtonItem alloc]
-      initWithCustomView:self.tiltedTabViewDesktopModeButton];
+		//Create UIBarButtonItem for desktopButton
+		UIBarButtonItem *desktopBarButton = [[UIBarButtonItem alloc]
+						     initWithCustomView:self.tiltedTabViewDesktopModeButton];
 
-    return @[old[0], flexibleItem, desktopBarButton, flexibleItem, old[2],
-      flexibleItem, customSpace, flexibleItem, old[4], old[5]];
-  }
+		NSMutableArray* newM = [old mutableCopy];
 
-  return %orig;
+		if([old count] < 6)
+		{
+			[newM insertObject:flexibleItem atIndex:0];
+		}
+
+		[newM removeObjectAtIndex:3];
+		[newM removeObjectAtIndex:1];
+
+		[newM insertObject:flexibleItem atIndex:2];
+		[newM insertObject:customSpace atIndex:2];
+		[newM insertObject:flexibleItem atIndex:2];
+
+		[newM insertObject:flexibleItem atIndex:1];
+		[newM insertObject:desktopBarButton atIndex:1];
+		[newM insertObject:flexibleItem atIndex:1];
+
+		return [newM copy];
+	}
+
+	return %orig;
 }
 
 %new
 - (void)tiltedTabViewDesktopModeButtonPressed
 {
-  if(self.desktopButtonSelected)
-  {
-    //Deselect desktop button
-    self.desktopButtonSelected = NO;
-    self.tiltedTabViewDesktopModeButton.selected = NO;
+	if(self.desktopButtonSelected)
+	{
+		//Deselect desktop button
+		self.desktopButtonSelected = NO;
+		self.tiltedTabViewDesktopModeButton.selected = NO;
 
-    //Remove white color with animation
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.3];
-    self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
-    [UIView commitAnimations];
-  }
-  else
-  {
-    //Select desktop button
-    self.desktopButtonSelected = YES;
-    self.tiltedTabViewDesktopModeButton.selected = YES;
+		//Remove white color with animation
+		[UIView beginAnimations:nil context:nil];
+		[UIView setAnimationDuration:0.3];
+		self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
+		[UIView commitAnimations];
+	}
+	else
+	{
+		//Select desktop button
+		self.desktopButtonSelected = YES;
+		self.tiltedTabViewDesktopModeButton.selected = YES;
 
-    //Set color to white
-    self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
-  }
+		//Set color to white
+		self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
+	}
 
-  //Update user agents
-  [self updateUserAgents];
+	//Update user agents
+	[self updateUserAgents];
 
-  //Write button state to plist
-  [self saveDesktopButtonState];
+	//Write button state to plist
+	[self saveDesktopButtonState];
 }
 
 //Update user agent of all tabs
 %new
 - (void)updateUserAgents
 {
-  for(TabDocument* tabDocument in self.allTabDocuments)
-  {
-    if(tabDocument.desktopMode != self.desktopButtonSelected)
-    {
-      [tabDocument updateDesktopMode];
+	for(TabDocument* tabDocument in self.allTabDocuments)
+	{
+		if(tabDocument.desktopMode != self.desktopButtonSelected)
+		{
+			[tabDocument updateDesktopMode];
 
-      if(!tabDocument.isHibernated)
-      {
-        if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
-        {
-          [tabDocument _loadURLInternal:[tabDocument URL] userDriven:NO];
-        }
-        else
-        {
-          [tabDocument reload];
-        }
-      }
-    }
-  }
+			if(!tabDocument.isHibernated)
+			{
+				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
+				{
+					[tabDocument _loadURLInternal:[tabDocument URL] userDriven:NO];
+				}
+				else
+				{
+					[tabDocument reload];
+				}
+			}
+		}
+	}
 }
 
 %group iOS9Down
 
 - (BOOL)canAddNewTab
 {
-  if(preferenceManager.removeTabLimit)
-  {
-    return YES;
-  }
+	if(preferenceManager.removeTabLimit)
+	{
+		return YES;
+	}
 
-  return %orig;
+	return %orig;
 }
 
 %end
 
 /*
-//Lock tabs (Prevent them from being closable)
-- (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
-{
-  if(item.layoutInfo.contentView.isLocked)
-  {
+   //Lock tabs (Prevent them from being closable)
+   - (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
+   {
+   if(item.layoutInfo.contentView.isLocked)
+   {
     return NO;
-  }
+   }
 
-  return %orig;
-}
+   return %orig;
+   }
 
-- (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
-{
-  if(item.layoutInfo.itemView.isLocked)
-  {
+   - (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
+   {
+   if(item.layoutInfo.itemView.isLocked)
+   {
     return NO;
-  }
+   }
 
-  return %orig;
-}
-*/
+   return %orig;
+   }
+ */
 
 %end
 
 void initTabController()
 {
-  if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
-  {
-    %init(iOS9Down);
-  }
-  
-  %init();
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
+	{
+		%init(iOS9Down);
+	}
+
+	%init();
 }

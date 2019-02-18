@@ -30,296 +30,296 @@
 
 - (instancetype)init
 {
-  self = [super init];
+	self = [super init];
 
-  [self loadDownloads];
+	[self loadDownloads];
 
-  return self;
+	return self;
 }
 
 - (void)viewDidLoad
 {
-  [super viewDidLoad];
+	[super viewDidLoad];
 
-  self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
-    localizedSPStringForKey:@"DISMISS"] style:UIBarButtonItemStylePlain
-    target:self action:@selector(dismissButtonPressed)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
+											 localizedSPStringForKey:@"DISMISS"] style:UIBarButtonItemStylePlain
+						  target:self action:@selector(dismissButtonPressed)];
 
-  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLEAR"] style:UIBarButtonItemStylePlain
-    target:self action:@selector(clearButtonPressed)];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
+											localizedSPStringForKey:@"CLEAR"] style:UIBarButtonItemStylePlain
+						 target:self action:@selector(clearButtonPressed)];
 
-  self.title = [localizationManager localizedSPStringForKey:@"DOWNLOAD_OVERVIEW"];
+	self.title = [localizationManager localizedSPStringForKey:@"DOWNLOAD_OVERVIEW"];
 
-  self.tableView.allowsMultipleSelectionDuringEditing = NO;
+	self.tableView.allowsMultipleSelectionDuringEditing = NO;
 
-  [self.tableView registerClass:[SPDownloadListTableViewCell class] forCellReuseIdentifier:@"SPDownloadListTableViewCell"];
-  [self.tableView registerClass:[SPDownloadListFinishedTableViewCell class] forCellReuseIdentifier:@"SPDownloadListFinishedTableViewCell"];
+	[self.tableView registerClass:[SPDownloadListTableViewCell class] forCellReuseIdentifier:@"SPDownloadListTableViewCell"];
+	[self.tableView registerClass:[SPDownloadListFinishedTableViewCell class] forCellReuseIdentifier:@"SPDownloadListFinishedTableViewCell"];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-  [super viewDidAppear:animated];
+	[super viewDidAppear:animated];
 
-  [self fixFooterColors];
+	[self fixFooterColors];
 }
 
 - (void)reload
 {
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
-  ^{
-    //Repopulate dataSources
-    BOOL needsReload = [self loadDownloads];
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+	{
+		//Repopulate dataSources
+		BOOL needsReload = [self loadDownloads];
 
-    if(needsReload)
-    {
-      //Reload tableView with new dataSources
-      NSRange range = NSMakeRange(0, [self numberOfSectionsInTableView:self.tableView]);
-      NSIndexSet* sections = [NSIndexSet indexSetWithIndexesInRange:range];
+		if(needsReload)
+		{
+			//Reload tableView with new dataSources
+			NSRange range = NSMakeRange(0, [self numberOfSectionsInTableView:self.tableView]);
+			NSIndexSet* sections = [NSIndexSet indexSetWithIndexesInRange:range];
 
-      dispatch_async(dispatch_get_main_queue(),
-      ^{
-        [self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationFade];
-      });
-    }
-  });
+			dispatch_async(dispatch_get_main_queue(), ^
+			{
+				[self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationFade];
+			});
+		}
+	});
 }
 
 - (BOOL)loadDownloads
 {
-  NSArray* newPendingDownloads = [downloadManager.pendingDownloads copy];
-  NSArray* newFinishedDownloads = [downloadManager.finishedDownloads copy];
+	NSArray* newPendingDownloads = [downloadManager.pendingDownloads copy];
+	NSArray* newFinishedDownloads = [downloadManager.finishedDownloads copy];
 
-  BOOL downloadsNeedUpdate = !([_pendingDownloads isEqualToArray:newPendingDownloads] && [_finishedDownloads isEqualToArray:newFinishedDownloads]);
+	BOOL downloadsNeedUpdate = !([_pendingDownloads isEqualToArray:newPendingDownloads] && [_finishedDownloads isEqualToArray:newFinishedDownloads]);
 
-  if(downloadsNeedUpdate)
-  {
-    _pendingDownloads = newPendingDownloads;
-    _finishedDownloads = newFinishedDownloads;
-  }
+	if(downloadsNeedUpdate)
+	{
+		_pendingDownloads = newPendingDownloads;
+		_finishedDownloads = newFinishedDownloads;
+	}
 
-  return downloadsNeedUpdate;
+	return downloadsNeedUpdate;
 }
 
 - (void)dismissButtonPressed
 {
-  //Dismiss controller
-  [self dismissViewControllerAnimated:YES completion:nil];
+	//Dismiss controller
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)clearButtonPressed
 {
-  UIAlertController* clearAlert = [UIAlertController alertControllerWithTitle:nil
-    message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+	UIAlertController* clearAlert = [UIAlertController alertControllerWithTitle:nil
+					 message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-  UIAlertAction* cancelDownloadsAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CANCEL_ALL_DOWNLOADS"] style:UIAlertActionStyleDestructive
-    handler:^(UIAlertAction* action)
-  {
-    [downloadManager cancelAllDownloads];
-  }];
+	UIAlertAction* cancelDownloadsAction = [UIAlertAction actionWithTitle:[localizationManager
+									       localizedSPStringForKey:@"CANCEL_ALL_DOWNLOADS"] style:UIAlertActionStyleDestructive
+						handler:^(UIAlertAction* action)
+	{
+		[downloadManager cancelAllDownloads];
+	}];
 
-  [clearAlert addAction:cancelDownloadsAction];
+	[clearAlert addAction:cancelDownloadsAction];
 
-  UIAlertAction* clearHistoryAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLEAR_DOWNLOAD_HISTORY"] style:UIAlertActionStyleDestructive
-    handler:^(UIAlertAction* action)
-  {
-    [downloadManager clearDownloadHistory];
-  }];
+	UIAlertAction* clearHistoryAction = [UIAlertAction actionWithTitle:[localizationManager
+									    localizedSPStringForKey:@"CLEAR_DOWNLOAD_HISTORY"] style:UIAlertActionStyleDestructive
+					     handler:^(UIAlertAction* action)
+	{
+		[downloadManager clearDownloadHistory];
+	}];
 
-  [clearAlert addAction:clearHistoryAction];
+	[clearAlert addAction:clearHistoryAction];
 
-  UIAlertAction* clearTempFilesAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLEAR_TEMPORARY_DATA"] style:UIAlertActionStyleDestructive
-    handler:^(UIAlertAction* action)
-  {
-    [downloadManager clearTempFilesIgnorePendingDownloads:YES];
-  }];
+	UIAlertAction* clearTempFilesAction = [UIAlertAction actionWithTitle:[localizationManager
+									      localizedSPStringForKey:@"CLEAR_TEMPORARY_DATA"] style:UIAlertActionStyleDestructive
+					       handler:^(UIAlertAction* action)
+	{
+		[downloadManager clearTempFilesIgnorePendingDownloads:YES];
+	}];
 
-  [clearAlert addAction:clearTempFilesAction];
+	[clearAlert addAction:clearTempFilesAction];
 
-  UIAlertAction* clearEverythingAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CLEAR_EVERYTHING"] style:UIAlertActionStyleDestructive
-    handler:^(UIAlertAction* action)
-  {
-    UIAlertController* warningAlert = [UIAlertController
-        alertControllerWithTitle:[localizationManager
-        localizedSPStringForKey:@"WARNING"]
-        message:[localizationManager localizedSPStringForKey:@"CLEAR_EVERYTHING_WARNING"]
-        preferredStyle:UIAlertControllerStyleAlert];
+	UIAlertAction* clearEverythingAction = [UIAlertAction actionWithTitle:[localizationManager
+									       localizedSPStringForKey:@"CLEAR_EVERYTHING"] style:UIAlertActionStyleDestructive
+						handler:^(UIAlertAction* action)
+	{
+		UIAlertController* warningAlert = [UIAlertController
+						   alertControllerWithTitle:[localizationManager
+									     localizedSPStringForKey:@"WARNING"]
+						   message:[localizationManager localizedSPStringForKey:@"CLEAR_EVERYTHING_WARNING"]
+						   preferredStyle:UIAlertControllerStyleAlert];
 
-    UIAlertAction* yesAction = [UIAlertAction actionWithTitle:[localizationManager
-      localizedSPStringForKey:@"YES"]
-      style:UIAlertActionStyleDestructive
-      handler:^(UIAlertAction* action)
-    {
-      [downloadManager cancelAllDownloads];
-      [downloadManager clearDownloadHistory];
-      [cacheManager clearDownloadCache];
-      [downloadManager clearTempFiles];
-      [fileManager resetHardLinks];
-    }];
+		UIAlertAction* yesAction = [UIAlertAction actionWithTitle:[localizationManager
+									   localizedSPStringForKey:@"YES"]
+					    style:UIAlertActionStyleDestructive
+					    handler:^(UIAlertAction* action)
+		{
+			[downloadManager cancelAllDownloads];
+			[downloadManager clearDownloadHistory];
+			[cacheManager clearDownloadCache];
+			[downloadManager clearTempFiles];
+			[fileManager resetHardLinks];
+		}];
 
-    [warningAlert addAction:yesAction];
+		[warningAlert addAction:yesAction];
 
-    UIAlertAction* noAction = [UIAlertAction actionWithTitle:[localizationManager
-      localizedSPStringForKey:@"NO"]
-      style:UIAlertActionStyleCancel
-      handler:nil];
+		UIAlertAction* noAction = [UIAlertAction actionWithTitle:[localizationManager
+									  localizedSPStringForKey:@"NO"]
+					   style:UIAlertActionStyleCancel
+					   handler:nil];
 
-    [warningAlert addAction:noAction];
+		[warningAlert addAction:noAction];
 
-    [self presentViewController:warningAlert animated:YES completion:nil];
-  }];
+		[self presentViewController:warningAlert animated:YES completion:nil];
+	}];
 
-  [clearAlert addAction:clearEverythingAction];
+	[clearAlert addAction:clearEverythingAction];
 
-  UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"CANCEL"]
-    style:UIAlertActionStyleCancel
-    handler:nil];
+	UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[localizationManager
+								      localizedSPStringForKey:@"CANCEL"]
+				       style:UIAlertActionStyleCancel
+				       handler:nil];
 
-  [clearAlert addAction:cancelAction];
+	[clearAlert addAction:cancelAction];
 
-  UIView* buttonView = [self.navigationItem.leftBarButtonItem valueForKey:@"view"];
+	UIView* buttonView = [self.navigationItem.leftBarButtonItem valueForKey:@"view"];
 
-  UIPopoverPresentationController* popPresenter = [clearAlert popoverPresentationController];
+	UIPopoverPresentationController* popPresenter = [clearAlert popoverPresentationController];
 
-  popPresenter.sourceView = buttonView;
-  popPresenter.sourceRect = buttonView.bounds;
+	popPresenter.sourceView = buttonView;
+	popPresenter.sourceRect = buttonView.bounds;
 
-  [self.navigationController presentViewController:clearAlert animated:YES completion:nil];
+	[self.navigationController presentViewController:clearAlert animated:YES completion:nil];
 }
 
 - (void)restartDownload:(SPDownload*)download
 {
-  [self dismissViewControllerAnimated:YES completion:^
-  {
-    BrowserController* browserController = browserControllers().firstObject;
+	[self dismissViewControllerAnimated:YES completion:^
+	{
+		BrowserController* browserController = browserControllers().firstObject;
 
-    if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
-    {
-      [browserController loadURLInNewTab:download.request.URL inBackground:NO];
-    }
-    else
-    {
-      [browserController loadURLInNewWindow:download.request.URL inBackground:NO];
-    }
-  }];
+		if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
+		{
+			[browserController loadURLInNewTab:download.request.URL inBackground:NO];
+		}
+		else
+		{
+			[browserController loadURLInNewWindow:download.request.URL inBackground:NO];
+		}
+	}];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return 2;
+	return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  switch(section)
-  {
-    case 0:
-    //return amount of pending downloads
-    return [_pendingDownloads count];
+	switch(section)
+	{
+	case 0:
+		//return amount of pending downloads
+		return [_pendingDownloads count];
 
-    case 1:
-    //return amount of finished downloads
-    return [_finishedDownloads count];
-  }
+	case 1:
+		//return amount of finished downloads
+		return [_finishedDownloads count];
+	}
 
-  return 0;
+	return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  switch(indexPath.section)
-  {
-    case 0:
-    return 88.0;
+	switch(indexPath.section)
+	{
+	case 0:
+		return 88.0;
 
-    case 1:
-    return 60.5;
+	case 1:
+		return 60.5;
 
-    default:
-    return UITableViewAutomaticDimension;
-  }
+	default:
+		return UITableViewAutomaticDimension;
+	}
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
+	return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-  if([self tableView:tableView numberOfRowsInSection:section] > 0)
-  {
-    switch(section)
-    {
-      case 0:
-      return [localizationManager localizedSPStringForKey:@"PENDING_DOWNLOADS"];
+	if([self tableView:tableView numberOfRowsInSection:section] > 0)
+	{
+		switch(section)
+		{
+		case 0:
+			return [localizationManager localizedSPStringForKey:@"PENDING_DOWNLOADS"];
 
-      case 1:
-      return [localizationManager localizedSPStringForKey:@"DOWNLOAD_HISTORY"];
-    }
-  }
+		case 1:
+			return [localizationManager localizedSPStringForKey:@"DOWNLOAD_HISTORY"];
+		}
+	}
 
-  return nil;
+	return nil;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  switch(indexPath.section)
-  {
-    case 0:
-    {
-      SPDownloadListTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SPDownloadListTableViewCell"];
+	switch(indexPath.section)
+	{
+	case 0:
+	{
+		SPDownloadListTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SPDownloadListTableViewCell"];
 
-      if(!cell)
-      {
-        cell = [[SPDownloadListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SPDownloadListTableViewCell"];
-      }
+		if(!cell)
+		{
+			cell = [[SPDownloadListTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SPDownloadListTableViewCell"];
+		}
 
-      [cell applyDownload:_pendingDownloads[indexPath.row]];
+		[cell applyDownload:_pendingDownloads[indexPath.row]];
 
-      return cell;
-    }
-    case 1:
-    {
-      SPDownloadListFinishedTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SPDownloadListFinishedTableViewCell"];
+		return cell;
+	}
+	case 1:
+	{
+		SPDownloadListFinishedTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SPDownloadListFinishedTableViewCell"];
 
-      if(!cell)
-      {
-        cell = [[SPDownloadListFinishedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SPDownloadListFinishedTableViewCell"];
-      }
+		if(!cell)
+		{
+			cell = [[SPDownloadListFinishedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SPDownloadListFinishedTableViewCell"];
+		}
 
-      [cell applyDownload:_finishedDownloads[indexPath.row]];
-      cell.tableViewController = self;
+		[cell applyDownload:_finishedDownloads[indexPath.row]];
+		cell.tableViewController = self;
 
-      return cell;
-    }
-  }
+		return cell;
+	}
+	}
 
-  return nil;
+	return nil;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  if(indexPath.section == 1)
-  {
-    return YES;
-  }
+	if(indexPath.section == 1)
+	{
+		return YES;
+	}
 
-  return NO;
+	return NO;
 }
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  if(editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1)
-  {
-    [downloadManager removeDownloadFromHistory:_finishedDownloads[indexPath.row]];
-  }
+	if(editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1)
+	{
+		[downloadManager removeDownloadFromHistory:_finishedDownloads[indexPath.row]];
+	}
 }
 
 @end

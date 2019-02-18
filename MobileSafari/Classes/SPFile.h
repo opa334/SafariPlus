@@ -16,15 +16,15 @@
 
 @interface SPFile : NSObject
 
-@property(nonatomic, readonly) NSURL* fileURL;
-@property(nonatomic, readonly) NSString* name;
-@property(nonatomic, readonly) NSString* applicationDisplayName;
-@property(nonatomic, readonly) NSAttributedString* cellTitle;
-@property(nonatomic, readonly) BOOL isRegularFile;
-@property(nonatomic, readonly) int64_t size;
-@property(nonatomic, readonly) BOOL isHidden;
-@property(nonatomic, readonly) BOOL isWritable;
-@property(nonatomic, readonly) CFStringRef fileUTI;
+@property (nonatomic, readonly) NSURL* fileURL;
+@property (nonatomic, readonly) NSString* name;
+@property (nonatomic, readonly) NSString* applicationDisplayName;
+@property (nonatomic, readonly) NSAttributedString* cellTitle;
+@property (nonatomic, readonly) BOOL isRegularFile;
+@property (nonatomic, readonly) int64_t size;
+@property (nonatomic, readonly) BOOL isHidden;
+@property (nonatomic, readonly) BOOL isWritable;
+@property (nonatomic, readonly) CFStringRef fileUTI;
 
 - (instancetype)initWithFileURL:(NSURL*)fileURL;
 

@@ -20,22 +20,22 @@
 
 + (SPStatusBarNotification*)defaultStyleWithText:(NSString*)text
 {
-  SPStatusBarNotification* defaultNotification = [[SPStatusBarNotification alloc] init];
-  defaultNotification.text = text;
-  defaultNotification.backgroundColor = [UIColor whiteColor];
-  defaultNotification.textColor = [UIColor blackColor];
-  defaultNotification.dismissAfter = 2.0;
-  return defaultNotification;
+	SPStatusBarNotification* defaultNotification = [[SPStatusBarNotification alloc] init];
+	defaultNotification.text = text;
+	defaultNotification.backgroundColor = [UIColor whiteColor];
+	defaultNotification.textColor = [UIColor blackColor];
+	defaultNotification.dismissAfter = 2.0;
+	return defaultNotification;
 }
 
 + (SPStatusBarNotification*)downloadStyleWithText:(NSString*)text
 {
-  SPStatusBarNotification* downloadNotification = [[SPStatusBarNotification alloc] init];
-  downloadNotification.text = text;
-  downloadNotification.backgroundColor = [UIColor blueColor];
-  downloadNotification.textColor = [UIColor whiteColor];
-  downloadNotification.dismissAfter = 2.0;
-  return downloadNotification;
+	SPStatusBarNotification* downloadNotification = [[SPStatusBarNotification alloc] init];
+	downloadNotification.text = text;
+	downloadNotification.backgroundColor = [UIColor blueColor];
+	downloadNotification.textColor = [UIColor whiteColor];
+	downloadNotification.dismissAfter = 2.0;
+	return downloadNotification;
 }
 
 @end

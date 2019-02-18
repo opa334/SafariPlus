@@ -18,9 +18,9 @@
 
 @interface SPSBReceiver : NSObject
 {
-  CPDistributedMessagingCenter* _messagingCenter;
-  NSDictionary* _displayNamesForPaths;
-  SSDownloadQueue* _downloadQueue;
+	CPDistributedMessagingCenter* _messagingCenter;
+	NSDictionary* _displayNamesForPaths;
+	SSDownloadQueue* _downloadQueue;
 }
 
 - (NSDictionary*)testConnection:(NSString*)name withUserInfo:(NSDictionary*)userInfo;

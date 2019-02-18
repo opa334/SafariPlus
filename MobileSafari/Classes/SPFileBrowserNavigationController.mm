@@ -21,70 +21,70 @@
 
 - (instancetype)init
 {
-  self = [super init];
+	self = [super init];
 
-  [self setUpTableViewControllers];
+	[self setUpTableViewControllers];
 
-  //Add observer to reload all files if app enters foreground (after being minimized)
-  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadEverything)
-    name:UIApplicationWillEnterForegroundNotification object:nil];
+	//Add observer to reload all files if app enters foreground (after being minimized)
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadEverything)
+	 name:UIApplicationWillEnterForegroundNotification object:nil];
 
-  return self;
+	return self;
 }
 
 - (void)setUpTableViewControllers
 {
-  NSArray* tableViewControllers = [self tableViewControllersForDirectory:_startURL recursive:self.loadParentDirectories];
+	NSArray* tableViewControllers = [self tableViewControllersForDirectory:_startURL recursive:self.loadParentDirectories];
 
-  [self setViewControllers:tableViewControllers animated:NO];
+	[self setViewControllers:tableViewControllers animated:NO];
 }
 
 - (NSArray*)tableViewControllersForDirectory:(NSURL*)directoryURL recursive:(BOOL)recursive
 {
-  NSMutableArray* viewControllers = [NSMutableArray new];
+	NSMutableArray* viewControllers = [NSMutableArray new];
 
-  if(recursive)
-  {
-    NSURL* tmpURL;
+	if(recursive)
+	{
+		NSURL* tmpURL;
 
-    for(NSString* component in directoryURL.pathComponents)
-    {
-      if(!tmpURL)
-      {
-        tmpURL = [NSURL fileURLWithPath:component];
-      }
-      else
-      {
-        tmpURL = [tmpURL URLByAppendingPathComponent:component];
-      }
+		for(NSString* component in directoryURL.pathComponents)
+		{
+			if(!tmpURL)
+			{
+				tmpURL = [NSURL fileURLWithPath:component];
+			}
+			else
+			{
+				tmpURL = [tmpURL URLByAppendingPathComponent:component];
+			}
 
-      [viewControllers addObject:[((SPFileBrowserTableViewController*)[[self tableControllerClass] alloc]) initWithDirectoryURL:tmpURL]];
-    }
-  }
-  else
-  {
-    [viewControllers addObject:[((SPFileBrowserTableViewController*)[[self tableControllerClass] alloc]) initWithDirectoryURL:directoryURL]];
-  }
+			[viewControllers addObject:[((SPFileBrowserTableViewController*)[[self tableControllerClass] alloc]) initWithDirectoryURL:tmpURL]];
+		}
+	}
+	else
+	{
+		[viewControllers addObject:[((SPFileBrowserTableViewController*)[[self tableControllerClass] alloc]) initWithDirectoryURL:directoryURL]];
+	}
 
-  return [viewControllers copy];
+	return [viewControllers copy];
 }
 
 - (void)reloadBrowser
 {
-  [self.viewControllers.lastObject reload];
+	[self.viewControllers.lastObject reload];
 }
 
 - (void)reloadEverything
 {
-  for(SPFileBrowserTableViewController* viewController in self.viewControllers)
-  {
-    [viewController reload];
-  }
+	for(SPFileBrowserTableViewController* viewController in self.viewControllers)
+	{
+		[viewController reload];
+	}
 }
 
 - (Class)tableControllerClass
 {
-  return [SPFileBrowserTableViewController class];
+	return [SPFileBrowserTableViewController class];
 }
 
 @end

@@ -18,8 +18,8 @@
 
 @interface SPDownloadListTableViewController : UITableViewController
 {
-  NSArray* _pendingDownloads;
-  NSArray* _finishedDownloads;
+	NSArray* _pendingDownloads;
+	NSArray* _finishedDownloads;
 }
 
 - (void)reload;

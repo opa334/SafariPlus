@@ -20,7 +20,7 @@
 
 @interface SPDownloadListFinishedTableViewCell : UITableViewCell
 {
-  SPDownload* _download;
+	SPDownload* _download;
 }
 
 @property (nonatomic) UIImageView* iconView;

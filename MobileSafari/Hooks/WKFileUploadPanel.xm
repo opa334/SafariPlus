@@ -29,17 +29,17 @@
 %new
 - (void)_showFilePicker
 {
-  SPFilePickerNavigationController* navController = [[%c(SPFilePickerNavigationController) alloc] init];
-  navController.filePickerDelegate = self;
+	SPFilePickerNavigationController* navController = [[%c(SPFilePickerNavigationController) alloc] init];
+	navController.filePickerDelegate = self;
 
-  if(IS_PAD)
-  {
-    [self _presentPopoverWithContentViewController:navController animated:YES];
-  }
-  else
-  {
-    [self _presentFullscreenViewController:navController animated:YES];
-  }
+	if(IS_PAD)
+	{
+		[self _presentPopoverWithContentViewController:navController animated:YES];
+	}
+	else
+	{
+		[self _presentFullscreenViewController:navController animated:YES];
+	}
 }
 
 %group iOS9Up
@@ -47,120 +47,121 @@
 //Add button to document menu
 - (void)_showDocumentPickerMenu
 {
-  %orig;
-  if(preferenceManager.uploadAnyFileOptionEnabled)
-  {
-    UIDocumentMenuViewController* documentMenuController =
-      MSHookIvar<UIDocumentMenuViewController*>(self, "_documentMenuController");
+	%orig;
+	if(preferenceManager.uploadAnyFileOptionEnabled)
+	{
+		UIDocumentMenuViewController* documentMenuController =
+			MSHookIvar<UIDocumentMenuViewController*>(self, "_documentMenuController");
 
-    [documentMenuController addOptionWithTitle:[localizationManager
-      localizedSPStringForKey:@"LOCAL_FILES"]
-      image:[UIImage imageNamed:@"UploadFileButton.png"
-      inBundle:SPBundle compatibleWithTraitCollection:nil]
-      order:UIDocumentMenuOrderFirst handler:
-    ^{
-      [self _showFilePicker];
-    }];
-  }
+		[documentMenuController addOptionWithTitle:[localizationManager
+							    localizedSPStringForKey:@"LOCAL_FILES"]
+		 image:[UIImage imageNamed:@"UploadFileButton.png"
+			inBundle:SPBundle compatibleWithTraitCollection:nil]
+		 order:UIDocumentMenuOrderFirst handler:
+		 ^
+		{
+			[self _showFilePicker];
+		}];
+	}
 }
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)didSelectFiles:(NSArray*)URLs
+- (void)filePicker: (SPFilePickerNavigationController*)filePicker didSelectFiles: (NSArray*)URLs
 {
-  [self _dismissDisplayAnimated:YES];
+	[filePicker dismissViewControllerAnimated:YES completion:nil];
 
-  if(!URLs)
-  {
-    [self _cancel];
-    return;
-  }
+	if(!URLs)
+	{
+		[self _cancel];
+		return;
+	}
 
-  [fileManager resetHardLinks];
+	[fileManager resetHardLinks];
 
-  NSMutableArray* hardLinkedURLs = [NSMutableArray new];
+	NSMutableArray* hardLinkedURLs = [NSMutableArray new];
 
-  for(NSURL* URL in URLs)
-  {
-    [hardLinkedURLs addObject:[fileManager createHardLinkForFileAtURL:URL onlyIfNeeded:YES]];
-  }
+	for(NSURL* URL in URLs)
+	{
+		[hardLinkedURLs addObject:[fileManager createHardLinkForFileAtURL:URL onlyIfNeeded:YES]];
+	}
 
-  [self _chooseFiles:[hardLinkedURLs copy]
-    displayString:[((NSURL*)hardLinkedURLs.firstObject).lastPathComponent
-    stringByRemovingPercentEncoding] iconImage:nil];
+	[self _chooseFiles:[hardLinkedURLs copy]
+	 displayString:[((NSURL*)hardLinkedURLs.firstObject).lastPathComponent
+			stringByRemovingPercentEncoding] iconImage:nil];
 }
 
 %end
 
 %group iOS8
 
-- (void)_showPhotoPickerWithSourceType:(int)arg1
+- (void)_showPhotoPickerWithSourceType: (int)arg1
 {
-  if(preferenceManager.uploadAnyFileOptionEnabled)
-  {
-    //On some sites only the photo picker gets opened, if that's the case, just present the alert nonetheless
-    UIAlertController* actionSheetController = MSHookIvar<UIAlertController*>(self, "_actionSheetController");
-    if(!actionSheetController)
-    {
-      [self _showMediaSourceSelectionSheet];
-      return;
-    }
-  }
+	if(preferenceManager.uploadAnyFileOptionEnabled)
+	{
+		//On some sites only the photo picker gets opened, if that's the case, just present the alert nonetheless
+		UIAlertController* actionSheetController = MSHookIvar<UIAlertController*>(self, "_actionSheetController");
+		if(!actionSheetController)
+		{
+			[self _showMediaSourceSelectionSheet];
+			return;
+		}
+	}
 
-  %orig;
+	%orig;
 }
 
 - (void)_showMediaSourceSelectionSheet
 {
-  %orig;
+	%orig;
 
-  if(preferenceManager.uploadAnyFileOptionEnabled)
-  {
-    UIAlertController* uploadAlert = MSHookIvar<UIAlertController*>(self, "_actionSheetController");
+	if(preferenceManager.uploadAnyFileOptionEnabled)
+	{
+		UIAlertController* uploadAlert = MSHookIvar<UIAlertController*>(self, "_actionSheetController");
 
-    UIAlertAction* fileAction = [UIAlertAction actionWithTitle:[localizationManager
-      localizedSPStringForKey:@"LOCAL_FILES"]
-      style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
-    {
-      [self _showFilePicker];
-    }];
+		UIAlertAction* fileAction = [UIAlertAction actionWithTitle:[localizationManager
+									    localizedSPStringForKey:@"LOCAL_FILES"]
+					     style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
+		{
+			[self _showFilePicker];
+		}];
 
-    //Add 'Local File' option to alert
-    [uploadAlert addAction:fileAction];
-  }
+		//Add 'Local File' option to alert
+		[uploadAlert addAction:fileAction];
+	}
 }
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)didSelectFiles:(NSArray*)URLs
+- (void)filePicker: (SPFilePickerNavigationController*)filePicker didSelectFiles: (NSArray*)URLs
 {
-  [self _dismissDisplayAnimated:YES];
+	[filePicker dismissViewControllerAnimated:YES completion:nil];
 
-  if(!URLs)
-  {
-    [self _cancel];
-  }
-  else
-  {
-    //iOS8 needs the files to be inside sandbox (otherwise WebKit crashes)
+	if(!URLs)
+	{
+		[self _cancel];
+	}
+	else
+	{
+		//iOS8 needs the files to be inside sandbox (otherwise WebKit crashes)
 
-    //Mutable array for sandboxed URLs
-    NSMutableArray* sandboxedURLs = [NSMutableArray new];
+		//Mutable array for sandboxed URLs
+		NSMutableArray* sandboxedURLs = [NSMutableArray new];
 
-    for(NSURL* URL in URLs)
-    {
-      //Create URL for tmp location
-      NSURL* sandboxedURL = [fileManager createHardLinkForFileAtURL:URL onlyIfNeeded:NO];
+		for(NSURL* URL in URLs)
+		{
+			//Create URL for tmp location
+			NSURL* sandboxedURL = [fileManager createHardLinkForFileAtURL:URL onlyIfNeeded:NO];
 
-      //Add URL to array
-      [sandboxedURLs addObject:sandboxedURL];
-    }
+			//Add URL to array
+			[sandboxedURLs addObject:sandboxedURL];
+		}
 
-    //Choose files inside sandbox
-    [self _chooseFiles:sandboxedURLs
-      displayString:[((NSURL*)sandboxedURLs.firstObject).lastPathComponent
-      stringByRemovingPercentEncoding] iconImage:nil];
-  }
+		//Choose files inside sandbox
+		[self _chooseFiles:sandboxedURLs
+		 displayString:[((NSURL*)sandboxedURLs.firstObject).lastPathComponent
+				stringByRemovingPercentEncoding] iconImage:nil];
+	}
 }
 
 %end
@@ -169,14 +170,14 @@
 
 void initWKFileUploadPanel()
 {
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-  {
-    %init(iOS9Up);
-  }
-  else
-  {
-    %init(iOS8);
-  }
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+	{
+		%init(iOS9Up);
+	}
+	else
+	{
+		%init(iOS8);
+	}
 
-  %init();
+	%init();
 }

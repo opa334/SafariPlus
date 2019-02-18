@@ -23,53 +23,54 @@
 
 + (instancetype)sharedInstance
 {
-  static SPLocalizationManager *sharedInstance = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-      sharedInstance = [[SPLocalizationManager alloc] init];
-  });
-  return sharedInstance;
+	static SPLocalizationManager *sharedInstance = nil;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^
+	{
+		sharedInstance = [[SPLocalizationManager alloc] init];
+	});
+	return sharedInstance;
 }
 
 //Retrieves a localized string from SafariPlus
 - (NSString*)localizedSPStringForKey:(NSString*)key;
 {
-  NSString* localizedString = [SPBundle localizedStringForKey:key value:nil table:nil];
-  if([localizedString isEqualToString:key])
-  {
-    //Handle missing localization
-    NSDictionary *englishDict = [[NSDictionary alloc]
-      initWithContentsOfFile:[SPBundle pathForResource:@"Localizable"
-      ofType:@"strings" inDirectory:@"en.lproj"]];
+	NSString* localizedString = [SPBundle localizedStringForKey:key value:nil table:nil];
+	if([localizedString isEqualToString:key])
+	{
+		//Handle missing localization
+		NSDictionary *englishDict = [[NSDictionary alloc]
+					     initWithContentsOfFile:[SPBundle pathForResource:@"Localizable"
+								     ofType:@"strings" inDirectory:@"en.lproj"]];
 
-    localizedString = [englishDict objectForKey:key];
+		localizedString = [englishDict objectForKey:key];
 
-    if(!localizedString)
-    {
-      return key;
-    }
-  }
-  return localizedString;
+		if(!localizedString)
+		{
+			return key;
+		}
+	}
+	return localizedString;
 }
 
 //Retrieves a localized string from MobileSafari
 - (NSString*)localizedMSStringForKey:(NSString*)key
 {
-  NSString* localizedString = [MSBundle localizedStringForKey:key value:key table:nil];
-  return localizedString;
+	NSString* localizedString = [MSBundle localizedStringForKey:key value:key table:nil];
+	return localizedString;
 }
 
 - (void)parseSPLocalizationsForSpecifiers:(NSArray*)specifiers
 {
-  //Localize specifiers
-  NSMutableArray* mutableSpecifiers = (NSMutableArray*)specifiers;
-  for(PSSpecifier* specifier in mutableSpecifiers)
-  {
-    NSString *localizedTitle = [self localizedSPStringForKey:specifier.properties[@"label"]];
-    NSString *localizedFooter = [self localizedSPStringForKey:specifier.properties[@"footerText"]];
-    specifier.name = localizedTitle;
-    [specifier setProperty:localizedFooter forKey:@"footerText"];
-  }
+	//Localize specifiers
+	NSMutableArray* mutableSpecifiers = (NSMutableArray*)specifiers;
+	for(PSSpecifier* specifier in mutableSpecifiers)
+	{
+		NSString *localizedTitle = [self localizedSPStringForKey:specifier.properties[@"label"]];
+		NSString *localizedFooter = [self localizedSPStringForKey:specifier.properties[@"footerText"]];
+		specifier.name = localizedTitle;
+		[specifier setProperty:localizedFooter forKey:@"footerText"];
+	}
 }
 
 @end

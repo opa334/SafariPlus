@@ -21,28 +21,28 @@
 
 - (instancetype)init
 {
-  self = [super init];
+	self = [super init];
 
-  _textLabel = [[UILabel alloc] init];
-  _textLabel.font = [_textLabel.font fontWithSize:12];
-  [self addSubview:_textLabel];
+	_textLabel = [[UILabel alloc] init];
+	_textLabel.font = [_textLabel.font fontWithSize:12];
+	[self addSubview:_textLabel];
 
-  return self;
+	return self;
 }
 
 - (void)layoutSubviews
 {
-  dispatch_async(dispatch_get_main_queue(),
-  ^{
-    _textLabel.frame = CGRectMake(0,0,self.frame.size.width, self.frame.size.height);
-  });
+	dispatch_async(dispatch_get_main_queue(),^
+	{
+		_textLabel.frame = CGRectMake(0,0,self.frame.size.width, self.frame.size.height);
+	});
 }
 
 - (void)setCurrentNotification:(SPStatusBarNotification*)notification
 {
-  _textLabel.text = notification.text;
-  _textLabel.textColor = notification.textColor;
-  _textLabel.textAlignment = NSTextAlignmentCenter;
+	_textLabel.text = notification.text;
+	_textLabel.textColor = notification.textColor;
+	_textLabel.textAlignment = NSTextAlignmentCenter;
 }
 
 @end

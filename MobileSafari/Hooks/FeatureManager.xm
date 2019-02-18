@@ -1,4 +1,4 @@
-// SPStatusBarNotificationStyle.h
+// FeatureManager.xm
 // (c) 2018 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import "../Shared.h"
+#import "../Classes/SPPreferenceManager.h"
+#import "../Defines.h"
 
-@interface SPStatusBarNotification : NSObject
+%group iOS12Up
+%hook FeatureManager
 
-@property (nonatomic) NSString* text;
-@property (nonatomic) UIColor* backgroundColor;
-@property (nonatomic) UIColor* textColor;
-@property (nonatomic) NSTimeInterval dismissAfter;
+//iOS 12 specific hooks to disable private browsing
 
-+ (SPStatusBarNotification*)defaultStyleWithText:(NSString*)text;
-+ (SPStatusBarNotification*)downloadStyleWithText:(NSString*)text;
+- (void)determineIfPrivateBrowsingIsAvailableWithCompletionHandler: (void (^)(BOOL))handler
+{
+	if(preferenceManager.disablePrivateMode)
+	{
+		handler(NO);
+	}
+	else
+	{
+		%orig;
+	}
+}
 
-@end
+- (BOOL)isPrivateBrowsingAvailable
+{
+	return (preferenceManager.disablePrivateMode) ? NO : %orig;
+}
+
+%end
+%end
+
+void initFeatureManager()
+{
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+	{
+		%init(iOS12Up)
+	}
+}

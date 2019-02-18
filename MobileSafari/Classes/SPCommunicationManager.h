@@ -18,7 +18,7 @@
 
 @interface SPCommunicationManager : NSObject
 {
-  CPDistributedMessagingCenter* _messagingCenter;
+	CPDistributedMessagingCenter* _messagingCenter;
 }
 
 + (instancetype)sharedInstance;

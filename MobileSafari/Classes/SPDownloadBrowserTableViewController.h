@@ -18,13 +18,13 @@
 
 @class SPDownload;
 
-@interface UIApplication(iOS10)
+@interface UIApplication (iOS10)
 - (void)openURL:(id)arg1 options:(id)arg2 completionHandler:(id)arg3;
 @end
 
 @interface SPDownloadBrowserTableViewController : SPFileBrowserTableViewController <UIDocumentInteractionControllerDelegate>
 {
-  BOOL _filzaInstalled;
+	BOOL _filzaInstalled;
 }
 @property (nonatomic) NSMutableArray<SPDownload*>* downloadsAtCurrentURL;
 @property (nonatomic, strong) UIDocumentInteractionController* documentController;

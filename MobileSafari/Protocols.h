@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPDownload, SPDownloadInfo, AVActivityButton;
+@class SPDownload, SPDownloadInfo, SPFilePickerNavigationController, AVActivityButton;
 
 @protocol filePickerDelegate<NSObject>
-- (void)didSelectFiles:(NSArray*)URLs;
+- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs;
 @end
 
 @protocol DownloadNavigationControllerDelegate
@@ -29,7 +29,7 @@
 
 @protocol DownloadCellDelegate
 @required
-@property(nonatomic) BOOL paused;
+@property (nonatomic) BOOL paused;
 - (void)updateDownloadSpeed:(int64_t)bytesPerSecond;
 - (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated;
 - (void)setFilesize:(int64_t)filesize;
@@ -55,6 +55,6 @@
 
 @protocol SourceVideoDelegate
 @required
-@property(nonatomic,retain) AVActivityButton* downloadButton;
+@property (nonatomic,retain) AVActivityButton* downloadButton;
 - (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion;
 @end

@@ -43,107 +43,107 @@
 
 - (void)loadView
 {
-  %orig;
+	%orig;
 
-  if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
-  {
-    //Get asset
-    AVAsset* currentPlayerAsset = self.playerViewController.player.currentItem.asset;
+	if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
+	{
+		//Get asset
+		AVAsset* currentPlayerAsset = self.playerViewController.player.currentItem.asset;
 
-    //Check if video is online (and not a local file)
-    if(![currentPlayerAsset isKindOfClass:AVURLAsset.class])
-    {
-      self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
-      self.downloadButton.translatesAutoresizingMaskIntoConstraints = NO;
-      UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
-      [self.downloadButton setImage:buttonImage forState:UIControlStateNormal];
-      [self.downloadButton setImage:[UIImage inverseColor:buttonImage] forState:UIControlStateHighlighted];
-      [self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-      [self.downloadButton _setDrawsAsBackdropOverlay:YES];
+		//Check if video is online (and not a local file)
+		if(![currentPlayerAsset isKindOfClass:AVURLAsset.class])
+		{
+			self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
+			self.downloadButton.translatesAutoresizingMaskIntoConstraints = NO;
+			UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+			[self.downloadButton setImage:buttonImage forState:UIControlStateNormal];
+			[self.downloadButton setImage:[UIImage inverseColor:buttonImage] forState:UIControlStateHighlighted];
+			[self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+			[self.downloadButton _setDrawsAsBackdropOverlay:YES];
 
-      UIView* lowerControlsRightSubContainerView = MSHookIvar<UIView*>(self, "_lowerControlsRightSubContainerView");
-      UIView* backdropContentView = [lowerControlsRightSubContainerView superview];
+			UIView* lowerControlsRightSubContainerView = MSHookIvar<UIView*>(self, "_lowerControlsRightSubContainerView");
+			UIView* backdropContentView = [lowerControlsRightSubContainerView superview];
 
-      [backdropContentView addSubview:self.downloadButton];
-    }
-  }
+			[backdropContentView addSubview:self.downloadButton];
+		}
+	}
 }
 
 - (void)updateViewConstraints
 {
-  %orig;
+	%orig;
 
-  if(self.downloadButton)
-  {
-    BOOL bottomControlsSingleRowLayoutPossible = MSHookIvar<BOOL>(self, "_bottomControlsSingleRowLayoutPossible");
-    UIView* lowerControlsRightSubContainerView = MSHookIvar<UIView*>(self, "_lowerControlsRightSubContainerView");
-    UIView* backdropContentView = [lowerControlsRightSubContainerView superview];
+	if(self.downloadButton)
+	{
+		BOOL bottomControlsSingleRowLayoutPossible = MSHookIvar<BOOL>(self, "_bottomControlsSingleRowLayoutPossible");
+		UIView* lowerControlsRightSubContainerView = MSHookIvar<UIView*>(self, "_lowerControlsRightSubContainerView");
+		UIView* backdropContentView = [lowerControlsRightSubContainerView superview];
 
-    if(!self.additionalLayoutConstraints)
-    {
-      self.additionalLayoutConstraints = [NSMutableArray new];
-    }
-    else
-    {
-      [backdropContentView removeConstraints:self.additionalLayoutConstraints];
-      [self.additionalLayoutConstraints removeAllObjects];
-    }
+		if(!self.additionalLayoutConstraints)
+		{
+			self.additionalLayoutConstraints = [NSMutableArray new];
+		}
+		else
+		{
+			[backdropContentView removeConstraints:self.additionalLayoutConstraints];
+			[self.additionalLayoutConstraints removeAllObjects];
+		}
 
-    NSDictionary* views =
-    @{
-      @"downloadButton" : self.downloadButton,
-      @"lowerControlsRightSubContainerView" : lowerControlsRightSubContainerView
-    };
+		NSDictionary* views =
+			@{
+				@"downloadButton" : self.downloadButton,
+				@"lowerControlsRightSubContainerView" : lowerControlsRightSubContainerView
+		};
 
-    if(bottomControlsSingleRowLayoutPossible)
-    {
-      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[downloadButton(22)]-25-[lowerControlsRightSubContainerView]" options:0 metrics:nil views:views]];
-      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-14-[downloadButton(22)]" options:0 metrics:nil views:views]];
-    }
-    else
-    {
-      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[downloadButton(22)]-15-|" options:0 metrics:nil views:views]];
-      [self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-11-[downloadButton(22)]" options:0 metrics:nil views:views]];
-    }
+		if(bottomControlsSingleRowLayoutPossible)
+		{
+			[self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[downloadButton(22)]-25-[lowerControlsRightSubContainerView]" options:0 metrics:nil views:views]];
+			[self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-14-[downloadButton(22)]" options:0 metrics:nil views:views]];
+		}
+		else
+		{
+			[self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[downloadButton(22)]-15-|" options:0 metrics:nil views:views]];
+			[self.additionalLayoutConstraints addObjectsFromArray:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-11-[downloadButton(22)]" options:0 metrics:nil views:views]];
+		}
 
-    [backdropContentView addConstraints:self.additionalLayoutConstraints];
-  }
+		[backdropContentView addConstraints:self.additionalLayoutConstraints];
+	}
 }
 
 %new
 - (void)downloadButtonPressed
 {
-  SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
-  downloadInfo.sourceVideo = self;
-  downloadInfo.presentationController = self;
-  downloadInfo.sourceRect = self.downloadButton.frame;
+	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
+	downloadInfo.sourceVideo = self;
+	downloadInfo.presentationController = self;
+	downloadInfo.sourceRect = self.downloadButton.frame;
 
-  [downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
+	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
 }
 
 %new
-- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
+- (void)setBackgroundPlaybackActiveWithCompletion: (void (^)(void))completion
 {
-  WebAVPlayerController* playerController = (WebAVPlayerController*)self.playerController;
+	WebAVPlayerController* playerController = (WebAVPlayerController*)self.playerController;
 
-  if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
-  {
-    [playerController play:nil];
-    [playerController pause:nil];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
-  }
-  else
-  {
-    completion();
-  }
+	if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
+	{
+		[playerController play:nil];
+		[playerController pause:nil];
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
+	}
+	else
+	{
+		completion();
+	}
 }
 
 %end
 
 void initAVFullScreenPlaybackControlsViewController()
 {
-  if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
-  {
-    %init();
-  }
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
+	{
+		%init();
+	}
 }

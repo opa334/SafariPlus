@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+//Hooks for iOS 11 and above
+
 #import "../SafariPlus.h"
 
 #import "../Defines.h"
@@ -31,120 +33,148 @@
 %new
 - (void)setUpDownloadButton
 {
-  if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
-  {
-    self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
+	if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled && !self.downloadButton)
+	{
+		self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
 
-    [self.downloadButton setImage:[[UIImage imageNamed:@"VideoDownloadButton.png"
-      inBundle:SPBundle compatibleWithTraitCollection:nil]
-      imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-      forState:UIControlStateNormal];
+		[self.downloadButton setImage:[[UIImage imageNamed:@"VideoDownloadButton.png"
+						inBundle:SPBundle compatibleWithTraitCollection:nil]
+					       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+		 forState:UIControlStateNormal];
 
-    [self.downloadButton addTarget:self action:@selector(downloadButtonPressed)
-      forControlEvents:UIControlEventTouchUpInside];
+		[self.downloadButton addTarget:self action:@selector(downloadButtonPressed)
+		 forControlEvents:UIControlEventTouchUpInside];
 
-    self.downloadButton.adjustsImageWhenHighlighted = NO;
-    [self.downloadButton.widthAnchor constraintEqualToConstant:60].active = true;
+		self.downloadButton.adjustsImageWhenHighlighted = NO;
+		[self.downloadButton.widthAnchor constraintEqualToConstant:60].active = true;
 
-    self.downloadButton.tintColor = [UIColor colorWithWhite:1 alpha:0.55];
-  }
+		self.downloadButton.tintColor = [UIColor colorWithWhite:1 alpha:0.55];
+	}
 }
 
 - (void)layoutSubviews
 {
-  %orig;
-  if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
-  {
-    if([self.delegate.delegate.playerController isKindOfClass:[%c(WebAVPlayerController) class]])
-    {
-      UIStackView* stackView;
+	%orig;
+	if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
+	{
+		AVPlaybackControlsController* playbackControlsController;
 
-      if([self.screenModeControls respondsToSelector:@selector(stackView)])
-      {
-        stackView = self.screenModeControls.stackView;
-      }
-      else
-      {
-        stackView = self.screenModeControls.contentView;
-      }
+		if([self respondsToSelector:@selector(delegate)])
+		{
+			playbackControlsController = self.delegate.delegate;
+		}
+		else
+		{
+			playbackControlsController = self.transportControlsView.delegate;	//iOS 12
+		}
 
-      if(![stackView.arrangedSubviews containsObject:self.downloadButton])
-      {
-        [stackView addArrangedSubview:self.downloadButton];
-      }
-    }
-  }
+		if([playbackControlsController.playerController isKindOfClass:[%c(WebAVPlayerController) class]])
+		{
+			UIStackView* stackView;
+
+			if([self.screenModeControls respondsToSelector:@selector(stackView)])
+			{
+				stackView = self.screenModeControls.stackView;
+			}
+			else
+			{
+				stackView = self.screenModeControls.contentView;
+			}
+
+			if(![stackView.arrangedSubviews containsObject:self.downloadButton])
+			{
+				[stackView addArrangedSubview:self.downloadButton];
+			}
+
+			if(self.downloadButton.hidden)	//Solve a layout issue caused by hacky solutions with more hacky solutions
+			{
+				AVPlaybackControlsView* __weak weakSelf = self;
+				dispatch_async(dispatch_get_main_queue(),^
+				{
+					AVPlaybackControlsView* strongSelf = weakSelf;
+					if (strongSelf)
+					{
+						strongSelf.downloadButton.included = YES;
+						strongSelf.downloadButton.hidden = NO;
+					}
+				});
+			}
+		}
+	}
 }
 
 %new
 - (void)downloadButtonPressed
 {
-  SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
-  downloadInfo.sourceVideo = self;
-  downloadInfo.presentationController = self.delegate.delegate.playerViewController.fullScreenViewController;
-  downloadInfo.sourceRect = [self.screenModeControls.contentView convertRect:self.downloadButton.frame toView:self.delegate.delegate.playerViewController.fullScreenViewController.view];
+	AVPlaybackControlsController* playbackControlsController;
 
-  [downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
+	if([self respondsToSelector:@selector(delegate)])
+	{
+		playbackControlsController = self.delegate.delegate;
+	}
+	else
+	{
+		playbackControlsController = self.transportControlsView.delegate;	//iOS 12
+	}
+
+	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
+	downloadInfo.sourceVideo = self;
+	downloadInfo.presentationController = playbackControlsController.playerViewController.fullScreenViewController;
+	downloadInfo.sourceRect = [self.screenModeControls.contentView convertRect:self.downloadButton.frame toView:playbackControlsController.playerViewController.fullScreenViewController.view];
+
+	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
 }
 
 %new
-- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
+- (void)setBackgroundPlaybackActiveWithCompletion: (void (^)(void))completion
 {
-  WebAVPlayerController* playerController = (WebAVPlayerController*)self.delegate.delegate.playerController;
+	WebAVPlayerController* playerController = (WebAVPlayerController*)self.delegate.delegate.playerController;
 
-  if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
-  {
-    [playerController play:nil];
-    [playerController pause:nil];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
-  }
-  else
-  {
-    completion();
-  }
+	if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
+	{
+		[playerController play:nil];
+		[playerController pause:nil];
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
+	}
+	else
+	{
+		completion();
+	}
 }
 
-%group iOS11_3_up
-
-- (instancetype)initWithFrame:(CGRect)frame
+- (id)initWithFrame: (CGRect)arg1 styleSheet: (id)arg2 captureView: (id)arg3	//iOS 12 and above
 {
-  self = %orig;
+	self = %orig;
 
-  [self setUpDownloadButton];
+	[self setUpDownloadButton];
 
-  return self;
+	return self;
 }
 
-%end
-
-%group iOS11_2_down
-
-- (instancetype)init
+- (instancetype)initWithFrame: (CGRect)frame	//iOS 11.3 - 11.4.1
 {
-  self = %orig;
+	self = %orig;
 
-  [self setUpDownloadButton];
+	[self setUpDownloadButton];
 
-  return self;
+	return self;
 }
 
-%end
+- (instancetype)init	//iOS 11.0 - 11.2.6
+{
+	self = %orig;
+
+	[self setUpDownloadButton];
+
+	return self;
+}
 
 %end
 
 void initAVPlaybackControlsView()
 {
-  if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
-  {
-    %init()
-
-    if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
-    {
-      %init(iOS11_3_up)
-    }
-    else
-    {
-      %init(iOS11_2_down)
-    }
-  }
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+	{
+		%init()
+	}
 }

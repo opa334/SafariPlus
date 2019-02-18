@@ -27,19 +27,19 @@
 
 - (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-  self.loadParentDirectories = YES;
-  self.startURL = downloadManager.defaultDownloadURL;
+	self.loadParentDirectories = YES;
+	self.startURL = downloadManager.defaultDownloadURL;
 
-  self = [super init];
+	self = [super init];
 
-  self.downloadInfo = downloadInfo;
+	self.downloadInfo = downloadInfo;
 
-  return self;
+	return self;
 }
 
 - (Class)tableControllerClass
 {
-  return [SPDirectoryPickerTableViewController class];
+	return [SPDirectoryPickerTableViewController class];
 }
 
 @end
