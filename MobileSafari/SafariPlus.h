@@ -27,6 +27,28 @@
 
 /**** General stuff ****/
 
+#if defined __cplusplus
+extern "C" {
+#endif
+
+enum sandbox_filter_type
+{
+	SANDBOX_FILTER_NONE,
+	SANDBOX_FILTER_PATH,
+	SANDBOX_FILTER_GLOBAL_NAME,
+	SANDBOX_FILTER_LOCAL_NAME,
+	SANDBOX_FILTER_APPLEEVENT_DESTINATION,
+	SANDBOX_FILTER_RIGHT_NAME,
+};
+
+extern const enum sandbox_filter_type SANDBOX_CHECK_NO_REPORT __attribute__((weak_import));
+
+int sandbox_check(pid_t pid, const char *operation, int type, ...);
+
+#if defined __cplusplus
+};
+#endif
+
 @interface LSAppLink : NSObject
 @property (assign) NSInteger openStrategy;
 + (void)getAppLinkWithURL:(id)arg1 completionHandler:(void (^)(LSAppLink*,NSError*))arg2;

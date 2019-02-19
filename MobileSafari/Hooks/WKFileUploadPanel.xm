@@ -83,7 +83,7 @@
 
 	for(NSURL* URL in URLs)
 	{
-		[hardLinkedURLs addObject:[fileManager createHardLinkForFileAtURL:URL onlyIfNeeded:YES]];
+		[hardLinkedURLs addObject:[fileManager accessibleHardLinkForFileAtURL:URL forced:NO]];
 	}
 
 	[self _chooseFiles:[hardLinkedURLs copy]
@@ -151,7 +151,7 @@
 		for(NSURL* URL in URLs)
 		{
 			//Create URL for tmp location
-			NSURL* sandboxedURL = [fileManager createHardLinkForFileAtURL:URL onlyIfNeeded:NO];
+			NSURL* sandboxedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:YES];
 
 			//Add URL to array
 			[sandboxedURLs addObject:sandboxedURL];

@@ -232,7 +232,7 @@
 
 		if([file conformsTo:kUTTypeAudiovisualContent] || [file conformsTo:kUTTypeImage])
 		{
-			NSURL* hardLinkedURL = [fileManager createHardLinkForFileAtURL:file.fileURL onlyIfNeeded:YES];
+			NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 
 			if([file conformsTo:kUTTypeAudiovisualContent])
 			{
@@ -341,7 +341,7 @@
 	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager createHardLinkForFileAtURL:file.fileURL onlyIfNeeded:YES];
+		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 		[self startPlayerWithMedia:hardLinkedURL];
 	}];
 }
@@ -352,7 +352,7 @@
 					       localizedSPStringForKey:@"OPEN_IN"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager createHardLinkForFileAtURL:file.fileURL onlyIfNeeded:NO];
+		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:YES];
 
 		//Create documentController from selected file and present it
 		self.documentController = [UIDocumentInteractionController interactionControllerWithURL:hardLinkedURL];

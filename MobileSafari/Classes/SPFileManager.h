@@ -32,9 +32,13 @@ typedef NSString *NSFileAttributeKey;
 + (instancetype)sharedInstance;
 #ifndef PREFERENCES
 - (void)resetHardLinks;
-- (NSURL*)createHardLinkForFileAtURL:(NSURL*)url onlyIfNeeded:(BOOL)needed;
-- (BOOL)isSandboxedPath:(NSString*)path;
-- (BOOL)isSandboxedURL:(NSURL*)url;
+- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced;
+- (BOOL)_isReadable:(const char*)str;
+- (BOOL)_isWritable:(const char*)str;
+- (BOOL)isPathReadable:(NSString*)path;
+- (BOOL)isURLReadable:(NSURL*)URL;
+- (BOOL)isPathWritable:(NSString*)path;
+- (BOOL)isURLWritable:(NSURL*)URL;
 - (NSString*)applicationDisplayNameForURL:(NSURL*)URL;
 #endif
 - (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error;
