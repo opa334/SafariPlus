@@ -42,12 +42,6 @@
 	return orig;
 }
 
-- (void)_updateTiltedTabViewPrivateBrowsingButtonVisibility
-{
-	%orig;
-	NSLog(@"_updateTiltedTabViewPrivateBrowsingButtonVisibility");
-}
-
 %new
 - (void)loadDesktopButtonState
 {

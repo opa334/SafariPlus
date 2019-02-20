@@ -460,7 +460,6 @@ void reloadPrefs()
 - (void)reloadColors
 {
 	colors = [[NSDictionary alloc] initWithContentsOfFile:colorPrefsPath];
-	NSLog(@"colors = %@", colors);
 }
 
 - (UIColor*)topBarNormalTintColor
@@ -470,7 +469,6 @@ void reloadPrefs()
 
 - (UIColor*)topBarNormalBackgroundColor
 {
-	NSLog(@"topBarNormalBackgroundColor");
 	return LCPParseColorString([colors objectForKey:@"topBarNormalBackgroundColor"], @"#FFFFFF");
 }
 
