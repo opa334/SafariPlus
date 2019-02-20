@@ -6,7 +6,16 @@ SafariPlusPrefs_FILES = ../MobileSafari/Classes/SPFileManager.mm ../MobileSafari
 SafariPlusPrefs_FILES += $(wildcard *.mm)
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
-SafariPlusPrefs_LIBRARIES = colorpicker
+
+ifeq ($(NO_LIBCOLORPICKER),0)
+SafariPlusPrefs_LIBRARIES += colorpicker
+else
+SafariPlusPrefs_CFLAGS += -D NO_LIBCOLORPICKER=1
+endif
+
+ifeq ($(ROOTLESS),1)
+SafariPlusPrefs_CFLAGS += -D ROOTLESS=1
+endif
 
 SafariPlusPrefs_PRIVATE_FRAMEWORKS = Preferences
 

@@ -19,7 +19,7 @@
 #import "../Shared.h"
 #import "SPFileManager.h"
 
-#if !defined(SIMJECT)
+#ifndef NO_ROCKETBOOTSTRAP
 #import <RocketBootstrap/rocketbootstrap.h>
 #endif
 
@@ -46,14 +46,14 @@
 
 	_messagingCenter = [NSClassFromString(@"CPDistributedMessagingCenter") centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
 
-  #if !defined(SIMJECT)
+  #ifndef NO_ROCKETBOOTSTRAP
 	rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
   #endif
 
 	return self;
 }
 
-#if !defined(SIMJECT)
+#ifndef NO_ROCKETBOOTSTRAP
 
 //Check if communication with SpringBoard works
 - (BOOL)testConnection

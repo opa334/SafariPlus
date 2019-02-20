@@ -50,11 +50,16 @@ void otherPlistChanged()
 {
 	if(!_specifiers)
 	{
-		_specifiers = [self loadSpecifiersFromPlistName:[self plistName] target:self];
-		[localizationManager parseSPLocalizationsForSpecifiers:_specifiers];
+		NSString* plistName = [self plistName];
 
-		_allSpecifiers = [_specifiers copy];
-		[self removeDisabledGroups:_specifiers];
+		if(plistName)
+		{
+			_specifiers = [self loadSpecifiersFromPlistName:[self plistName] target:self];
+			[localizationManager parseSPLocalizationsForSpecifiers:_specifiers];
+
+			_allSpecifiers = [_specifiers copy];
+			[self removeDisabledGroups:_specifiers];
+		}
 	}
 
 	[(UINavigationItem *)self.navigationItem setTitle:[self title]];
@@ -702,6 +707,8 @@ void otherPlistChanged()
 
 @implementation ColorOverviewPrefsController
 
+#ifndef NO_LIBCOLORPICKER
+
 - (NSString*)title
 {
 	return [localizationManager localizedSPStringForKey:@"COLOR_SETTINGS"];
@@ -711,6 +718,20 @@ void otherPlistChanged()
 {
 	return @"ColorPrefsOverview";
 }
+
+#else
+
+- (NSString*)title
+{
+	return @"NOT SUPPORTED";
+}
+
+- (NSString*)plistName
+{
+	return nil;
+}
+
+#endif
 
 @end
 

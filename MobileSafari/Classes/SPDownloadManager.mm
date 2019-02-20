@@ -103,7 +103,7 @@
 
 - (void)migrateFromSandbox
 {
-  #ifndef SIMJECT
+  #ifndef NO_ROCKETBOOTSTRAP
 	NSURL* oldDownloadURL = [NSURL fileURLWithPath:oldDownloadPath];
 
 	if([fileManager fileExistsAtURL:oldDownloadURL error:nil])

@@ -19,8 +19,10 @@
 #import "../Defines.h"
 #import "../Shared.h"
 
-#if !defined(SIMJECT)
+#ifndef NO_CEPHEI
 #import <Cephei/HBPreferences.h>
+#endif
+#ifndef NO_LIBCOLORPICKER
 #import "libcolorpicker.h"
 #endif
 
@@ -33,6 +35,15 @@ void reloadColors()
 {
 	[preferenceManager reloadColors];
 }
+
+#ifdef NO_CEPHEI
+
+void reloadPrefs()
+{
+	[preferenceManager reloadPrefs];
+}
+
+#endif
 
 @implementation SPPreferenceManager
 
@@ -132,7 +143,13 @@ void reloadColors()
 	_tabTitleBarPrivateTextColorEnabled = NO;
 	_tabTitleBarPrivateBackgroundColorEnabled = NO;
 
-  #else
+  #elif defined(NO_CEPHEI)
+
+	[self reloadPrefs];
+
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPrefs, CFSTR("com.opa334.safariplusprefs/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+
+	#else
 
 	preferences = [[HBPreferences alloc] initWithIdentifier:SarafiPlusPrefsDomain];
 
@@ -188,6 +205,8 @@ void reloadColors()
 	[preferences registerBool:&_alwaysOpenNewTabInBackgroundEnabled default:NO forKey:@"alwaysOpenNewTabInBackgroundEnabled"];
 	[preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
 
+	#if !defined(NO_LIBCOLORPICKER)
+
 	[preferences registerBool:&_topBarNormalTintColorEnabled default:NO forKey:@"topBarNormalTintColorEnabled"];
 	[preferences registerBool:&_topBarNormalBackgroundColorEnabled default:NO forKey:@"topBarNormalBackgroundColorEnabled"];
 	[preferences registerBool:&_topBarNormalStatusBarStyleEnabled default:UIStatusBarStyleDefault forKey:@"topBarNormalStatusBarStyleEnabled"];
@@ -218,125 +237,156 @@ void reloadColors()
 	[preferences registerBool:&_tabTitleBarPrivateTextColorEnabled default:NO forKey:@"tabTitleBarPrivateTextColorEnabled"];
 	[preferences registerBool:&_tabTitleBarPrivateBackgroundColorEnabled default:NO forKey:@"tabTitleBarPrivateBackgroundColorEnabled"];
 
+	#endif
+  #endif
+
 	[self reloadColors];
 	[self reloadOtherPlist];
 
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadColors, CFSTR("com.opa334.safaripluscolorprefs/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadOtherPlist, CFSTR("com.opa334.safariplusprefs/ReloadOtherPlist"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
-  #endif
-
 	return self;
 }
 
 #if defined(SIMJECT)
 
-- (void)reloadOtherPlist {
-}
-- (void)reloadColors {
-}
-- (void)reloadMiscPlist {
-}
+- (void)reloadPrefs { }
+- (void)reloadOtherPlist { }
+- (void)reloadColors { }
+- (void)reloadMiscPlist { }
 
-- (BOOL)isFirstLaunch
+- (NSArray*)forceHTTPSExceptions { return nil; }
+- (NSArray*)pinnedLocationNames { return @[@"Dummy Name"]; }
+- (NSArray*)pinnedLocationPaths { return @[@"dummy/path"]; }
+
+- (UIColor*)topBarNormalTintColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalBackgroundColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalURLFontColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalProgressBarColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalLockIconColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalReloadButtonColor { return [UIColor redColor]; }
+- (UIColor*)topBarNormalTabBarTitleColor { return [[UIColor redColor] colorWithAlphaComponent:0.8]; }
+- (UIColor*)bottomBarNormalTintColor {  return [UIColor redColor];}
+- (UIColor*)bottomBarNormalBackgroundColor { return [UIColor redColor]; }
+- (UIColor*)tabTitleBarNormalTextColor { return [UIColor redColor]; }
+- (UIColor*)tabTitleBarNormalBackgroundColor { return [UIColor redColor]; }
+
+- (UIColor*)topBarPrivateTintColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateBackgroundColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateURLFontColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateProgressBarColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateLockIconColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateReloadButtonColor { return [UIColor redColor]; }
+- (UIColor*)topBarPrivateTabBarTitleColor { return [[UIColor redColor] colorWithAlphaComponent:0.8]; }
+- (UIColor*)bottomBarPrivateTintColor { return [UIColor redColor]; }
+- (UIColor*)bottomBarPrivateBackgroundColor {   return [UIColor redColor]; }
+- (UIColor*)tabTitleBarPrivateTextColor { return [UIColor redColor]; }
+- (UIColor*)tabTitleBarPrivateBackgroundColor { return [UIColor redColor]; }
+
+#elif defined NO_CEPHEI
+
+- (void)reloadPrefs
 {
-	return NO;
+	userDefaults = [[NSDictionary alloc] initWithContentsOfFile:prefPlistPath];
 }
 
-- (NSArray*)forceHTTPSExceptions
+- (BOOL)forceHTTPSEnabled { return [[userDefaults objectForKey:@"forceHTTPSEnabled"] boolValue]; }
+- (BOOL)openInOppositeModeOptionEnabled { return [[userDefaults objectForKey:@"openInOppositeModeOptionEnabled"] boolValue]; }
+- (BOOL)openInNewTabOptionEnabled { return [[userDefaults objectForKey:@"openInNewTabOptionEnabled"] boolValue]; }
+- (BOOL)uploadAnyFileOptionEnabled { return [[userDefaults objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
+- (BOOL)desktopButtonEnabled { return [[userDefaults objectForKey:@"desktopButtonEnabled"] boolValue]; }
+- (BOOL)longPressSuggestionsEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsEnabled"] boolValue]; }
+- (CGFloat)longPressSuggestionsDuration
 {
-	return nil;
+	NSNumber* longPressSuggestionsDuration = [userDefaults objectForKey:@"longPressSuggestionsDuration"];
+	if(longPressSuggestionsDuration)
+	{
+		return [longPressSuggestionsDuration floatValue];
+	}
+	else
+	{
+		return 0.5;
+	}
 }
+- (BOOL)longPressSuggestionsFocusEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsFocusEnabled"] boolValue]; }
 
-- (NSArray*)pinnedLocationNames
-{
-	return @[@"Dummy Name"];
-}
+- (BOOL)enhancedDownloadsEnabled { return [[userDefaults objectForKey:@"enhancedDownloadsEnabled"] boolValue]; }
+- (BOOL)videoDownloadingEnabled { return [[userDefaults objectForKey:@"videoDownloadingEnabled"] boolValue]; }
+- (BOOL)instantDownloadsEnabled { return [[userDefaults objectForKey:@"instantDownloadsEnabled"] boolValue]; }
+- (NSInteger)instantDownloadsOption { return [[userDefaults objectForKey:@"instantDownloadsOption"] integerValue]; }
+- (BOOL)customDefaultPathEnabled { return [[userDefaults objectForKey:@"customDefaultPathEnabled"] boolValue]; }
+- (NSString*)customDefaultPath { return [userDefaults objectForKey:@"customDefaultPath"]; }
+- (BOOL)pinnedLocationsEnabled { return [[userDefaults objectForKey:@"pinnedLocationsEnabled"] boolValue]; }
+- (BOOL)onlyDownloadOnWifiEnabled { return [[userDefaults objectForKey:@"onlyDownloadOnWifiEnabled"] boolValue]; }
+- (BOOL)disablePushNotificationsEnabled { return [[userDefaults objectForKey:@"disablePushNotificationsEnabled"] boolValue]; }
+- (BOOL)disableBarNotificationsEnabled { return [[userDefaults objectForKey:@"disableBarNotificationsEnabled"] boolValue]; }
 
-- (NSArray*)pinnedLocationPaths
-{
-	return @[@"dummy/path"];
-}
+- (BOOL)forceModeOnStartEnabled { return [[userDefaults objectForKey:@"forceModeOnStartEnabled"] boolValue]; }
+- (NSInteger)forceModeOnStartFor { return [[userDefaults objectForKey:@"forceModeOnStartFor"] integerValue]; }
+- (BOOL)forceModeOnResumeEnabled { return [[userDefaults objectForKey:@"forceModeOnResumeEnabled"] boolValue]; }
+- (NSInteger)forceModeOnResumeFor { return [[userDefaults objectForKey:@"forceModeOnResumeFor"] integerValue]; }
+- (BOOL)forceModeOnExternalLinkEnabled { return [[userDefaults objectForKey:@"forceModeOnExternalLinkEnabled"] boolValue]; }
+- (NSInteger)forceModeOnExternalLinkFor { return [[userDefaults objectForKey:@"forceModeOnExternalLinkFor"] integerValue]; }
+- (BOOL)autoCloseTabsEnabled { return [[userDefaults objectForKey:@"autoCloseTabsEnabled"] boolValue]; }
+- (NSInteger)autoCloseTabsOn { return [[userDefaults objectForKey:@"autoCloseTabsOn"] integerValue]; }
+- (NSInteger)autoCloseTabsFor { return [[userDefaults objectForKey:@"autoCloseTabsFor"] integerValue]; }
+- (BOOL)autoDeleteDataEnabled { return [[userDefaults objectForKey:@"autoDeleteDataEnabled"] boolValue]; }
+- (NSInteger)autoDeleteDataOn { return [[userDefaults objectForKey:@"autoDeleteDataOn"] integerValue]; }
 
-- (UIColor*)topBarNormalTintColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarNormalBackgroundColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarNormalURLFontColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarNormalProgressBarColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarNormalLockIconColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarNormalReloadButtonColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarNormalTabBarTitleColor {
-	return [[UIColor redColor] colorWithAlphaComponent:0.8];
-}
-- (UIColor*)bottomBarNormalTintColor {
-	return [UIColor redColor];
-}
-- (UIColor*)bottomBarNormalBackgroundColor {
-	return [UIColor redColor];
-}
-- (UIColor*)tabTitleBarNormalTextColor {
-	return [UIColor redColor];
-}
-- (UIColor*)tabTitleBarNormalBackgroundColor {
-	return [UIColor redColor];
-}
+- (BOOL)URLLeftSwipeGestureEnabled { return [[userDefaults objectForKey:@"URLLeftSwipeGestureEnabled"] boolValue]; }
+- (NSInteger)URLLeftSwipeAction { return [[userDefaults objectForKey:@"URLLeftSwipeAction"] integerValue]; }
+- (BOOL)URLRightSwipeGestureEnabled { return [[userDefaults objectForKey:@"URLRightSwipeGestureEnabled"] boolValue]; }
+- (NSInteger)URLRightSwipeAction { return [[userDefaults objectForKey:@"URLRightSwipeAction"] integerValue]; }
+- (BOOL)URLDownSwipeGestureEnabled { return [[userDefaults objectForKey:@"URLDownSwipeGestureEnabled"] boolValue]; }
+- (NSInteger)URLDownSwipeAction { return [[userDefaults objectForKey:@"URLDownSwipeAction"] integerValue]; }
+- (BOOL)gestureBackground { return [[userDefaults objectForKey:@"gestureBackground"] boolValue]; }
 
+- (BOOL)fullscreenScrollingEnabled { return [[userDefaults objectForKey:@"fullscreenScrollingEnabled"] boolValue]; }
+- (BOOL)lockBars { return [[userDefaults objectForKey:@"lockBars"] boolValue]; }
+- (BOOL)disablePrivateMode { return [[userDefaults objectForKey:@"disablePrivateMode"] boolValue]; }
+- (BOOL)alwaysOpenNewTabEnabled { return [[userDefaults objectForKey:@"alwaysOpenNewTabEnabled"] boolValue]; }
+- (BOOL)suppressMailToDialog { return [[userDefaults objectForKey:@"suppressMailToDialog"] boolValue]; }
 
-- (UIColor*)topBarPrivateTintColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarPrivateBackgroundColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarPrivateURLFontColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarPrivateProgressBarColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarPrivateLockIconColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarPrivateReloadButtonColor {
-	return [UIColor redColor];
-}
-- (UIColor*)topBarPrivateTabBarTitleColor {
-	return [[UIColor redColor] colorWithAlphaComponent:0.8];
-}
-- (UIColor*)bottomBarPrivateTintColor {
-	return [UIColor redColor];
-}
-- (UIColor*)bottomBarPrivateBackgroundColor {
-	return [UIColor redColor];
-}
-- (UIColor*)tabTitleBarPrivateTextColor {
-	return [UIColor redColor];
-}
-- (UIColor*)tabTitleBarPrivateBackgroundColor {
-	return [UIColor redColor];
-}
+#if !defined(NO_LIBCOLORPICKER)
 
-#else
+- (BOOL)topBarNormalTintColorEnabled { return [[userDefaults objectForKey:@"topBarNormalTintColorEnabled"] boolValue]; }
+- (BOOL)topBarNormalBackgroundColorEnabled { return [[userDefaults objectForKey:@"topBarNormalBackgroundColorEnabled"] boolValue]; }
+- (BOOL)topBarNormalStatusBarStyleEnabled { return [[userDefaults objectForKey:@"topBarNormalStatusBarStyleEnabled"] boolValue]; }
+- (UIStatusBarStyle)topBarNormalStatusBarStyle { return [[userDefaults objectForKey:@"topBarNormalStatusBarStyle"] intValue]; }
+- (BOOL)topBarNormalTabBarTitleColorEnabled { return [[userDefaults objectForKey:@"topBarNormalTabBarTitleColorEnabled"] boolValue]; }
+- (CGFloat)topBarNormalTabBarInactiveTitleOpacity { return [[userDefaults objectForKey:@"topBarNormalTabBarInactiveTitleOpacity"] floatValue]; }
+- (BOOL)topBarNormalURLFontColorEnabled { return [[userDefaults objectForKey:@"topBarNormalURLFontColorEnabled"] boolValue]; }
+- (BOOL)topBarNormalProgressBarColorEnabled { return [[userDefaults objectForKey:@"topBarNormalProgressBarColorEnabled"] boolValue]; }
+- (BOOL)topBarNormalLockIconColorEnabled { return [[userDefaults objectForKey:@"topBarNormalLockIconColorEnabled"] boolValue]; }
+- (BOOL)topBarNormalReloadButtonColorEnabled { return [[userDefaults objectForKey:@"topBarNormalReloadButtonColorEnabled"] boolValue]; }
+- (BOOL)bottomBarNormalTintColorEnabled { return [[userDefaults objectForKey:@"bottomBarNormalTintColorEnabled"] boolValue]; }
+- (BOOL)bottomBarNormalBackgroundColorEnabled { return [[userDefaults objectForKey:@"bottomBarNormalBackgroundColorEnabled"] boolValue]; }
+- (BOOL)tabTitleBarNormalTextColorEnabled { return [[userDefaults objectForKey:@"tabTitleBarNormalTextColorEnabled"] boolValue]; }
+- (BOOL)tabTitleBarNormalBackgroundColorEnabled { return [[userDefaults objectForKey:@"tabTitleBarNormalBackgroundColorEnabled"] boolValue]; }
+
+- (BOOL)topBarPrivateTintColorEnabled { return [[userDefaults objectForKey:@"topBarPrivateTintColorEnabled"] boolValue]; }
+- (BOOL)topBarPrivateBackgroundColorEnabled { return [[userDefaults objectForKey:@"topBarPrivateBackgroundColorEnabled"] boolValue]; }
+- (BOOL)topBarPrivateStatusBarStyleEnabled { return [[userDefaults objectForKey:@"topBarPrivateStatusBarStyleEnabled"] boolValue]; }
+- (UIStatusBarStyle)topBarPrivateStatusBarStyle { return [[userDefaults objectForKey:@"topBarPrivateStatusBarStyle"] intValue]; }
+- (BOOL)topBarPrivateTabBarTitleColorEnabled { return [[userDefaults objectForKey:@"topBarPrivateTabBarTitleColorEnabled"] boolValue]; }
+- (CGFloat)topBarPrivateTabBarInactiveTitleOpacity { return [[userDefaults objectForKey:@"topBarPrivateTabBarInactiveTitleOpacity"] floatValue]; }
+- (BOOL)topBarPrivateURLFontColorEnabled { return [[userDefaults objectForKey:@"topBarPrivateURLFontColorEnabled"] boolValue]; }
+- (BOOL)topBarPrivateProgressBarColorEnabled { return [[userDefaults objectForKey:@"topBarPrivateProgressBarColorEnabled"] boolValue]; }
+- (BOOL)topBarPrivateLockIconColorEnabled { return [[userDefaults objectForKey:@"topBarPrivateLockIconColorEnabled"] boolValue]; }
+- (BOOL)topBarPrivateReloadButtonColorEnabled { return [[userDefaults objectForKey:@"topBarPrivateReloadButtonColorEnabled"] boolValue]; }
+- (BOOL)bottomBarPrivateTintColorEnabled { return [[userDefaults objectForKey:@"bottomBarPrivateTintColorEnabled"] boolValue]; }
+- (BOOL)bottomBarPrivateBackgroundColorEnabled { return [[userDefaults objectForKey:@"bottomBarPrivateBackgroundColorEnabled"] boolValue]; }
+- (BOOL)tabTitleBarPrivateTextColorEnabled { return [[userDefaults objectForKey:@"tabTitleBarPrivateTextColorEnabled"] boolValue]; }
+- (BOOL)tabTitleBarPrivateBackgroundColorEnabled { return [[userDefaults objectForKey:@"tabTitleBarPrivateBackgroundColorEnabled"] boolValue]; }
+
+#endif
+
+#endif
 
 - (void)reloadOtherPlist
 {
 	otherPlist = [[NSDictionary alloc] initWithContentsOfFile:otherPlistPath];
-}
-
-- (void)reloadColors
-{
-	colors = [[NSDictionary alloc] initWithContentsOfFile:colorPrefsPath];
 }
 
 - (NSArray*)forceHTTPSExceptions
@@ -354,6 +404,65 @@ void reloadColors()
 	return [otherPlist objectForKey:@"PinnedLocationPaths"];
 }
 
+#if defined(NO_LIBCOLORPICKER)
+
+- (void)reloadColors { }
+
+- (BOOL)topBarNormalTintColorEnabled { return NO; }
+- (UIColor*)topBarNormalTintColor { return nil; }
+- (BOOL)topBarNormalBackgroundColorEnabled { return NO; }
+- (UIColor*)topBarNormalBackgroundColor { return nil; }
+- (BOOL)topBarNormalURLFontColorEnabled { return NO; }
+- (UIColor*)topBarNormalURLFontColor { return nil; }
+- (BOOL)topBarNormalProgressBarColorEnabled { return NO; }
+- (UIColor*)topBarNormalProgressBarColor { return nil; }
+- (BOOL)topBarNormalLockIconColorEnabled { return NO; }
+- (UIColor*)topBarNormalLockIconColor { return nil; }
+- (BOOL)topBarNormalReloadButtonColorEnabled { return NO; }
+- (UIColor*)topBarNormalReloadButtonColor { return nil; }
+- (BOOL)topBarNormalTabBarTitleColorEnabled { return NO; }
+- (UIColor*)topBarNormalTabBarTitleColor { return nil; }
+- (BOOL)bottomBarNormalTintColorEnabled { return NO; }
+- (UIColor*)bottomBarNormalTintColor {  return nil;}
+- (BOOL)bottomBarNormalBackgroundColorEnabled { return NO; }
+- (UIColor*)bottomBarNormalBackgroundColor { return nil; }
+- (BOOL)tabTitleBarNormalTextColorEnabled { return NO; }
+- (UIColor*)tabTitleBarNormalTextColor { return nil; }
+- (BOOL)tabTitleBarNormalBackgroundColorEnabled { return NO; }
+- (UIColor*)tabTitleBarNormalBackgroundColor { return nil; }
+
+- (BOOL)topBarPrivateTintColorEnabled { return NO; }
+- (UIColor*)topBarPrivateTintColor { return nil; }
+- (BOOL)topBarPrivateBackgroundColorEnabled { return NO; }
+- (UIColor*)topBarPrivateBackgroundColor { return nil; }
+- (BOOL)topBarPrivateURLFontColorEnabled { return NO; }
+- (UIColor*)topBarPrivateURLFontColor { return nil; }
+- (BOOL)topBarPrivateProgressBarColorEnabled { return NO; }
+- (UIColor*)topBarPrivateProgressBarColor { return nil; }
+- (BOOL)topBarPrivateLockIconColorEnabled { return NO; }
+- (UIColor*)topBarPrivateLockIconColor { return nil; }
+- (BOOL)topBarPrivateReloadButtonColorEnabled { return NO; }
+- (UIColor*)topBarPrivateReloadButtonColor { return nil; }
+- (BOOL)topBarPrivateTabBarTitleColorEnabled { return NO; }
+- (UIColor*)topBarPrivateTabBarTitleColor { return nil; }
+- (BOOL)bottomBarPrivateTintColorEnabled { return NO; }
+- (UIColor*)bottomBarPrivateTintColor {  return nil;}
+- (BOOL)bottomBarPrivateBackgroundColorEnabled { return NO; }
+- (UIColor*)bottomBarPrivateBackgroundColor { return nil; }
+- (BOOL)tabTitleBarPrivateTextColorEnabled { return NO; }
+- (UIColor*)tabTitleBarPrivateTextColor { return nil; }
+- (BOOL)tabTitleBarPrivateBackgroundColorEnabled { return NO; }
+- (UIColor*)tabTitleBarPrivateBackgroundColor { return nil; }
+
+
+#else
+
+- (void)reloadColors
+{
+	colors = [[NSDictionary alloc] initWithContentsOfFile:colorPrefsPath];
+	NSLog(@"colors = %@", colors);
+}
+
 - (UIColor*)topBarNormalTintColor
 {
 	return LCPParseColorString([colors objectForKey:@"topBarNormalTintColor"], @"#FFFFFF");
@@ -361,6 +470,7 @@ void reloadColors()
 
 - (UIColor*)topBarNormalBackgroundColor
 {
+	NSLog(@"topBarNormalBackgroundColor");
 	return LCPParseColorString([colors objectForKey:@"topBarNormalBackgroundColor"], @"#FFFFFF");
 }
 

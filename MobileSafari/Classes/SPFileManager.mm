@@ -64,7 +64,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return sharedInstance;
 }
 
-#ifndef PREFERENCES
+#if !defined(PREFERENCES) && !defined(NO_ROCKETBOOTSTRAP)
 
 - (instancetype)init
 {
@@ -658,6 +658,14 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 	return resolvedURL;
 }
+
+#endif
+
+#ifdef NO_ROCKETBOOTSTRAP
+
+- (void)resetHardLinks { }
+- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced { return URL; }
+- (NSString*)applicationDisplayNameForURL:(NSURL*)URL { return nil; }
 
 #endif
 

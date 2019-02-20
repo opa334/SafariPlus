@@ -39,6 +39,9 @@
 
 	_cacheURL = [NSURL fileURLWithPath:SPCachePath];
 
+	NSLog(@"cacheURL = %@", _cacheURL);
+	NSLog(@"cachePath = %@", SPCachePath);
+
 	//Migrate old cache to new location
 	NSURL* oldCacheURL = [NSURL fileURLWithPath:SPDeprecatedCachePath];
 
@@ -49,7 +52,9 @@
 
 	if(![_cacheURL checkResourceIsReachableAndReturnError:nil])
 	{
-		[[NSFileManager defaultManager] createDirectoryAtURL:_cacheURL withIntermediateDirectories:NO attributes:nil error:nil];
+		NSError* error;
+		[[NSFileManager defaultManager] createDirectoryAtURL:_cacheURL withIntermediateDirectories:NO attributes:nil error:&error];
+		NSLog(@"error = %@", error);
 	}
 
 	[self updateExcludedFromBackup];

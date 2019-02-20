@@ -20,12 +20,18 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 @interface SPPreferenceManager : NSObject
 {
-  #if !defined(SIMJECT)
+  #ifndef NO_CEPHEI
 	HBPreferences* preferences;
+  #else
+	NSDictionary* userDefaults;
+  #endif
+
+  #ifndef NO_LIBCOLORPICKER
 	NSDictionary* colors;
+  #endif
+
 	NSDictionary* otherPlist;
 	NSMutableDictionary* miscPlist;
-  #endif
 }
 
 + (instancetype)sharedInstance;
@@ -139,5 +145,8 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 - (void)reloadColors;
 - (void)reloadOtherPlist;
+#ifdef NO_CEPHEI
+- (void)reloadPrefs;
+#endif
 
 @end
