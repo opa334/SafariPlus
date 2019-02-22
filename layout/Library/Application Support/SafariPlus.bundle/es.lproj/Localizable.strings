@@ -1,0 +1,281 @@
+"YES" = "Si";
+"NO" = "No";
+
+/* Root Page*/
+
+"GENERAL" = "General";
+"ACTION_ADDONS" = "Ajustes de acciones";
+"DOWNLOAD_ADDONS" = "Ajustes de descarga";
+"GESTURE_ADDONS" = "Ajustes de gestos";
+"OTHER_ADDONS" = "Otros ajustes";
+"COLOR_SETTINGS" = "Ajustes de color";
+"SOURCE_CODE" = "Código fuente";
+"TWITTER" = "Twitter";
+
+"DONATE" = "Donar";
+"DONATE_FOOTER" = "Si te gusta este tweak, puedes ayudarme con una pequeña donación :)";
+
+/* General Settings */
+
+"FORCE_HTTPS_FOOTER" = "Forzar el protocolo HTTPS globalmente.\n\nNOTA: Puedes añadir sitios que no soporten HTTPS a las excepciones.";
+"FORCE_HTTPS" = "Forzar HTTPS";
+"FORCE_HTTPS_EXCEPTIONS" = "Excepciones...";
+"FORCE_HTTPS_EXCEPTIONS_TITLE" = "Excepciones";
+"EDIT" = "Editar";
+"ADD" = "Añadir";
+"ADD_EXCEPTION_ALERT_TITLE" = "Añadir excepción";
+"ADD_EXCEPTION_ALERT_MESSAGE" = "Escriba un dominio en el cual HTTPS no deba ser forzado.\nEjemplo: 'google.com'";
+"ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
+
+"OPEN_IN_NEW_TAB_FOOTER" = "Añade la opción 'Abrir en una pestaña nueva' cuando se mantiene presionado un enlace.\nActiva 'Abrir enlaces en' 'segundo plano' en los ajustes de Safari para poder tener las 2 opciones cuando mantienes presionado un enlace.";
+"OPEN_IN_NEW_TAB" = "Opción de 'Abrir en una pestaña nueva'";
+
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Añade una opción al menú que aparece cuando se mantiene presionado un enlace, para abrir el enlace en el modo contrario de navegación.\n(Modo normal -> Opción para abrir en modo privado,\nModo privado-> Opción para abrir en modo normal)";
+"OPEN_IN_OPPOSITE_MODE" = "Opción de abrir en modo contrario";
+
+"UPLOAD_ANY_FILE_FOOTER" = "Añade una nueva opción al menú de subida de archivos que permite elegir cualquier archivo de la raíz de tu dispositivo. También puedes seleccionar y subir múltiples archivos manteniendo presionado un archivo.";
+"UPLOAD_ANY_FILE" = "Subir cualquier archivo";
+
+"DESKTOP_SWITCH_FOOTER" = "Añade un botón a la barra de pestañas, que puedes usar para cambiar globalmente entre modo normal / modo de escritorio.";
+"DESKTOP_SWITCH_LABEL" = "Botón de modo de escritorio";
+
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Mantén presionado en buscar / sugerencias para insertarlas en la barra de direcciones.";
+"LONG_PRESS_SUGGESTIONS" = "Mantén presionado en sugerencias";
+"LONG_PRESS_DURATION_TITLE" = "Duración de mantener presionado";
+"LONG_PRESS_FOCUS_TITLE" = "Elegir la barra de direcciones al mantener presionado";
+
+/* Download Settings */
+
+"ENHANCED_DOWNLOADS" = "Descargas mejoradas";
+"ENHANCED_DOWNLOADS_FOOTER" = "Añade un botón a la barra de herramientas para abrir la vista de descargas. En ella puedes ver y administrar descargas pendientes y finalizadas. El explorador de archivos puede utilizarse para acceder y administrar archivos descargados. Antes de que comience una descarga, aparecerá una alerta que contiene las opciones para guardar el archivo en un directorio (/var/mobile/Downloads por defecto). Las descargas continuarán en segundo plano y serás notificado cuando una descarga termine. Cuando Safari es cerrado de la barra de aplicaciones, todas las descargas pendientes serán pausadas y continuarán cuando Safari vuelva a iniciarse.";
+
+"VIDEO_DOWNLOADING" = "Descargar Videos";
+"VIDEO_DOWNLOADING_FOOTER" = "Añade un botón al reproductor de video para descargarlo.\n\nNOTA: Puede que no funcione en algunos sitios ya que la URL no es rastreable fácilmente. Además algunos sitios usan archivos m3u8 para transmitir el contenido, puede guardar estos archivos, pero no contendrán ningún video.";
+
+"DEFAULT_SECTION" = "Sección por defecto";
+"DEFAULT_SECTION_FOOTER" = "Seleccione la sección por defecto del menú de descargas cuando se abra. La opción 'Automático' solo seleccionará la opción si hay descargas pendientes, si no seleccionará la otra opcion.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Automático";
+
+"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Añade opciones para descargar un sitio / una imagen al menú cuando se mantiene presionado en un elemento.";
+"DOWNLOAD_SITE_TO_OPTION" = "Opción de 'Descargar sitio a...'";
+"DOWNLOAD_IMAGE_TO_OPTION" = "Opción de 'Descargar imagen a...'";
+
+"INSTANT_DOWNLOAD" = "Descarga instantánea";
+"INSTANT_DOWNLOAD_FOOTER" = "Desactiva la alerta de descarga y siempre elige la opción por defecto.";
+"OPTION" = "Opción";
+
+"CUSTOM_DEFAULT_PATH" = "Destino por defecto personalizado";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Elige una carpeta en la cual se descargarán los archivos cuando esté activada la opción de descarga.\n\nNota: Solo se pueden descargar archivos en carpetas con permiso de escritura, así que cualquiera dentro del directorio /var debería funcionar";
+
+"PINNED_LOCATIONS_ENABLED" = "Activar carpetas preseleccionadas";
+"PINNED_LOCATIONS" = "Carpetas preseleccionadas";
+"PINNED_LOCATIONS_FOOTER" = "Te permite elegir algunas carpetas que aparecerán cuando se usa la opción de 'Descargar a'.";
+"ERROR_INVALID_NAME_OR_PATH" = "Nombre o carpeta invalido";
+
+"ONLY_DOWNLOAD_ON_WIFI" = "Solo descargar con Wifi";
+"ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Solo permitir las descargas cuando el dispositivo se encuentre conectado a una red Wifi.";
+
+"DISABLE_PUSH_NOTIFICATIONS" = "Desactivar notificaciones push";
+"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Por defecto, recibirás una notificación push cuando una descarga finalice si la aplicación esté inactiva. Esta opción lo desactiva.";
+
+"DISABLE_BAR_NOTIFICATIONS" = "Desactivar notificaciones en la barra de estado";
+"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Por defecto, recibirás una notificación en la barra de estado cuando una descarga comienza / finaliza cuando la aplicación esté activa. Esta opción lo desactiva.";
+
+/* Pinned Locations */
+
+"PINNED_LOCATIONS_ALERT_TITLE" = "Añadir carpeta preseleccionada";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Elige un nombre y un directorio de la carpeta preseleccionada.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Nombre";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Directorio";
+"BROWSE" = "Buscar...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Elegir directorio";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Quieres usar el directorio\n%@?";
+
+/* Action Settings */
+
+"NORMAL_MODE" = "Modo normal de navegación";
+"PRIVATE_MODE" = "Modo privado de navegación";
+"TO" = "a...";
+"ON" = "con...";
+"FOR" = "en...";
+
+"CHANGE_MODE_ON" = "Cambiar modo de navegación al...";
+
+"LAUNCH_MODE_FOOTER" = "Cambia al modo de navegación especificado cuando se inicia Safari.";
+"LAUNCH_MODE_LABEL" = "Iniciar la aplicación";
+
+"RESUME_FOOTER" = "Cambia al modo de navegación especificado cuando se vuelve a utilizar Safari.";
+"RESUME_LABEL" = "Retomar Safari";
+
+"EXTERNAL_URL_FOOTER" = "Cambia al modo de navegación especificado cuando  una URL externa (de otra aplicación) se abre con Safari.";
+"EXTERNAL_URL_LABEL" = "Abrir una URL externa";
+
+"AUTO_CLOSE_TABS_FOOTER" = "Cierra pestañas del modo de navegación especificado cuando una acción ocurre.";
+"AUTO_CLOSE_TABS_LABEL" = "Cerrar pestañas automáticamente";
+"AUTO_DELETE_DATA_LABEL" = "Borrar datos de navegación automáticamente";
+"AUTO_DELETE_DATA_FOOTER" = "Borra datos de navegación (historial, autocompletar) cuando una acción ocurre.";
+"SAFARI_CLOSED" = "Cerrar Safari";
+"SAFARI_MINIMIZED" = "Minimizar Safari";
+
+"ACTIVE_MODE" = "Modo de navegación activa";
+"BOTH_MODES" = "Ambos modos de navegación";
+
+/* Gesture Settings */
+
+"ACTION" = "Acción";
+
+"URL_BAR_GESTURES_LABEL" = "Gestos en la barra de direcciones";
+
+"SWIPE_LEFT_GESTURE_FOOTER" = "Realiza la acción especificada cuando la barra se desliza a la izquierda.";
+"SWIPE_LEFT_GESTURE" = "Gesto de deslizar a la izquierda";
+
+"SWIPE_RIGHT_GESTURE_FOOTER" = "Realiza la acción especificada cuando la barra se desliza a la derecha.";
+"SWIPE_RIGHT_GESTURE" = "Gesto de deslizar a la derecha";
+
+"SWIPE_DOWN_GESTURE_FOOTER" = "Realiza la acción especificada cuando la barra se desliza hacia abajo.";
+"SWIPE_DOWN_GESTURE" = "Gesto de deslizar hacia abajo";
+
+"CLOSE_ACTIVE_TAB" = "Cerrar pestaña activa";
+"OPEN_NEW_TAB" = "Abrir nueva pestaña";
+"DUPLICATE_ACTIVE_TAB" = "Duplicar pestaña activa";
+"CLOSE_ALL_TABS" = "Cerrar todas las pestañas del modo de navegación";
+"SWITCH_MODE" = "Cambiar modo de navegación";
+"TAB_BACKWARD" = "Cambiar a la pestaña anterior";
+"TAB_FORWARD" = "Cambiar a la pestaña siguiente";
+"RELOAD_ACTIVE_TAB" = "Recargar pestaña activa";
+"REQUEST_DESTKOP_SITE" = "Solicitar modo de escritorio";
+"OPEN_FIND_ON_PAGE" = "Abrir 'Buscar en la página'";
+
+"BACKGROUND" = "Duplicar pestaña en segundo plano";
+
+/* Other Settings */
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Oculta la barra superior cuando se mueve hacia abajo.\n\nNOTA: No funciona en iOS 8!";
+"FULLSCREEN_SCROLLING" = "Modo pantalla completa";
+
+"REMOVE_TAB_LIMIT" = "Remueve el límite de pestañas";
+"REMOVE_TAB_LIMIT_FOOTER" = "Remueve el límite de pestañas permitidas que se basa en la versión de iOS y el dispositivo. Hay una razón por la cual Apple establece un límite de pestañas, úsalo bajo tu propio riesgo.";
+
+"LOCK_BARS" = "Fijar barras";
+"LOCK_BARS_FOOTER" = "Fija las barras superior e inferior en su lugar, así no desaparecen usando se mueve hacia abajo en un sitio web.";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Desactiva el modo de navegación privado y remueve el botón 'privado'. (Opción por defecto escondida)";
+"DISABLE_PRIVATE_MODE" = "Desactiva completamente el modo de navegación privada";
+
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Siempre abre enlaces tocados en pestañas nuevas.";
+"ALWAYS_OPEN_NEW_TAB" = "Abrir enlaces en pestaña nueva";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Abrir nueva pestaña en segundo plano";
+
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Desactiva la ventana de diálogo que aparece al hacer click en una URL 'mailto:<email>' en iOS 10 y superior.";
+"SUPPRESS_MAILTO_DIALOG" = "Desactivar ventana de diálogo mailto(iOS 10+)";
+
+/* Color Settings */
+
+"TOP_BAR" = "Barra superior";
+"BOTTOM_BAR" = "Barra inferior";
+"TAB_SWITCHER" = "Pestañas";
+
+"NORMAL" = "Normal";
+"PRIVATE" = "Privado";
+
+"TINT_COLOR" = "Color";
+"BACKGROUND_COLOR" = "Color de fondo";
+"STATUS_BAR_COLOR" = "Color de la barra de estado";
+"TAB_BAR_TITLE_COLOR" = "Color del título de la barra de pestañas";
+"INACTIVE_TITLE_OPACITY" = "Opacidad del título inactivo";
+"TAB_BAR_BACKGROUND_COLOR" = "Color de fondo de la barra de pestañas";
+"URL_FONT_COLOR" = "Color de fuente de la URL";
+"PROGRESS_BAR_COLOR" = "Color de la barra de progreso";
+"RELOAD_BUTTON_COLOR" = "Color del botón actualizar";
+"LOCK_ICON_COLOR" = "Color del icono fijar";
+"TAB_TITLE_TEXT_COLOR" = "Color del texto del título de la pestaña";
+"TAB_TITLE_BACKGROUND_COLOR" = "Color del fondo del título de la pestaña";
+
+"TAB_BAR_NOTE" = "NOTA: La barra de pestañas no existe en todos los tamaños de dispositivo / orientaciones.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTA: Algunos ajustes requieren relanzar Safari para aplicarse.";
+
+"WHITE" = "Blanco";
+"BLACK" = "Negro";
+
+/* Credits */
+
+"CREDITS" = "Créditos";
+"PICKER_INSPIRED" = "Selector de archivos inspirado por";
+
+/* In app */
+
+"LOCAL_FILES" = "Archivos locales";
+"WELCOME_TITLE" = "Bienvenido/a!";
+"WELCOME_MESSAGE" = "Gracias por instalar Safari Plus! Si deseas estar informado/a sobre el futuro de este tweak, asegúrate de seguirme en Twitter! Este mensaje no se volverá a mostrar (lo prometo)!";
+"OPEN_TWITTER" = "Abrir Twitter";
+"COMMUNICATION_ERROR" = "Error de comunicación";
+"COMMUNICATION_ERROR_DESCRIPTION" = "No ha sido posible comunicarse con SpringBoard! Algunas funciones no estarán disponibles. Por favor asegúrate que RocketBootstrap está instalado correctamente y que SafariPlusSB.dylib no fue desactivado con iCleaner Pro.";
+
+/* File picker */
+
+"DISMISS" = "Anular";
+"CANCEL" = "Cancelar";
+"UPLOAD" = "Subir";
+
+/* Downloads */
+
+"DOWNLOAD" = "Descargar";
+"DOWNLOAD_TO" = "Descargar en...";
+"DOWNLOAD_SITE_TO" = "Descargar sitio en...";
+"DOWNLOAD_IMAGE_TO" = "Descargar imagen en...";
+"DOWNLOAD_OVERVIEW" = "Download Overview";
+"DOWNLOADS" = "Descargas";
+"FILE_BROWSER" = "Explorador de Archivos";
+"OPEN" = "Abrir";
+"OPEN_IN" = "Abrir en...";
+"IMPORT_TO_MUSIC_LIBRARY" = "Importar a librería de música";
+"SAVE_TO_MEDIA_LIBRARY" = "Guardar en librería de medios";
+"CLEAR" = "Limpiar";
+"CANCEL_ALL_DOWNLOADS" = "Cancelar todas las descargas";
+"CLEAR_DOWNLOAD_HISTORY" = "Limpiar historial de descargas";
+"CLEAR_TEMPORARY_DATA" = "Limpiar datos temporales";
+"CLEAR_EVERYTHING" = "Limpiar todo";
+"CLEAR_EVERYTHING_WARNING" = "Estás seguro/a qué quieres cancelar todas las descargas, limpiar el historial de descargas y todos los datos temporales?";
+"CREATE_DIRECTORY" = "Crear Carpeta";
+"DIRECTORY_NAME" = "Nombre de carpeta";
+"CREATE" = "Crear";
+"SHOW_IN_FILZA" = "Mostrar en Filza";
+"DELETE_FILE" = "Borrar archivo";
+"DELETE_DIRECTORY" = "Borrar carpeta";
+"RENAME_FILE" = "Renombrar archivo";
+"RENAME_DIRECTORY" = "Renombrar carpeta";
+"WARNING" = "Atención!";
+"DELETE_FILE_MESSAGE" = "Estás seguro/a que deseas borrar permanentemente el archivo %@? Recuperarlo después NO es posible!";
+"DELETE_DIRECTORY_MESSAGE" = "Estás seguro/a que deseas borrar permanentemente la carpeta %@ y sus contenidos? Recuperarlo después NO es posible!";
+"DELETE" = "Borrar";
+"RENAME" = "Renombrar";
+"DOWNLOAD_STARTED" = "Descarga iniciada";
+"DOWNLOAD_SUCCESS" = "Descarga completa";
+"SAVED_IMAGE" = "Imagen guardada";
+"ERROR" = "Error";
+"FILE_EXISTS_MESSAGE" = "Un archivo o una descarga pendiente ya existe en el destino especificado!";
+"NOT_ENOUGH_SPACE_MESSAGE" = "No hay suficiente espacio libre!\nLibera un poco de espacio e inténtalo nuevamente!";
+"REPLACE_FILE" = "Reemplazar archivo";
+"CHANGE_PATH" = "Cambiar destino de descarga";
+"PENDING_DOWNLOADS" = "Descargas pendientes";
+"DOWNLOAD_HISTORY" = "Historial se descargas";
+"FILES" = "Archivos";
+"CHOOSE" = "Seleccionar";
+"START_DOWNLOAD" = "Iniciar descarga";
+"CHOOSE_FILENAME" = "Seleccionar nombre de archivo";
+"FILENAME" = "Nombre de archivo";
+"CLOSE" = "Cerrar";
+"CANCEL_PICKER" = "Cancelar";
+"PERMISSION_ERROR_MESSAGE" = "No tienes permisos para escribir en el destino seleccionado. Por favor elige otro.\nNOTA: Normalmente solo destinos dentro de /var son escribibles! También puedes utilizar Filza para inspeccionar / cambiar permisos de un directorio.";
+"PLAY" = "Reproducir";
+"CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "El destino elegido en 'Destino por defecto personalizado' no es válido. Por favor corrígelo.";
+"VIDEO_URL_NOT_FOUND" = "URL del video no encontrada, el sitio actual probablemente no está soportado!";
+"COPY_LINK" = "Copiar enlace";
+"SIZE_UNKNOWN" = "Tamaño desconocido";
+"MIGRATION_TITLE" = "Migración completada";
+"MIGRATION_MESSAGE" = "Los días de estar restringido al uso sandboxed de Safari han terminado! Tus descargas se han movido de %@ a %@. Ahora puedes descargar archivos en el destino que quieras!";
+
+/* Open in opposite mode */
+
+"OPEN_IN_NORMAL_MODE" = "Abrir en modo normal";
+"OPEN_IN_PRIVATE_MODE" = "Abrir en modo privado";
