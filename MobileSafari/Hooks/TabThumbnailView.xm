@@ -1,5 +1,5 @@
 // TabThumbnailView.xm
-// (c) 2018 opa334
+// (c) 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,15 +18,15 @@
 
 /*%hook TabThumbnailView
 
-%property(nonatomic, retain) UIButton *lockButton;
-%property(nonatomic, assign) BOOL isLocked;
+   %property(nonatomic, retain) UIButton *lockButton;
+   %property(nonatomic, assign) BOOL isLocked;
 
-- (void)layoutSubviews
-{
-  %orig;
-  UIView* headerView = MSHookIvar<UIView*>(self, "_headerView");
-  if(!self.lockButton)
-  {
+   - (void)layoutSubviews
+   {
+   %orig;
+   UIView* headerView = MSHookIvar<UIView*>(self, "_headerView");
+   if(!self.lockButton)
+   {
     self.lockButton = [%c(_SFDimmingButton) buttonWithType:UIButtonTypeCustom];
     self.lockButton.backgroundColor = [UIColor redColor];
     [self.lockButton addTarget:self
@@ -34,17 +34,17 @@
       forControlEvents:UIControlEventTouchUpInside];
     self.lockButton.selected = self.isLocked;
     [headerView addSubview:self.lockButton];
-  }
-  CGFloat size = self.closeButton.frame.size.width;
-  self.lockButton.frame = CGRectMake(headerView.frame.size.width - size, 0, size, size);
-}
+   }
+   CGFloat size = self.closeButton.frame.size.width;
+   self.lockButton.frame = CGRectMake(headerView.frame.size.width - size, 0, size, size);
+   }
 
-%new
-- (void)lockButtonPressed
-{
-  self.lockButton.selected = !self.lockButton.selected;
-  self.isLocked = self.lockButton.selected;
-  [self layoutSubviews];
-}
+   %new
+   - (void)lockButtonPressed
+   {
+   self.lockButton.selected = !self.lockButton.selected;
+   self.isLocked = self.lockButton.selected;
+   [self layoutSubviews];
+   }
 
-%end*/
+   %end*/
