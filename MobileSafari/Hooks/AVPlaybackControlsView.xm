@@ -128,7 +128,18 @@
 %new
 - (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
 {
-	WebAVPlayerController* playerController = (WebAVPlayerController*)self.delegate.delegate.playerController;
+	AVPlaybackControlsController* playbackControlsController;
+
+	if([self respondsToSelector:@selector(delegate)])
+	{
+		playbackControlsController = self.delegate.delegate;
+	}
+	else
+	{
+		playbackControlsController = self.transportControlsView.delegate;	//iOS 12
+	}
+
+	WebAVPlayerController* playerController = (WebAVPlayerController*)playbackControlsController.playerController;
 
 	if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
 	{
