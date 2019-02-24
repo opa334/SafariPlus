@@ -254,7 +254,6 @@ void reloadPrefs()
 - (void)reloadPrefs { }
 - (void)reloadOtherPlist { }
 - (void)reloadColors { }
-- (void)reloadMiscPlist { }
 
 - (NSArray*)forceHTTPSExceptions { return nil; }
 - (NSArray*)pinnedLocationNames { return @[@"Dummy Name"]; }

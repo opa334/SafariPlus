@@ -31,7 +31,6 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
   #endif
 
 	NSDictionary* otherPlist;
-	NSMutableDictionary* miscPlist;
 }
 
 + (instancetype)sharedInstance;
