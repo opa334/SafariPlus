@@ -298,20 +298,18 @@
 {
 	if(switchToMode == ModeSwitchActionNormalMode)
 	{
-		//Private browsing mode is active -> toggle browsing mode
-		togglePrivateBrowsing(self);
+		//Switch to normal browsing mode
+		setPrivateBrowsing(self, NO, nil);
 	}
-
 	else if(switchToMode == ModeSwitchActionPrivateMode && [self isPrivateBrowsingAvailable])
 	{
-		//Normal browsing mode is active -> toggle browsing mode
-		togglePrivateBrowsing(self);
+		//Switch to private browsing mode
+		setPrivateBrowsing(self, YES, nil);
 
 		//Hide private mode notice
 		if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView:animated:)])
 		{
-			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
-			 animated:NO];
+			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO animated:NO];
 		}
 		else
 		{
