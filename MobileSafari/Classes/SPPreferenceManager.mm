@@ -384,6 +384,8 @@ void reloadPrefs()
 
 #endif
 
+#if !defined(SIMJECT)
+
 - (void)reloadOtherPlist
 {
 	otherPlist = [[NSDictionary alloc] initWithContentsOfFile:otherPlistPath];
@@ -572,6 +574,8 @@ void reloadPrefs()
 {
 	return LCPParseColorString([colors objectForKey:@"tabTitleBarPrivateBackgroundColor"], @"#FFFFFF");
 }
+
+#endif
 
 #endif
 

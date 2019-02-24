@@ -17,6 +17,10 @@ ifeq ($(ROOTLESS),1)
 SafariPlusPrefs_CFLAGS += -D ROOTLESS=1
 endif
 
+ifeq ($(SIMJECT),1)
+SafariPlusPrefs_CFLAGS += -D SIMJECT=1
+endif
+
 SafariPlusPrefs_PRIVATE_FRAMEWORKS = Preferences
 
 include $(THEOS_MAKE_PATH)/bundle.mk
