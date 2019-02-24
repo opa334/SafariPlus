@@ -67,7 +67,7 @@
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)filePicker: (SPFilePickerNavigationController*)filePicker didSelectFiles: (NSArray*)URLs
+- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs
 {
 	[filePicker dismissViewControllerAnimated:YES completion:nil];
 
@@ -95,7 +95,7 @@
 
 %group iOS8
 
-- (void)_showPhotoPickerWithSourceType: (int)arg1
+- (void)_showPhotoPickerWithSourceType:(int)arg1
 {
 	if(preferenceManager.uploadAnyFileOptionEnabled)
 	{
@@ -133,7 +133,7 @@
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)filePicker: (SPFilePickerNavigationController*)filePicker didSelectFiles: (NSArray*)URLs
+- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs
 {
 	[filePicker dismissViewControllerAnimated:YES completion:nil];
 

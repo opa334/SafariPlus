@@ -28,7 +28,7 @@
 
 %hook AVPlaybackControlsView
 
-%property(nonatomic,retain) AVActivityButton *downloadButton;
+%property (nonatomic,retain) AVActivityButton *downloadButton;
 
 %new
 - (void)setUpDownloadButton
@@ -126,7 +126,7 @@
 }
 
 %new
-- (void)setBackgroundPlaybackActiveWithCompletion: (void (^)(void))completion
+- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
 {
 	WebAVPlayerController* playerController = (WebAVPlayerController*)self.delegate.delegate.playerController;
 
@@ -142,7 +142,7 @@
 	}
 }
 
-- (id)initWithFrame: (CGRect)arg1 styleSheet: (id)arg2 captureView: (id)arg3	//iOS 12 and above
+- (id)initWithFrame:(CGRect)arg1 styleSheet:(id)arg2 captureView:(id)arg3	//iOS 12 and above
 {
 	self = %orig;
 
@@ -151,7 +151,7 @@
 	return self;
 }
 
-- (instancetype)initWithFrame: (CGRect)frame	//iOS 11.3 - 11.4.1
+- (instancetype)initWithFrame:(CGRect)frame	//iOS 11.3 - 11.4.1
 {
 	self = %orig;
 

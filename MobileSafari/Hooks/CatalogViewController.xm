@@ -23,7 +23,7 @@
 //Long press on Search / Site suggestions
 %hook CatalogViewController
 
-- (UITableViewCell *)tableView: (id)tableView cellForRowAtIndexPath: (id)indexPath
+- (UITableViewCell *)tableView:(id)tableView cellForRowAtIndexPath:(id)indexPath
 {
 	if(preferenceManager.longPressSuggestionsEnabled)
 	{
@@ -54,7 +54,7 @@
 }
 
 %new
-- (void)handleLongPress: (UILongPressGestureRecognizer*)gestureRecognizer
+- (void)handleLongPress:(UILongPressGestureRecognizer*)gestureRecognizer
 {
 	if(gestureRecognizer.state == UIGestureRecognizerStateBegan)
 	{

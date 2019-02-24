@@ -19,7 +19,7 @@
 
 %subclass AVActivityButton: AVButton
 
-%property(nonatomic,retain) UIActivityIndicatorView *activityIndicatorView;
+%property (nonatomic,retain) UIActivityIndicatorView *activityIndicatorView;
 
 + (instancetype)buttonWithType:(UIButtonType)buttonType
 {
@@ -59,7 +59,7 @@
 }
 
 %new
-- (void)setSpinning: (BOOL)spinning
+- (void)setSpinning:(BOOL)spinning
 {
 	BOOL _spinning = [self spinning];
 

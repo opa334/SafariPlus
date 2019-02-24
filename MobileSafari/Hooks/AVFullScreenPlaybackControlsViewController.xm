@@ -38,8 +38,8 @@
 
 %hook AVFullScreenPlaybackControlsViewController
 
-%property(nonatomic,retain) AVActivityButton *downloadButton;
-%property(nonatomic,retain) NSMutableArray *additionalLayoutConstraints;
+%property (nonatomic,retain) AVActivityButton *downloadButton;
+%property (nonatomic,retain) NSMutableArray *additionalLayoutConstraints;
 
 - (void)loadView
 {
@@ -122,7 +122,7 @@
 }
 
 %new
-- (void)setBackgroundPlaybackActiveWithCompletion: (void (^)(void))completion
+- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
 {
 	WebAVPlayerController* playerController = (WebAVPlayerController*)self.playerController;
 

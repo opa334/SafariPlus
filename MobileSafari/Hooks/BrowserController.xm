@@ -25,9 +25,9 @@
 %hook BrowserController
 
 //Properties for gesture recognizers
-%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
-%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
-%property(nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
+%property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
+%property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
+%property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 
 //Present downloads view
 %new
@@ -44,7 +44,7 @@
 
 //URL Swipe actions
 %new
-- (void)handleGesture: (NSInteger)swipeAction
+- (void)handleGesture:(NSInteger)swipeAction
 {
 	//Some actions need a clean up after being ran
 	__block BOOL shouldClean = NO;
@@ -294,7 +294,7 @@
 
 //Used to switch mode based on the setting
 %new
-- (void)modeSwitchAction: (int)switchToMode
+- (void)modeSwitchAction:(int)switchToMode
 {
 	if(switchToMode == ModeSwitchActionNormalMode)
 	{
@@ -333,7 +333,7 @@
 }
 
 
-- (BOOL)dynamicBarAnimator: (id)arg1 canHideBarsByDraggingWithOffset: (CGFloat)arg2
+- (BOOL)dynamicBarAnimator:(id)arg1 canHideBarsByDraggingWithOffset:(CGFloat)arg2
 {
 	return (preferenceManager.lockBars) ? NO : %orig;
 }
@@ -389,7 +389,7 @@
 
 //Call method based on the direction of the url bar swipe
 %new
-- (void)navigationBarURLWasSwiped: (UISwipeGestureRecognizer*)swipe
+- (void)navigationBarURLWasSwiped:(UISwipeGestureRecognizer*)swipe
 {
 	switch(swipe.direction)
 	{
@@ -419,7 +419,7 @@
 %group iOS9Up
 
 //Auto switch mode on external URL opened
-- (NSURL*)handleExternalURL: (NSURL*)URL
+- (NSURL*)handleExternalURL:(NSURL*)URL
 {
 	if(URL && preferenceManager.forceModeOnExternalLinkEnabled)
 	{
@@ -458,7 +458,7 @@
 
 %group iOS12Up
 
-- (void)_updateButtonsAnimatingTabBar: (BOOL)arg1
+- (void)_updateButtonsAnimatingTabBar:(BOOL)arg1
 {
 	%orig;
 

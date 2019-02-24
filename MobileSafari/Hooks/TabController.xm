@@ -75,7 +75,7 @@
 }
 
 //Set state of desktop button
-- (void)tiltedTabViewDidPresent: (id)arg1
+- (void)tiltedTabViewDidPresent:(id)arg1
 {
 	%orig;
 	if(preferenceManager.desktopButtonEnabled)

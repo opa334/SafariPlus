@@ -35,7 +35,7 @@ BOOL showAlert = YES;
 
 %hook TabDocument
 
-%property(nonatomic,assign) BOOL desktopMode;
+%property (nonatomic,assign) BOOL desktopMode;
 
 %new
 - (void)updateDesktopMode
@@ -60,7 +60,7 @@ BOOL showAlert = YES;
 }
 
 //This method creates the SafariWebView
-- (void)_createDocumentViewWithConfiguration: (id)arg1
+- (void)_createDocumentViewWithConfiguration:(id)arg1
 {
 	%orig;
 
@@ -80,9 +80,9 @@ BOOL showAlert = YES;
  */
 
 //Always open in new tab option
-- (void)webView: (WKWebView *)webView
-decidePolicyForNavigationAction: (WKNavigationAction *)navigationAction
-decisionHandler: (void (^)(WKNavigationActionPolicy))decisionHandler
+- (void)webView:(WKWebView *)webView
+	decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
+	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
 	if(preferenceManager.alwaysOpenNewTabEnabled)
 	{
@@ -117,10 +117,10 @@ decisionHandler: (void (^)(WKNavigationActionPolicy))decisionHandler
 
 						if(appLink.openStrategy == 2)	//1: Open in browser, 2: Open in app (NO WARRANTY IMPLIED)
 						{
-							NSDictionary* browserState = @
-										     {
-											     @"browserReuseTab" : @1,
-											     @"updateAppLinkOpenStrategy" : @YES
+							NSDictionary* browserState =
+								@{
+									@"browserReuseTab" : @1,
+									@"updateAppLinkOpenStrategy" : @YES
 							};
 
 							if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11
@@ -162,9 +162,9 @@ decisionHandler: (void (^)(WKNavigationActionPolicy))decisionHandler
 }
 
 //Present download alert if clicked link is a downloadable file
-- (void)webView: (WKWebView *)webView
-decidePolicyForNavigationResponse: (WKNavigationResponse *)navigationResponse
-decisionHandler: (void (^)(WKNavigationResponsePolicy))decisionHandler
+- (void)webView:(WKWebView *)webView
+	decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse
+	decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
 	if(preferenceManager.enhancedDownloadsEnabled)
 	{
@@ -224,7 +224,7 @@ decisionHandler: (void (^)(WKNavigationResponsePolicy))decisionHandler
 	}
 }
 
-- (void)_loadStartedDuringSimulatedClickForURL: (NSURL*)URL
+- (void)_loadStartedDuringSimulatedClickForURL:(NSURL*)URL
 {
 	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
 	{
@@ -262,7 +262,7 @@ decisionHandler: (void (^)(WKNavigationResponsePolicy))decisionHandler
 
 //Checks through exceptions whether https should be forced or not
 %new
-- (BOOL)shouldRequestHTTPS: (NSURL*)URL
+- (BOOL)shouldRequestHTTPS:(NSURL*)URL
 {
 	if(!URL)
 	{
@@ -284,8 +284,8 @@ decisionHandler: (void (^)(WKNavigationResponsePolicy))decisionHandler
 %group iOS10Up
 
 //Supress mailTo alert
-- (void)dialogController: (_SFDialogController*)dialogController
-willPresentDialog: (_SFDialog*)dialog
+- (void)dialogController:(_SFDialogController*)dialogController
+	willPresentDialog:(_SFDialog*)dialog
 {
 	if(preferenceManager.suppressMailToDialog && [[castedSelf URL].scheme isEqualToString:@"mailto"])
 	{
@@ -306,8 +306,8 @@ willPresentDialog: (_SFDialog*)dialog
 %group iOS9Up
 
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
-- (NSMutableArray*)_actionsForElement: (_WKActivatedElementInfo*)element
-defaultActions: (NSArray*)arg2 previewViewController: (id)arg3
+- (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element
+	defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
 	if(!arg3 && (preferenceManager.enhancedDownloadsEnabled ||
 		     preferenceManager.openInNewTabOptionEnabled ||
@@ -467,7 +467,7 @@ defaultActions: (NSArray*)arg2 previewViewController: (id)arg3
 }
 
 //desktop mode + ForceHTTPS
-- (id)_loadURLInternal: (NSURL*)URL userDriven: (BOOL)arg2
+- (id)_loadURLInternal:(NSURL*)URL userDriven:(BOOL)arg2
 {
 	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
 	{
@@ -476,7 +476,7 @@ defaultActions: (NSArray*)arg2 previewViewController: (id)arg3
 	return %orig;
 }
 
-- (id)loadURL: (NSURL*)URL fromBookmark: (id)arg2
+- (id)loadURL:(NSURL*)URL fromBookmark:(id)arg2
 {
 	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
 	{
@@ -486,7 +486,7 @@ defaultActions: (NSArray*)arg2 previewViewController: (id)arg3
 }
 
 //Exception because method uses NSString instead of NSURL
-- (NSString*)loadUserTypedAddress: (NSString*)arg1
+- (NSString*)loadUserTypedAddress:(NSString*)arg1
 {
 	if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
 	{
@@ -518,8 +518,8 @@ defaultActions: (NSArray*)arg2 previewViewController: (id)arg3
 %group iOS8
 
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
-- (NSMutableArray*)actionsForElement: (_WKActivatedElementInfo*)element
-defaultActions: (NSArray*)arg2
+- (NSMutableArray*)actionsForElement:(_WKActivatedElementInfo*)element
+	defaultActions:(NSArray*)arg2
 {
 	if(preferenceManager.enhancedDownloadsEnabled ||
 	   preferenceManager.openInNewTabOptionEnabled ||
@@ -644,7 +644,7 @@ defaultActions: (NSArray*)arg2
 	return %orig;
 }
 
-- (void)loadURL: (NSURL*)URL userDriven: (BOOL)arg2
+- (void)loadURL:(NSURL*)URL userDriven:(BOOL)arg2
 {
 	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
 	{
@@ -655,7 +655,7 @@ defaultActions: (NSArray*)arg2
 	%orig;
 }
 
-- (void)loadURL: (NSURL*)URL fromBookmark: (id)arg2
+- (void)loadURL:(NSURL*)URL fromBookmark:(id)arg2
 {
 	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
 	{
@@ -667,7 +667,7 @@ defaultActions: (NSArray*)arg2
 }
 
 //Exception because method uses NSString instead of NSURL
-- (void)loadUserTypedAddress: (NSString*)arg1
+- (void)loadUserTypedAddress:(NSString*)arg1
 {
 	if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
 	{

@@ -24,10 +24,10 @@
 @interface NavigationBarColorView : UIView
 @end
 
-%subclass NavigationBarColorView: UIView
+%subclass NavigationBarColorView : UIView
 
 //Use custom color instead
-- (void)setBackgroundColor: (UIColor*)backgroundColor
+- (void)setBackgroundColor:(UIColor*)backgroundColor
 {
 	CGFloat white, alpha;
 
@@ -46,7 +46,7 @@
 }
 
 //Don't hide this view if custom color is active
-- (void)setHidden: (BOOL)hidden
+- (void)setHidden:(BOOL)hidden
 {
 	if(([self.backgroundColor isEqual:[preferenceManager topBarNormalBackgroundColor]] || [self.backgroundColor isEqual:[preferenceManager topBarPrivateBackgroundColor]]))
 	{
@@ -65,10 +65,10 @@
 @interface BrowserToolbarColorView : UIView
 @end
 
-%subclass BrowserToolbarColorView: UIView
+%subclass BrowserToolbarColorView : UIView
 
 //Use custom color instead
-- (void)setBackgroundColor: (UIColor*)backgroundColor
+- (void)setBackgroundColor:(UIColor*)backgroundColor
 {
 	CGFloat white, alpha;
 
@@ -87,7 +87,7 @@
 }
 
 //Don't hide this view if custom color is active
-- (void)setHidden: (BOOL)hidden
+- (void)setHidden:(BOOL)hidden
 {
 	if(([self.backgroundColor isEqual:[preferenceManager bottomBarNormalBackgroundColor]] || [self.backgroundColor isEqual:[preferenceManager bottomBarPrivateBackgroundColor]]))
 	{
@@ -107,7 +107,7 @@
 
 %hook NavigationBarBackdrop
 
-- (NavigationBarBackdrop*)initWithSettings: (_UIBackdropViewSettings*)settings
+- (NavigationBarBackdrop*)initWithSettings:(_UIBackdropViewSettings*)settings
 {
 	NavigationBarBackdrop* orig = %orig;
 
@@ -129,7 +129,7 @@
 %hook _SFNavigationBarBackdrop
 
 //Top Bar Background Color
-- (_SFNavigationBarBackdrop*)initWithSettings: (_UIBackdropViewSettings*)settings
+- (_SFNavigationBarBackdrop*)initWithSettings:(_UIBackdropViewSettings*)settings
 {
 	_SFNavigationBarBackdrop* orig = %orig;
 
@@ -149,7 +149,7 @@
 %hook NavigationBar
 
 //Top Bar Tint Color
-- (void)setTintColor: (UIColor*)tintColor
+- (void)setTintColor:(UIColor*)tintColor
 {
 	if(preferenceManager.topBarNormalTintColorEnabled || preferenceManager.topBarPrivateTintColorEnabled)
 	{
@@ -298,7 +298,7 @@
 %group iOS10Up
 
 //Lock Icon Color
-- (UIColor*)_tintForLockImage: (BOOL)arg1
+- (UIColor*)_tintForLockImage:(BOOL)arg1
 {
 	if(preferenceManager.topBarNormalLockIconColorEnabled || preferenceManager.topBarPrivateLockIconColorEnabled)
 	{
@@ -320,7 +320,7 @@
 %group iOS9Down
 
 //Lock Icon Color
-- (UIImage*)_lockImageUsingMiniatureVersion: (BOOL)miniatureVersion
+- (UIImage*)_lockImageUsingMiniatureVersion:(BOOL)miniatureVersion
 {
 	if(preferenceManager.topBarNormalLockIconColorEnabled && !self.usingLightControls)
 	{
@@ -381,7 +381,7 @@
 
 %group iOS10Down
 
-- (void)setTitleColor: (UIColor*)titleColor
+- (void)setTitleColor:(UIColor*)titleColor
 {
 	if(preferenceManager.tabTitleBarNormalTextColorEnabled || preferenceManager.tabTitleBarPrivateTextColorEnabled || preferenceManager.tabTitleBarNormalBackgroundColorEnabled || preferenceManager.tabTitleBarPrivateBackgroundColorEnabled)
 	{
@@ -567,7 +567,7 @@
 %hook BrowserToolbar
 
 //Bottom Bar Color
-- (id)initWithPlacement: (NSInteger)placement
+- (id)initWithPlacement:(NSInteger)placement
 {
 	id orig = %orig;
 
@@ -583,7 +583,7 @@
 }
 
 //Bottom Bar Tint Color
-- (void)setTintColor: (UIColor*)tintColor
+- (void)setTintColor:(UIColor*)tintColor
 {
 	if(preferenceManager.topBarNormalTintColorEnabled || preferenceManager.topBarPrivateTintColorEnabled || preferenceManager.bottomBarNormalTintColorEnabled || preferenceManager.bottomBarPrivateTintColorEnabled)
 	{
@@ -636,7 +636,7 @@
 
 %hook BrowserRootViewController
 
-- (void)setPreferredStatusBarStyle: (UIStatusBarStyle)statusBarStyle
+- (void)setPreferredStatusBarStyle:(UIStatusBarStyle)statusBarStyle
 {
 	if([preferenceManager topBarNormalStatusBarStyleEnabled] || [preferenceManager topBarPrivateStatusBarStyleEnabled])
 	{

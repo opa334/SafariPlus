@@ -28,7 +28,7 @@
 
 - (void)setUpRightBarButtonItems
 {
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithTitle:
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:
 						  [localizationManager localizedSPStringForKey:@"CHOOSE"] style:UIBarButtonItemStylePlain
 						  target:self action:@selector(chooseButtonPressed)];
 }

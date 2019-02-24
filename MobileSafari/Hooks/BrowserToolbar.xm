@@ -41,7 +41,7 @@
 }
 
 %new
-- (void)setDownloadsEnabled: (BOOL)enabled
+- (void)setDownloadsEnabled:(BOOL)enabled
 {
 	[self._downloadsItem setEnabled:enabled];
 }

@@ -91,13 +91,13 @@
 }
 
 %new
-- (void)application: (UIApplication *)application handleEventsForBackgroundURLSession: (NSString *)identifier completionHandler: (void (^)())completionHandler
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
 {
 	downloadManager.applicationBackgroundSessionCompletionHandler = completionHandler;
 }
 
 //Auto switch mode on app resume
-- (void)applicationWillEnterForeground: (id)arg1
+- (void)applicationWillEnterForeground:(id)arg1
 {
 	%orig;
 	if(preferenceManager.forceModeOnResumeEnabled)
@@ -137,7 +137,7 @@
 }
 
 //Auto close tabs when Safari gets minimized
-- (void)applicationDidEnterBackground: (id)arg1
+- (void)applicationDidEnterBackground:(id)arg1
 {
 	if(preferenceManager.autoCloseTabsEnabled &&
 	   preferenceManager.autoCloseTabsOn == 2 /*Safari minimized*/)
@@ -164,7 +164,7 @@
 
 %group iOS10Up
 
-- (BOOL)canAddNewTabForPrivateBrowsing: (BOOL)privateBrowsing
+- (BOOL)canAddNewTabForPrivateBrowsing:(BOOL)privateBrowsing
 {
 	if(preferenceManager.removeTabLimit)
 	{
@@ -178,7 +178,7 @@
 
 %group iOS9Up
 
-- (BOOL)application: (UIApplication*)application didFinishLaunchingWithOptions: (NSDictionary*)launchOptions
+- (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
 	BOOL orig = %orig;
 
@@ -207,7 +207,7 @@
 
 %group iOS8
 
-- (void)applicationOpenURL: (NSURL*)URL
+- (void)applicationOpenURL:(NSURL*)URL
 {
 	if(preferenceManager.forceModeOnExternalLinkEnabled && URL)
 	{
@@ -218,7 +218,7 @@
 	%orig;
 }
 
-- (void)applicationDidFinishLaunching: (id)arg1
+- (void)applicationDidFinishLaunching:(id)arg1
 {
 	%orig;
 
