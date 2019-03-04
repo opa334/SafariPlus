@@ -1,5 +1,5 @@
 // TabDocument.xm
-// (c) 2019 opa334
+// (c) 2018 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,6 +33,9 @@
 
 BOOL showAlert = YES;
 
+//Desktop mode user agent (set once)
+static NSString *desktopUserAgent;
+
 %hook TabDocument
 
 %property (nonatomic,assign) BOOL desktopMode;
@@ -40,21 +43,38 @@ BOOL showAlert = YES;
 %new
 - (void)updateDesktopMode
 {
-	if(castedSelf.webView)
+	if(preferenceManager.desktopButtonEnabled)
 	{
-		BOOL desktopButtonSelected;
-
-		desktopButtonSelected = browserControllerForTabDocument(castedSelf).tabController.desktopButtonSelected;
-
-		castedSelf.desktopMode = desktopButtonSelected;
-
-		if(desktopButtonSelected)
+		static dispatch_once_t onceToken = 0;
+		dispatch_once(&onceToken, ^	//Dynamically generate the appropriate desktop user agent for the current device
 		{
-			castedSelf.customUserAgent = desktopUserAgent;
-		}
-		else
+			NSArray<NSString*>* userAgentComponents = [castedSelf.webView._applicationNameForUserAgent componentsSeparatedByString:@" "];
+
+			//userAgentComponents[0] = Version/<iOS Version>
+			//userAgentComponents[1] = Mobile/<Build Number> (Not needed for desktop agent)
+			//userAgentComponents[2] = Safari/<Safari Version>
+
+			NSString* webKitVersion = [userAgentComponents[2] componentsSeparatedByString:@"/"].lastObject;	//Same as Safari Version
+
+			desktopUserAgent = [NSString stringWithFormat:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/%@ (KHTML, like Gecko) %@ %@", webKitVersion, userAgentComponents[0], userAgentComponents[2]];
+		});
+
+		if(castedSelf.webView)
 		{
-			castedSelf.customUserAgent = @"";
+			BOOL desktopButtonSelected;
+
+			desktopButtonSelected = browserControllerForTabDocument(castedSelf).tabController.desktopButtonSelected;
+
+			castedSelf.desktopMode = desktopButtonSelected;
+
+			if(desktopButtonSelected)
+			{
+				castedSelf.customUserAgent = desktopUserAgent;
+			}
+			else
+			{
+				castedSelf.customUserAgent = @"";
+			}
 		}
 	}
 }
@@ -79,82 +99,338 @@ BOOL showAlert = YES;
    }
  */
 
-//Always open in new tab option
+%new
+- (BOOL)handleAlwaysOpenInNewTabForNavigationAction:(WKNavigationAction *)navigationAction
+	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+	if(navigationAction.navigationType == WKNavigationTypeLinkActivated)
+	{
+		//Stripped string of current url
+		NSString* oldStripped = [[castedSelf URL].absoluteString stringStrippedByStrings:@[@"#",@"?"]];
+
+		//Stripped string of new url
+		NSString* newStripped = [navigationAction.request.URL.absoluteString stringStrippedByStrings:@[@"#",@"?"]];
+
+		if(![newStripped isEqualToString:oldStripped])	//Link doesn't contain current URL
+		{
+			//Cancel site load
+			decisionHandler(WKNavigationResponsePolicyCancel);
+
+			//Correctly handle launching external applications if needed
+			if(NSClassFromString(@"LSAppLink"))
+			{
+				if(navigationAction._shouldOpenAppLinks && navigationAction.targetFrame.isMainFrame)
+				{
+					__block LSAppLink *appLink;
+
+					dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+					[%c(LSAppLink) getAppLinkWithURL:navigationAction.request.URL completionHandler:^(LSAppLink* _appLink, NSError* error)
+					{
+						appLink = _appLink;
+
+						dispatch_semaphore_signal(semaphore);
+					}];
+					dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+
+					if(appLink.openStrategy == 2)	//1: Open in browser, 2: Open in app (NO WARRANTY IMPLIED)
+					{
+						NSDictionary* browserState = @
+									     {
+										     @"browserReuseTab" : @1,
+										     @"updateAppLinkOpenStrategy" : @YES
+						};
+
+						if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11
+						{
+							[castedSelf _openAppLinkInApp:appLink fromOriginalRequest:navigationAction.request updateAppLinkStrategy:YES webBrowserState:browserState completionHandler:nil];
+						}
+						else	//Works on iOS 10 and 9
+						{
+							[appLink openInWebBrowser:NO setOpenStrategy:2 webBrowserState:browserState completionHandler:nil];
+						}
+
+						return NO;
+					}
+				}
+			}
+
+			BrowserController* controller = browserControllerForTabDocument(castedSelf);
+
+			BOOL inBackground = preferenceManager.alwaysOpenNewTabInBackgroundEnabled;
+
+			//Load URL in new tab
+			if([controller respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
+			{
+				[controller loadURLInNewTab:navigationAction.request.URL
+				 inBackground:inBackground animated:YES];
+			}
+			else
+			{
+				[controller loadURLInNewWindow:navigationAction.request.URL
+				 inBackground:inBackground animated:YES];
+			}
+
+			return NO;
+		}
+	}
+
+	return YES;
+}
+
+%new
+- (BOOL)handleForceHTTPSForNavigationAction:(WKNavigationAction*)navigationAction
+	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+	if(navigationAction.targetFrame.mainFrame)
+	{
+		NSURLRequest* request = navigationAction.request;
+
+		if([request.URL.scheme isEqualToString:@"http"])
+		{
+			if(![preferenceManager isURLOnHTTPSExceptionsList:request.URL])
+			{
+				decisionHandler(WKNavigationResponsePolicyCancel);
+
+				NSMutableURLRequest* requestM = [request mutableCopy];
+
+				requestM.URL = [requestM.URL httpsURL];
+
+				//Load https site instead
+				[castedSelf.webView loadRequest:requestM];
+
+				return NO;
+			}
+		}
+	}
+
+	return YES;
+}
+
+%new
+- (BOOL)handleDownloadAlertForNavigationResponse:(WKNavigationResponse *)navigationResponse
+	decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
+{
+	//Get MIMEType
+	NSString* MIMEType = navigationResponse.response.MIMEType;
+
+	//Check if MIMEType indicates that link can be downloaded
+	if(showAlert && (!navigationResponse.canShowMIMEType ||
+			 [MIMEType rangeOfString:@"video/"].location != NSNotFound ||
+			 [MIMEType rangeOfString:@"audio/"].location != NSNotFound ||
+			 [MIMEType isEqualToString:@"application/pdf"]))
+	{
+		//Cancel loading
+		decisionHandler(WKNavigationResponsePolicyCancel);
+
+		//Fix for some sites (dropbox etc.), credits to https://stackoverflow.com/a/34740466
+		NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
+		NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
+		for(NSHTTPCookie *cookie in cookies)
+		{
+			[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+		}
+
+		//Get browserController and rootViewController
+		BrowserController* controller = browserControllerForTabDocument(castedSelf);
+		BrowserRootViewController* rootViewController = rootViewControllerForBrowserController(controller);
+
+		//Create download info and configure it
+		SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:navigationResponse._request];
+		downloadInfo.filesize = navigationResponse.response.expectedContentLength;
+		downloadInfo.filename = navigationResponse.response.suggestedFilename;
+		downloadInfo.presentationController = rootViewController;
+		downloadInfo.sourceDocument = self;
+
+		if(IS_PAD)
+		{
+			//Set iPad positions to download button
+			UIView* button = MSHookIvar<UIView*>(controller.activeToolbar._downloadsItem, "_view");
+			downloadInfo.sourceRect = [[button superview] convertRect:button.frame toView:rootViewController.view];
+		}
+
+		//Present download alert
+		[downloadManager presentDownloadAlertWithDownloadInfo:downloadInfo];
+
+		return NO;
+	}
+	else if(!showAlert)
+	{
+		showAlert = YES;
+	}
+
+	return YES;
+}
+
+%new
+- (void)addAdditionalActionsForElement:(_WKActivatedElementInfo*)element
+	toActions:(NSMutableArray*)actions
+{
+	//Get browserController
+	BrowserController* browserController = browserControllerForTabDocument(castedSelf);
+
+	//URL long pressed
+	if(element.URL && ![element.URL.absoluteString isEqualToString:@""])
+	{
+		//Get browsing status
+		BOOL privateBrowsing = privateBrowsingEnabled(browserController);
+
+		if(preferenceManager.openInOppositeModeOptionEnabled && ([browserController isPrivateBrowsingAvailable] || privateBrowsing))
+		{
+			//Variable for title
+			NSString* title;
+
+			//Set title based on browsing mode
+			if(privateBrowsing)
+			{
+				title = [localizationManager localizedSPStringForKey:@"OPEN_IN_NORMAL_MODE"];
+			}
+			else
+			{
+				title = [localizationManager localizedSPStringForKey:@"OPEN_IN_PRIVATE_MODE"];
+			}
+
+			_WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
+								      elementActionWithTitle:title actionHandler:^
+			{
+				setPrivateBrowsing(browserController, !privateBrowsing, ^
+				{
+					if([browserController.tabController.activeTabDocument isBlankDocument])
+					{
+						[browserController setFavoritesState:0 animated:YES];	//Dismisses the bookmark favorites grid view
+						[browserController.tabController.activeTabDocument loadURL:element.URL userDriven:NO];
+					}
+					else
+					{
+						if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
+						{
+							[browserController loadURLInNewTab:element.URL inBackground:NO];
+						}
+						else
+						{
+							[browserController loadURLInNewWindow:element.URL inBackground:NO];
+						}
+					}
+				});
+			}];
+
+			[actions insertObject:openInOppositeModeAction atIndex:2];
+		}
+
+		if(preferenceManager.openInNewTabOptionEnabled)
+		{
+			//Only needed when there is no tabBar
+			if(!browserController.tabController.usesTabBar)
+			{
+				_WKElementAction* openInNewTabAction = [%c(_WKElementAction)
+									elementActionWithTitle:[localizationManager
+												localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:^
+				{
+					//Open URL in new tab
+					if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
+					{
+						[browserController loadURLInNewTab:element.URL inBackground:NO];
+					}
+					else
+					{
+						[browserController loadURLInNewWindow:element.URL inBackground:NO];
+					}
+				}];
+
+				[actions insertObject:openInNewTabAction atIndex:1];
+			}
+		}
+	}
+
+	if(preferenceManager.enhancedDownloadsEnabled)
+	{
+		if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && preferenceManager.downloadSiteToActionEnabled)
+		{
+			_WKElementAction* downloadSiteToAction;
+
+			downloadSiteToAction = [%c(_WKElementAction)
+						elementActionWithTitle:[localizationManager
+									localizedSPStringForKey:@"DOWNLOAD_SITE_TO"] actionHandler:^
+			{
+				//Create download request from URL
+				NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:element.URL];
+
+				//Create downloadInfo
+				SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:downloadRequest];
+
+				//Set filename
+				downloadInfo.filename = @"site.html";
+				downloadInfo.customPath = YES;
+				downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
+
+				//Call downloadManager
+				[downloadManager configureDownloadWithInfo:downloadInfo];
+			}];
+
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
+			{
+				if(element.type == ElementInfoImage)
+				{
+					[actions insertObject:downloadSiteToAction atIndex:[actions count] - 4];
+				}
+				else
+				{
+					[actions insertObject:downloadSiteToAction atIndex:[actions count] - 1];
+				}
+			}
+			else
+			{
+				if(element.type == ElementInfoImage)
+				{
+					[actions insertObject:downloadSiteToAction atIndex:[actions count] - 2];
+				}
+				else
+				{
+					[actions addObject:downloadSiteToAction];
+				}
+			}
+		}
+
+		if(element.type == ElementInfoImage && preferenceManager.downloadImageToActionEnabled)
+		{
+			_WKElementAction* downloadImageToAction;
+			downloadImageToAction = [%c(_WKElementAction)
+						 elementActionWithTitle:[localizationManager
+									 localizedSPStringForKey:@"DOWNLOAD_IMAGE_TO"] actionHandler:^
+			{
+				//Create downloadInfo
+				SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithImage:element.image];
+
+				downloadInfo.filename = @"image.png";
+				downloadInfo.customPath = YES;
+				downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
+
+				//Call SPDownloadManager with image
+				[downloadManager configureDownloadWithInfo:downloadInfo];
+			}];
+
+			[actions addObject:downloadImageToAction];
+		}
+	}
+}
+
+//Force HTTPS + Always open in new tab option
 - (void)webView:(WKWebView *)webView
 	decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
 	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
 	if(preferenceManager.alwaysOpenNewTabEnabled)
 	{
-		if(navigationAction.navigationType == WKNavigationTypeLinkActivated)
+		if(![self handleAlwaysOpenInNewTabForNavigationAction:navigationAction decisionHandler:decisionHandler])
 		{
-			//Stripped string of current url
-			NSString* oldStripped = [[castedSelf URL].absoluteString stringStrippedByStrings:@[@"#",@"?"]];
+			return;
+		}
+	}
 
-			//Stripped string of new url
-			NSString* newStripped = [navigationAction.request.URL.absoluteString stringStrippedByStrings:@[@"#",@"?"]];
-
-			if(![newStripped isEqualToString:oldStripped])	//Link doesn't contain current URL
-			{
-				//Cancel site load
-				decisionHandler(WKNavigationResponsePolicyCancel);
-
-				//Correctly handle launching external applications if needed
-				if(NSClassFromString(@"LSAppLink"))
-				{
-					if(navigationAction._shouldOpenAppLinks && navigationAction.targetFrame.isMainFrame)
-					{
-						__block LSAppLink *appLink;
-
-						dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-						[%c(LSAppLink) getAppLinkWithURL:navigationAction.request.URL completionHandler:^(LSAppLink* _appLink, NSError* error)
-						{
-							appLink = _appLink;
-
-							dispatch_semaphore_signal(semaphore);
-						}];
-						dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-
-						if(appLink.openStrategy == 2)	//1: Open in browser, 2: Open in app (NO WARRANTY IMPLIED)
-						{
-							NSDictionary* browserState =
-								@{
-									@"browserReuseTab" : @1,
-									@"updateAppLinkOpenStrategy" : @YES
-							};
-
-							if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11
-							{
-								[castedSelf _openAppLinkInApp:appLink fromOriginalRequest:navigationAction.request updateAppLinkStrategy:YES webBrowserState:browserState completionHandler:nil];
-							}
-							else	//Works on iOS 10 and 9
-							{
-								[appLink openInWebBrowser:NO setOpenStrategy:2 webBrowserState:browserState completionHandler:nil];
-							}
-
-							return;
-						}
-					}
-				}
-
-				BrowserController* controller = browserControllerForTabDocument(castedSelf);
-
-				BOOL inBackground = preferenceManager.alwaysOpenNewTabInBackgroundEnabled;
-
-				//Load URL in new tab
-				if([controller respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
-				{
-					[controller loadURLInNewTab:navigationAction.request.URL
-					 inBackground:inBackground animated:YES];
-				}
-				else
-				{
-					[controller loadURLInNewWindow:navigationAction.request.URL
-					 inBackground:inBackground animated:YES];
-				}
-
-				return;
-			}
+	if(preferenceManager.forceHTTPSEnabled)
+	{
+		if(![self handleForceHTTPSForNavigationAction:navigationAction decisionHandler:decisionHandler])
+		{
+			return;
 		}
 	}
 
@@ -168,117 +444,13 @@ BOOL showAlert = YES;
 {
 	if(preferenceManager.enhancedDownloadsEnabled)
 	{
-		//Get MIMEType
-		NSString* MIMEType = navigationResponse.response.MIMEType;
-
-		//Check if MIMEType indicates that link can be downloaded
-		if(showAlert && (!navigationResponse.canShowMIMEType ||
-				 [MIMEType rangeOfString:@"video/"].location != NSNotFound ||
-				 [MIMEType rangeOfString:@"audio/"].location != NSNotFound ||
-				 [MIMEType isEqualToString:@"application/pdf"]))
+		if(![self handleDownloadAlertForNavigationResponse:navigationResponse decisionHandler:decisionHandler])
 		{
-			//Cancel loading
-			decisionHandler(WKNavigationResponsePolicyCancel);
-
-			//Fix for some sites (dropbox etc.), credits to https://stackoverflow.com/a/34740466
-			NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
-			NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
-			for(NSHTTPCookie *cookie in cookies)
-			{
-				[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-			}
-
-			//Get browserController and rootViewController
-			BrowserController* controller = browserControllerForTabDocument(castedSelf);
-			BrowserRootViewController* rootViewController = rootViewControllerForBrowserController(controller);
-
-			//Create download info and configure it
-			SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:navigationResponse._request];
-			downloadInfo.filesize = navigationResponse.response.expectedContentLength;
-			downloadInfo.filename = navigationResponse.response.suggestedFilename;
-			downloadInfo.presentationController = rootViewController;
-			downloadInfo.sourceDocument = self;
-
-			if(IS_PAD)
-			{
-				//Set iPad positions to download button
-				UIView* button = MSHookIvar<UIView*>(controller.activeToolbar._downloadsItem, "_view");
-				downloadInfo.sourceRect = [[button superview] convertRect:button.frame toView:rootViewController.view];
-			}
-
-			//Present download alert
-			[downloadManager presentDownloadAlertWithDownloadInfo:downloadInfo];
-
-			return;
-		}
-		else if(!showAlert)
-		{
-			showAlert = YES;
-		}
-
-		%orig;
-	}
-	else
-	{
-		%orig;
-	}
-}
-
-- (void)_loadStartedDuringSimulatedClickForURL:(NSURL*)URL
-{
-	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
-	{
-		NSURL* newURL = [URL httpsURL];
-		if(![[newURL absoluteString] isEqualToString:[URL absoluteString]])
-		{
-			//arg1 and newURL are not the same -> load newURL
-			[castedSelf loadURL:newURL userDriven:NO];
 			return;
 		}
 	}
 
 	%orig;
-}
-
-- (void)reload
-{
-	if(preferenceManager.forceHTTPSEnabled)
-	{
-		NSURL* currentURL = [castedSelf URL];
-		if(currentURL && [self shouldRequestHTTPS:currentURL])
-		{
-			NSURL* tmpURL = [currentURL httpsURL];
-			if(![[tmpURL absoluteString] isEqualToString:[currentURL absoluteString]])
-			{
-				//currentURL and tmpURL are not the same -> load tmpURL
-				[castedSelf loadURL:tmpURL userDriven:NO];
-				return;
-			}
-		}
-	}
-
-	%orig;
-}
-
-//Checks through exceptions whether https should be forced or not
-%new
-- (BOOL)shouldRequestHTTPS:(NSURL*)URL
-{
-	if(!URL)
-	{
-		return NO;
-	}
-
-	for(NSString* exception in [preferenceManager forceHTTPSExceptions])
-	{
-		if([[URL host] rangeOfString:exception].location != NSNotFound)
-		{
-			//Exception list contains host -> return false
-			return NO;
-		}
-	}
-	//Exception list doesn't contain host -> return false
-	return YES;
 }
 
 %group iOS10Up
@@ -315,201 +487,11 @@ BOOL showAlert = YES;
 	{
 		NSMutableArray* actions = %orig;
 
-		//Get browserController
-		BrowserController* browserController = browserControllerForTabDocument(castedSelf);
+		[self addAdditionalActionsForElement:element toActions:actions];
 
-		//URL long pressed
-		if(element.URL && ![element.URL.absoluteString isEqualToString:@""])
-		{
-			//Get browsing status
-			BOOL privateBrowsing = privateBrowsingEnabled(browserController);
-
-			if(preferenceManager.openInOppositeModeOptionEnabled && ([browserController isPrivateBrowsingAvailable] || privateBrowsing))
-			{
-				//Variable for title
-				NSString* title;
-
-				//Set title based on browsing mode
-				if(privateBrowsing)
-				{
-					title = [localizationManager localizedSPStringForKey:@"OPEN_IN_NORMAL_MODE"];
-				}
-				else
-				{
-					title = [localizationManager localizedSPStringForKey:@"OPEN_IN_PRIVATE_MODE"];
-				}
-
-				_WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
-									      elementActionWithTitle:title actionHandler:^
-				{
-					setPrivateBrowsing(browserController, !privateBrowsing, ^
-					{
-						if([browserController.tabController.activeTabDocument isBlankDocument])
-						{
-							[browserController setFavoritesState:0 animated:YES];	//Dismisses the bookmark favorites grid view
-							[browserController.tabController.activeTabDocument loadURL:element.URL userDriven:NO];
-						}
-						else
-						{
-							if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
-							{
-								[browserController loadURLInNewTab:element.URL inBackground:NO];
-							}
-							else
-							{
-								[browserController loadURLInNewWindow:element.URL inBackground:NO];
-							}
-						}
-					});
-				}];
-
-				[actions insertObject:openInOppositeModeAction atIndex:2];
-			}
-
-			if(preferenceManager.openInNewTabOptionEnabled)
-			{
-				//Only needed when there is no tabBar
-				if(!browserController.tabController.usesTabBar)
-				{
-					_WKElementAction* openInNewTabAction = [%c(_WKElementAction)
-										elementActionWithTitle:[localizationManager
-													localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:^
-					{
-						//Open URL in new tab
-						if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
-						{
-							[browserController loadURLInNewTab:element.URL inBackground:NO];
-						}
-						else
-						{
-							[browserController loadURLInNewWindow:element.URL inBackground:NO];
-						}
-					}];
-
-					[actions insertObject:openInNewTabAction atIndex:1];
-				}
-			}
-		}
-
-		if(preferenceManager.enhancedDownloadsEnabled)
-		{
-			if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && preferenceManager.downloadSiteToActionEnabled)
-			{
-				_WKElementAction* downloadSiteToAction;
-
-				downloadSiteToAction = [%c(_WKElementAction)
-							elementActionWithTitle:[localizationManager
-										localizedSPStringForKey:@"DOWNLOAD_SITE_TO"] actionHandler:^
-				{
-					//Create download request from URL
-					NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:element.URL];
-
-					//Create downloadInfo
-					SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:downloadRequest];
-
-					//Set filename
-					downloadInfo.filename = @"site.html";
-					downloadInfo.customPath = YES;
-					downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
-
-					//Call downloadManager
-					[downloadManager configureDownloadWithInfo:downloadInfo];
-				}];
-
-				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
-				{
-					if(element.type == ElementInfoImage)
-					{
-						[actions insertObject:downloadSiteToAction atIndex:[actions count] - 4];
-					}
-					else
-					{
-						[actions insertObject:downloadSiteToAction atIndex:[actions count] - 1];
-					}
-				}
-				else
-				{
-					if(element.type == ElementInfoImage)
-					{
-						[actions insertObject:downloadSiteToAction atIndex:[actions count] - 2];
-					}
-					else
-					{
-						[actions addObject:downloadSiteToAction];
-					}
-				}
-			}
-
-			if(element.type == ElementInfoImage && preferenceManager.downloadImageToActionEnabled)
-			{
-				_WKElementAction* downloadImageToAction;
-				downloadImageToAction = [%c(_WKElementAction)
-							 elementActionWithTitle:[localizationManager
-										 localizedSPStringForKey:@"DOWNLOAD_IMAGE_TO"] actionHandler:^
-				{
-					//Create downloadInfo
-					SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithImage:element.image];
-
-					downloadInfo.filename = @"image.png";
-					downloadInfo.customPath = YES;
-					downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
-
-					//Call SPDownloadManager with image
-					[downloadManager configureDownloadWithInfo:downloadInfo];
-				}];
-
-				[actions addObject:downloadImageToAction];
-			}
-		}
 		return actions;
 	}
-	return %orig;
-}
 
-//desktop mode + ForceHTTPS
-- (id)_loadURLInternal:(NSURL*)URL userDriven:(BOOL)arg2
-{
-	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
-	{
-		return %orig([URL httpsURL], arg2);
-	}
-	return %orig;
-}
-
-- (id)loadURL:(NSURL*)URL fromBookmark:(id)arg2
-{
-	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
-	{
-		return %orig([URL httpsURL], arg2);
-	}
-	return %orig;
-}
-
-//Exception because method uses NSString instead of NSURL
-- (NSString*)loadUserTypedAddress:(NSString*)arg1
-{
-	if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
-	{
-		NSString* newURL = arg1;
-		if((preferenceManager.forceHTTPSEnabled && newURL) &&
-		   ([newURL rangeOfString:@"https://"].location == NSNotFound))
-		{
-			if([newURL rangeOfString:@"://"].location == NSNotFound)
-			{
-				//URL has not scheme -> Default to http://
-				newURL = [@"http://" stringByAppendingString:newURL];
-			}
-
-			if([self shouldRequestHTTPS:[NSURL URLWithString:newURL]])
-			{
-				//Set scheme to https://
-				newURL = [newURL stringByReplacingOccurrencesOfString:@"http://"
-					  withString:@"https://"];
-			}
-		}
-
-		return %orig(newURL);
-	}
 	return %orig;
 }
 
@@ -527,170 +509,11 @@ BOOL showAlert = YES;
 	{
 		NSMutableArray* actions = %orig;
 
-		//Get browserController
-		BrowserController* browserController = browserControllerForTabDocument(castedSelf);
+		[self addAdditionalActionsForElement:element toActions:actions];
 
-		//URL long pressed
-		if(element.URL && ![element.URL.absoluteString isEqualToString:@""])
-		{
-			//Get browsing status
-			BOOL privateBrowsing = privateBrowsingEnabled(browserController);
-
-			if(preferenceManager.openInOppositeModeOptionEnabled && ([browserController isPrivateBrowsingAvailable] || privateBrowsing))
-			{
-				//Variable for title
-				NSString* title;
-
-				//Set title based on browsing mode
-				if(privateBrowsing)
-				{
-					title = [localizationManager localizedSPStringForKey:@"OPEN_IN_NORMAL_MODE"];
-				}
-				else
-				{
-					title = [localizationManager localizedSPStringForKey:@"OPEN_IN_PRIVATE_MODE"];
-				}
-
-				_WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
-									      elementActionWithTitle:title actionHandler:^
-				{
-					//Toggle browsing mode
-					setPrivateBrowsing(browserController, !privateBrowsing, ^
-					{
-						//Open URL in new tab
-						[browserController loadURLInNewWindow:element.URL inBackground:NO];
-					});
-				}];
-
-				[actions insertObject:openInOppositeModeAction atIndex:2];
-			}
-
-			if(preferenceManager.openInNewTabOptionEnabled)
-			{
-				//Only needed when there is no tabBar
-				if(!browserController.tabController.usesTabBar)
-				{
-					_WKElementAction* openInNewTabAction = [%c(_WKElementAction)
-										elementActionWithTitle:[localizationManager
-													localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:^
-					{
-						//Open URL in new tab
-						[browserController loadURLInNewWindow:element.URL inBackground:NO];
-					}];
-
-					[actions insertObject:openInNewTabAction atIndex:1];
-				}
-			}
-		}
-
-		if(preferenceManager.enhancedDownloadsEnabled)
-		{
-			if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && preferenceManager.downloadSiteToActionEnabled)
-			{
-				_WKElementAction* downloadSiteToAction;
-
-				downloadSiteToAction = [%c(_WKElementAction)
-							elementActionWithTitle:[localizationManager
-										localizedSPStringForKey:@"DOWNLOAD_SITE_TO"] actionHandler:^
-				{
-					//Create download request from URL
-					NSURLRequest* downloadRequest = [NSURLRequest requestWithURL:element.URL];
-
-					//Create downloadInfo
-					SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:downloadRequest];
-
-					//Set filename
-					downloadInfo.filename = @"site.html";
-					downloadInfo.customPath = YES;
-					downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
-
-					//Call downloadManager
-					[downloadManager configureDownloadWithInfo:downloadInfo];
-				}];
-
-				if(element.type == ElementInfoImage)
-				{
-					[actions insertObject:downloadSiteToAction atIndex:[actions count] - 2];
-				}
-				else
-				{
-					[actions addObject:downloadSiteToAction];
-				}
-			}
-
-			if(element.type == ElementInfoImage && preferenceManager.downloadImageToActionEnabled)
-			{
-				_WKElementAction* downloadImageToAction;
-				downloadImageToAction = [%c(_WKElementAction)
-							 elementActionWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_IMAGE_TO"]
-							 actionHandler:^
-				{
-					//Create downloadInfo
-					SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithImage:element.image];
-
-					downloadInfo.filename = @"image.png";
-					downloadInfo.customPath = YES;
-					downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
-
-					//Call SPDownloadManager with image
-					[downloadManager configureDownloadWithInfo:downloadInfo];
-				}];
-
-				[actions addObject:downloadImageToAction];
-			}
-		}
 		return actions;
 	}
-	return %orig;
-}
 
-- (void)loadURL:(NSURL*)URL userDriven:(BOOL)arg2
-{
-	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
-	{
-		%orig([URL httpsURL], arg2);
-		return;
-	}
-
-	%orig;
-}
-
-- (void)loadURL:(NSURL*)URL fromBookmark:(id)arg2
-{
-	if(preferenceManager.forceHTTPSEnabled && [self shouldRequestHTTPS:URL])
-	{
-		%orig([URL httpsURL], arg2);
-		return;
-	}
-
-	%orig;
-}
-
-//Exception because method uses NSString instead of NSURL
-- (void)loadUserTypedAddress:(NSString*)arg1
-{
-	if(preferenceManager.forceHTTPSEnabled || preferenceManager.desktopButtonEnabled)
-	{
-		NSString* newURL = arg1;
-		if((preferenceManager.forceHTTPSEnabled && newURL) &&
-		   ([newURL rangeOfString:@"https://"].location == NSNotFound))
-		{
-			if([newURL rangeOfString:@"://"].location == NSNotFound)
-			{
-				//URL has not scheme -> Default to http://
-				newURL = [@"http://" stringByAppendingString:newURL];
-			}
-
-			if([self shouldRequestHTTPS:[NSURL URLWithString:newURL]])
-			{
-				//Set scheme to https://
-				newURL = [newURL stringByReplacingOccurrencesOfString:@"http://"
-					  withString:@"https://"];
-			}
-		}
-
-		return %orig(newURL);
-	}
 	return %orig;
 }
 

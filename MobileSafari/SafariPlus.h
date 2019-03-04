@@ -21,6 +21,8 @@
 #import <WebKit/WKNavigationAction.h>
 #import <WebKit/WKNavigationResponse.h>
 #import <WebKit/WKWebView.h>
+#import <WebKit/WKNavigationDelegate.h>
+
 #import "Protocols.h"
 
 @class ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
@@ -93,6 +95,10 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 
 @interface WKNavigationResponse ()
 @property (nonatomic,readonly) NSURLRequest* _request;
+@end
+
+@interface WKWebView ()
+@property (setter=_setApplicationNameForUserAgent:,copy) NSString* _applicationNameForUserAgent;
 @end
 
 @interface WKFileUploadPanel <filePickerDelegate>
@@ -485,7 +491,10 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)requestDesktopSite;	//iOS 8
 //new stuff below
 - (void)updateDesktopMode;
-- (BOOL)shouldRequestHTTPS:(NSURL*)URL;
+- (BOOL)handleAlwaysOpenInNewTabForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
+- (BOOL)handleForceHTTPSForNavigationAction:(WKNavigationAction*)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
+- (BOOL)handleDownloadAlertForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler;
+- (void)addAdditionalActionsForElement:(_WKActivatedElementInfo*)element toActions:(NSMutableArray*)actions;
 @property (nonatomic) BOOL desktopMode;
 @end
 
