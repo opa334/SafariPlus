@@ -37,6 +37,7 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 
 @property (nonatomic, readonly) BOOL forceHTTPSEnabled;
 - (NSArray*)forceHTTPSExceptions;
+- (BOOL)isURLOnHTTPSExceptionsList:(NSURL*)URL;
 @property (nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
 @property (nonatomic, readonly) BOOL openInNewTabOptionEnabled;
 @property (nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;

@@ -181,22 +181,15 @@ void reloadPrefs()
 - (BOOL)uploadAnyFileOptionEnabled { return [[userDefaults objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
 - (BOOL)desktopButtonEnabled { return [[userDefaults objectForKey:@"desktopButtonEnabled"] boolValue]; }
 - (BOOL)longPressSuggestionsEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsEnabled"] boolValue]; }
-- (CGFloat)longPressSuggestionsDuration
-{
-	NSNumber* longPressSuggestionsDuration = [userDefaults objectForKey:@"longPressSuggestionsDuration"];
-	if(longPressSuggestionsDuration)
-	{
-		return [longPressSuggestionsDuration floatValue];
-	}
-	else
-	{
-		return 0.5;
-	}
-}
+- (CGFloat)longPressSuggestionsDuration { return [userDefaults objectForKey:@"longPressSuggestionsDuration"] ?[[userDefaults objectForKey:@"longPressSuggestionsDuration"] floatValue] : 0.5; }
 - (BOOL)longPressSuggestionsFocusEnabled { return [[userDefaults objectForKey:@"longPressSuggestionsFocusEnabled"] boolValue]; }
 
 - (BOOL)enhancedDownloadsEnabled { return [[userDefaults objectForKey:@"enhancedDownloadsEnabled"] boolValue]; }
 - (BOOL)videoDownloadingEnabled { return [[userDefaults objectForKey:@"videoDownloadingEnabled"] boolValue]; }
+- (NSInteger)defaultDownloadSection { return [userDefaults objectForKey:@"defaultDownloadSection"] ?[[userDefaults objectForKey:@"defaultDownloadSection"] integerValue] : 1; }
+- (BOOL)defaultDownloadSectionAutoSwitchEnabled { return [[userDefaults objectForKey:@"defaultDownloadSectionAutoSwitchEnabled"] boolValue]; }
+- (BOOL)downloadSiteToActionEnabled { return [userDefaults objectForKey:@"downloadSiteToActionEnabled"] ?[[userDefaults objectForKey:@"downloadSiteToActionEnabled"] boolValue] : YES; }
+- (BOOL)downloadImageToActionEnabled { return [userDefaults objectForKey:@"downloadImageToActionEnabled"] ?[[userDefaults objectForKey:@"downloadImageToActionEnabled"] boolValue] : YES; }
 - (BOOL)instantDownloadsEnabled { return [[userDefaults objectForKey:@"instantDownloadsEnabled"] boolValue]; }
 - (NSInteger)instantDownloadsOption { return [[userDefaults objectForKey:@"instantDownloadsOption"] integerValue]; }
 - (BOOL)customDefaultPathEnabled { return [[userDefaults objectForKey:@"customDefaultPathEnabled"] boolValue]; }
@@ -227,9 +220,11 @@ void reloadPrefs()
 - (BOOL)gestureBackground { return [[userDefaults objectForKey:@"gestureBackground"] boolValue]; }
 
 - (BOOL)fullscreenScrollingEnabled { return [[userDefaults objectForKey:@"fullscreenScrollingEnabled"] boolValue]; }
+- (BOOL)removeTabLimit { return [[userDefaults objectForKey:@"removeTabLimit"] boolValue]; }
 - (BOOL)lockBars { return [[userDefaults objectForKey:@"lockBars"] boolValue]; }
 - (BOOL)disablePrivateMode { return [[userDefaults objectForKey:@"disablePrivateMode"] boolValue]; }
 - (BOOL)alwaysOpenNewTabEnabled { return [[userDefaults objectForKey:@"alwaysOpenNewTabEnabled"] boolValue]; }
+- (BOOL)alwaysOpenNewTabInBackgroundEnabled { return [[userDefaults objectForKey:@"alwaysOpenNewTabInBackgroundEnabled"] boolValue]; }
 - (BOOL)suppressMailToDialog { return [[userDefaults objectForKey:@"suppressMailToDialog"] boolValue]; }
 
 #if !defined(NO_LIBCOLORPICKER)
@@ -276,6 +271,25 @@ void reloadPrefs()
 - (NSArray*)forceHTTPSExceptions
 {
 	return [otherPlist objectForKey:@"ForceHTTPSExceptions"];
+}
+
+- (BOOL)isURLOnHTTPSExceptionsList:(NSURL*)URL
+{
+	if(!URL)
+	{
+		return NO;
+	}
+
+	for(NSString* exception in [self forceHTTPSExceptions])
+	{
+		if([[URL host] rangeOfString:exception].location != NSNotFound)
+		{
+			//Exception list contains host -> return false
+			return YES;
+		}
+	}
+
+	return NO;
 }
 
 - (NSArray*)pinnedLocationNames
