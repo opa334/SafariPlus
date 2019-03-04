@@ -71,7 +71,7 @@
 	if([[UIApplication sharedApplication].keyWindow respondsToSelector:@selector(safeAreaInsets)])
 	{
 		double safeTop = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-		if(safeTop > 0)
+		if(safeTop > 24)
 		{
 			_barHeight += (safeTop - 14);
 		}
