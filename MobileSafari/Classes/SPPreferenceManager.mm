@@ -62,88 +62,7 @@ void reloadPrefs()
 {
 	self = [super init];
 
-  #if defined(SIMJECT)
-
-	//Simject preferences (No PreferenceLoader in Simulator)
-	_forceHTTPSEnabled = YES;
-	_openInOppositeModeOptionEnabled = YES;
-	_openInNewTabOptionEnabled = YES;
-	_uploadAnyFileOptionEnabled = YES;
-	_desktopButtonEnabled = YES;
-	_longPressSuggestionsEnabled = YES;
-	_longPressSuggestionsDuration = 0.25;
-	_longPressSuggestionsFocusEnabled = NO;
-
-	_enhancedDownloadsEnabled = YES;
-	_videoDownloadingEnabled = YES;
-	_downloadSiteToActionEnabled = YES;
-	_downloadImageToActionEnabled = YES;
-	_instantDownloadsEnabled = NO;
-	_instantDownloadsOption = 0;
-	_customDefaultPathEnabled = NO;
-	_customDefaultPath = @"";
-	_pinnedLocationsEnabled = YES;
-	_onlyDownloadOnWifiEnabled = NO;
-	_disablePushNotificationsEnabled = NO;
-	_disableBarNotificationsEnabled = NO;
-
-	_forceModeOnStartEnabled = YES;
-	_forceModeOnStartFor = 1;	//1: Normal Mode, 2: Private Mode
-	_forceModeOnResumeEnabled = NO;
-	_forceModeOnResumeFor = 1;	//1: Normal Mode, 2: Private Mode
-	_forceModeOnExternalLinkEnabled = NO;
-	_forceModeOnExternalLinkFor = 1;//1: Normal Mode, 2: Private Mode
-	_autoCloseTabsEnabled = NO;
-	_autoCloseTabsOn = 1;	//1: Closed, 2: Minimized
-	_autoCloseTabsFor = 1;	//1: Active Mode, 2: Normal Mode, 3: Private Mode, 4: Both Modes
-	_autoDeleteDataEnabled = NO;
-	_autoDeleteDataOn = 1;	//1: Closed, 2: Minimized
-
-	//Actions:
-	//1: Close Active Tab 2: New Tab, 3: Duplicate Active Tab, 4: Close all tabs from surfing mode
-	//5: Switch surfing mode, 6: Switch tab backwards 7: Switch tab forwards 8: Reload active tab
-	//9: Request desktop site, 10: Open search
-	_URLLeftSwipeGestureEnabled = YES;
-	_URLLeftSwipeAction = 6;
-	_URLRightSwipeGestureEnabled = YES;
-	_URLRightSwipeAction = 7;
-	_URLDownSwipeGestureEnabled = YES;
-	_URLDownSwipeAction = 5;
-
-	_fullscreenScrollingEnabled = YES;
-	_removeTabLimit = NO;
-	_disablePrivateMode = NO;
-	_alwaysOpenNewTabEnabled = NO;
-	_alwaysOpenNewTabInBackgroundEnabled = NO;
-	_suppressMailToDialog = NO;
-
-	_topBarNormalTintColorEnabled = NO;
-	_topBarNormalBackgroundColorEnabled = NO;
-	_topBarNormalURLFontColorEnabled = NO;
-	_topBarNormalProgressBarColorEnabled = NO;
-	_topBarNormalLockIconColorEnabled = NO;
-	_topBarNormalReloadButtonColorEnabled = NO;
-	_topBarNormalTabBarTitleColorEnabled = NO;
-	_topBarNormalTabBarInactiveTitleOpacity = 0.4;
-	_bottomBarNormalTintColorEnabled = NO;
-	_bottomBarNormalBackgroundColorEnabled = NO;
-	_tabTitleBarNormalTextColorEnabled = NO;
-	_tabTitleBarNormalBackgroundColorEnabled = NO;
-
-	_topBarPrivateTintColorEnabled = NO;
-	_topBarPrivateBackgroundColorEnabled = NO;
-	_topBarPrivateURLFontColorEnabled = NO;
-	_topBarPrivateProgressBarColorEnabled = NO;
-	_topBarPrivateLockIconColorEnabled = NO;
-	_topBarPrivateReloadButtonColorEnabled = NO;
-	_topBarPrivateTabBarTitleColorEnabled = NO;
-	_topBarPrivateTabBarInactiveTitleOpacity = 0.6;
-	_bottomBarPrivateTintColorEnabled = NO;
-	_bottomBarPrivateBackgroundColorEnabled = NO;
-	_tabTitleBarPrivateTextColorEnabled = NO;
-	_tabTitleBarPrivateBackgroundColorEnabled = NO;
-
-  #elif defined(NO_CEPHEI)
+  #if defined(NO_CEPHEI)
 
 	[self reloadPrefs];
 
@@ -249,45 +168,11 @@ void reloadPrefs()
 	return self;
 }
 
-#if defined(SIMJECT)
-
-- (void)reloadPrefs { }
-- (void)reloadOtherPlist { }
-- (void)reloadColors { }
-
-- (NSArray*)forceHTTPSExceptions { return nil; }
-- (NSArray*)pinnedLocationNames { return @[@"Dummy Name"]; }
-- (NSArray*)pinnedLocationPaths { return @[@"dummy/path"]; }
-
-- (UIColor*)topBarNormalTintColor { return [UIColor redColor]; }
-- (UIColor*)topBarNormalBackgroundColor { return [UIColor redColor]; }
-- (UIColor*)topBarNormalURLFontColor { return [UIColor redColor]; }
-- (UIColor*)topBarNormalProgressBarColor { return [UIColor redColor]; }
-- (UIColor*)topBarNormalLockIconColor { return [UIColor redColor]; }
-- (UIColor*)topBarNormalReloadButtonColor { return [UIColor redColor]; }
-- (UIColor*)topBarNormalTabBarTitleColor { return [[UIColor redColor] colorWithAlphaComponent:0.8]; }
-- (UIColor*)bottomBarNormalTintColor {  return [UIColor redColor];}
-- (UIColor*)bottomBarNormalBackgroundColor { return [UIColor redColor]; }
-- (UIColor*)tabTitleBarNormalTextColor { return [UIColor redColor]; }
-- (UIColor*)tabTitleBarNormalBackgroundColor { return [UIColor redColor]; }
-
-- (UIColor*)topBarPrivateTintColor { return [UIColor redColor]; }
-- (UIColor*)topBarPrivateBackgroundColor { return [UIColor redColor]; }
-- (UIColor*)topBarPrivateURLFontColor { return [UIColor redColor]; }
-- (UIColor*)topBarPrivateProgressBarColor { return [UIColor redColor]; }
-- (UIColor*)topBarPrivateLockIconColor { return [UIColor redColor]; }
-- (UIColor*)topBarPrivateReloadButtonColor { return [UIColor redColor]; }
-- (UIColor*)topBarPrivateTabBarTitleColor { return [[UIColor redColor] colorWithAlphaComponent:0.8]; }
-- (UIColor*)bottomBarPrivateTintColor { return [UIColor redColor]; }
-- (UIColor*)bottomBarPrivateBackgroundColor {   return [UIColor redColor]; }
-- (UIColor*)tabTitleBarPrivateTextColor { return [UIColor redColor]; }
-- (UIColor*)tabTitleBarPrivateBackgroundColor { return [UIColor redColor]; }
-
-#elif defined NO_CEPHEI
+#if defined NO_CEPHEI
 
 - (void)reloadPrefs
 {
-	userDefaults = [[NSDictionary alloc] initWithContentsOfFile:prefPlistPath];
+	userDefaults = [[NSDictionary alloc] initWithContentsOfFile:path(prefPlistPath)];
 }
 
 - (BOOL)forceHTTPSEnabled { return [[userDefaults objectForKey:@"forceHTTPSEnabled"] boolValue]; }
@@ -383,11 +268,9 @@ void reloadPrefs()
 
 #endif
 
-#if !defined(SIMJECT)
-
 - (void)reloadOtherPlist
 {
-	otherPlist = [[NSDictionary alloc] initWithContentsOfFile:otherPlistPath];
+	otherPlist = [[NSDictionary alloc] initWithContentsOfFile:path(otherPlistPath)];
 }
 
 - (NSArray*)forceHTTPSExceptions
@@ -454,7 +337,6 @@ void reloadPrefs()
 - (UIColor*)tabTitleBarPrivateTextColor { return nil; }
 - (BOOL)tabTitleBarPrivateBackgroundColorEnabled { return NO; }
 - (UIColor*)tabTitleBarPrivateBackgroundColor { return nil; }
-
 
 #else
 
@@ -573,8 +455,6 @@ void reloadPrefs()
 {
 	return LCPParseColorString([colors objectForKey:@"tabTitleBarPrivateBackgroundColor"], @"#FFFFFF");
 }
-
-#endif
 
 #endif
 

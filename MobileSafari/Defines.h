@@ -16,7 +16,8 @@
 
 #if defined(SIMJECT)
 #define SPBundlePath [NSString stringWithFormat:@"%@/layout/Library/Application Support/SafariPlus.bundle", [CUR_DIR stringByDeletingLastPathComponent]]
-#define defaultDownloadPath [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", USER]
+#define currentUser NSHomeDirectory().pathComponents[2]
+#define defaultDownloadPath [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", currentUser]
 #else
 #define SPBundlePath @"/Library/Application Support/SafariPlus.bundle"
 #define oldDownloadPath [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]

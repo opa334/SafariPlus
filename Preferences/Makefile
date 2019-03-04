@@ -18,7 +18,8 @@ SafariPlusPrefs_CFLAGS += -D ROOTLESS=1
 endif
 
 ifeq ($(SIMJECT),1)
-SafariPlusPrefs_CFLAGS += -D SIMJECT=1
+dir_string := @"\"$(CURDIR)\""
+SafariPlusPrefs_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
 SafariPlusPrefs_PRIVATE_FRAMEWORKS = Preferences

@@ -31,8 +31,7 @@ endif
 
 ifeq ($(SIMJECT),1)
 	dir_string := @"\"$(CURDIR)\""
-	username_string := @"\"$(USER)\""
-	SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string) -D USER=$(username_string)
+	SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
 SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote

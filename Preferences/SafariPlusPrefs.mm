@@ -27,6 +27,23 @@ SPLocalizationManager* localizationManager;
 NSBundle* SPBundle;
 NSBundle* MSBundle;	//Unused, just here to satisfy the linker
 
+#if defined(SIMJECT)
+#import <UIKit/UIFunctions.h>
+NSString* simulatorPath(NSString* path)
+{
+	if([path hasPrefix:@"/var/mobile/"])
+	{
+		NSString* simulatorID = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject].pathComponents[7];
+		NSString* strippedPath = [path stringByReplacingOccurrencesOfString:@"/var/mobile/" withString:@""];
+		return [NSString stringWithFormat:@"/Users/%@/Library/Developer/CoreSimulator/Devices/%@/data/%@", currentUser, simulatorID, strippedPath];
+	}
+	return [UISystemRootDirectory() stringByAppendingPathComponent:path];
+}
+ #define path(x) ({ simulatorPath(x); })
+ #else
+ #define path(x) ({ x; })
+ #endif
+
 void otherPlistChanged()
 {
 	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.opa334.safariplusprefs/ReloadOtherPlist"), NULL, NULL, true);
@@ -138,7 +155,7 @@ void otherPlistChanged()
 
 	fileManager = [SPFileManager sharedInstance];
 	localizationManager = [SPLocalizationManager sharedInstance];
-	SPBundle = [NSBundle bundleWithPath:@"/Library/Application Support/SafariPlus.bundle"];
+	SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
 	return self;
 }
@@ -167,7 +184,7 @@ void otherPlistChanged()
 {
 	if(!self.headerView)
 	{
-		UIImage* headerImage = [UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/SafariPlusPrefs.bundle/PrefHeader.png"];
+		UIImage* headerImage = [UIImage imageNamed:@"PrefHeader" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];	//[UIImage imageWithContentsOfFile:@"/Library/PreferenceBundles/SafariPlusPrefs.bundle/PrefHeader.png"];
 		self.headerView = [[UIImageView alloc] initWithImage:headerImage];
 
 		CGFloat aspectRatio = 3.312;
@@ -267,22 +284,22 @@ void otherPlistChanged()
 {
 	if(!_specifiers)
 	{
-		if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
+		if(![[NSFileManager defaultManager] fileExistsAtPath:path(otherPlistPath)])
 		{
-			[@{} writeToFile:otherPlistPath atomically:NO];
+			[@{} writeToFile:path(otherPlistPath) atomically:NO];
 			otherPlistChanged();
 		}
 
 		if(!plist)
 		{
-			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
+			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path(otherPlistPath)];
 		}
 
 		if(![[plist allKeys] containsObject:@"ForceHTTPSExceptions"])
 		{
 			ForceHTTPSExceptions = [NSMutableArray new];
 			[plist setObject:ForceHTTPSExceptions forKey:@"ForceHTTPSExceptions"];
-			[plist writeToFile:otherPlistPath atomically:YES];
+			[plist writeToFile:path(otherPlistPath) atomically:YES];
 			otherPlistChanged();
 		}
 		else
@@ -347,7 +364,7 @@ void otherPlistChanged()
 		UITextField * URLField = addLocationAlert.textFields[0];
 
 		[ForceHTTPSExceptions addObject:URLField.text];
-		[plist writeToFile:otherPlistPath atomically:YES];
+		[plist writeToFile:path(otherPlistPath) atomically:YES];
 
 		PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:URLField.text
 					  target:self
@@ -381,7 +398,7 @@ void otherPlistChanged()
 {
 	BOOL orig = [super performDeletionActionForSpecifier:specifier];
 	[ForceHTTPSExceptions removeObject:[specifier name]];
-	[plist writeToFile:otherPlistPath atomically:YES];
+	[plist writeToFile:path(otherPlistPath) atomically:YES];
 	otherPlistChanged();
 	return orig;
 }
@@ -393,22 +410,22 @@ void otherPlistChanged()
 {
 	if(!_specifiers)
 	{
-		if(![[NSFileManager defaultManager] fileExistsAtPath:otherPlistPath])
+		if(![[NSFileManager defaultManager] fileExistsAtPath:path(otherPlistPath)])
 		{
-			[@{} writeToFile:otherPlistPath atomically:NO];
+			[@{} writeToFile:path(otherPlistPath) atomically:NO];
 			otherPlistChanged();
 		}
 
 		if(!plist)
 		{
-			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:otherPlistPath];
+			plist = [[NSMutableDictionary alloc] initWithContentsOfFile:path(otherPlistPath)];
 		}
 
 		if(![[plist allKeys] containsObject:@"PinnedLocationNames"])
 		{
 			PinnedLocationNames = [NSMutableArray new];
 			[plist setObject:PinnedLocationNames forKey:@"PinnedLocationNames"];
-			[plist writeToFile:otherPlistPath atomically:YES];
+			[plist writeToFile:path(otherPlistPath) atomically:YES];
 			otherPlistChanged();
 		}
 		else
@@ -420,7 +437,7 @@ void otherPlistChanged()
 		{
 			PinnedLocationPaths = [NSMutableArray new];
 			[plist setObject:PinnedLocationPaths forKey:@"PinnedLocationPaths"];
-			[plist writeToFile:otherPlistPath atomically:YES];
+			[plist writeToFile:path(otherPlistPath) atomically:YES];
 			otherPlistChanged();
 		}
 		else
@@ -516,7 +533,7 @@ void otherPlistChanged()
 			[PinnedLocationNames addObject:name];
 			[PinnedLocationPaths addObject:path];
 
-			[plist writeToFile:otherPlistPath atomically:YES];
+			[plist writeToFile:path(otherPlistPath) atomically:YES];
 
 			PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:name
 						  target:self
@@ -596,7 +613,7 @@ void otherPlistChanged()
 	[PinnedLocationNames removeObjectAtIndex:[indexPath row]];
 	[PinnedLocationPaths removeObjectAtIndex:[indexPath row]];
 
-	[plist writeToFile:otherPlistPath atomically:YES];
+	[plist writeToFile:path(otherPlistPath) atomically:YES];
 	otherPlistChanged();
 
 	return orig;

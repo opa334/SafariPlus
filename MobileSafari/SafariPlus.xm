@@ -83,7 +83,7 @@ void initDebug()
 	[debugLogFileHandle seekToEndOfFile];
 }
 
-void intDlog(NSString* fString, ...)
+void _dlog(NSString* fString, ...)
 {
 	va_list va;
 	va_start(va, fString);
@@ -94,7 +94,7 @@ void intDlog(NSString* fString, ...)
 	NSLog(@"%@", msg);
 }
 
-void intDlogDownload(SPDownload* download, NSString* message)
+void _dlogDownload(SPDownload* download, NSString* message)
 {
 	dlog(@"----------");
 	dlog(@"DOWNLOAD %@", download);
@@ -122,7 +122,7 @@ void intDlogDownload(SPDownload* download, NSString* message)
 	dlog(@"----------");
 }
 
-void intDlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message)
+void _dlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message)
 {
 	dlog(@"----------");
 	dlog(@"DOWNLOADINFO %@", downloadInfo);
@@ -141,7 +141,7 @@ void intDlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message)
 	dlog(@"----------");
 }
 
-void intDlogDownloadManager()
+void _dlogDownloadManager()
 {
 	dlog(@"----------");
 	dlog(@"DOWNLOADMANAGER %@", downloadManager);
@@ -159,6 +159,23 @@ void intDlogDownloadManager()
 		dlog(@"tasks: %@", tasks);
 	}];
 	dlog(@"----------");
+}
+
+#endif
+
+#if defined(SIMJECT)
+
+#import <UIKit/UIFunctions.h>
+
+NSString* simulatorPath(NSString* path)
+{
+	if([path hasPrefix:@"/var/mobile/"])
+	{
+		NSString* simulatorID = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject].pathComponents[7];
+		NSString* strippedPath = [path stringByReplacingOccurrencesOfString:@"/var/mobile/" withString:@""];
+		return [NSString stringWithFormat:@"/Users/%@/Library/Developer/CoreSimulator/Devices/%@/data/%@", currentUser, simulatorID, strippedPath];
+	}
+	return [UISystemRootDirectory() stringByAppendingPathComponent:path];
 }
 
 #endif

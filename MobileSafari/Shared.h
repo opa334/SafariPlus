@@ -43,15 +43,15 @@ extern void saveOtherPlist();
 #ifdef DEBUG_LOGGING
 
 extern void initDebug();
-extern void intDlog(NSString* fString, ...);
-extern void intDlogDownload(SPDownload* download, NSString* message);
-extern void intDlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message);
-extern void intDlogDownloadManager();
+extern void _dlog(NSString* fString, ...);
+extern void _dlogDownload(SPDownload* download, NSString* message);
+extern void _dlogDownloadInfo(SPDownloadInfo* downloadInfo, NSString* message);
+extern void _dlogDownloadManager();
 
-#define dlog(args ...) intDlog(args)
-#define dlogDownload(args ...) intDlogDownload(args)
-#define dlogDownloadInfo(args ...) intDlogDownloadInfo(args)
-#define dlogDownloadManager() intDlogDownloadManager()
+#define dlog(args ...) _dlog(args)
+#define dlogDownload(args ...) _dlogDownload(args)
+#define dlogDownloadInfo(args ...) _dlogDownloadInfo(args)
+#define dlogDownloadManager() _dlogDownloadManager()
 
 #else
 
@@ -60,6 +60,13 @@ extern void intDlogDownloadManager();
 #define dlogDownloadInfo(args ...)
 #define dlogDownloadManager()
 
+#endif
+
+#if defined(SIMJECT)
+NSString* simulatorPath(NSString* path);
+#define path(x) ({ simulatorPath(x); })
+#else
+#define path(x) ({ x; })
 #endif
 
 @interface UIImage (ColorInverse)
