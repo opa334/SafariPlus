@@ -47,14 +47,14 @@
 
 /* Uploads & Downloads */
 
-"UPLOADS" = "Uploads";
-"DOWNLOADS" = "Downloads";
+"UPLOADS" = "التحميلات";
+"DOWNLOADS" = "التنزيلات";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Adds a new option to the document upload menu that lets you pick any file from the root of your device. You can also select and upload multiple files through long pressing on a file.";
-"UPLOAD_ANY_FILE" = "Upload Any File";
+"UPLOAD_ANY_FILE_FOOTER" = "إضافة خيار إلى قائمة تحميل المستندات يمكن من خلاله اختيار أي ملف من جذر جهازك. يمكنك أيضًا تحديد وتحميل عدة ملفات في آنً واحد من خلال الضغط لفترة طويلة على أي ملف.";
+"UPLOAD_ANY_FILE" = "تحميل أي ملف";
 
-"ENHANCED_DOWNLOADS" = "Enhanced Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Adds a button to the bottom toolbar which will open the downloads view. In there you can see and manage pending and already finished downloads. The file browser can be used to access and manage downloaded files. Before a download starts, an alert will appear that contains options to save the file to a local directory (/var/mobile/Downloads by default). Downloads will continue in background and you will be notified when a download finishes. When Safari is closed from the app switcher, all pending downloads will be 'frozen' and will continue on the next start of Safari.";
+"ENHANCED_DOWNLOADS" = "التنزيلات المحسنة";
+"ENHANCED_DOWNLOADS_FOOTER" = "عند تفعيل هذا الخيار:\n١- سيتم إضافة زر في شريط الأدوات السفلي الخاص بمتصفح Safari يمكن من خلاله استعراض وإدارة التنزيلات الجارية والمكتملة والمعلقة.\n٢- ستتمكن من الوصول إلى الملفات المنزلة وإدارتها عن طريق قسم 'تصفح الملفات'.\n٣- قبل بدأ التنزيل سيظهر تنبيه يمكن من خلاله حفظ الملف المراد تنزيله في مسار آخر غير المسار الافتراضي، حيث أن المسار الافتراضي هو (/var/mobile/Downloads).\n٤- ستستمر التنزيلات في الخلفية وستحصل على إشعار فور انتهاء التنزيل.\n٥- عند إغلاق Safari من مبدل التطبيقات ستتجمد التنزيلات الجارية وستظل مجمدة حتى يتم إعادة تشغيل Safari مرة أخرى.";
 
 "VIDEO_DOWNLOADING" = "Video Downloading";
 "VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save these files, but they do not contain any video.";
