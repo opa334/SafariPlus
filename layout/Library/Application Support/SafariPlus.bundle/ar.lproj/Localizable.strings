@@ -35,8 +35,8 @@
 /*DISABLE_ANALYTICS*/
 /*DISABLE_ANALYTICS_FOOTER*/
 
-"LOCKED_TABS" = "Locked Tabs";
-"LOCKED_TABS_FOOTER" = "Adds a lock switch to the top right of each tab inside the tab switcher. While a tab is locked, it cannot be closed and will stay open until you unlock it again.";
+"LOCKED_TABS" = "علامات تبويب مقفلة";
+"LOCKED_TABS_FOOTER" = "إضافة مفتاح تبديل قفل إلى أعلى يسار كل علامة تبويب في مبدل علامات التبويب. لا يمكن إغلاق علامة التبويب المقفلة طالما هي مقفلة، وستظل موجودة إلى أن تقوم بفتح قفلها.";
 
 "BIOMETRIC_PROTECTION" = "Biometric Protection";
 "BIOMETRIC_PROTECTION_FOOTER" = "Protects the selected actions with either Touch ID or Face ID.";
