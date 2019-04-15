@@ -448,7 +448,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 //Add downloads button to toolbar
 - (NSMutableArray *)defaultItems
 {
-	if(preferenceManager.bottomToolbarCustomOrderEnabled || preferenceManager.topToolbarCustomOrderEnabled)
+	if(preferenceManager.bottomToolbarCustomOrderEnabled || preferenceManager.topToolbarCustomOrderEnabled || preferenceManager.enhancedDownloadsEnabled)
 	{
 		NSMutableDictionary* defaultItemsForToolbarSize = MSHookIvar<NSMutableDictionary*>(self, "_defaultItemsForToolbarSize");
 
@@ -466,6 +466,17 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			{
 				defaultItems = [self dynamicItemsForOrder:preferenceManager.topToolbarCustomOrder];
 			}
+			else if(preferenceManager.enhancedDownloadsEnabled)
+			{
+				if(placement)	//Bottom Bar
+				{
+					defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarShareItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarDownloadsItem), @(BrowserToolbarTabExposeItem)]];
+				}
+				else	//Top Bar
+				{
+					defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarSearchBarSpace), @(BrowserToolbarDownloadsItem), @(BrowserToolbarShareItem), @(BrowserToolbarAddTabItem), @(BrowserToolbarTabExposeItem)]];
+				}
+			}
 			else
 			{
 				defaultItems = %orig;
@@ -476,7 +487,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 		return defaultItems;
 	}
-
 
 	return %orig;
 	/*if(preferenceManager.enhancedDownloadsEnabled)
