@@ -63,12 +63,12 @@
 "DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات نشطة، وعندما لا تكون هناك تنزيلات نشطة سيتم فتح القسم الآخر.";
 "DEFAULT_SECTION_AUTO_SWITCH" = "تبديل تلقائي";
 
-"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Adds options to download a site / an image to the menu that appears when long pressing site elements.";
-"DOWNLOAD_SITE_TO_OPTION" = "'Download Site to...' Option";
-"DOWNLOAD_IMAGE_TO_OPTION" = "'Download Image to...' Option";
+"LINK_DOWNLOAD_OPTIONS_FOOTER" = "إضافة خيارات تنزيل موقع / صورة إلى القائمة التي تظهر عند الضغط مطولًا على عناصر الموقع.";
+"DOWNLOAD_SITE_TO_OPTION" = "خيار 'تنزيل الموقع إلى...'";
+"DOWNLOAD_IMAGE_TO_OPTION" = "خيار 'تنزيل الصورة إلى...'";
 
-"INSTANT_DOWNLOAD" = "Instant Download";
-"INSTANT_DOWNLOAD_FOOTER" = "Suppresses the download alert and always chooses the selcted option by default.";
+"INSTANT_DOWNLOAD" = "التنزيل الفوري";
+"INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الخيار المحدد افتراضيًا دائمًا.";
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "Custom Default Path";
