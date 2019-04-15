@@ -1,5 +1,5 @@
 // SPCacheManager.mm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -148,7 +148,7 @@
 {
 	NSURL* downloadCacheURL = [_cacheURL URLByAppendingPathComponent:@"downloads.plist"];
 
-	//Create data from pendingDownloads
+	//Create archived data from pendingDownloads
 	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:downloadCache];
 
 	//Write data to file
@@ -217,7 +217,11 @@
 //Get desktop button state for browserController UUID
 - (BOOL)desktopButtonStateForUUID:(NSUUID*)UUID
 {
-	[self loadDesktopButtonStates];
+	if(!_desktopButtonStates)
+	{
+		[self loadDesktopButtonStates];
+	}
+
 
 	if(UUID)
 	{
@@ -225,6 +229,74 @@
 	}
 
 	return [[_desktopButtonStates objectForKey:@"Enabled"] boolValue];
+}
+
+- (void)loadTabStateAdditions
+{
+	NSURL* tabStateAdditionsURL = [_cacheURL URLByAppendingPathComponent:@"tabStateAdditions.plist"];
+
+	//Get data
+	NSData* data = [NSData dataWithContentsOfURL:tabStateAdditionsURL];
+
+	//Unarchive data
+	_tabStateAdditions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+
+	if(!_tabStateAdditions)
+	{
+		_tabStateAdditions = [NSMutableDictionary new];
+	}
+}
+
+- (void)saveTabStateAdditions
+{
+	NSURL* tabStateAdditionsURL = [_cacheURL URLByAppendingPathComponent:@"tabStateAdditions.plist"];
+
+	//Get archived data from dictionary
+	NSData* data = [NSKeyedArchiver archivedDataWithRootObject:_tabStateAdditions];
+
+	//Save data to file
+	[data writeToURL:tabStateAdditionsURL atomically:YES];
+
+	[self updateExcludedFromBackup];
+}
+
+- (BOOL)isTabWithUUIDLocked:(NSUUID*)UUID
+{
+	if(!_tabStateAdditions)
+	{
+		[self loadTabStateAdditions];
+	}
+
+	NSMutableSet* lockedTabs = [_tabStateAdditions objectForKey:@"lockedTabs"];
+
+	BOOL locked = [lockedTabs containsObject:UUID];
+
+	return locked;
+}
+
+- (void)setLocked:(BOOL)locked forTabWithUUID:(NSUUID*)UUID
+{
+	NSMutableSet* lockedTabs = [_tabStateAdditions objectForKey:@"lockedTabs"];
+
+	if(!lockedTabs)
+	{
+		lockedTabs = [NSMutableSet new];
+		[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
+	}
+
+	if(locked)
+	{
+		[lockedTabs addObject:UUID];
+	}
+	else
+	{
+		[lockedTabs removeObject:UUID];
+	}
+
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+	{
+		[self saveTabStateAdditions];
+	});
 }
 
 @end

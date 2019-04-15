@@ -29,17 +29,17 @@ Various enhancements to Safari
 - Change (almost) any color of the Safari interface
 
 ## Compatibilty
-Any iDevice between iOS 8.0 and 12.1.2 should be supported (including iPad)
+Any iOS device between iOS 8.0 and 12.1.2 should be supported!
 
 ## Localization
 If you wish to help with localizing the tweak, take the english template from [here](https://github.com/opa334/SafariPlus/blob/master/layout/Library/Application%20Support/SafariPlus.bundle/en.lproj/Localizable.strings) and contact me somewhere with the localized file.
 
 ## Compiling
-You will need the following libraries / frameworks in order to compile SafariPlus:
+You will need the following libraries / frameworks in order to compile Safari Plus:
 
 - [Cephei](https://hbang.github.io/libcephei/)
 
-- [libcolorpicker (site currently down?)](http://git.pixelfiredev.com/)
+- [libCSColorPicker](https://github.com/CreatureSurvive/libCSColorPicker)
 
 - [libbulletin](https://github.com/limneos/libbulletin)
 

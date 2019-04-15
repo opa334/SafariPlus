@@ -19,6 +19,6 @@
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>NSPrincipalClass</key>
-	<string>SafariPlusRootListController</string>
+	<string>SPPRootListController</string>
 </dict>
 </plist>

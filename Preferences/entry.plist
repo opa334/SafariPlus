@@ -9,9 +9,9 @@
 		<key>cell</key>
 		<string>PSLinkCell</string>
 		<key>detail</key>
-		<string>SafariPlusRootListController</string>
+		<string>SPPRootListController</string>
 		<key>icon</key>
-		<string>SPRootIcon.png</string>
+		<string>SPPRootIcon.png</string>
 		<key>isController</key>
 		<true/>
 		<key>label</key>

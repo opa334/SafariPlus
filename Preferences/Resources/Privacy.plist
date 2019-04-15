@@ -34,7 +34,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>ExceptionsController</string>
+			<string>SPPExceptionsController</string>
 			<key>label</key>
 			<string>FORCE_HTTPS_EXCEPTIONS</string>
 		</dict>
@@ -44,7 +44,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>OPEN_IN_NEW_TAB_FOOTER</string>
+			<string>LOCKED_TABS_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -56,9 +56,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>openInNewTabOptionEnabled</string>
+			<string>lockedTabsEnabled</string>
 			<key>label</key>
-			<string>OPEN_IN_NEW_TAB</string>
+			<string>LOCKED_TABS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -66,7 +66,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>OPEN_IN_OPPOSITE_MODE_FOOTER</string>
+			<string>BIOMETRIC_PROTECTION_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -78,105 +78,11 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>openInOppositeModeOptionEnabled</string>
+			<string>biometricProtectionEnabled</string>
 			<key>label</key>
-			<string>OPEN_IN_OPPOSITE_MODE</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>UPLOAD_ANY_FILE_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>uploadAnyFileOptionEnabled</string>
-			<key>label</key>
-			<string>UPLOAD_ANY_FILE</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>DESKTOP_SWITCH_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>desktopButtonEnabled</string>
-			<key>label</key>
-			<string>DESKTOP_SWITCH_LABEL</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>LONG_PRESS_SUGGESTIONS_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>longPressSuggestionsEnabled</string>
-			<key>label</key>
-			<string>LONG_PRESS_SUGGESTIONS</string>
+			<string>BIOMETRIC_PROTECTION</string>
 			<key>nestedEntryCount</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>label</key>
-			<string>LONG_PRESS_DURATION_TITLE</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSliderCell</string>
-			<key>default</key>
-			<string>1</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>isSegmented</key>
-			<string>1</string>
-			<key>key</key>
-			<string>longPressSuggestionsDuration</string>
-			<key>max</key>
-			<string>2</string>
-			<key>min</key>
-			<string>0.25</string>
-			<key>segmentCount</key>
-			<integer>7</integer>
-			<key>showValue</key>
-			<string>1</string>
+			<integer>4</integer>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -184,16 +90,58 @@
 			<key>cell</key>
 			<string>PSSwitchCell</string>
 			<key>default</key>
-			<true/>
+			<false/>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>longPressSuggestionsFocusEnabled</string>
+			<string>biometricProtectionSwitchModeEnabled</string>
 			<key>label</key>
-			<string>LONG_PRESS_FOCUS_TITLE</string>
+			<string>SWITCH_BROWSING_MODE</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>biometricProtectionLockTabEnabled</string>
+			<key>label</key>
+			<string>LOCK_TAB</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>biometricProtectionUnlockTabEnabled</string>
+			<key>label</key>
+			<string>UNLOCK_TAB</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>biometricProtectionAccessLockedTabEnabled</string>
+			<key>label</key>
+			<string>ACCESS_LOCKED_TAB</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>GENERAL</string>
+	<string>PRIVACY</string>
 </dict>
 </plist>

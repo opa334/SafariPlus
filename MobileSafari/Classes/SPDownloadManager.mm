@@ -1,5 +1,5 @@
 // SPDownloadManager.mm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -363,9 +363,14 @@
 	dlog(@"removeTemporaryFileForResumeData");
 	dlogDownloadManager();
 
-	NSURL* tmpFileURL = [NSURL fileURLWithPath:[self pathForResumeData:resumeData]];
+	NSString* resumeDataPath = [self pathForResumeData:resumeData];
 
-	[fileManager removeItemAtURL:tmpFileURL error:nil];
+	if(resumeDataPath)
+	{
+		NSURL* tmpFileURL = [NSURL fileURLWithPath:resumeDataPath];
+
+		[fileManager removeItemAtURL:tmpFileURL error:nil];
+	}
 }
 
 - (void)loadDownloadsFromDisk
@@ -874,26 +879,25 @@
 
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-	//Get pinned location names & paths
-	NSArray* pinnedLocationNames = [preferenceManager pinnedLocationNames];
-	NSArray* pinnedLocationPaths = [preferenceManager pinnedLocationPaths];
+	//Get pinned locations
+	NSArray* pinnedLocations = preferenceManager.pinnedLocations;
 
 	UIAlertController* pinnedLocationAlert = [UIAlertController
 						  alertControllerWithTitle:[localizationManager
 									    localizedSPStringForKey:@"PINNED_LOCATIONS"] message:nil
 						  preferredStyle:UIAlertControllerStyleActionSheet];
 
-	for(NSString* name in pinnedLocationNames)
+	for(NSDictionary* pinnedLocation in pinnedLocations)
 	{
 		//Add option for each location
-		[pinnedLocationAlert addAction:[UIAlertAction actionWithTitle:name
+		[pinnedLocationAlert addAction:[UIAlertAction actionWithTitle:[pinnedLocation objectForKey:@"name"]
 						style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 		{
 			//Get index of tapped action
 			NSInteger index = [pinnedLocationAlert.actions indexOfObject:action];
 
 			//Get URL from index
-			__block NSURL* pathURL = [NSURL fileURLWithPath:[pinnedLocationPaths objectAtIndex:index]];
+			__block NSURL* pathURL = [NSURL fileURLWithPath:[pinnedLocations[index] objectForKey:@"path"]];
 
 			//Alert for filename
 			UIAlertController* filenameAlert = [UIAlertController

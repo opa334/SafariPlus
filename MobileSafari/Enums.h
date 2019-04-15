@@ -1,5 +1,5 @@
 // Enums.h
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -84,4 +84,16 @@ enum
 	FileOperation_IsWritable,
 	FileOperation_ResolveSymlinks,
 	FileOperation_ResolveSymlinks_URL
+};
+
+enum
+{
+	BrowserToolbarBackItem,
+	BrowserToolbarForwardItem,
+	BrowserToolbarBookmarksItem,
+	BrowserToolbarShareItem,
+	BrowserToolbarAddTabItem,
+	BrowserToolbarTabExposeItem,
+	BrowserToolbarSearchBarSpace,
+	BrowserToolbarDownloadsItem
 };

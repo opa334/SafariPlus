@@ -1,5 +1,5 @@
 // TabController.xm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPCacheManager.h"
+#import "../Classes/SPLocalizationManager.h"
 #import "../Defines.h"
 #import "../Shared.h"
-#import "libcolorpicker.h"
 
 %hook TabController
 
@@ -80,18 +80,7 @@
 	%orig;
 	if(preferenceManager.desktopButtonEnabled)
 	{
-		if(self.desktopButtonSelected)
-		{
-			//desktop button should be selected -> Select it
-			self.tiltedTabViewDesktopModeButton.selected = YES;
-			self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
-		}
-		else
-		{
-			//desktop button should not be selected -> Unselect it
-			self.tiltedTabViewDesktopModeButton.selected = NO;
-			self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
-		}
+		self.tiltedTabViewDesktopModeButton.selected = self.desktopButtonSelected;
 	}
 }
 
@@ -105,41 +94,25 @@
 		if(!self.tiltedTabViewDesktopModeButton)
 		{
 			//desktopButton not created yet -> create and configure it
-			self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
 
-			UIImage* inactiveImage = [UIImage
-						  imageNamed:@"DesktopButton.png" inBundle:SPBundle
-						  compatibleWithTraitCollection:nil];
+			UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
 
-			UIImage* activeImage = [UIImage inverseColor:inactiveImage];
+			[self.tiltedTabViewDesktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
 
-			[self.tiltedTabViewDesktopModeButton setImage:inactiveImage
-			 forState:UIControlStateNormal];
-
-			[self.tiltedTabViewDesktopModeButton setImage:activeImage
-			 forState:UIControlStateSelected];
-
-			self.tiltedTabViewDesktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
-			self.tiltedTabViewDesktopModeButton.layer.cornerRadius = 4;
-			self.tiltedTabViewDesktopModeButton.adjustsImageWhenHighlighted = true;
+			self.tiltedTabViewDesktopModeButton.tintColor = [UIColor whiteColor];
 
 			[self.tiltedTabViewDesktopModeButton addTarget:self
 			 action:@selector(tiltedTabViewDesktopModeButtonPressed)
 			 forControlEvents:UIControlEventTouchUpInside];
 
-			self.tiltedTabViewDesktopModeButton.frame = CGRectMake(0, 0, 27.5, 27.5);
+			[self.tiltedTabViewDesktopModeButton sizeToFit];
 
-			if(self.desktopButtonSelected)
-			{
-				self.tiltedTabViewDesktopModeButton.selected = YES;
-				self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
-			}
+			self.tiltedTabViewDesktopModeButton.selected = self.desktopButtonSelected;
 		}
 
 		//Create empty space button to align the bottom toolbar perfectly
 		UIButton* emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
-		emptySpace.imageEdgeInsets = UIEdgeInsetsMake(2.5, 2.5, 2.5, 2.5);
-		emptySpace.layer.cornerRadius = 4;
 		emptySpace.frame = CGRectMake(0, 0, 27.5, 27.5);
 
 		//Create UIBarButtonItem from space
@@ -181,27 +154,9 @@
 %new
 - (void)tiltedTabViewDesktopModeButtonPressed
 {
-	if(self.desktopButtonSelected)
-	{
-		//Deselect desktop button
-		self.desktopButtonSelected = NO;
-		self.tiltedTabViewDesktopModeButton.selected = NO;
+	self.desktopButtonSelected = !self.desktopButtonSelected;
 
-		//Remove white color with animation
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.3];
-		self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor clearColor];
-		[UIView commitAnimations];
-	}
-	else
-	{
-		//Select desktop button
-		self.desktopButtonSelected = YES;
-		self.tiltedTabViewDesktopModeButton.selected = YES;
-
-		//Set color to white
-		self.tiltedTabViewDesktopModeButton.backgroundColor = [UIColor whiteColor];
-	}
+	self.tiltedTabViewDesktopModeButton.selected = self.desktopButtonSelected;
 
 	//Update user agents
 	[self updateUserAgents];
@@ -216,32 +171,231 @@
 {
 	for(TabDocument* tabDocument in self.allTabDocuments)
 	{
-		if(tabDocument.desktopMode != self.desktopButtonSelected)
-		{
-			[tabDocument updateDesktopMode];
+		BOOL needsReload = [tabDocument updateDesktopMode];
 
-			if(!tabDocument.isHibernated)
+		if(needsReload)
+		{
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
 			{
-				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
-				{
-					[tabDocument _loadURLInternal:[tabDocument URL] userDriven:NO];
-				}
-				else
-				{
-					[tabDocument reload];
-				}
+				//Calling reload on webView does apply the user agent on iOS 11.3 and above, no idea why, this is the proper fix for it
+				[tabDocument.webView evaluateJavaScript:@"window.location.reload(true)" completionHandler:nil];
+			}
+			else
+			{
+				[tabDocument reload];
 			}
 		}
 	}
 }
 
+%new
+- (void)tiltedTabView:(TiltedTabView*)tiltedTabView toggleLockedStateForItem:(TiltedTabItem*)item
+{
+	TabDocument* tabDocument = [self _tabDocumentRepresentedByTiltedTabItem:item];
+
+	void (^toggle)(void) = ^
+	{
+		tabDocument.locked = !tabDocument.locked;
+
+		if([item respondsToSelector:@selector(contentView)])
+		{
+			item.contentView.lockButton.selected = tabDocument.locked;
+		}
+		else
+		{
+			item.layoutInfo.contentView.lockButton.selected = tabDocument.locked;
+		}
+
+		[tiltedTabView _layoutItemsWithTransition:0];	//Update close button
+	};
+
+	if(preferenceManager.biometricProtectionEnabled && (preferenceManager.biometricProtectionLockTabEnabled || preferenceManager.biometricProtectionUnlockTabEnabled))
+	{
+		if(preferenceManager.biometricProtectionLockTabEnabled && !tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"LOCK_TAB"], toggle);
+			return;
+		}
+		else if(preferenceManager.biometricProtectionUnlockTabEnabled && tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"UNLOCK_TAB"], toggle);
+			return;
+		}
+	}
+
+	toggle();
+}
+
+//Lock tabs (Prevent them from being closable)
+- (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		TabDocument* tabDocument = [self _tabDocumentRepresentedByTiltedTabItem:item];
+
+		if(tabDocument.locked)
+		{
+			return NO;
+		}
+	}
+
+	return %orig;
+}
+
+%new
+- (void)tabOverview:(TabOverview*)tabOverview toggleLockedStateForItem:(TabOverviewItem*)item
+{
+	TabDocument* tabDocument = [self _tabDocumentRepresentedByTabOverviewItem:item];
+
+	void (^toggle)(void) = ^
+	{
+		tabDocument.locked = !tabDocument.locked;
+		if([item respondsToSelector:@selector(_thumbnailView)])
+		{
+			item.thumbnailView.lockButton.selected = tabDocument.locked;
+		}
+		else
+		{
+			item.layoutInfo.itemView.lockButton.selected = tabDocument.locked;
+		}
+	};
+
+	if(preferenceManager.biometricProtectionEnabled && (preferenceManager.biometricProtectionLockTabEnabled || preferenceManager.biometricProtectionUnlockTabEnabled))
+	{
+		if(preferenceManager.biometricProtectionLockTabEnabled && !tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"LOCK_TAB"], toggle);
+			return;
+		}
+		else if(preferenceManager.biometricProtectionUnlockTabEnabled && tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"UNLOCK_TAB"], toggle);
+			return;
+		}
+	}
+
+	toggle();
+}
+
+- (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		TabDocument* tabDocument = [self _tabDocumentRepresentedByTabOverviewItem:item];
+
+		if(tabDocument.locked)
+		{
+			return NO;
+		}
+	}
+
+	return %orig;
+}
+
+- (void)_updateTiltedTabViewItemsWithTransition:(NSInteger)transition
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		NSMutableSet<TabDocument*>* tabDocumentsAboutToBeClosedInTiltedTabView = MSHookIvar<NSMutableSet<TabDocument*>*>(self, "_tabDocumentsAboutToBeClosedInTiltedTabView");
+
+		NSMutableSet<TabDocument*>* tabDocumentsCopy = [tabDocumentsAboutToBeClosedInTiltedTabView copy];
+
+		for(TabDocument* tabDocument in tabDocumentsCopy)
+		{
+			if(tabDocument.locked)
+			{
+				[tabDocumentsAboutToBeClosedInTiltedTabView removeObject:tabDocument];
+			}
+		}
+	}
+
+	%orig;
+}
+
 %group iOS9Down
 
-- (BOOL)canAddNewTab
+- (NSUInteger)maximumTabDocumentCount
 {
-	if(preferenceManager.removeTabLimit)
+	if(preferenceManager.disableTabLimit)
 	{
-		return YES;
+		return NSUIntegerMax;	//Should be more than enough ;)
+	}
+
+	return %orig;
+}
+
+- (void)_tabCountDidChange
+{
+	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+		[browserController.activeToolbar updateTabCount];
+	}
+}
+
+%end
+
+%group iOS10Up
+
+- (void)closeAllOpenTabsAnimated:(BOOL)animated exitTabView:(BOOL)exitTabView temporarily:(BOOL)temporarily
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		NSMutableArray<TabDocument*>* lockedTabDocuments = [NSMutableArray new];
+
+		for(TabDocument* document in self.currentTabDocuments)
+		{
+			if(document.locked)
+			{
+				[lockedTabDocuments addObject:document];
+			}
+		}
+
+		if([lockedTabDocuments count] > 0)	//Don't close tabView if tabs are still open afterwards
+		{
+			exitTabView = NO;
+		}
+
+		%orig(animated, exitTabView, temporarily);
+
+		return;
+	}
+
+	%orig;
+}
+
+- (void)updateTabCount
+{
+	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+		[browserController.activeToolbar updateTabCount];
+	}
+}
+
+%end
+
+%group iOS11Up
+
+- (void)_closeTabDocuments:(NSArray<TabDocument*>*)documents animated:(BOOL)arg2 temporarily:(BOOL)arg3 allowAddingToRecentlyClosedTabs:(BOOL)arg4 keepWebViewAlive:(BOOL)arg5
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		NSMutableArray* documentsM = [documents mutableCopy];
+
+		for(TabDocument* document in [documentsM reverseObjectEnumerator])
+		{
+			if(document.locked)
+			{
+				[documentsM removeObject:document];
+			}
+		}
+
+		return %orig([documentsM copy], arg2, arg3, arg4, arg5);
 	}
 
 	return %orig;
@@ -249,36 +403,135 @@
 
 %end
 
-/*
-   //Lock tabs (Prevent them from being closable)
-   - (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
-   {
-   if(item.layoutInfo.contentView.isLocked)
-   {
-    return NO;
-   }
+%group iOS10Down
 
-   return %orig;
-   }
+- (void)_closeTabDocument:(TabDocument*)document animated:(BOOL)arg2 temporarily:(BOOL)arg3 allowAddingToRecentlyClosedTabs:(BOOL)arg4 keepWebViewAlive:(BOOL)arg5
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		if(document.locked)
+		{
+			return;
+		}
+	}
 
-   - (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
-   {
-   if(item.layoutInfo.itemView.isLocked)
-   {
-    return NO;
-   }
+	return %orig;
+}
 
-   return %orig;
-   }
- */
+- (void)_closeTabDocument:(TabDocument*)document animated:(BOOL)arg2 allowAddingToRecentlyClosedTabs:(BOOL)arg3
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		if(document.locked)
+		{
+			return;
+		}
+	}
+
+	return %orig;
+}
+
+- (void)closeTabDocument:(TabDocument*)document animated:(BOOL)arg2
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		if(document.locked)
+		{
+			return;
+		}
+	}
+
+	return %orig;
+}
+
+%end
+
+%group iOS9Up
+
+- (void)setActiveTabDocument:(TabDocument*)document animated:(BOOL)arg2 deferActivation:(BOOL)arg3
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		if(self.activeTabDocument != document)
+		{
+			if(!document.accessAuthenticated && document.locked && preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionAccessLockedTabEnabled)
+			{
+				requestAuthentication([localizationManager localizedSPStringForKey:@"ACCESS_LOCKED_TAB"], ^
+				{
+					%orig;
+				});
+
+				return;
+			}
+
+			if(document.accessAuthenticated)
+			{
+				document.accessAuthenticated = NO;
+			}
+		}
+	}
+
+	%orig;
+}
+
+%end
+
+%group iOS8
+
+- (void)setActiveTabDocument:(TabDocument*)document animated:(BOOL)arg2
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		if(!document.accessAuthenticated && document.locked && preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionAccessLockedTabEnabled)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"ACCESS_LOCKED_TAB"], ^
+			{
+				%orig;
+			});
+
+			return;
+		}
+
+		if(document.accessAuthenticated)
+		{
+			document.accessAuthenticated = NO;
+		}
+	}
+
+	%orig;
+}
+
+%end
 
 %end
 
 void initTabController()
 {
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
+	{
+		%init(iOS10Down);
+	}
+	else
+	{
+		%init(iOS11Up);
+	}
+
 	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
 	{
 		%init(iOS9Down);
+	}
+	else
+	{
+		%init(iOS10Up);
+	}
+
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
+	{
+		%init(iOS8);
+	}
+	else
+	{
+		%init(iOS9Up);
 	}
 
 	%init();

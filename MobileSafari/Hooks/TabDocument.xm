@@ -17,6 +17,7 @@
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPCacheManager.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPDownload.h"
 #import "../Classes/SPDownloadInfo.h"
@@ -38,10 +39,24 @@ static NSString *desktopUserAgent;
 
 %hook TabDocument
 
-%property (nonatomic,assign) BOOL desktopMode;
+%property (nonatomic,assign) NSInteger desktopMode;
+//%property (nonatomic,assign) BOOL locked;
+%property (nonatomic,assign) BOOL accessAuthenticated;
 
 %new
-- (void)updateDesktopMode
+- (BOOL)locked
+{
+	return [cacheManager isTabWithUUIDLocked:castedSelf.UUID];
+}
+
+%new
+- (void)setLocked:(BOOL)locked
+{
+	[cacheManager setLocked:locked forTabWithUUID:castedSelf.UUID];
+}
+
+%new
+- (BOOL)updateDesktopMode
 {
 	if(preferenceManager.desktopButtonEnabled)
 	{
@@ -59,45 +74,34 @@ static NSString *desktopUserAgent;
 			desktopUserAgent = [NSString stringWithFormat:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/%@ (KHTML, like Gecko) %@ %@", webKitVersion, userAgentComponents[0], userAgentComponents[2]];
 		});
 
-		if(castedSelf.webView)
+		if(!castedSelf.isHibernated)
 		{
 			BOOL desktopButtonSelected;
 
 			desktopButtonSelected = browserControllerForTabDocument(castedSelf).tabController.desktopButtonSelected;
 
-			castedSelf.desktopMode = desktopButtonSelected;
+			NSInteger newDesktopMode = (NSInteger)desktopButtonSelected + 1;
 
-			if(desktopButtonSelected)
+			if(castedSelf.desktopMode != newDesktopMode)
 			{
-				castedSelf.customUserAgent = desktopUserAgent;
-			}
-			else
-			{
-				castedSelf.customUserAgent = @"";
+				castedSelf.desktopMode = newDesktopMode;
+
+				if(desktopButtonSelected)
+				{
+					castedSelf.customUserAgent = desktopUserAgent;
+				}
+				else
+				{
+					castedSelf.customUserAgent = @"";
+				}
+
+				return YES;
 			}
 		}
 	}
+
+	return NO;
 }
-
-//This method creates the SafariWebView
-- (void)_createDocumentViewWithConfiguration:(id)arg1
-{
-	%orig;
-
-	//Change user agent of the webView right after it is created
-	[castedSelf updateDesktopMode];
-}
-
-/*
-   - (void)setClosed:(BOOL)closed userDriven:(BOOL)userDriven
-   {
-   if(!(castedSelf.tiltedTabItem.layoutInfo.contentView.isLocked ||
-    castedSelf.tabOverviewItem.layoutInfo.itemView.isLocked))
-   {
-    %orig;
-   }
-   }
- */
 
 %new
 - (BOOL)handleAlwaysOpenInNewTabForNavigationAction:(WKNavigationAction *)navigationAction
@@ -168,6 +172,33 @@ static NSString *desktopUserAgent;
 			{
 				[controller loadURLInNewWindow:navigationAction.request.URL
 				 inBackground:inBackground animated:YES];
+			}
+
+			return NO;
+		}
+	}
+
+	return YES;
+}
+
+%new
+- (BOOL)handleDesktopModeForNavigationAction:(WKNavigationAction*)navigationAction
+	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+	if(navigationAction.targetFrame.mainFrame)
+	{
+		BOOL needsReload = [castedSelf updateDesktopMode];
+
+		if(needsReload)
+		{
+			decisionHandler(WKNavigationResponsePolicyCancel);
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+			{
+				[castedSelf _loadURLInternal:navigationAction.request.URL userDriven:NO];
+			}
+			else
+			{
+				[((TabDocument8*)self) _loadURLInternal:navigationAction.request.URL userDriven:NO];
 			}
 
 			return NO;
@@ -292,8 +323,24 @@ static NSString *desktopUserAgent;
 			_WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
 								      elementActionWithTitle:title actionHandler:^
 			{
-				setPrivateBrowsing(browserController, !privateBrowsing, ^
+				TabDocument* tabDocument;
+
+				tabDocument = [[%c(TabDocument) alloc] initWithTitle:nil URL:element.URL UUID:[NSUUID UUID] privateBrowsingEnabled:!privateBrowsing hibernated:YES bookmark:nil browserController:browserController];
+
+				//iOS 11.2 and below somehow manage to open a private tab in normal mode if we don't manually switch
+				if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_3)
 				{
+					BOOL animationsEnabled = [UIView areAnimationsEnabled];
+
+					[UIView setAnimationsEnabled:NO];
+
+					if([browserController respondsToSelector:@selector(dismissTransientUIAnimated:)])
+					{
+						[browserController dismissTransientUIAnimated:NO];
+					}
+
+					togglePrivateBrowsing(browserController);
+
 					if([browserController.tabController.activeTabDocument isBlankDocument])
 					{
 						[browserController setFavoritesState:0 animated:YES];	//Dismisses the bookmark favorites grid view
@@ -301,16 +348,16 @@ static NSString *desktopUserAgent;
 					}
 					else
 					{
-						if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
-						{
-							[browserController loadURLInNewTab:element.URL inBackground:NO];
-						}
-						else
-						{
-							[browserController loadURLInNewWindow:element.URL inBackground:NO];
-						}
+						[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:NO];
 					}
-				});
+
+					[UIView setAnimationsEnabled:animationsEnabled];
+				}
+				else
+				{
+					[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:YES];
+				}
+
 			}];
 
 			[actions insertObject:openInOppositeModeAction atIndex:2];
@@ -434,6 +481,14 @@ static NSString *desktopUserAgent;
 		}
 	}
 
+	if(preferenceManager.desktopButtonEnabled)
+	{
+		if(![self handleDesktopModeForNavigationAction:navigationAction decisionHandler:decisionHandler])
+		{
+			return;
+		}
+	}
+
 	%orig;
 }
 
@@ -518,6 +573,22 @@ static NSString *desktopUserAgent;
 }
 
 %end
+
+- (instancetype)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(NSUUID*)UUID privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6 createDocumentView:(id)arg7
+{
+
+	TabDocument* orig = %orig;
+
+	/*if(preferenceManager.lockedTabsEnabled)
+	   {
+	        orig.locked = [cacheManager isTabWithUUIDLocked:UUID];
+	   }*/
+
+	orig.desktopMode = 0;
+	orig.accessAuthenticated = NO;
+
+	return orig;
+}
 
 %end
 

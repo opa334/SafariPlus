@@ -1,5 +1,5 @@
 // BrowserController.xm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #import "../Defines.h"
 #import "../Enums.h"
 #import "../Shared.h"
+#import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPDownloadNavigationController.h"
 
@@ -28,6 +29,8 @@
 %property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeLeftGestureRecognizer;
 %property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
 %property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
+
+%property (nonatomic, assign) BOOL browsingModeSet;
 
 //Present downloads view
 %new
@@ -52,9 +55,11 @@
 	switch(swipeAction)
 	{
 	case GestureActionCloseActiveTab:
+	{
 		[self.tabController.activeTabDocument _closeTabDocumentAnimated:NO];
 		shouldClean = YES;
 		break;
+	}
 
 	case GestureActionOpenNewTab:
 	{
@@ -414,6 +419,141 @@
 	}
 }
 
+- (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2
+{
+	if(preferenceManager.customStartSiteEnabled && preferenceManager.customStartSite)
+	{
+		TabDocument* activeTabDocument = self.tabController.activeTabDocument;
+
+		if(arg1 == 4)
+		{
+			%orig(0,arg2);
+			[activeTabDocument loadURL:[NSURL URLWithString:preferenceManager.customStartSite] userDriven:NO];
+			return;
+		}
+	}
+
+	%orig;
+}
+
+//Modify tab expose alert for locked tabs (purely cosmetical)
+%new
+- (void)updateTabExposeAlertForLockedTabs
+{
+	UIAlertController* tabExposeAlertController = MSHookIvar<UIAlertController*>(self, "_tabExposeAlertController");
+
+	if(!tabExposeAlertController)
+	{
+		return;
+	}
+
+	NSUInteger nonLockedTabCount = 0;
+
+	NSMutableArray<UIAlertAction*>* actions = MSHookIvar<NSMutableArray<UIAlertAction*>*>(tabExposeAlertController, "_actions");
+
+	BOOL hasSearchTerm = NO;
+	BOOL reloadActions = NO;
+
+	if([self.tabController respondsToSelector:@selector(searchTerm)])
+	{
+		hasSearchTerm = (self.tabController.searchTerm.length > 0);
+	}
+
+	if(!hasSearchTerm && ([self isShowingTabView] || self.tabController.currentTabDocuments.count > 1))
+	{
+		for(TabDocument* document in self.tabController.currentTabDocuments)
+		{
+			if(!document.locked)
+			{
+				nonLockedTabCount++;
+			}
+		}
+
+		if(self.tabController.currentTabDocuments.count == nonLockedTabCount)
+		{
+			return;	//No tabs locked, nothing else to do
+		}
+
+		UIAlertAction* closeAllTabsAction;
+		UIAlertAction* closeTabAction;
+
+		if([self respondsToSelector:@selector(_closeAllTabsAction)])
+		{
+			closeAllTabsAction = actions.firstObject;
+
+			if(![self isShowingTabView])
+			{
+				closeTabAction = [actions objectAtIndex:1];
+			}
+		}
+		else
+		{
+			closeAllTabsAction = [actions objectAtIndex:actions.count - 2];
+		}
+
+		//If there are no nonlocked tabs outside of the current active tab, we remove the option to close all tabs, otherwise we change the title
+		if(nonLockedTabCount > 1)
+		{
+			[closeAllTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedTabCount]];
+		}
+		else if ((self.tabController.activeTabDocument.locked || [self isShowingTabView] || ![self respondsToSelector:@selector(_closeAllTabsAction)]) && nonLockedTabCount == 1)
+		{
+			[closeAllTabsAction setTitle:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"]];
+		}
+		else
+		{
+			[actions removeObject:closeAllTabsAction];
+			reloadActions = YES;
+		}
+
+		//If the active tab is locked, we remove the option to close it
+		if(self.tabController.activeTabDocument.locked && closeTabAction)
+		{
+			[actions removeObject:closeTabAction];
+			reloadActions = YES;
+		}
+	}
+	else if(hasSearchTerm)
+	{
+		UIAlertAction* closeMatchingTabsAction = actions.firstObject;
+
+		for(TabDocument* document in self.tabController.tabDocumentsMatchingSearchTerm)
+		{
+			if(!document.locked)
+			{
+				nonLockedTabCount++;
+			}
+		}
+
+		if(self.tabController.tabDocumentsMatchingSearchTerm.count == nonLockedTabCount)
+		{
+			return;	//No matching tabs locked, nothing else to do
+		}
+
+		if(nonLockedTabCount == 0)
+		{
+			[actions removeObject:closeMatchingTabsAction];
+			reloadActions = YES;
+		}
+		else if(nonLockedTabCount == 1)
+		{
+			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB_MATCHING"], self.tabController.searchTerm]];
+		}
+		else
+		{
+			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS_MATCHING"], nonLockedTabCount, self.tabController.searchTerm]];
+		}
+	}
+
+	//If any action has been removed, we need to manually remove and readd all actions so that the UI actually updates
+	if(reloadActions)
+	{
+		NSMutableArray* newActions = [actions copy];
+		[tabExposeAlertController _removeAllActions];
+		[tabExposeAlertController _setActions:newActions];
+	}
+}
+
 %group iOS9Up
 
 //Auto switch mode on external URL opened
@@ -425,6 +565,91 @@
 	}
 
 	return %orig;
+}
+
+%end
+
+%group iOS11Up
+
+- (void)_updateTabExposeAlertController
+{
+	%orig;
+
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		[self updateTabExposeAlertForLockedTabs];
+	}
+}
+
+- (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(id)arg3
+{
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
+	{
+		if(!self.browsingModeSet)
+		{
+			%orig;
+			self.browsingModeSet = YES;
+			return;
+		}
+
+		BOOL previous = privateBrowsingEnabled(self);
+
+		if(previous != arg1)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
+			{
+				%orig;
+			});
+
+			return;
+		}
+	}
+
+	%orig;
+}
+
+%end
+
+%group iOS10Down
+
+- (void)updateTabExposePopoverActions
+{
+	%orig;
+
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		[self updateTabExposeAlertForLockedTabs];
+	}
+}
+
+- (void)togglePrivateBrowsingEnabled
+{
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
+	{
+		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
+		{
+			%orig;
+		});
+
+		return;
+	}
+
+	%orig;
+}
+
+- (void)togglePrivateBrowsing
+{
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
+	{
+		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
+		{
+			%orig;
+		});
+
+		return;
+	}
+
+	%orig;
 }
 
 %end
@@ -498,6 +723,15 @@ void initBrowserController()
 		{
 			%init(iOS11_3_to_12);
 		}
+	}
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+	{
+		%init(iOS11Up);
+	}
+	else
+	{
+		%init(iOS10Down)
 	}
 
 	%init();

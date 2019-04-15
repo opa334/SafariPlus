@@ -1,5 +1,5 @@
 // Shared.h
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -34,7 +34,8 @@ extern NSArray<SafariWebView*>* activeWebViews();
 extern BrowserController* browserControllerForTabDocument(TabDocument* document);
 extern BrowserRootViewController* rootViewControllerForBrowserController(BrowserController* controller);
 extern BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document);
-extern void addToDict(NSMutableDictionary* dict, NSObject* object, NSString* key);
+extern void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying> key);
+extern void requestAuthentication(NSString* reason, void (^successHandler)(void));
 extern void sendSimpleAlert(NSString* title, NSString* message);
 extern NSDictionary* decodeResumeData12(NSData* resumeData);
 extern void loadOtherPlist();
@@ -62,19 +63,13 @@ extern void _dlogDownloadManager();
 
 #endif
 
-#if defined(SIMJECT)
-NSString* simulatorPath(NSString* path);
-#define path(x) ({ simulatorPath(x); })
-#else
-#define path(x) ({ x; })
-#endif
-
 @interface UIImage (ColorInverse)
 + (UIImage *)inverseColor:(UIImage *)image;
 @end
 
-@interface NSURL (HTTPtoHTTPS)
+@interface NSURL (SchemeConversion)
 - (NSURL*)httpsURL;
+- (NSURL*)httpURL;
 @end
 
 @interface NSString (Strip)
@@ -92,4 +87,12 @@ NSString* simulatorPath(NSString* path);
 
 @interface UITableViewController (FooterFix)
 - (void)fixFooterColors;
+@end
+
+@interface UIImage (WidthChange)
+- (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment;
+@end
+
+@interface UIImage (Rotate)
+- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees;
 @end

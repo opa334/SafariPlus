@@ -1,5 +1,5 @@
 // SPPDirectoryPickerNavigationController.h
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,6 +20,5 @@
 
 @interface SPPDirectoryPickerNavigationController : SPFileBrowserNavigationController
 @property (nonatomic, weak) id<PinnedLocationsDelegate> pinnedLocationsDelegate;
-@property (nonatomic) NSString* name;
-- (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate name:(NSString*)name;
+- (id)initWithDelegate:(id<PinnedLocationsDelegate>)delegate;
 @end

@@ -1,21 +1,25 @@
 "YES" = "Yes";
 "NO" = "No";
+"SAVE" = "Save";
 
-/* Root Page*/
+/* Root Page */
 
-"GENERAL" = "General";
-"ACTION_ADDONS" = "Action Addons";
-"DOWNLOAD_ADDONS" = "Download Addons";
-"GESTURE_ADDONS" = "Gesture Addons";
-"OTHER_ADDONS" = "Other Addons";
-"COLOR_SETTINGS" = "Color Settings";
-"SOURCE_CODE" = "Source Code";
+"ENABLED" = "Enabled";
+"FEATURES" = "Features";
+"PRIVACY" = "Privacy";
+"UPLOADS_AND_DOWNLOADS" = "Uploads & Downloads";
+"USABILITY" = "Usability";
+"BEHAVIOUR" = "Behaviour";
+"GESTURES" = "Gestures";
+"CUSTOMIZATION" = "Customization";
+"ABOUT_ME" = "About me";
 "TWITTER" = "Twitter";
-
 "DONATE" = "Donate";
-"DONATE_FOOTER" = "If you like this tweak, feel free to donate a small amount of money to support me! :)";
+"ABOUT_THIS_TWEAK" = "About this Tweak";
+"SOURCE_CODE" = "Source Code";
+/*"DONATE_FOOTER" = "If you like this tweak, feel free to donate a small amount of money to support me! :)";*/
 
-/* General Settings */
+/* Privacy */
 
 "FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\n\nNOTE: You can add sites that don't support HTTPS to exceptions.";
 "FORCE_HTTPS" = "Force HTTPS";
@@ -23,28 +27,31 @@
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";
 "EDIT" = "Edit";
 "ADD" = "Add";
+"APPLY" = "Apply";
 "ADD_EXCEPTION_ALERT_TITLE" = "Add Exception";
 "ADD_EXCEPTION_ALERT_MESSAGE" = "Enter a domain where the HTTPS protocol should not be forced.\nExample: 'google.com'";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
-"OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
-"OPEN_IN_NEW_TAB" = "'Open in New Tab' Option";
+/*DISABLE_ANALYTICS*/
+/*DISABLE_ANALYTICS_FOOTER*/
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an option to the menu that appears when a link is long pressed, that can be used to open the link in the opposite browsing mode.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
-"OPEN_IN_OPPOSITE_MODE" = "Open in Opposite Mode Option";
+"LOCKED_TABS" = "Locked Tabs";
+"LOCKED_TABS_FOOTER" = "Adds a lock switch to the top right of each tab inside the tab switcher. While a tab is locked, it cannot be closed and will stay open until you unlock it again.";
+
+"BIOMETRIC_PROTECTION" = "Biometric Protection";
+"BIOMETRIC_PROTECTION_FOOTER" = "Protects the selected actions with either Touch ID or Face ID.";
+"SWITCH_BROWSING_MODE" = "Switch Browsing Mode";
+"LOCK_TAB" = "Lock Tab";
+"UNLOCK_TAB" = "Unlock Tab";
+"ACCESS_LOCKED_TAB" = "Access Locked Tab";
+
+/* Uploads & Downloads */
+
+"UPLOADS" = "Uploads";
+"DOWNLOADS" = "Downloads";
 
 "UPLOAD_ANY_FILE_FOOTER" = "Adds a new option to the document upload menu that lets you pick any file from the root of your device. You can also select and upload multiple files through long pressing on a file.";
 "UPLOAD_ANY_FILE" = "Upload Any File";
-
-"DESKTOP_SWITCH_FOOTER" = "Adds a button to the tab switcher, which you can use to globally switch between mobile / desktop mode.";
-"DESKTOP_SWITCH_LABEL" = "Desktop Mode Switch";
-
-"LONG_PRESS_SUGGESTIONS_FOOTER" = "Long press on search / URL suggestions to insert them into the URL bar.";
-"LONG_PRESS_SUGGESTIONS" = "Long Press Suggestions";
-"LONG_PRESS_DURATION_TITLE" = "Long Press Duration";
-"LONG_PRESS_FOCUS_TITLE" = "Focus URL Bar on Long Press";
-
-/* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Enhanced Downloads";
 "ENHANCED_DOWNLOADS_FOOTER" = "Adds a button to the bottom toolbar which will open the downloads view. In there you can see and manage pending and already finished downloads. The file browser can be used to access and manage downloaded files. Before a download starts, an alert will appear that contains options to save the file to a local directory (/var/mobile/Downloads by default). Downloads will continue in background and you will be notified when a download finishes. When Safari is closed from the app switcher, all pending downloads will be 'frozen' and will continue on the next start of Safari.";
@@ -70,6 +77,14 @@
 "PINNED_LOCATIONS_ENABLED" = "Pinned Locations Enabled";
 "PINNED_LOCATIONS" = "Pinned Locations";
 "PINNED_LOCATIONS_FOOTER" = "Lets you pick a few locations that will appear when using the 'Download to' option.";
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "Add Pinned Location";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "Edit Pinned Location";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Choose a name and the path of the pinned location.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
+"BROWSE" = "Browse...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Choose Path";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n%@?";
 "ERROR_INVALID_NAME_OR_PATH" = "Invalid name or path";
 
 "ONLY_DOWNLOAD_ON_WIFI" = "Only Download on Wifi";
@@ -81,17 +96,52 @@
 "DISABLE_BAR_NOTIFICATIONS" = "Disable Status Bar Notifications";
 "DISABLE_BAR_NOTIFICATIONS_FOOTER" = "By default, you will recieve a status bar notification when a download starts / finishes while the app is active. This option will disable that.";
 
-/* Pinned Locations */
+/* Usability */
 
-"PINNED_LOCATIONS_ALERT_TITLE" = "Add Pinned Location";
-"PINNED_LOCATIONS_ALERT_MESSAGE" = "Choose a name and the path of the pinned location.";
-"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
-"BROWSE" = "Browse...";
-"CHOOSE_PATH_CONFIRMATION_TITLE" = "Choose Path";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n%@?";
+"URL_ACTIONS" = "URL Actions";
 
-/* Action Settings */
+"SECOND_OPEN_IN_NEW_TAB" = "Second 'Open in New Tab' Option";
+"SECOND_OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
+
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an option to the menu that appears when a link is long pressed, that can be used to open the link in the opposite browsing mode.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
+"OPEN_IN_OPPOSITE_MODE" = "Open in Opposite Mode Option";
+
+"TAB_MANAGEMENT" = "Tab Management";
+
+"DESKTOP_MODE_SWITCH_FOOTER" = "Adds a switch to the tab switcher that can be used to globally switch between mobile and desktop mode.";
+"DESKTOP_MODE_SWITCH" = "Desktop Mode Switch";
+
+/*SHARE_BUTTON*/
+/*SHARE_BUTTON_FOOTER*/
+
+"DISABLE_TAB_LIMIT" = "Disable Tab Limit";
+"DISABLE_TAB_LIMIT_FOOTER" = "Disables the imposed tab limit that varies based on iOS version and device. There is probably a reason why Apple has decided to enforce a tab limit, use on your own risk.";
+
+"CUSTOM_START_SITE" = "Custom Start Site";
+"CUSTOM_START_SITE_FOOTER" = "Replace the favorites view that normally appears in a newly opened tab with a custom site that gets opened instead.";
+
+"SUGGESTIONS" = "Suggestions";
+
+"LONG_PRESS_SUGGESTIONS" = "Insert Suggestions on Long Press";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Long press on search / URL suggestions to insert them into the URL bar.";
+"LONG_PRESS_DURATION_TITLE" = "Long Press Duration";
+"LONG_PRESS_FOCUS_TITLE" = "Focus URL Bar on Long Press";
+
+/*INSERT_SUGGESTION_BUTTON*/
+/*INSERT_SUGGESTION_BUTTON_FOOTER*/
+
+"INTERFACE" = "Interface";
+
+"SHOW_TAB_COUNT" = "Show Tab Count";
+"SHOW_TAB_COUNT_FOOTER" = "Shows the tab count for the current browing mode on the button that opens the tab switcher.";
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Hides the complete top bar when scrolling down.\n\nNOTE: Does not work on iOS 8!";
+"FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
+
+"LOCK_BARS" = "Lock Bars";
+"LOCK_BARS_FOOTER" = "Locks the bottom and the top bar in place, so they won't get hidden anymore when the page is being scrolled down.";
+
+/* BEHAVIOUR */
 
 "NORMAL_MODE" = "Normal Browsing Mode";
 "PRIVATE_MODE" = "Private Browsing Mode";
@@ -120,11 +170,21 @@
 "ACTIVE_MODE" = "Active Browsing Mode";
 "BOTH_MODES" = "Both Browsing Modes";
 
-/* Gesture Settings */
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Always opens clicked links in new tabs.";
+"ALWAYS_OPEN_NEW_TAB" = "Always Open Links in New Tab";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Open New Tab in Background";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Disables private browsing mode and removes the 'Private' button. (Hidden stock feature)";
+"DISABLE_PRIVATE_MODE" = "Fully Disable Private Browsing";
+
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 and above when a 'mailto:<email>' URL is accessed.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Suppress Mailto Dialog";
+
+/* Gestures */
 
 "ACTION" = "Action";
 
-"URL_BAR_GESTURES_LABEL" = "Url Bar Gestures";
+"URL_BAR_GESTURES_LABEL" = "URL Bar Gestures";
 
 "SWIPE_LEFT_GESTURE_FOOTER" = "Performs specified action when URL bar is swiped left.";
 "SWIPE_LEFT_GESTURE" = "Swipe Left Gesture";
@@ -148,28 +208,16 @@
 
 "BACKGROUND" = "Duplicate Tab in Background";
 
-/* Other Settings */
+/* Customization */
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Hides the complete top bar when scrolling down.\n\nNOTE: Does not work on iOS 8!";
-"FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
+"APPEARANCE" = "Appearance";
 
-"REMOVE_TAB_LIMIT" = "Remove Tab Limit";
-"REMOVE_TAB_LIMIT_FOOTER" = "Disables the imposed tab limit that varies based on iOS version and device. There is probably a reason why Apple has decided to enforce a tab limit, use on your own risk.";
+"COLORS" = "Colors";
 
-"LOCK_BARS" = "Lock Bars";
-"LOCK_BARS_FOOTER" = "Locks the bottom and the top bar in place, so they won't get hidden anymore when the page is being scrolled down.";
+"SELECT_COLOR" = "Select Color";
 
-"DISABLE_PRIVATE_MODE_FOOTER" = "Disables private browsing mode and removes the 'Private' button. (Hidden stock feature)";
-"DISABLE_PRIVATE_MODE" = "Fully Disable Private Browsing";
-
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Always opens clicked links in new tabs.";
-"ALWAYS_OPEN_NEW_TAB" = "Always Open Links in New Tab";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Open New Tab in Background";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 and above when a 'mailto:<email>' URL is accessed.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Suppress Mailto Dialog";
-
-/* Color Settings */
+"NORMAL_MODE_COLORS" = "Normal Mode Colors";
+"PRIVATE_MODE_COLORS" = "Private Mode Colors";
 
 "TOP_BAR" = "Top Bar";
 "BOTTOM_BAR" = "Bottom Bar";
@@ -183,19 +231,47 @@
 "STATUS_BAR_COLOR" = "Status Bar Color";
 "TAB_BAR_TITLE_COLOR" = "Tab Bar Title Color";
 "INACTIVE_TITLE_OPACITY" = "Inactive Title Opacity";
+"TAB_BAR_CLOSE_BUTTON_COLOR" = "Tab Bar Close Button Color";
 "TAB_BAR_BACKGROUND_COLOR" = "Tab Bar Background Color";
 "URL_FONT_COLOR" = "URL Font Color";
 "PROGRESS_BAR_COLOR" = "Progress Bar Color";
 "RELOAD_BUTTON_COLOR" = "Reload Button Color";
+"READER_BUTTON_COLOR" = "Reader Button Color";
 "LOCK_ICON_COLOR" = "Lock Icon Color";
 "TAB_TITLE_TEXT_COLOR" = "Tab Title Text Color";
 "TAB_TITLE_BACKGROUND_COLOR" = "Tab Title Background Color";
+"TOOLBAR_BACKGROUND_COLOR" = "Toolbar Background Color";
 
 "TAB_BAR_NOTE" = "NOTE: The tab bar does not exist on all devices sizes / orientations.";
 "COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTE: Some settings will require an app restart to be applied.";
 
 "WHITE" = "White";
 "BLACK" = "Black";
+
+"BOTTOM_TOOLBAR" = "Bottom Toolbar";
+"TOP_TOOLBAR" = "Top Toolbar";
+
+"BOTTOM_TOOLBAR_FOOTER" = "The Bottom Toolbar is used on iPhones in Portrait Mode, some smaller iPhones also use it in Landscape Mode. iPads also use it inside Split-View.";
+"TOP_TOOLBAR_FOOTER" = "The Top Toolbar is used on larger iPhones in Landscape Mode. On iPads, it is used in both Portrait and Landscape.";
+
+"REORDER_BOTTOM_TOOLBAR" = "Reorder Bottom Toolbar";
+"REORDER_TOP_TOOLBAR" = "Reorder Top Toolbar";
+
+"CHOOSE_ORDER" = "Choose Order";
+
+"BOTTOM_TOOLBAR_ORDER" = "Bottom Toolbar Order";
+"TOP_TOOLBAR_ORDER" = "Top Toolbar Order";
+
+"ENABLED_ITEMS" = "Enabled Items";
+"DISABLED_ITEMS" = "Disabled Items";
+
+"BACK" = "Back";
+"FORWARD" = "Forward";
+"SHARE" = "Share";
+"BOOKMARKS" = "Bookmarks";
+"TABS" = "Tabs";
+"ADD_TAB" = "Add Tab";
+"SEARCH_BAR_SPACE" = "Search Bar Space";
 
 /* Credits */
 
@@ -204,12 +280,21 @@
 
 /* In app */
 
+"CLOSE_NON_LOCKED_TABS" = "Close %zu Non-Locked Tabs";
+"CLOSE_NON_LOCKED_TAB" = "Close Non-Locked Tab";
+"CLOSE_NON_LOCKED_TABS_MATCHING" = "Close %zu Non-Locked Tabs Matching “%@“";
+"CLOSE_NON_LOCKED_TAB_MATCHING" = "Close Non-Locked Tab Matching “%@“";
 "LOCAL_FILES" = "Local Files";
 "WELCOME_TITLE" = "Welcome!";
 "WELCOME_MESSAGE" = "Thanks for installing Safari Plus! If you wish to stay updated about the future of this tweak, make sure to follow me on Twitter! This message will not show again (I promise)!";
 "OPEN_TWITTER" = "Open Twitter";
 "COMMUNICATION_ERROR" = "Communication Error";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro.";
+
+/* Force HTTPS */
+
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Remove from Force HTTPS Exceptions";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Add to Force HTTPS Exceptions";
 
 /* File picker */
 

@@ -1,5 +1,5 @@
 // SPPreferenceManager.h
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,36 +16,36 @@
 
 @class SPPreferenceManager, HBPreferences;
 
-static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
+static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
 
 @interface SPPreferenceManager : NSObject
 {
   #ifndef NO_CEPHEI
-	HBPreferences* preferences;
-  #else
-	NSDictionary* userDefaults;
+	HBPreferences* _preferences;
+  #elif !defined(SIMJECT)
+	NSDictionary* _preferences;
   #endif
-
-  #ifndef NO_LIBCOLORPICKER
-	NSDictionary* colors;
-  #endif
-
-	NSDictionary* otherPlist;
 }
 
 + (instancetype)sharedInstance;
 
-@property (nonatomic, readonly) BOOL forceHTTPSEnabled;
-- (NSArray*)forceHTTPSExceptions;
-- (BOOL)isURLOnHTTPSExceptionsList:(NSURL*)URL;
-@property (nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
-@property (nonatomic, readonly) BOOL openInNewTabOptionEnabled;
-@property (nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;
-@property (nonatomic, readonly) BOOL desktopButtonEnabled;
-@property (nonatomic, readonly) BOOL longPressSuggestionsEnabled;
-@property (nonatomic, readonly) CGFloat longPressSuggestionsDuration;
-@property (nonatomic, readonly) BOOL longPressSuggestionsFocusEnabled;
+@property (nonatomic, readonly) BOOL tweakEnabled;
 
+@property (nonatomic, readonly) BOOL forceHTTPSEnabled;
+@property (nonatomic, readonly) NSArray* forceHTTPSExceptions;
+- (BOOL)isURLOnHTTPSExceptionsList:(NSURL*)URL;
+- (void)addURLToHTTPSExceptionsList:(NSURL*)URL;
+- (void)removeURLFromHTTPSExceptionsList:(NSURL*)URL;
+@property (nonatomic, readonly) BOOL lockedTabsEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionSwitchModeEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionOpenTabEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionCloseTabEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionLockTabEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionUnlockTabEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionAccessLockedTabEnabled;
+
+@property (nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;
 @property (nonatomic, readonly) BOOL enhancedDownloadsEnabled;
 @property (nonatomic, readonly) BOOL videoDownloadingEnabled;
 @property (nonatomic, readonly) NSInteger defaultDownloadSection;
@@ -57,11 +57,23 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) BOOL customDefaultPathEnabled;
 @property (nonatomic, readonly, retain) NSString* customDefaultPath;
 @property (nonatomic, readonly) BOOL pinnedLocationsEnabled;
-- (NSArray*)pinnedLocationNames;
-- (NSArray*)pinnedLocationPaths;
+@property (nonatomic, readonly) NSArray* pinnedLocations;
 @property (nonatomic, readonly) BOOL onlyDownloadOnWifiEnabled;
 @property (nonatomic, readonly) BOOL disablePushNotificationsEnabled;
 @property (nonatomic, readonly) BOOL disableBarNotificationsEnabled;
+
+@property (nonatomic, readonly) BOOL openInNewTabOptionEnabled;
+@property (nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
+@property (nonatomic, readonly) BOOL desktopButtonEnabled;
+@property (nonatomic, readonly) BOOL disableTabLimit;
+@property (nonatomic, readonly) BOOL customStartSiteEnabled;
+@property (nonatomic, readonly) NSString* customStartSite;
+@property (nonatomic, readonly) BOOL longPressSuggestionsEnabled;
+@property (nonatomic, readonly) CGFloat longPressSuggestionsDuration;
+@property (nonatomic, readonly) BOOL longPressSuggestionsFocusEnabled;
+@property (nonatomic, readonly) BOOL showTabCountEnabled;
+@property (nonatomic, readonly) BOOL fullscreenScrollingEnabled;
+@property (nonatomic, readonly) BOOL lockBars;
 
 @property (nonatomic, readonly) BOOL forceModeOnStartEnabled;
 @property (nonatomic, readonly) NSInteger forceModeOnStartFor;
@@ -74,6 +86,10 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) NSInteger autoCloseTabsFor;
 @property (nonatomic, readonly) BOOL autoDeleteDataEnabled;
 @property (nonatomic, readonly) NSInteger autoDeleteDataOn;
+@property (nonatomic, readonly) BOOL alwaysOpenNewTabEnabled;
+@property (nonatomic, readonly) BOOL alwaysOpenNewTabInBackgroundEnabled;
+@property (nonatomic, readonly) BOOL disablePrivateMode;
+@property (nonatomic, readonly) BOOL suppressMailToDialog;
 
 @property (nonatomic, readonly) BOOL URLLeftSwipeGestureEnabled;
 @property (nonatomic, readonly) NSInteger URLLeftSwipeAction;
@@ -83,68 +99,75 @@ static NSString *const SarafiPlusPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) NSInteger URLDownSwipeAction;
 @property (nonatomic, readonly) BOOL gestureBackground;
 
-@property (nonatomic, readonly) BOOL fullscreenScrollingEnabled;
-@property (nonatomic, readonly) BOOL removeTabLimit;
-@property (nonatomic, readonly) BOOL lockBars;
-@property (nonatomic, readonly) BOOL disablePrivateMode;
-@property (nonatomic, readonly) BOOL alwaysOpenNewTabEnabled;
-@property (nonatomic, readonly) BOOL alwaysOpenNewTabInBackgroundEnabled;
-@property (nonatomic, readonly) BOOL suppressMailToDialog;
-
 @property (nonatomic, readonly) BOOL topBarNormalTintColorEnabled;
-- (UIColor*)topBarNormalTintColor;
+@property (nonatomic, readonly) NSString* topBarNormalTintColor;
 @property (nonatomic, readonly) BOOL topBarNormalBackgroundColorEnabled;
-- (UIColor*)topBarNormalBackgroundColor;
+@property (nonatomic, readonly) NSString* topBarNormalBackgroundColor;
 @property (nonatomic, readonly) BOOL topBarNormalStatusBarStyleEnabled;
 @property (nonatomic, readonly) UIStatusBarStyle topBarNormalStatusBarStyle;
-@property (nonatomic, readonly) BOOL topBarNormalTabBarTitleColorEnabled;
-- (UIColor*)topBarNormalTabBarTitleColor;
-@property (nonatomic, readonly) CGFloat topBarNormalTabBarInactiveTitleOpacity;
-@property (nonatomic, readonly) BOOL topBarNormalURLFontColorEnabled;
-- (UIColor*)topBarNormalURLFontColor;
-@property (nonatomic, readonly) BOOL topBarNormalProgressBarColorEnabled;
-- (UIColor*)topBarNormalProgressBarColor;
+@property (nonatomic, readonly) BOOL topBarNormalReaderButtonColorEnabled;
+@property (nonatomic, readonly) NSString* topBarNormalReaderButtonColor;
 @property (nonatomic, readonly) BOOL topBarNormalLockIconColorEnabled;
-- (UIColor*)topBarNormalLockIconColor;
+@property (nonatomic, readonly) NSString* topBarNormalLockIconColor;
+@property (nonatomic, readonly) BOOL topBarNormalURLFontColorEnabled;
+@property (nonatomic, readonly) NSString* topBarNormalURLFontColor;
 @property (nonatomic, readonly) BOOL topBarNormalReloadButtonColorEnabled;
-- (UIColor*)topBarNormalReloadButtonColor;
+@property (nonatomic, readonly) NSString* topBarNormalReloadButtonColor;
+@property (nonatomic, readonly) BOOL topBarNormalProgressBarColorEnabled;
+@property (nonatomic, readonly) NSString* topBarNormalProgressBarColor;
+@property (nonatomic, readonly) BOOL topBarNormalTabBarCloseButtonColorEnabled;
+@property (nonatomic, readonly) NSString* topBarNormalTabBarCloseButtonColor;
+@property (nonatomic, readonly) BOOL topBarNormalTabBarTitleColorEnabled;
+@property (nonatomic, readonly) NSString* topBarNormalTabBarTitleColor;
+@property (nonatomic, readonly) CGFloat topBarNormalTabBarInactiveTitleOpacity;
 @property (nonatomic, readonly) BOOL bottomBarNormalTintColorEnabled;
-- (UIColor*)bottomBarNormalTintColor;
+@property (nonatomic, readonly) NSString* bottomBarNormalTintColor;
 @property (nonatomic, readonly) BOOL bottomBarNormalBackgroundColorEnabled;
-- (UIColor*)bottomBarNormalBackgroundColor;
+@property (nonatomic, readonly) NSString* bottomBarNormalBackgroundColor;
 @property (nonatomic, readonly) BOOL tabTitleBarNormalTextColorEnabled;
-- (UIColor*)tabTitleBarNormalTextColor;
+@property (nonatomic, readonly) NSString* tabTitleBarNormalTextColor;
 @property (nonatomic, readonly) BOOL tabTitleBarNormalBackgroundColorEnabled;
-- (UIColor*)tabTitleBarNormalBackgroundColor;
+@property (nonatomic, readonly) NSString* tabTitleBarNormalBackgroundColor;
+@property (nonatomic, readonly) BOOL tabSwitcherNormalToolbarBackgroundColorEnabled;
+@property (nonatomic, readonly) NSString* tabSwitcherNormalToolbarBackgroundColor;
 
 @property (nonatomic, readonly) BOOL topBarPrivateTintColorEnabled;
-- (UIColor*)topBarPrivateTintColor;
+@property (nonatomic, readonly) NSString* topBarPrivateTintColor;
 @property (nonatomic, readonly) BOOL topBarPrivateBackgroundColorEnabled;
-- (UIColor*)topBarPrivateBackgroundColor;
+@property (nonatomic, readonly) NSString* topBarPrivateBackgroundColor;
 @property (nonatomic, readonly) BOOL topBarPrivateStatusBarStyleEnabled;
 @property (nonatomic, readonly) UIStatusBarStyle topBarPrivateStatusBarStyle;
-@property (nonatomic, readonly) BOOL topBarPrivateTabBarTitleColorEnabled;
-- (UIColor*)topBarPrivateTabBarTitleColor;
-@property (nonatomic, readonly) CGFloat topBarPrivateTabBarInactiveTitleOpacity;
-@property (nonatomic, readonly) BOOL topBarPrivateURLFontColorEnabled;
-- (UIColor*)topBarPrivateURLFontColor;
-@property (nonatomic, readonly) BOOL topBarPrivateProgressBarColorEnabled;
-- (UIColor*)topBarPrivateProgressBarColor;
+@property (nonatomic, readonly) BOOL topBarPrivateReaderButtonColorEnabled;
+@property (nonatomic, readonly) NSString* topBarPrivateReaderButtonColor;
 @property (nonatomic, readonly) BOOL topBarPrivateLockIconColorEnabled;
-- (UIColor*)topBarPrivateLockIconColor;
+@property (nonatomic, readonly) NSString* topBarPrivateLockIconColor;
+@property (nonatomic, readonly) BOOL topBarPrivateURLFontColorEnabled;
+@property (nonatomic, readonly) NSString* topBarPrivateURLFontColor;
 @property (nonatomic, readonly) BOOL topBarPrivateReloadButtonColorEnabled;
-- (UIColor*)topBarPrivateReloadButtonColor;
+@property (nonatomic, readonly) NSString* topBarPrivateReloadButtonColor;
+@property (nonatomic, readonly) BOOL topBarPrivateProgressBarColorEnabled;
+@property (nonatomic, readonly) NSString* topBarPrivateProgressBarColor;
+@property (nonatomic, readonly) BOOL topBarPrivateTabBarCloseButtonColorEnabled;
+@property (nonatomic, readonly) NSString* topBarPrivateTabBarCloseButtonColor;
+@property (nonatomic, readonly) BOOL topBarPrivateTabBarTitleColorEnabled;
+@property (nonatomic, readonly) NSString* topBarPrivateTabBarTitleColor;
+@property (nonatomic, readonly) CGFloat topBarPrivateTabBarInactiveTitleOpacity;
 @property (nonatomic, readonly) BOOL bottomBarPrivateTintColorEnabled;
-- (UIColor*)bottomBarPrivateTintColor;
+@property (nonatomic, readonly) NSString* bottomBarPrivateTintColor;
 @property (nonatomic, readonly) BOOL bottomBarPrivateBackgroundColorEnabled;
-- (UIColor*)bottomBarPrivateBackgroundColor;
+@property (nonatomic, readonly) NSString* bottomBarPrivateBackgroundColor;
 @property (nonatomic, readonly) BOOL tabTitleBarPrivateTextColorEnabled;
-- (UIColor*)tabTitleBarPrivateTextColor;
+@property (nonatomic, readonly) NSString* tabTitleBarPrivateTextColor;
 @property (nonatomic, readonly) BOOL tabTitleBarPrivateBackgroundColorEnabled;
-- (UIColor*)tabTitleBarPrivateBackgroundColor;
+@property (nonatomic, readonly) NSString* tabTitleBarPrivateBackgroundColor;
+@property (nonatomic, readonly) BOOL tabSwitcherPrivateToolbarBackgroundColorEnabled;
+@property (nonatomic, readonly) NSString* tabSwitcherPrivateToolbarBackgroundColor;
 
-- (void)reloadColors;
-- (void)reloadOtherPlist;
+@property (nonatomic, readonly) BOOL topToolbarCustomOrderEnabled;
+@property (nonatomic, readonly) NSArray<NSNumber*>* topToolbarCustomOrder;
+@property (nonatomic, readonly) BOOL bottomToolbarCustomOrderEnabled;
+@property (nonatomic, readonly) NSArray<NSNumber*>* bottomToolbarCustomOrder;
+
 #ifdef NO_CEPHEI
 - (void)reloadPrefs;
 #endif

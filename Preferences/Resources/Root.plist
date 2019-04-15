@@ -9,72 +9,26 @@
 			<string>PSGroupCell</string>
 		</dict>
 		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
 			<key>cell</key>
-			<string>PSGroupCell</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
+			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>SPPKillSwitchTableCell</string>
+			<key>default</key>
+			<true/>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>GeneralPrefsController</string>
+			<key>key</key>
+			<string>tweakEnabled</string>
 			<key>label</key>
-			<string>GENERAL</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>DownloadPrefsController</string>
-			<key>label</key>
-			<string>DOWNLOAD_ADDONS</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>ActionPrefsController</string>
-			<key>label</key>
-			<string>ACTION_ADDONS</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>GesturePrefsController</string>
-			<key>label</key>
-			<string>GESTURE_ADDONS</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>OtherPrefsController</string>
-			<key>label</key>
-			<string>OTHER_ADDONS</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>ColorOverviewPrefsController</string>
-			<key>label</key>
-			<string>COLOR_SETTINGS</string>
+			<string>ENABLED</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>FEATURES</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -82,29 +36,65 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>CreditsController</string>
+			<string>SPPPrivacyListController</string>
 			<key>label</key>
-			<string>CREDITS</string>
+			<string>PRIVACY</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPUploadDownloadListController</string>
+			<key>label</key>
+			<string>UPLOADS_AND_DOWNLOADS</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPUsabilityListController</string>
+			<key>label</key>
+			<string>USABILITY</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPBehaviourListController</string>
+			<key>label</key>
+			<string>BEHAVIOUR</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPGesturesListController</string>
+			<key>label</key>
+			<string>GESTURES</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPCustomizationListController</string>
+			<key>label</key>
+			<string>CUSTOMIZATION</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>sourceLink</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>icon</key>
-			<string>GitHub.png</string>
 			<key>label</key>
-			<string>SOURCE_CODE</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>DONATE_FOOTER</string>
+			<string>ABOUT_ME</string>
 		</dict>
 		<dict>
 			<key>action</key>
@@ -125,8 +115,34 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>ABOUT_THIS_TWEAK</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>sourceLink</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>GitHub.png</string>
+			<key>label</key>
+			<string>SOURCE_CODE</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPCreditsListController</string>
+			<key>label</key>
+			<string>CREDITS</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>© 2019 opa334</string>
+			<string>© 2017-2019 opa334</string>
 		</dict>
 	</array>
 	<key>title</key>

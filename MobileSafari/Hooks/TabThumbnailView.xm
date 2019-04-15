@@ -1,5 +1,5 @@
 // TabThumbnailView.xm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,37 +14,78 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-//#import "../SafariPlus.h"
+#import "../SafariPlus.h"
 
-/*%hook TabThumbnailView
+#import "../Shared.h"
+#import "../Classes/SPPreferenceManager.h"
+#import "../Defines.h"
 
-   %property(nonatomic, retain) UIButton *lockButton;
-   %property(nonatomic, assign) BOOL isLocked;
+%hook TabThumbnailView
 
-   - (void)layoutSubviews
-   {
-   %orig;
-   UIView* headerView = MSHookIvar<UIView*>(self, "_headerView");
-   if(!self.lockButton)
-   {
-    self.lockButton = [%c(_SFDimmingButton) buttonWithType:UIButtonTypeCustom];
-    self.lockButton.backgroundColor = [UIColor redColor];
-    [self.lockButton addTarget:self
-      action:@selector(lockButtonPressed)
-      forControlEvents:UIControlEventTouchUpInside];
-    self.lockButton.selected = self.isLocked;
-    [headerView addSubview:self.lockButton];
-   }
-   CGFloat size = self.closeButton.frame.size.width;
-   self.lockButton.frame = CGRectMake(headerView.frame.size.width - size, 0, size, size);
-   }
+%property (nonatomic, retain) _SFDimmingButton *lockButton;
 
-   %new
-   - (void)lockButtonPressed
-   {
-   self.lockButton.selected = !self.lockButton.selected;
-   self.isLocked = self.lockButton.selected;
-   [self layoutSubviews];
-   }
+- (TabThumbnailView*)initWithFrame:(CGRect)frame
+{
+	TabThumbnailView* orig = %orig;
 
-   %end*/
+	if(orig && preferenceManager.lockedTabsEnabled)
+	{
+		UIView* headerView = MSHookIvar<UIView*>(self, "_headerView");
+
+		Class buttonClass = NSClassFromString(@"_SFDimmingButton");
+
+		if(!buttonClass)
+		{
+			buttonClass = NSClassFromString(@"DimmingButton");
+		}
+
+		self.lockButton = [buttonClass buttonWithType:UIButtonTypeSystem];
+		[self.lockButton setImage:[UIImage imageNamed:@"LockButtonOpen.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+		[self.lockButton setImage:[UIImage imageNamed:@"LockButtonClosed.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateSelected];
+		self.lockButton.normalImageAlpha = 1.0;
+		self.lockButton.highlightedImageAlpha = 0.2;
+		[headerView addSubview:self.lockButton];
+	}
+
+	return orig;
+}
+
+- (void)layoutSubviews
+{
+	%orig;
+
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		UIView* headerView = MSHookIvar<UIView*>(self, "_headerView");
+		UIView* titleView;
+
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_0)
+		{
+			titleView = MSHookIvar<UIView*>(self, "_titleLabel");
+		}
+		else
+		{
+			titleView = MSHookIvar<UIView*>(self, "_iconAndTitleView");
+		}
+
+		self.lockButton.tintColor = self.titleColor;
+
+		CGFloat size = self.closeButton.frame.size.width;
+		self.lockButton.frame = CGRectMake(headerView.frame.size.width - size, 0, size, size);
+
+		CGFloat spacing = titleView.frame.origin.x - size;
+		CGFloat maxTitleViewWidth = headerView.frame.size.width - ((size + spacing) * 2);
+
+		if(titleView.frame.size.width > maxTitleViewWidth)
+		{
+			titleView.frame = CGRectMake(titleView.frame.origin.x, titleView.frame.origin.y, maxTitleViewWidth, titleView.frame.size.height);
+		}
+	}
+}
+
+%end
+
+void initTabThumbnailView()
+{
+	%init();
+}

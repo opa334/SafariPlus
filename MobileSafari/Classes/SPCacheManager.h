@@ -1,5 +1,5 @@
 // SPCacheManager.h
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 	NSURL* _cacheURL;
 	NSMutableDictionary* _miscPlist;
 	NSMutableDictionary* _desktopButtonStates;
+	NSMutableDictionary* _tabStateAdditions;
 }
 
 + (instancetype)sharedInstance;
@@ -40,5 +41,10 @@
 - (void)saveDesktopButtonStates;
 - (void)setDesktopButtonState:(BOOL)state forUUID:(NSUUID*)UUID;
 - (BOOL)desktopButtonStateForUUID:(NSUUID*)UUID;
+
+- (void)loadTabStateAdditions;
+- (void)saveTabStateAdditions;
+- (BOOL)isTabWithUUIDLocked:(NSUUID*)UUID;
+- (void)setLocked:(BOOL)locked forTabWithUUID:(NSUUID*)UUID;
 
 @end

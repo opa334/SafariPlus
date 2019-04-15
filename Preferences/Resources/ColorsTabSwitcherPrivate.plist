@@ -5,14 +5,6 @@
 	<key>items</key>
 	<array>
 		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>FULLSCREEN_SCROLLING_FOOTER</string>
-		</dict>
-		<dict>
 			<key>PostNotification</key>
 			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
 			<key>cell</key>
@@ -22,121 +14,35 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>fullscreenScrollingEnabled</string>
+			<string>tabTitleBarPrivateTextColorEnabled</string>
 			<key>label</key>
-			<string>FULLSCREEN_SCROLLING</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>REMOVE_TAB_LIMIT_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>removeTabLimit</string>
-			<key>label</key>
-			<string>REMOVE_TAB_LIMIT</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>LOCK_BARS_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>lockBars</string>
-			<key>label</key>
-			<string>LOCK_BARS</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>DISABLE_PRIVATE_MODE_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>disablePrivateMode</string>
-			<key>label</key>
-			<string>DISABLE_PRIVATE_MODE</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>ALWAYS_OPEN_NEW_TAB_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>alwaysOpenNewTabEnabled</string>
-			<key>label</key>
-			<string>ALWAYS_OPEN_NEW_TAB</string>
+			<string>TAB_TITLE_TEXT_COLOR</string>
 			<key>nestedEntryCount</key>
 			<integer>1</integer>
 		</dict>
 		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>CSColorDisplayCell</string>
 			<key>PostNotification</key>
 			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
+			<key>alpha</key>
 			<false/>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
+			<key>fallback</key>
+			<string>00000</string>
 			<key>key</key>
-			<string>alwaysOpenNewTabInBackgroundEnabled</string>
+			<string>tabTitleBarPrivateTextColor</string>
 			<key>label</key>
-			<string>OPEN_NEW_TAB_IN_BACKGROUND</string>
+			<string>SELECT_COLOR</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>SUPPRESS_MAILTO_DIALOG_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -148,12 +54,72 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>suppressMailToDialog</string>
+			<string>tabTitleBarPrivateBackgroundColorEnabled</string>
 			<key>label</key>
-			<string>SUPPRESS_MAILTO_DIALOG</string>
+			<string>TAB_TITLE_BACKGROUND_COLOR</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>CSColorDisplayCell</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>alpha</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>fallback</key>
+			<string>00000</string>
+			<key>key</key>
+			<string>tabTitleBarPrivateBackgroundColor</string>
+			<key>label</key>
+			<string>SELECT_COLOR</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>tabSwitcherPrivateToolbarBackgroundColorEnabled</string>
+			<key>label</key>
+			<string>TOOLBAR_BACKGROUND_COLOR</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>cellClass</key>
+			<string>CSColorDisplayCell</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>alpha</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>fallback</key>
+			<string>00000</string>
+			<key>key</key>
+			<string>tabSwitcherPrivateToolbarBackgroundColor</string>
+			<key>label</key>
+			<string>SELECT_COLOR</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>OTHER_ADDONS</string>
+	<string>BOTTOM_BAR</string>
 </dict>
 </plist>

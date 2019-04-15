@@ -10,9 +10,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>LAUNCH_MODE_FOOTER</string>
+			<string>SWIPE_LEFT_GESTURE_FOOTER</string>
 			<key>label</key>
-			<string>CHANGE_MODE_ON</string>
+			<string>URL_BAR_GESTURES_LABEL</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -24,9 +24,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>forceModeOnStartEnabled</string>
+			<string>URLLeftSwipeGestureEnabled</string>
 			<key>label</key>
-			<string>LAUNCH_MODE_LABEL</string>
+			<string>SWIPE_LEFT_GESTURE</string>
 			<key>nestedEntryCount</key>
 			<integer>1</integer>
 		</dict>
@@ -40,13 +40,13 @@
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>key</key>
-			<string>forceModeOnStartFor</string>
+			<string>URLLeftSwipeAction</string>
 			<key>label</key>
-			<string>TO</string>
+			<string>ACTION</string>
 			<key>titlesDataSource</key>
-			<string>modeTitles</string>
+			<string>gestureActionTitles</string>
 			<key>valuesDataSource</key>
-			<string>modeValues</string>
+			<string>gestureActionValues</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -54,9 +54,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>RESUME_FOOTER</string>
-			<key>label</key>
-			<string>CHANGE_MODE_ON</string>
+			<string>SWIPE_RIGHT_GESTURE_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -68,9 +66,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>forceModeOnResumeEnabled</string>
+			<string>URLRightSwipeGestureEnabled</string>
 			<key>label</key>
-			<string>RESUME_LABEL</string>
+			<string>SWIPE_RIGHT_GESTURE</string>
 			<key>nestedEntryCount</key>
 			<integer>1</integer>
 		</dict>
@@ -84,13 +82,13 @@
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>key</key>
-			<string>forceModeOnResumeFor</string>
+			<string>URLRightSwipeAction</string>
 			<key>label</key>
-			<string>TO</string>
+			<string>ACTION</string>
 			<key>titlesDataSource</key>
-			<string>modeTitles</string>
+			<string>gestureActionTitles</string>
 			<key>valuesDataSource</key>
-			<string>modeValues</string>
+			<string>gestureActionValues</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -98,9 +96,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>EXTERNAL_URL_FOOTER</string>
-			<key>label</key>
-			<string>CHANGE_MODE_ON</string>
+			<string>SWIPE_DOWN_GESTURE_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -112,9 +108,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>forceModeOnExternalLinkEnabled</string>
+			<string>URLDownSwipeGestureEnabled</string>
 			<key>label</key>
-			<string>EXTERNAL_URL_LABEL</string>
+			<string>SWIPE_DOWN_GESTURE</string>
 			<key>nestedEntryCount</key>
 			<integer>1</integer>
 		</dict>
@@ -128,21 +124,19 @@
 			<key>detail</key>
 			<string>PSListItemsController</string>
 			<key>key</key>
-			<string>forceModeOnExternalLinkFor</string>
+			<string>URLDownSwipeAction</string>
 			<key>label</key>
-			<string>TO</string>
+			<string>ACTION</string>
 			<key>titlesDataSource</key>
-			<string>modeTitles</string>
+			<string>gestureActionTitles</string>
 			<key>valuesDataSource</key>
-			<string>modeValues</string>
+			<string>gestureActionValues</string>
 		</dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>AUTO_CLOSE_TABS_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -154,92 +148,12 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>autoCloseTabsEnabled</string>
+			<string>gestureBackground</string>
 			<key>label</key>
-			<string>AUTO_CLOSE_TABS_LABEL</string>
-			<key>nestedEntryCount</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>key</key>
-			<string>autoCloseTabsOn</string>
-			<key>label</key>
-			<string>ON</string>
-			<key>titlesDataSource</key>
-			<string>stateTitles</string>
-			<key>valuesDataSource</key>
-			<string>stateValues</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>key</key>
-			<string>autoCloseTabsFor</string>
-			<key>label</key>
-			<string>FOR</string>
-			<key>titlesDataSource</key>
-			<string>closeModeTitles</string>
-			<key>valuesDataSource</key>
-			<string>closeModeValues</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>AUTO_DELETE_DATA_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>autoDeleteDataEnabled</string>
-			<key>label</key>
-			<string>AUTO_DELETE_DATA_LABEL</string>
-			<key>nestedEntryCount</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>key</key>
-			<string>autoDeleteDataOn</string>
-			<key>label</key>
-			<string>ON</string>
-			<key>titlesDataSource</key>
-			<string>stateTitles</string>
-			<key>valuesDataSource</key>
-			<string>stateValues</string>
+			<string>BACKGROUND</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>TAB_SETTINGS</string>
+	<string>GESTURES</string>
 </dict>
 </plist>

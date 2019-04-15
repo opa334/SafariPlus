@@ -1,5 +1,5 @@
 // SafariPlus.xm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -24,14 +24,12 @@
 #import "Classes/SPCommunicationManager.h"
 #import "Classes/SPCacheManager.h"
 
-#import <sys/utsname.h>
+#import "../Shared/SPPreferenceMerger.h"
+
+#import <LocalAuthentication/LocalAuthentication.h>
 
 @interface NSKeyedUnarchiver ()
 + (id)unarchivedObjectOfClass:(Class)cls fromData:(NSData *)data error:(NSError * _Nullable *)error;
-#ifdef SIMJECT
-- (void)setDecodingFailurePolicy:(long long)arg1;
-#endif
-- (id)initForReadingFromData:(id)arg1 error:(id*)arg2;
 @end
 
 /****** Variables ******/
@@ -40,8 +38,8 @@ NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
 SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
-SPFileManager* fileManager = [SPFileManager sharedInstance];
-SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
+SPFileManager* fileManager;
+SPPreferenceManager* preferenceManager;
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
@@ -163,23 +161,6 @@ void _dlogDownloadManager()
 
 #endif
 
-#if defined(SIMJECT)
-
-#import <UIKit/UIFunctions.h>
-
-NSString* simulatorPath(NSString* path)
-{
-	if([path hasPrefix:@"/var/mobile/"])
-	{
-		NSString* simulatorID = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject].pathComponents[7];
-		NSString* strippedPath = [path stringByReplacingOccurrencesOfString:@"/var/mobile/" withString:@""];
-		return [NSString stringWithFormat:@"/Users/%@/Library/Developer/CoreSimulator/Devices/%@/data/%@", currentUser, simulatorID, strippedPath];
-	}
-	return [UISystemRootDirectory() stringByAppendingPathComponent:path];
-}
-
-#endif
-
 /****** Extensions ******/
 
 //https://stackoverflow.com/a/22669888
@@ -196,19 +177,33 @@ NSString* simulatorPath(NSString* path)
 
 @end
 
-@implementation NSURL (HTTPtoHTTPS)
+@implementation NSURL (SchemeConversion)
 
-//Convert http url into https url
+//Convert http url to https url
 - (NSURL*)httpsURL
 {
 	//Get URL components
-	NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:self
-					  resolvingAgainstBaseURL:NO];
+	NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
 
 	if([self.scheme isEqualToString:@"http"])
 	{
 		//Change scheme to https
 		URLComponents.scheme = @"https";
+	}
+
+	return URLComponents.URL;
+}
+
+//Convert https url to http url
+- (NSURL*)httpURL
+{
+	//Get URL components
+	NSURLComponents* URLComponents = [NSURLComponents componentsWithURL:self resolvingAgainstBaseURL:NO];
+
+	if([self.scheme isEqualToString:@"https"])
+	{
+		//Change scheme to http
+		URLComponents.scheme = @"http";
 	}
 
 	return URLComponents.URL;
@@ -256,6 +251,74 @@ NSString* simulatorPath(NSString* path)
 		UITableViewHeaderFooterView* footerView = [self.tableView headerViewForSection:i];
 		footerView.backgroundView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
 	}
+}
+@end
+
+@implementation UIImage (WidthChange)
+
+//Roughly based around https://stackoverflow.com/questions/20021478/add-transparent-space-around-a-uiimage
+//alignment -1: left; 0: center; 1: right;
+- (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment
+{
+	if(width <= self.size.width)
+	{
+		return self;
+	}
+
+	UIGraphicsBeginImageContextWithOptions(CGSizeMake(width, self.size.height), NO, 0.0);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	UIGraphicsPushContext(context);
+
+	CGFloat x;
+
+	if(alignment < 0)
+	{
+		x = 0;
+	}
+	else if(alignment == 0)
+	{
+		x = (width - self.size.width) / 2;
+	}
+	else
+	{
+		x = width - self.size.width;
+	}
+
+	CGPoint origin = CGPointMake(x, 0);
+	[self drawAtPoint:origin];
+
+	UIGraphicsPopContext();
+	UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+
+	return newImage;
+}
+@end
+
+@implementation UIImage (Rotate)
+- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees
+{
+	CGFloat radians = degrees * M_PI/180;
+
+	UIView *rotatedViewBox = [[UIView alloc] initWithFrame:CGRectMake(0,0, self.size.width, self.size.height)];
+	CGAffineTransform t = CGAffineTransformMakeRotation(radians);
+	rotatedViewBox.transform = t;
+	CGSize rotatedSize = rotatedViewBox.frame.size;
+
+	UIGraphicsBeginImageContextWithOptions(rotatedSize, NO, [[UIScreen mainScreen] scale]);
+	CGContextRef bitmap = UIGraphicsGetCurrentContext();
+
+	CGContextTranslateCTM(bitmap, rotatedSize.width / 2, rotatedSize.height / 2);
+
+	CGContextRotateCTM(bitmap, radians);
+
+	CGContextScaleCTM(bitmap, 1.0, -1.0);
+	CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), self.CGImage );
+
+	UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+
+	return newImage;
 }
 @end
 
@@ -383,12 +446,37 @@ BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* documen
 	return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
 }
 
-//Only add object to dict if it's not nil
-void addToDict(NSMutableDictionary* dict, NSObject* object, NSString* key)
+//Only add object to dict if it's not nil (to combat crashes)
+void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying> key)
 {
 	if(object)
 	{
 		[dict setObject:object forKey:key];
+	}
+}
+
+void requestAuthentication(NSString* reason, void (^successHandler)(void))
+{
+	BOOL mainThread = [NSThread isMainThread];
+	LAContext* myContext = [[LAContext alloc] init];
+	NSError* authError = nil;
+	if([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError])
+	{
+		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+		 localizedReason:reason reply:^(BOOL success, NSError* error)
+		{
+			if(success)
+			{
+				if(mainThread)
+				{
+					dispatch_async(dispatch_get_main_queue(), successHandler);
+				}
+				else
+				{
+					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), successHandler);
+				}
+			}
+		}];
 	}
 }
 
@@ -431,11 +519,20 @@ NSDictionary* decodeResumeData12(NSData* resumeData)
 extern void initApplication();
 extern void initAVFullScreenPlaybackControlsViewController();
 extern void initAVPlaybackControlsView();
+extern void initBookmarkFavoritesActionsView();
 extern void initBrowserController();
+extern void initBrowserRootViewController();
+extern void initBrowserToolbar();
+extern void initCatalogViewController();
 extern void initColors();
 extern void initFeatureManager();
 extern void initTabController();
 extern void initTabDocument();
+extern void initTabOverview();
+extern void initTabOverviewItemLayoutInfo();
+extern void initTabThumbnailView();
+extern void initTiltedTabItemLayoutInfo();
+extern void initTiltedTabView();
 extern void initWKFileUploadPanel();
 
 %ctor
@@ -444,13 +541,31 @@ extern void initWKFileUploadPanel();
 	initDebug();
   #endif
 
-	initApplication();
-	initAVFullScreenPlaybackControlsViewController();
-	initAVPlaybackControlsView();
-	initBrowserController();
-	initColors();
-	initFeatureManager();
-	initTabController();
-	initTabDocument();
-	initWKFileUploadPanel();
+	fileManager = [SPFileManager sharedInstance];
+
+	[SPPreferenceMerger mergeIfNeeded];
+
+	preferenceManager = [SPPreferenceManager sharedInstance];
+
+	if(preferenceManager.tweakEnabled)	//Only initialise hooks if tweak is enabled
+	{
+		initApplication();
+		initAVFullScreenPlaybackControlsViewController();
+		initAVPlaybackControlsView();
+		initBookmarkFavoritesActionsView();
+		initBrowserController();
+		initBrowserRootViewController();
+		initBrowserToolbar();
+		initCatalogViewController();
+		initColors();
+		initFeatureManager();
+		initTabController();
+		initTabDocument();
+		initTabOverview();
+		initTabOverviewItemLayoutInfo();
+		initTabThumbnailView();
+		initTiltedTabItemLayoutInfo();
+		initTiltedTabView();
+		initWKFileUploadPanel();
+	}
 }

@@ -1,5 +1,5 @@
 // TabOverview.xm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPLocalizationManager.h"
 #import "../Shared.h"
+#import "../Defines.h"
 
 %hook TabOverview
 
@@ -38,33 +40,12 @@
 		if(!self.desktopModeButton)
 		{
 			//desktopButton not created yet -> create and configure it
-			self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-
-			UIImage* inactiveImage = [UIImage
-						  imageNamed:@"DesktopButton.png" inBundle:SPBundle
-						  compatibleWithTraitCollection:nil];
-
-			UIImage* activeImage = [UIImage inverseColor:inactiveImage];
-
-			[self.desktopModeButton setImage:inactiveImage
-			 forState:UIControlStateNormal];
-
-			[self.desktopModeButton setImage:activeImage
-			 forState:UIControlStateSelected];
-
-			self.desktopModeButton.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5);
-			self.desktopModeButton.layer.cornerRadius = 4;
-			self.desktopModeButton.adjustsImageWhenHighlighted = true;
-
-			[self.desktopModeButton addTarget:self
-			 action:@selector(desktopModeButtonPressed)
-			 forControlEvents:UIControlEventTouchUpInside];
-
-			if(self.delegate.desktopButtonSelected)
-			{
-				self.desktopModeButton.selected = YES;
-				self.desktopModeButton.backgroundColor = [UIColor whiteColor];
-			}
+			self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+			UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+			[self.desktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
+			[self.desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+			self.desktopModeButton.selected = self.delegate.desktopButtonSelected;
+			self.desktopModeButton.tintColor = [UIColor whiteColor];
 		}
 
 		//Desktop button is not added to top bar yet -> Add it
@@ -84,7 +65,7 @@
 			self.privateBrowsingButton.frame.size.height,
 			self.privateBrowsingButton.frame.size.height);
 
-		if([searchBar isFirstResponder])
+		if([searchBar isFirstResponder] || searchBar.text.length > 0)
 		{
 			if(self.desktopModeButton.enabled)
 			{
@@ -116,27 +97,8 @@
 %new
 - (void)desktopModeButtonPressed
 {
-	if(self.delegate.desktopButtonSelected)
-	{
-		//Deselect desktop button
-		self.delegate.desktopButtonSelected = NO;
-		self.desktopModeButton.selected = NO;
-
-		//Remove white color with animation
-		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationDuration:0.3];
-		self.desktopModeButton.backgroundColor = [UIColor clearColor];
-		[UIView commitAnimations];
-	}
-	else
-	{
-		//Select desktop button
-		self.delegate.desktopButtonSelected = YES;
-		self.desktopModeButton.selected = YES;
-
-		//Set color to white
-		self.desktopModeButton.backgroundColor = [UIColor whiteColor];
-	}
+	self.delegate.desktopButtonSelected = !self.delegate.desktopButtonSelected;
+	self.desktopModeButton.selected = self.delegate.desktopButtonSelected;
 
 	//Reload tabs
 	[self.delegate updateUserAgents];
@@ -145,4 +107,87 @@
 	[self.delegate saveDesktopButtonState];
 }
 
+%new
+- (void)_lockButtonPressed:(UIButton*)button
+{
+	for(TabOverviewItem* item in self.items)
+	{
+		if([item respondsToSelector:@selector(_thumbnailView)])	//iOS 9 and below
+		{
+			if(item.thumbnailView.lockButton == button)
+			{
+				[self.delegate tabOverview:self toggleLockedStateForItem:item];
+			}
+		}
+		else
+		{
+			if(item.layoutInfo.itemView.lockButton == button)
+			{
+				[self.delegate tabOverview:self toggleLockedStateForItem:item];
+			}
+		}
+	}
+}
+
+- (void)_dismissWithItemAtCurrentDecelerationFactor:(TabOverviewItem*)item
+{
+	if(preferenceManager.lockedTabsEnabled && preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionAccessLockedTabEnabled)
+	{
+		if([self.delegate currentItemForTabOverview:self] != item)
+		{
+			TabDocument* tabDocument = [self.delegate _tabDocumentRepresentedByTabOverviewItem:item];
+
+			if(tabDocument.locked)
+			{
+				requestAuthentication([localizationManager localizedSPStringForKey:@"ACCESS_LOCKED_TAB"], ^
+				{
+					tabDocument.accessAuthenticated = YES;
+					%orig;
+				});
+
+				return;
+			}
+		}
+	}
+
+	%orig;
+}
+
+%group iOS9Down
+
+- (void)removeViewsForItem:(TabOverviewItem*)item
+{
+	[item.thumbnailView.lockButton removeTarget:self action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	item.thumbnailView.lockButton = nil;
+	%orig;
+}
+
+- (void)_updateDisplayedItems
+{
+	%orig;
+
+	NSArray* displayedItems = MSHookIvar<NSArray*>(self, "_displayedItems");
+
+	for(TabOverviewItem* item in displayedItems)
+	{
+		if([item.thumbnailView.lockButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].count == 0)
+		{
+			[item.thumbnailView.lockButton addTarget:self action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+			item.thumbnailView.lockButton.selected = [self.delegate _tabDocumentRepresentedByTabOverviewItem:item].locked;
+		}
+	}
+}
+
 %end
+
+%end
+
+void initTabOverview()
+{
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
+	{
+		%init(iOS9Down);
+	}
+
+	%init();
+}

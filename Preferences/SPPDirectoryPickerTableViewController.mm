@@ -1,5 +1,5 @@
 // SPPDirectoryPickerTableViewController.mm
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -55,12 +55,9 @@
 			//Dismiss picker
 			[self dismissViewControllerAnimated:YES completion:^
 			{
-				//Get name
-				NSString* name = ((SPPDirectoryPickerNavigationController*)self.navigationController).name;
-
 				//Finish picking
 				[((SPPDirectoryPickerNavigationController*)self.navigationController).pinnedLocationsDelegate
-				 directoryPickerFinishedWithName:name path:self.directoryURL.path];
+				 directoryPickerFinishedWithPath:self.directoryURL.path];
 			}];
 		}];
 

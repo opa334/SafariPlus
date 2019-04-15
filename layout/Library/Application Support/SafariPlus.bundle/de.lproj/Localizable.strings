@@ -1,15 +1,18 @@
 "YES" = "Ja";
 "NO" = "Nein";
 
-/* Root Page*/
+/* Root Page */
 
-"GENERAL" = "Allgemein";
-"ACTION_ADDONS" = "Aktionen Erweiterungen";
-"DOWNLOAD_ADDONS" = "Download Erweiterungen";
-"GESTURE_ADDONS" = "Gesten Erweiterungen";
-"OTHER_ADDONS" = "Andere Erweiterungen";
-"COLOR_SETTINGS" = "Farbeinstellungen";
+"ENABLED" = "Aktiviert";
+"FEATURES" = "Features";
+"PRIVACY" = "Privatsphäre";
+"UPLOADS_AND_DOWNLOADS" = "Uploads & Downloads";
+"USABILITY" = "Benutzbarkeit";
+"BEHAVIOUR" = "Verhalten";
+"GESTURES" = "Gesten";
+"APPEARANCE" = "Aussehen";
 "SOURCE_CODE" = "Quellcode";
+"ABOUT_ME" = "Über mich";
 "TWITTER" = "Twitter";
 
 "DONATE" = "Spenden";
@@ -23,6 +26,7 @@
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Ausnahmen";
 "EDIT" = "Bearbeiten";
 "ADD" = "Hinzufügen";
+"APPLY" = "Anwenden";
 "ADD_EXCEPTION_ALERT_TITLE" = "Ausnahme hinzufügen";
 "ADD_EXCEPTION_ALERT_MESSAGE" = "Gebe eine Domain ein, bei der HTTPS nicht erzwungen werden soll.\nBeispiel: 'google.com'";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
@@ -44,7 +48,10 @@
 "LONG_PRESS_DURATION_TITLE" = "Dauer des Drucks";
 "LONG_PRESS_FOCUS_TITLE" = "URL Feld nach Druck fokussieren";
 
-/* Download Settings */
+/* Uploads & Downloads */
+
+"UPLOADS" = "Uploads";
+"DOWNLOADS" = "Downloads";
 
 "ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
 "ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Button zur unteren Leiste hinzu, welcher die Download Ansicht öffnet. In dieser lassen sich ausstehende und bereits fertiggestellte Downloads einsehen und verwalten. Über den Dateibrowser lassen sich die Dateien verwalten. Außerdem wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /var/mobile/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde. Wenn Safari über den App Switcher geschlossen wird, werden alle ausstehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.";
@@ -153,8 +160,8 @@
 "FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.\n\nHINWEIS: Nicht kompatibel mit iOS 8!";
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
 
-"REMOVE_TAB_LIMIT" = "Tab Limit entfernen";
-"REMOVE_TAB_LIMIT_FOOTER" = "Deaktiviert das Tab Limit, welches abhängig von iOS Version und Gerät varriert. Apple wird wahrscheinlich Gründe für das Tab Limit haben, Benutzung auf eigene Gefahr.";
+"DISABLE_TAB_LIMIT" = "Tab Limit deaktivieren";
+"DISABLE_TAB_LIMIT_FOOTER" = "Deaktiviert das Tab Limit, welches abhängig von iOS Version und Gerät variiert. Apple wird wahrscheinlich Gründe für das Tab Limit haben, Benutzung auf eigene Gefahr.";
 
 "LOCK_BARS" = "Leisten sperren";
 "LOCK_BARS_FOOTER" = "Sperrt die obere und die untere Leiste, sodass diese nicht mehr verschwinden, wenn die Seite nach unten gescrollt wird.";
@@ -170,6 +177,11 @@
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";
 
 /* Color Settings */
+
+"SELECT_COLOR" = "Farbe auswählen";
+
+"NORMAL_MODE_COLORS" = "Farben im normalen Modus";
+"PRIVATE_MODE_COLORS" = "Farben im privaten Modus";
 
 "TOP_BAR" = "Obere Leiste";
 "BOTTOM_BAR" = "Untere Leiste";
@@ -210,6 +222,11 @@
 "OPEN_TWITTER" = "Öffne Twitter";
 "COMMUNICATION_ERROR" = "Kommunikationsfehler";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde.";
+
+/* Force HTTPS */
+
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Zu HTTPS Ausnahmen hinzufügen";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Von HTTPS Ausnahmen entfernen";
 
 /* File picker */
 

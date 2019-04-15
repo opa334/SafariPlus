@@ -1,5 +1,5 @@
 // SafariPlus.h
-// (c) 2019 opa334
+// (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 #import "Protocols.h"
 
-@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, SPVerticalCenterLabel, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 
@@ -57,16 +57,38 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 - (void)openInWebBrowser:(BOOL)arg1 setOpenStrategy:(NSInteger)arg2 webBrowserState:(id)arg3 completionHandler:(id)arg4;
 @end
 
+@interface _UIBackdropViewSettings : NSObject
+@property (nonatomic,retain) UIColor* colorTint;
+@property (nonatomic,retain) UIColor* legibleColor;
+@property (assign,nonatomic) CGFloat colorTintAlpha;
+@property (assign,nonatomic) BOOL usesGrayscaleTintView;
+@property (assign,nonatomic) BOOL usesColorTintView;
+@property (assign,nonatomic) CGFloat colorTintMaskAlpha;
+@property (assign,nonatomic) CGFloat grayscaleTintAlpha;
++ (id)settingsForPrivateStyle:(NSInteger)privateStyle;
+@end
+
+@interface _UIBackdropViewSettingsColored : _UIBackdropViewSettings
+@end
+
 @interface _UIBackdropView : UIView
 @property (nonatomic, retain) UIView* contentView;
 @property (nonatomic, retain) UIView* grayscaleTintView;
-@end
-
-@interface _UIBackdropViewSettings : NSObject
+@property (nonatomic,retain) _UIBackdropViewSettings* inputSettings;
+- (void)transitionToSettings:(_UIBackdropViewSettings*)settings;
+- (void)transitionToPrivateStyle:(NSInteger)arg1;
 @end
 
 @interface _UIBarBackground : UIView
 @property (nonatomic,retain) UIView* customBackgroundView;
+@end
+
+@interface _UIButtonBarButtonVisualProviderIOS : NSObject
+@property (nonatomic,readonly) UIButton* imageButton;
+@end
+
+@interface _UIButtonBarButton : UIView
+@property (nonatomic,copy,readonly) _UIButtonBarButtonVisualProviderIOS* visualProvider;
 @end
 
 @interface UIImage (Private)
@@ -77,6 +99,11 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 - (BOOL)isAttached;
 @end
 
+@interface UIAlertController (Private)
+- (void)_removeAllActions;
+- (void)_setActions:(id)arg1;
+@end
+
 @interface UINavigationController (Private)
 - (id)paletteForEdge:(NSUInteger)arg1 size:(CGSize)arg2;
 - (void)attachPalette:(id)arg1 isPinned:(BOOL)arg2;
@@ -84,6 +111,35 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 
 @interface UISegmentedControl (Private)
 + (double)defaultHeightForStyle:(NSInteger)arg1 size:(int)arg2;
+@end
+
+@interface UIBarButtonItem (Safari)
+//iOS 11.2.6 and below
+- (void)_sf_setLongPressTarget:(id)target action:(SEL)action;
+//iOS 11.3 and above
+- (void)_sf_setTarget:(id)target longPressAction:(SEL)longPressAction;
+- (void)_sf_setTarget:(id)target touchDownAction:(SEL)touchDownAction longPressAction:(SEL)longPressAction;
+@end
+
+@interface UIBarButtonItem (Private)
+- (UIView*)view;
++ (void)_getSystemItemStyle:(NSInteger*)arg1 title:(id*)arg2 image:(UIImage**)arg3 selectedImage:(UIImage**)arg4 action:(SEL*)arg5 forBarStyle:(NSInteger)arg6 landscape:(BOOL)arg7 alwaysBordered:(BOOL)arg8 usingSystemItem:(NSInteger)arg9 usingItemStyle:(NSInteger)arg10;
+@property (nonatomic) NSInteger systemItem;
+@property (assign,setter=_setAdditionalSelectionInsets:,nonatomic) UIEdgeInsets _additionalSelectionInsets;
+@property (setter=_setGestureRecognizers:,nonatomic,retain) NSArray* _gestureRecognizers;
+- (BOOL)isSystemItem;
+@end
+
+@interface UIAlertAction (Private)
+- (void)setTitle:(NSString*)arg1;
+@end
+
+@interface UIImage (Safari)
++ (UIImage*)ss_imageNamed:(NSString*)name;
+@end
+
+@interface UIWindow (Safari)
+@property (nonatomic) CGRect _sf_bottomUnsafeAreaFrameForToolbar;
 @end
 
 /**** WebKit ****/
@@ -135,6 +191,10 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 /**** SafariServices ****/
 
+@interface SFBarRegistration : UIResponder
+- (UIBarButtonItem*)UIBarButtonItemForItem:(NSInteger)arg1;
+@end
+
 @interface SFCrossfadingLabel : UILabel
 @end
 
@@ -154,6 +214,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface _SFDimmingButton : UIButton
+@property (assign,nonatomic) double normalImageAlpha;
+@property (assign,nonatomic) double highlightedImageAlpha;
 @end
 
 
@@ -175,6 +237,9 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface _SFNavigationBar : UIView
 @property (nonatomic, weak) BrowserController* delegate;
+@property (nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
+@property (nonatomic,readonly) CGRect URLOutlineFrameInNavigationBarSpace;
+- (id)_backdropInputSettings;
 @end
 
 @interface _SFNavigationBarBackdrop : _UIBackdropView
@@ -186,6 +251,11 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
+@end
+
+@interface SFNavigationBarReaderButton : UIButton	//_SFNavigationBarReaderButton on iOS 10 and below, but doesn't matter
+- (void)setGlyphTintColor:(UIColor*)color;
+@property (assign,nonatomic) BOOL drawsLightGlyph;
 @end
 
 @interface _SFReloadOptionsController : NSObject
@@ -201,6 +271,10 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @interface _SFToolbar : UIToolbar
 @property (nonatomic) UIColor* tintColor;
 @property (nonatomic,readonly) NSInteger toolbarSize;
+@property (nonatomic,readonly) CGFloat URLFieldHorizontalMargin;
+- (id)_backdropInputSettings;
+- (BOOL)_tintUsesDarkTheme;
+- (BOOL)hasDarkBackground;
 @end
 
 
@@ -345,8 +419,9 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)clearAutoFillMessageReceived;
 - (BOOL)_shouldShowTabBar;
 - (void)updateUsesTabBar;
-- (void)setFavoritesState:(int)arg1 animated:(BOOL)arg2;
+- (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2;
 - (BOOL)isPrivateBrowsingAvailable;
+- (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(_Bool)arg2 completion:(void (^)(void))arg3;		//iOS11
 - (BOOL)isPrivateBrowsingEnabled;	//iOS11
 - (void)togglePrivateBrowsingEnabled;	//iOS11
@@ -355,6 +430,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;	//iOS9
 - (void)newTabKeyPressed;	//iOS8
 //new stuff below
+@property (nonatomic, assign) BOOL browsingModeSet;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
@@ -363,10 +439,11 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)clearData;
 - (void)modeSwitchAction:(int)switchToMode;
 - (void)autoCloseAction;
+- (void)updateTabExposeAlertForLockedTabs;
 @end
 
 @interface BrowserRootViewController : UIViewController
-@property (nonatomic,weak,readonly) BrowserController* browserController;
+@property (nonatomic,weak,readonly) BrowserController* browserController;	//iOS10 and above
 @end
 
 @interface BrowserToolbar : _SFToolbar
@@ -376,7 +453,20 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)updateTintColor;
 //new stuff below
 @property (nonatomic,retain) UIBarButtonItem* _downloadsItem;
+@property (nonatomic,retain) UILabel* tabCountLabel;
+@property (nonatomic,retain) UIImage *tabExposeImage;
 - (void)setDownloadsEnabled:(BOOL)enabled;
+- (void)updateTabCount;
+- (NSMutableArray*)dynamicItemsForOrder:(NSArray*)order;
+- (void)updateCustomBackgroundColorForStyle:(NSUInteger)style;
+@end
+
+@interface BookmarkFavoritesActionButton : UIButton
+- (void)configureWithActivity:(UIActivity*)arg1;
+@end
+
+@interface BookmarkFavoritesActionsView : UIView
+@property (nonatomic,retain) BookmarkFavoritesActionButton* toggleForceHTTPSButton;
 @end
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
@@ -400,9 +490,12 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)setView:(id)arg1;
 @end
 
+@interface LoadingController : NSObject
+- (void)reload;
+@end
+
 @interface NavigationBar : _SFNavigationBar
 @property (nonatomic,readonly) UnifiedField* textField;
-@property (nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
 - (UIImage*)_lockImageWithTint:(UIColor*)tint usingMiniatureVersion:(BOOL)miniatureVersion;
 - (void)_updateControlTints;
 - (UIColor*)_placeholderColor;
@@ -432,33 +525,54 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface TabBarStyle : NSObject
++ (UIImage*)_closeButtonWithColor:(UIColor*)color;
 @end
 
 @interface TabBarItemView : UIView
 @property (nonatomic, getter=isActive) BOOL active;
+@property (readonly, nonatomic) UIButton* closeButton;
 @end
 
 @interface TabController : NSObject
 @property (nonatomic,copy,readonly) NSArray* tabDocuments;
 @property (nonatomic,copy,readonly) NSArray* privateTabDocuments;
 @property (nonatomic,copy,readonly) NSArray* allTabDocuments;
-@property (nonatomic,copy,readonly) NSArray* currentTabDocuments;	//iOS 10 only
+@property (nonatomic,copy,readonly) NSArray* currentTabDocuments;
 @property (nonatomic,retain,readonly) TiltedTabView* tiltedTabView;
 @property (nonatomic,retain) TabDocument* activeTabDocument;
 @property (nonatomic,retain,readonly) TabOverview* tabOverview;
 @property (assign,nonatomic) BOOL usesTabBar;
+@property (retain, nonatomic) NSString* searchTerm;	//iOS 11 and above
+@property (readonly, nonatomic) NSArray* tabDocumentsMatchingSearchTerm;	//iOS 11 and above
 - (void)setActiveTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)closeTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
 - (BOOL)isPrivateBrowsingEnabled;
 - (void)closeTab;
 - (void)newTab;
+- (TabDocument*)_tabDocumentRepresentedByTiltedTabItem:(TiltedTabItem*)arg1;
+- (TabDocument*)_tabDocumentRepresentedByTabOverviewItem:(TabOverviewItem*)arg1;
+- (void)tiltedTabView:(TiltedTabView*)arg1 didSelectItem:(TiltedTabItem*)arg2;
+- (TabOverviewItem*)currentItemForTabOverview:(TabOverview*)arg1;
+- (TiltedTabItem*)currentItemForTiltedTabView:(TiltedTabView*)arg1;
+- (void)insertNewTabDocument:(TabDocument*)arg1 openedFromTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;
+- (void)dismissTabViewAnimated:(BOOL)arg1;
+- (void)_updateTiltedTabViewItemsAnimated:(BOOL)arg1;
+- (void)_closeTabDocuments:(NSArray<TabDocument*>*)documents animated:(BOOL)arg2 temporarily:(BOOL)arg3 allowAddingToRecentlyClosedTabs:(BOOL)arg4 keepWebViewAlive:(BOOL)arg5;
+- (void)_insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 8-10
+- (void)insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 11 and above
 //new stuff below
 @property (assign,nonatomic) BOOL desktopButtonSelected;
 @property (nonatomic,retain) UIButton* tiltedTabViewDesktopModeButton;
 - (void)loadDesktopButtonState;
 - (void)saveDesktopButtonState;
 - (void)updateUserAgents;
+- (void)tiltedTabView:(TiltedTabView*)tiltedTabView toggleLockedStateForItem:(TiltedTabItem*)item;
+- (void)tabOverview:(TabOverview*)tabOverview toggleLockedStateForItem:(TabOverviewItem*)item;
+@end
+
+@interface TabDocument8 : NSObject
+- (void)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2;
 @end
 
 @interface TabDocument : NSObject
@@ -472,7 +586,10 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic,readonly) TiltedTabItem* tiltedTabItem;
 @property (nonatomic,readonly) TabOverviewItem* tabOverviewItem;
 @property (assign,getter=isBlankDocument,nonatomic) BOOL blankDocument;
+@property (copy, nonatomic) NSUUID *UUID;
+@property (nonatomic) CGPoint scrollPoint;
 + (id)tabDocumentForWKWebView:(id)arg1;
+- (id)initWithTitle:(NSString*)arg1 URL:(NSURL*)arg2 UUID:(NSUUID*)arg3 privateBrowsingEnabled:(BOOL)arg4 hibernated:(BOOL)arg5 bookmark:(id)arg6 browserController:(BrowserController*)arg7;
 - (NSURL*)URL;
 - (BOOL)isBlankDocument;
 - (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2;
@@ -488,14 +605,18 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (BOOL)isHibernated;
 - (void)_openAppLinkInApp:(id)arg1 fromOriginalRequest:(id)arg2 updateAppLinkStrategy:(_Bool)arg3 webBrowserState:(id)arg4 completionHandler:(id)arg5;
+- (void)userTappedReloadButton;
 - (void)requestDesktopSite;	//iOS 8
 //new stuff below
-- (void)updateDesktopMode;
+- (BOOL)updateDesktopMode;
 - (BOOL)handleAlwaysOpenInNewTabForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
 - (BOOL)handleForceHTTPSForNavigationAction:(WKNavigationAction*)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
+- (BOOL)handleDesktopModeForNavigationAction:(WKNavigationAction*)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
 - (BOOL)handleDownloadAlertForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler;
 - (void)addAdditionalActionsForElement:(_WKActivatedElementInfo*)element toActions:(NSMutableArray*)actions;
-@property (nonatomic) BOOL desktopMode;
+@property (nonatomic,assign) NSInteger desktopMode;
+@property (nonatomic,assign) BOOL locked;
+@property (nonatomic,assign) BOOL accessAuthenticated;
 @end
 
 //iOS 8
@@ -506,22 +627,32 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (readonly, nonatomic) UIButton* addTabButton;
 @property (nonatomic,readonly) UIButton* privateBrowsingButton;
 @property (nonatomic, weak) TabController* delegate;
+@property (copy, nonatomic) NSArray *items;
+- (void)_updateDisplayedItems;
 //new stuff below
 @property (nonatomic, retain) UIButton* desktopModeButton;
 - (void)userAgentButtonLandscapePressed;
 @end
 
 @interface TabOverviewItem : NSObject
+@property (nonatomic, getter=_thumbnailView, setter=_setThumbnailView:) __weak TabThumbnailView *thumbnailView;	//iOS 9 and below
 @property (nonatomic,retain) TabOverviewItemLayoutInfo* layoutInfo;
 @property (nonatomic,weak) TabOverview* tabOverview;
 @end
 
 @interface TabOverviewItemLayoutInfo : NSObject
+@property (readonly, nonatomic) __weak TabOverview* tabOverview;
+@property (readonly, nonatomic) __weak TabOverviewItem* tabOverviewItem;
 @property (nonatomic,retain) TabOverviewItemView* itemView;
+@property (nonatomic) BOOL visibleInTabOverview;
 @end
 
 @interface TiltedTabView : UIView
-@property (nonatomic,weak) BrowserController* delegate;
+@property (nonatomic,weak) TabController* delegate;
+@property (copy, nonatomic) NSArray* items;
+- (id)_tiltedTabItemForLocation:(CGPoint)arg1;
+- (void)_layoutItemsWithTransition:(NSInteger)arg1;
+- (void)setPresented:(BOOL)arg1 animated:(BOOL)arg2;
 - (void)setShowsExplanationView:(BOOL)arg1 animated:(BOOL)arg2;
 - (void)setShowsPrivateBrowsingExplanationView:(BOOL)arg1 animated:(BOOL)arg2;	//iOS 11
 @end
@@ -532,8 +663,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @interface TabThumbnailView : UIView
 @property (nonatomic,readonly) UIButton* closeButton;
 @property (nonatomic) BOOL usesDarkTheme;
-//@property(nonatomic, assign) BOOL isLocked; //new
-//@property(nonatomic, retain) UIButton* lockButton; //new
+@property (copy, nonatomic) UIColor *titleColor;
+@property (nonatomic, retain) _SFDimmingButton* lockButton;	//new
 - (void)layoutSubviews;
 @end
 
@@ -544,12 +675,15 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface TiltedTabItem : NSObject
+@property (readonly, nonatomic) TabThumbnailView *contentView;	//iOS 9 and below
 @property (nonatomic,readonly) TiltedTabItemLayoutInfo* layoutInfo;
 @property (nonatomic,weak) TiltedTabView* tiltedTabView;
 @end
 
 @interface TiltedTabItemLayoutInfo : NSObject
+@property (readonly, nonatomic) TiltedTabView* tiltedTabView;
 @property (nonatomic,retain) TiltedTabThumbnailView* contentView;
+@property (readonly, nonatomic) __weak TiltedTabItem* item;
 @end
 
 @interface UnifiedField : UITextField

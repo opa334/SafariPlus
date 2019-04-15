@@ -10,7 +10,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>ENHANCED_DOWNLOADS_FOOTER</string>
+			<string>SECOND_OPEN_IN_NEW_TAB_FOOTER</string>
+			<key>label</key>
+			<string>URL_ACTIONS</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -22,11 +24,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>enhancedDownloadsEnabled</string>
+			<string>openInNewTabOptionEnabled</string>
 			<key>label</key>
-			<string>ENHANCED_DOWNLOADS</string>
-			<key>nestedEntryCount</key>
-			<integer>25</integer>
+			<string>SECOND_OPEN_IN_NEW_TAB</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -34,7 +34,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>VIDEO_DOWNLOADING_FOOTER</string>
+			<string>OPEN_IN_OPPOSITE_MODE_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -46,9 +46,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>videoDownloadingEnabled</string>
+			<string>openInOppositeModeOptionEnabled</string>
 			<key>label</key>
-			<string>VIDEO_DOWNLOADING</string>
+			<string>OPEN_IN_OPPOSITE_MODE</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -56,31 +56,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>DEFAULT_SECTION_FOOTER</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
+			<string>DESKTOP_MODE_SWITCH_FOOTER</string>
 			<key>label</key>
-			<string>DEFAULT_SECTION</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSegmentCell</string>
-			<key>default</key>
-			<integer>0</integer>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>key</key>
-			<string>defaultDownloadSection</string>
-			<key>titlesDataSource</key>
-			<string>sectionTitles</string>
-			<key>valuesDataSource</key>
-			<string>sectionValues</string>
+			<string>TAB_MANAGEMENT</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -92,9 +70,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>defaultDownloadSectionAutoSwitchEnabled</string>
+			<string>desktopButtonEnabled</string>
 			<key>label</key>
-			<string>DEFAULT_SECTION_AUTO_SWITCH</string>
+			<string>DESKTOP_MODE_SWITCH</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -102,43 +80,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>LINK_DOWNLOAD_OPTIONS_FOOTER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>downloadSiteToActionEnabled</string>
-			<key>label</key>
-			<string>DOWNLOAD_SITE_TO_OPTION</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<true/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>downloadImageToActionEnabled</string>
-			<key>label</key>
-			<string>DOWNLOAD_IMAGE_TO_OPTION</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>INSTANT_DOWNLOAD_FOOTER</string>
+			<string>DISABLE_TAB_LIMIT_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -150,29 +92,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>instantDownloadsEnabled</string>
+			<string>disableTabLimit</string>
 			<key>label</key>
-			<string>INSTANT_DOWNLOAD</string>
-			<key>nestedEntryCount</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>PSListItemsController</string>
-			<key>key</key>
-			<string>instantDownloadsOption</string>
-			<key>label</key>
-			<string>OPTION</string>
-			<key>titlesDataSource</key>
-			<string>instantDownloadTitles</string>
-			<key>valuesDataSource</key>
-			<string>instantDownloadValues</string>
+			<string>DISABLE_TAB_LIMIT</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -180,7 +102,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>CUSTOM_DEFAULT_PATH_FOOTER</string>
+			<string>CUSTOM_START_SITE_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -192,19 +114,11 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>customDefaultPathEnabled</string>
+			<string>customStartSiteEnabled</string>
 			<key>label</key>
-			<string>CUSTOM_DEFAULT_PATH</string>
+			<string>CUSTOM_START_SITE</string>
 			<key>nestedEntryCount</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSStaticTextCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>label</key>
-			<string>/var</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -218,9 +132,21 @@
 			<key>isURL</key>
 			<string>true</string>
 			<key>key</key>
-			<string>customDefaultPath</string>
+			<string>customStartSite</string>
 			<key>placeholder</key>
-			<string>/mobile/Downloads/</string>
+			<string>https://google.com/</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>label</key>
+			<string>SAVE</string>
+			<key>action</key>
+			<string>closeKeyboard</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -228,7 +154,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>PINNED_LOCATIONS_FOOTER</string>
+			<string>LONG_PRESS_SUGGESTIONS_FOOTER</string>
+			<key>label</key>
+			<string>SUGGESTIONS</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -240,21 +168,53 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>pinnedLocationsEnabled</string>
+			<string>longPressSuggestionsEnabled</string>
 			<key>label</key>
-			<string>PINNED_LOCATIONS_ENABLED</string>
+			<string>LONG_PRESS_SUGGESTIONS</string>
 			<key>nestedEntryCount</key>
-			<integer>1</integer>
+			<integer>3</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
-			<string>PSLinkListCell</string>
+			<string>PSStaticTextCell</string>
+			<key>label</key>
+			<string>LONG_PRESS_DURATION_TITLE</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<string>1</string>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>PinnedLocationsController</string>
+			<key>isSegmented</key>
+			<string>1</string>
+			<key>key</key>
+			<string>longPressSuggestionsDuration</string>
+			<key>max</key>
+			<string>2</string>
+			<key>min</key>
+			<string>0.25</string>
+			<key>segmentCount</key>
+			<integer>7</integer>
+			<key>showValue</key>
+			<string>1</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>longPressSuggestionsFocusEnabled</string>
 			<key>label</key>
-			<string>PINNED_LOCATIONS</string>
+			<string>LONG_PRESS_FOCUS_TITLE</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -262,7 +222,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>ONLY_DOWNLOAD_ON_WIFI_FOOTER</string>
+			<string>SHOW_TAB_COUNT_FOOTER</string>
+			<key>label</key>
+			<string>INTERFACE</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -274,9 +236,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>onlyDownloadOnWifiEnabled</string>
+			<string>showTabCountEnabled</string>
 			<key>label</key>
-			<string>ONLY_DOWNLOAD_ON_WIFI</string>
+			<string>SHOW_TAB_COUNT</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -284,7 +246,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>DISABLE_PUSH_NOTIFICATIONS_FOOTER</string>
+			<string>FULLSCREEN_SCROLLING_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -296,9 +258,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>disablePushNotificationsEnabled</string>
+			<string>fullscreenScrollingEnabled</string>
 			<key>label</key>
-			<string>DISABLE_PUSH_NOTIFICATIONS</string>
+			<string>FULLSCREEN_SCROLLING</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -306,7 +268,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>DISABLE_BAR_NOTIFICATIONS_FOOTER</string>
+			<string>LOCK_BARS_FOOTER</string>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -318,12 +280,12 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>disableBarNotificationsEnabled</string>
+			<string>lockBars</string>
 			<key>label</key>
-			<string>DISABLE_BAR_NOTIFICATIONS</string>
+			<string>LOCK_BARS</string>
 		</dict>
 	</array>
 	<key>title</key>
-	<string>ENHANCED_DOWNLOADS</string>
+	<string>USABILITY</string>
 </dict>
 </plist>

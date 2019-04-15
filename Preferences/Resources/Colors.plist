@@ -10,7 +10,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>label</key>
-			<string>NORMAL_MODE</string>
+			<string>NORMAL_MODE_COLORS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -18,7 +18,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>TopBarNormalColorPrefsController</string>
+			<string>SPPColorTopBarNormalListController</string>
 			<key>label</key>
 			<string>TOP_BAR</string>
 		</dict>
@@ -28,7 +28,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>BottomBarNormalColorPrefsController</string>
+			<string>SPPColorBottomBarNormalListController</string>
 			<key>label</key>
 			<string>BOTTOM_BAR</string>
 		</dict>
@@ -38,7 +38,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>TabSwitcherNormalColorPrefsController</string>
+			<string>SPPColorTabSwitcherNormalListController</string>
 			<key>label</key>
 			<string>TAB_SWITCHER</string>
 		</dict>
@@ -50,7 +50,7 @@
 			<key>footerText</key>
 			<string>COLOR_SETTINGS_BOTTOM_NOTICE</string>
 			<key>label</key>
-			<string>PRIVATE_MODE</string>
+			<string>PRIVATE_MODE_COLORS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -58,7 +58,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>TopBarPrivateColorPrefsController</string>
+			<string>SPPColorTopBarPrivateListController</string>
 			<key>label</key>
 			<string>TOP_BAR</string>
 		</dict>
@@ -68,7 +68,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>BottomBarPrivateColorPrefsController</string>
+			<string>SPPColorBottomBarPrivateListController</string>
 			<key>label</key>
 			<string>BOTTOM_BAR</string>
 		</dict>
@@ -78,7 +78,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>TabSwitcherPrivateColorPrefsController</string>
+			<string>SPPColorTabSwitcherPrivateListController</string>
 			<key>label</key>
 			<string>TAB_SWITCHER</string>
 		</dict>

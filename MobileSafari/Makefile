@@ -1,11 +1,9 @@
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = SafariPlus
-SafariPlus_CFLAGS = -fobjc-arc -Wno-deprecated-declarations
+SafariPlus_CFLAGS = -fobjc-arc -Wno-deprecated-declarations -Wno-unguarded-availability-new
 SafariPlus_FILES = SafariPlus.xm
-SafariPlus_FILES += $(wildcard Hooks/*.xm)
-SafariPlus_FILES += $(wildcard Classes/*.mm)
-SafariPlus_FILES += $(wildcard Classes/*.xm)
+SafariPlus_FILES += $(wildcard Hooks/*.xm Classes/*.mm Classes/*.xm ../Shared/*.mm)
 
 ifeq ($(NO_CEPHEI),0)
 SafariPlus_EXTRA_FRAMEWORKS += Cephei
@@ -13,10 +11,10 @@ else
 SafariPlus_CFLAGS += -D NO_CEPHEI=1
 endif
 
-ifeq ($(NO_LIBCOLORPICKER),0)
-SafariPlus_LIBRARIES += colorpicker
+ifeq ($(NO_LIBCSCOLORPICKER),0)
+SafariPlus_LIBRARIES += CSColorPicker
 else
-SafariPlus_CFLAGS += -D NO_LIBCOLORPICKER=1
+SafariPlus_CFLAGS += -D NO_LIBCSCOLORPICKER=1
 endif
 
 ifeq ($(NO_ROCKETBOOTSTRAP),0)
