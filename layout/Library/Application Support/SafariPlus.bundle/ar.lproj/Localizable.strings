@@ -59,9 +59,9 @@
 "VIDEO_DOWNLOADING" = "تنزيل الفيديوهات";
 "VIDEO_DOWNLOADING_FOOTER" = "عند التفعيل، سيتم إضافة زر إلى مشغل الفيديوهات يمكن من خلاله تنزيل الفيديو الذي يجرِ تشغيله.\n\nملاحظة: قد لا تعمل هذه الميزة في بعض المواقع بسبب عدم إمكانية الحصول على عناوين URL الخاصة بالفيديوهات من هذه المواقع بسهولة، أيضًا بعض المواقع تستخدم ملفات m3u8 لتدفق محتواها، وبالتالي ستتمكن من حفظ هذه الملفات ولكن لن تستفيد شيء لأنك لن تصل إلى مرادك.";
 
-"DEFAULT_SECTION" = "Default Section";
-"DEFAULT_SECTION_FOOTER" = "Choose the selected section of the download menu when it gets opened. The 'Auto Switch' option will only choose the selected section if there are still active downloads left, otherwise the other section will get selected.";
-"DEFAULT_SECTION_AUTO_SWITCH" = "Auto Switch";
+"DEFAULT_SECTION" = "القسم الافتراضي";
+"DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات نشطة، وعندما لا تكون هناك تنزيلات نشطة سيتم فتح القسم الآخر.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "تبديل تلقائي";
 
 "LINK_DOWNLOAD_OPTIONS_FOOTER" = "Adds options to download a site / an image to the menu that appears when long pressing site elements.";
 "DOWNLOAD_SITE_TO_OPTION" = "'Download Site to...' Option";
