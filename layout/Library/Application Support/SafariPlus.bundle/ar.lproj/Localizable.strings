@@ -21,16 +21,16 @@
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\n\nNOTE: You can add sites that don't support HTTPS to exceptions.";
-"FORCE_HTTPS" = "Force HTTPS";
-"FORCE_HTTPS_EXCEPTIONS" = "Exceptions...";
-"FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";
-"EDIT" = "Edit";
-"ADD" = "Add";
-"APPLY" = "Apply";
-"ADD_EXCEPTION_ALERT_TITLE" = "Add Exception";
-"ADD_EXCEPTION_ALERT_MESSAGE" = "Enter a domain where the HTTPS protocol should not be forced.\nExample: 'google.com'";
-"ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
+"FORCE_HTTPS_FOOTER" = "سيتم فرض بروتوكول HTTPS عالميًا على كل مواقع الويب.\n\ملاحظة: يمكنك إضافة مواقع ويب لا تدعم بروتوكول HTTPS إلى الاستثناءات أيضًا.";
+"FORCE_HTTPS" = "فرض بروتوكول HTTPS";
+"FORCE_HTTPS_EXCEPTIONS" = "الاستثناءات...";
+"FORCE_HTTPS_EXCEPTIONS_TITLE" = "الاستثناءات";
+"EDIT" = "تعديل";
+"ADD" = "إضافة";
+"APPLY" = "تطبيق";
+"ADD_EXCEPTION_ALERT_TITLE" = "إضافة استثناء";
+"ADD_EXCEPTION_ALERT_MESSAGE" = "أدخل موقع ويب (دومين) لا ينبغي لبروتوكول HTTPS أن يفرض عليه.\nمثال: 'google.com'";
+"ADD_EXCEPTION_ALERT_PLACEHOLDER" = "عنوان URL";
 
 /*DISABLE_ANALYTICS*/
 /*DISABLE_ANALYTICS_FOOTER*/
