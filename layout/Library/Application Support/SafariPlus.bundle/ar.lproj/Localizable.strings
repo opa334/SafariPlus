@@ -56,8 +56,8 @@
 "ENHANCED_DOWNLOADS" = "التنزيلات المحسنة";
 "ENHANCED_DOWNLOADS_FOOTER" = "عند تفعيل هذا الخيار:\n١- سيتم إضافة زر في شريط الأدوات السفلي الخاص بمتصفح Safari يمكن من خلاله استعراض وإدارة التنزيلات الجارية والمكتملة والمعلقة.\n٢- ستتمكن من الوصول إلى الملفات المنزلة وإدارتها عن طريق قسم 'تصفح الملفات'.\n٣- قبل بدأ التنزيل سيظهر تنبيه يمكن من خلاله حفظ الملف المراد تنزيله في مسار آخر غير المسار الافتراضي، حيث أن المسار الافتراضي هو (/var/mobile/Downloads).\n٤- ستستمر التنزيلات في الخلفية وستحصل على إشعار فور انتهاء التنزيل.\n٥- عند إغلاق Safari من مبدل التطبيقات ستتجمد التنزيلات الجارية وستظل مجمدة حتى يتم إعادة تشغيل Safari مرة أخرى.";
 
-"VIDEO_DOWNLOADING" = "Video Downloading";
-"VIDEO_DOWNLOADING_FOOTER" = "Adds a button to the video player that can be used to download the video.\n\nNOTE: Might not work on some sites due to the URL not being retrievable easily. Also some sites use m3u8 files to stream their content, you can save these files, but they do not contain any video.";
+"VIDEO_DOWNLOADING" = "تنزيل الفيديوهات";
+"VIDEO_DOWNLOADING_FOOTER" = "عند التفعيل، سيتم إضافة زر إلى مشغل الفيديوهات يمكن من خلاله تنزيل الفيديو الذي يجرِ تشغيله.\n\nملاحظة: قد لا تعمل هذه الميزة في بعض المواقع بسبب عدم إمكانية الحصول على عناوين URL الخاصة بالفيديوهات من هذه المواقع بسهولة، أيضًا بعض المواقع تستخدم ملفات m3u8 لتدفق محتواها، وبالتالي ستتمكن من حفظ هذه الملفات ولكن لن تستفيد شيء لأنك لن تصل إلى مرادك.";
 
 "DEFAULT_SECTION" = "Default Section";
 "DEFAULT_SECTION_FOOTER" = "Choose the selected section of the download menu when it gets opened. The 'Auto Switch' option will only choose the selected section if there are still active downloads left, otherwise the other section will get selected.";
