@@ -98,10 +98,10 @@
 
 /* Usability */
 
-"URL_ACTIONS" = "URL Actions";
+"URL_ACTIONS" = "إجراءات عناوين URL";
 
-"SECOND_OPEN_IN_NEW_TAB" = "Second 'Open in New Tab' Option";
-"SECOND_OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
+"SECOND_OPEN_IN_NEW_TAB" = "خيار فتح في علامة تبويب جديدة' ثاني";
+"SECOND_OPEN_IN_NEW_TAB_FOOTER" = "إضافة خيار 'فتح في علامة تبويب جديدة' آخر إلى القائمة التي تظهر عند الضغط مطولًا على رابط.\nقم بتعيين 'فتح الروابط' في إعدادات Safari إلى 'في الخلفية' ليكون كلا الخيارين متاحين عند الضغط مطولًا على رابط.";
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an option to the menu that appears when a link is long pressed, that can be used to open the link in the opposite browsing mode.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
 "OPEN_IN_OPPOSITE_MODE" = "Open in Opposite Mode Option";
