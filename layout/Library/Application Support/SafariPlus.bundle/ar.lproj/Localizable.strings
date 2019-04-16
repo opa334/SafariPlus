@@ -114,15 +114,15 @@
 /*SHARE_BUTTON*/
 /*SHARE_BUTTON_FOOTER*/
 
-"DISABLE_TAB_LIMIT" = "Disable Tab Limit";
-"DISABLE_TAB_LIMIT_FOOTER" = "Disables the imposed tab limit that varies based on iOS version and device. There is probably a reason why Apple has decided to enforce a tab limit, use on your own risk.";
+"DISABLE_TAB_LIMIT" = "تعطيل حد علامة التبويب";
+"DISABLE_TAB_LIMIT_FOOTER" = "تعطيل حد علامة التبويب الذي تفرضه Apple والذي يختلف بناءً على إصدار iOS ونوع الجهاز. قد يكون هناك سبب وجيه جعل Apple تفعل هذا ولذلك فإن استخدام هذه الميزة يكون على مسؤوليتك الخاصة.";
 
-"CUSTOM_START_SITE" = "Custom Start Site";
-"CUSTOM_START_SITE_FOOTER" = "Replace the favorites view that normally appears in a newly opened tab with a custom site that gets opened instead.";
+"CUSTOM_START_SITE" = "موقع بدأ مخصص";
+"CUSTOM_START_SITE_FOOTER" = "استبدال صفحة المفضلة التي تظهر عند فتح علامة تبويب بموقع مخصص.";
 
-"SUGGESTIONS" = "Suggestions";
+"SUGGESTIONS" = "الإقتراحات";
 
-"LONG_PRESS_SUGGESTIONS" = "Insert Suggestions on Long Press";
+"LONG_PRESS_SUGGESTIONS" = "إدراج الإقتراحات في الضغط المطول";
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Long press on search / URL suggestions to insert them into the URL bar.";
 "LONG_PRESS_DURATION_TITLE" = "Long Press Duration";
 "LONG_PRESS_FOCUS_TITLE" = "Focus URL Bar on Long Press";
