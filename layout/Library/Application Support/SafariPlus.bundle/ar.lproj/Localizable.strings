@@ -68,33 +68,33 @@
 "DOWNLOAD_IMAGE_TO_OPTION" = "خيار 'تنزيل الصورة إلى...'";
 
 "INSTANT_DOWNLOAD" = "التنزيل الفوري";
-"INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الخيار المحدد افتراضيًا دائمًا.";
+"INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الخيار المحدد بشكل افتراضي دائمًا.";
 "OPTION" = "Option";
 
-"CUSTOM_DEFAULT_PATH" = "Custom Default Path";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Choose a custom location to where the files should be downloaded when the download option is selected.\n\nNote: It is only possible to download files into writable paths, so anything inside the /var directory should work!";
+"CUSTOM_DEFAULT_PATH" = "مسار افتراضي مخصص";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "اختر مسارًا مخصصًا يتم تنزيل الملفات إليه عندما يكون هذا الخيار مفعلًا.\n\nملاحظة: يمكن تنزيل الملفات في مسارات قابلة للكتابة فقط، مما يعني أن أي مسار داخل مجلد /var يمكن اختياره.";
 
-"PINNED_LOCATIONS_ENABLED" = "Pinned Locations Enabled";
-"PINNED_LOCATIONS" = "Pinned Locations";
-"PINNED_LOCATIONS_FOOTER" = "Lets you pick a few locations that will appear when using the 'Download to' option.";
-"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "Add Pinned Location";
-"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "Edit Pinned Location";
-"PINNED_LOCATIONS_ALERT_MESSAGE" = "Choose a name and the path of the pinned location.";
-"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
-"BROWSE" = "Browse...";
-"CHOOSE_PATH_CONFIRMATION_TITLE" = "Choose Path";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n%@?";
-"ERROR_INVALID_NAME_OR_PATH" = "Invalid name or path";
+"PINNED_LOCATIONS_ENABLED" = "تفعيل المواقع المثبتة";
+"PINNED_LOCATIONS" = "المواقع المثبتة";
+"PINNED_LOCATIONS_FOOTER" = "يتيح لك اختيار بعض المواقع التي ستظهر عند استخدام خيار 'تنزيل إلى...'.";
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "إضافة موقع مثبت";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "تعديل موقع مثبت";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "اختر اسم ومسار الموقع المثبت.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "الاسم";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "المساو";
+"BROWSE" = "تصفح...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "اختر المسار";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "هل تريد اختيار المسار\n%@؟";
+"ERROR_INVALID_NAME_OR_PATH" = "اسم أو مسار غير صالح";
 
-"ONLY_DOWNLOAD_ON_WIFI" = "Only Download on Wifi";
-"ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Only allow downloading while the device is connected to a wifi network.";
+"ONLY_DOWNLOAD_ON_WIFI" = "التنزيل باستخدام WiFi فقط";
+"ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "عند تفعيل هذا الخيار لن تتمكن من تنزيل أي شيء إلا عندما تكون متصلًا بشبكة WiFi.";
 
-"DISABLE_PUSH_NOTIFICATIONS" = "Disable Push Notifications";
-"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "By default, you will recieve a push notification when a download finishes while the app is inactive. This option will disable that.";
+"DISABLE_PUSH_NOTIFICATIONS" = "تعطيل تلقي الإشعارات";
+"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "بشكل افتراضي، ستتلقى إشعارات عند انتهاء تنزيل شيء عندما يكون متصفح Safari ليس نشطًا (أي مشغلًا في الخلفية)، هذا الخيار يقوم بتعطيل هذه الإشعارات.";
 
-"DISABLE_BAR_NOTIFICATIONS" = "Disable Status Bar Notifications";
-"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "By default, you will recieve a status bar notification when a download starts / finishes while the app is active. This option will disable that.";
+"DISABLE_BAR_NOTIFICATIONS" = "تعطيل إشعارات شريط الحالة";
+"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "بشكل افتراضي، ستتلقى إشعارات عند بدء / انتهاء تنزيل شيء عندما يكون Safari نشطًا (قيد الاستخدام)، هذا الخيار يقوم بتعطيل هذه الإشعارات.";
 
 /* Usability */
 
