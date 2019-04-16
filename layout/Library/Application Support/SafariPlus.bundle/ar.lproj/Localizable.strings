@@ -120,12 +120,12 @@
 "CUSTOM_START_SITE" = "موقع بدأ مخصص";
 "CUSTOM_START_SITE_FOOTER" = "استبدال صفحة المفضلة التي تظهر عند فتح علامة تبويب بموقع مخصص.";
 
-"SUGGESTIONS" = "الإقتراحات";
+"SUGGESTIONS" = "الاقتراحات";
 
-"LONG_PRESS_SUGGESTIONS" = "إدراج الإقتراحات في الضغط المطول";
-"LONG_PRESS_SUGGESTIONS_FOOTER" = "Long press on search / URL suggestions to insert them into the URL bar.";
-"LONG_PRESS_DURATION_TITLE" = "Long Press Duration";
-"LONG_PRESS_FOCUS_TITLE" = "Focus URL Bar on Long Press";
+"LONG_PRESS_SUGGESTIONS" = "إدراج الاقتراحات في الضغط المطول";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "اضغط مطولًا على اقتراحات البحث / URL لإدراجها في شريط URL";
+"LONG_PRESS_DURATION_TITLE" = "مدة الضغط المطول";
+"LONG_PRESS_FOCUS_TITLE" = "التركيز على شريط URL عند الضغط المطول";
 
 /*INSERT_SUGGESTION_BUTTON*/
 /*INSERT_SUGGESTION_BUTTON_FOOTER*/
