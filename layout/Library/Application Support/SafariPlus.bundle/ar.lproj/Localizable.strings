@@ -36,7 +36,7 @@
 /*DISABLE_ANALYTICS_FOOTER*/
 
 "LOCKED_TABS" = "علامات تبويب مقفلة";
-"LOCKED_TABS_FOOTER" = "إضافة مفتاح تبديل قفل إلى أعلى يسار كل علامة تبويب في مبدل علامات التبويب. لا يمكن إغلاق علامة التبويب المقفلة طالما هي مقفلة، وستظل موجودة إلى أن تقوم بفتح قفلها.";
+"LOCKED_TABS_FOOTER" = "إضافة مفتاح تبديل للقفل إلى أعلى يسار كل علامة تبويب في مبدل علامات التبويب. لا يمكن إغلاق علامة التبويب المقفلة طالما هي مقفلة، وستظل موجودة إلى أن تقوم بفتح قفلها.";
 
 "BIOMETRIC_PROTECTION" = "حماية البصمة";
 "BIOMETRIC_PROTECTION_FOOTER" = "حماية الإجراءات المحددة بالبصمة سواءً الإصبع أو الوجه.";
@@ -103,13 +103,13 @@
 "SECOND_OPEN_IN_NEW_TAB" = "خيار فتح في علامة تبويب جديدة' ثاني";
 "SECOND_OPEN_IN_NEW_TAB_FOOTER" = "إضافة خيار 'فتح في علامة تبويب جديدة' آخر إلى القائمة التي تظهر عند الضغط مطولًا على رابط.\nقم بتعيين 'فتح الروابط' في إعدادات Safari إلى 'في الخلفية' ليكون كلا الخيارين متاحين عند الضغط مطولًا على رابط.";
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an option to the menu that appears when a link is long pressed, that can be used to open the link in the opposite browsing mode.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
-"OPEN_IN_OPPOSITE_MODE" = "Open in Opposite Mode Option";
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "إضافة خيار إلى قائمة الخيارات التي تظهر عند الضغط مطولًا على رابط من شأنه فتح الرابط في وضع التصفح المعاكس.\n(الوضع العادي -> خيار للفتح في الوضع الخاص،\nالوضع الخاص -> خيار للفتح في الوضع العادي)";
+"OPEN_IN_OPPOSITE_MODE" = "خيار للفتح في الوضع المعاكس";
 
-"TAB_MANAGEMENT" = "Tab Management";
+"TAB_MANAGEMENT" = "إدارة علامة التبويب";
 
-"DESKTOP_MODE_SWITCH_FOOTER" = "Adds a switch to the tab switcher that can be used to globally switch between mobile and desktop mode.";
-"DESKTOP_MODE_SWITCH" = "Desktop Mode Switch";
+"DESKTOP_MODE_SWITCH_FOOTER" = "إضافة مفتاح تبديل إلى مبدل علامات التبويب يمكن استخدامه في التبديل بين وضع الهاتف ووضع سطح المكتب.";
+"DESKTOP_MODE_SWITCH" = "تبديل وضع سطح المكتب";
 
 /*SHARE_BUTTON*/
 /*SHARE_BUTTON_FOOTER*/
