@@ -163,22 +163,22 @@
 "AUTO_CLOSE_TABS_FOOTER" = "إغلاق علامات التبويب لوضع التصفح عند حدوث حالة محددة.";
 "AUTO_CLOSE_TABS_LABEL" = "إغلاق تلقائي لعلامات التبويب";
 "AUTO_DELETE_DATA_LABEL" = "مسح تلقائي لبيانات المتصفح";
-"AUTO_DELETE_DATA_FOOTER" = "Clears browser data (history, autofill) when the specified case occurs.";
-"SAFARI_CLOSED" = "Safari closed";
-"SAFARI_MINIMIZED" = "Safari minimized";
+"AUTO_DELETE_DATA_FOOTER" = "مسح بيانات المتصفح (السجل والتعبئة التلقائية) عند حدوث حالة محددة.";
+"SAFARI_CLOSED" = "إغلاق Safari";
+"SAFARI_MINIMIZED" = "تصغير Safari";
 
-"ACTIVE_MODE" = "Active Browsing Mode";
-"BOTH_MODES" = "Both Browsing Modes";
+"ACTIVE_MODE" = "وضع التصفح النشط";
+"BOTH_MODES" = "كلا أوضاع التصفح";
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Always opens clicked links in new tabs.";
-"ALWAYS_OPEN_NEW_TAB" = "Always Open Links in New Tab";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Open New Tab in Background";
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "فتح الروابط التي يتم النقر عليها في علامات تبويب جديدة دائمًا.";
+"ALWAYS_OPEN_NEW_TAB" = "فتح الروابط في علامة تبويب جديدة دائمًا";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "فتح علامة تبويب جديدة في الخلفية";
 
-"DISABLE_PRIVATE_MODE_FOOTER" = "Disables private browsing mode and removes the 'Private' button. (Hidden stock feature)";
-"DISABLE_PRIVATE_MODE" = "Fully Disable Private Browsing";
+"DISABLE_PRIVATE_MODE_FOOTER" = "تعطيل وضع التصفح الخاص وإزالة زر 'خاص'. (ميزة مخفية في النظام)";
+"DISABLE_PRIVATE_MODE" = "تعطيل التصفح الخاص بالكامل";
 
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 and above when a 'mailto:<email>' URL is accessed.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Suppress Mailto Dialog";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "منع مربع الحوار الذي يظهر على إصدارات iOS 10 ومابعده عندما يستطيع 'mailto:<email>' الوصول إلى عنوان URL.";
+"SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار (iOS 10+)";
 
 /* Gestures */
 
