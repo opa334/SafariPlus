@@ -17,6 +17,6 @@
 @interface SPPreferenceMerger : NSObject
 + (BOOL)needsMerge;
 + (void)mergeIfNeeded;
-+ (NSString*)LCSCPHexFromLCPHex:(NSString*)lcpHex; //libColorPicker -> libCSColorPicker
++ (NSString*)LCSCPHexFromLCPHex:(NSString*)lcpHex;	//libColorPicker -> libCSColorPicker
 + (NSDictionary*)locationWithName:(NSString*)name path:(NSString*)path;
 @end

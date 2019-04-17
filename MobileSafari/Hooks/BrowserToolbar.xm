@@ -23,12 +23,26 @@
 
 //Turns a system bar button item into a non-system one
 //Needed because system items act weird and can't be modified that easily
-static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment, BOOL setLongPress, BOOL setTouchDown)
+static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment, BOOL setLongPress, BOOL setTouchDown, BOOL flipForRTL)
 {
 	UIImage* itemImage;
 	[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:oldItem.systemItem usingItemStyle:0];
 
+	BOOL rtl = NO;
+
+	UIView* tmpView = [[UIView alloc] init];
+
+	if([tmpView respondsToSelector:@selector(_sf_usesLeftToRightLayout)])
+	{
+		rtl = ![tmpView _sf_usesLeftToRightLayout];
+	}
+
 	UIImage* newImage = [itemImage imageWithWidth:width alignment:alignment];
+
+	if(flipForRTL && [newImage respondsToSelector:@selector(imageFlippedForRightToLeftLayoutDirection)])
+	{
+		newImage = [newImage imageFlippedForRightToLeftLayoutDirection];
+	}
 
 	UIBarButtonItem* newItem = [[(__kindof UIBarButtonItem*)[oldItem class] alloc] initWithImage:newImage style:UIBarButtonItemStylePlain target:oldItem.target action:oldItem.action];
 
@@ -206,7 +220,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				alignment = 1;
 			}
 
-			UIBarButtonItem* newBackItem = unsystemifiedBarButtonItem(backItem, 25, alignment, YES, NO);
+			UIBarButtonItem* newBackItem = unsystemifiedBarButtonItem(backItem, 25, alignment, YES, NO, YES);
 
 			[allItems setObject:newBackItem forKey:@(BrowserToolbarBackItem)];
 
@@ -233,7 +247,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				alignment = 1;
 			}
 
-			UIBarButtonItem* newForwardItem = unsystemifiedBarButtonItem(forwardItem, 25, alignment, YES, NO);
+			UIBarButtonItem* newForwardItem = unsystemifiedBarButtonItem(forwardItem, 25, alignment, YES, NO, YES);
 
 			[allItems setObject:newForwardItem forKey:@(BrowserToolbarForwardItem)];
 
@@ -260,7 +274,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				alignment = 1;
 			}
 
-			UIBarButtonItem* newShareItem = unsystemifiedBarButtonItem(shareItem, 25, alignment, YES, YES);
+			UIBarButtonItem* newShareItem = unsystemifiedBarButtonItem(shareItem, 25, alignment, YES, YES, NO);
 
 			[allItems setObject:newShareItem forKey:@(BrowserToolbarShareItem)];
 

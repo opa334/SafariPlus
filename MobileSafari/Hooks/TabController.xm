@@ -226,7 +226,6 @@
 	toggle();
 }
 
-//Lock tabs (Prevent them from being closable)
 - (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
 {
 	if(preferenceManager.lockedTabsEnabled)
@@ -291,7 +290,22 @@
 
 	return %orig;
 }
+/* //Somewhat broken, TODO: fix it
+- (BOOL)tabBar:(TabBar*)tabBar canCloseItem:(TabBarItem*)item
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		TabDocument* tabDocument = [self _tabDocumentRepresentedByTabBarItem:item];
 
+		if(tabDocument.locked)
+		{
+			return NO;
+		}
+	}
+
+	return %orig;
+}
+*/
 - (void)_updateTiltedTabViewItemsWithTransition:(NSInteger)transition
 {
 	if(preferenceManager.lockedTabsEnabled)

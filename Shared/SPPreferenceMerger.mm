@@ -43,10 +43,10 @@
 		return;
 	}
 
-  NSString* defaults = @"com.opa334.safariplusprefs";
+	NSString* defaults = @"com.opa334.safariplusprefs";
 
   #ifndef PREFERENCES
-  HBPreferences* tmpPreferences = [[HBPreferences alloc] initWithIdentifier:defaults];
+	HBPreferences* tmpPreferences = [[HBPreferences alloc] initWithIdentifier:defaults];
   #endif
 
 	NSDictionary* colorDict = [NSDictionary dictionaryWithContentsOfFile:rPath(colorPrefsPath)];
@@ -58,60 +58,60 @@
 			NSString* lcscpHex = [self LCSCPHexFromLCPHex:lcpHex];
 
       #ifdef PREFERENCES
-      CFPreferencesSetValue((__bridge CFStringRef)key, (__bridge CFPropertyListRef)lcscpHex, (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-  		CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSetValue((__bridge CFStringRef)key, (__bridge CFPropertyListRef)lcscpHex, (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
       #else
-      [tmpPreferences setObject:lcscpHex forKey:key];
+			[tmpPreferences setObject:lcscpHex forKey:key];
       #endif
 		}
 
-    [fileManager removeItemAtPath:rPath(colorPrefsPath) error:nil];
+		[fileManager removeItemAtPath:rPath(colorPrefsPath) error:nil];
 	}
 
-  NSDictionary* otherDict = [NSDictionary dictionaryWithContentsOfFile:rPath(otherPlistPath)];
-  if(otherDict)
-  {
-    NSArray* forceHTTPSExceptions = [otherDict objectForKey:@"ForceHTTPSExceptions"];
+	NSDictionary* otherDict = [NSDictionary dictionaryWithContentsOfFile:rPath(otherPlistPath)];
+	if(otherDict)
+	{
+		NSArray* forceHTTPSExceptions = [otherDict objectForKey:@"ForceHTTPSExceptions"];
 
-    NSArray* pinnedLocationNames = [otherDict objectForKey:@"PinnedLocationNames"];
-    NSArray* pinnedLocationPaths = [otherDict objectForKey:@"PinnedLocationPaths"];
+		NSArray* pinnedLocationNames = [otherDict objectForKey:@"PinnedLocationNames"];
+		NSArray* pinnedLocationPaths = [otherDict objectForKey:@"PinnedLocationPaths"];
 
-    if(forceHTTPSExceptions)
-    {
+		if(forceHTTPSExceptions)
+		{
       #ifdef PREFERENCES
-      CFPreferencesSetValue((__bridge CFStringRef)@"forceHTTPSExceptions", (__bridge CFPropertyListRef)forceHTTPSExceptions, (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-  		CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSetValue((__bridge CFStringRef)@"forceHTTPSExceptions", (__bridge CFPropertyListRef)forceHTTPSExceptions, (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
       #else
-      [tmpPreferences setObject:forceHTTPSExceptions forKey:@"forceHTTPSExceptions"];
+			[tmpPreferences setObject:forceHTTPSExceptions forKey:@"forceHTTPSExceptions"];
       #endif
-    }
+		}
 
-    if(pinnedLocationNames && pinnedLocationPaths)
-    {
-      if(pinnedLocationNames.count == pinnedLocationPaths.count)
-      {
-        NSMutableArray* pinnedLocationsM = [NSMutableArray new];
+		if(pinnedLocationNames && pinnedLocationPaths)
+		{
+			if(pinnedLocationNames.count == pinnedLocationPaths.count)
+			{
+				NSMutableArray* pinnedLocationsM = [NSMutableArray new];
 
-        for(NSInteger i = 0; i < pinnedLocationNames.count; i++)
-        {
-          NSString* name = pinnedLocationNames[i];
-          NSString* path = pinnedLocationPaths[i];
+				for(NSInteger i = 0; i < pinnedLocationNames.count; i++)
+				{
+					NSString* name = pinnedLocationNames[i];
+					NSString* path = pinnedLocationPaths[i];
 
-          NSDictionary* location = [self locationWithName:name path:path];
-          [pinnedLocationsM addObject:location];
-        }
+					NSDictionary* location = [self locationWithName:name path:path];
+					[pinnedLocationsM addObject:location];
+				}
 
-        #ifdef PREFERENCES
-        CFPreferencesSetValue((__bridge CFStringRef)@"pinnedLocations", (__bridge CFPropertyListRef)[pinnedLocationsM copy], (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-    		CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-        #else
-        [tmpPreferences setObject:[pinnedLocationsM copy] forKey:@"pinnedLocations"];
-        #endif
-      }
+	#ifdef PREFERENCES
+				CFPreferencesSetValue((__bridge CFStringRef)@"pinnedLocations", (__bridge CFPropertyListRef)[pinnedLocationsM copy], (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+				CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+	#else
+				[tmpPreferences setObject:[pinnedLocationsM copy] forKey:@"pinnedLocations"];
+	#endif
+			}
 
-      [fileManager removeItemAtPath:rPath(otherPlistPath) error:nil];
-    }
-  }
+			[fileManager removeItemAtPath:rPath(otherPlistPath) error:nil];
+		}
+	}
 }
 
 + (NSString*)LCSCPHexFromLCPHex:(NSString*)lcpHex

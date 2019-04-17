@@ -33,8 +33,6 @@
 
 #import <WebKit/WKWebView.h>
 
-
-
 @implementation SPDownloadManager
 
 + (instancetype)sharedInstance

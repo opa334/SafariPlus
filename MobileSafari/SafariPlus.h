@@ -110,7 +110,7 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 @end
 
 @interface UISegmentedControl (Private)
-+ (double)defaultHeightForStyle:(NSInteger)arg1 size:(int)arg2;
++ (CGFloat)defaultHeightForStyle:(NSInteger)arg1 size:(int)arg2;
 @end
 
 @interface UIBarButtonItem (Safari)
@@ -140,6 +140,10 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 
 @interface UIWindow (Safari)
 @property (nonatomic) CGRect _sf_bottomUnsafeAreaFrameForToolbar;
+@end
+
+@interface UIView (Safari)
+- (BOOL)_sf_usesLeftToRightLayout;
 @end
 
 /**** WebKit ****/
@@ -214,8 +218,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface _SFDimmingButton : UIButton
-@property (assign,nonatomic) double normalImageAlpha;
-@property (assign,nonatomic) double highlightedImageAlpha;
+@property (assign,nonatomic) CGFloat normalImageAlpha;
+@property (assign,nonatomic) CGFloat highlightedImageAlpha;
 @end
 
 
@@ -316,7 +320,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface AVValueTiming : NSObject
-@property (nonatomic,readonly) double anchorTimeStamp;
+@property (nonatomic,readonly) CGFloat anchorTimeStamp;
 @end
 
 @interface WebAVPlayerController : NSObject
@@ -528,6 +532,9 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 + (UIImage*)_closeButtonWithColor:(UIColor*)color;
 @end
 
+@interface TabBarItem : NSObject
+@end
+
 @interface TabBarItemView : UIView
 @property (nonatomic, getter=isActive) BOOL active;
 @property (readonly, nonatomic) UIButton* closeButton;
@@ -552,6 +559,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)newTab;
 - (TabDocument*)_tabDocumentRepresentedByTiltedTabItem:(TiltedTabItem*)arg1;
 - (TabDocument*)_tabDocumentRepresentedByTabOverviewItem:(TabOverviewItem*)arg1;
+- (TabDocument*)_tabDocumentRepresentedByTabBarItem:(TabBarItem*)arg1;
 - (void)tiltedTabView:(TiltedTabView*)arg1 didSelectItem:(TiltedTabItem*)arg2;
 - (TabOverviewItem*)currentItemForTabOverview:(TabOverview*)arg1;
 - (TiltedTabItem*)currentItemForTiltedTabView:(TiltedTabView*)arg1;
