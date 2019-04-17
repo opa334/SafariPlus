@@ -98,7 +98,7 @@
 
 /* Usability */
 
-"URL_ACTIONS" = "إجراءات عناوين URL";
+"URL_ACTIONS" = "إجراءات عنوان URL";
 
 "SECOND_OPEN_IN_NEW_TAB" = "خيار فتح في علامة تبويب جديدة' ثاني";
 "SECOND_OPEN_IN_NEW_TAB_FOOTER" = "إضافة خيار 'فتح في علامة تبويب جديدة' آخر إلى القائمة التي تظهر عند الضغط مطولًا على رابط.\nقم بتعيين 'فتح الروابط' في إعدادات Safari إلى 'في الخلفية' ليكون كلا الخيارين متاحين عند الضغط مطولًا على رابط.";
@@ -151,18 +151,18 @@
 
 "CHANGE_MODE_ON" = "تغيير وضع التصفح على...";
 
-"LAUNCH_MODE_FOOTER" = "Changes to specified browsing mode when Safari is launched.";
-"LAUNCH_MODE_LABEL" = "App Start";
+"LAUNCH_MODE_FOOTER" = "التغيير إلى وضع التصفح المحدد عند بدء Safari.";
+"LAUNCH_MODE_LABEL" = "بدء التطبيق";
 
-"RESUME_FOOTER" = "Changes to specified browsing mode when Safari is resumed.";
-"RESUME_LABEL" = "App Resume";
+"RESUME_FOOTER" = "التغيير إلى وضع التصفح المحدد عند استئناف Safari.";
+"RESUME_LABEL" = "استئناف التطبيق";
 
-"EXTERNAL_URL_FOOTER" = "Changes to specified browsing mode when an external URL (from another app) is opened with Safari.";
-"EXTERNAL_URL_LABEL" = "External Link Opened";
+"EXTERNAL_URL_FOOTER" = "التغيير إلى وضع التصفح المحدد عند فتح رابط خارجي (من تطبيق آخر) مع Safari.";
+"EXTERNAL_URL_LABEL" = "فتح الرابط الخارجي";
 
-"AUTO_CLOSE_TABS_FOOTER" = "Closes tabs of specified browsing mode when the specified case occurs.";
-"AUTO_CLOSE_TABS_LABEL" = "Auto-Close Tabs";
-"AUTO_DELETE_DATA_LABEL" = "Auto-Clear Browser Data";
+"AUTO_CLOSE_TABS_FOOTER" = "إغلاق علامات التبويب لوضع التصفح عند حدوث حالة محددة.";
+"AUTO_CLOSE_TABS_LABEL" = "إغلاق تلقائي لعلامات التبويب";
+"AUTO_DELETE_DATA_LABEL" = "مسح تلقائي لبيانات المتصفح";
 "AUTO_DELETE_DATA_FOOTER" = "Clears browser data (history, autofill) when the specified case occurs.";
 "SAFARI_CLOSED" = "Safari closed";
 "SAFARI_MINIMIZED" = "Safari minimized";
