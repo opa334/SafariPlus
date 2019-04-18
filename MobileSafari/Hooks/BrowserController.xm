@@ -505,7 +505,7 @@
 			{
 				[closeAllTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedTabCount]];
 			}
-			else if ((self.tabController.activeTabDocument.locked || ![self respondsToSelector:@selector(_closeAllTabsAction)]) && nonLockedTabCount == 1)
+			else if (([self isShowingTabView] || self.tabController.activeTabDocument.locked || ![self respondsToSelector:@selector(_closeAllTabsAction)]) && nonLockedTabCount == 1)
 			{
 				[closeAllTabsAction setTitle:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"]];
 			}
