@@ -18,7 +18,7 @@
 
 #import "../Defines.h"
 #import "../SafariPlus.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Classes/AVActivityButton.h"
 #import "SPDirectoryPickerNavigationController.h"
 #import "SPDownload.h"

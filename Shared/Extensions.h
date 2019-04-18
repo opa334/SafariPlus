@@ -1,4 +1,4 @@
-// SPDirectoryPickerNavigationController.mm
+// Extensions.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,32 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "SPDirectoryPickerNavigationController.h"
+@interface UIImage (ColorInverse)
++ (UIImage *)inverseColor:(UIImage *)image;
+@end
 
-#import "../Defines.h"
-#import "../Util.h"
-#import "SPDirectoryPickerTableViewController.h"
-#import "SPDownloadManager.h"
-#import "SPPreferenceManager.h"
-#import "SPFileManager.h"
+@interface NSURL (SchemeConversion)
+- (NSURL*)httpsURL;
+- (NSURL*)httpURL;
+@end
 
-@implementation SPDirectoryPickerNavigationController
+@interface NSString (Strip)
+- (NSString*)stringStrippedByStrings:(NSArray<NSString*>*)strings;
+@end
 
-- (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo
-{
-	self.loadParentDirectories = YES;
-	self.startURL = downloadManager.defaultDownloadURL;
+@interface NSString (UUID)
+- (BOOL)isUUID;
+@end
 
-	self = [super init];
+@interface UIView (Autolayout)
++ (id)autolayoutView;
+@end
 
-	self.downloadInfo = downloadInfo;
+@interface UITableViewController (FooterFix)
+- (void)fixFooterColors;
+@end
 
-	return self;
-}
+@interface UIImage (WidthChange)
+- (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment;
+@end
 
-- (Class)tableControllerClass
-{
-	return [SPDirectoryPickerTableViewController class];
-}
-
+@interface UIImage (Rotate)
+- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees;
 @end

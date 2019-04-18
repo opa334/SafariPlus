@@ -15,9 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPDownloadListTableViewCell.h"
+#import "Extensions.h"
 
 #import "SPDownload.h"
-#import "../Shared.h"
+#import "../Util.h"
 
 @implementation SPDownloadListTableViewCell
 

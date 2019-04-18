@@ -18,7 +18,7 @@
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Defines.h"
 
 %hook TabOverview

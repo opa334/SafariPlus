@@ -17,7 +17,7 @@
 #import "SPDownloadInfo.h"
 
 #import "SPDownload.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPFileManager.h"
 
 @implementation SPDownloadInfo

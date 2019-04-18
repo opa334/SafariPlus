@@ -29,6 +29,8 @@ export NO_LIBCSCOLORPICKER = 1
 export NO_LIBBULLETIN = 1
 endif
 
+export INCLUDES = $(THEOS_PROJECT_DIR)/Shared
+
 include $(THEOS)/makefiles/common.mk
 
 include $(THEOS_MAKE_PATH)/tweak.mk

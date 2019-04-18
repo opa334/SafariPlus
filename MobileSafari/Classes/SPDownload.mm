@@ -16,7 +16,7 @@
 
 #import "SPDownload.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPDownloadInfo.h"
 #import "SPPreferenceManager.h"
 

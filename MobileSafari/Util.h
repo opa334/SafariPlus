@@ -1,4 +1,4 @@
-// Shared.h
+// Util.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -62,37 +62,3 @@ extern void _dlogDownloadManager();
 #define dlogDownloadManager()
 
 #endif
-
-@interface UIImage (ColorInverse)
-+ (UIImage *)inverseColor:(UIImage *)image;
-@end
-
-@interface NSURL (SchemeConversion)
-- (NSURL*)httpsURL;
-- (NSURL*)httpURL;
-@end
-
-@interface NSString (Strip)
-- (NSString*)stringStrippedByStrings:(NSArray<NSString*>*)strings;
-@end
-
-@interface NSString (UUID)
-- (BOOL)isUUID;
-@end
-
-//http://commandshift.co.uk/blog/2013/01/31/visual-format-language-for-autolayout/
-@interface UIView (Autolayout)
-+ (id)autolayoutView;
-@end
-
-@interface UITableViewController (FooterFix)
-- (void)fixFooterColors;
-@end
-
-@interface UIImage (WidthChange)
-- (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment;
-@end
-
-@interface UIImage (Rotate)
-- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees;
-@end

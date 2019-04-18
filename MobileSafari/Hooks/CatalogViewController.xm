@@ -17,7 +17,7 @@
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Defines.h"
 
 //Long press on Search / Site suggestions

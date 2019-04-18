@@ -16,7 +16,7 @@
 
 #import "../SafariPlus.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Defines.h"
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"

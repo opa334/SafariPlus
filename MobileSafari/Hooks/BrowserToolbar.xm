@@ -15,10 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
+#import "Extensions.h"
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Enums.h"
 
 //Turns a system bar button item into a non-system one

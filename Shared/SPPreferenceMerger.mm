@@ -16,7 +16,7 @@
 
 #import "../MobileSafari/Defines.h"
 #import "SPPreferenceMerger.h"
-#import "../MobileSafari/Shared.h"
+#import "../MobileSafari/Util.h"
 #import "../MobileSafari/Classes/SPFileManager.h"
 #import "Simulator.h"
 

@@ -17,7 +17,7 @@
 #import "SPStatusBarNotificationWindow.h"
 #import "SPStatusBarNotification.h"
 #import "SPStatusBarTextView.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Defines.h"
 
 #define DEGREES_TO_RADIANS(degrees)((M_PI * degrees)/180)

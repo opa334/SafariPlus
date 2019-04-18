@@ -16,7 +16,7 @@
 
 #import "SPFileTableViewCell.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
 #import "SPFile.h"

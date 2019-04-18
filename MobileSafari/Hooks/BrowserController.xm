@@ -18,7 +18,7 @@
 
 #import "../Defines.h"
 #import "../Enums.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPDownloadNavigationController.h"

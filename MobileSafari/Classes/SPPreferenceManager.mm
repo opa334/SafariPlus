@@ -17,7 +17,7 @@
 #import "SPPreferenceManager.h"
 
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Enums.h"
 
 #ifndef NO_CEPHEI

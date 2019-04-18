@@ -15,8 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPFileBrowserTableViewController.h"
+#import "Extensions.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPFileBrowserNavigationController.h"
 #import "SPFileTableViewCell.h"
 #import "SPLocalizationManager.h"

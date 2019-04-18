@@ -19,7 +19,7 @@
 #import "../SafariPlus.h"
 
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPDownloadManager.h"

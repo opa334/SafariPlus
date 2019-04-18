@@ -17,7 +17,7 @@
 #import "SPDownloadBrowserTableViewController.h"
 
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPDownloadManager.h"
 #import "SPDownloadTableViewCell.h"
 #import "SPDownloadNavigationController.h"

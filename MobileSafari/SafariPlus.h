@@ -146,6 +146,10 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 - (BOOL)_sf_usesLeftToRightLayout;
 @end
 
+/*@interface NSKeyedUnarchiver (Private)
++ (id)unarchivedObjectOfClass:(Class)cls fromData:(NSData*)data error:(NSError**)error;
+@end*/
+
 /**** WebKit ****/
 
 @interface WKNavigationAction ()
