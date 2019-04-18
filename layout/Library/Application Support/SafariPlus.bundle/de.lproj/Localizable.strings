@@ -283,8 +283,8 @@
 
 /* Force HTTPS */
 
-"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Zu HTTPS Ausnahmen hinzufügen";
-"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Von HTTPS Ausnahmen entfernen";
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Von HTTPS Ausnahmen entfernen";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Zu HTTPS Ausnahmen hinzufügen";
 
 /* File picker */
 
