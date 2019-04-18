@@ -1,21 +1,24 @@
 "YES" = "Evet";
 "NO" = "Hayır";
+/*SAVE*/
 
-/* Root Page*/
+/* Root Page */
 
-"GENERAL" = "Genel";
-"ACTION_ADDONS" = "Aksiyon Eklentileri";
-"DOWNLOAD_ADDONS" = "İndirme Eklentileri";
-"GESTURE_ADDONS" = "Hareket Eklentileri";
-"OTHER_ADDONS" = "Diğer Eklentileri";
-"COLOR_SETTINGS" = "Renk Ayarları";
-"SOURCE_CODE" = "Kaynak Kodu";
+/*ENABLED*/
+/*FEATURES*/
+/*PRIVACY*/
+/*UPLOADS_AND_DOWNLOADS*/
+/*USABILITY*/
+/*BEHAVIOUR*/
+/*GESTURES*/
+/*CUSTOMIZATION*/
+/*ABOUT_ME*/
 "TWITTER" = "Twitter";
-
 "DONATE" = "Bağış";
-"DONATE_FOOTER" = "Bu tweak'i beğendiyseniz, bana destek olmak için bağışta bulunabilirsiniz! :)";
+/*ABOUT_THIS_TWEAK*/
+"SOURCE_CODE" = "Kaynak Kodu";
 
-/* Genel Ayarlar */
+/* Privacy */
 
 "FORCE_HTTPS_FOOTER" = "HTTPS protokolünü uygular.\n\nNot: HTTPS'yi desteklemeyen siteleri ekleyebilirsiniz.";
 "FORCE_HTTPS" = "HTTPS Zorla";
@@ -23,28 +26,28 @@
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "İstisnalar";
 "EDIT" = "Düzenle";
 "ADD" = "Ekle";
+/*APPLY*/
 "ADD_EXCEPTION_ALERT_TITLE" = "İstisna Ekle";
 "ADD_EXCEPTION_ALERT_MESSAGE" = "HTTPS protokolünün zorlanmaması gereken bir alan girin.\nÖrnek: 'google.com''";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
-"OPEN_IN_NEW_TAB_FOOTER" = "Bir bağlantıya uzun basıldığında görüntülenen menüye başka bir 'Yeni Sekmede aç' seçeneği ekler.\nNot: Bir bağlantıya uzun süre basıldığında her iki seçeceğin de kullanılabilmesi için Safari ayarlarında 'Açık Bağlantılar' öğesini 'Arka Planda' olarak ayarlayın..";
-"OPEN_IN_NEW_TAB" = "'Yeni Sekmede aç";
+/*LOCKED_TABS*/
+/*LOCKED_TABS_FOOTER*/
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Bir bağlantıya uzun basıldığında görüntülenen menüye, ters göz atma modunda bağlantıyı açmak için kullanılabilecek bir seçenek ekler.\n(Normal mod -> Özel modda açmak için Seçenek,\nÖzel mod -> Seçenek normal modda aç)";
-"OPEN_IN_OPPOSITE_MODE" = "Karşı mod ayarlarlarında aç";
+/*BIOMETRIC_PROTECTION*/
+/*BIOMETRIC_PROTECTION_FOOTER*/
+/*SWITCH_BROWSING_MODE*/
+/*LOCK_TAB*/
+/*UNLOCK_TAB*/
+/*ACCESS_LOCKED_TAB*/
+
+/* Uploads & Downloads */
+
+/*UPLOADS*/
+"DOWNLOADS" = "İndirilenler";
 
 "UPLOAD_ANY_FILE_FOOTER" = "Cihazınızda bulunan herhangi bir dosyayı seçmenize izin veren belge yükleme menüsüne yeni bir seçenek ekler. Bir dosyaya uzun basma yoluyla da birden fazla dosya seçip yükleyebilirsiniz.";
 "UPLOAD_ANY_FILE" = "Herhangi bir dosya yükle";
-
-"DESKTOP_SWITCH_FOOTER" = "Mobil / masaüstü modu arasında geçiş yapmak için kullanabileceğiniz sekme değiştiriciye bir Buton ekler.";
-"DESKTOP_SWITCH_LABEL" = "Masaüstü Moduna geç";
-
-"LONG_PRESS_SUGGESTIONS_FOOTER" = "Url önerilerini url çubuğuna eklemek için uzun basın";
-"LONG_PRESS_SUGGESTIONS" = "Uzun Basma Önerilerisi";
-"LONG_PRESS_DURATION_TITLE" = "Uzun basma süresi";
-"LONG_PRESS_FOCUS_TITLE" = "Uzun Basışta URL Çubuğuna Odaklan";
-
-/* İndirme Ayarları */
 
 "ENHANCED_DOWNLOADS" = "Gelişmiş İndirme";
 "ENHANCED_DOWNLOADS_FOOTER" = "Bekleyen ve bitmiş indirme sayısını görebileceğiniz bir görünümü açan alt araç çubuğuna indirme düğmesi ekler. Dosyayı yerel bir dizine (varsayılan olarak / var / mobile / Downloads) kaydetmek için seçenekler içeren bir indirme başlamadan önce bir uyarı görünür. İndirmeler arka planda devam edecek ve indirme işlemi bittiğinde size bildirileceksiniz. Safari uygulama değiştiriciden kapatıldığında, devam eden tüm indirmeler ‘Bekletilir’, Safari tekrar açınca indirmeler devam eder.";
@@ -52,9 +55,9 @@
 "VIDEO_DOWNLOADING" = "Video İndirme";
 "VIDEO_DOWNLOADING_FOOTER" = "Video oynatıcısına, videoyu indirmek için kullanılabilecek bir düğme ekler.\n\nNOT: Bazı sitelerde, URL'nin kolayca alınamadığından dolayı çalışmayabilir. Ayrıca bazı siteler içerik akışı için m3u8 dosyalarını kullanır, bu dosyaları kaydedebilirsiniz, ancak herhangi bir video içermez.";
 
-/*DEFAULT_SECTION
-DEFAULT_SECTION_FOOTER
-DEFAULT_SECTION_AUTO_SWITCH*/
+/*DEFAULT_SECTION*/
+/*DEFAULT_SECTION_FOOTER*/
+/*DEFAULT_SECTION_AUTO_SWITCH*/
 
 "LINK_DOWNLOAD_OPTIONS_FOOTER" = "Link uzun basıldığında görüntülenen menüye site / resim indirmek için seçenekler ekler.";
 "DOWNLOAD_SITE_TO_OPTION" = "'Siteyi indir...' Seçenekler";
@@ -70,6 +73,14 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "PINNED_LOCATIONS_ENABLED" = "Sabitlenmiş Adres aktif";
 "PINNED_LOCATIONS" = "Sabitlenmiş Adres";
 "PINNED_LOCATIONS_FOOTER" = "'İndirme' seçeneğine birkaç konum seçmenizi sağlar.";
+/*PINNED_LOCATIONS_ADD_ALERT_TITLE*/
+/*PINNED_LOCATIONS_EDIT_ALERT_TITLE*/
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Bir isim ve sabitlenmiş yerin yolunu seçin…";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "İsim";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Yol";
+"BROWSE" = "Araştır…";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Yolu Seç";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Bu yolu seçmek istermisiniz?\n%@?";
 "ERROR_INVALID_NAME_OR_PATH" = "Geçersiz isim veya yol";
 
 "ONLY_DOWNLOAD_ON_WIFI" = "Sadece Wifi'de İndir";
@@ -81,17 +92,46 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "DISABLE_BAR_NOTIFICATIONS" = "Durum Çubuğu Bildirimlerini Devre Dışı Bırak";
 "DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Varsayılan olarak indirme başladığında ve bittiğinde bildirim alırsınız. Bu bildirimleri Engeller.";
 
-/* Sabitlenmiş Yerler */
+/* Usability */
 
-"PINNED_LOCATIONS_ALERT_TITLE" = "Sabitlenmiş Yer Ekle";
-"PINNED_LOCATIONS_ALERT_MESSAGE" = "Bir isim ve sabitlenmiş yerin yolunu seçin…";
-"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "İsim";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Yol";
-"BROWSE" = "Araştır…";
-"CHOOSE_PATH_CONFIRMATION_TITLE" = "Yolu Seç";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Bu yolu seçmek istermisiniz?\n%@?";
+/*URL_ACTIONS*/
 
-/* Eylem Ayarları */
+/*SECOND_OPEN_IN_NEW_TAB*/
+/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
+
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Bir bağlantıya uzun basıldığında görüntülenen menüye, ters göz atma modunda bağlantıyı açmak için kullanılabilecek bir seçenek ekler.\n(Normal mod -> Özel modda açmak için Seçenek,\nÖzel mod -> Seçenek normal modda aç)";
+"OPEN_IN_OPPOSITE_MODE" = "Karşı mod ayarlarlarında aç";
+
+/*TAB_MANAGEMENT*/
+
+/*DESKTOP_MODE_SWITCH_FOOTER*/
+/*DESKTOP_MODE_SWITCH*/
+
+/*DISABLE_TAB_LIMIT*/
+/*DISABLE_TAB_LIMIT_FOOTER*/
+
+/*CUSTOM_START_SITE*/
+/*CUSTOM_START_SITE_FOOTER*/
+
+/*SUGGESTIONS*/
+
+"LONG_PRESS_SUGGESTIONS" = "Uzun Basma Önerilerisi";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Url önerilerini url çubuğuna eklemek için uzun basın";
+"LONG_PRESS_DURATION_TITLE" = "Uzun basma süresi";
+"LONG_PRESS_FOCUS_TITLE" = "Uzun Basışta URL Çubuğuna Odaklan";
+
+/*INTERFACE*/
+
+/*SHOW_TAB_COUNT*/
+/*SHOW_TAB_COUNT_FOOTER*/
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Aşağı kaydırırken tam üstteki çubuğu gizler.\n\nNOT: iOS 8'de çalışmıyor!";
+"FULLSCREEN_SCROLLING" = "Tam Ekran Kaydırma";
+
+"LOCK_BARS" = "Barları kilitle";
+"LOCK_BARS_FOOTER" = "Alt ve üstteki çubuğu yerinde kilitler, böylece sayfa aşağı kaydırıldığında artık gizlenmez.";
+
+/* Behaviour */
 
 "NORMAL_MODE" = "Normal Tarama Modu";
 "PRIVATE_MODE" = "Özel Tarama Modu";
@@ -120,7 +160,17 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "ACTIVE_MODE" = "Aktif Tarayı Modu";
 "BOTH_MODES" = "Her iki tarama modu";
 
-/* Hareket Ayarları */
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Tıklanan linkleri yeni sekmede açar.";
+"ALWAYS_OPEN_NEW_TAB" = "Her Zaman Bağlantıları Yeni Sekmede Aç";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Arka Planda Yeni Sekme Aç";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Gizli tarama modunu devre dışı bırakır ve ‘Gizli’ düğmesini kaldırır. (Gizli stok özelliği)";
+"DISABLE_PRIVATE_MODE" = "Gizli tarama modunu ve gizli tarama butonunu devre dışı bırak.";
+
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Bir 'mailto: <email>' URL'sine erişildiğinde, iOS 10 ve üstünde görünen iletişim kutusunu engeller.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) mail yönlendirmelerini engelle";
+
+/* Gestures */
 
 "ACTION" = "Aksiyon";
 
@@ -148,25 +198,16 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 
 "BACKGROUND" = "Arka planda Sekme Aç";
 
-/* Diğer Ayarlar */
+/* Customization */
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Aşağı kaydırırken tam üstteki çubuğu gizler.\n\nNOT: iOS 8'de çalışmıyor!";
-"FULLSCREEN_SCROLLING" = "Tam Ekran Kaydırma";
+/*APPEARANCE*/
 
-"LOCK_BARS" = "Barları kilitle";
-"LOCK_BARS_FOOTER" = "Alt ve üstteki çubuğu yerinde kilitler, böylece sayfa aşağı kaydırıldığında artık gizlenmez.";
+/*COLORS*/
 
-"DISABLE_PRIVATE_MODE_FOOTER" = "Gizli tarama modunu devre dışı bırakır ve ‘Gizli’ düğmesini kaldırır. (Gizli stok özelliği)";
-"DISABLE_PRIVATE_MODE" = "Gizli tarama modunu ve gizli tarama butonunu devre dışı bırak.";
+/*SELECT_COLOR*/
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Tıklanan linkleri yeni sekmede açar.";
-"ALWAYS_OPEN_NEW_TAB" = "Her Zaman Bağlantıları Yeni Sekmede Aç";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Arka Planda Yeni Sekme Aç";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Bir 'mailto: <email>' URL'sine erişildiğinde, iOS 10 ve üstünde görünen iletişim kutusunu engeller.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) mail yönlendirmelerini engelle";
-
-/* Renk ayarları */
+/*NORMAL_MODE_COLORS*/
+/*PRIVATE_MODE_COLORS*/
 
 "TOP_BAR" = "Üst Bar";
 "BOTTOM_BAR" = "Alt Bar";
@@ -179,13 +220,17 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "BACKGROUND_COLOR" = "Arka plan rengi";
 "STATUS_BAR_COLOR" = "Durum Çubuğunun Rengi";
 "TAB_BAR_TITLE_COLOR" = "Sekme Çubuğu Rengi";
+/*INACTIVE_TITLE_OPACITY*/
+/*TAB_BAR_CLOSE_BUTTON_COLOR*/
 "TAB_BAR_BACKGROUND_COLOR" = "Sekme Çubuğu Arkaplan Rengi";
 "URL_FONT_COLOR" = "URL Yazı Rengi";
 "PROGRESS_BAR_COLOR" = "İlerleme Çubuğu Rengi";
 "RELOAD_BUTTON_COLOR" = "Yeniden Yükle Düğmesi Rengi";
+/*READER_BUTTON_COLOR*/
 "LOCK_ICON_COLOR" = "Kilit Simgesi Rengi";
 "TAB_TITLE_TEXT_COLOR" = "Sekme Başlığı Metin Rengi";
 "TAB_TITLE_BACKGROUND_COLOR" = "Sekme Başlığı Arkaplan Rengi";
+/*TOOLBAR_BACKGROUND_COLOR*/
 
 "TAB_BAR_NOTE" = "NOT: Sekme çubuğu, tüm cihaz boyutlarında / oryantasyonlarında mevcut değil.";
 "COLOR_SETTINGS_BOTTOM_NOTICE" = "NOT: Bazı ayarlar uygulanacak uygulamanın yeniden başlatılmasını gerektirecek.";
@@ -193,13 +238,42 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "WHITE" = "Beyaz";
 "BLACK" = "Siyah";
 
-/* Kredi */
+/*BOTTOM_TOOLBAR*/
+/*TOP_TOOLBAR*/
+
+/*BOTTOM_TOOLBAR_FOOTER*/
+/*TOP_TOOLBAR_FOOTER*/
+
+/*REORDER_BOTTOM_TOOLBAR*/
+/*REORDER_TOP_TOOLBAR*/
+
+/*CHOOSE_ORDER*/
+
+/*BOTTOM_TOOLBAR_ORDER*/
+/*TOP_TOOLBAR_ORDER*/
+
+/*ENABLED_ITEMS*/
+/*DISABLED_ITEMS*/
+
+/*BACK*/
+/*FORWARD*/
+/*SHARE*/
+/*BOOKMARKS*/
+/*TABS*/
+/*ADD_TAB*/
+/*SEARCH_BAR_SPACE*/
+
+/* Credits */
 
 "CREDITS" = "Kredi";
 "PICKER_INSPIRED" = "ilham Alındı";
 
-/* Uygulamada */
+/* In app */
 
+/*CLOSE_NON_LOCKED_TABS*/
+/*CLOSE_NON_LOCKED_TAB*/
+/*CLOSE_NON_LOCKED_TABS_MATCHING*/
+/*CLOSE_NON_LOCKED_TAB_MATCHING*/
 "LOCAL_FILES" = "Yerel dosyalar";
 "WELCOME_TITLE" = "Hoşgeldiniz!";
 "WELCOME_MESSAGE" = "Safari Plus'ı kurduğunuz için teşekkürler! Bu tweak geleceği hakkında güncel kalmak isterseniz, beni Twitter'da takip ettiğinizden emin olun! Bu mesaj tekrar gösterilmeyecek (söz veriyorum)!";
@@ -207,13 +281,18 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 /*COMMUNICATION_ERROR*/
 /*COMMUNICATION_ERROR_DESCRIPTION*/
 
-/* Dosya seçici */
+/* Force HTTPS */
+
+/*REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS*/
+/*ADD_TO_FORCE_HTTPS_EXCEPTIONS*/
+
+/* File picker */
 
 "DISMISS" = "Reddet";
 "CANCEL" = "İptal et";
 "UPLOAD" = "Yükle";
 
-/* İndirilenler */
+/* Downloads */
 
 "DOWNLOAD" = "İndir";
 "DOWNLOAD_TO" = "Şuraya indir…";
@@ -229,8 +308,9 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "CLEAR" = "Temizle";
 "CANCEL_ALL_DOWNLOADS" = "Tüm İndirmeleri İptal Et";
 "CLEAR_DOWNLOAD_HISTORY" = "İndirme geçmişini temizle";
+/*CLEAR_TEMPORARY_DATA*/
 "CLEAR_EVERYTHING" = "Her şeyi temizle";
-"CLEAR_EVERYTHING_WARNING" = "Tüm indirmeyi iptal edip indirme geçmişini ve tüm geçici dosyaları silmek istediğinizden emin misiniz??";
+"CLEAR_EVERYTHING_WARNING" = "Tüm indirmeleri iptal etmek ve tüm geçici dosyaları silmek istediğinizden emin misiniz?";
 /*CREATE_DIRECTORY*/
 /*DIRECTORY_NAME*/
 /*CREATE*/
@@ -242,7 +322,6 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "WARNING" = "Uyarı!";
 "DELETE_FILE_MESSAGE" = "Dosyayı kalıcı olarak silmek istediğinizden emin misiniz? %@? Daha sonra geri kazanmak mümkün değildir!";
 /*DELETE_DIRECTORY_MESSAGE*/
-"CLEAR_EVERYTHING_WARNING" = "Tüm indirmeleri iptal etmek ve tüm geçici dosyaları silmek istediğinizden emin misiniz?";
 "DELETE" = "Sil";
 "RENAME" = "Adını değiştir";
 "DOWNLOAD_STARTED" = "İndirme başladı";
@@ -271,9 +350,8 @@ DEFAULT_SECTION_AUTO_SWITCH*/
 "MIGRATION_TITLE" = "işlem başarılı";
 "MIGRATION_MESSAGE" = "Artık dosyaları istediğiniz herhangi bir dizine indirebilirsiniz!";
 
-/* Ters modda aç */
+/* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "Normal Mod aç";
 "OPEN_IN_PRIVATE_MODE" = "Özel Modda Aç";
 
-/* Çeviri : Sinan Taşpınar @Snntspnr ‘iPhoneYardim.net’ */
