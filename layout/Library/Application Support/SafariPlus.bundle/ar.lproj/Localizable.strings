@@ -190,13 +190,13 @@
 "DUPLICATE_ACTIVE_TAB" = "تكرار علامة التبويب النشطة";
 "CLOSE_ALL_TABS" = "إغلاق كافة علامات التبويب من وضع التصفح";
 "SWITCH_MODE" = "تبديل وضع التصفح";
-"TAB_BACKWARD" = "Switch Tab Backwards";
-"TAB_FORWARD" = "Switch Tab Forwards";
-"RELOAD_ACTIVE_TAB" = "Reload Active Tab";
-"REQUEST_DESTKOP_SITE" = "Request Desktop Site";
-"OPEN_FIND_ON_PAGE" = "Open 'Find on Page'";
+"TAB_BACKWARD" = "نقل علامة التبويب إلى الخلف";
+"TAB_FORWARD" = "نقل علامة التبويب إلى الأمام";
+"RELOAD_ACTIVE_TAB" = "إعادة تحميل علامة التبويب النشطة";
+"REQUEST_DESTKOP_SITE" = "طلب موقع سطح المكتب";
+"OPEN_FIND_ON_PAGE" = "فتح 'البحث على الصفحة'";
 
-"BACKGROUND" = "Duplicate Tab in Background";
+"BACKGROUND" = "تكرار علامة التبويب في الخلفية";
 
 /* Customization */
 
