@@ -172,24 +172,24 @@
 
 /* Gestures */
 
-"ACTION" = "Action";
+"ACTION" = "الإجراء";
 
-"URL_BAR_GESTURES_LABEL" = "URL Bar Gestures";
+"URL_BAR_GESTURES_LABEL" = "إيماءات شريط URL";
 
-"SWIPE_LEFT_GESTURE_FOOTER" = "Performs specified action when URL bar is swiped left.";
-"SWIPE_LEFT_GESTURE" = "Swipe Left Gesture";
+"SWIPE_LEFT_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL لليسار.";
+"SWIPE_LEFT_GESTURE" = "إيماءة التمرير لليسار";
 
-"SWIPE_RIGHT_GESTURE_FOOTER" = "Performs specified action when URL bar is swiped right.";
-"SWIPE_RIGHT_GESTURE" = "Swipe Right Gesture";
+"SWIPE_RIGHT_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL لليمين.";
+"SWIPE_RIGHT_GESTURE" = "إيماءة التمرير لليمين";
 
-"SWIPE_DOWN_GESTURE_FOOTER" = "Performs specified action when URL bar is swiped down.";
-"SWIPE_DOWN_GESTURE" = "Swipe Down Gesture";
+"SWIPE_DOWN_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL للأسفل.";
+"SWIPE_DOWN_GESTURE" = "إيماءة التمرير للأسفل";
 
-"CLOSE_ACTIVE_TAB" = "Close Active Tab";
-"OPEN_NEW_TAB" = "Open New Tab";
-"DUPLICATE_ACTIVE_TAB" = "Duplicate Active Tab";
-"CLOSE_ALL_TABS" = "Close All Tabs From Browsing Mode";
-"SWITCH_MODE" = "Switch Browsing Mode";
+"CLOSE_ACTIVE_TAB" = "إغلاق علامة التبويب النشطة";
+"OPEN_NEW_TAB" = "فتح علامة تبويب جديدة";
+"DUPLICATE_ACTIVE_TAB" = "تكرار علامة التبويب النشطة";
+"CLOSE_ALL_TABS" = "إغلاق كافة علامات التبويب من وضع التصفح";
+"SWITCH_MODE" = "تبديل وضع التصفح";
 "TAB_BACKWARD" = "Switch Tab Backwards";
 "TAB_FORWARD" = "Switch Tab Forwards";
 "RELOAD_ACTIVE_TAB" = "Reload Active Tab";
