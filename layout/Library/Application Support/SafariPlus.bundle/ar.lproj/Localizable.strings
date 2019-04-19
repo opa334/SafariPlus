@@ -120,9 +120,6 @@
 "LONG_PRESS_DURATION_TITLE" = "مدة الضغط المطول";
 "LONG_PRESS_FOCUS_TITLE" = "التركيز على شريط URL عند الضغط المطول";
 
-/*INSERT_SUGGESTION_BUTTON*/
-/*INSERT_SUGGESTION_BUTTON_FOOTER*/
-
 "INTERFACE" = "Interface";
 
 "SHOW_TAB_COUNT" = "إظهار عدد علامات التبويب";
