@@ -31,9 +31,6 @@
 "ADD_EXCEPTION_ALERT_MESSAGE" = "أدخل موقع ويب (دومين) لا ينبغي لبروتوكول HTTPS أن يفرض عليه.\nمثال: 'google.com'";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "عنوان URL";
 
-/*DISABLE_ANALYTICS*/
-/*DISABLE_ANALYTICS_FOOTER*/
-
 "LOCKED_TABS" = "علامات تبويب مقفلة";
 "LOCKED_TABS_FOOTER" = "إضافة مفتاح تبديل للقفل إلى أعلى يسار كل علامة تبويب في مبدل علامات التبويب. لا يمكن إغلاق علامة التبويب المقفلة طالما هي مقفلة، وستظل موجودة إلى أن تقوم بفتح قفلها.";
 
