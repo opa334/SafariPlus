@@ -220,7 +220,7 @@
 "BACKGROUND_COLOR" = "لون الخلفية";
 "STATUS_BAR_COLOR" = "لون شريط الحالة";
 "TAB_BAR_TITLE_COLOR" = "لون عنوان شريط علامة التبويب";
-"INACTIVE_TITLE_OPACITY" = "Inactive Title Opacity";
+"INACTIVE_TITLE_OPACITY" = "شفافية العنوان الغير نشط";
 "TAB_BAR_CLOSE_BUTTON_COLOR" = "Tab Bar Close Button Color";
 "TAB_BAR_BACKGROUND_COLOR" = "Tab Bar Background Color";
 "URL_FONT_COLOR" = "URL Font Color";
