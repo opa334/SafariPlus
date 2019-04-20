@@ -283,23 +283,23 @@
 
 /* Force HTTPS */
 
-"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Remove from Force HTTPS Exceptions";
-"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Add to Force HTTPS Exceptions";
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "إزالة من استثناءات فرض بروتوكل HTTPS";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "إضافة إلى استثناءات فرض بروتوكل HTTPS";
 
 /* File picker */
 
-"DISMISS" = "Dismiss";
-"CANCEL" = "Cancel";
-"UPLOAD" = "Upload";
+"DISMISS" = "إغلاق";
+"CANCEL" = "إلغاء";
+"UPLOAD" = "تحميل";
 
 /* Downloads */
 
-"DOWNLOAD" = "Download";
-"DOWNLOAD_TO" = "Download to...";
-"DOWNLOAD_SITE_TO" = "Download Site to...";
-"DOWNLOAD_IMAGE_TO" = "Download Image to...";
+"DOWNLOAD" = "تنزيل";
+"DOWNLOAD_TO" = "تنزيل إلى";
+"DOWNLOAD_SITE_TO" = "تنزيل الموقع إلى";
+"DOWNLOAD_IMAGE_TO" = "تنزيل الصورة إلى...";
 "DOWNLOAD_OVERVIEW" = "Download Overview";
-"DOWNLOADS" = "Downloads";
+"DOWNLOADS" = "التنزيلات";
 "FILE_BROWSER" = "File Browser";
 "OPEN" = "Open";
 "OPEN_IN" = "Open in...";
