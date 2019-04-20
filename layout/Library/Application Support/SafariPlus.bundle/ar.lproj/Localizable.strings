@@ -241,32 +241,32 @@
 "BOTTOM_TOOLBAR" = "شريط الأدوات السفلي";
 "TOP_TOOLBAR" = "شريط الأدوات العلوي";
 
-"BOTTOM_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات السفلي على أجهزة الـ iPhone في وضع الدوران، وبعض أجهزة الـ iPhone الأصغر تستخدمه في الوضع الأفقي، كما أن أجهزة الـ iPad تستخدمه داخل Split-View.";
-"TOP_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات العلوي على أجهزة الـ iPhone الكبيرة في الوضع الأفقي. على الـ iPad، يتم استخدامه في كلا الوضعين الدوران والأفقي.";
+"BOTTOM_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات السفلي على أجهزة الـ iPhone في وضع الرأسي، وبعض أجهزة الـ iPhone الأصغر تستخدمه في الوضع الأفقي، كما أن أجهزة الـ iPad تستخدمه داخل Split-View.";
+"TOP_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات العلوي على أجهزة الـ iPhone الكبيرة في الوضع الأفقي. على الـ iPad، يتم استخدامه في كلا الوضعين الرأسي والأفقي.";
 
-"REORDER_BOTTOM_TOOLBAR" = "Reorder Bottom Toolbar";
-"REORDER_TOP_TOOLBAR" = "Reorder Top Toolbar";
+"REORDER_BOTTOM_TOOLBAR" = "شريط أدوات القارئ السفلي";
+"REORDER_TOP_TOOLBAR" = "شريط أدوات القارئ العلوي";
 
-"CHOOSE_ORDER" = "Choose Order";
+"CHOOSE_ORDER" = "اختر الأزرار";
 
-"BOTTOM_TOOLBAR_ORDER" = "Bottom Toolbar Order";
-"TOP_TOOLBAR_ORDER" = "Top Toolbar Order";
+"BOTTOM_TOOLBAR_ORDER" = "أزرار شريط الأدوات السفلي";
+"TOP_TOOLBAR_ORDER" = "أزرار شريط الأدوات العلوي";
 
-"ENABLED_ITEMS" = "Enabled Items";
-"DISABLED_ITEMS" = "Disabled Items";
+"ENABLED_ITEMS" = "العناصر المفعلة";
+"DISABLED_ITEMS" = "العناصر المعطلة";
 
-"BACK" = "Back";
-"FORWARD" = "Forward";
-"SHARE" = "Share";
-"BOOKMARKS" = "Bookmarks";
-"TABS" = "Tabs";
-"ADD_TAB" = "Add Tab";
+"BACK" = "رجوع";
+"FORWARD" = "تقدم";
+"SHARE" = "مشاركة";
+"BOOKMARKS" = "إشارات مرجعية";
+"TABS" = "علامات التبويب";
+"ADD_TAB" = "إضافة علامة تبويب";
 "SEARCH_BAR_SPACE" = "Search Bar Space";
 
 /* Credits */
 
-"CREDITS" = "Credits";
-"PICKER_INSPIRED" = "File picker inspired by";
+"CREDITS" = "الاعتمادات";
+"PICKER_INSPIRED" = "تقنية انتقاء الملف مستوحاة بواسطة:";
 
 /* In app */
 
