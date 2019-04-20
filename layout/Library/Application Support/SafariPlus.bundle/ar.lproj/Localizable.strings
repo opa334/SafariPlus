@@ -221,11 +221,11 @@
 "STATUS_BAR_COLOR" = "لون شريط الحالة";
 "TAB_BAR_TITLE_COLOR" = "لون عنوان شريط علامة التبويب";
 "INACTIVE_TITLE_OPACITY" = "شفافية العنوان الغير نشط";
-"TAB_BAR_CLOSE_BUTTON_COLOR" = "Tab Bar Close Button Color";
-"TAB_BAR_BACKGROUND_COLOR" = "Tab Bar Background Color";
-"URL_FONT_COLOR" = "URL Font Color";
-"PROGRESS_BAR_COLOR" = "Progress Bar Color";
-"RELOAD_BUTTON_COLOR" = "Reload Button Color";
+"TAB_BAR_CLOSE_BUTTON_COLOR" = "لون زر إغلاق شريط علامة التبويب";
+"TAB_BAR_BACKGROUND_COLOR" = "لون خلفية شريط علامة التبويب";
+"URL_FONT_COLOR" = "لون خط URL";
+"PROGRESS_BAR_COLOR" = "لون شريط التقدم";
+"RELOAD_BUTTON_COLOR" = "لون زر إعادة التحميل";
 "READER_BUTTON_COLOR" = "Reader Button Color";
 "LOCK_ICON_COLOR" = "Lock Icon Color";
 "TAB_TITLE_TEXT_COLOR" = "Tab Title Text Color";
