@@ -200,26 +200,26 @@
 
 /* Customization */
 
-"APPEARANCE" = "Appearance";
+"APPEARANCE" = "المظهر";
 
-"COLORS" = "Colors";
+"COLORS" = "الألوان";
 
-"SELECT_COLOR" = "Select Color";
+"SELECT_COLOR" = "حدد لون";
 
-"NORMAL_MODE_COLORS" = "Normal Mode Colors";
-"PRIVATE_MODE_COLORS" = "Private Mode Colors";
+"NORMAL_MODE_COLORS" = "ألوان الوضع العادي";
+"PRIVATE_MODE_COLORS" = "ألوان الوضع الخاص";
 
-"TOP_BAR" = "Top Bar";
-"BOTTOM_BAR" = "Bottom Bar";
-"TAB_SWITCHER" = "Tab Switcher";
+"TOP_BAR" = "الشريط العلوي";
+"BOTTOM_BAR" = "الشريط السفلي";
+"TAB_SWITCHER" = "شريط المبدل";
 
-"NORMAL" = "Normal";
-"PRIVATE" = "Private";
+"NORMAL" = "عادي";
+"PRIVATE" = "خاص";
 
-"TINT_COLOR" = "Tint Color";
-"BACKGROUND_COLOR" = "Background Color";
-"STATUS_BAR_COLOR" = "Status Bar Color";
-"TAB_BAR_TITLE_COLOR" = "Tab Bar Title Color";
+"TINT_COLOR" = "لون الصبغة";
+"BACKGROUND_COLOR" = "لون الخلفية";
+"STATUS_BAR_COLOR" = "لون شريط الحالة";
+"TAB_BAR_TITLE_COLOR" = "لون عنوان شريط علامة التبويب";
 "INACTIVE_TITLE_OPACITY" = "Inactive Title Opacity";
 "TAB_BAR_CLOSE_BUTTON_COLOR" = "Tab Bar Close Button Color";
 "TAB_BAR_BACKGROUND_COLOR" = "Tab Bar Background Color";
