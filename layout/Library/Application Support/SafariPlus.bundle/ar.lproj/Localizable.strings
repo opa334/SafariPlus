@@ -276,8 +276,8 @@
 "CLOSE_NON_LOCKED_TAB_MATCHING" = "إغلاق علامة التبويب غير المقفلة والتي تطابق “%@“";
 "LOCAL_FILES" = "ملفات محلية";
 "WELCOME_TITLE" = "مرحبًا!";
-"WELCOME_MESSAGE" = "";
-"OPEN_TWITTER" = "Open Twitter";
+"WELCOME_MESSAGE" = "شكرًا لتثبيت Safari Plus! إذا كنت ترغب في البقاء على اطلاع دائم بآخر أخبار هذه الأداة، فتأكد من متابعتي على تويتر! هذه الرسالة لن تظهر مرة أخرى (أعدك)!";
+"OPEN_TWITTER" = "فتح تويتر";
 "COMMUNICATION_ERROR" = "Communication Error";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro.";
 
