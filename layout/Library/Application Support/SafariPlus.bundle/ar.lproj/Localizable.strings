@@ -270,13 +270,13 @@
 
 /* In app */
 
-"CLOSE_NON_LOCKED_TABS" = "Close %zu Non-Locked Tabs";
-"CLOSE_NON_LOCKED_TAB" = "Close Non-Locked Tab";
-"CLOSE_NON_LOCKED_TABS_MATCHING" = "Close %zu Non-Locked Tabs Matching “%@“";
-"CLOSE_NON_LOCKED_TAB_MATCHING" = "Close Non-Locked Tab Matching “%@“";
-"LOCAL_FILES" = "Local Files";
-"WELCOME_TITLE" = "Welcome!";
-"WELCOME_MESSAGE" = "Thanks for installing Safari Plus! If you wish to stay updated about the future of this tweak, make sure to follow me on Twitter! This message will not show again (I promise)!";
+"CLOSE_NON_LOCKED_TABS" = "إغلاق %zu علامة تبويب غير مقفلة.";
+"CLOSE_NON_LOCKED_TAB" = "إغلاق علامة التبويب الغير مقفلة";
+"CLOSE_NON_LOCKED_TABS_MATCHING" = "إغلاق %zu علامة تبويب غير مقفلة والتي تطابق “%@“";
+"CLOSE_NON_LOCKED_TAB_MATCHING" = "إغلاق علامة التبويب غير المقفلة والتي تطابق “%@“";
+"LOCAL_FILES" = "ملفات محلية";
+"WELCOME_TITLE" = "مرحبًا!";
+"WELCOME_MESSAGE" = "";
 "OPEN_TWITTER" = "Open Twitter";
 "COMMUNICATION_ERROR" = "Communication Error";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro.";
