@@ -278,8 +278,8 @@
 "WELCOME_TITLE" = "مرحبًا!";
 "WELCOME_MESSAGE" = "شكرًا لتثبيت Safari Plus! إذا كنت ترغب في البقاء على اطلاع دائم بآخر أخبار هذه الأداة، فتأكد من متابعتي على تويتر! هذه الرسالة لن تظهر مرة أخرى (أعدك)!";
 "OPEN_TWITTER" = "فتح تويتر";
-"COMMUNICATION_ERROR" = "Communication Error";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro.";
+"COMMUNICATION_ERROR" = "خطأ في الاتصال";
+"COMMUNICATION_ERROR_DESCRIPTION" = "غير قادر على التواصل مع واجهة النظام! بعض المميزات لن تعمل. يرجى التأكد من تثبيت RocketBootstrap بشكل صحيح وأن SafariPlusSB.dylip لم يتم تعطيله عبر iCleaner Pro.";
 
 /* Force HTTPS */
 
