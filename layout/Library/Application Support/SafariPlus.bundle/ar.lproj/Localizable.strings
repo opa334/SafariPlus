@@ -241,8 +241,8 @@
 "BOTTOM_TOOLBAR" = "شريط الأدوات السفلي";
 "TOP_TOOLBAR" = "شريط الأدوات العلوي";
 
-"BOTTOM_TOOLBAR_FOOTER" = "The Bottom Toolbar is used on iPhones in Portrait Mode, some smaller iPhones also use it in Landscape Mode. iPads also use it inside Split-View.";
-"TOP_TOOLBAR_FOOTER" = "The Top Toolbar is used on larger iPhones in Landscape Mode. On iPads, it is used in both Portrait and Landscape.";
+"BOTTOM_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات السفلي على أجهزة الـ iPhone في وضع الدوران، وبعض أجهزة الـ iPhone الأصغر تستخدمه في الوضع الأفقي، كما أن أجهزة الـ iPad تستخدمه داخل Split-View.";
+"TOP_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات العلوي على أجهزة الـ iPhone الكبيرة في الوضع الأفقي. على الـ iPad، يتم استخدامه في كلا الوضعين الدوران والأفقي.";
 
 "REORDER_BOTTOM_TOOLBAR" = "Reorder Bottom Toolbar";
 "REORDER_TOP_TOOLBAR" = "Reorder Top Toolbar";
