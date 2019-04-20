@@ -226,20 +226,20 @@
 "URL_FONT_COLOR" = "لون خط URL";
 "PROGRESS_BAR_COLOR" = "لون شريط التقدم";
 "RELOAD_BUTTON_COLOR" = "لون زر إعادة التحميل";
-"READER_BUTTON_COLOR" = "Reader Button Color";
-"LOCK_ICON_COLOR" = "Lock Icon Color";
-"TAB_TITLE_TEXT_COLOR" = "Tab Title Text Color";
-"TAB_TITLE_BACKGROUND_COLOR" = "Tab Title Background Color";
-"TOOLBAR_BACKGROUND_COLOR" = "Toolbar Background Color";
+"READER_BUTTON_COLOR" = "لون زر القارئ";
+"LOCK_ICON_COLOR" = "لون أيقونة القفل";
+"TAB_TITLE_TEXT_COLOR" = "لون نص عنوان علامة التبويب";
+"TAB_TITLE_BACKGROUND_COLOR" = "لون خلفية عنوان علامة التبويب";
+"TOOLBAR_BACKGROUND_COLOR" = "لون خلفية شريط الأدوات";
 
-"TAB_BAR_NOTE" = "NOTE: The tab bar does not exist on all devices sizes / orientations.";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTE: Some settings will require an app restart to be applied.";
+"TAB_BAR_NOTE" = "ملاحظة: شريط علامة التبويب غير موجود على جمبع أحجام واتجاهات كل الأجهزة.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "ملاحظة: بعض الإعدادات تتطلب إعادة تشغيل التطبيق لتطبيقها.";
 
-"WHITE" = "White";
-"BLACK" = "Black";
+"WHITE" = "أبيض";
+"BLACK" = "أسود";
 
-"BOTTOM_TOOLBAR" = "Bottom Toolbar";
-"TOP_TOOLBAR" = "Top Toolbar";
+"BOTTOM_TOOLBAR" = "شريط الأدوات السفلي";
+"TOP_TOOLBAR" = "شريط الأدوات العلوي";
 
 "BOTTOM_TOOLBAR_FOOTER" = "The Bottom Toolbar is used on iPhones in Portrait Mode, some smaller iPhones also use it in Landscape Mode. iPads also use it inside Split-View.";
 "TOP_TOOLBAR_FOOTER" = "The Top Toolbar is used on larger iPhones in Landscape Mode. On iPads, it is used in both Portrait and Landscape.";
