@@ -341,16 +341,16 @@
 "FILENAME" = "اسم الملف";
 "CLOSE" = "إغلاق";
 "CANCEL_PICKER" = "إلغاء";
-"PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل ملف /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";
-"PLAY" = "Play";
-"CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
-"VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";
-"COPY_LINK" = "Copy Link";
-"SIZE_UNKNOWN" = "Unknown Size";
+"PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل  /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";
+"PLAY" = "تشغيل";
+"CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "المسار الذي قمت بتعيينه في الإعدادات ضمن 'مسار افتراضي مخصص' غير صالح. يرجى تصحيح ذلك.";
+"VIDEO_URL_NOT_FOUND" = "لم يتم العثور على عنوان URL لهذا الفيديو، ربما يكون الموقع الحالي غير مدعوم!";
+"COPY_LINK" = "نسخ الرابط";
+"SIZE_UNKNOWN" = "حجم غير معروف";
 "MIGRATION_TITLE" = "Migration succeeded";
 "MIGRATION_MESSAGE" = "Gone are the days of being restricted to the sandbox container of Safari! Your downloads have been moved from %@ to %@. You can now download files to any directory you want!";
 
 /* Open in opposite mode */
 
-"OPEN_IN_NORMAL_MODE" = "Open in Normal Mode";
-"OPEN_IN_PRIVATE_MODE" = "Open in Private Mode";
+"OPEN_IN_NORMAL_MODE" = "فتح في الوضع العادي";
+"OPEN_IN_PRIVATE_MODE" = "فتح في الوضع الخاص";
