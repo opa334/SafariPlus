@@ -347,8 +347,8 @@
 "VIDEO_URL_NOT_FOUND" = "لم يتم العثور على عنوان URL لهذا الفيديو، ربما يكون الموقع الحالي غير مدعوم!";
 "COPY_LINK" = "نسخ الرابط";
 "SIZE_UNKNOWN" = "حجم غير معروف";
-"MIGRATION_TITLE" = "Migration succeeded";
-"MIGRATION_MESSAGE" = "Gone are the days of being restricted to the sandbox container of Safari! Your downloads have been moved from %@ to %@. You can now download files to any directory you want!";
+"MIGRATION_TITLE" = "تم الانتقال بنجاح";
+"MIGRATION_MESSAGE" = "لقد ولت تلك الأيام التي يتم فيها تقييد حاوية sandbox الخاصة بـ Safari! تنزيلاتك تم نقلها من %@ إلى %@. يمكنك الآن تنزيل الملفات إلى أي مسار تريده!";
 
 /* Open in opposite mode */
 
