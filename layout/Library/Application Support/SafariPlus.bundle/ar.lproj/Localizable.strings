@@ -341,7 +341,7 @@
 "FILENAME" = "اسم الملف";
 "CLOSE" = "إغلاق";
 "CANCEL_PICKER" = "إلغاء";
-"PERMISSION_ERROR_MESSAGE" = "Not enough permissions to write to the selected path. Please select another one.\nNOTE: Normally only paths inside the /var directory are writable! You can also use Filza to inspect / change the permissions of a directory.";
+"PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل ملف /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
 "VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";
