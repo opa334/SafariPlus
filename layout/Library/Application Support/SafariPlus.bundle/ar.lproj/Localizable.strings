@@ -32,7 +32,7 @@
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "عنوان URL";
 
 "LOCKED_TABS" = "علامات تبويب مقفلة";
-"LOCKED_TABS_FOOTER" = "إضافة مفتاح تبديل للقفل إلى أعلى يسار كل علامة تبويب في مبدل علامات التبويب. لا يمكن إغلاق علامة التبويب المقفلة طالما هي مقفلة، وستظل موجودة إلى أن تقوم بفتح قفلها.";
+"LOCKED_TABS_FOOTER" = "إضافة مفتاح تبديل قفل إلى أعلى يسار كل علامة تبويب في مبدل علامات التبويب. لا يمكن إغلاق علامة التبويب المقفلة طالما هي مقفلة، وستظل موجودة إلى أن تقوم بفتح قفلها.";
 
 "BIOMETRIC_PROTECTION" = "حماية البصمة";
 "BIOMETRIC_PROTECTION_FOOTER" = "حماية الإجراءات المحددة بالبصمة سواءً الإصبع أو الوجه.";
@@ -68,7 +68,7 @@
 "OPTION" = "Option";
 
 "CUSTOM_DEFAULT_PATH" = "مسار افتراضي مخصص";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "اختر مسارًا مخصصًا يتم تنزيل الملفات إليه عندما يكون هذا الخيار مفعلًا.\n\nملاحظة: يمكن تنزيل الملفات في مسارات قابلة للكتابة فقط، مما يعني أن أي مسار داخل مجلد /var يمكن اختياره.";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "اختر مسارًا مخصصًا يتم تنزيل الملفات إليه عندما يكون هذا الخيار مفعلًا.\n\nملاحظة: يمكن تنزيل الملفات في مسارات قابلة للكتابة فقط، مما يعني أن أي مسار داخل  /var يمكن اختياره.";
 
 "PINNED_LOCATIONS_ENABLED" = "تفعيل المواقع المثبتة";
 "PINNED_LOCATIONS" = "المواقع المثبتة";
@@ -77,7 +77,7 @@
 "PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "تعديل موقع مثبت";
 "PINNED_LOCATIONS_ALERT_MESSAGE" = "اختر اسم ومسار الموقع المثبت.";
 "PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "الاسم";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "المساو";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "المسار";
 "BROWSE" = "تصفح...";
 "CHOOSE_PATH_CONFIRMATION_TITLE" = "اختر المسار";
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "هل تريد اختيار المسار\n%@؟";
@@ -96,11 +96,11 @@
 
 "URL_ACTIONS" = "إجراءات عنوان URL";
 
-"SECOND_OPEN_IN_NEW_TAB" = "خيار فتح في علامة تبويب جديدة' ثاني";
+"SECOND_OPEN_IN_NEW_TAB" = "خيار 'فتح في علامة تبويب جديدة' ثاني";
 "SECOND_OPEN_IN_NEW_TAB_FOOTER" = "إضافة خيار 'فتح في علامة تبويب جديدة' آخر إلى القائمة التي تظهر عند الضغط مطولًا على رابط.\nقم بتعيين 'فتح الروابط' في إعدادات Safari إلى 'في الخلفية' ليكون كلا الخيارين متاحين عند الضغط مطولًا على رابط.";
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "إضافة خيار إلى قائمة الخيارات التي تظهر عند الضغط مطولًا على رابط من شأنه فتح الرابط في وضع التصفح المعاكس.\n(الوضع العادي -> خيار للفتح في الوضع الخاص،\nالوضع الخاص -> خيار للفتح في الوضع العادي)";
-"OPEN_IN_OPPOSITE_MODE" = "خيار للفتح في الوضع المعاكس";
+"OPEN_IN_OPPOSITE_MODE" = "خيار فتح في الوضع المعاكس";
 
 "TAB_MANAGEMENT" = "إدارة علامة التبويب";
 
@@ -110,13 +110,13 @@
 "DISABLE_TAB_LIMIT" = "تعطيل حد علامة التبويب";
 "DISABLE_TAB_LIMIT_FOOTER" = "تعطيل حد علامة التبويب الذي تفرضه Apple والذي يختلف بناءً على إصدار iOS ونوع الجهاز. قد يكون هناك سبب وجيه جعل Apple تفعل هذا ولذلك فإن استخدام هذه الميزة يكون على مسؤوليتك الخاصة.";
 
-"CUSTOM_START_SITE" = "موقع بدأ مخصص";
-"CUSTOM_START_SITE_FOOTER" = "استبدال صفحة المفضلة التي تظهر عند فتح علامة تبويب بموقع مخصص.";
+"CUSTOM_START_SITE" = "موقع بدء مخصص";
+"CUSTOM_START_SITE_FOOTER" = "استبدال صفحة المفضلة التي تظهر عند فتح علامة تبويب جديدة بموقع مخصص.";
 
 "SUGGESTIONS" = "الاقتراحات";
 
 "LONG_PRESS_SUGGESTIONS" = "إدراج الاقتراحات في الضغط المطول";
-"LONG_PRESS_SUGGESTIONS_FOOTER" = "اضغط مطولًا على اقتراحات البحث / URL لإدراجها في شريط URL";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "اضغط مطولًا على اقتراحات بحث / URL لإدراجها في شريط URL.";
 "LONG_PRESS_DURATION_TITLE" = "مدة الضغط المطول";
 "LONG_PRESS_FOCUS_TITLE" = "التركيز على شريط URL عند الضغط المطول";
 
@@ -241,7 +241,7 @@
 "BOTTOM_TOOLBAR" = "شريط الأدوات السفلي";
 "TOP_TOOLBAR" = "شريط الأدوات العلوي";
 
-"BOTTOM_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات السفلي على أجهزة الـ iPhone في وضع الرأسي، وبعض أجهزة الـ iPhone الأصغر تستخدمه في الوضع الأفقي، كما أن أجهزة الـ iPad تستخدمه داخل Split-View.";
+"BOTTOM_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات السفلي على أجهزة الـ iPhone في الوضع الرأسي، وبعض أجهزة الـ iPhone الأصغر تستخدمه في الوضع الأفقي، كما أن أجهزة الـ iPad تستخدمه داخل Split-View.";
 "TOP_TOOLBAR_FOOTER" = "يتم استخدام شريط الأدوات العلوي على أجهزة الـ iPhone الكبيرة في الوضع الأفقي. على الـ iPad، يتم استخدامه في كلا الوضعين الرأسي والأفقي.";
 
 "REORDER_BOTTOM_TOOLBAR" = "شريط أدوات القارئ السفلي";
@@ -255,10 +255,10 @@
 "ENABLED_ITEMS" = "العناصر المفعلة";
 "DISABLED_ITEMS" = "العناصر المعطلة";
 
-"BACK" = "رجوع";
-"FORWARD" = "تقدم";
-"SHARE" = "مشاركة";
-"BOOKMARKS" = "إشارات مرجعية";
+"BACK" = "الخلف";
+"FORWARD" = "الأمام";
+"SHARE" = "المشاركة";
+"BOOKMARKS" = "الإشارات المرجعية";
 "TABS" = "علامات التبويب";
 "ADD_TAB" = "إضافة علامة تبويب";
 "SEARCH_BAR_SPACE" = "فراغ شريط البحث";
@@ -278,7 +278,7 @@
 "WELCOME_TITLE" = "مرحبًا!";
 "WELCOME_MESSAGE" = "شكرًا لتثبيت Safari Plus! إذا كنت ترغب في البقاء على اطلاع دائم بآخر أخبار هذه الأداة، فتأكد من متابعتي على تويتر! هذه الرسالة لن تظهر مرة أخرى (أعدك)!";
 "OPEN_TWITTER" = "فتح تويتر";
-"COMMUNICATION_ERROR" = "خطأ في الاتصال";
+"COMMUNICATION_ERROR" = "خطأ في التواصل";
 "COMMUNICATION_ERROR_DESCRIPTION" = "غير قادر على التواصل مع واجهة النظام! بعض المميزات لن تعمل. يرجى التأكد من تثبيت RocketBootstrap بشكل صحيح وأن SafariPlusSB.dylip لم يتم تعطيله عبر iCleaner Pro.";
 
 /* Force HTTPS */
@@ -296,7 +296,7 @@
 
 "DOWNLOAD" = "تنزيل";
 "DOWNLOAD_TO" = "تنزيل إلى";
-"DOWNLOAD_SITE_TO" = "تنزيل الموقع إلى";
+"DOWNLOAD_SITE_TO" = "تنزيل الموقع إلى...";
 "DOWNLOAD_IMAGE_TO" = "تنزيل الصورة إلى...";
 "DOWNLOAD_OVERVIEW" = "نظرة عامة على التنزيلات";
 "DOWNLOADS" = "التنزيلات";
@@ -305,12 +305,12 @@
 "OPEN_IN" = "فتح في...";
 "IMPORT_TO_MUSIC_LIBRARY" = "استيراد إلى مكتبة الموسيقى";
 "SAVE_TO_MEDIA_LIBRARY" = "حفظ إلى مكتبة الوسائط";
-"CLEAR" = "Clear";
+"CLEAR" = "مسح";
 "CANCEL_ALL_DOWNLOADS" = "إلغاء كل التنزيلات";
 "CLEAR_DOWNLOAD_HISTORY" = "مسح سجل التنزيل";
 "CLEAR_TEMPORARY_DATA" = "مسح البيانات المؤقتة";
 "CLEAR_EVERYTHING" = "مسح كل شيء";
-"CLEAR_EVERYTHING_WARNING" = "هل أنت متأكد أنك تريد إلغاء كل التنزيلات؟ مسح سجل التنزيل و البيانات المؤقتة؟";
+"CLEAR_EVERYTHING_WARNING" = "هل أنت متأكد أنك تريد إلغاء كل التنزيلات؟ مسح سجل التنزيل والبيانات المؤقتة؟";
 "CREATE_DIRECTORY" = "إنشاء مسار";
 "DIRECTORY_NAME" = "اسم المسار";
 "CREATE" = "إنشاء";
