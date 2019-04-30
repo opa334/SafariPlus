@@ -1,4 +1,4 @@
-// SafariPlusPrefs.h
+// SPTabManagerNavigationController.mm
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -13,23 +13,3 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#import "../MobileSafari/Classes/SPLocalizationManager.h"
-#import "SPPDirectoryPickerNavigationController.h"
-#import "../MobileSafari/Enums.h"
-#import "../MobileSafari/Defines.h"
-#import "../MobileSafari/Classes/SPFileManager.h"
-#import <Preferences/PSListController.h>
-
-extern SPFileManager* fileManager;
-extern SPLocalizationManager* localizationManager;
-extern NSBundle* SPBundle;
-extern NSBundle* MSBundle;
-extern NSBundle* SSBundle;
-
-@interface PSEditableListController : PSListController
-- (id)_editButtonBarItem;
-- (BOOL)performDeletionActionForSpecifier:(id)arg1;
-- (void)setEditable:(BOOL)editable;
-- (BOOL)editable;
-@end

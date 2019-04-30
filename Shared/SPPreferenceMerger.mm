@@ -20,6 +20,8 @@
 #import "../MobileSafari/Classes/SPFileManager.h"
 #import "Simulator.h"
 
+#ifndef SIMJECT
+
 #ifndef PREFERENCES
 #import <Cephei/HBPreferences.h>
 #endif
@@ -152,3 +154,5 @@
 }
 
 @end
+
+#endif

@@ -139,6 +139,14 @@
 	UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 
+	if([self respondsToSelector:@selector(flipsForRightToLeftLayoutDirection)])
+	{
+		if(self.flipsForRightToLeftLayoutDirection)
+		{
+			newImage = [newImage imageFlippedForRightToLeftLayoutDirection];
+		}
+	}
+
 	return newImage;
 }
 @end

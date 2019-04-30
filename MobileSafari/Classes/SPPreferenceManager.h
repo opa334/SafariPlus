@@ -62,15 +62,17 @@ static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) BOOL disablePushNotificationsEnabled;
 @property (nonatomic, readonly) BOOL disableBarNotificationsEnabled;
 
-@property (nonatomic, readonly) BOOL openInNewTabOptionEnabled;
+@property (nonatomic, readonly) BOOL bothTabOpenActionsEnabled;
 @property (nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
 @property (nonatomic, readonly) BOOL desktopButtonEnabled;
 @property (nonatomic, readonly) BOOL disableTabLimit;
+@property (nonatomic, readonly) BOOL tabManagerEnabled;
 @property (nonatomic, readonly) BOOL customStartSiteEnabled;
 @property (nonatomic, readonly) NSString* customStartSite;
 @property (nonatomic, readonly) BOOL longPressSuggestionsEnabled;
 @property (nonatomic, readonly) CGFloat longPressSuggestionsDuration;
 @property (nonatomic, readonly) BOOL longPressSuggestionsFocusEnabled;
+@property (nonatomic, readonly) BOOL suggestionInsertButtonEnabled;
 @property (nonatomic, readonly) BOOL showTabCountEnabled;
 @property (nonatomic, readonly) BOOL fullscreenScrollingEnabled;
 @property (nonatomic, readonly) BOOL lockBars;

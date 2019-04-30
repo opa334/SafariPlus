@@ -96,11 +96,11 @@
 
 "URL_ACTIONS" = "URL Aktionen";
 
-"SECOND_OPEN_IN_NEW_TAB" = "Zweite 'In neuem Tab öffnen' Option";
-"SECOND_OPEN_IN_NEW_TAB_FOOTER" = "Fügt eine zweite 'In neuem Tab öffnen' Option zum Menü hinzu, das beim langen gedrückt halten von Links erscheint.\nStelle 'Links öffnen' in den Safari Einstellungen auf 'Im Hintergrund', um im Menü Zugriff auf beide Optionen zu haben.";
+"BOTH_TAB_OPEN_ACTIONS" = "Beide Tab Öffnen Aktionen";
+"BOTH_TAB_OPEN_ACTIONS_FOOTER" = "Standardmäßig kann in den Safari Einstellungen nur eine der 'In neuem Tab öffnen' und der 'Im Hintergrund öffnen' Aktionen ausgewählt werden. Diese Option ignoriert die Einstellung und aktiviert stattdessen beide Aktionen.";
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Fügt eine Option zum Menü hinzu, was beim langen gedrückt halten von Links erscheint. Diese kann dazu benutzt werden, den Link im jeweils anderen Surfmodus zu öffen.\n(Normaler Modus -> Option zum Öffnen im privaten Modus,\nPrivater Modus -> Option zum Öffnen im normalen Modus)";
-"OPEN_IN_OPPOSITE_MODE" = "Option zum Öffnen in anderem Modus";
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Fügt eine Aktion zum Öffnen des Links im jeweils anderen Surfmodus zum Menü hinzu, was beim langen gedrückt halten von Links erscheint.\n(Normaler Modus -> Option zum Öffnen im privaten Modus,\nPrivater Modus -> Option zum Öffnen im normalen Modus)";
+"OPEN_IN_OPPOSITE_MODE" = "Aktion zum Öffnen in anderem Modus";
 
 "TAB_MANAGEMENT" = "Tab Verwaltung";
 
@@ -119,6 +119,9 @@
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Lässt dich auf Such / URL Vorschläge lange Drücken, um diese in die URL Leiste einzufügen.";
 "LONG_PRESS_DURATION_TITLE" = "Dauer des Drucks";
 "LONG_PRESS_FOCUS_TITLE" = "URL Feld nach Druck fokussieren";
+
+"SUGGESTION_INSERT_BUTTON" = "'Vorschlag einfügen' Button";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "Fügt einen Button rechts von jedem Suchvorschlag hinzu, mit dem er in die URL Leiste eingefügt werden kann. Inspiriert von iOS 12.2 und höher.";
 
 "INTERFACE" = "Oberfläche";
 
@@ -349,6 +352,7 @@
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "MIGRATION_TITLE" = "Migration abgeschlossen";
 "MIGRATION_MESSAGE" = "Deine Downloads wurden von %@ zu %@ verschoben. Du kannst nun in alle Order herunterladen, in die du willst! (Vorher war dies nur innerhalb des Sandbox-Containers von Safari möglich).";
+"CELLULAR_DATA_WARNING" = "'Nur über WLAN herunterladen' ist in den Einstellungen aktiviert und dein Gerät ist momentan über mobile Daten verbunden. Downloads werden nicht starten bis du dich entweder mit einem WLAN Netzwerk verbindest oder du die Einstellung deaktivierst und Safari neustartest.";
 
 /* Open in opposite mode */
 

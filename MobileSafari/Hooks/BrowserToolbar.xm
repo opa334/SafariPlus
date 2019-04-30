@@ -24,26 +24,12 @@
 
 //Turns a system bar button item into a non-system one
 //Needed because system items act weird and can't be modified that easily
-static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment, BOOL setLongPress, BOOL setTouchDown, BOOL flipForRTL)
+static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment, BOOL setLongPress, BOOL setTouchDown)
 {
 	UIImage* itemImage;
 	[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:oldItem.systemItem usingItemStyle:0];
 
-	BOOL rtl = NO;
-
-	UIView* tmpView = [[UIView alloc] init];
-
-	if([tmpView respondsToSelector:@selector(_sf_usesLeftToRightLayout)])
-	{
-		rtl = ![tmpView _sf_usesLeftToRightLayout];
-	}
-
 	UIImage* newImage = [itemImage imageWithWidth:width alignment:alignment];
-
-	if(flipForRTL && [newImage respondsToSelector:@selector(imageFlippedForRightToLeftLayoutDirection)])
-	{
-		newImage = [newImage imageFlippedForRightToLeftLayoutDirection];
-	}
 
 	UIBarButtonItem* newItem = [[(__kindof UIBarButtonItem*)[oldItem class] alloc] initWithImage:newImage style:UIBarButtonItemStylePlain target:oldItem.target action:oldItem.action];
 
@@ -221,7 +207,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				alignment = 1;
 			}
 
-			UIBarButtonItem* newBackItem = unsystemifiedBarButtonItem(backItem, 25, alignment, YES, NO, YES);
+			UIBarButtonItem* newBackItem = unsystemifiedBarButtonItem(backItem, 25, alignment, YES, NO);
 
 			[allItems setObject:newBackItem forKey:@(BrowserToolbarBackItem)];
 
@@ -248,7 +234,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				alignment = 1;
 			}
 
-			UIBarButtonItem* newForwardItem = unsystemifiedBarButtonItem(forwardItem, 25, alignment, YES, NO, YES);
+			UIBarButtonItem* newForwardItem = unsystemifiedBarButtonItem(forwardItem, 25, alignment, YES, NO);
 
 			[allItems setObject:newForwardItem forKey:@(BrowserToolbarForwardItem)];
 
@@ -275,7 +261,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				alignment = 1;
 			}
 
-			UIBarButtonItem* newShareItem = unsystemifiedBarButtonItem(shareItem, 25, alignment, YES, YES, NO);
+			UIBarButtonItem* newShareItem = unsystemifiedBarButtonItem(shareItem, 25, alignment, YES, YES);
 
 			[allItems setObject:newShareItem forKey:@(BrowserToolbarShareItem)];
 
@@ -299,15 +285,14 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	if([orderM containsObject:@(BrowserToolbarTabExposeItem)])
 	{
 		UIBarButtonItem* tabExposeItem = [allItems objectForKey:@(BrowserToolbarTabExposeItem)];
+		tabExposeItem.image = [tabExposeItem.image imageWithWidth:25 alignment:0];
 		tabExposeItem.imageInsets = UIEdgeInsetsMake(tabExposeItem.imageInsets.top, 0, tabExposeItem.imageInsets.bottom, 0);
 	}
 
 	if([orderM containsObject:@(BrowserToolbarAddTabItem)])
 	{
 		UIBarButtonItem* addTabItem = [allItems objectForKey:@(BrowserToolbarAddTabItem)];
-
 		addTabItem.image = [addTabItem.image imageWithWidth:25 alignment:0];
-
 		addTabItem.imageInsets = UIEdgeInsetsMake(addTabItem.imageInsets.top, 0, addTabItem.imageInsets.bottom, 0);
 	}
 
@@ -485,7 +470,26 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			{
 				if(placement)	//Bottom Bar
 				{
-					defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarShareItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarDownloadsItem), @(BrowserToolbarTabExposeItem)]];
+					BOOL tabBarTweakActive = NO;
+
+					if([self.browserDelegate respondsToSelector:@selector(_shouldShowTabBar)])
+					{
+						tabBarTweakActive = [self.browserDelegate _shouldShowTabBar] && [browserControllers() count] <= 1;
+					}
+					else
+					{
+						[self.browserDelegate updateUsesTabBar];
+						tabBarTweakActive = self.browserDelegate.tabController.usesTabBar;
+					}
+
+					if(tabBarTweakActive)
+					{
+						defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarShareItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarDownloadsItem), @(BrowserToolbarTabExposeItem), @(BrowserToolbarAddTabItem)]];
+					}
+					else
+					{
+						defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarShareItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarDownloadsItem), @(BrowserToolbarTabExposeItem)]];
+					}
 				}
 				else	//Top Bar
 				{

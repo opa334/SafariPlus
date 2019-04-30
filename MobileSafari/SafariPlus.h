@@ -25,7 +25,7 @@
 
 #import "Protocols.h"
 
-@class ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, SPVerticalCenterLabel, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@class _WKActivatedElementInfo, ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, SPVerticalCenterLabel, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 
@@ -131,6 +131,7 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 @end
 
 @interface UIAlertAction (Private)
+@property (setter=_setRepresenter:) id _representer;
 - (void)setTitle:(NSString*)arg1;
 @end
 
@@ -146,23 +147,29 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 - (BOOL)_sf_usesLeftToRightLayout;
 @end
 
+@interface UIView (Private)
+- (void)removeAllGestureRecognizers;
+@end
+
 /*@interface NSKeyedUnarchiver (Private)
-+ (id)unarchivedObjectOfClass:(Class)cls fromData:(NSData*)data error:(NSError**)error;
-@end*/
+ + (id)unarchivedObjectOfClass:(Class)cls fromData:(NSData*)data error:(NSError**)error;
+   @end*/
 
 /**** WebKit ****/
 
-@interface WKNavigationAction ()
+@interface WKNavigationAction (Private)
 @property (getter=_isUserInitiated, nonatomic, readonly) bool _userInitiated;
 @property (nonatomic,readonly) BOOL _shouldOpenAppLinks;
+@property (nonatomic,readonly) CGPoint _clickLocationInRootViewCoordinates;
 @end
 
-@interface WKNavigationResponse ()
+@interface WKNavigationResponse (Private)
 @property (nonatomic,readonly) NSURLRequest* _request;
 @end
 
-@interface WKWebView ()
+@interface WKWebView (Private)
 @property (setter=_setApplicationNameForUserAgent:,copy) NSString* _applicationNameForUserAgent;
+- (void)_requestActivatedElementAtPosition:(CGPoint)position completionBlock:(void (^)(_WKActivatedElementInfo *))block;
 @end
 
 @interface WKFileUploadPanel <filePickerDelegate>
@@ -186,6 +193,59 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 @interface _WKElementAction : NSObject
 + (id)elementActionWithTitle:(id)arg1 actionHandler:(id)arg2;
 @end
+
+/**** WebCore ****/
+
+// *INDENT-OFF*
+
+namespace WTF
+{
+	class StringImpl
+	{
+	public:
+		unsigned m_refCount;
+    unsigned m_length;
+		union
+		{
+        const char* m_data8;
+        const char16_t* m_data16;
+        const char* m_data8Char;
+        const char16_t* m_data16Char;
+    };
+		mutable unsigned m_hashAndFlags;
+	};
+
+	class String
+	{
+	public:
+		StringImpl* m_impl;
+	};
+}
+
+#define m_currentSrc_off 159
+
+namespace WebCore
+{
+	class URL
+	{
+	public:
+		operator NSURL*() const;
+	};
+
+	class HTMLMediaElement
+	{
+	public:
+	};
+
+	class PlaybackSessionModelMediaElement// final
+	{
+	public:
+		HTMLMediaElement* m_mediaElement; //This works because this is the first attribute, for everything else we have to add the offset to the object
+		void pause();
+	};
+}
+
+// *INDENT-ON*
 
 /**** MediaRemote ****/
 extern "C"
@@ -287,6 +347,11 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 
 /**** SafariShared ****/
+
+@interface WBSCompletionQuery : NSObject
+@property (nonatomic,readonly) NSString* queryString;
+@property (assign,nonatomic) NSUInteger triggerEvent;
+@end
 
 @interface WBSBookmarkAndHistoryCompletionMatch : NSObject
 - (id)originalURLString;
@@ -430,6 +495,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2;
 - (BOOL)isPrivateBrowsingAvailable;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
+- (BOOL)_shouldShowTabBar;
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(_Bool)arg2 completion:(void (^)(void))arg3;		//iOS11
 - (BOOL)isPrivateBrowsingEnabled;	//iOS11
 - (void)togglePrivateBrowsingEnabled;	//iOS11
@@ -479,6 +545,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface CatalogViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic,retain) UnifiedField* textField;
+@property (retain, nonatomic) NSString* queryString;
 -  (UITableViewCell*)tableView:(UITableView*)tableView cellForRowAtIndexPath:(NSIndexPath*)indexPath;
 - (id)_completionItemAtIndexPath:(id)arg1;
 - (void)_textFieldEditingChanged;
@@ -525,7 +592,14 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface SearchSuggestion : NSObject
+@property (nonatomic) BOOL goesToURL;
+@property (nonatomic, retain) CatalogViewController* sp_handler;
 - (NSString*)string;
+@end
+
+@interface SearchSuggestionTableViewCell : UITableViewCell
+@property (nonatomic, retain) UIImageView* hiddenAccessoryView;	//new
+- (void)setHidesAccessoryView:(BOOL)hidden;	//new (below 12.2)
 @end
 
 @interface TabBar : UIView
@@ -570,17 +644,22 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)insertNewTabDocument:(TabDocument*)arg1 openedFromTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;
 - (void)dismissTabViewAnimated:(BOOL)arg1;
 - (void)_updateTiltedTabViewItemsAnimated:(BOOL)arg1;
+- (BOOL)_document:(TabDocument*)arg1 matchesSearchText:(NSString*)arg2;
 - (void)_closeTabDocuments:(NSArray<TabDocument*>*)documents animated:(BOOL)arg2 temporarily:(BOOL)arg3 allowAddingToRecentlyClosedTabs:(BOOL)arg4 keepWebViewAlive:(BOOL)arg5;
+- (void)closeTabsDocuments:(NSArray<TabDocument*>*)arg1;
 - (void)_insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 8-10
 - (void)insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 11 and above
 //new stuff below
 @property (assign,nonatomic) BOOL desktopButtonSelected;
 @property (nonatomic,retain) UIButton* tiltedTabViewDesktopModeButton;
+@property (nonatomic,retain) UIBarButtonItem* tiltedTabViewTabManagerBarButton;
+@property (nonatomic,retain) UINavigationController* presentedTabManager;
 - (void)loadDesktopButtonState;
 - (void)saveDesktopButtonState;
 - (void)updateUserAgents;
 - (void)tiltedTabView:(TiltedTabView*)tiltedTabView toggleLockedStateForItem:(TiltedTabItem*)item;
 - (void)tabOverview:(TabOverview*)tabOverview toggleLockedStateForItem:(TabOverviewItem*)item;
+- (void)tabManagerDidClose;
 @end
 
 @interface TabDocument8 : NSObject
@@ -603,6 +682,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 + (id)tabDocumentForWKWebView:(id)arg1;
 - (id)initWithTitle:(NSString*)arg1 URL:(NSURL*)arg2 UUID:(NSUUID*)arg3 privateBrowsingEnabled:(BOOL)arg4 hibernated:(BOOL)arg5 bookmark:(id)arg6 browserController:(BrowserController*)arg7;
 - (NSURL*)URL;
+- (NSString*)title;
 - (BOOL)isBlankDocument;
 - (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2;
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
@@ -610,7 +690,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (BOOL)privateBrowsingEnabled;
 - (WebBookmark*)readingListBookmark;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
-- (void)_animateElement:(id)arg1 toToolbarButton:(int)arg2;
+- (void)_animateElement:(id)arg1 toToolbarButton:(NSInteger)arg2;
 - (void)loadURL:(id)arg1 userDriven:(BOOL)arg2;
 - (void)stopLoading;
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
@@ -618,6 +698,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (BOOL)isHibernated;
 - (void)_openAppLinkInApp:(id)arg1 fromOriginalRequest:(id)arg2 updateAppLinkStrategy:(_Bool)arg3 webBrowserState:(id)arg4 completionHandler:(id)arg5;
 - (void)userTappedReloadButton;
+- (_WKElementAction*)_openInNewPageActionForElement:(_WKActivatedElementInfo*)arg1;	//iOS 8
+- (_WKElementAction*)_openInNewPageActionForElement:(_WKActivatedElementInfo*)arg1 previewViewController:(id)arg2;	//iOS 9 and above
 - (void)requestDesktopSite;	//iOS 8
 //new stuff below
 - (BOOL)updateDesktopMode;
@@ -643,6 +725,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)_updateDisplayedItems;
 //new stuff below
 @property (nonatomic, retain) UIButton* desktopModeButton;
+@property (nonatomic,retain) UIButton* tabManagerButton;
 - (void)userAgentButtonLandscapePressed;
 @end
 
@@ -699,6 +782,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface UnifiedField : UITextField
+- (void)_setTopHit:(id)arg1;
 - (void)_textDidChangeFromTyping;
 - (void)setText:(id)arg1;
 - (void)setInteractionTintColor:(UIColor*)interactionTintColor;

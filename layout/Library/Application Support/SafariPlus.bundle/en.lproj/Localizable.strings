@@ -96,16 +96,19 @@
 
 "URL_ACTIONS" = "URL Actions";
 
-"SECOND_OPEN_IN_NEW_TAB" = "Second 'Open in New Tab' Option";
-"SECOND_OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
+"BOTH_TAB_OPEN_ACTIONS" = "Both Tab Open Actions";
+"BOTH_TAB_OPEN_ACTIONS_FOOTER" = "By default the Safari preferences let you only choose either the 'Open in New Tab' action or the 'Open in Background' action. This option will ignore whatever is selected inside Safari settings and just show both actions.";
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an option to the menu that appears when a link is long pressed, that can be used to open the link in the opposite browsing mode.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
-"OPEN_IN_OPPOSITE_MODE" = "Open in Opposite Mode Option";
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an action to open a URL in the opposite browsing mode to the sheet that appears when a URL is long pressed.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
+"OPEN_IN_OPPOSITE_MODE" = "'Open in Opposite Mode' Action";
 
 "TAB_MANAGEMENT" = "Tab Management";
 
 "DESKTOP_MODE_SWITCH_FOOTER" = "Adds a switch to the tab switcher that can be used to globally switch between mobile and desktop mode.";
 "DESKTOP_MODE_SWITCH" = "Desktop Mode Switch";
+
+"TAB_MANAGER" = "Tab Manager";
+"TAB_MANAGER_FOOTER" = "";
 
 "DISABLE_TAB_LIMIT" = "Disable Tab Limit";
 "DISABLE_TAB_LIMIT_FOOTER" = "Disables the imposed tab limit that varies based on iOS version and device. There is probably a reason why Apple has decided to enforce a tab limit, use on your own risk.";
@@ -119,6 +122,9 @@
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Long press on search / URL suggestions to insert them into the URL bar.";
 "LONG_PRESS_DURATION_TITLE" = "Long Press Duration";
 "LONG_PRESS_FOCUS_TITLE" = "Focus URL Bar on Long Press";
+
+"SUGGESTION_INSERT_BUTTON" = "Suggestion Insert Button";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "Adds a button at the right of every search suggestion to insert it into the URL bar. Inspired by how it is implemented in iOS 12.2 and above.";
 
 "INTERFACE" = "Interface";
 
@@ -349,6 +355,14 @@
 "SIZE_UNKNOWN" = "Unknown Size";
 "MIGRATION_TITLE" = "Migration succeeded";
 "MIGRATION_MESSAGE" = "Gone are the days of being restricted to the sandbox container of Safari! Your downloads have been moved from %@ to %@. You can now download files to any directory you want!";
+"CELLULAR_DATA_WARNING" = "'Only Download on Wifi' is enabled inside settings and you're currently on cellular data. Downloads will not start until you either connect to a wifi network or disable the option inside settings and restart Safari.";
+
+/* Tab Manager */
+"SELECT_ALL" = "Select All";
+"UNSELECT_ALL" = "Unselect All";
+"CHOOSE_EXPORT_FORMAT" = "Choose Export Format";
+"CHOOSE_EXPORT_FORMAT_MESSAGE" = "Each selected tab will be one line of text. Choose how each line should be formatted.";
+"WITH_HYPERLINK" = "With Hyperlink to URL";
 
 /* Open in opposite mode */
 

@@ -25,26 +25,33 @@
 
 - (UITableViewCell *)tableView:(id)tableView cellForRowAtIndexPath:(id)indexPath
 {
-	if(preferenceManager.longPressSuggestionsEnabled)
+	if(preferenceManager.longPressSuggestionsEnabled || preferenceManager.suggestionInsertButtonEnabled)
 	{
 		UITableViewCell* orig = %orig;
 
 		//Get item class from cell
 		id target = [self _completionItemAtIndexPath:indexPath];
 
-		if([target isKindOfClass:[%c(WBSBookmarkAndHistoryCompletionMatch) class]]
-		   || [target isKindOfClass:[%c(SearchSuggestion) class]])
+		if([target respondsToSelector:@selector(setSp_handler:)] && preferenceManager.suggestionInsertButtonEnabled)
 		{
-			//Cell is suggestion from bookmarks / history or a search suggestion
-			//-> add long press recognizer
-			UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc]
-									     initWithTarget:self action:@selector(handleLongPress:)];
+			((SearchSuggestion*)target).sp_handler = self;
+		}
 
-			//Get long press duration to value specified in preferences
-			longPressRecognizer.minimumPressDuration = preferenceManager.longPressSuggestionsDuration;
+		if(preferenceManager.longPressSuggestionsEnabled)
+		{
+			if([target isKindOfClass:[%c(WBSBookmarkAndHistoryCompletionMatch) class]]
+			   || [target isKindOfClass:[%c(SearchSuggestion) class]])
+			{
+				//Cell is suggestion from bookmarks / history or a search suggestion
+				//-> add long press recognizer
+				UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPress:)];
 
-			//Add recognizer to cell
-			[orig addGestureRecognizer:longPressRecognizer];
+				//Get long press duration to value specified in preferences
+				longPressRecognizer.minimumPressDuration = preferenceManager.longPressSuggestionsDuration;
+
+				//Add recognizer to cell
+				[orig addGestureRecognizer:longPressRecognizer];
+			}
 		}
 
 		return orig;
@@ -89,16 +96,7 @@
 				//Get URL textfield
 				UnifiedField* textField = MSHookIvar<UnifiedField*>(self, "_textField");
 
-				if([target isKindOfClass:[%c(WBSBookmarkAndHistoryCompletionMatch) class]])
-				{
-					//Set long pressed URL to textField
-					[textField setText:[target originalURLString]];
-				}
-				else	//SearchSuggestion
-				{
-					//Set long pressed search string to textField
-					[textField setText:[target string]];
-				}
+				[textField _setTopHit:nil];
 
 				//Focus URL field if specified in preferences
 				if(preferenceManager.longPressSuggestionsFocusEnabled)
@@ -106,9 +104,14 @@
 					[textField becomeFirstResponder];
 				}
 
-				//Update Field
-				[textField _textDidChangeFromTyping];
-				[self _textFieldEditingChanged];
+				if([target isKindOfClass:[%c(WBSBookmarkAndHistoryCompletionMatch) class]])
+				{
+					self.queryString = [target originalURLString];
+				}
+				else	//SearchSuggestion
+				{
+					self.queryString = [target string];
+				}
 			}
 		}
 	}
@@ -116,7 +119,111 @@
 
 %end
 
+%group iOS12_1_4_down
+%hook SearchSuggestionTableViewCell
+
+%property (nonatomic, retain) UIImageView *hiddenAccessoryView;
+
+%new
+- (void)setHidesAccessoryView:(BOOL)hidden
+{
+	if(hidden && self.accessoryView)
+	{
+		self.hiddenAccessoryView = (UIImageView*)self.accessoryView;
+		self.accessoryView = nil;
+	}
+	else if(!hidden && self.hiddenAccessoryView)
+	{
+		self.accessoryView = self.hiddenAccessoryView;
+		self.hiddenAccessoryView = nil;
+	}
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+	SearchSuggestionTableViewCell* orig = %orig;
+
+	if(preferenceManager.suggestionInsertButtonEnabled)
+	{
+		UIImageView* arrowImageView = [[UIImageView alloc] initWithFrame:CGRectMake(4,4,15,15)];
+
+		UIImage* arrowImage = [UIImage imageNamed:@"CompletionArrow" inBundle:SPBundle compatibleWithTraitCollection:nil];
+
+		arrowImage = [arrowImage _flatImageWithColor:self.contentView.tintColor];
+
+		if([arrowImage respondsToSelector:@selector(imageFlippedForRightToLeftLayoutDirection)])
+		{
+			arrowImage = [arrowImage imageFlippedForRightToLeftLayoutDirection];
+		}
+
+		[arrowImageView setImage:arrowImage];
+
+		self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0,0,23,23)];
+		[self.accessoryView addSubview:arrowImageView];
+		[self setHidesAccessoryView:YES];
+	}
+
+	return orig;
+}
+
+%end
+
+%hook SearchSuggestion
+
+%property (nonatomic, retain) CatalogViewController *sp_handler;
+
+- (void)configureCompletionTableViewCell:(SearchSuggestionTableViewCell*)cell forCompletionList:(id)completionList
+{
+	%orig;
+
+	if(preferenceManager.suggestionInsertButtonEnabled)
+	{
+		BOOL differentFromQuery = NO;
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+		{
+			differentFromQuery = ![MSHookIvar<WBSCompletionQuery*>(self,"_userQuery").queryString isEqualToString:self.string];
+		}
+		else
+		{
+			differentFromQuery = ![MSHookIvar<WBSCompletionQuery*>(completionList, "_query").queryString isEqualToString:self.string];
+		}
+
+		if(differentFromQuery)
+		{
+			[cell setHidesAccessoryView:self.goesToURL];
+
+			UITapGestureRecognizer* tapGestureRegognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(insertSuggestion:)];
+			[cell.accessoryView removeAllGestureRecognizers];
+			[cell.accessoryView addGestureRecognizer:tapGestureRegognizer];
+		}
+		else
+		{
+			[cell setHidesAccessoryView:YES];
+		}
+	}
+}
+
+%new
+- (void)insertSuggestion:(UIGestureRecognizer*)recognizer
+{
+	UnifiedField* textField = MSHookIvar<UnifiedField*>(self.sp_handler, "_textField");
+
+	[textField _setTopHit:nil];
+
+	self.sp_handler.queryString = self.string;
+}
+
+%end
+
+%end
+
 void initCatalogViewController()
 {
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
+	{
+		%init(iOS12_1_4_down);
+	}
+
 	%init();
 }

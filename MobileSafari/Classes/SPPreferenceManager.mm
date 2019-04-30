@@ -19,6 +19,7 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
+#import "Simulator.h"
 
 #ifndef NO_CEPHEI
 #import <Cephei/HBPreferences.h>
@@ -93,15 +94,17 @@ void reloadPrefs()
 	[_preferences registerBool:&_disablePushNotificationsEnabled default:NO forKey:@"disablePushNotificationsEnabled"];
 	[_preferences registerBool:&_disableBarNotificationsEnabled default:NO forKey:@"disableBarNotificationsEnabled"];
 
-	[_preferences registerBool:&_openInNewTabOptionEnabled default:NO forKey:@"openInNewTabOptionEnabled"];
+	[_preferences registerBool:&_bothTabOpenActionsEnabled default:NO forKey:@"bothTabOpenActionsEnabled"];
 	[_preferences registerBool:&_openInOppositeModeOptionEnabled default:NO forKey:@"openInOppositeModeOptionEnabled"];
 	[_preferences registerBool:&_desktopButtonEnabled default:NO forKey:@"desktopButtonEnabled"];
 	[_preferences registerBool:&_disableTabLimit default:NO forKey:@"disableTabLimit"];
+	[_preferences registerBool:&_tabManagerEnabled default:NO forKey:@"tabManagerEnabled"];
 	[_preferences registerBool:&_customStartSiteEnabled default:NO forKey:@"customStartSiteEnabled"];
 	[_preferences registerObject:&_customStartSite default:nil forKey:@"customStartSite"];
 	[_preferences registerBool:&_longPressSuggestionsEnabled default:NO forKey:@"longPressSuggestionsEnabled"];
 	[_preferences registerFloat:&_longPressSuggestionsDuration default:1 forKey:@"longPressSuggestionsDuration"];
 	[_preferences registerBool:&_longPressSuggestionsFocusEnabled default:YES forKey:@"longPressSuggestionsFocusEnabled"];
+	[_preferences registerBool:&_suggestionInsertButtonEnabled default:NO forKey:@"suggestionInsertButtonEnabled"];
 	[_preferences registerBool:&_showTabCountEnabled default:NO forKey:@"showTabCountEnabled"];
 	[_preferences registerBool:&_fullscreenScrollingEnabled default:NO forKey:@"fullscreenScrollingEnabled"];
 	[_preferences registerBool:&_lockBars default:NO forKey:@"lockBars"];
@@ -254,16 +257,18 @@ void reloadPrefs()
 		_disablePushNotificationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disablePushNotificationsEnabled"), appID) boolValue];
 		_disableBarNotificationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disableBarNotificationsEnabled"), appID) boolValue];
 
-		_openInNewTabOptionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("openInNewTabOptionEnabled"), appID) boolValue];
+		_bothTabOpenActionsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("bothTabOpenActionsEnabled"), appID) boolValue];
 		_openInOppositeModeOptionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("openInOppositeModeOptionEnabled"), appID) boolValue];
 		_desktopButtonEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("desktopButtonEnabled"), appID) boolValue];
 		_disableTabLimit = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disableTabLimit"), appID) boolValue];
+		_tabManagerEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("tabManagerEnabled"), appID) boolValue];
 		_customStartSiteEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("customStartSiteEnabled"), appID) boolValue];
 		_customStartSite = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customStartSite"), appID);
 		_longPressSuggestionsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("longPressSuggestionsEnabled"), appID) boolValue];
 		NSNumber* longPressSuggestionsDuration = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("longPressSuggestionsDuration"), appID);
 		_longPressSuggestionsDuration = longPressSuggestionsDuration ? [longPressSuggestionsDuration floatValue] : 0.5;
 		_longPressSuggestionsFocusEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("longPressSuggestionsFocusEnabled"), appID) boolValue];
+		_suggestionInsertButtonEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("suggestionInsertButtonEnabled"), appID) boolValue];
 		_showTabCountEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("showTabCountEnabled"), appID) boolValue];
 		_fullscreenScrollingEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("fullscreenScrollingEnabled"), appID) boolValue];
 		_lockBars = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("lockBars"), appID) boolValue];
@@ -367,7 +372,7 @@ void reloadPrefs()
 	}
 	else
 	{
-		NSDictionary* prefDict = [NSDictionary dictionaryWithContentsOfFile:path(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")];
+		NSDictionary* prefDict = [NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")];
 
 		NSNumber* tweakEnabled = [prefDict objectForKey:@"tweakEnabled"];
 		_tweakEnabled = tweakEnabled ? [tweakEnabled boolValue] : YES;
@@ -396,16 +401,18 @@ void reloadPrefs()
 		_disablePushNotificationsEnabled = [[prefDict objectForKey:@"disablePushNotificationsEnabled"] boolValue];
 		_disableBarNotificationsEnabled = [[prefDict objectForKey:@"disableBarNotificationsEnabled"] boolValue];
 
-		_openInNewTabOptionEnabled = [[prefDict objectForKey:@"openInNewTabOptionEnabled"] boolValue];
+		_bothTabOpenActionsEnabled = [[prefDict objectForKey:@"bothTabOpenActionsEnabled"] boolValue];
 		_openInOppositeModeOptionEnabled = [[prefDict objectForKey:@"openInOppositeModeOptionEnabled"] boolValue];
 		_desktopButtonEnabled = [[prefDict objectForKey:@"desktopButtonEnabled"] boolValue];
 		_disableTabLimit = [[prefDict objectForKey:@"disableTabLimit"] boolValue];
+		_tabManagerEnabled = [[prefDict objectForKey:@"tabManagerEnabled"] boolValue];
 		_customStartSiteEnabled = [[prefDict objectForKey:@"customStartSiteEnabled"] boolValue];
 		_customStartSite = [prefDict objectForKey:@"customStartSite"];
 		_longPressSuggestionsEnabled = [[prefDict objectForKey:@"longPressSuggestionsEnabled"] boolValue];
 		NSNumber* longPressSuggestionsDuration = [prefDict objectForKey:@"longPressSuggestionsDuration"];
 		_longPressSuggestionsDuration = longPressSuggestionsDuration ? [longPressSuggestionsDuration floatValue] : 0.5;
 		_longPressSuggestionsFocusEnabled = [[prefDict objectForKey:@"longPressSuggestionsFocusEnabled"] boolValue];
+		_suggestionInsertButtonEnabled = [[prefDict objectForKey:@"suggestionInsertButtonEnabled"] boolValue];
 		_showTabCountEnabled = [[prefDict objectForKey:@"showTabCountEnabled"] boolValue];
 		_fullscreenScrollingEnabled = [[prefDict objectForKey:@"fullscreenScrollingEnabled"] boolValue];
 		_lockBars = [[prefDict objectForKey:@"lockBars"] boolValue];
@@ -509,13 +516,13 @@ void reloadPrefs()
 
 - (void)reloadPrefs
 {
-	_preferences = [[NSDictionary alloc] initWithContentsOfFile:path(prefPlistPath)];
+	_preferences = [[NSDictionary alloc] initWithContentsOfFile:rPath(prefPlistPath)];
 }
 
 - (BOOL)forceHTTPSEnabled { return [[_preferences objectForKey:@"forceHTTPSEnabled"] boolValue]; }
 - (NSArray*)forceHTTPSExceptions { return [_preferences objectForKey:@"forceHTTPSExceptions"]; }
 - (BOOL)openInOppositeModeOptionEnabled { return [[_preferences objectForKey:@"openInOppositeModeOptionEnabled"] boolValue]; }
-- (BOOL)openInNewTabOptionEnabled { return [[_preferences objectForKey:@"openInNewTabOptionEnabled"] boolValue]; }
+- (BOOL)bothTabOpenActionsEnabled { return [[_preferences objectForKey:@"bothTabOpenActionsEnabled"] boolValue]; }
 - (BOOL)uploadAnyFileOptionEnabled { return [[_preferences objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
 - (BOOL)desktopButtonEnabled { return [[_preferences objectForKey:@"desktopButtonEnabled"] boolValue]; }
 - (BOOL)longPressSuggestionsEnabled { return [[_preferences objectForKey:@"longPressSuggestionsEnabled"] boolValue]; }

@@ -31,6 +31,8 @@
 #import "SPStatusBarNotificationWindow.h"
 #import "SPFileManager.h"
 
+#import "Extensions.h"
+
 #import <WebKit/WKWebView.h>
 
 @implementation SPDownloadManager

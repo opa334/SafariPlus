@@ -35,6 +35,26 @@
 
 BOOL showAlert = YES;
 
+static BOOL shouldFakeOpenLinksKey = NO;
+static BOOL fakeOpenLinksValue = NO;
+
+%hook NSUserDefaults
+
+- (BOOL)boolForKey:(NSString*)key
+{
+	if(shouldFakeOpenLinksKey)
+	{
+		if([key isEqualToString:@"OpenLinksInBackground"])
+		{
+			return fakeOpenLinksValue;
+		}
+	}
+
+	return %orig;
+}
+
+%end
+
 //Desktop mode user agent (set once)
 static NSString *desktopUserAgent;
 
@@ -175,6 +195,20 @@ static NSString *desktopUserAgent;
 				 inBackground:inBackground animated:YES];
 			}
 
+			if(inBackground)
+			{
+				if(!controller.isShowingTabBar)
+				{
+					if([castedSelf.webView respondsToSelector:@selector(_requestActivatedElementAtPosition:completionBlock:)])	//Sorry iOS < 11, you're not getting that fancy animation :(
+					{
+						[castedSelf.webView _requestActivatedElementAtPosition:navigationAction._clickLocationInRootViewCoordinates completionBlock:^(_WKActivatedElementInfo *element)
+						{
+							[self _animateElement:element toToolbarButton:0];
+						}];
+					}
+				}
+			}
+
 			return NO;
 		}
 	}
@@ -294,8 +328,7 @@ static NSString *desktopUserAgent;
 }
 
 %new
-- (void)addAdditionalActionsForElement:(_WKActivatedElementInfo*)element
-	toActions:(NSMutableArray*)actions
+- (void)addAdditionalActionsForElement:(_WKActivatedElementInfo*)element toActions:(NSMutableArray*)actions
 {
 	//Get browserController
 	BrowserController* browserController = browserControllerForTabDocument(castedSelf);
@@ -364,26 +397,42 @@ static NSString *desktopUserAgent;
 			[actions insertObject:openInOppositeModeAction atIndex:2];
 		}
 
-		if(preferenceManager.openInNewTabOptionEnabled)
+		if(preferenceManager.bothTabOpenActionsEnabled)
 		{
 			//Only needed when there is no tabBar
 			if(!browserController.tabController.usesTabBar)
 			{
-				_WKElementAction* openInNewTabAction = [%c(_WKElementAction)
-									elementActionWithTitle:[localizationManager
-												localizedMSStringForKey:@"Open Link in New Tab"] actionHandler:^
-				{
-					//Open URL in new tab
-					if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
-					{
-						[browserController loadURLInNewTab:element.URL inBackground:NO];
-					}
-					else
-					{
-						[browserController loadURLInNewWindow:element.URL inBackground:NO];
-					}
-				}];
+				_WKElementAction* openInNewTabAction;
+				_WKElementAction* openInBackgroundAction;
 
+				shouldFakeOpenLinksKey = YES;
+				fakeOpenLinksValue = NO;
+
+				if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
+				{
+					openInNewTabAction = [self _openInNewPageActionForElement:element];
+				}
+				else
+				{
+					openInNewTabAction = [self _openInNewPageActionForElement:element previewViewController:nil];
+				}
+
+				fakeOpenLinksValue = YES;
+
+				if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
+				{
+					openInBackgroundAction = [self _openInNewPageActionForElement:element];
+				}
+				else
+				{
+					openInBackgroundAction = [self _openInNewPageActionForElement:element previewViewController:nil];
+				}
+
+				shouldFakeOpenLinksKey = NO;
+				fakeOpenLinksValue = NO;
+
+				[actions removeObjectAtIndex:1];
+				[actions insertObject:openInBackgroundAction atIndex:1];
 				[actions insertObject:openInNewTabAction atIndex:1];
 			}
 		}
@@ -538,7 +587,7 @@ static NSString *desktopUserAgent;
 	defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
 	if(!arg3 && (preferenceManager.enhancedDownloadsEnabled ||
-		     preferenceManager.openInNewTabOptionEnabled ||
+		     preferenceManager.bothTabOpenActionsEnabled ||
 		     preferenceManager.openInOppositeModeOptionEnabled))
 	{
 		NSMutableArray* actions = %orig;
@@ -560,7 +609,7 @@ static NSString *desktopUserAgent;
 	defaultActions:(NSArray*)arg2
 {
 	if(preferenceManager.enhancedDownloadsEnabled ||
-	   preferenceManager.openInNewTabOptionEnabled ||
+	   preferenceManager.bothTabOpenActionsEnabled ||
 	   preferenceManager.openInOppositeModeOptionEnabled)
 	{
 		NSMutableArray* actions = %orig;

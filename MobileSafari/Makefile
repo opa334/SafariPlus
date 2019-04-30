@@ -32,6 +32,6 @@ ifeq ($(SIMJECT),1)
 	SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
-SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote
+SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote WebCore
 
 include $(THEOS_MAKE_PATH)/tweak.mk

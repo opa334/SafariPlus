@@ -17,6 +17,7 @@
 #import "SPPBottomToolbarReorderingListController.h"
 #import "../MobileSafari/Enums.h"
 #import "SafariPlusPrefs.h"
+#import "Extensions.h"
 
 @interface UIBarButtonItem (Private)
 + (void)_getSystemItemStyle:(NSInteger*)arg1 title:(id*)arg2 image:(UIImage**)arg3 selectedImage:(UIImage**)arg4 action:(SEL*)arg5 forBarStyle:(NSInteger)arg6 landscape:(BOOL)arg7 alwaysBordered:(BOOL)arg8 usingSystemItem:(NSInteger)arg9 usingItemStyle:(NSInteger)arg10;
@@ -261,6 +262,7 @@
 
 			case BrowserToolbarSearchBarSpace:
 			{
+				itemImage = [UIImage imageNamed:@"SearchBarSpace" inBundle:SPBundle compatibleWithTraitCollection:nil];
 				break;
 			}
 
@@ -274,6 +276,12 @@
 			if(itemImage)
 			{
 				itemImage = [itemImage _flatImageWithColor:self.view.tintColor];
+
+				if(itemImage.size.width < 25)
+				{
+					itemImage = [itemImage imageWithWidth:25 alignment:0];
+				}
+
 				[_imageByItem setObject:itemImage forKey:itemNumber];
 			}
 		}
@@ -304,7 +312,7 @@
 
 	cell.imageView.image = image;
 	cell.imageView.adjustsImageSizeForAccessibilityContentSizeCategory = YES;
-	cell.separatorInset = UIEdgeInsetsMake(0,60,0,0);
+	cell.separatorInset = UIEdgeInsetsMake(0,0,0,0);
 
 	return cell;
 }
@@ -431,6 +439,6 @@
 	_enabledItems = [(NSArray*)[self readPreferenceValue:_toolbarOrderSpecifier] mutableCopy];
 }
 
-- (void)suspend { }; //This method turns the UITableView back into non-editing mode if the app is minimized, so we prevent it
+- (void)suspend { };	//This method turns the UITableView back into non-editing mode if the app is minimized, so we prevent it
 
 @end

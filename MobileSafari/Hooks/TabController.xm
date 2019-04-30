@@ -19,6 +19,7 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPLocalizationManager.h"
+#import "../Classes/SPTabManagerTableViewController.h"
 #import "../Defines.h"
 #import "../Util.h"
 
@@ -29,6 +30,11 @@
 
 //Property for desktop button in portrait
 %property (nonatomic,retain) UIButton *tiltedTabViewDesktopModeButton;
+
+//Property for tab manager button in portrait
+%property (nonatomic,retain) UIBarButtonItem *tiltedTabViewTabManagerBarButton;
+
+%property (nonatomic,retain) UINavigationController *presentedTabManager;
 
 - (TabController*)initWithBrowserController:(BrowserController*)browserController
 {
@@ -87,63 +93,85 @@
 //Desktop mode button: Portrait
 - (NSArray *)tiltedTabViewToolbarItems
 {
-	if(preferenceManager.desktopButtonEnabled)
+	if(preferenceManager.desktopButtonEnabled || preferenceManager.tabManagerEnabled)
 	{
 		NSArray* old = %orig;
 
-		if(!self.tiltedTabViewDesktopModeButton)
+		UIBarButtonItem* desktopBarButton;
+
+		if(preferenceManager.desktopButtonEnabled)
 		{
-			//desktopButton not created yet -> create and configure it
-			self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+			if(!self.tiltedTabViewDesktopModeButton)
+			{
+				//desktopButton not created yet -> create and configure it
+				self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
 
-			UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
 
-			[self.tiltedTabViewDesktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
+				[self.tiltedTabViewDesktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
 
-			self.tiltedTabViewDesktopModeButton.tintColor = [UIColor whiteColor];
+				self.tiltedTabViewDesktopModeButton.tintColor = [UIColor whiteColor];
 
-			[self.tiltedTabViewDesktopModeButton addTarget:self
-			 action:@selector(tiltedTabViewDesktopModeButtonPressed)
-			 forControlEvents:UIControlEventTouchUpInside];
+				[self.tiltedTabViewDesktopModeButton addTarget:self
+				 action:@selector(tiltedTabViewDesktopModeButtonPressed)
+				 forControlEvents:UIControlEventTouchUpInside];
 
-			[self.tiltedTabViewDesktopModeButton sizeToFit];
+				[self.tiltedTabViewDesktopModeButton sizeToFit];
 
-			self.tiltedTabViewDesktopModeButton.selected = self.desktopButtonSelected;
+				self.tiltedTabViewDesktopModeButton.selected = self.desktopButtonSelected;
+			}
+
+			desktopBarButton = [[UIBarButtonItem alloc] initWithCustomView:self.tiltedTabViewDesktopModeButton];
 		}
 
-		//Create empty space button to align the bottom toolbar perfectly
-		UIButton* emptySpace = [UIButton buttonWithType:UIButtonTypeCustom];
-		emptySpace.frame = CGRectMake(0, 0, 27.5, 27.5);
+		if(preferenceManager.tabManagerEnabled)
+		{
+			if(!self.tiltedTabViewTabManagerBarButton)
+			{
+				self.tiltedTabViewTabManagerBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(tiltedTabViewTabManagerButtonPressed)];
+			}
+		}
 
-		//Create UIBarButtonItem from space
-		UIBarButtonItem *customSpace = [[UIBarButtonItem alloc] initWithCustomView:emptySpace];
+		UIBarButtonItem* fixedSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+		[fixedSpace setWidth:17.5];
 
-		//Create flexible UIBarButtonItem
-		UIBarButtonItem *flexibleItem = [[UIBarButtonItem alloc]
-						 initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-						 target:nil action:nil];
-
-		//Create UIBarButtonItem for desktopButton
-		UIBarButtonItem *desktopBarButton = [[UIBarButtonItem alloc]
-						     initWithCustomView:self.tiltedTabViewDesktopModeButton];
+		UIBarButtonItem* flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
 		NSMutableArray* newM = [old mutableCopy];
 
 		if([old count] < 6)
 		{
-			[newM insertObject:flexibleItem atIndex:0];
+			[newM insertObject:flexibleSpace atIndex:0];
 		}
 
 		[newM removeObjectAtIndex:3];
 		[newM removeObjectAtIndex:1];
 
-		[newM insertObject:flexibleItem atIndex:2];
-		[newM insertObject:customSpace atIndex:2];
-		[newM insertObject:flexibleItem atIndex:2];
+		[newM insertObject:flexibleSpace atIndex:2];
 
-		[newM insertObject:flexibleItem atIndex:1];
-		[newM insertObject:desktopBarButton atIndex:1];
-		[newM insertObject:flexibleItem atIndex:1];
+		if(preferenceManager.tabManagerEnabled)
+		{
+			[newM insertObject:self.tiltedTabViewTabManagerBarButton atIndex:2];
+		}
+		else
+		{
+			[newM insertObject:fixedSpace atIndex:2];
+		}
+
+		[newM insertObject:flexibleSpace atIndex:2];
+
+		[newM insertObject:flexibleSpace atIndex:1];
+
+		if(preferenceManager.desktopButtonEnabled)
+		{
+			[newM insertObject:desktopBarButton atIndex:1];
+		}
+		else
+		{
+			[newM insertObject:fixedSpace atIndex:1];
+		}
+
+		[newM insertObject:flexibleSpace atIndex:1];
 
 		return [newM copy];
 	}
@@ -163,6 +191,37 @@
 
 	//Write button state to plist
 	[self saveDesktopButtonState];
+}
+
+%new
+- (void)tiltedTabViewTabManagerButtonPressed
+{
+	BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+
+	BrowserRootViewController* vc = rootViewControllerForBrowserController(browserController);
+	SPTabManagerTableViewController* tabManagerTableViewController = [[SPTabManagerTableViewController alloc] initWithTabController:self];
+	UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:tabManagerTableViewController];
+
+	self.presentedTabManager = navigationController;
+
+	[vc presentViewController:navigationController animated:YES completion:nil];
+}
+
+%new
+- (void)tabManagerDidClose
+{
+	self.presentedTabManager = nil;
+}
+
+- (void)_updateTiltedTabViewItemsAnimated:(BOOL)animated
+{
+	NSLog(@"_updateTiltedTabViewItemsAnimated");
+	%orig;
+
+	if(preferenceManager.tabManagerEnabled && self.presentedTabManager)
+	{
+		[(SPTabManagerTableViewController*)self.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
+	}
 }
 
 //Update user agent of all tabs
@@ -291,21 +350,21 @@
 	return %orig;
 }
 /* //Somewhat broken, TODO: fix it
-- (BOOL)tabBar:(TabBar*)tabBar canCloseItem:(TabBarItem*)item
-{
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		TabDocument* tabDocument = [self _tabDocumentRepresentedByTabBarItem:item];
+   - (BOOL)tabBar:(TabBar*)tabBar canCloseItem:(TabBarItem*)item
+   {
+        if(preferenceManager.lockedTabsEnabled)
+        {
+                TabDocument* tabDocument = [self _tabDocumentRepresentedByTabBarItem:item];
 
-		if(tabDocument.locked)
-		{
-			return NO;
-		}
-	}
+                if(tabDocument.locked)
+                {
+                        return NO;
+                }
+        }
 
-	return %orig;
-}
-*/
+        return %orig;
+   }
+ */
 - (void)_updateTiltedTabViewItemsWithTransition:(NSInteger)transition
 {
 	if(preferenceManager.lockedTabsEnabled)

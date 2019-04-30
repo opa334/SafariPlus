@@ -10,7 +10,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>SECOND_OPEN_IN_NEW_TAB_FOOTER</string>
+			<string>BOTH_TAB_OPEN_ACTIONS_FOOTER</string>
 			<key>label</key>
 			<string>URL_ACTIONS</string>
 		</dict>
@@ -24,9 +24,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>key</key>
-			<string>openInNewTabOptionEnabled</string>
+			<string>bothTabOpenActionsEnabled</string>
 			<key>label</key>
-			<string>SECOND_OPEN_IN_NEW_TAB</string>
+			<string>BOTH_TAB_OPEN_ACTIONS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -73,6 +73,28 @@
 			<string>desktopButtonEnabled</string>
 			<key>label</key>
 			<string>DESKTOP_MODE_SWITCH</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>TAB_MANAGER_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>tabManagerEnabled</string>
+			<key>label</key>
+			<string>TAB_MANAGER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -215,6 +237,28 @@
 			<string>longPressSuggestionsFocusEnabled</string>
 			<key>label</key>
 			<string>LONG_PRESS_FOCUS_TITLE</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>SUGGESTION_INSERT_BUTTON_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>suggestionInsertButtonEnabled</string>
+			<key>label</key>
+			<string>SUGGESTION_INSERT_BUTTON</string>
 		</dict>
 		<dict>
 			<key>cell</key>

@@ -17,6 +17,8 @@
 #import "SPCacheManager.h"
 
 #import "../Defines.h"
+#import "../SafariPlus.h"
+#import "../Util.h"
 
 @implementation SPCacheManager
 
@@ -245,6 +247,13 @@
 	{
 		_tabStateAdditions = [NSMutableDictionary new];
 	}
+	else
+	{
+		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+		{
+			[self cleanUpTabStateAdditions];
+		});
+	}
 }
 
 - (void)saveTabStateAdditions
@@ -297,6 +306,44 @@
 	{
 		[self saveTabStateAdditions];
 	});
+}
+
+- (void)cleanUpTabStateAdditions
+{
+	if(!_tabStateAdditions)
+	{
+		[self loadTabStateAdditions];
+	}
+
+	NSMutableSet* lockedTabs = [[_tabStateAdditions objectForKey:@"lockedTabs"] mutableCopy];
+
+	for(NSUUID* UUID in [lockedTabs copy])
+	{
+		if(![self tabExistsWithUUID:UUID])
+		{
+			//NSLog(@"cleaned tab with UUID:%@", UUID);
+			[lockedTabs removeObject:UUID];
+		}
+	}
+
+	[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
+	[self saveTabStateAdditions];
+}
+
+- (BOOL)tabExistsWithUUID:(NSUUID*)UUID
+{
+	for(BrowserController* bc in browserControllers())
+	{
+		for(TabDocument* tb in [bc.tabController.allTabDocuments copy])
+		{
+			if([tb.UUID isEqual:UUID])
+			{
+				return YES;
+			}
+		}
+	}
+
+	return NO;
 }
 
 @end

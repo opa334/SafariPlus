@@ -46,5 +46,7 @@
 - (void)saveTabStateAdditions;
 - (BOOL)isTabWithUUIDLocked:(NSUUID*)UUID;
 - (void)setLocked:(BOOL)locked forTabWithUUID:(NSUUID*)UUID;
+- (void)cleanUpTabStateAdditions;
+- (BOOL)tabExistsWithUUID:(NSUUID*)UUID;
 
 @end

@@ -1,4 +1,4 @@
-// Simulator.mm
+// SPTabManagerTableViewCell.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,20 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#if defined(SIMJECT)
+@class TabDocument;
 
-#import "../MobileSafari/Defines.h"
-#import <UIKit/UIFunctions.h>
-
-NSString* simulatorPath(NSString* path)
+@interface SPTabManagerTableViewCell : UITableViewCell
 {
-	if([path hasPrefix:@"/var/mobile/"])
-	{
-		NSString* simulatorID = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject].pathComponents[7];
-		NSString* strippedPath = [path stringByReplacingOccurrencesOfString:@"/var/mobile/" withString:@""];
-		return [NSString stringWithFormat:@"/Users/%@/Library/Developer/CoreSimulator/Devices/%@/data/%@", currentUser, simulatorID, strippedPath];
-	}
-	return [UISystemRootDirectory() stringByAppendingPathComponent:path];
+	UILabel* _titleLabel;
+	UILabel* _URLLabel;
 }
 
-#endif
+- (void)applyTabDocument:(TabDocument*)tabDocument;
+- (void)initContent;
+- (void)setUpConstraints;
+
+@end

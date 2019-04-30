@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView;
+#import <WebKit/WKWebView.h>
+
+@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView, WebAVPlayerController;
 
 extern BOOL showAlert;
 extern SPFileManager* fileManager;
@@ -38,6 +40,8 @@ extern void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying>
 extern void requestAuthentication(NSString* reason, void (^successHandler)(void));
 extern void sendSimpleAlert(NSString* title, NSString* message);
 extern NSDictionary* decodeResumeData12(NSData* resumeData);
+extern BOOL isUsingCellularData();
+//extern NSURL* videoURLFromWebAVPlayerController(WebAVPlayerController* playerController);
 extern void loadOtherPlist();
 extern void saveOtherPlist();
 
@@ -62,3 +66,8 @@ extern void _dlogDownloadManager();
 #define dlogDownloadManager()
 
 #endif
+/*
+   @interface WKWebView (VideoURL)
+   - (NSString*)getNowPlayingVideoURL;
+   @end
+ */
