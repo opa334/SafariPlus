@@ -10,7 +10,7 @@ SafariPlusSB_LIBRARIES += rocketbootstrap
 endif
 
 ifeq ($(NO_LIBBULLETIN),0)
-SafariPlusSB_LIBRARIES += bulletin
+SafariPlusSB_WEAK_LIBRARIES += $(THEOS)/lib/libbulletin.dylib
 endif
 
 SafariPlusSB_PRIVATE_FRAMEWORKS = StoreServices
