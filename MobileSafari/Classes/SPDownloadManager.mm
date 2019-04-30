@@ -88,7 +88,6 @@
 	else if(!rocketBootstrapWorks)
 	{
 		self.defaultDownloadURL = [NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]];
-		NSLog(@"defaultDownloadURL:%@", self.defaultDownloadURL);
 
 		if([self createDownloadDirectoryIfNeeded])
 		{
@@ -105,10 +104,7 @@
 	if(![fileManager fileExistsAtURL:self.defaultDownloadURL error:nil] || ![fileManager isDirectoryAtURL:self.defaultDownloadURL error:nil])
 	{
 		//Downloads directory doesn't exist -> try to create it
-		NSError* error;
-		BOOL xd = [fileManager createDirectoryAtURL:self.defaultDownloadURL withIntermediateDirectories:YES attributes:nil error:&error];
-		NSLog(@"xd=%i error=%@", xd, error);
-		return xd;
+		return [fileManager createDirectoryAtURL:self.defaultDownloadURL withIntermediateDirectories:YES attributes:nil error:nil];
 	}
 
 	return YES;

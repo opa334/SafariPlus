@@ -40,7 +40,7 @@
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
-SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
+SPCommunicationManager* communicationManager;
 SPFileManager* fileManager = [SPFileManager sharedInstance];
 SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
@@ -442,6 +442,9 @@ extern void initWKFileUploadPanel();
 
 %ctor
 {
+	communicationManager = [SPCommunicationManager sharedInstance];
+	rocketBootstrapWorks = [communicationManager testConnection];
+
 	fileManager = [SPFileManager sharedInstance];
 
 	#ifndef SIMJECT
