@@ -24,20 +24,19 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-			<string>PFSimpleLiteColorCell</string>
-			<key>libcolorpicker</key>
-			<dict>
-				<key>PostNotification</key>
-				<string>com.opa334.safaripluscolorprefs/ReloadPrefs</string>
-				<key>alpha</key>
-				<false/>
-				<key>defaults</key>
-				<string>com.opa334.safaripluscolorprefs</string>
-				<key>fallback</key>
-				<string>#00000</string>
-				<key>key</key>
-				<string>bottomBarNormalTintColor</string>
-			</dict>
+			<string>CSColorDisplayCell</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>alpha</key>
+			<false/>
+			<key>fallback</key>
+			<string>00000</string>
+			<key>key</key>
+			<string>bottomBarNormalTintColor</string>
+			<key>label</key>
+			<string>SELECT_COLOR</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -65,20 +64,19 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>cellClass</key>
-			<string>PFSimpleLiteColorCell</string>
-			<key>libcolorpicker</key>
-			<dict>
-				<key>PostNotification</key>
-				<string>com.opa334.safaripluscolorprefs/ReloadPrefs</string>
-				<key>alpha</key>
-				<true/>
-				<key>defaults</key>
-				<string>com.opa334.safaripluscolorprefs</string>
-				<key>fallback</key>
-				<string>#00000</string>
-				<key>key</key>
-				<string>bottomBarNormalBackgroundColor</string>
-			</dict>
+			<string>CSColorDisplayCell</string>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>alpha</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>fallback</key>
+			<string>00000</string>
+			<key>key</key>
+			<string>bottomBarNormalBackgroundColor</string>
+			<key>label</key>
+			<string>SELECT_COLOR</string>
 		</dict>
 	</array>
 	<key>title</key>

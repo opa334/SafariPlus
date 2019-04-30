@@ -209,7 +209,6 @@
 "WELCOME_MESSAGE" = "Gracias por instalar Safari Plus! Si deseas estar informado/a sobre el futuro de este tweak, asegúrate de seguirme en Twitter! Este mensaje no se volverá a mostrar (lo prometo)!";
 "OPEN_TWITTER" = "Abrir Twitter";
 "COMMUNICATION_ERROR" = "Error de comunicación";
-"COMMUNICATION_ERROR_DESCRIPTION" = "No ha sido posible comunicarse con SpringBoard! Algunas funciones no estarán disponibles. Por favor asegúrate que RocketBootstrap está instalado correctamente y que SafariPlusSB.dylib no fue desactivado con iCleaner Pro.";
 
 /* File picker */
 

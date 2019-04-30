@@ -18,6 +18,7 @@
 #import "../Defines.h"
 #import "../Shared.h"
 #import "../Classes/SPPreferenceManager.h"
+#import <CSColorPicker/CSColorPicker.h>
 
 /******* Top Bar Background View Class *******/
 
@@ -35,11 +36,11 @@
 
 	if(preferenceManager.topBarNormalBackgroundColorEnabled && white >= alpha)
 	{
-		return %orig([preferenceManager topBarNormalBackgroundColor]);
+		return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarNormalBackgroundColor]);
 	}
 	else if(preferenceManager.topBarPrivateBackgroundColorEnabled && white < alpha)
 	{
-		return %orig([preferenceManager topBarPrivateBackgroundColor]);
+		return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateBackgroundColor]);
 	}
 
 	%orig;
@@ -48,7 +49,7 @@
 //Don't hide this view if custom color is active
 - (void)setHidden:(BOOL)hidden
 {
-	if(([self.backgroundColor isEqual:[preferenceManager topBarNormalBackgroundColor]] || [self.backgroundColor isEqual:[preferenceManager topBarPrivateBackgroundColor]]))
+	if(([self.backgroundColor isEqual:[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalBackgroundColor]] || [self.backgroundColor isEqual:[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateBackgroundColor]]))
 	{
 		%orig(NO);
 		return;
@@ -76,11 +77,11 @@
 
 	if(preferenceManager.bottomBarNormalBackgroundColorEnabled && white >= alpha)
 	{
-		return %orig([preferenceManager bottomBarNormalBackgroundColor]);
+		return %orig([UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalBackgroundColor]);
 	}
 	else if(preferenceManager.bottomBarPrivateBackgroundColorEnabled && white < alpha)
 	{
-		return %orig([preferenceManager bottomBarPrivateBackgroundColor]);
+		return %orig([UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateBackgroundColor]);
 	}
 
 	%orig;
@@ -89,7 +90,7 @@
 //Don't hide this view if custom color is active
 - (void)setHidden:(BOOL)hidden
 {
-	if(([self.backgroundColor isEqual:[preferenceManager bottomBarNormalBackgroundColor]] || [self.backgroundColor isEqual:[preferenceManager bottomBarPrivateBackgroundColor]]))
+	if(([self.backgroundColor isEqual:[UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalBackgroundColor]] || [self.backgroundColor isEqual:[UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateBackgroundColor]]))
 	{
 		%orig(NO);
 		return;
@@ -155,11 +156,11 @@
 	{
 		if(preferenceManager.topBarNormalTintColorEnabled && !self.usingLightControls)
 		{
-			return %orig([preferenceManager topBarNormalTintColor]);
+			return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTintColor]);
 		}
 		else if(preferenceManager.topBarPrivateTintColorEnabled && self.usingLightControls)
 		{
-			return %orig([preferenceManager topBarPrivateTintColor]);
+			return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTintColor]);
 		}
 	}
 
@@ -176,11 +177,11 @@
 
 		if(preferenceManager.topBarNormalProgressBarColorEnabled && !self.usingLightControls)
 		{
-			progressView.progressBarFillColor = [preferenceManager topBarNormalProgressBarColor];
+			progressView.progressBarFillColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalProgressBarColor];
 		}
 		else if(preferenceManager.topBarPrivateProgressBarColorEnabled && self.usingLightControls)
 		{
-			progressView.progressBarFillColor = [preferenceManager topBarPrivateProgressBarColor];
+			progressView.progressBarFillColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateProgressBarColor];
 		}
 	}
 }
@@ -194,11 +195,11 @@
 	{
 		if(preferenceManager.topBarNormalURLFontColorEnabled && !self.usingLightControls)
 		{
-			return [preferenceManager topBarNormalURLFontColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalURLFontColor];
 		}
 		else if(preferenceManager.topBarPrivateURLFontColorEnabled && self.usingLightControls)
 		{
-			return [preferenceManager topBarPrivateURLFontColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateURLFontColor];
 		}
 	}
 
@@ -212,11 +213,11 @@
 	{
 		if(preferenceManager.topBarNormalReloadButtonColorEnabled && !self.usingLightControls)
 		{
-			return [preferenceManager topBarNormalReloadButtonColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalReloadButtonColor];
 		}
 		else if(preferenceManager.topBarPrivateReloadButtonColorEnabled && self.usingLightControls)
 		{
-			return [preferenceManager topBarPrivateReloadButtonColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateReloadButtonColor];
 		}
 	}
 
@@ -232,11 +233,11 @@
 	{
 		if(preferenceManager.topBarNormalURLFontColorEnabled && !self.usingLightControls)
 		{
-			return [[preferenceManager topBarNormalURLFontColor] colorWithAlphaComponent:0.5];
+			return [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalURLFontColor] colorWithAlphaComponent:0.5];
 		}
 		else if(preferenceManager.topBarPrivateURLFontColorEnabled && self.usingLightControls)
 		{
-			return [[preferenceManager topBarPrivateURLFontColor] colorWithAlphaComponent:0.5];
+			return [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateURLFontColor] colorWithAlphaComponent:0.5];
 		}
 	}
 
@@ -258,11 +259,11 @@
 		{
 			if(preferenceManager.topBarNormalURLFontColorEnabled && !self.usingLightControls)
 			{
-				URLLabel.textColor = [preferenceManager topBarNormalURLFontColor];
+				URLLabel.textColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalURLFontColor];
 			}
 			else if(preferenceManager.topBarPrivateURLFontColorEnabled && self.usingLightControls)
 			{
-				URLLabel.textColor = [preferenceManager topBarPrivateURLFontColor];
+				URLLabel.textColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateURLFontColor];
 			}
 		}
 	}
@@ -282,13 +283,13 @@
 
 		if(preferenceManager.topBarNormalReloadButtonColorEnabled && !self.usingLightControls)
 		{
-			[reloadButton setImage:[reloadImage _flatImageWithColor:[preferenceManager topBarNormalReloadButtonColor]] forState:0];
-			[stopButton setImage:[stopImage _flatImageWithColor:[preferenceManager topBarNormalReloadButtonColor]] forState:0];
+			[reloadButton setImage:[reloadImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalReloadButtonColor]] forState:0];
+			[stopButton setImage:[stopImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalReloadButtonColor]] forState:0];
 		}
 		else if(preferenceManager.topBarPrivateReloadButtonColorEnabled && self.usingLightControls)
 		{
-			[reloadButton setImage:[reloadImage _flatImageWithColor:[preferenceManager topBarPrivateReloadButtonColor]] forState:0];
-			[stopButton setImage:[stopImage _flatImageWithColor:[preferenceManager topBarPrivateReloadButtonColor]] forState:0];
+			[reloadButton setImage:[reloadImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateReloadButtonColor]] forState:0];
+			[stopButton setImage:[stopImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateReloadButtonColor]] forState:0];
 		}
 	}
 }
@@ -304,11 +305,11 @@
 	{
 		if(preferenceManager.topBarNormalLockIconColorEnabled && !self.usingLightControls)
 		{
-			return [preferenceManager topBarNormalLockIconColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLockIconColor];
 		}
 		else if(preferenceManager.topBarPrivateLockIconColorEnabled && self.usingLightControls)
 		{
-			return [preferenceManager topBarPrivateLockIconColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLockIconColor];
 		}
 	}
 
@@ -324,11 +325,11 @@
 {
 	if(preferenceManager.topBarNormalLockIconColorEnabled && !self.usingLightControls)
 	{
-		return [self _lockImageWithTint:[preferenceManager topBarNormalLockIconColor] usingMiniatureVersion:miniatureVersion];
+		return [self _lockImageWithTint:[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLockIconColor] usingMiniatureVersion:miniatureVersion];
 	}
 	else if(preferenceManager.topBarPrivateLockIconColorEnabled && self.usingLightControls)
 	{
-		return [self _lockImageWithTint:[preferenceManager topBarPrivateLockIconColor] usingMiniatureVersion:miniatureVersion];
+		return [self _lockImageWithTint:[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLockIconColor] usingMiniatureVersion:miniatureVersion];
 	}
 
 	return %orig;
@@ -348,11 +349,11 @@
 	{
 		if(preferenceManager.tabTitleBarNormalTextColorEnabled && !self.usesDarkTheme)
 		{
-			return [preferenceManager tabTitleBarNormalTextColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalTextColor];
 		}
 		else if(preferenceManager.tabTitleBarPrivateTextColorEnabled && self.usesDarkTheme)
 		{
-			return [preferenceManager tabTitleBarPrivateTextColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateTextColor];
 		}
 	}
 
@@ -366,11 +367,11 @@
 	{
 		if(preferenceManager.tabTitleBarNormalBackgroundColorEnabled && !self.usesDarkTheme)
 		{
-			return [preferenceManager tabTitleBarNormalBackgroundColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalBackgroundColor];
 		}
 		else if(preferenceManager.tabTitleBarPrivateBackgroundColorEnabled && self.usesDarkTheme)
 		{
-			return [preferenceManager tabTitleBarPrivateBackgroundColor];
+			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateBackgroundColor];
 		}
 	}
 
@@ -394,11 +395,11 @@
 
 			if(preferenceManager.tabTitleBarNormalBackgroundColorEnabled && !privateMode)
 			{
-				headerView.backgroundColor = [preferenceManager tabTitleBarNormalBackgroundColor];
+				headerView.backgroundColor = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalBackgroundColor];
 			}
 			else if(preferenceManager.tabTitleBarPrivateBackgroundColorEnabled && privateMode)
 			{
-				headerView.backgroundColor = [preferenceManager tabTitleBarPrivateBackgroundColor];
+				headerView.backgroundColor = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateBackgroundColor];
 			}
 			else
 			{
@@ -411,11 +412,11 @@
 		{
 			if(preferenceManager.tabTitleBarNormalTextColorEnabled && !privateMode)
 			{
-				return %orig([preferenceManager tabTitleBarNormalTextColor]);
+				return %orig([UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalTextColor]);
 			}
 			else if(preferenceManager.tabTitleBarPrivateTextColorEnabled && privateMode)
 			{
-				return %orig([preferenceManager tabTitleBarPrivateTextColor]);
+				return %orig([UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateTextColor]);
 			}
 		}
 	}
@@ -450,15 +451,15 @@
 			{
 				CGFloat activeTitleAlpha = 1.0;
 
-				[[preferenceManager topBarNormalTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+				[[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
 
 				titleLabel.alpha = activeTitleAlpha;
 				titleOverlayLabel.alpha = activeTitleAlpha;
 			}
 			else
 			{
-				titleLabel.alpha = [preferenceManager topBarNormalTabBarInactiveTitleOpacity];
-				titleOverlayLabel.alpha = [preferenceManager topBarNormalTabBarInactiveTitleOpacity];
+				titleLabel.alpha = preferenceManager.topBarNormalTabBarInactiveTitleOpacity;
+				titleOverlayLabel.alpha = preferenceManager.topBarNormalTabBarInactiveTitleOpacity;
 			}
 		}
 		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
@@ -469,15 +470,15 @@
 			{
 				CGFloat activeTitleAlpha = 1.0;
 
-				[[preferenceManager topBarPrivateTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+				[[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
 
 				titleLabel.alpha = activeTitleAlpha;
 				titleOverlayLabel.alpha = activeTitleAlpha;
 			}
 			else
 			{
-				titleLabel.alpha = [preferenceManager topBarPrivateTabBarInactiveTitleOpacity];
-				titleOverlayLabel.alpha = [preferenceManager topBarPrivateTabBarInactiveTitleOpacity];
+				titleLabel.alpha = preferenceManager.topBarPrivateTabBarInactiveTitleOpacity;
+				titleOverlayLabel.alpha = preferenceManager.topBarPrivateTabBarInactiveTitleOpacity;
 			}
 		}
 	}
@@ -494,11 +495,11 @@
 
 		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && tabBar.barStyle == 0)
 		{
-			titleLabel.textColor = [[preferenceManager topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
+			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
 		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
 		{
-			titleLabel.textColor = [[preferenceManager topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
+			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
 	}
 }
@@ -518,7 +519,7 @@
 
 	if(preferenceManager.topBarNormalTabBarTitleColorEnabled)
 	{
-		UIColor* topBarNormalTabBarTitleColor = [preferenceManager topBarNormalTabBarTitleColor];
+		UIColor* topBarNormalTabBarTitleColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor];
 
 		MSHookIvar<UIColor*>(normalStyle, "_itemTitleColor") = [topBarNormalTabBarTitleColor colorWithAlphaComponent:1.0];
 
@@ -542,7 +543,7 @@
 
 	if(preferenceManager.topBarPrivateTabBarTitleColorEnabled)
 	{
-		UIColor* topBarPrivateTabBarTitleColor = [preferenceManager topBarPrivateTabBarTitleColor];
+		UIColor* topBarPrivateTabBarTitleColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor];
 
 		MSHookIvar<UIColor*>(privateBrowsingStyle, "_itemTitleColor") = [topBarPrivateTabBarTitleColor colorWithAlphaComponent:1.0];
 
@@ -605,11 +606,11 @@
 			{
 				if(preferenceManager.topBarNormalTintColorEnabled && !privateMode)
 				{
-					return %orig([preferenceManager topBarNormalTintColor]);
+					return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTintColor]);
 				}
 				else if(preferenceManager.topBarPrivateTintColorEnabled && privateMode)
 				{
-					return %orig([preferenceManager topBarPrivateTintColor]);
+					return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTintColor]);
 				}
 			}
 		}
@@ -619,11 +620,11 @@
 			{
 				if(preferenceManager.bottomBarNormalTintColorEnabled && !privateMode)
 				{
-					return %orig([preferenceManager bottomBarNormalTintColor]);
+					return %orig([UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalTintColor]);
 				}
 				else if(preferenceManager.bottomBarPrivateTintColorEnabled && privateMode)
 				{
-					return %orig([preferenceManager bottomBarPrivateTintColor]);
+					return %orig([UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateTintColor]);
 				}
 			}
 		}
@@ -638,7 +639,7 @@
 
 - (void)setPreferredStatusBarStyle:(UIStatusBarStyle)statusBarStyle
 {
-	if([preferenceManager topBarNormalStatusBarStyleEnabled] || [preferenceManager topBarPrivateStatusBarStyleEnabled])
+	if(preferenceManager.topBarNormalStatusBarStyleEnabled || preferenceManager.topBarPrivateStatusBarStyleEnabled)
 	{
 		BrowserController* browserController;
 
@@ -666,13 +667,13 @@
 		{
 			BOOL privateMode = (statusBarStyle == UIStatusBarStyleLightContent);
 
-			if(!privateMode && [preferenceManager topBarNormalStatusBarStyleEnabled])
+			if(!privateMode && preferenceManager.topBarNormalStatusBarStyleEnabled)
 			{
-				return %orig([preferenceManager topBarNormalStatusBarStyle]);
+				return %orig(preferenceManager.topBarNormalStatusBarStyle);
 			}
-			else if(privateMode && [preferenceManager topBarPrivateStatusBarStyleEnabled])
+			else if(privateMode && preferenceManager.topBarPrivateStatusBarStyleEnabled)
 			{
-				return %orig([preferenceManager topBarPrivateStatusBarStyle]);
+				return %orig(preferenceManager.topBarPrivateStatusBarStyle);
 			}
 		}
 	}

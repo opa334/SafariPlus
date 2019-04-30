@@ -23,6 +23,7 @@
 #import "Classes/SPLocalizationManager.h"
 #import "Classes/SPCommunicationManager.h"
 #import "Classes/SPCacheManager.h"
+#import "../Shared/SPPreferenceMerger.h"
 
 #import <sys/utsname.h>
 
@@ -45,6 +46,7 @@ SPPreferenceManager* preferenceManager = [SPPreferenceManager sharedInstance];
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
+BOOL rocketBootstrapWorks;
 
 #ifdef DEBUG_LOGGING
 
@@ -440,6 +442,12 @@ extern void initWKFileUploadPanel();
 
 %ctor
 {
+	fileManager = [SPFileManager sharedInstance];
+
+	#ifndef SIMJECT
+	[SPPreferenceMerger mergeIfNeeded];
+	#endif
+
   #ifdef DEBUG_LOGGING
 	initDebug();
   #endif

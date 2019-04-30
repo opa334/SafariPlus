@@ -16,6 +16,7 @@
 
 @class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView;
 
+extern BOOL rocketBootstrapWorks;
 extern BOOL showAlert;
 extern SPFileManager* fileManager;
 extern SPPreferenceManager* preferenceManager;

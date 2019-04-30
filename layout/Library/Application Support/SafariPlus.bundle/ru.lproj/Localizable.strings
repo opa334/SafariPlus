@@ -204,7 +204,6 @@
 "WELCOME_MESSAGE" = "Благодарим за установку твика Safari Plus! Если вы хотите быть в курсе всех новостей об обновлениях твика, следите за моей страницей в Twitter! Это сообщение больше не будет показываться (обещаю)!";
 "OPEN_TWITTER" = "Открыть Twitter";
 "COMMUNICATION_ERROR" = "Ошибка Связи";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Невозможно получить доступ к SpringBoard! Некоторые функции не будут работать. Пожалуйста убедитесь в том, что RocketBootstrap установлен и SafariPlusSB.dylib не отключен с помощью iCleaner Pro.";
 
 /* File picker */
 

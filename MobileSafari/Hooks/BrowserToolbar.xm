@@ -19,7 +19,6 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Defines.h"
 #import "../Shared.h"
-#import "libcolorpicker.h"
 
 @interface BrowserToolbar (FullSafari)
 @property (nonatomic, retain) UIBarButtonItem *addTabItemManual;

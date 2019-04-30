@@ -37,7 +37,6 @@
     "COLOR_SETTINGS" = "Impostazioni colore";
     "COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTA: alcune impostazioni richiedono il riavvio dell'app per essere applicate.";
     "COMMUNICATION_ERROR" = "Errore di comunicazione";
-    "COMMUNICATION_ERROR_DESCRIPTION" = "Impossibile comunicare con SpringBoard! Alcune funzioni non funzioneranno. Assicurati che RocketBootstrap sia installato correttamente e che SafariPlusSB.dylib non sia stato disabilitato tramite iCleaner Pro.";
     "COPY_LINK" = "Copia link";
     CREATE = Crea;
     "CREATE_DIRECTORY" = "Crea cartella";

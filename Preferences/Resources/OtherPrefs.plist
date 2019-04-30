@@ -152,6 +152,28 @@
 			<key>label</key>
 			<string>SUPPRESS_MAILTO_DIALOG</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>DISABLE_COMMUNICATION_ERROR_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>communicationErrorDisabled</string>
+			<key>label</key>
+			<string>DISABLE_COMMUNICATION_ERROR</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string>OTHER_ADDONS</string>

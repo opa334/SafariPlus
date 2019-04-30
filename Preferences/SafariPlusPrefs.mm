@@ -21,6 +21,7 @@
 #import "../MobileSafari/Enums.h"
 #import "../MobileSafari/Defines.h"
 #import "../MobileSafari/Classes/SPFileManager.h"
+#import "../Shared/SPPreferenceMerger.h"
 
 SPFileManager* fileManager;
 SPLocalizationManager* localizationManager;
@@ -156,6 +157,7 @@ void otherPlistChanged()
 	fileManager = [SPFileManager sharedInstance];
 	localizationManager = [SPLocalizationManager sharedInstance];
 	SPBundle = [NSBundle bundleWithPath:SPBundlePath];
+	[SPPreferenceMerger mergeIfNeeded];
 
 	return self;
 }

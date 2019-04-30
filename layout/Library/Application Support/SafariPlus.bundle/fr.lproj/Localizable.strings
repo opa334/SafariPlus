@@ -183,7 +183,6 @@
 "DEFAULT_SECTION_FOOTER"="Choisissez la section sélectionnée du menu de téléchargement à l'ouverture. L'option `Auto Switch` ne choisira la section sélectionnée que s'il reste des téléchargements actifs, sinon l'autre section sera sélectionnée.";
 "DEFAULT_SECTION_AUTO_SWITCH"="Auto Switch";
 "COMMUNICATION_ERROR"="Erreur de communication";
-"COMMUNICATION_ERROR_DESCRIPTION"="Impossible de communiquer avec SpringBoard! Quelques fonctionnalités ne fonctionneront pas. Veuillez vous assurer que RocketBootstrap est correctement installé et que SafariPlusSB.dylib n'est pas désactivé via iCleaner Pro.";
 "DOWNLOAD_OVERVIEW"="Aperçu du téléchargement";
 "DOWNLOADS"="Téléchargements";
 "FILE_BROWSER"="Navigateur de fichiers";

@@ -17,7 +17,7 @@ export TARGET = simulator:clang:9.2:8.0
 export ARCHS = x86_64 i386
 else
 export TARGET = iphone:clang:11.2:8.0
-export ARCHS = arm64 armv7
+export ARCHS = armv7 arm64 arm64e
 endif
 
 ifeq ($(NO_DEPENDENCIES),1)

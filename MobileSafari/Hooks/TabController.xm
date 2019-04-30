@@ -20,7 +20,6 @@
 #import "../Classes/SPCacheManager.h"
 #import "../Defines.h"
 #import "../Shared.h"
-#import "libcolorpicker.h"
 
 %hook TabController
 

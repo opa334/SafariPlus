@@ -76,9 +76,19 @@
 
 - (void)setUpDefaultDownloadURL
 {
-	if(preferenceManager.customDefaultPathEnabled && preferenceManager.customDefaultPath)
+	if(preferenceManager.customDefaultPathEnabled && preferenceManager.customDefaultPath && rocketBootstrapWorks)
 	{
 		self.defaultDownloadURL = [fileManager resolveSymlinkForURL:[NSURL fileURLWithPath:[@"/var" stringByAppendingString:preferenceManager.customDefaultPath]]];
+
+		if([self createDownloadDirectoryIfNeeded])
+		{
+			return;
+		}
+	}
+	else if(!rocketBootstrapWorks)
+	{
+		self.defaultDownloadURL = [NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]];
+		NSLog(@"defaultDownloadURL:%@", self.defaultDownloadURL);
 
 		if([self createDownloadDirectoryIfNeeded])
 		{
@@ -95,7 +105,10 @@
 	if(![fileManager fileExistsAtURL:self.defaultDownloadURL error:nil] || ![fileManager isDirectoryAtURL:self.defaultDownloadURL error:nil])
 	{
 		//Downloads directory doesn't exist -> try to create it
-		return [fileManager createDirectoryAtURL:self.defaultDownloadURL withIntermediateDirectories:YES attributes:nil error:nil];
+		NSError* error;
+		BOOL xd = [fileManager createDirectoryAtURL:self.defaultDownloadURL withIntermediateDirectories:YES attributes:nil error:&error];
+		NSLog(@"xd=%i error=%@", xd, error);
+		return xd;
 	}
 
 	return YES;
@@ -104,28 +117,31 @@
 - (void)migrateFromSandbox
 {
   #ifndef NO_ROCKETBOOTSTRAP
-	NSURL* oldDownloadURL = [NSURL fileURLWithPath:oldDownloadPath];
-
-	if([fileManager fileExistsAtURL:oldDownloadURL error:nil])
+	if(rocketBootstrapWorks)
 	{
-		NSArray* fileURLs = [fileManager contentsOfDirectoryAtURL:oldDownloadURL
-				     includingPropertiesForKeys:nil
-				     options:0
-				     error:nil];
+		NSURL* oldDownloadURL = [NSURL fileURLWithPath:oldDownloadPath];
 
-		NSError* error;
-
-		for(NSURL* fileURL in fileURLs)
+		if([fileManager fileExistsAtURL:oldDownloadURL error:nil])
 		{
-			[fileManager moveItemAtURL:fileURL toURL:[self.defaultDownloadURL URLByAppendingPathComponent:fileURL.lastPathComponent] error:&error];
-		}
+			NSArray* fileURLs = [fileManager contentsOfDirectoryAtURL:oldDownloadURL
+					     includingPropertiesForKeys:nil
+					     options:0
+					     error:nil];
 
-		if(!error)
-		{
-			[fileManager removeItemAtURL:oldDownloadURL error:nil];
+			NSError* error;
 
-			sendSimpleAlert([localizationManager localizedSPStringForKey:@"MIGRATION_TITLE"],
-					[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], oldDownloadPath, self.defaultDownloadURL.path]);
+			for(NSURL* fileURL in fileURLs)
+			{
+				[fileManager moveItemAtURL:fileURL toURL:[self.defaultDownloadURL URLByAppendingPathComponent:fileURL.lastPathComponent] error:&error];
+			}
+
+			if(!error)
+			{
+				[fileManager removeItemAtURL:oldDownloadURL error:nil];
+
+				sendSimpleAlert([localizationManager localizedSPStringForKey:@"MIGRATION_TITLE"],
+						[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], oldDownloadPath, self.defaultDownloadURL.path]);
+			}
 		}
 	}
   #endif

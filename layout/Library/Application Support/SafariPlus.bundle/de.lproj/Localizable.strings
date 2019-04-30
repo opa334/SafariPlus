@@ -169,7 +169,12 @@
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";
 
+"DISABLE_COMMUNICATION_ERROR" = "Deaktiviere Kommunikationsfehler";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
+
 /* Color Settings */
+
+"SELECT_COLOR" = "Farbe auswählen";
 
 "TOP_BAR" = "Obere Leiste";
 "BOTTOM_BAR" = "Untere Leiste";
@@ -209,7 +214,7 @@
 "WELCOME_MESSAGE" = "Danke für das Installieren von Safari Plus! Wenn du über die Zukunft des Tweaks auf dem laufenden bleiben willst, folge mir doch auf Twitter! Diese Nachricht wird nie wieder angezeigt, versprochen!";
 "OPEN_TWITTER" = "Öffne Twitter";
 "COMMUNICATION_ERROR" = "Kommunikationsfehler";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde.";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde. Dein Downloadspfad wird auf den Sandbox Container von Safari geändert. Eine Option diese Meldung zu deaktivieren befindet sich unter Andere Addons->Kommunikationsfehler Meldung deaktivieren.";
 
 /* File picker */
 

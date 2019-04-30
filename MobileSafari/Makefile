@@ -6,6 +6,7 @@ SafariPlus_FILES = SafariPlus.xm
 SafariPlus_FILES += $(wildcard Hooks/*.xm)
 SafariPlus_FILES += $(wildcard Classes/*.mm)
 SafariPlus_FILES += $(wildcard Classes/*.xm)
+SafariPlus_FILES += $(wildcard ../Shared/*.mm)
 
 ifeq ($(NO_CEPHEI),0)
 SafariPlus_EXTRA_FRAMEWORKS += Cephei
@@ -14,7 +15,7 @@ SafariPlus_CFLAGS += -D NO_CEPHEI=1
 endif
 
 ifeq ($(NO_LIBCOLORPICKER),0)
-SafariPlus_LIBRARIES += colorpicker
+SafariPlus_LIBRARIES += cscolorpicker
 else
 SafariPlus_CFLAGS += -D NO_LIBCOLORPICKER=1
 endif

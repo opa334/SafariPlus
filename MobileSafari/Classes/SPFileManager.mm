@@ -108,7 +108,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced
 {
-	if(_isSandboxed || forced)
+	if((rocketBootstrapWorks && _isSandboxed) || forced)
 	{
 		if(![self isURLReadable:URL] || ![self isURLWritable:URL] || forced)
 		{
@@ -157,7 +157,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (NSArray<NSString*>*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:path])
 		{
@@ -176,7 +176,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (NSArray<NSURL*>*)contentsOfDirectoryAtURL:(NSURL*)url includingPropertiesForKeys:(NSArray<NSURLResourceKey>*)keys options:(NSDirectoryEnumerationOptions)mask error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLReadable:url])
 		{
@@ -198,7 +198,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)createDirectoryAtPath:(NSString*)path withIntermediateDirectories:(BOOL)createIntermediates attributes:(NSDictionary<NSFileAttributeKey, id>*)attributes error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathWritable:path])
 		{
@@ -220,7 +220,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)createDirectoryAtURL:(NSURL *)url withIntermediateDirectories:(BOOL)createIntermediates attributes:(NSDictionary<NSFileAttributeKey, id> *)attributes error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLWritable:url])
 		{
@@ -242,7 +242,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:srcPath] || ![self isPathWritable:dstPath])
 		{
@@ -262,7 +262,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLReadable:srcURL] || ![self isURLWritable:dstURL])
 		{
@@ -282,7 +282,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)removeItemAtPath:(NSString*)path error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathWritable:path])
 		{
@@ -301,7 +301,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)removeItemAtURL:(NSURL*)URL error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLWritable:URL])
 		{
@@ -320,7 +320,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)copyItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:srcPath] || ![self isPathWritable:dstPath])
 		{
@@ -340,7 +340,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)copyItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLReadable:srcURL] || ![self isURLWritable:dstURL])
 		{
@@ -360,7 +360,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)linkItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:srcPath] || ![self isPathWritable:dstPath])
 		{
@@ -380,7 +380,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)linkItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLReadable:srcURL] || ![self isURLWritable:dstURL])
 		{
@@ -400,7 +400,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)fileExistsAtPath:(NSString*)path
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:path])
 		{
@@ -419,7 +419,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)fileExistsAtPath:(NSString*)path isDirectory:(BOOL*)isDirectory
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:path])
 		{
@@ -442,7 +442,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (NSDictionary<NSFileAttributeKey, id> *)attributesOfItemAtPath:(NSString *)path error:(NSError**)error;
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:path])
 		{
@@ -461,7 +461,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)isWritableFileAtPath:(NSString *)path
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isPathReadable:path])
 		{
@@ -480,7 +480,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLReadable:url])
 		{
@@ -499,7 +499,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)isDirectoryAtURL:(NSURL*)url error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLReadable:url])
 		{
@@ -520,7 +520,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (BOOL)URLResourceValue:(id*)value forKey:(NSURLResourceKey)key forURL:(NSURL*)url error:(NSError**)error
 {
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if(![self isURLReadable:url])
 		{
@@ -546,7 +546,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	NSString* resolvedPath;
 
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if([self isPathReadable:path])
 		{
@@ -578,7 +578,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	NSURL* resolvedURL;
 
-	if(_isSandboxed)
+	if(rocketBootstrapWorks && _isSandboxed)
 	{
 		if([self isURLReadable:url])
 		{

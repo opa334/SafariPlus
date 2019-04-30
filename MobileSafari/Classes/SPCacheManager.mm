@@ -17,6 +17,7 @@
 #import "SPCacheManager.h"
 
 #import "../Defines.h"
+#import "../Shared.h"
 
 @implementation SPCacheManager
 
