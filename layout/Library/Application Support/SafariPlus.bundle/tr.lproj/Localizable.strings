@@ -96,8 +96,8 @@
 
 /*URL_ACTIONS*/
 
-/*SECOND_OPEN_IN_NEW_TAB*/
-/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
+/*BOTH_TAB_OPEN_ACTIONS*/
+/*BOTH_TAB_OPEN_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Bir bağlantıya uzun basıldığında görüntülenen menüye, ters göz atma modunda bağlantıyı açmak için kullanılabilecek bir seçenek ekler.\n(Normal mod -> Özel modda açmak için Seçenek,\nÖzel mod -> Seçenek normal modda aç)";
 "OPEN_IN_OPPOSITE_MODE" = "Karşı mod ayarlarlarında aç";
@@ -106,6 +106,9 @@
 
 /*DESKTOP_MODE_SWITCH_FOOTER*/
 /*DESKTOP_MODE_SWITCH*/
+
+/*TAB_MANAGER*/
+/*TAB_MANAGER_FOOTER*/
 
 /*DISABLE_TAB_LIMIT*/
 /*DISABLE_TAB_LIMIT_FOOTER*/
@@ -119,6 +122,9 @@
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Url önerilerini url çubuğuna eklemek için uzun basın";
 "LONG_PRESS_DURATION_TITLE" = "Uzun basma süresi";
 "LONG_PRESS_FOCUS_TITLE" = "Uzun Basışta URL Çubuğuna Odaklan";
+
+/*SUGGESTION_INSERT_BUTTON*/
+/*SUGGESTION_INSERT_BUTTON_FOOTER*/
 
 /*INTERFACE*/
 
@@ -169,6 +175,10 @@
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Bir 'mailto: <email>' URL'sine erişildiğinde, iOS 10 ve üstünde görünen iletişim kutusunu engeller.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) mail yönlendirmelerini engelle";
+
+/*OTHER*/
+/*DISABLE_COMMUNICATION_ERROR*/
+/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /* Gestures */
 
@@ -349,6 +359,17 @@
 "SIZE_UNKNOWN" = "Bilinmeyen boyutu";
 "MIGRATION_TITLE" = "işlem başarılı";
 "MIGRATION_MESSAGE" = "Artık dosyaları istediğiniz herhangi bir dizine indirebilirsiniz!";
+/*CELLULAR_DATA_WARNING*/
+
+/* Tab Manager */
+
+/*SELECT_ALL*/
+/*DESELECT_ALL*/
+/*CHOOSE_EXPORT_FORMAT*/
+/*CHOOSE_EXPORT_FORMAT_MESSAGE*/
+/*ADD_TABS_ALERT*/
+/*ADD_TABS_ALERT_MESSAGE*/
+/*USE_CLIPBOARD*/
 
 /* Open in opposite mode */
 

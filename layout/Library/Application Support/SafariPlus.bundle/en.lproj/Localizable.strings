@@ -20,7 +20,7 @@
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\n\nNOTE: You can add sites that don't support HTTPS to exceptions.";
+"FORCE_HTTPS_FOOTER" = "Globally enforces the HTTPS protocol.\n\nNOTE: You can add sites that don't support HTTPS to exceptions. There is also an in-app way of adding a site to exceptions by long pressing the refresh button and selecting the 'Add to Force HTTPS Exceptions' button.";
 "FORCE_HTTPS" = "Force HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "Exceptions...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";

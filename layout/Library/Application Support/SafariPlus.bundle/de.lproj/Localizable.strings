@@ -20,7 +20,7 @@
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\n\nHINWEIS: Ausnahmen können hinzugefügt werden damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
+"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\n\nHINWEIS: Ausnahmen können hinzugefügt werden damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren. Ausnahmen können auch innerhalb von Safari über ein langes Drücken des 'Neu Laden' Buttons hinzugefügt werden.";
 "FORCE_HTTPS" = "HTTPS erzwingen";
 "FORCE_HTTPS_EXCEPTIONS" = "Ausnahmen...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Ausnahmen";

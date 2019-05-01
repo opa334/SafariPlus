@@ -20,7 +20,7 @@
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "سيتم فرض بروتوكول HTTPS عالميًا على كل مواقع الويب.\n\ملاحظة: يمكنك إضافة مواقع ويب لا تدعم بروتوكول HTTPS إلى الاستثناءات أيضًا.";
+"FORCE_HTTPS_FOOTER" = "سيتم فرض بروتوكول HTTPS عالميًا على كل مواقع الويب.\nملاحظة: يمكنك إضافة مواقع ويب لا تدعم بروتوكول HTTPS إلى الاستثناءات أيضًا.";
 "FORCE_HTTPS" = "فرض بروتوكول HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "الاستثناءات...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "الاستثناءات";
@@ -76,13 +76,11 @@
 "PINNED_LOCATIONS_ADD_ALERT_TITLE" = "إضافة موقع مثبت";
 "PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "تعديل موقع مثبت";
 "PINNED_LOCATIONS_ALERT_MESSAGE" = "اختر اسم ومسار الموقع المثبت.";
-
 "PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "الاسم";
 "PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "المسار";
 "BROWSE" = "تصفح...";
 "CHOOSE_PATH_CONFIRMATION_TITLE" = "اختر المسار";
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "هل تريد اختيار المسار\n%@؟";
-
 "ERROR_INVALID_NAME_OR_PATH" = "اسم أو مسار غير صالح";
 
 "ONLY_DOWNLOAD_ON_WIFI" = "التنزيل باستخدام WiFi فقط";
@@ -98,8 +96,8 @@
 
 "URL_ACTIONS" = "إجراءات عنوان URL";
 
-"SECOND_OPEN_IN_NEW_TAB" = "خيار 'فتح في علامة تبويب جديدة' ثاني";
-"SECOND_OPEN_IN_NEW_TAB_FOOTER" = "إضافة خيار 'فتح في علامة تبويب جديدة' آخر إلى القائمة التي تظهر عند الضغط مطولًا على رابط.\nقم بتعيين 'فتح الروابط' في إعدادات Safari إلى 'في الخلفية' ليكون كلا الخيارين متاحين عند الضغط مطولًا على رابط.";
+/*BOTH_TAB_OPEN_ACTIONS*/
+/*BOTH_TAB_OPEN_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "إضافة خيار إلى قائمة الخيارات التي تظهر عند الضغط مطولًا على رابط من شأنه فتح الرابط في وضع التصفح المعاكس.\n(الوضع العادي -> خيار للفتح في الوضع الخاص،\nالوضع الخاص -> خيار للفتح في الوضع العادي)";
 "OPEN_IN_OPPOSITE_MODE" = "خيار فتح في الوضع المعاكس";
@@ -108,6 +106,9 @@
 
 "DESKTOP_MODE_SWITCH_FOOTER" = "إضافة مفتاح تبديل إلى مبدل علامات التبويب يمكن استخدامه في التبديل بين وضع الهاتف ووضع سطح المكتب.";
 "DESKTOP_MODE_SWITCH" = "تبديل وضع سطح المكتب";
+
+/*TAB_MANAGER*/
+/*TAB_MANAGER_FOOTER*/
 
 "DISABLE_TAB_LIMIT" = "تعطيل حد علامة التبويب";
 "DISABLE_TAB_LIMIT_FOOTER" = "تعطيل حد علامة التبويب الذي تفرضه Apple والذي يختلف بناءً على إصدار iOS ونوع الجهاز. قد يكون هناك سبب وجيه جعل Apple تفعل هذا ولذلك فإن استخدام هذه الميزة يكون على مسؤوليتك الخاصة.";
@@ -122,6 +123,9 @@
 "LONG_PRESS_DURATION_TITLE" = "مدة الضغط المطول";
 "LONG_PRESS_FOCUS_TITLE" = "التركيز على شريط URL عند الضغط المطول";
 
+/*SUGGESTION_INSERT_BUTTON*/
+/*SUGGESTION_INSERT_BUTTON_FOOTER*/
+
 "INTERFACE" = "Interface";
 
 "SHOW_TAB_COUNT" = "إظهار عدد علامات التبويب";
@@ -133,7 +137,7 @@
 "LOCK_BARS" = "قفل الشرائط";
 "LOCK_BARS_FOOTER" = "قفل الشريط السفلي والشريط العلوي وإبقاؤهما في مكانهما، وبالتالي لن يختفيا عند تمرير الصفحة إلى أسفل.";
 
-/* BEHAVIOUR */
+/* Behaviour */
 
 "NORMAL_MODE" = "وضع التصفح العادي";
 "PRIVATE_MODE" = "وضع التصفح الخاص";
@@ -171,6 +175,10 @@
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "منع مربع الحوار الذي يظهر على إصدارات iOS 10 ومابعده عندما يستطيع 'mailto:<email>' الوصول إلى عنوان URL.";
 "SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار (iOS 10+)";
+
+/*OTHER*/
+/*DISABLE_COMMUNICATION_ERROR*/
+/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /* Gestures */
 
@@ -220,7 +228,6 @@
 
 "TINT_COLOR" = "لون الصبغة";
 "BACKGROUND_COLOR" = "لون الخلفية";
-
 "STATUS_BAR_COLOR" = "لون شريط الحالة";
 "TAB_BAR_TITLE_COLOR" = "لون عنوان شريط علامة التبويب";
 "INACTIVE_TITLE_OPACITY" = "شفافية العنوان الغير نشط";
@@ -269,7 +276,6 @@
 /* Credits */
 
 "CREDITS" = "الاعتمادات";
-
 "PICKER_INSPIRED" = "تقنية انتقاء الملف مستوحاة بواسطة:";
 
 /* In app */
@@ -299,7 +305,6 @@
 /* Downloads */
 
 "DOWNLOAD" = "تنزيل";
-
 "DOWNLOAD_TO" = "تنزيل إلى";
 "DOWNLOAD_SITE_TO" = "تنزيل الموقع إلى...";
 "DOWNLOAD_IMAGE_TO" = "تنزيل الصورة إلى...";
@@ -329,25 +334,21 @@
 "DELETE_DIRECTORY_MESSAGE" = "هل أنت متأكد أنك تريد حذف مسار %@ ومحتوياته؟ الاستعادة لاحقًا غير ممكنة!";
 "DELETE" = "حذف";
 "RENAME" = "إعادة تسمية";
-
 "DOWNLOAD_STARTED" = "بدأ تنزيل";
 "DOWNLOAD_SUCCESS" = "تم التنزيل بنجاح";
 "SAVED_IMAGE" = "تم حفظ الصورة";
 "ERROR" = "خطأ";
-
 "FILE_EXISTS_MESSAGE" = "يوجد ملف أو تنزيل معلق بالفعل في نفس هذا المسار!";
 "NOT_ENOUGH_SPACE_MESSAGE" = "لا توجد مساحة كافية!\nحرر بعض المساحة وحاول مجددًا!";
 "REPLACE_FILE" = "استبدال الملف";
 "CHANGE_PATH" = "تغيير مسار التنزيل";
 "PENDING_DOWNLOADS" = "التنزيلات المعلقة";
 "DOWNLOAD_HISTORY" = "سجل التنزيل";
-
 "FILES" = "الملفات";
 "CHOOSE" = "اختر";
 "START_DOWNLOAD" = "بدأ التنزيل";
 "CHOOSE_FILENAME" = "اختر اسم الملف";
 "FILENAME" = "اسم الملف";
-
 "CLOSE" = "إغلاق";
 "CANCEL_PICKER" = "إلغاء";
 "PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل  /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";
@@ -358,8 +359,20 @@
 "SIZE_UNKNOWN" = "حجم غير معروف";
 "MIGRATION_TITLE" = "تم الانتقال بنجاح";
 "MIGRATION_MESSAGE" = "لقد ولت تلك الأيام التي يتم فيها تقييد حاوية sandbox الخاصة بـ Safari! تنزيلاتك تم نقلها من %@ إلى %@. يمكنك الآن تنزيل الملفات إلى أي مسار تريده!";
+/*CELLULAR_DATA_WARNING*/
+
+/* Tab Manager */
+
+/*SELECT_ALL*/
+/*DESELECT_ALL*/
+/*CHOOSE_EXPORT_FORMAT*/
+/*CHOOSE_EXPORT_FORMAT_MESSAGE*/
+/*ADD_TABS_ALERT*/
+/*ADD_TABS_ALERT_MESSAGE*/
+/*USE_CLIPBOARD*/
 
 /* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "فتح في الوضع العادي";
 "OPEN_IN_PRIVATE_MODE" = "فتح في الوضع الخاص";
+

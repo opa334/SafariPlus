@@ -96,8 +96,8 @@
 
 /*URL_ACTIONS*/
 
-/*SECOND_OPEN_IN_NEW_TAB*/
-/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
+/*BOTH_TAB_OPEN_ACTIONS*/
+/*BOTH_TAB_OPEN_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Aggiunge un'opzione al menu che appare quando un collegamento viene premuto a lungo, che può essere utilizzato per aprire il collegamento nella modalità di navigazione opposta.\n(Modalità normale -> Opzione per aprire in modalità privata,\nModalità privata -> Opzione per aprire in modalità normale)";
 "OPEN_IN_OPPOSITE_MODE" = "Apri in modalità opposta";
@@ -106,6 +106,9 @@
 
 /*DESKTOP_MODE_SWITCH_FOOTER*/
 /*DESKTOP_MODE_SWITCH*/
+
+/*TAB_MANAGER*/
+/*TAB_MANAGER_FOOTER*/
 
 /*DISABLE_TAB_LIMIT*/
 /*DISABLE_TAB_LIMIT_FOOTER*/
@@ -119,6 +122,9 @@
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Tieni premuto a lungo sui suggerimenti di ricerca / URL per inserirli nella barra degli URL.";
 "LONG_PRESS_DURATION_TITLE" = "Lunga durata della pressione";
 "LONG_PRESS_FOCUS_TITLE" = "Metta a fuoco la barra dell'URL sulla pressione lunga";
+
+/*SUGGESTION_INSERT_BUTTON*/
+/*SUGGESTION_INSERT_BUTTON_FOOTER*/
 
 /*INTERFACE*/
 
@@ -169,6 +175,10 @@
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Elimina la finestra di dialogo che appare su iOS 10 e versioni successive quando si accede a un URL \"mailto: <email>\".";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Elimina finestra di dialogo Mailto";
+
+/*OTHER*/
+/*DISABLE_COMMUNICATION_ERROR*/
+/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /* Gestures */
 
@@ -349,6 +359,17 @@
 "SIZE_UNKNOWN" = "Dimensione sconosciuta";
 "MIGRATION_TITLE" = "Migrazione riuscita";
 "MIGRATION_MESSAGE" = "Sono finiti i giorni di limitazione al contenitore sandbox di Safari! I tuoi download sono stati spostati da %@ a %@ . Ora puoi scaricare i file in qualsiasi directory tu voglia!";
+/*CELLULAR_DATA_WARNING*/
+
+/* Tab Manager */
+
+/*SELECT_ALL*/
+/*DESELECT_ALL*/
+/*CHOOSE_EXPORT_FORMAT*/
+/*CHOOSE_EXPORT_FORMAT_MESSAGE*/
+/*ADD_TABS_ALERT*/
+/*ADD_TABS_ALERT_MESSAGE*/
+/*USE_CLIPBOARD*/
 
 /* Open in opposite mode */
 

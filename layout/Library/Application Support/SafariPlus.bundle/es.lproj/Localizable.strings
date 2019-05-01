@@ -96,8 +96,8 @@
 
 /*URL_ACTIONS*/
 
-/*SECOND_OPEN_IN_NEW_TAB*/
-/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
+/*BOTH_TAB_OPEN_ACTIONS*/
+/*BOTH_TAB_OPEN_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Añade una opción al menú que aparece cuando se mantiene presionado un enlace, para abrir el enlace en el modo contrario de navegación.\n(Modo normal -> Opción para abrir en modo privado,\nModo privado-> Opción para abrir en modo normal)";
 "OPEN_IN_OPPOSITE_MODE" = "Opción de abrir en modo contrario";
@@ -106,6 +106,9 @@
 
 /*DESKTOP_MODE_SWITCH_FOOTER*/
 /*DESKTOP_MODE_SWITCH*/
+
+/*TAB_MANAGER*/
+/*TAB_MANAGER_FOOTER*/
 
 /*DISABLE_TAB_LIMIT*/
 /*DISABLE_TAB_LIMIT_FOOTER*/
@@ -119,6 +122,9 @@
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Mantén presionado en buscar / sugerencias para insertarlas en la barra de direcciones.";
 "LONG_PRESS_DURATION_TITLE" = "Duración de mantener presionado";
 "LONG_PRESS_FOCUS_TITLE" = "Elegir la barra de direcciones al mantener presionado";
+
+/*SUGGESTION_INSERT_BUTTON*/
+/*SUGGESTION_INSERT_BUTTON_FOOTER*/
 
 /*INTERFACE*/
 
@@ -169,6 +175,10 @@
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Desactiva la ventana de diálogo que aparece al hacer click en una URL 'mailto:<email>' en iOS 10 y superior.";
 "SUPPRESS_MAILTO_DIALOG" = "Desactivar ventana de diálogo mailto(iOS 10+)";
+
+/*OTHER*/
+/*DISABLE_COMMUNICATION_ERROR*/
+/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /* Gestures */
 
@@ -349,6 +359,17 @@
 "SIZE_UNKNOWN" = "Tamaño desconocido";
 "MIGRATION_TITLE" = "Migración completada";
 "MIGRATION_MESSAGE" = "Los días de estar restringido al uso sandboxed de Safari han terminado! Tus descargas se han movido de %@ a %@. Ahora puedes descargar archivos en el destino que quieras!";
+/*CELLULAR_DATA_WARNING*/
+
+/* Tab Manager */
+
+/*SELECT_ALL*/
+/*DESELECT_ALL*/
+/*CHOOSE_EXPORT_FORMAT*/
+/*CHOOSE_EXPORT_FORMAT_MESSAGE*/
+/*ADD_TABS_ALERT*/
+/*ADD_TABS_ALERT_MESSAGE*/
+/*USE_CLIPBOARD*/
 
 /* Open in opposite mode */
 

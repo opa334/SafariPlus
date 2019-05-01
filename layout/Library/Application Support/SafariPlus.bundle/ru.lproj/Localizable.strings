@@ -96,8 +96,8 @@
 
 /*URL_ACTIONS*/
 
-/*SECOND_OPEN_IN_NEW_TAB*/
-/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
+/*BOTH_TAB_OPEN_ACTIONS*/
+/*BOTH_TAB_OPEN_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Добавляет пункт 'Открыть в приватном режиме' в меню, открываемом  длинным тапом по ссылке.\n(В нормальном режиме -> Открыть в приватном режиме,\nВ приватном режиме -> Открыть в нормальном режиме)";
 "OPEN_IN_OPPOSITE_MODE" = "Открыть в приватном реж.";
@@ -106,6 +106,9 @@
 
 /*DESKTOP_MODE_SWITCH_FOOTER*/
 /*DESKTOP_MODE_SWITCH*/
+
+/*TAB_MANAGER*/
+/*TAB_MANAGER_FOOTER*/
 
 /*DISABLE_TAB_LIMIT*/
 /*DISABLE_TAB_LIMIT_FOOTER*/
@@ -119,6 +122,9 @@
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Вставляет в строку поиска, текст выбранного поискового предложения, для этого произведите длинный тап по одному из результатов/ URL.";
 "LONG_PRESS_DURATION_TITLE" = "Длительность тапа";
 "LONG_PRESS_FOCUS_TITLE" = "Сфокусироваться на строке поиска по длинному тапу";
+
+/*SUGGESTION_INSERT_BUTTON*/
+/*SUGGESTION_INSERT_BUTTON_FOOTER*/
 
 /*INTERFACE*/
 
@@ -169,6 +175,10 @@
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Отключает диалоговое окно, появляющееся на iOS 10 и выше при открытии окна отправки email письма.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Откл. Email Диалога";
+
+/*OTHER*/
+/*DISABLE_COMMUNICATION_ERROR*/
+/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /* Gestures */
 
@@ -349,6 +359,17 @@
 "SIZE_UNKNOWN" = "Размер не известен";
 "MIGRATION_TITLE" = "Перенос завершен";
 "MIGRATION_MESSAGE" = "Ура! Safari научился загружать файлы без каких-либо ограничений! Ваши загрузки были перемещены из %@ в %@. И теперь вы можете загружать файлы практически в любую директорию!";
+/*CELLULAR_DATA_WARNING*/
+
+/* Tab Manager */
+
+/*SELECT_ALL*/
+/*DESELECT_ALL*/
+/*CHOOSE_EXPORT_FORMAT*/
+/*CHOOSE_EXPORT_FORMAT_MESSAGE*/
+/*ADD_TABS_ALERT*/
+/*ADD_TABS_ALERT_MESSAGE*/
+/*USE_CLIPBOARD*/
 
 /* Open in opposite mode */
 
