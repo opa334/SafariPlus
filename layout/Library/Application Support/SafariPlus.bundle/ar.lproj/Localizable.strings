@@ -76,11 +76,13 @@
 "PINNED_LOCATIONS_ADD_ALERT_TITLE" = "إضافة موقع مثبت";
 "PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "تعديل موقع مثبت";
 "PINNED_LOCATIONS_ALERT_MESSAGE" = "اختر اسم ومسار الموقع المثبت.";
+
 "PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "الاسم";
 "PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "المسار";
 "BROWSE" = "تصفح...";
 "CHOOSE_PATH_CONFIRMATION_TITLE" = "اختر المسار";
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "هل تريد اختيار المسار\n%@؟";
+
 "ERROR_INVALID_NAME_OR_PATH" = "اسم أو مسار غير صالح";
 
 "ONLY_DOWNLOAD_ON_WIFI" = "التنزيل باستخدام WiFi فقط";
@@ -218,6 +220,7 @@
 
 "TINT_COLOR" = "لون الصبغة";
 "BACKGROUND_COLOR" = "لون الخلفية";
+
 "STATUS_BAR_COLOR" = "لون شريط الحالة";
 "TAB_BAR_TITLE_COLOR" = "لون عنوان شريط علامة التبويب";
 "INACTIVE_TITLE_OPACITY" = "شفافية العنوان الغير نشط";
@@ -266,6 +269,7 @@
 /* Credits */
 
 "CREDITS" = "الاعتمادات";
+
 "PICKER_INSPIRED" = "تقنية انتقاء الملف مستوحاة بواسطة:";
 
 /* In app */
@@ -295,6 +299,7 @@
 /* Downloads */
 
 "DOWNLOAD" = "تنزيل";
+
 "DOWNLOAD_TO" = "تنزيل إلى";
 "DOWNLOAD_SITE_TO" = "تنزيل الموقع إلى...";
 "DOWNLOAD_IMAGE_TO" = "تنزيل الصورة إلى...";
@@ -324,21 +329,25 @@
 "DELETE_DIRECTORY_MESSAGE" = "هل أنت متأكد أنك تريد حذف مسار %@ ومحتوياته؟ الاستعادة لاحقًا غير ممكنة!";
 "DELETE" = "حذف";
 "RENAME" = "إعادة تسمية";
+
 "DOWNLOAD_STARTED" = "بدأ تنزيل";
 "DOWNLOAD_SUCCESS" = "تم التنزيل بنجاح";
 "SAVED_IMAGE" = "تم حفظ الصورة";
 "ERROR" = "خطأ";
+
 "FILE_EXISTS_MESSAGE" = "يوجد ملف أو تنزيل معلق بالفعل في نفس هذا المسار!";
 "NOT_ENOUGH_SPACE_MESSAGE" = "لا توجد مساحة كافية!\nحرر بعض المساحة وحاول مجددًا!";
 "REPLACE_FILE" = "استبدال الملف";
 "CHANGE_PATH" = "تغيير مسار التنزيل";
 "PENDING_DOWNLOADS" = "التنزيلات المعلقة";
 "DOWNLOAD_HISTORY" = "سجل التنزيل";
+
 "FILES" = "الملفات";
 "CHOOSE" = "اختر";
 "START_DOWNLOAD" = "بدأ التنزيل";
 "CHOOSE_FILENAME" = "اختر اسم الملف";
 "FILENAME" = "اسم الملف";
+
 "CLOSE" = "إغلاق";
 "CANCEL_PICKER" = "إلغاء";
 "PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل  /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";

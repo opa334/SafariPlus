@@ -18,56 +18,102 @@
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Defines.h"
 
 %hook TabOverview
 
-//Property for landscape desktop button
 %property (nonatomic,retain) UIButton *desktopModeButton;
+%property (nonatomic,retain) UIButton *tabManagerButton;
 
 //Desktop mode button: Landscape
 - (void)layoutSubviews
 {
 	%orig;
-	if(preferenceManager.desktopButtonEnabled)
+	if(preferenceManager.desktopButtonEnabled || preferenceManager.tabManagerEnabled)
 	{
 		UISearchBar* searchBar = MSHookIvar<UISearchBar*>(self, "_searchBar");
 		UIView* superview = [self.privateBrowsingButton superview];
 
 		BOOL desktopButtonAdded = NO;
+		BOOL tabManagerButtonAdded = NO;
 
-		if(!self.desktopModeButton)
+		if(preferenceManager.desktopButtonEnabled)
 		{
-			//desktopButton not created yet -> create and configure it
-			self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-			UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
-			[self.desktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
-			[self.desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-			self.desktopModeButton.selected = self.delegate.desktopButtonSelected;
-			self.desktopModeButton.tintColor = [UIColor whiteColor];
+			if(!self.desktopModeButton)
+			{
+				//desktopButton not created yet -> create and configure it
+				self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
+				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				[self.desktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
+				[self.desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+				self.desktopModeButton.selected = self.delegate.desktopButtonSelected;
+				self.desktopModeButton.tintColor = [UIColor whiteColor];
+			}
+
+			//Desktop button is not added to top bar yet -> Add it
+			if(![self.desktopModeButton isDescendantOfView:superview])
+			{
+				desktopButtonAdded = YES;
+				[superview addSubview:self.desktopModeButton];
+			}
 		}
 
-		//Desktop button is not added to top bar yet -> Add it
-		if(![self.desktopModeButton isDescendantOfView:superview])
+		if(preferenceManager.tabManagerEnabled)
 		{
-			desktopButtonAdded = YES;
-			[superview addSubview:self.desktopModeButton];
+			if(!self.tabManagerButton)
+			{
+				self.tabManagerButton = [UIButton buttonWithType:UIButtonTypeSystem];
+				UIImage* shareImage;
+				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&shareImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:9 usingItemStyle:0];
+				[self.tabManagerButton setImage:shareImage forState:UIControlStateNormal];
+				[self.tabManagerButton addTarget:self action:@selector(tabManagerButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+				self.tabManagerButton.tintColor = [UIColor whiteColor];
+			}
+
+			if(![self.tabManagerButton isDescendantOfView:superview])
+			{
+				tabManagerButtonAdded = YES;
+				[superview addSubview:self.tabManagerButton];
+			}
 		}
 
 		//Update position
 
 		CGFloat gap = self.addTabButton.frame.origin.x - (self.privateBrowsingButton.frame.origin.x + self.privateBrowsingButton.frame.size.width);
 
-		self.desktopModeButton.frame = CGRectMake(
+		CGRect pos1 = CGRectMake(
 			self.privateBrowsingButton.frame.origin.x - (gap + self.privateBrowsingButton.frame.size.height),
 			self.privateBrowsingButton.frame.origin.y,
 			self.privateBrowsingButton.frame.size.height,
 			self.privateBrowsingButton.frame.size.height);
 
+		CGRect pos2 = CGRectMake(
+			self.privateBrowsingButton.frame.origin.x - ((gap + self.privateBrowsingButton.frame.size.height) * 2),
+			self.privateBrowsingButton.frame.origin.y,
+			self.privateBrowsingButton.frame.size.height,
+			self.privateBrowsingButton.frame.size.height);
+
+		if(preferenceManager.desktopButtonEnabled && preferenceManager.tabManagerEnabled)
+		{
+			self.desktopModeButton.frame = pos1;
+			self.tabManagerButton.frame = pos2;
+		}
+		else
+		{
+			if(preferenceManager.desktopButtonEnabled)
+			{
+				self.desktopModeButton.frame = pos1;
+			}
+			else if(preferenceManager.tabManagerEnabled)
+			{
+				self.tabManagerButton.frame = pos1;
+			}
+		}
+
 		if([searchBar isFirstResponder] || searchBar.text.length > 0)
 		{
-			if(self.desktopModeButton.enabled)
+			if(preferenceManager.desktopButtonEnabled && self.desktopModeButton.enabled)
 			{
 				self.desktopModeButton.enabled = NO;
 
@@ -77,10 +123,20 @@
 					self.desktopModeButton.alpha = 0.0;
 				} completion:nil];
 			}
+			if(preferenceManager.tabManagerEnabled && self.tabManagerButton.enabled)
+			{
+				self.tabManagerButton.enabled = NO;
+
+				[UIView animateWithDuration:0.35 delay:0 options:327682
+				 animations:^
+				{
+					self.tabManagerButton.alpha = 0.0;
+				} completion:nil];
+			}
 		}
 		else if(!desktopButtonAdded)
 		{
-			if(!self.desktopModeButton.enabled)
+			if(preferenceManager.desktopButtonEnabled && !self.desktopModeButton.enabled)
 			{
 				self.desktopModeButton.enabled = YES;
 
@@ -88,6 +144,16 @@
 				 animations:^
 				{
 					self.desktopModeButton.alpha = 1.0;
+				} completion:nil];
+			}
+			if(preferenceManager.tabManagerEnabled && !self.tabManagerButton.enabled)
+			{
+				self.tabManagerButton.enabled = YES;
+
+				[UIView animateWithDuration:0.35 delay:0 options:327682
+				 animations:^
+				{
+					self.tabManagerButton.alpha = 1.0;
 				} completion:nil];
 			}
 		}

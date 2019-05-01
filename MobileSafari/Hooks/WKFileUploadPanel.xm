@@ -21,7 +21,7 @@
 #import "../Classes/SPFilePickerNavigationController.h"
 #import "../Classes/SPFileManager.h"
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 
 %hook WKFileUploadPanel
 

@@ -27,13 +27,6 @@ extern NSBundle* SPBundle;
 extern NSBundle* MSBundle;
 extern NSBundle* SSBundle;
 
-#ifdef SIMJECT
-extern NSString* simulatorPath(NSString* path);
-#define rPath(args ...) ({ simulatorPath(args); })
-#else
-#define rPath(args ...) ({ args; })
-#endif
-
 @interface PSEditableListController : PSListController
 - (id)_editButtonBarItem;
 - (BOOL)performDeletionActionForSpecifier:(id)arg1;

@@ -16,7 +16,7 @@
 
 #import "../SafariPlus.h"
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
 #ifndef NO_LIBCSCOLORPICKER
 #import <CSColorPicker/CSColorPicker.h>

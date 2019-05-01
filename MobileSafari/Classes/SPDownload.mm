@@ -16,9 +16,10 @@
 
 #import "SPDownload.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPDownloadInfo.h"
 #import "SPPreferenceManager.h"
+#import "SPLocalizationManager.h"
 
 @implementation SPDownload
 
@@ -81,6 +82,21 @@
 	if(self.resumeData)
 	{
 		[self parseResumeData];
+	}
+	else
+	{
+		if(preferenceManager.onlyDownloadOnWifiEnabled)
+		{
+			if(isUsingCellularData())
+			{
+				static BOOL cellularDataWarningHasBeenShown = NO;
+				if(!cellularDataWarningHasBeenShown)
+				{
+					sendSimpleAlert([localizationManager localizedSPStringForKey:@"WARNING"], [localizationManager localizedSPStringForKey:@"CELLULAR_DATA_WARNING"]);
+					cellularDataWarningHasBeenShown = YES;
+				}
+			}
+		}
 	}
 
 	[self setPaused:self.paused forced:YES];

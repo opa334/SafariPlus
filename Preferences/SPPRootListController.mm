@@ -17,6 +17,7 @@
 #import "SPPRootListController.h"
 #import "SafariPlusPrefs.h"
 #import <dlfcn.h>
+#import "Simulator.h"
 
 #import "../Shared/SPPreferenceMerger.h"
 
@@ -25,26 +26,6 @@ SPLocalizationManager* localizationManager;
 NSBundle* SPBundle;	//Safari Plus
 NSBundle* MSBundle;	//MobileSafari
 NSBundle* SSBundle;	//SafariServices
-
-#ifdef SIMJECT
-
-#import <UIKit/UIFunctions.h>
-
-#define currentUser NSHomeDirectory().pathComponents[2]
-
-NSString* simulatorPath(NSString* path)
-{
-	if([path hasPrefix:@"/var/mobile/"] || [path hasPrefix:@"/User/"])
-	{
-		NSString* simulatorID = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject].pathComponents[7];
-		NSString* strippedPath = [path stringByReplacingOccurrencesOfString:@"/var/mobile/" withString:@""];
-		strippedPath = [strippedPath stringByReplacingOccurrencesOfString:@"/User/" withString:@""];
-		return [NSString stringWithFormat:@"/Users/%@/Library/Developer/CoreSimulator/Devices/%@/data/%@", currentUser, simulatorID, strippedPath];
-	}
-	return [UISystemRootDirectory() stringByAppendingPathComponent:path];
-}
-
-#endif
 
 @implementation SPPRootListController
 
@@ -58,7 +39,9 @@ NSString* simulatorPath(NSString* path)
 	MSBundle = [NSBundle bundleWithPath:rPath(@"/Applications/MobileSafari.app/")];
 	SSBundle = [NSBundle bundleWithPath:rPath(@"/System/Library/Frameworks/SafariServices.framework/")];
 
+	#ifndef SIMJECT
 	[SPPreferenceMerger mergeIfNeeded];
+	#endif
 
 	return self;
 }

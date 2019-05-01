@@ -15,14 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPPDirectoryPickerTableViewController.h"
-#import "../MobileSafari/Shared.h"
-
-@implementation UITableViewController (FooterFix)
-- (void)fixFooterColors
-{
-
-}
-@end
+#import "../MobileSafari/Util.h"
+#import "Extensions.h"
 
 @implementation SPPDirectoryPickerTableViewController
 

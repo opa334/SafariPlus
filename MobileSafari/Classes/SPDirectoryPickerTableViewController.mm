@@ -16,7 +16,7 @@
 
 #import "SPDirectoryPickerTableViewController.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPDirectoryPickerNavigationController.h"
 #import "SPDownloadInfo.h"
 #import "SPDownloadManager.h"

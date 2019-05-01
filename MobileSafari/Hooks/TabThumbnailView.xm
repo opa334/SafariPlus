@@ -16,7 +16,7 @@
 
 #import "../SafariPlus.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Defines.h"
 
@@ -40,8 +40,8 @@
 		}
 
 		self.lockButton = [buttonClass buttonWithType:UIButtonTypeSystem];
-		[self.lockButton setImage:[UIImage imageNamed:@"LockButtonOpen.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
-		[self.lockButton setImage:[UIImage imageNamed:@"LockButtonClosed.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateSelected];
+		[self.lockButton setImage:[UIImage imageNamed:@"LockButtonOpen" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+		[self.lockButton setImage:[UIImage imageNamed:@"LockButtonClosed" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateSelected];
 		self.lockButton.normalImageAlpha = 1.0;
 		self.lockButton.highlightedImageAlpha = 0.2;
 		[headerView addSubview:self.lockButton];
@@ -71,14 +71,39 @@
 		self.lockButton.tintColor = self.titleColor;
 
 		CGFloat size = self.closeButton.frame.size.width;
-		self.lockButton.frame = CGRectMake(headerView.frame.size.width - size, 0, size, size);
 
-		CGFloat spacing = titleView.frame.origin.x - size;
+		BOOL isRTL = NO;
+
+		if([self respondsToSelector:@selector(_sf_usesLeftToRightLayout)])
+		{
+			isRTL = ![self _sf_usesLeftToRightLayout];
+		}
+
+		CGFloat spacing;
+
+		if(isRTL)
+		{
+			self.lockButton.frame = CGRectMake(0, 0, size, size);
+			spacing = headerView.frame.size.width - titleView.frame.origin.x - titleView.frame.size.width - size;
+		}
+		else
+		{
+			self.lockButton.frame = CGRectMake(headerView.frame.size.width - size, 0, size, size);
+			spacing = titleView.frame.origin.x - size;
+		}
+
 		CGFloat maxTitleViewWidth = headerView.frame.size.width - ((size + spacing) * 2);
 
 		if(titleView.frame.size.width > maxTitleViewWidth)
 		{
-			titleView.frame = CGRectMake(titleView.frame.origin.x, titleView.frame.origin.y, maxTitleViewWidth, titleView.frame.size.height);
+			if(isRTL)
+			{
+				titleView.frame = CGRectMake(size + spacing, titleView.frame.origin.y, maxTitleViewWidth, titleView.frame.size.height);
+			}
+			else
+			{
+				titleView.frame = CGRectMake(titleView.frame.origin.x, titleView.frame.origin.y, maxTitleViewWidth, titleView.frame.size.height);
+			}
 		}
 	}
 }

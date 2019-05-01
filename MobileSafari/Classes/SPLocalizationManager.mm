@@ -17,7 +17,7 @@
 #import "SPLocalizationManager.h"
 
 #import <Preferences/PSSpecifier.h>
-#import "../Shared.h"
+#import "../Util.h"
 
 @implementation SPLocalizationManager
 

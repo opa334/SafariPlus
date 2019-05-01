@@ -19,7 +19,7 @@ export TARGET = simulator:clang:12.1:8.0
 export ARCHS = x86_64 i386
 else
 export TARGET = iphone:clang:12.1.2:8.0
-export ARCHS = armv7 armv7s arm64
+export ARCHS = armv7 armv7s arm64 arm64e
 endif
 
 ifeq ($(NO_DEPENDENCIES),1)
@@ -28,6 +28,8 @@ export NO_ROCKETBOOTSTRAP = 1
 export NO_LIBCSCOLORPICKER = 1
 export NO_LIBBULLETIN = 1
 endif
+
+export INCLUDES = $(THEOS_PROJECT_DIR)/Shared
 
 include $(THEOS)/makefiles/common.mk
 

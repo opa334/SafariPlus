@@ -17,8 +17,9 @@
 //Hooks for iOS 10 and below
 
 #import "../SafariPlus.h"
+#import "Extensions.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Defines.h"
 #import "../Classes/SPDownloadInfo.h"
 #import "../Classes/SPDownloadManager.h"

@@ -1,8 +1,8 @@
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = SafariPlus
-SafariPlus_CFLAGS = -fobjc-arc -Wno-deprecated-declarations -Wno-unguarded-availability-new
-SafariPlus_FILES = SafariPlus.xm
+SafariPlus_CFLAGS = -fobjc-arc -I$(INCLUDES) -Wno-deprecated-declarations -Wno-unguarded-availability-new
+SafariPlus_FILES = Util.xm
 SafariPlus_FILES += $(wildcard Hooks/*.xm Classes/*.mm Classes/*.xm ../Shared/*.mm)
 
 ifeq ($(NO_CEPHEI),0)
@@ -32,6 +32,6 @@ ifeq ($(SIMJECT),1)
 	SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
-SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote
+SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote WebCore
 
 include $(THEOS_MAKE_PATH)/tweak.mk

@@ -1,5 +1,6 @@
 "YES" = "Ja";
 "NO" = "Nein";
+"SAVE" = "Speichern";
 
 /* Root Page */
 
@@ -10,15 +11,14 @@
 "USABILITY" = "Benutzbarkeit";
 "BEHAVIOUR" = "Verhalten";
 "GESTURES" = "Gesten";
-"APPEARANCE" = "Aussehen";
-"SOURCE_CODE" = "Quellcode";
+"CUSTOMIZATION" = "Anpassungen";
 "ABOUT_ME" = "Über mich";
 "TWITTER" = "Twitter";
-
 "DONATE" = "Spenden";
-"DONATE_FOOTER" = "Wenn dir dieser Tweak gefällt, dann spende doch eine geringe Summe, um mich zu unterstützen! :)";
+"ABOUT_THIS_TWEAK" = "Über diesen Tweak";
+"SOURCE_CODE" = "Quellcode";
 
-/* General Settings */
+/* Privacy */
 
 "FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\n\nHINWEIS: Ausnahmen können hinzugefügt werden damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
 "FORCE_HTTPS" = "HTTPS erzwingen";
@@ -31,27 +31,23 @@
 "ADD_EXCEPTION_ALERT_MESSAGE" = "Gebe eine Domain ein, bei der HTTPS nicht erzwungen werden soll.\nBeispiel: 'google.com'";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
-"OPEN_IN_NEW_TAB_FOOTER" = "Fügt eine weitere 'In neuem Tab öffnen' Option zum Menü hinzu, das beim langen gedrückt halten von Links erscheint.\nStelle 'Links öffnen' in den Safari Einstellungen auf 'Im Hintergrund', um im Menü Zugriff auf beide Optionen zu haben.";
-"OPEN_IN_NEW_TAB" = "'In neuem Tab öffnen' Option";
+"LOCKED_TABS" = "Verriegelte Tabs";
+"LOCKED_TABS_FOOTER" = "Fügt einen Schalter zum Verriegeln zur oberen Leiste jedes Tabs im Tab-Switcher hinzu. Während ein Tab verriegelt ist, lässt er sich nicht mehr schließen und bleibt offen, bis er wieder entriegelt wird.";
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Fügt eine Option zum Menü hinzu, was beim langen gedrückt halten von Links erscheint. Diese kann dazu benutzt werden, den Link im jeweils anderen Surfmodus zu öffen.\n(Normaler Modus -> Option zum Öffnen im privaten Modus,\nPrivater Modus -> Option zum Öffnen im normalen Modus)";
-"OPEN_IN_OPPOSITE_MODE" = "Option zum Öffnen in anderem Modus";
-
-"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt und hochgeladen werden.";
-"UPLOAD_ANY_FILE" = "Jede Datei hochladen";
-
-"DESKTOP_SWITCH_FOOTER" = "Fügt einen Button zum Tab Switcher hinzu, mit dem global zwischen dem mobilen und dem desktop Modus gewechselt werden kann.";
-"DESKTOP_SWITCH_LABEL" = "Desktop Modus Schalter";
-
-"LONG_PRESS_SUGGESTIONS_FOOTER" = "Lässt dich auf Such / URL Vorschläge lange Drücken, um diese in die URL Leiste einzufügen.";
-"LONG_PRESS_SUGGESTIONS" = "Lange auf Vorschläge drücken";
-"LONG_PRESS_DURATION_TITLE" = "Dauer des Drucks";
-"LONG_PRESS_FOCUS_TITLE" = "URL Feld nach Druck fokussieren";
+"BIOMETRIC_PROTECTION" = "Biometrischer Schutz";
+"BIOMETRIC_PROTECTION_FOOTER" = "Schützt die ausgewählten Aktionen mit Touch ID oder Face ID.";
+"SWITCH_BROWSING_MODE" = "Surfmodus wechseln";
+"LOCK_TAB" = "Tab verriegeln";
+"UNLOCK_TAB" = "Tab entriegeln";
+"ACCESS_LOCKED_TAB" = "Zugriff auf verriegelten Tab";
 
 /* Uploads & Downloads */
 
 "UPLOADS" = "Uploads";
 "DOWNLOADS" = "Downloads";
+
+"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt und hochgeladen werden.";
+"UPLOAD_ANY_FILE" = "Jede Datei hochladen";
 
 "ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
 "ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Button zur unteren Leiste hinzu, welcher die Download Ansicht öffnet. In dieser lassen sich ausstehende und bereits fertiggestellte Downloads einsehen und verwalten. Über den Dateibrowser lassen sich die Dateien verwalten. Außerdem wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /var/mobile/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde. Wenn Safari über den App Switcher geschlossen wird, werden alle ausstehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.";
@@ -77,6 +73,14 @@
 "PINNED_LOCATIONS_ENABLED" = "Angepinnte Orte aktivieren";
 "PINNED_LOCATIONS" = "Angepinnte Orte";
 "PINNED_LOCATIONS_FOOTER" = "Lässt dich einige Orte auswählen, welche beim Benutzen der 'Herunterladen nach' Option auftauchen werden.";
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "Angepinnten Ort hinzufügen";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "Angepinnten Ort bearbeiten";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Wähle einen Namen und einen Pfad für den angepinnten Ort.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Pfad";
+"BROWSE" = "Durchsuchen...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Pfad auswählen";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Möchtest du den Pfad\n%@\nauswählen?";
 "ERROR_INVALID_NAME_OR_PATH" = "Ungültiger Name oder Pfad";
 
 "ONLY_DOWNLOAD_ON_WIFI" = "Nur über WLAN herunterladen";
@@ -88,17 +92,52 @@
 "DISABLE_BAR_NOTIFICATIONS" = "Status-Mitteilungen deaktivieren";
 "DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Standardmäßig erhälst du eine Mitteilung in der Statusleiste, wenn ein Download gestartet oder fertiggestellt wurde, diese Option deaktiviert das.";
 
-/* Pinned Locations */
+/* Usability */
 
-"PINNED_LOCATIONS_ALERT_TITLE" = "Angepinnten Ort hinzufügen";
-"PINNED_LOCATIONS_ALERT_MESSAGE" = "Wähle einen Namen und einen Pfad für den angepinnten Ort.";
-"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Pfad";
-"BROWSE" = "Durchsuchen...";
-"CHOOSE_PATH_CONFIRMATION_TITLE" = "Pfad auswählen";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Möchtest du den Pfad\n%@\nauswählen?";
+"URL_ACTIONS" = "URL Aktionen";
 
-/* Action Settings */
+"BOTH_TAB_OPEN_ACTIONS" = "Beide Tab Öffnen Aktionen";
+"BOTH_TAB_OPEN_ACTIONS_FOOTER" = "Standardmäßig kann in den Safari Einstellungen nur eine der 'In neuem Tab öffnen' und der 'Im Hintergrund öffnen' Aktionen ausgewählt werden. Diese Option ignoriert die Einstellung und aktiviert stattdessen beide Aktionen.";
+
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Fügt eine Aktion zum Öffnen des Links im jeweils anderen Surfmodus zum Menü hinzu, was beim langen gedrückt halten von Links erscheint.\n(Normaler Modus -> Option zum Öffnen im privaten Modus,\nPrivater Modus -> Option zum Öffnen im normalen Modus)";
+"OPEN_IN_OPPOSITE_MODE" = "Aktion zum Öffnen in anderem Modus";
+
+"TAB_MANAGEMENT" = "Tab Verwaltung";
+
+"DESKTOP_MODE_SWITCH_FOOTER" = "Fügt einen Schalter zum Tab Switcher hinzu, mit dem global zwischen dem mobilen und dem desktop Modus gewechselt werden kann.";
+"DESKTOP_MODE_SWITCH" = "Desktop Modus Schalter";
+
+"TAB_MANAGER" = "Tab Manager";
+"TAB_MANAGER_FOOTER" = "Fügt einen Teilen Button dem Tab Switcher hinzu, welcher einen Tab Manager öffnet, in dem mehrere Tabs gleichzeitig geschlossen, exportiert und hinzugefügt werden können.";
+
+"DISABLE_TAB_LIMIT" = "Tab Limit deaktivieren";
+"DISABLE_TAB_LIMIT_FOOTER" = "Deaktiviert das Tab Limit, welches abhängig von iOS Version und Gerät variiert. Apple wird wahrscheinlich Gründe für das Tab Limit haben, Benutzung auf eigene Gefahr.";
+
+"CUSTOM_START_SITE" = "Benutzerdefinierte Startseite";
+"CUSTOM_START_SITE_FOOTER" = "Ersetzt die Favoritenanzeige, welche normalerweise in einem neu geöffneten Tab erscheint, durch eine benutzerdefinierten Seite, welche stattdessen geöffnet wird.";
+
+"SUGGESTIONS" = "Vorschläge";
+
+"LONG_PRESS_SUGGESTIONS" = "Lange auf Vorschläge drücken";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Lässt dich auf Such / URL Vorschläge lange Drücken, um diese in die URL Leiste einzufügen.";
+"LONG_PRESS_DURATION_TITLE" = "Dauer des Drucks";
+"LONG_PRESS_FOCUS_TITLE" = "URL Feld nach Druck fokussieren";
+
+"SUGGESTION_INSERT_BUTTON" = "'Vorschlag einfügen' Button";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "Fügt einen Button rechts von jedem Suchvorschlag hinzu, mit dem er in die URL Leiste eingefügt werden kann. Inspiriert von iOS 12.2 und höher.";
+
+"INTERFACE" = "Oberfläche";
+
+"SHOW_TAB_COUNT" = "Tab Anzahl anzeigen";
+"SHOW_TAB_COUNT_FOOTER" = "Zeigt die Anzahl an Tabs des aktuellen Surfmodus auf dem Button an, welcher den Tab-Switcher öffnet.";
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.\n\nHINWEIS: Nicht kompatibel mit iOS 8!";
+"FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
+
+"LOCK_BARS" = "Leisten sperren";
+"LOCK_BARS_FOOTER" = "Sperrt die obere und die untere Leiste, sodass diese nicht mehr verschwinden, wenn die Seite nach unten gescrollt wird.";
+
+/* Behaviour */
 
 "NORMAL_MODE" = "Normaler Surfmodus";
 "PRIVATE_MODE" = "Privater Surfmodus";
@@ -127,7 +166,21 @@
 "ACTIVE_MODE" = "Aktiver Surfmodus";
 "BOTH_MODES" = "Beide Surfmodi";
 
-/* Gesture Settings */
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Öffnet angeklickte Links immer in neuen Tabs.";
+"ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Neuen Tab im Hintergrund öffnen";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
+"DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
+
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";
+
+"OTHER" = "Anderes";
+"DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
+
+/* Gestures */
 
 "ACTION" = "Aktion";
 
@@ -155,28 +208,11 @@
 
 "BACKGROUND" = "Tab im Hintergrund duplizieren";
 
-/* Other Settings */
+/* Customization */
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.\n\nHINWEIS: Nicht kompatibel mit iOS 8!";
-"FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
+"APPEARANCE" = "Aussehen";
 
-"DISABLE_TAB_LIMIT" = "Tab Limit deaktivieren";
-"DISABLE_TAB_LIMIT_FOOTER" = "Deaktiviert das Tab Limit, welches abhängig von iOS Version und Gerät variiert. Apple wird wahrscheinlich Gründe für das Tab Limit haben, Benutzung auf eigene Gefahr.";
-
-"LOCK_BARS" = "Leisten sperren";
-"LOCK_BARS_FOOTER" = "Sperrt die obere und die untere Leiste, sodass diese nicht mehr verschwinden, wenn die Seite nach unten gescrollt wird.";
-
-"DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
-"DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
-
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Öffnet angeklickte Links immer in neuen Tabs.";
-"ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Neuen Tab im Hintergrund öffnen";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";
-
-/* Color Settings */
+"COLORS" = "Farbe";
 
 "SELECT_COLOR" = "Farbe auswählen";
 
@@ -195,19 +231,47 @@
 "STATUS_BAR_COLOR" = "Farbe der Statusleiste";
 "TAB_BAR_TITLE_COLOR" = "Schriftfarbe der Tab Leiste";
 "INACTIVE_TITLE_OPACITY" = "Deckkraft der inaktiven Titel";
+"TAB_BAR_CLOSE_BUTTON_COLOR" = "Farbe des Schließbuttons auf der Tab Leiste";
 "TAB_BAR_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Leiste";
 "URL_FONT_COLOR" = "URL Schriftfarbe";
 "PROGRESS_BAR_COLOR" = "Farbe des Ladebalkens";
 "RELOAD_BUTTON_COLOR" = "Farbe des Neuladen Buttons";
+"READER_BUTTON_COLOR" = "Farbe des Lesemodus Buttons";
 "LOCK_ICON_COLOR" = "Farbe des Schlüsselicons";
 "TAB_TITLE_TEXT_COLOR" = "Schriftfarbe der Tab Titelleiste";
 "TAB_TITLE_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Titelleiste";
+"TOOLBAR_BACKGROUND_COLOR" = "Farbe der Funktionsleiste";
 
 "TAB_BAR_NOTE" = "HINWEIS: Die Tab Leiste ist nicht auf allen Geräten aktiviert.";
 "COLOR_SETTINGS_BOTTOM_NOTICE" = "HINWEIS: Einige Einstellungen werden erst nach einem App-Neustart angewandt.";
 
 "WHITE" = "Weiß";
 "BLACK" = "Schwarz";
+
+"BOTTOM_TOOLBAR" = "Untere Leiste";
+"TOP_TOOLBAR" = "Obere Leiste";
+
+"BOTTOM_TOOLBAR_FOOTER" = "Die untere Leiste wird auf iPhones im Hochformat benutzt, manche kleineren iPhones benutzen sie auch im Querformat. Auf kleineren iPads wird sie im Split View Modus verwendet.";
+"TOP_TOOLBAR_FOOTER" = "Die obere Leiste wird auf größeren iPhones im Querformat benutzt. Auf iPads wird sie sowohl im Hoch- als auch im Querformat benutzt.";
+
+"REORDER_BOTTOM_TOOLBAR" = "Untere Leiste umordnen";
+"REORDER_TOP_TOOLBAR" = "Obere Leiste umordnen";
+
+"CHOOSE_ORDER" = "Reihenfolge auswählen";
+
+"BOTTOM_TOOLBAR_ORDER" = "Reihenfolge der unteren Leiste";
+"TOP_TOOLBAR_ORDER" = "Reihenfolge der oberen Leiste";
+
+"ENABLED_ITEMS" = "Aktivierte Elemente";
+"DISABLED_ITEMS" = "Deaktivierte Elemente";
+
+"BACK" = "Zurück";
+"FORWARD" = "Nach Vorne";
+"SHARE" = "Teilen";
+"BOOKMARKS" = "Lesezeichen";
+"TABS" = "Tabs";
+"ADD_TAB" = "Tab hinzufügen";
+"SEARCH_BAR_SPACE" = "Platz für die Suchleiste";
 
 /* Credits */
 
@@ -216,17 +280,21 @@
 
 /* In app */
 
+"CLOSE_NON_LOCKED_TABS" = "%zu nicht verriegelte Tabs schließen";
+"CLOSE_NON_LOCKED_TAB" = "Nicht verriegelten Tab schließen";
+"CLOSE_NON_LOCKED_TABS_MATCHING" = "Schließe %zu nicht verriegelte Tabs zu “%@“";
+"CLOSE_NON_LOCKED_TAB_MATCHING" = "Schließe nicht verriegelten Tab zu “%@“";
 "LOCAL_FILES" = "Lokale Dateien";
 "WELCOME_TITLE" = "Willkommen!";
 "WELCOME_MESSAGE" = "Danke für das Installieren von Safari Plus! Wenn du über die Zukunft des Tweaks auf dem laufenden bleiben willst, folge mir doch auf Twitter! Diese Nachricht wird nie wieder angezeigt, versprochen!";
 "OPEN_TWITTER" = "Öffne Twitter";
 "COMMUNICATION_ERROR" = "Kommunikationsfehler";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde.";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde. Dein Downloadspfad wird auf den Sandbox Container von Safari geändert. Eine Option diese Meldung zu deaktivieren befindet sich unter Verhalten->Kommunikationsfehler Meldung deaktivieren.";
 
 /* Force HTTPS */
 
-"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Zu HTTPS Ausnahmen hinzufügen";
-"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Von HTTPS Ausnahmen entfernen";
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Von HTTPS Ausnahmen entfernen";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Zu HTTPS Ausnahmen hinzufügen";
 
 /* File picker */
 
@@ -265,8 +333,8 @@
 "DELETE_FILE_MESSAGE" = "Soll die Datei %@ wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
 "DELETE_DIRECTORY_MESSAGE" = "Soll der Ordner %@ und dessen Inhalt wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
 "DELETE" = "Löschen";
-"DOWNLOAD_STARTED" = "Download gestartet";
 "RENAME" = "Umbenennen";
+"DOWNLOAD_STARTED" = "Download gestartet";
 "DOWNLOAD_SUCCESS" = "Download abgeschlossen";
 "SAVED_IMAGE" = "Bild gespeichert";
 "ERROR" = "Fehler";
@@ -291,8 +359,19 @@
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "MIGRATION_TITLE" = "Migration abgeschlossen";
 "MIGRATION_MESSAGE" = "Deine Downloads wurden von %@ zu %@ verschoben. Du kannst nun in alle Order herunterladen, in die du willst! (Vorher war dies nur innerhalb des Sandbox-Containers von Safari möglich).";
+"CELLULAR_DATA_WARNING" = "'Nur über WLAN herunterladen' ist in den Einstellungen aktiviert und dein Gerät ist momentan über mobile Daten verbunden. Downloads werden nicht starten bis du dich entweder mit einem WLAN Netzwerk verbindest oder du die Einstellung deaktivierst und Safari neustartest.";
 
-/* Open in Opposite Mode */
+/* Tab Manager */
+
+"SELECT_ALL" = "Alles";
+"DESELECT_ALL" = "Auswahl aufheben";
+"CHOOSE_EXPORT_FORMAT" = "Export-Format auswählen";
+"CHOOSE_EXPORT_FORMAT_MESSAGE" = "Jeder ausgewählte Tab wird eine Zeile Text sein. Wähle das gewünschte Format für alle Zeilen.";
+"ADD_TABS_ALERT" = "Tabs hinzufügen";
+"ADD_TABS_ALERT_MESSAGE" = "Gebe URLs ins Text Feld ein. Alles was keine URL ist, wird ignoriert.";
+"USE_CLIPBOARD" = "Verwende Zwischenablage";
+
+/* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "Im normalen Modus öffnen";
 "OPEN_IN_PRIVATE_MODE" = "Im privaten Modus öffnen";

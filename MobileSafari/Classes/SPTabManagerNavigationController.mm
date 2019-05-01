@@ -1,4 +1,4 @@
-// SPDirectoryPickerNavigationController.mm
+// SPTabManagerNavigationController.mm
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -13,33 +13,3 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-#import "SPDirectoryPickerNavigationController.h"
-
-#import "../Defines.h"
-#import "../Util.h"
-#import "SPDirectoryPickerTableViewController.h"
-#import "SPDownloadManager.h"
-#import "SPPreferenceManager.h"
-#import "SPFileManager.h"
-
-@implementation SPDirectoryPickerNavigationController
-
-- (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo
-{
-	self.loadParentDirectories = YES;
-	self.startURL = downloadManager.defaultDownloadURL;
-
-	self = [super init];
-
-	self.downloadInfo = downloadInfo;
-
-	return self;
-}
-
-- (Class)tableControllerClass
-{
-	return [SPDirectoryPickerTableViewController class];
-}
-
-@end

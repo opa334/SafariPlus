@@ -16,7 +16,7 @@
 
 #import "SPCommunicationManager.h"
 #import <AppSupport/CPDistributedMessagingCenter.h>
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPFileManager.h"
 
 #ifndef NO_ROCKETBOOTSTRAP

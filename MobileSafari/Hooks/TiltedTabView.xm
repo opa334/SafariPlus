@@ -20,7 +20,7 @@
 #import "../Classes/SPLocalizationManager.h"
 
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 
 %hook TiltedTabView
 

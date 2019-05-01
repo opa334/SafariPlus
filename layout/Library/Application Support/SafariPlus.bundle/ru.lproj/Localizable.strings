@@ -1,21 +1,24 @@
 "YES" = "Да";
 "NO" = "Нет";
+/*SAVE*/
 
-/* Root Page*/
+/* Root Page */
 
-"GENERAL" = "Основные";
-"ACTION_ADDONS" = "Поведение";
-"DOWNLOAD_ADDONS" = "Загрузки";
-"GESTURE_ADDONS" = "Жесты";
-"OTHER_ADDONS" = "Другие настройки";
-"COLOR_SETTINGS" = "Настройки цвета";
-"SOURCE_CODE" = "Исходный код";
+/*ENABLED*/
+/*FEATURES*/
+/*PRIVACY*/
+/*UPLOADS_AND_DOWNLOADS*/
+/*USABILITY*/
+/*BEHAVIOUR*/
+/*GESTURES*/
+/*CUSTOMIZATION*/
+/*ABOUT_ME*/
 "TWITTER" = "Twitter";
-
 "DONATE" = "Пожертвовать";
-"DONATE_FOOTER" = "Если вам понравился этот твик, не стесняйтесь и поддержите автора небольшой суммой! :) \n\nПеревод - Sentrop(Reddit) / Albrus(4PDA)";
+/*ABOUT_THIS_TWEAK*/
+"SOURCE_CODE" = "Исходный код";
 
-/* General Settings */
+/* Privacy */
 
 "FORCE_HTTPS_FOOTER" = "Глобально использовать протокол HTTPS.\n\nПримечание: Сайты, не поддерживающие HTTPS можно добавить в исключения.";
 "FORCE_HTTPS" = "Использовать HTTPS";
@@ -23,28 +26,28 @@
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Исключения";
 "EDIT" = "Изменить";
 "ADD" = "Сохранить";
+/*APPLY*/
 "ADD_EXCEPTION_ALERT_TITLE" = "Добавить исключение";
 "ADD_EXCEPTION_ALERT_MESSAGE" = "Введите домен, который не будет использовать протокол HTTPS.\nПример: 'google.com'";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
-"OPEN_IN_NEW_TAB_FOOTER" = "Дублирует пункт 'Открыть в новой вкладке' в меню, открываемом  длинным тапом по ссылке.\nДля корректной работы функции, зайдите в настройки/Safari/, откройте подменю 'Ссылки' и отметьте пункт 'В фоновом режиме'.";
-"OPEN_IN_NEW_TAB" = "Открыть в новой вкладке";
+/*LOCKED_TABS*/
+/*LOCKED_TABS_FOOTER*/
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Добавляет пункт 'Открыть в приватном режиме' в меню, открываемом  длинным тапом по ссылке.\n(В нормальном режиме -> Открыть в приватном режиме,\nВ приватном режиме -> Открыть в нормальном режиме)";
-"OPEN_IN_OPPOSITE_MODE" = "Открыть в приватном реж.";
+/*BIOMETRIC_PROTECTION*/
+/*BIOMETRIC_PROTECTION_FOOTER*/
+/*SWITCH_BROWSING_MODE*/
+/*LOCK_TAB*/
+/*UNLOCK_TAB*/
+/*ACCESS_LOCKED_TAB*/
+
+/* Uploads & Downloads */
+
+/*UPLOADS*/
+"DOWNLOADS" = "Загрузки";
 
 "UPLOAD_ANY_FILE_FOOTER" = "Добавляет пункт в меню выгрузки, позволяющий выгружать из устройства любой файл рут фс. Так же вы можете выгружать сразу несколько файлов, с помощью меню, вызываемого длинным тапом по файлу.";
 "UPLOAD_ANY_FILE" = "Выгрузка любых файлов";
-
-"DESKTOP_SWITCH_FOOTER" = "Добавляет кнопку переключения между мобильной / полной версией сайта в окно управления вкладками.";
-"DESKTOP_SWITCH_LABEL" = "Полная версия сайта";
-
-"LONG_PRESS_SUGGESTIONS_FOOTER" = "Вставляет в строку поиска, текст выбранного поискового предложения, для этого произведите длинный тап по одному из результатов/ URL.";
-"LONG_PRESS_SUGGESTIONS" = "Вставка поиск. предложения";
-"LONG_PRESS_DURATION_TITLE" = "Длительность тапа";
-"LONG_PRESS_FOCUS_TITLE" = "Сфокусироваться на строке поиска по длинному тапу";
-
-/* Download Settings */
 
 "ENHANCED_DOWNLOADS" = "Полноценный Загрузчик";
 "ENHANCED_DOWNLOADS_FOOTER" = "Добавляет кнопку \"загрузки\" в нижнюю панель инструментов, нажатие которой открывает менеджер загрузок. Здесь вы можете следить за процессом загрузки и управлять загружаемыми файлами. Вкладка \"файловый менеджер\", в свою очередь, позволяет управлять загруженными файлами. Перед началом загрузки, вам будет предложено выбрать место для сохранения (по умолчанию /var/mobile/Downloads). Загрузка файлов так же работает в фоновом режиме, по завершению загрузки вы получите уведомление. Если Safari закрыт в панеле переключения приложений, все загрузки будут 'приостановлены' и возобновлены только после следующего запуска Safari.";
@@ -70,6 +73,14 @@
 "PINNED_LOCATIONS_ENABLED" = "Разрешить закреплять папки";
 "PINNED_LOCATIONS" = "Закреплённые папки";
 "PINNED_LOCATIONS_FOOTER" = "Позволяет закреплять  папки, для быстрого выбора пути загрузки в режиме  'Сохранить в'.";
+/*PINNED_LOCATIONS_ADD_ALERT_TITLE*/
+/*PINNED_LOCATIONS_EDIT_ALERT_TITLE*/
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Выберите имя и директорию, которую хотите закрепить.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Имя";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Путь";
+"BROWSE" = "Указать путь...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Выбрать путь";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Вы действительно хотите выбрать эту папку\n%@?";
 "ERROR_INVALID_NAME_OR_PATH" = "Неверное имя или путь";
 
 "ONLY_DOWNLOAD_ON_WIFI" = "Загружать только через Wifi";
@@ -81,17 +92,46 @@
 "DISABLE_BAR_NOTIFICATIONS" = "Откл. уведомл. в статус баре";
 "DISABLE_BAR_NOTIFICATIONS_FOOTER" = "По умолчанию в статус баре появляется сообщение о начале / конце загрузки. Эта настройка отключает подобные сообщения.";
 
-/* Pinned Locations */
+/* Usability */
 
-"PINNED_LOCATIONS_ALERT_TITLE" = "Закрепить путь";
-"PINNED_LOCATIONS_ALERT_MESSAGE" = "Выберите имя и директорию, которую хотите закрепить.";
-"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Имя";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Путь";
-"BROWSE" = "Указать путь...";
-"CHOOSE_PATH_CONFIRMATION_TITLE" = "Выбрать путь";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Вы действительно хотите выбрать эту папку\n%@?";
+/*URL_ACTIONS*/
 
-/* Action Settings */
+/*SECOND_OPEN_IN_NEW_TAB*/
+/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
+
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Добавляет пункт 'Открыть в приватном режиме' в меню, открываемом  длинным тапом по ссылке.\n(В нормальном режиме -> Открыть в приватном режиме,\nВ приватном режиме -> Открыть в нормальном режиме)";
+"OPEN_IN_OPPOSITE_MODE" = "Открыть в приватном реж.";
+
+/*TAB_MANAGEMENT*/
+
+/*DESKTOP_MODE_SWITCH_FOOTER*/
+/*DESKTOP_MODE_SWITCH*/
+
+/*DISABLE_TAB_LIMIT*/
+/*DISABLE_TAB_LIMIT_FOOTER*/
+
+/*CUSTOM_START_SITE*/
+/*CUSTOM_START_SITE_FOOTER*/
+
+/*SUGGESTIONS*/
+
+"LONG_PRESS_SUGGESTIONS" = "Вставка поиск. предложения";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Вставляет в строку поиска, текст выбранного поискового предложения, для этого произведите длинный тап по одному из результатов/ URL.";
+"LONG_PRESS_DURATION_TITLE" = "Длительность тапа";
+"LONG_PRESS_FOCUS_TITLE" = "Сфокусироваться на строке поиска по длинному тапу";
+
+/*INTERFACE*/
+
+/*SHOW_TAB_COUNT*/
+/*SHOW_TAB_COUNT_FOOTER*/
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Скрывает верхнюю панель при скролинге вниз.\n\nNOTE: Не паботает на iOS 8!";
+"FULLSCREEN_SCROLLING" = "Полноэкранный Скроллинг";
+
+"LOCK_BARS" = "Закрепить Панели";
+"LOCK_BARS_FOOTER" = "Закрепляет верхнюю и нижнюю панель, так, чтобы они не скрывались при скроллинге вниз.";
+
+/* Behaviour */
 
 "NORMAL_MODE" = "Обычный режим";
 "PRIVATE_MODE" = "Приватный режим";
@@ -120,7 +160,17 @@
 "ACTIVE_MODE" = "Активный Режим";
 "BOTH_MODES" = "Оба Режима";
 
-/* Gesture Settings */
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Позволяет всегда открывать ссылки в новых вкладках.";
+"ALWAYS_OPEN_NEW_TAB" = "Откр. ссылки в Вкладках";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Открыв. вкладки в Фоне";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Отключает приватный режим и скрывает кнопку 'Частный доступ'. (Функция не доступна по умолчанию)";
+"DISABLE_PRIVATE_MODE" = "Откл. Приватный Режим";
+
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Отключает диалоговое окно, появляющееся на iOS 10 и выше при открытии окна отправки email письма.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Откл. Email Диалога";
+
+/* Gestures */
 
 "ACTION" = "Действие";
 
@@ -148,25 +198,16 @@
 
 "BACKGROUND" = "Дублировать в Фоне ";
 
-/* Other Settings */
+/* Customization */
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Скрывает верхнюю панель при скролинге вниз.\n\nNOTE: Не паботает на iOS 8!";
-"FULLSCREEN_SCROLLING" = "Полноэкранный Скроллинг";
+/*APPEARANCE*/
 
-"LOCK_BARS" = "Закрепить Панели";
-"LOCK_BARS_FOOTER" = "Закрепляет верхнюю и нижнюю панель, так, чтобы они не скрывались при скроллинге вниз.";
+/*COLORS*/
 
-"DISABLE_PRIVATE_MODE_FOOTER" = "Отключает приватный режим и скрывает кнопку 'Частный доступ'. (Функция не доступна по умолчанию)";
-"DISABLE_PRIVATE_MODE" = "Откл. Приватный Режим";
+/*SELECT_COLOR*/
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Позволяет всегда открывать ссылки в новых вкладках.";
-"ALWAYS_OPEN_NEW_TAB" = "Откр. ссылки в Вкладках";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Открыв. вкладки в Фоне";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Отключает диалоговое окно, появляющееся на iOS 10 и выше при открытии окна отправки email письма.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Откл. Email Диалога";
-
-/* Color Settings */
+/*NORMAL_MODE_COLORS*/
+/*PRIVATE_MODE_COLORS*/
 
 "TOP_BAR" = "Верхняя Панель";
 "BOTTOM_BAR" = "Нижняя Панель";
@@ -177,20 +218,50 @@
 
 "TINT_COLOR" = "Элементы управления";
 "BACKGROUND_COLOR" = "Фон области";
+/*STATUS_BAR_COLOR*/
 "TAB_BAR_TITLE_COLOR" = "Заголовок вкладки";
+/*INACTIVE_TITLE_OPACITY*/
+/*TAB_BAR_CLOSE_BUTTON_COLOR*/
 "TAB_BAR_BACKGROUND_COLOR" = "Цвет Фона Вкладки";
 "URL_FONT_COLOR" = "Текст URL";
 "PROGRESS_BAR_COLOR" = "Полоса загрузки";
 "RELOAD_BUTTON_COLOR" = "Кнопка «обновить страницу»";
+/*READER_BUTTON_COLOR*/
 "LOCK_ICON_COLOR" = "Пиктограмма «Замок»";
 "TAB_TITLE_TEXT_COLOR" = "Заголовок вкладки";
 "TAB_TITLE_BACKGROUND_COLOR" = "Фон заголовка вкладки";
+/*TOOLBAR_BACKGROUND_COLOR*/
 
 "TAB_BAR_NOTE" = "Примечание: Панель вкладок есть не на всех устройствах / ориентациях.";
 "COLOR_SETTINGS_BOTTOM_NOTICE" = "Примечание: Некоторые настройки требуют перезапуск приложения для корректной работы.";
 
 "WHITE" = "Белый";
 "BLACK" = "Чёрный";
+
+/*BOTTOM_TOOLBAR*/
+/*TOP_TOOLBAR*/
+
+/*BOTTOM_TOOLBAR_FOOTER*/
+/*TOP_TOOLBAR_FOOTER*/
+
+/*REORDER_BOTTOM_TOOLBAR*/
+/*REORDER_TOP_TOOLBAR*/
+
+/*CHOOSE_ORDER*/
+
+/*BOTTOM_TOOLBAR_ORDER*/
+/*TOP_TOOLBAR_ORDER*/
+
+/*ENABLED_ITEMS*/
+/*DISABLED_ITEMS*/
+
+/*BACK*/
+/*FORWARD*/
+/*SHARE*/
+/*BOOKMARKS*/
+/*TABS*/
+/*ADD_TAB*/
+/*SEARCH_BAR_SPACE*/
 
 /* Credits */
 
@@ -199,12 +270,21 @@
 
 /* In app */
 
+/*CLOSE_NON_LOCKED_TABS*/
+/*CLOSE_NON_LOCKED_TAB*/
+/*CLOSE_NON_LOCKED_TABS_MATCHING*/
+/*CLOSE_NON_LOCKED_TAB_MATCHING*/
 "LOCAL_FILES" = "Файловая система";
 "WELCOME_TITLE" = "Привет!";
 "WELCOME_MESSAGE" = "Благодарим за установку твика Safari Plus! Если вы хотите быть в курсе всех новостей об обновлениях твика, следите за моей страницей в Twitter! Это сообщение больше не будет показываться (обещаю)!";
 "OPEN_TWITTER" = "Открыть Twitter";
 "COMMUNICATION_ERROR" = "Ошибка Связи";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Невозможно получить доступ к SpringBoard! Некоторые функции не будут работать. Пожалуйста убедитесь в том, что RocketBootstrap установлен и SafariPlusSB.dylib не отключен с помощью iCleaner Pro.";
+
+/* Force HTTPS */
+
+/*REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS*/
+/*ADD_TO_FORCE_HTTPS_EXCEPTIONS*/
 
 /* File picker */
 
@@ -228,6 +308,7 @@
 "CLEAR" = "Очистить";
 "CANCEL_ALL_DOWNLOADS" = "Отменить все загрузки";
 "CLEAR_DOWNLOAD_HISTORY" = "Очистить список загрузок";
+/*CLEAR_TEMPORARY_DATA*/
 "CLEAR_EVERYTHING" = "Очистить всё";
 "CLEAR_EVERYTHING_WARNING" = "Вы действительно хотите остановить загрузки и очистить всё? Загруженные файлы при этом останутся без изменений";
 "CREATE_DIRECTORY" = "Создать папку";
@@ -273,3 +354,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Открыть в обычном режиме";
 "OPEN_IN_PRIVATE_MODE" = "Открыть в приватном режиме";
+

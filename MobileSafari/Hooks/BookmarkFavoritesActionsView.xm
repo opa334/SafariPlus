@@ -15,9 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
+#import "Extensions.h"
 
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPPreferenceManager.h"
 

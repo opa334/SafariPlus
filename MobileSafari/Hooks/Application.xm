@@ -16,7 +16,7 @@
 
 #import "../SafariPlus.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Defines.h"
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"
@@ -84,7 +84,7 @@
 %new
 - (void)handleSBConnectionTest
 {
-	if(![communicationManager testConnection])
+	if(!rocketBootstrapWorks && !preferenceManager.communicationErrorDisabled)
 	{
 		sendSimpleAlert([localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR"], [localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR_DESCRIPTION"]);
 	}

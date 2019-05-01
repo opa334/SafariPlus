@@ -17,7 +17,6 @@
 "DONATE" = "Donate";
 "ABOUT_THIS_TWEAK" = "About this Tweak";
 "SOURCE_CODE" = "Source Code";
-/*"DONATE_FOOTER" = "If you like this tweak, feel free to donate a small amount of money to support me! :)";*/
 
 /* Privacy */
 
@@ -32,11 +31,8 @@
 "ADD_EXCEPTION_ALERT_MESSAGE" = "Enter a domain where the HTTPS protocol should not be forced.\nExample: 'google.com'";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
-/*DISABLE_ANALYTICS*/
-/*DISABLE_ANALYTICS_FOOTER*/
-
 "LOCKED_TABS" = "Locked Tabs";
-"LOCKED_TABS_FOOTER" = "Adds a lock switch to the top right of each tab inside the tab switcher. While a tab is locked, it cannot be closed and will stay open until you unlock it again.";
+"LOCKED_TABS_FOOTER" = "Adds a lock switch to the top bar of each tab inside the tab switcher. While a tab is locked, it cannot be closed and will stay open until you unlock it again.";
 
 "BIOMETRIC_PROTECTION" = "Biometric Protection";
 "BIOMETRIC_PROTECTION_FOOTER" = "Protects the selected actions with either Touch ID or Face ID.";
@@ -100,19 +96,19 @@
 
 "URL_ACTIONS" = "URL Actions";
 
-"SECOND_OPEN_IN_NEW_TAB" = "Second 'Open in New Tab' Option";
-"SECOND_OPEN_IN_NEW_TAB_FOOTER" = "Adds another 'Open in new Tab' option to the menu that appears when a link is long pressed.\nSet 'Open Links' in Safari settings to 'In Background' to have both options available when long pressing a link.";
+"BOTH_TAB_OPEN_ACTIONS" = "Both Tab Open Actions";
+"BOTH_TAB_OPEN_ACTIONS_FOOTER" = "By default the Safari preferences let you only choose either the 'Open in New Tab' action or the 'Open in Background' action. This option will ignore whatever is selected inside Safari settings and just show both actions.";
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an option to the menu that appears when a link is long pressed, that can be used to open the link in the opposite browsing mode.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
-"OPEN_IN_OPPOSITE_MODE" = "Open in Opposite Mode Option";
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adds an action to open a URL in the opposite browsing mode to the sheet that appears when a URL is long pressed.\n(Normal mode -> Option to open in private mode,\nPrivate mode -> Option to open in normal mode)";
+"OPEN_IN_OPPOSITE_MODE" = "'Open in Opposite Mode' Action";
 
 "TAB_MANAGEMENT" = "Tab Management";
 
 "DESKTOP_MODE_SWITCH_FOOTER" = "Adds a switch to the tab switcher that can be used to globally switch between mobile and desktop mode.";
 "DESKTOP_MODE_SWITCH" = "Desktop Mode Switch";
 
-/*SHARE_BUTTON*/
-/*SHARE_BUTTON_FOOTER*/
+"TAB_MANAGER" = "Tab Manager";
+"TAB_MANAGER_FOOTER" = "Adds a share button to the tab switcher that can be used to access a tab manager from which you can batch-close, batch-export and batch-add tabs.";
 
 "DISABLE_TAB_LIMIT" = "Disable Tab Limit";
 "DISABLE_TAB_LIMIT_FOOTER" = "Disables the imposed tab limit that varies based on iOS version and device. There is probably a reason why Apple has decided to enforce a tab limit, use on your own risk.";
@@ -127,8 +123,8 @@
 "LONG_PRESS_DURATION_TITLE" = "Long Press Duration";
 "LONG_PRESS_FOCUS_TITLE" = "Focus URL Bar on Long Press";
 
-/*INSERT_SUGGESTION_BUTTON*/
-/*INSERT_SUGGESTION_BUTTON_FOOTER*/
+"SUGGESTION_INSERT_BUTTON" = "Suggestion Insert Button";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "Adds a button at the right of every search suggestion to insert it into the URL bar. Inspired by how it is implemented in iOS 12.2 and above.";
 
 "INTERFACE" = "Interface";
 
@@ -141,7 +137,7 @@
 "LOCK_BARS" = "Lock Bars";
 "LOCK_BARS_FOOTER" = "Locks the bottom and the top bar in place, so they won't get hidden anymore when the page is being scrolled down.";
 
-/* BEHAVIOUR */
+/* Behaviour */
 
 "NORMAL_MODE" = "Normal Browsing Mode";
 "PRIVATE_MODE" = "Private Browsing Mode";
@@ -179,6 +175,10 @@
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 and above when a 'mailto:<email>' URL is accessed.";
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Suppress Mailto Dialog";
+
+"OTHER" = "Other";
+"DISABLE_COMMUNICATION_ERROR" = "Disable Communication Error Alert";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disables the communication error alert that appears on app launch when rocketbootstrap is not available for some reason. Use on your own risk.";
 
 /* Gestures */
 
@@ -251,7 +251,7 @@
 "BOTTOM_TOOLBAR" = "Bottom Toolbar";
 "TOP_TOOLBAR" = "Top Toolbar";
 
-"BOTTOM_TOOLBAR_FOOTER" = "The Bottom Toolbar is used on iPhones in Portrait Mode, some smaller iPhones also use it in Landscape Mode. iPads also use it inside Split-View.";
+"BOTTOM_TOOLBAR_FOOTER" = "The Bottom Toolbar is used on iPhones in Portrait Mode, some smaller iPhones also use it in Landscape Mode. Some smaller iPads also use it inside Split-View.";
 "TOP_TOOLBAR_FOOTER" = "The Top Toolbar is used on larger iPhones in Landscape Mode. On iPads, it is used in both Portrait and Landscape.";
 
 "REORDER_BOTTOM_TOOLBAR" = "Reorder Bottom Toolbar";
@@ -289,7 +289,7 @@
 "WELCOME_MESSAGE" = "Thanks for installing Safari Plus! If you wish to stay updated about the future of this tweak, make sure to follow me on Twitter! This message will not show again (I promise)!";
 "OPEN_TWITTER" = "Open Twitter";
 "COMMUNICATION_ERROR" = "Communication Error";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro.";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro. Your default download path will be changed to the sandbox container of Safari. If you want to disable this message, you can do so inside Preferences under Behaviour -> Disable Communication Error Alert.";
 
 /* Force HTTPS */
 
@@ -359,6 +359,17 @@
 "SIZE_UNKNOWN" = "Unknown Size";
 "MIGRATION_TITLE" = "Migration succeeded";
 "MIGRATION_MESSAGE" = "Gone are the days of being restricted to the sandbox container of Safari! Your downloads have been moved from %@ to %@. You can now download files to any directory you want!";
+"CELLULAR_DATA_WARNING" = "'Only Download on Wifi' is enabled inside settings and you're currently on cellular data. Downloads will not start until you either connect to a wifi network or disable the option inside settings and restart Safari.";
+
+/* Tab Manager */
+
+"SELECT_ALL" = "Select All";
+"DESELECT_ALL" = "Deselect All";
+"CHOOSE_EXPORT_FORMAT" = "Choose Export Format";
+"CHOOSE_EXPORT_FORMAT_MESSAGE" = "Each selected tab will be one line of text. Choose how each line should be formatted.";
+"ADD_TABS_ALERT" = "Add Tabs";
+"ADD_TABS_ALERT_MESSAGE" = "Enter some URLs in the text field. Anything that's not an URL will be ignored!";
+"USE_CLIPBOARD" = "Use Clipboard";
 
 /* Open in opposite mode */
 

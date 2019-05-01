@@ -15,10 +15,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
+#import "Extensions.h"
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Defines.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Enums.h"
 
 //Turns a system bar button item into a non-system one
@@ -284,15 +285,14 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	if([orderM containsObject:@(BrowserToolbarTabExposeItem)])
 	{
 		UIBarButtonItem* tabExposeItem = [allItems objectForKey:@(BrowserToolbarTabExposeItem)];
+		tabExposeItem.image = [tabExposeItem.image imageWithWidth:25 alignment:0];
 		tabExposeItem.imageInsets = UIEdgeInsetsMake(tabExposeItem.imageInsets.top, 0, tabExposeItem.imageInsets.bottom, 0);
 	}
 
 	if([orderM containsObject:@(BrowserToolbarAddTabItem)])
 	{
 		UIBarButtonItem* addTabItem = [allItems objectForKey:@(BrowserToolbarAddTabItem)];
-
 		addTabItem.image = [addTabItem.image imageWithWidth:25 alignment:0];
-
 		addTabItem.imageInsets = UIEdgeInsetsMake(addTabItem.imageInsets.top, 0, addTabItem.imageInsets.bottom, 0);
 	}
 
@@ -470,7 +470,26 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			{
 				if(placement)	//Bottom Bar
 				{
-					defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarShareItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarDownloadsItem), @(BrowserToolbarTabExposeItem)]];
+					BOOL tabBarTweakActive = NO;
+
+					if([self.browserDelegate respondsToSelector:@selector(_shouldShowTabBar)])
+					{
+						tabBarTweakActive = [self.browserDelegate _shouldShowTabBar] && [browserControllers() count] <= 1;
+					}
+					else
+					{
+						[self.browserDelegate updateUsesTabBar];
+						tabBarTweakActive = self.browserDelegate.tabController.usesTabBar;
+					}
+
+					if(tabBarTweakActive)
+					{
+						defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarShareItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarDownloadsItem), @(BrowserToolbarTabExposeItem), @(BrowserToolbarAddTabItem)]];
+					}
+					else
+					{
+						defaultItems = [self dynamicItemsForOrder:@[@(BrowserToolbarBackItem), @(BrowserToolbarForwardItem), @(BrowserToolbarShareItem), @(BrowserToolbarBookmarksItem), @(BrowserToolbarDownloadsItem), @(BrowserToolbarTabExposeItem)]];
+					}
 				}
 				else	//Top Bar
 				{

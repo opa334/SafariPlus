@@ -1,4 +1,4 @@
-// Shared.h
+// Util.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView;
+#import <WebKit/WKWebView.h>
+
+@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView, WebAVPlayerController;
 
 extern BOOL showAlert;
 extern SPFileManager* fileManager;
@@ -25,6 +27,7 @@ extern SPCommunicationManager* communicationManager;
 extern SPCacheManager* cacheManager;
 extern NSBundle* SPBundle;
 extern NSBundle* MSBundle;
+extern BOOL rocketBootstrapWorks;
 
 extern BOOL privateBrowsingEnabled(BrowserController* controller);
 extern void togglePrivateBrowsing(BrowserController* controller);
@@ -38,6 +41,8 @@ extern void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying>
 extern void requestAuthentication(NSString* reason, void (^successHandler)(void));
 extern void sendSimpleAlert(NSString* title, NSString* message);
 extern NSDictionary* decodeResumeData12(NSData* resumeData);
+extern BOOL isUsingCellularData();
+//extern NSURL* videoURLFromWebAVPlayerController(WebAVPlayerController* playerController);
 extern void loadOtherPlist();
 extern void saveOtherPlist();
 
@@ -62,37 +67,8 @@ extern void _dlogDownloadManager();
 #define dlogDownloadManager()
 
 #endif
-
-@interface UIImage (ColorInverse)
-+ (UIImage *)inverseColor:(UIImage *)image;
-@end
-
-@interface NSURL (SchemeConversion)
-- (NSURL*)httpsURL;
-- (NSURL*)httpURL;
-@end
-
-@interface NSString (Strip)
-- (NSString*)stringStrippedByStrings:(NSArray<NSString*>*)strings;
-@end
-
-@interface NSString (UUID)
-- (BOOL)isUUID;
-@end
-
-//http://commandshift.co.uk/blog/2013/01/31/visual-format-language-for-autolayout/
-@interface UIView (Autolayout)
-+ (id)autolayoutView;
-@end
-
-@interface UITableViewController (FooterFix)
-- (void)fixFooterColors;
-@end
-
-@interface UIImage (WidthChange)
-- (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment;
-@end
-
-@interface UIImage (Rotate)
-- (UIImage *)imageRotatedByDegrees:(CGFloat)degrees;
-@end
+/*
+   @interface WKWebView (VideoURL)
+   - (NSString*)getNowPlayingVideoURL;
+   @end
+ */

@@ -16,7 +16,7 @@
 
 #import "SPFilePickerTableViewController.h"
 
-#import "../Shared.h"
+#import "../Util.h"
 #import "SPFilePickerNavigationController.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"

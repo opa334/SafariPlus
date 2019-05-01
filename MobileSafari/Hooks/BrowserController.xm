@@ -18,7 +18,7 @@
 
 #import "../Defines.h"
 #import "../Enums.h"
-#import "../Shared.h"
+#import "../Util.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPDownloadNavigationController.h"
@@ -459,7 +459,7 @@
 		hasSearchTerm = (self.tabController.searchTerm.length > 0);
 	}
 
-	if(!hasSearchTerm && ([self isShowingTabView] || self.tabController.currentTabDocuments.count > 1))
+	if(!hasSearchTerm)
 	{
 		for(TabDocument* document in self.tabController.currentTabDocuments)
 		{
@@ -477,33 +477,43 @@
 		UIAlertAction* closeAllTabsAction;
 		UIAlertAction* closeTabAction;
 
-		if([self respondsToSelector:@selector(_closeAllTabsAction)])
+		if([self respondsToSelector:@selector(_closeAllTabsAction)] && ![self isShowingTabView])
 		{
-			closeAllTabsAction = actions.firstObject;
-
-			if(![self isShowingTabView])
+			if(self.tabController.currentTabDocuments.count > 1)
 			{
 				closeTabAction = [actions objectAtIndex:1];
 			}
-		}
-		else
-		{
-			closeAllTabsAction = [actions objectAtIndex:actions.count - 2];
+			else
+			{
+				closeTabAction = actions.firstObject;
+			}
 		}
 
-		//If there are no nonlocked tabs outside of the current active tab, we remove the option to close all tabs, otherwise we change the title
-		if(nonLockedTabCount > 1)
+		if([self isShowingTabView] || self.tabController.currentTabDocuments.count > 1)
 		{
-			[closeAllTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedTabCount]];
-		}
-		else if ((self.tabController.activeTabDocument.locked || [self isShowingTabView] || ![self respondsToSelector:@selector(_closeAllTabsAction)]) && nonLockedTabCount == 1)
-		{
-			[closeAllTabsAction setTitle:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"]];
-		}
-		else
-		{
-			[actions removeObject:closeAllTabsAction];
-			reloadActions = YES;
+			if([self respondsToSelector:@selector(_closeAllTabsAction)])
+			{
+				closeAllTabsAction = actions.firstObject;
+			}
+			else
+			{
+				closeAllTabsAction = [actions objectAtIndex:actions.count - 2];
+			}
+
+			//If there are no nonlocked tabs outside of the current active tab, we remove the option to close all tabs, otherwise we change the title
+			if(nonLockedTabCount > 1)
+			{
+				[closeAllTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedTabCount]];
+			}
+			else if(([self isShowingTabView] || self.tabController.activeTabDocument.locked || ![self respondsToSelector:@selector(_closeAllTabsAction)]) && nonLockedTabCount == 1)
+			{
+				[closeAllTabsAction setTitle:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"]];
+			}
+			else
+			{
+				[actions removeObject:closeAllTabsAction];
+				reloadActions = YES;
+			}
 		}
 
 		//If the active tab is locked, we remove the option to close it
