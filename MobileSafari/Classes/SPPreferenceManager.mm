@@ -132,6 +132,7 @@ void reloadPrefs()
 	[_preferences registerBool:&_alwaysOpenNewTabInBackgroundEnabled default:NO forKey:@"alwaysOpenNewTabInBackgroundEnabled"];
 	[_preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
 	[_preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
+	[_preferences registerBool:&_communicationErrorDisabled default:NO forKey:@"communicationErrorDisabled"];
 
 	#if !defined(NO_LIBCSCOLORPICKER)
 

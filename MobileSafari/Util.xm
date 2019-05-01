@@ -36,12 +36,13 @@
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
-SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
+SPCommunicationManager* communicationManager;
 SPFileManager* fileManager;
 SPPreferenceManager* preferenceManager;
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
+BOOL rocketBootstrapWorks;
 
 #ifdef DEBUG_LOGGING
 
@@ -461,6 +462,9 @@ extern void initWKFileUploadPanel();
   #ifdef DEBUG_LOGGING
 	initDebug();
   #endif
+
+	communicationManager = [SPCommunicationManager sharedInstance];
+	rocketBootstrapWorks = [communicationManager testConnection];
 
 	fileManager = [SPFileManager sharedInstance];
 

@@ -84,7 +84,7 @@
 %new
 - (void)handleSBConnectionTest
 {
-	if(![communicationManager testConnection])
+	if(!rocketBootstrapWorks && !preferenceManager.communicationErrorDisabled)
 	{
 		sendSimpleAlert([localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR"], [localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR_DESCRIPTION"]);
 	}

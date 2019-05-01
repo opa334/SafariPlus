@@ -92,6 +92,7 @@ static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) BOOL alwaysOpenNewTabInBackgroundEnabled;
 @property (nonatomic, readonly) BOOL disablePrivateMode;
 @property (nonatomic, readonly) BOOL suppressMailToDialog;
+@property (nonatomic, readonly) BOOL communicationErrorDisabled;
 
 @property (nonatomic, readonly) BOOL URLLeftSwipeGestureEnabled;
 @property (nonatomic, readonly) NSInteger URLLeftSwipeAction;
