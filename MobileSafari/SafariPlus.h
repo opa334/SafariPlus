@@ -197,7 +197,7 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 /**** WebCore ****/
 
 // *INDENT-OFF*
-
+/*
 namespace WTF
 {
 	class StringImpl
@@ -244,7 +244,7 @@ namespace WebCore
 		void pause();
 	};
 }
-
+*/
 // *INDENT-ON*
 
 /**** MediaRemote ****/
@@ -487,6 +487,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)updateTabOverviewFrame;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
+- (void)insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
 - (void)clearAutoFillMessageReceived;
@@ -647,6 +648,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (BOOL)_document:(TabDocument*)arg1 matchesSearchText:(NSString*)arg2;
 - (void)_closeTabDocuments:(NSArray<TabDocument*>*)documents animated:(BOOL)arg2 temporarily:(BOOL)arg3 allowAddingToRecentlyClosedTabs:(BOOL)arg4 keepWebViewAlive:(BOOL)arg5;
 - (void)closeTabsDocuments:(NSArray<TabDocument*>*)arg1;
+- (void)_insertTabDocument:(TabDocument*)arg1 atIndex:(NSUInteger)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4 updateUI:(BOOL)arg5;
 - (void)_insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 8-10
 - (void)insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 11 and above
 //new stuff below

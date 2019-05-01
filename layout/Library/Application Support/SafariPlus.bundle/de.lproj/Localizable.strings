@@ -107,6 +107,9 @@
 "DESKTOP_MODE_SWITCH_FOOTER" = "Fügt einen Schalter zum Tab Switcher hinzu, mit dem global zwischen dem mobilen und dem desktop Modus gewechselt werden kann.";
 "DESKTOP_MODE_SWITCH" = "Desktop Modus Schalter";
 
+"TAB_MANAGER" = "Tab Manager";
+"TAB_MANAGER_FOOTER" = "Fügt einen Teilen Button dem Tab Switcher hinzu, welcher einen Tab Manager öffnet, in dem mehrere Tabs gleichzeitig geschlossen, exportiert und hinzugefügt werden können.";
+
 "DISABLE_TAB_LIMIT" = "Tab Limit deaktivieren";
 "DISABLE_TAB_LIMIT_FOOTER" = "Deaktiviert das Tab Limit, welches abhängig von iOS Version und Gerät variiert. Apple wird wahrscheinlich Gründe für das Tab Limit haben, Benutzung auf eigene Gefahr.";
 
@@ -357,6 +360,16 @@
 "MIGRATION_TITLE" = "Migration abgeschlossen";
 "MIGRATION_MESSAGE" = "Deine Downloads wurden von %@ zu %@ verschoben. Du kannst nun in alle Order herunterladen, in die du willst! (Vorher war dies nur innerhalb des Sandbox-Containers von Safari möglich).";
 "CELLULAR_DATA_WARNING" = "'Nur über WLAN herunterladen' ist in den Einstellungen aktiviert und dein Gerät ist momentan über mobile Daten verbunden. Downloads werden nicht starten bis du dich entweder mit einem WLAN Netzwerk verbindest oder du die Einstellung deaktivierst und Safari neustartest.";
+
+/* Tab Manager */
+
+"SELECT_ALL" = "Alles";
+"DESELECT_ALL" = "Auswahl aufheben";
+"CHOOSE_EXPORT_FORMAT" = "Export-Format auswählen";
+"CHOOSE_EXPORT_FORMAT_MESSAGE" = "Jeder ausgewählte Tab wird eine Zeile Text sein. Wähle das gewünschte Format für alle Zeilen.";
+"ADD_TABS_ALERT" = "Tabs hinzufügen";
+"ADD_TABS_ALERT_MESSAGE" = "Gebe URLs ins Text Feld ein. Alles was keine URL ist, wird ignoriert.";
+"USE_CLIPBOARD" = "Verwende Zwischenablage";
 
 /* Open in opposite mode */
 

@@ -34,7 +34,17 @@
 - (TabDocument*)tabDocumentForIndexPath:(NSIndexPath*)indexPath;
 - (void)loadTabs;
 - (void)reloadAnimated:(BOOL)animated;
+- (void)updateSelectAllButton;
+- (void)selectAll;
+- (void)deselectAll;
 - (void)doneButtonPressed;
 - (void)selectAllButtonPressed;
+- (void)addTabsButtonPressed;
+- (void)openAllURLsInsideString:(NSString*)string;
+- (void)addToBookmarksButtonPressed;
+- (void)closeTabsButtonPressed;
+- (void)exportButtonPressed:(id)sender;
+- (void)updateSelectedTabs;
+
 
 @end

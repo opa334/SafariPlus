@@ -21,7 +21,7 @@
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
 #import "SPTabManagerTableViewCell.h"
-
+#import "Extensions.h"
 #import "../Defines.h"
 
 @implementation SPTabManagerTableViewController
@@ -48,7 +48,7 @@
 	//NSLog(@"setUpTopBar");
 
 	//TODO: set up top bar
-	//'Select All' / 'Unselect All' button in top right
+	//'Select All' / 'Deselect All' button in top right
 	//'Tab Manager' in middle
 	//'Done' button in top right
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneButtonPressed)];
@@ -86,10 +86,10 @@
 
 	UIBarButtonItem* addTabsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addTabsButtonPressed)];
 	UIBarButtonItem* exportBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(exportButtonPressed:)];
-	UIBarButtonItem* addToBookmarksBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(addToBookmarksButtonPressed)];
+	//UIBarButtonItem* addToBookmarksBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(addToBookmarksButtonPressed)];
 	UIBarButtonItem* closeTabsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closeTabsButtonPressed)];
 
-	self.toolbarItems = @[addTabsBarButtonItem,flexibleSpace,exportBarButtonItem,flexibleSpace,addToBookmarksBarButtonItem,flexibleSpace,closeTabsBarButtonItem];
+	self.toolbarItems = @[addTabsBarButtonItem,flexibleSpace,exportBarButtonItem,flexibleSpace /*,addToBookmarksBarButtonItem,flexibleSpace*/,closeTabsBarButtonItem];
 }
 
 - (void)viewDidLoad
@@ -217,7 +217,7 @@
 
 	if(selectedIndexPaths.count == rowNumber)
 	{
-		self.navigationItem.leftBarButtonItem.title = [localizationManager localizedSPStringForKey:@"UNSELECT_ALL"];
+		self.navigationItem.leftBarButtonItem.title = [localizationManager localizedSPStringForKey:@"DESELECT_ALL"];
 	}
 	else
 	{
@@ -295,10 +295,92 @@
 
 - (void)addTabsButtonPressed
 {
+	UIAlertController* addTabsController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ADD_TABS_ALERT"]
+						message:[localizationManager localizedSPStringForKey:@"ADD_TABS_ALERT_MESSAGE"] preferredStyle:UIAlertControllerStyleAlert];
 
+	UITextView* tabsTextView = [[UITextView alloc] initWithFrame:CGRectZero];
+
+	UIAlertAction* openAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN"] style:UIAlertActionStyleDefault
+				     handler:^(UIAlertAction* action)
+	{
+		[self openAllURLsInsideString:tabsTextView.text];
+	}];
+
+	[addTabsController addAction:openAction];
+
+	UIAlertAction* useClipboardAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"USE_CLIPBOARD"] style:UIAlertActionStyleDefault
+					     handler:^(UIAlertAction* action)
+	{
+		[self openAllURLsInsideString:[UIPasteboard generalPasteboard].string];
+	}];
+
+	[addTabsController addAction:useClipboardAction];
+
+	UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleCancel handler:nil];
+
+	[addTabsController addAction:cancelAction];
+
+	tabsTextView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+	UIViewController* contentController = [[UIViewController alloc] init];
+
+	tabsTextView.frame = contentController.view.frame;
+	[contentController.view addSubview:tabsTextView];
+
+	[addTabsController setValue:contentController forKey:@"contentViewController"];
+
+	NSLayoutConstraint* heightConstraint = [NSLayoutConstraint constraintWithItem:addTabsController.view
+						attribute:NSLayoutAttributeHeight
+						relatedBy:NSLayoutRelationEqual
+						toItem:nil
+						attribute:NSLayoutAttributeNotAnAttribute
+						multiplier:1
+						constant:self.navigationController.view.frame.size.height * 0.5];
+
+	[addTabsController.view addConstraint:heightConstraint];
+
+	[self.navigationController presentViewController:addTabsController animated:YES completion:nil];
 }
 
-- (void)addToBookmarksButtonPressed
+- (void)openAllURLsInsideString:(NSString*)string
+{
+	NSDataDetector* linkDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+
+	NSArray<NSTextCheckingResult*>* matches = [linkDetector matchesInString:string options:0 range:NSMakeRange(0,string.length)];
+
+	if(matches.count <= 0)
+	{
+		return;
+	}
+
+	BrowserController* browserController = [_tabController valueForKey:@"_browserController"];
+
+	for(NSTextCheckingResult* match in matches)
+	{
+		NSString* matchString = [string substringWithRange:match.range];
+
+		if(![matchString hasPrefix:@"http"])
+		{
+			matchString = [@"http://" stringByAppendingString:matchString];
+		}
+
+		NSURL* matchURL = [NSURL URLWithString:matchString];
+
+		TabDocument* document = [[NSClassFromString(@"TabDocument") alloc] initWithTitle:nil URL:matchURL UUID:[NSUUID UUID] privateBrowsingEnabled:privateBrowsingEnabled(browserController) hibernated:YES bookmark:nil browserController:browserController];
+
+		if([_tabController respondsToSelector:@selector(_insertTabDocument:afterTabDocument:inBackground:animated:)])
+		{
+			[_tabController _insertTabDocument:document afterTabDocument:_allTabs.lastObject inBackground:YES animated:NO];
+		}
+		else
+		{
+			[_tabController insertTabDocument:document afterTabDocument:_allTabs.lastObject inBackground:YES animated:NO];
+		}
+
+		[self reloadAnimated:YES];
+	}
+}
+
+- (void)addToBookmarksButtonPressed	//TODO: Implement
 {
 
 }

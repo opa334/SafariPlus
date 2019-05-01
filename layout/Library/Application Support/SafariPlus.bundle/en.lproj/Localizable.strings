@@ -108,7 +108,7 @@
 "DESKTOP_MODE_SWITCH" = "Desktop Mode Switch";
 
 "TAB_MANAGER" = "Tab Manager";
-"TAB_MANAGER_FOOTER" = "";
+"TAB_MANAGER_FOOTER" = "Adds a share button to the tab switcher that can be used to access a tab manager from which you can batch-close, batch-export and batch-add tabs.";
 
 "DISABLE_TAB_LIMIT" = "Disable Tab Limit";
 "DISABLE_TAB_LIMIT_FOOTER" = "Disables the imposed tab limit that varies based on iOS version and device. There is probably a reason why Apple has decided to enforce a tab limit, use on your own risk.";
@@ -362,11 +362,14 @@
 "CELLULAR_DATA_WARNING" = "'Only Download on Wifi' is enabled inside settings and you're currently on cellular data. Downloads will not start until you either connect to a wifi network or disable the option inside settings and restart Safari.";
 
 /* Tab Manager */
+
 "SELECT_ALL" = "Select All";
-"UNSELECT_ALL" = "Unselect All";
+"DESELECT_ALL" = "Deselect All";
 "CHOOSE_EXPORT_FORMAT" = "Choose Export Format";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "Each selected tab will be one line of text. Choose how each line should be formatted.";
-"WITH_HYPERLINK" = "With Hyperlink to URL";
+"ADD_TABS_ALERT" = "Add Tabs";
+"ADD_TABS_ALERT_MESSAGE" = "Enter some URLs in the text field. Anything that's not an URL will be ignored!";
+"USE_CLIPBOARD" = "Use Clipboard";
 
 /* Open in opposite mode */
 
