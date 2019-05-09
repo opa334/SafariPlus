@@ -23,6 +23,7 @@
 #import "../Classes/SPDownload.h"
 #import "../Classes/SPDownloadInfo.h"
 #import "../Classes/SPDownloadManager.h"
+#import "../Classes/SPTabManagerTableViewCell.h"
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
@@ -139,7 +140,7 @@ static NSString *desktopUserAgent;
 		if(![newStripped isEqualToString:oldStripped])	//Link doesn't contain current URL
 		{
 			//Cancel site load
-			decisionHandler(WKNavigationResponsePolicyCancel);
+			decisionHandler(WKNavigationActionPolicyCancel);
 
 			//Correctly handle launching external applications if needed
 			if(NSClassFromString(@"LSAppLink"))
@@ -226,7 +227,7 @@ static NSString *desktopUserAgent;
 
 		if(needsReload)
 		{
-			decisionHandler(WKNavigationResponsePolicyCancel);
+			decisionHandler(WKNavigationActionPolicyCancel);
 			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 			{
 				[castedSelf _loadURLInternal:navigationAction.request.URL userDriven:NO];
@@ -255,7 +256,7 @@ static NSString *desktopUserAgent;
 		{
 			if(![preferenceManager isURLOnHTTPSExceptionsList:request.URL])
 			{
-				decisionHandler(WKNavigationResponsePolicyCancel);
+				decisionHandler(WKNavigationActionPolicyCancel);
 
 				NSMutableURLRequest* requestM = [request mutableCopy];
 
@@ -558,6 +559,34 @@ static NSString *desktopUserAgent;
 	%orig;
 }
 
+%property (nonatomic, retain) SPTabManagerTableViewCell *tabManagerViewCell;
+%property (nonatomic, retain) UIImage *currentTabIcon;
+
+- (void)updateTabTitle
+{
+	if(preferenceManager.tabManagerEnabled && castedSelf.tabManagerViewCell)
+	{
+		[castedSelf.tabManagerViewCell updateContent];
+	}
+
+	%orig;
+}
+
+- (void)_setIcon:(UIImage*)icon isMonogram:(BOOL)arg2	//iOS 12 and up
+{
+	%orig;
+
+	if(preferenceManager.tabManagerEnabled)
+	{
+		castedSelf.currentTabIcon = icon;
+
+		if(castedSelf.tabManagerViewCell)
+		{
+			[castedSelf.tabManagerViewCell updateContent];
+		}
+	}
+}
+
 %group iOS10Up
 
 //Supress mailTo alert
@@ -628,11 +657,6 @@ static NSString *desktopUserAgent;
 {
 
 	TabDocument* orig = %orig;
-
-	/*if(preferenceManager.lockedTabsEnabled)
-	   {
-	        orig.locked = [cacheManager isTabWithUUIDLocked:UUID];
-	   }*/
 
 	orig.desktopMode = 0;
 	orig.accessAuthenticated = NO;

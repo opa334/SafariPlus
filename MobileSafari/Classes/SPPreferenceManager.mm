@@ -141,7 +141,7 @@ void reloadPrefs()
 	[_preferences registerBool:&_topBarNormalBackgroundColorEnabled default:NO forKey:@"topBarNormalBackgroundColorEnabled"];
 	[_preferences registerObject:&_topBarNormalBackgroundColor default:nil forKey:@"topBarNormalBackgroundColor"];
 	[_preferences registerBool:&_topBarNormalStatusBarStyleEnabled default:UIStatusBarStyleDefault forKey:@"topBarNormalStatusBarStyleEnabled"];
-	[_preferences registerInteger:&_topBarNormalStatusBarStyle default:NO forKey:@"topBarNormalStatusBarStyle"];
+	[_preferences registerInteger:(NSInteger*)&_topBarNormalStatusBarStyle default:NO forKey:@"topBarNormalStatusBarStyle"];
 	[_preferences registerBool:&_topBarNormalReaderButtonColorEnabled default:NO forKey:@"topBarNormalReaderButtonColorEnabled"];
 	[_preferences registerObject:&_topBarNormalReaderButtonColor default:nil forKey:@"topBarNormalReaderButtonColor"];
 	[_preferences registerBool:&_topBarNormalLockIconColorEnabled default:NO forKey:@"topBarNormalLockIconColorEnabled"];
@@ -173,7 +173,7 @@ void reloadPrefs()
 	[_preferences registerBool:&_topBarPrivateBackgroundColorEnabled default:NO forKey:@"topBarPrivateBackgroundColorEnabled"];
 	[_preferences registerObject:&_topBarPrivateBackgroundColor default:nil forKey:@"topBarPrivateBackgroundColor"];
 	[_preferences registerBool:&_topBarPrivateStatusBarStyleEnabled default:UIStatusBarStyleDefault forKey:@"topBarPrivateStatusBarStyleEnabled"];
-	[_preferences registerInteger:&_topBarPrivateStatusBarStyle default:NO forKey:@"topBarPrivateStatusBarStyle"];
+	[_preferences registerInteger:(NSInteger*)&_topBarPrivateStatusBarStyle default:NO forKey:@"topBarPrivateStatusBarStyle"];
 	[_preferences registerBool:&_topBarPrivateReaderButtonColorEnabled default:NO forKey:@"topBarPrivateReaderButtonColorEnabled"];
 	[_preferences registerObject:&_topBarPrivateReaderButtonColor default:nil forKey:@"topBarPrivateReaderButtonColor"];
 	[_preferences registerBool:&_topBarPrivateLockIconColorEnabled default:NO forKey:@"topBarPrivateLockIconColorEnabled"];

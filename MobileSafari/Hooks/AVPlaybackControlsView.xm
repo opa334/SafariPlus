@@ -117,11 +117,6 @@
 		playbackControlsController = self.transportControlsView.delegate;	//iOS 12
 	}
 
-	//WebAVPlayerController* playerController = (WebAVPlayerController*)playbackControlsController.playerController;
-
-	/*NSURL* videoURL = videoURLFromWebAVPlayerController(playerController);
-	   NSLog(@"videoURL = %@", videoURL);*/
-
 	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
 	downloadInfo.sourceVideo = self;
 	downloadInfo.presentationController = playbackControlsController.playerViewController.fullScreenViewController;
@@ -130,7 +125,7 @@
 	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
 }
 
-- (id)initWithFrame:(CGRect)arg1 styleSheet:(id)arg2 captureView:(id)arg3	//iOS 12 and above
+- (instancetype)initWithFrame:(CGRect)arg1 styleSheet:(id)arg2 captureView:(id)arg3	//iOS 12 and above
 {
 	self = %orig;
 

@@ -659,7 +659,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		orig.tabCountLabel.minimumFontSize = 0;
 		orig.tabCountLabel.numberOfLines = 1;
 		orig.tabCountLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-		orig.tabCountLabel.textAlignment = UITextAlignmentCenter;
+		orig.tabCountLabel.textAlignment = NSTextAlignmentCenter;
 		orig.tabCountLabel.frame = CGRectMake(2.25,6.5,14.75,17.25);
 		orig.tabCountLabel.textColor = [UIColor blackColor];
 	}

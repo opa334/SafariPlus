@@ -18,6 +18,7 @@
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
+#import "../Classes/SPTabManagerTableViewController.h"
 #import "../Util.h"
 #import "../Defines.h"
 
@@ -27,9 +28,11 @@
 %property (nonatomic,retain) UIButton *tabManagerButton;
 
 //Desktop mode button: Landscape
+
 - (void)layoutSubviews
 {
 	%orig;
+
 	if(preferenceManager.desktopButtonEnabled || preferenceManager.tabManagerEnabled)
 	{
 		UISearchBar* searchBar = MSHookIvar<UISearchBar*>(self, "_searchBar");
@@ -160,6 +163,19 @@
 	}
 }
 
+- (void)_updateScrollBoundsForKeyboardInfo:(id)arg1
+{
+	if(preferenceManager.tabManagerEnabled)
+	{
+		if(!self.delegate)
+		{
+			return; //please don't break anything, please (fix for weird crash)
+		}
+	}
+
+	%orig;
+}
+
 %new
 - (void)desktopModeButtonPressed
 {
@@ -171,6 +187,14 @@
 
 	//Write button state to plist
 	[self.delegate saveDesktopButtonState];
+}
+
+%new
+- (void)tabManagerButtonPressed
+{
+	TabController* tabController = self.delegate;
+
+	[tabController tiltedTabViewTabManagerButtonPressed];
 }
 
 %new

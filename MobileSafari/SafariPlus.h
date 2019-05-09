@@ -25,7 +25,7 @@
 
 #import "Protocols.h"
 
-@class _WKActivatedElementInfo, ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, SPVerticalCenterLabel, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@class _WKActivatedElementInfo, ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, CWSPStatusBarNotification, DownloadDispatcher, NavigationBar, SafariWebView, SPTabManagerTableViewCell, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 
@@ -55,6 +55,10 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 @property (assign) NSInteger openStrategy;
 + (void)getAppLinkWithURL:(id)arg1 completionHandler:(void (^)(LSAppLink*,NSError*))arg2;
 - (void)openInWebBrowser:(BOOL)arg1 setOpenStrategy:(NSInteger)arg2 webBrowserState:(id)arg3 completionHandler:(id)arg4;
+@end
+
+@interface NSUserDefaults (Safari)
++ (NSUserDefaults*)_sf_safariDefaults;
 @end
 
 @interface _UIBackdropViewSettings : NSObject
@@ -193,59 +197,6 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 @interface _WKElementAction : NSObject
 + (id)elementActionWithTitle:(id)arg1 actionHandler:(id)arg2;
 @end
-
-/**** WebCore ****/
-
-// *INDENT-OFF*
-/*
-namespace WTF
-{
-	class StringImpl
-	{
-	public:
-		unsigned m_refCount;
-    unsigned m_length;
-		union
-		{
-        const char* m_data8;
-        const char16_t* m_data16;
-        const char* m_data8Char;
-        const char16_t* m_data16Char;
-    };
-		mutable unsigned m_hashAndFlags;
-	};
-
-	class String
-	{
-	public:
-		StringImpl* m_impl;
-	};
-}
-
-#define m_currentSrc_off 159
-
-namespace WebCore
-{
-	class URL
-	{
-	public:
-		operator NSURL*() const;
-	};
-
-	class HTMLMediaElement
-	{
-	public:
-	};
-
-	class PlaybackSessionModelMediaElement// final
-	{
-	public:
-		HTMLMediaElement* m_mediaElement; //This works because this is the first attribute, for everything else we have to add the offset to the object
-		void pause();
-	};
-}
-*/
-// *INDENT-ON*
 
 /**** MediaRemote ****/
 extern "C"
@@ -395,6 +346,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @interface WebAVPlayerController : NSObject
 @property (getter=isPlaying) BOOL playing;
 @property (retain) AVValueTiming* timing;
+//@property (assign) WebCore::PlaybackSessionModel** delegate;
 - (void)play:(id)arg1;
 - (void)pause:(id)arg1;
 @end
@@ -497,7 +449,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (BOOL)isPrivateBrowsingAvailable;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (BOOL)_shouldShowTabBar;
-- (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(_Bool)arg2 completion:(void (^)(void))arg3;		//iOS11
+- (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(void (^)(void))arg3;		//iOS11
 - (BOOL)isPrivateBrowsingEnabled;	//iOS11
 - (void)togglePrivateBrowsingEnabled;	//iOS11
 - (void)showFindOnPage;	//iOS9
@@ -662,6 +614,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)tiltedTabView:(TiltedTabView*)tiltedTabView toggleLockedStateForItem:(TiltedTabItem*)item;
 - (void)tabOverview:(TabOverview*)tabOverview toggleLockedStateForItem:(TabOverviewItem*)item;
 - (void)tabManagerDidClose;
+- (void)tiltedTabViewTabManagerButtonPressed;
 @end
 
 @interface TabDocument8 : NSObject
@@ -698,8 +651,9 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (BOOL)isHibernated;
-- (void)_openAppLinkInApp:(id)arg1 fromOriginalRequest:(id)arg2 updateAppLinkStrategy:(_Bool)arg3 webBrowserState:(id)arg4 completionHandler:(id)arg5;
+- (void)_openAppLinkInApp:(id)arg1 fromOriginalRequest:(id)arg2 updateAppLinkStrategy:(BOOL)arg3 webBrowserState:(id)arg4 completionHandler:(id)arg5;
 - (void)userTappedReloadButton;
+- (void)unhibernate;
 - (_WKElementAction*)_openInNewPageActionForElement:(_WKActivatedElementInfo*)arg1;	//iOS 8
 - (_WKElementAction*)_openInNewPageActionForElement:(_WKActivatedElementInfo*)arg1 previewViewController:(id)arg2;	//iOS 9 and above
 - (void)requestDesktopSite;	//iOS 8
@@ -713,6 +667,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic,assign) NSInteger desktopMode;
 @property (nonatomic,assign) BOOL locked;
 @property (nonatomic,assign) BOOL accessAuthenticated;
+@property (nonatomic, retain) SPTabManagerTableViewCell* tabManagerViewCell;
+@property (nonatomic, retain) UIImage* currentTabIcon;
 @end
 
 //iOS 8

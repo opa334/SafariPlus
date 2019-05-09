@@ -328,15 +328,15 @@
 
 	[addTabsController setValue:contentController forKey:@"contentViewController"];
 
-	NSLayoutConstraint* heightConstraint = [NSLayoutConstraint constraintWithItem:addTabsController.view
+	NSLayoutConstraint* heightConstraint = [NSLayoutConstraint constraintWithItem:tabsTextView
 						attribute:NSLayoutAttributeHeight
 						relatedBy:NSLayoutRelationEqual
 						toItem:nil
 						attribute:NSLayoutAttributeNotAnAttribute
 						multiplier:1
-						constant:self.navigationController.view.frame.size.height * 0.5];
+						constant:90];
 
-	[addTabsController.view addConstraint:heightConstraint];
+	[tabsTextView addConstraint:heightConstraint];
 
 	[self.navigationController presentViewController:addTabsController animated:YES completion:nil];
 }
@@ -376,7 +376,9 @@
 			[_tabController insertTabDocument:document afterTabDocument:_allTabs.lastObject inBackground:YES animated:NO];
 		}
 
-		[self reloadAnimated:YES];
+		[document unhibernate];
+
+		//[self reloadAnimated:YES];
 	}
 }
 

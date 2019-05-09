@@ -18,10 +18,13 @@
 
 @interface SPTabManagerTableViewCell : UITableViewCell
 {
+	TabDocument* _tabDocument;
 	UILabel* _titleLabel;
 	UILabel* _URLLabel;
+	UIImageView* _tabIconImageView;
 }
 
+- (void)updateContent;
 - (void)applyTabDocument:(TabDocument*)tabDocument;
 - (void)initContent;
 - (void)setUpConstraints;

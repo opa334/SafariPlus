@@ -336,7 +336,7 @@ void sendSimpleAlert(NSString* title, NSString* message)
 NSDictionary* decodeResumeData12(NSData* resumeData)
 {
 	NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:resumeData error:nil];
-	[unarchiver setDecodingFailurePolicy:NO];
+	[unarchiver setDecodingFailurePolicy:NSDecodingFailurePolicyRaiseException];
 	id obj = [unarchiver decodeObjectOfClasses:[[NSSet alloc] initWithArray:@[[NSString class],[NSNumber class],[NSURL class],[NSURLRequest class],[NSArray class],[NSData class],[NSDictionary class]]] forKey:@"NSKeyedArchiveRootObjectKey"];
 
 	[unarchiver finishDecoding];
@@ -370,71 +370,6 @@ BOOL isUsingCellularData()
 
 	return NO;
 }
-
-
-
-/*NSURL* videoURLFromWebAVPlayerController(WebAVPlayerController* playerController)
-{
-	NSLog(@"playerController = %@",playerController);
-
-	WebCore::PlaybackSessionModelMediaElement* mediaElementModel = MSHookIvar<WebCore::PlaybackSessionModelMediaElement*>(playerController, "_delegate");
-
-	NSLog(@"mediaElementModel = %p", mediaElementModel);
-
-	NSLog(@"trying to pause!");
-
-	mediaElementModel->pause();
-
-	NSLog(@"paused??");
-
-	WebCore::HTMLMediaElement* mediaElement = mediaElementModel->m_mediaElement;
-
-	NSLog(@"mediaElement = %p", mediaElement);
-
-	const WebCore::URL* url = (const WebCore::URL*)(((intptr_t)mediaElement) + m_currentSrc_off);
-
-	NSLog(@"url = %p", url);
-
-	NSURL* videoURL = (__bridge NSURL*)url;
-
-	NSLog(@"videoURL=%@", videoURL);
-
-	/*bool valid = url.isValid();
-
-	   NSLog(@"valid = %i", valid);*/
-
-	/*const WTF::String& string = url.m_string;
-
-	   NSLog(@"string:%p", &string);
-
-	   WTF::StringImpl* stringImpl = string.m_impl;
-
-	   NSLog(@"stringImpl:%p", &stringImpl);
-
-	   const char* litString = stringImpl->m_data8Char;
-
-	   NSLog(@"pointer: %p", &litString);
-
-	   NSLog(@"length: %u", stringImpl->m_length);
-	   NSLog(@"hashAndFlags:%u", stringImpl->m_hashAndFlags);
-	   NSLog(@"is8Bit:%i", stringImpl->m_hashAndFlags & (1u << 2));
-
-	   NSLog(@"test:%c", stringImpl->m_data16Char[0]);*/
-
-	/*char* urlCString = NULL;
-
-	   strcpy(urlCString, litString);
-
-	   NSString* URLGANG = [NSString stringWithCString:urlCString encoding:NSUTF8StringEncoding];
-
-	   NSLog(@"URL String GANG %@", URLGANG);*/
-
-	//return nil;
-
-	/*CFURLRef videoURL = url.createCFURL();
-
-	   return (__bridge NSURL*)videoURL;*/
-//}
 
 /****** One constructor that inits all hooks ******/
 

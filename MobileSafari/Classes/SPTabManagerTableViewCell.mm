@@ -34,8 +34,17 @@
 
 - (void)applyTabDocument:(TabDocument*)tabDocument
 {
-	_titleLabel.text = [tabDocument title];
-	_URLLabel.text = [tabDocument URL].absoluteString;
+	_tabDocument = tabDocument;
+	_tabDocument.tabManagerViewCell = self;
+
+	[self updateContent];
+}
+
+- (void)prepareForReuse
+{
+	[super prepareForReuse];
+
+	_tabDocument.tabManagerViewCell = nil;
 }
 
 - (void)initContent
@@ -51,23 +60,63 @@
 	_URLLabel.textAlignment = NSTextAlignmentLeft;
 	_URLLabel.font = [_URLLabel.font fontWithSize:11];
 
+	_tabIconImageView = [UIImageView autolayoutView];
+
 	[self.contentView addSubview:_titleLabel];
 	[self.contentView addSubview:_URLLabel];
+	[self.contentView addSubview:_tabIconImageView];
+}
+
+- (void)updateContent
+{
+	_titleLabel.text = [_tabDocument title];
+	_URLLabel.text = [_tabDocument URL].absoluteString;
+
+	if(_tabDocument.currentTabIcon)
+	{
+		_tabIconImageView.image = _tabDocument.currentTabIcon;
+	}
 }
 
 - (void)setUpConstraints
 {
 	UIView* contentView = self.contentView;
 
-	NSDictionary *metrics = @{@"TitleHeight" : @17, @"URLHeight" : @13.33333333};
+	NSDictionary *metrics = @{@"TabIconSize" : @30, @"TitleHeight" : @17, @"URLHeight" : @13.33333333};
 
-	NSDictionary *views = NSDictionaryOfVariableBindings(_titleLabel, _URLLabel);
+	NSDictionary *views = NSDictionaryOfVariableBindings(_tabIconImageView, _titleLabel, _URLLabel);
 
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"H:|-[_titleLabel]-|" options:0 metrics:metrics views:views]];
+	BOOL useTabIcons = NO;
 
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"H:|-[_URLLabel]-|" options:0 metrics:metrics views:views]];
+	if([NSUserDefaults respondsToSelector:@selector(_sf_safariDefaults)])
+	{
+		NSUserDefaults* safariDefaults = [NSUserDefaults _sf_safariDefaults];
+
+		useTabIcons = [safariDefaults boolForKey:@"IconsInTabsEnabled"];
+	}
+
+	if(useTabIcons)
+	{
+		[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+					     @"H:|-[_tabIconImageView(TabIconSize)]" options:0 metrics:metrics views:views]];
+
+		[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+					     @"H:[_tabIconImageView]-[_titleLabel]-|" options:0 metrics:metrics views:views]];
+
+		[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+					     @"H:[_tabIconImageView]-[_URLLabel]-|" options:0 metrics:metrics views:views]];
+
+		[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+					     @"V:|-[_tabIconImageView(TabIconSize)]-|" options:0 metrics:metrics views:views]];
+	}
+	else
+	{
+		[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+					     @"H:|-[_titleLabel]-|" options:0 metrics:metrics views:views]];
+
+		[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+					     @"H:|-[_URLLabel]-|" options:0 metrics:metrics views:views]];
+	}
 
 	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
 				     @"V:|-5-[_titleLabel]-2.5-[_URLLabel]-5-|" options:0 metrics:metrics views:views]];

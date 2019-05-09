@@ -201,6 +201,7 @@
 	BrowserRootViewController* vc = rootViewControllerForBrowserController(browserController);
 	SPTabManagerTableViewController* tabManagerTableViewController = [[SPTabManagerTableViewController alloc] initWithTabController:self];
 	UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:tabManagerTableViewController];
+	//navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
 
 	self.presentedTabManager = navigationController;
 
@@ -211,17 +212,6 @@
 - (void)tabManagerDidClose
 {
 	self.presentedTabManager = nil;
-}
-
-- (void)_updateTiltedTabViewItemsAnimated:(BOOL)animated
-{
-	NSLog(@"_updateTiltedTabViewItemsAnimated");
-	%orig;
-
-	if(preferenceManager.tabManagerEnabled && self.presentedTabManager)
-	{
-		[(SPTabManagerTableViewController*)self.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
-	}
 }
 
 //Update user agent of all tabs
@@ -406,6 +396,11 @@
 		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
 		[browserController.activeToolbar updateTabCount];
 	}
+
+	if(preferenceManager.tabManagerEnabled && self.presentedTabManager)
+	{
+		[(SPTabManagerTableViewController*)self.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
+	}
 }
 
 %end
@@ -447,6 +442,11 @@
 	{
 		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
 		[browserController.activeToolbar updateTabCount];
+	}
+
+	if(preferenceManager.tabManagerEnabled && self.presentedTabManager)
+	{
+		[(SPTabManagerTableViewController*)self.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
 	}
 }
 

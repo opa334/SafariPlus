@@ -26,7 +26,7 @@
 
 @interface UIWindow ()
 - (BOOL)_canAffectStatusBarAppearance;
-- (NSInteger)interfaceOrientation;
+- (UIInterfaceOrientation)interfaceOrientation;
 @end
 
 @interface UIView ()
