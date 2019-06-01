@@ -21,6 +21,7 @@
 @interface SPDownloadListFinishedTableViewCell : UITableViewCell
 {
 	SPDownload* _download;
+	NSMutableArray<NSLayoutConstraint*>* _allConstraints;
 }
 
 @property (nonatomic) UIImageView* iconView;
@@ -28,6 +29,7 @@
 @property (nonatomic) UIButton* restartButton;
 @property (nonatomic) UIButton* openDirectoryButton;
 @property (nonatomic) UILabel* targetLabel;
+@property (nonatomic) BOOL showsOpenButton;
 
 @property (nonatomic, weak) SPDownloadListTableViewController* tableViewController;
 

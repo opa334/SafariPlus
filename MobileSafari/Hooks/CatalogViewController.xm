@@ -120,6 +120,37 @@
 %end
 
 %group iOS12_1_4_down
+
+@interface SPSearchSuggestionInsertView : UIView
+@property (nonatomic) BOOL rtl;
+@end
+
+@implementation SPSearchSuggestionInsertView
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+	if(([UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft))
+	{
+		//Every press left from the x position of the button should trigger the action (RTL)
+		if(point.x < self.frame.size.width)
+		{
+			return YES;
+		}
+	}
+	else
+	{
+		//Every press right from the x position of the button should trigger the action
+		if(point.x >= 0)
+		{
+			return YES;
+		}
+	}
+
+	return [super pointInside:point withEvent:event];
+}
+
+@end
+
 %hook SearchSuggestionTableViewCell
 
 %property (nonatomic, retain) UIImageView *hiddenAccessoryView;
@@ -158,7 +189,7 @@
 
 		[arrowImageView setImage:arrowImage];
 
-		self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0,0,23,23)];
+		self.accessoryView = [[SPSearchSuggestionInsertView alloc] initWithFrame:CGRectMake(0,0,23,23)];
 		[self.accessoryView addSubview:arrowImageView];
 		[self setHidesAccessoryView:YES];
 	}
@@ -180,7 +211,7 @@
 	{
 		BOOL differentFromQuery = NO;
 
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
 		{
 			differentFromQuery = ![MSHookIvar<WBSCompletionQuery*>(self,"_userQuery").queryString isEqualToString:self.string];
 		}

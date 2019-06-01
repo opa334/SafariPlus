@@ -18,8 +18,6 @@
 
 #import "../Util.h"
 #import "SPDirectoryPickerNavigationController.h"
-#import "SPDownloadInfo.h"
-#import "SPDownloadManager.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
 #import "SPFileManager.h"
@@ -42,27 +40,23 @@
 
 	if([isWritable boolValue])
 	{
-		//Get downloadInfo
-		SPDownloadInfo* downloadInfo = ((SPDirectoryPickerNavigationController*)
-						self.navigationController).downloadInfo;
-
 		//Path is writable -> create alert to pick file name
-		UIAlertController * nameAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"CHOOSE_FILENAME"]
+		UIAlertController* nameAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"CHOOSE_FILENAME"]
 						 message:nil
 						 preferredStyle:UIAlertControllerStyleAlert];
 
 		//Add textField to choose filename
 		[nameAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 		{
-			textField.text = downloadInfo.filename;
+			textField.text = ((SPDirectoryPickerNavigationController*)self.navigationController).placeholderFilename;
 			textField.placeholder = [localizationManager localizedSPStringForKey:@"FILENAME"];
 			textField.textColor = [UIColor blackColor];
 			textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 			textField.borderStyle = UITextBorderStyleNone;
 		}];
 
-		//Create action to start downloading
-		UIAlertAction* startDownloadAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"START_DOWNLOAD"]
+		//Create action to select path
+		UIAlertAction* startDownloadAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"SELECT_PATH"]
 						      style:UIAlertActionStyleDefault
 						      handler:^(UIAlertAction *addAction)
 		{
@@ -70,13 +64,9 @@
 			UITextField * nameField = nameAlert.textFields[0];
 			NSString* filename = nameField.text;
 
-			downloadInfo.filename = filename;
-
-			downloadInfo.targetURL = self.directoryURL;
-
 			[self dismiss];
 
-			[downloadManager pathSelectionResponseWithDownloadInfo:downloadInfo];
+			[((SPDirectoryPickerNavigationController*)self.navigationController).pickerDelegate directoryPicker:self.navigationController didSelectDirectoryAtURL:self.directoryURL withFilename:filename];
 		}];
 
 		//Add action
@@ -84,11 +74,11 @@
 
 		//Create action to close the picker
 		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-						    [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
+						    [localizationManager localizedSPStringForKey:@"EXIT_PICKER"]
 						    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 		{
 			//Dismiss picker
-			[self dismiss];
+			[self cancel];
 		}];
 
 		//Add action
@@ -123,7 +113,7 @@
 						    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 		{
 			//Close picker
-			[self dismiss];
+			[self cancel];
 		}];
 
 		//Add action
@@ -132,6 +122,13 @@
 		//Present alert
 		[self presentViewController:errorAlert animated:YES completion:nil];
 	}
+}
+
+- (void)cancel
+{
+	[((SPDirectoryPickerNavigationController*)self.navigationController).pickerDelegate directoryPicker:self.navigationController didSelectDirectoryAtURL:nil withFilename:nil];
+
+	[self dismiss];
 }
 
 @end

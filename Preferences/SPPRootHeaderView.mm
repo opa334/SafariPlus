@@ -25,6 +25,7 @@
 	self = [super init];
 
 	UIImage* headerImage = [UIImage imageNamed:@"PrefHeader" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
+	_aspectRatio = headerImage.size.width / headerImage.size.height;
 	_headerImageView = [[UIImageView alloc] initWithImage:headerImage];
 	[self addSubview:_headerImageView];
 
@@ -43,8 +44,7 @@
 - (CGFloat)preferredHeightForWidth:(CGFloat)width
 {
 	_currentWidth = width;
-	CGFloat aspectRatio = 3.312;
-	CGFloat height = width / aspectRatio;
+	CGFloat height = width / _aspectRatio;
 	return height - 35;
 }
 

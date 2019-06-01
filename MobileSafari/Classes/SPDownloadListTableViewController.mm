@@ -20,6 +20,7 @@
 #import "SPDownloadListTableViewCell.h"
 #import "SPDownloadListFinishedTableViewCell.h"
 #import "SPDownload.h"
+#import "SPDownloadInfo.h"
 #import "../Util.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPDownloadManager.h"
@@ -42,9 +43,12 @@
 {
 	[super viewDidLoad];
 
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
-											 localizedSPStringForKey:@"DISMISS"] style:UIBarButtonItemStylePlain
-						  target:self action:@selector(dismissButtonPressed)];
+	UIBarButtonItem* dismissItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+					target:self action:@selector(dismissButtonPressed)];
+
+	UIBarButtonItem* addItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addButtonPressed:)];
+
+	self.navigationItem.rightBarButtonItems = @[dismissItem, addItem];
 
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
 											localizedSPStringForKey:@"CLEAR"] style:UIBarButtonItemStylePlain
@@ -67,45 +71,158 @@
 
 - (void)reload
 {
+	[self reloadForced:NO];
+}
+
+- (void)applyChangesAfterReload
+{
+	_displayedPendingDownloads = [_pendingDownloads copy];
+	_displayedFinishedDownloads = [_finishedDownloads copy];
+
+	[self updateSectionHeaders];
+}
+
+- (void)applyChangesToTable
+{
+	if(!_displayedPendingDownloads || !_displayedFinishedDownloads)
+	{
+		return;
+	}
+
+	NSMutableSet<SPDownload*>* oldPendingDownloadsSet = [NSMutableSet setWithArray:_displayedPendingDownloads];
+	NSMutableSet<SPDownload*>* currentPendingDownloadsSet = [NSMutableSet setWithArray:_pendingDownloads];
+
+	NSMutableSet<SPDownload*>* newPendingDownloadsSet = [currentPendingDownloadsSet mutableCopy];
+	NSMutableSet<SPDownload*>* finishedPendingDownloadsSet = [oldPendingDownloadsSet mutableCopy];
+
+	[newPendingDownloadsSet minusSet:oldPendingDownloadsSet];
+	[finishedPendingDownloadsSet minusSet:currentPendingDownloadsSet];
+
+	NSMutableSet<SPDownload*>* oldFinishedDownloadsSet = [NSMutableSet setWithArray:_displayedFinishedDownloads];
+	NSMutableSet<SPDownload*>* currentFinishedDownloadsSet = [NSMutableSet setWithArray:_finishedDownloads];
+
+	NSMutableSet<SPDownload*>* newFinishedDownloadsSet = [currentFinishedDownloadsSet mutableCopy];
+	NSMutableSet<SPDownload*>* deletedFinishedDownloadsSet = [oldFinishedDownloadsSet mutableCopy];
+
+	[newFinishedDownloadsSet minusSet:oldFinishedDownloadsSet];
+	[deletedFinishedDownloadsSet minusSet:currentFinishedDownloadsSet];
+
+	NSMutableArray<NSIndexPath*>* addIndexPaths = [NSMutableArray new];
+	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [NSMutableArray new];
+
+	for(SPDownload* download in finishedPendingDownloadsSet)
+	{
+		[deleteIndexPaths addObject:[NSIndexPath indexPathForRow:[_displayedPendingDownloads indexOfObject:download] inSection:0]];
+	}
+
+	for(SPDownload* download in newPendingDownloadsSet)
+	{
+		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[_pendingDownloads indexOfObject:download] inSection:0]];
+	}
+
+	for(SPDownload* download in deletedFinishedDownloadsSet)
+	{
+		[deleteIndexPaths addObject:[NSIndexPath indexPathForRow:[_displayedFinishedDownloads indexOfObject:download] inSection:1]];
+	}
+
+	for(SPDownload* download in newFinishedDownloadsSet)
+	{
+		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[_finishedDownloads indexOfObject:download] inSection:1]];
+	}
+
+	dispatch_async(dispatch_get_main_queue(), ^
+	{
+		[self.tableView beginUpdates];
+		[self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView insertRowsAtIndexPaths:addIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+		[self.tableView endUpdates];
+
+		[self applyChangesAfterReload];
+	});
+}
+
+- (void)reloadForced:(BOOL)forced
+{
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 	{
 		//Repopulate dataSources
 		BOOL needsReload = [self loadDownloads];
 
-		if(needsReload)
+		if(forced)
 		{
-			//Reload tableView with new dataSources
-			NSRange range = NSMakeRange(0, [self numberOfSectionsInTableView:self.tableView]);
-			NSIndexSet* sections = [NSIndexSet indexSetWithIndexesInRange:range];
-
 			dispatch_async(dispatch_get_main_queue(), ^
 			{
-				[self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationFade];
+				[self.tableView reloadData];
+				[self applyChangesAfterReload];
 			});
+		}
+		else
+		{
+			if(needsReload)
+			{
+				[self applyChangesToTable];
+			}
 		}
 	});
 }
 
 - (BOOL)loadDownloads
 {
-	NSArray* newPendingDownloads = [downloadManager.pendingDownloads copy];
-	NSArray* newFinishedDownloads = [downloadManager.finishedDownloads copy];
+	BOOL firstLoad = (_pendingDownloads == nil && _finishedDownloads == nil);
 
-	BOOL downloadsNeedUpdate = !([_pendingDownloads isEqualToArray:newPendingDownloads] && [_finishedDownloads isEqualToArray:newFinishedDownloads]);
+	_pendingDownloads = [downloadManager.pendingDownloads copy];
+	_finishedDownloads = [downloadManager.finishedDownloads copy];
 
-	if(downloadsNeedUpdate)
+	if(firstLoad)
 	{
-		_pendingDownloads = newPendingDownloads;
-		_finishedDownloads = newFinishedDownloads;
+		_displayedPendingDownloads = [_pendingDownloads copy];
+		_displayedFinishedDownloads = [_finishedDownloads copy];
 	}
 
-	return downloadsNeedUpdate;
+	return !([_pendingDownloads isEqualToArray:_displayedPendingDownloads] && [_finishedDownloads isEqualToArray:_displayedFinishedDownloads]);
 }
 
 - (void)dismissButtonPressed
 {
 	//Dismiss controller
 	[self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)addButtonPressed:(UIBarButtonItem*)sender
+{
+	UIAlertController* manualDownloadAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"MANUAL_DOWNLOAD"]
+						  message:@"" preferredStyle:UIAlertControllerStyleAlert];
+
+	[manualDownloadAlert addTextFieldWithConfigurationHandler:^(UITextField* textField)
+	{
+		textField.placeholder = [localizationManager
+					 localizedSPStringForKey:@"URL_TO_DOWNLOADABLE_FILE"];
+
+		textField.textColor = [UIColor blackColor];
+		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+		textField.borderStyle = UITextBorderStyleNone;
+	}];
+
+	UIAlertAction* startAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"START_DOWNLOAD"] style:UIAlertActionStyleDefault handler:^(UIAlertAction*)
+	{
+		NSString* URLString = manualDownloadAlert.textFields.firstObject.text;
+		NSURL* URL = [NSURL URLWithString:URLString];
+
+		if(URL && URL.scheme && URL.host)
+		{
+			SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:[NSURLRequest requestWithURL:URL]];
+			downloadInfo.presentationController = self.navigationController;
+			downloadInfo.sourceRect = [[sender.view superview] convertRect:sender.view.frame toView:self.navigationController.view];
+			[downloadManager prepareDownloadFromRequestForDownloadInfo:downloadInfo];
+		}
+	}];
+
+	UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleCancel handler:nil];
+
+	[manualDownloadAlert addAction:startAction];
+	[manualDownloadAlert addAction:cancelAction];
+
+	[self.navigationController presentViewController:manualDownloadAlert animated:YES completion:nil];
 }
 
 - (void)clearButtonPressed
@@ -193,21 +310,12 @@
 	[self.navigationController presentViewController:clearAlert animated:YES completion:nil];
 }
 
-- (void)restartDownload:(SPDownload*)download
+- (void)restartDownload:(SPDownload*)download forCell:(SPDownloadListFinishedTableViewCell*)cell
 {
-	[self dismissViewControllerAnimated:YES completion:^
-	{
-		BrowserController* browserController = browserControllers().firstObject;
-
-		if([browserController respondsToSelector:@selector(loadURLInNewTab:inBackground:)])
-		{
-			[browserController loadURLInNewTab:download.request.URL inBackground:NO];
-		}
-		else
-		{
-			[browserController loadURLInNewWindow:download.request.URL inBackground:NO];
-		}
-	}];
+	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:download.request];
+	downloadInfo.presentationController = self.navigationController;
+	downloadInfo.sourceRect = [cell.contentView convertRect:cell.restartButton.frame toView:self.navigationController.view];
+	[downloadManager prepareDownloadFromRequestForDownloadInfo:downloadInfo];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

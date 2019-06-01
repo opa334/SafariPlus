@@ -15,10 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPFileBrowserNavigationController.h"
+#import "../Protocols.h"
 
 @class SPDownloadInfo;
 
 @interface SPDirectoryPickerNavigationController : SPFileBrowserNavigationController
-@property (nonatomic) SPDownloadInfo* downloadInfo;
-- (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+@property (nonatomic, weak) id<SPDirectoryPickerDelegate> pickerDelegate;
+@property (nonatomic) NSString* placeholderFilename;
+- (instancetype)initWithStartURL:(NSURL*)startURL;
 @end

@@ -91,19 +91,23 @@
 	{
 		SPFile* file = (SPFile*)object;
 
-		if([self.fileURL.absoluteString isEqualToString:file.fileURL.absoluteString])
+		if([self hash] == [file hash])
 		{
-			if([self.name isEqualToString:file.name])
-			{
-				if(self.size == file.size)
-				{
-					return YES;
-				}
-			}
+			return YES;
 		}
 	}
 
 	return NO;
+}
+
+- (NSUInteger)hash
+{
+	return [[self description] hash];
+}
+
+- (NSString*)description
+{
+	return [NSString stringWithFormat:@"<SPFile: filename = %@, fileURL = %@, size = %llu>", self.name, self.fileURL, self.size];
 }
 
 @end

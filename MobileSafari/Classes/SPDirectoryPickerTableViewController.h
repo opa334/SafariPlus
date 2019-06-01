@@ -20,4 +20,5 @@
 
 @interface SPDirectoryPickerTableViewController : SPFileBrowserTableViewController
 - (void)chooseButtonPressed;
+- (void)cancel;
 @end

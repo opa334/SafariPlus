@@ -219,55 +219,6 @@
 	return serializedRetDict;
 }
 
-//Import to music library
-/*- (NSDictionary*)importToMusicLibrary:(NSString*)name withUserInfo:(NSDictionary*)serializedUserInfo
-   {
-   NSDictionary* userInfo = [NSKeyedUnarchiver unarchiveObjectWithData:[serializedUserInfo objectForKey:@"data"]];
-
-   NSURL* musicURL = [userInfo objectForKey:@"musicURL"];
-
-   SSDownloadMetadata* downloadMetadata = [[SSDownloadMetadata alloc] init];
-
-   downloadMetadata.kind = @"song";
-   downloadMetadata.primaryAssetURL = [userInfo objectForKey:@"primaryAssetURL"];
-   downloadMetadata.artistName = [userInfo objectForKey:@"artistName"];
-   [downloadMetadata setCollectionName:[userInfo objectForKey:@"collectionName"]];
-   downloadMetadata.thumbnailImageURL = [userInfo objectForKey:@"thumbnailImageURL"];
-   downloadMetadata.title = [userInfo objectForKey:@"title"];
-   downloadMetadata.shortDescription = [userInfo objectForKey:@"shortDescription"];
-   downloadMetadata.longDescription = [userInfo objectForKey:@"longDescription"];
-   downloadMetadata.genre = [userInfo objectForKey:@"genre"];
-   downloadMetadata.releaseDate = [userInfo objectForKey:@"releaseDate"];
-   downloadMetadata.releaseYear = [userInfo objectForKey:@"releaseYear"];
-   downloadMetadata.copyright = [userInfo objectForKey:@"copyright"];
-
-   AVURLAsset* audioAsset = [AVURLAsset URLAssetWithURL:downloadMetadata.primaryAssetURL options:nil];
-   NSNumber* duration = [NSNumber numberWithFloat:(CMTimeGetSeconds(audioAsset.duration) * 1000)];
-   [downloadMetadata setDurationInMilliseconds:duration];
-
-   SSDownload* download = [[SSDownload alloc] initWithDownloadMetadata:downloadMetadata];
-
-   NSLog(@"primaryAssetURL:%@", downloadMetadata.primaryAssetURL);
-
-   NSLog(@"download %@ for metadata %@", download, downloadMetadata);
-
-   [download setDownloadHandler:nil completionBlock:
-   ^{
-    NSLog(@"download finshed");
-   }];
-
-   if(!_downloadQueue)
-   {
-    _downloadQueue = [[SSDownloadQueue alloc] initWithDownloadKinds:[SSDownloadQueue mediaDownloadKinds]];
-   }
-
-   NSLog(@"_downloadQueue:%@",_downloadQueue);
-
-   [_downloadQueue addDownload:download];
-
-   return nil;
-   }*/
-
 //Returns a dictionary with display names with the paths being the keys
 - (NSDictionary*)getApplicationDisplayNames:(NSString*)name withUserInfo:(NSDictionary*)userInfo
 {

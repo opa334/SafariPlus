@@ -25,14 +25,12 @@
 
 @implementation SPDirectoryPickerNavigationController
 
-- (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo
+- (instancetype)initWithStartURL:(NSURL*)startURL
 {
 	self.loadParentDirectories = YES;
-	self.startURL = downloadManager.defaultDownloadURL;
+	self.startURL = startURL;
 
 	self = [super init];
-
-	self.downloadInfo = downloadInfo;
 
 	return self;
 }

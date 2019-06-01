@@ -26,7 +26,8 @@
 {
 	BOOL _filzaInstalled;
 }
-@property (nonatomic) NSMutableArray<SPDownload*>* downloadsAtCurrentURL;
+@property (nonatomic) NSArray<SPDownload*>* downloadsAtCurrentURL;
+@property (nonatomic) NSArray<SPDownload*>* displayedDownloads;
 @property (nonatomic, strong) UIDocumentInteractionController* documentController;
 - (void)unselectRow;
 - (void)startPlayerWithMedia:(NSURL*)mediaURL;

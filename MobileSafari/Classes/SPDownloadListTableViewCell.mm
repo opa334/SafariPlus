@@ -95,17 +95,4 @@
 				     @"V:[_downloadSpeed(8)]-41-|" options:0 metrics:metrics views:views]];
 }
 
-- (void)setUpDelegate
-{
-	self.download.listCellDelegate = self;
-}
-
-- (void)removeDelegate
-{
-	if([self isEqual:self.download.listCellDelegate])
-	{
-		self.download.listCellDelegate = nil;
-	}
-}
-
 @end

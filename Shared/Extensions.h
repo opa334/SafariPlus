@@ -35,7 +35,8 @@
 + (id)autolayoutView;
 @end
 
-@interface UITableViewController (FooterFix)
+@interface UITableViewController (Fixes)
+- (void)updateSectionHeaders;
 - (void)fixFooterColors;
 @end
 
@@ -45,4 +46,8 @@
 
 @interface UIImage (Rotate)
 - (UIImage *)imageRotatedByDegrees:(CGFloat)degrees;
+@end
+
+@interface UIAlertController (TextView)
+- (void)setTextView:(UITextView*)textView;
 @end

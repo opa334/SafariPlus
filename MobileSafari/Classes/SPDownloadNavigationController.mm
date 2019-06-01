@@ -100,6 +100,13 @@
 	[self segmentedControlValueDidChange:_segmentedControl];
 }
 
+- (void)showFileInBrowser:(NSURL*)fileURL
+{
+	[self openDirectoryInBrowser:fileURL.URLByDeletingLastPathComponent];
+
+	[[self browserTableViewControllers].lastObject showFileNamed:[fileURL lastPathComponent]];
+}
+
 - (void)segmentedControlValueDidChange:(UISegmentedControl *)segmentedControl
 {
 	if(segmentedControl.selectedSegmentIndex == 0)
@@ -124,24 +131,63 @@
 	_previousSelectedIndex = segmentedControl.selectedSegmentIndex;
 }
 
+- (NSArray<SPDownloadBrowserTableViewController*>*)browserTableViewControllers
+{
+	if(_segmentedControl.selectedSegmentIndex == 0)
+	{
+		return self.viewControllers;
+	}
+	else
+	{
+		return _browserTableViewControllers;
+	}
+}
+
+- (NSArray<SPDownloadListTableViewController*>*)listTableViewControllers
+{
+	if(_segmentedControl.selectedSegmentIndex == 1)
+	{
+		return self.viewControllers;
+	}
+	else
+	{
+		return _listTableViewControllers;
+	}
+}
+
 - (void)reloadBrowser
 {
-	[_browserTableViewControllers.lastObject reload];
+	[self reloadBrowserForced:NO];
+}
+
+- (void)reloadBrowserForced:(BOOL)forced
+{
+	[[self browserTableViewControllers].lastObject reloadForced:forced];
 }
 
 - (void)reloadEverything
 {
-	for(SPFileBrowserTableViewController* viewController in _browserTableViewControllers)
+	[self reloadEverythingForced:NO];
+}
+
+- (void)reloadEverythingForced:(BOOL)forced
+{
+	for(SPFileBrowserTableViewController* viewController in [self browserTableViewControllers])
 	{
-		[viewController reload];
+		[viewController reloadForced:forced];
 	}
 
-	[self reloadDownloadList];
+	[self reloadDownloadListForced:forced];
 }
 
 - (void)reloadDownloadList
 {
-	[_listTableViewControllers.firstObject reload];
+	[self reloadDownloadListForced:NO];
+}
+
+- (void)reloadDownloadListForced:(BOOL)forced
+{
+	[[self listTableViewControllers].firstObject reloadForced:forced];
 }
 
 - (Class)tableControllerClass

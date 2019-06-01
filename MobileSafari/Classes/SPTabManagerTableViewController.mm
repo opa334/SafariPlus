@@ -45,9 +45,6 @@
 
 - (void)setUpTopBar
 {
-	//NSLog(@"setUpTopBar");
-
-	//TODO: set up top bar
 	//'Select All' / 'Deselect All' button in top right
 	//'Tab Manager' in middle
 	//'Done' button in top right
@@ -117,6 +114,18 @@
 	else
 	{
 		return _allTabs;
+	}
+}
+
+- (UIViewController*)presentationController
+{
+	if(_searchController.isActive)
+	{
+		return _searchController;
+	}
+	else
+	{
+		return self.navigationController;
 	}
 }
 
@@ -320,25 +329,9 @@
 
 	[addTabsController addAction:cancelAction];
 
-	tabsTextView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-	UIViewController* contentController = [[UIViewController alloc] init];
+	[addTabsController setTextView:tabsTextView];
 
-	tabsTextView.frame = contentController.view.frame;
-	[contentController.view addSubview:tabsTextView];
-
-	[addTabsController setValue:contentController forKey:@"contentViewController"];
-
-	NSLayoutConstraint* heightConstraint = [NSLayoutConstraint constraintWithItem:tabsTextView
-						attribute:NSLayoutAttributeHeight
-						relatedBy:NSLayoutRelationEqual
-						toItem:nil
-						attribute:NSLayoutAttributeNotAnAttribute
-						multiplier:1
-						constant:90];
-
-	[tabsTextView addConstraint:heightConstraint];
-
-	[self.navigationController presentViewController:addTabsController animated:YES completion:nil];
+	[[self presentationController] presentViewController:addTabsController animated:YES completion:nil];
 }
 
 - (void)openAllURLsInsideString:(NSString*)string
@@ -389,22 +382,56 @@
 
 - (void)closeTabsButtonPressed
 {
-	if([_tabController respondsToSelector:@selector(closeTabsDocuments:)])
+	if(_selectedTabs.count <= 0)
 	{
-		[_tabController closeTabsDocuments:_selectedTabs];
+		return;
+	}
+
+	NSString* message;
+
+	if(_selectedTabs.count == 1)
+	{
+		message = [localizationManager localizedSPStringForKey:@"CLOSE_TAB_WARNING_MESSAGE"];
 	}
 	else
 	{
-		for(TabDocument* tabDocument in _selectedTabs)
-		{
-			[_tabController closeTabDocument:tabDocument animated:NO];
-		}
+		message = [NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_TABS_WARNING_MESSAGE"], _selectedTabs.count];
 	}
+
+	UIAlertController* confirmationController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
+						     message:message
+						     preferredStyle:UIAlertControllerStyleAlert];
+
+	UIAlertAction* yesAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"YES"]
+				    style:UIAlertActionStyleDestructive
+				    handler:^(UIAlertAction* action)
+	{
+		if([_tabController respondsToSelector:@selector(closeTabsDocuments:)])
+		{
+			[_tabController closeTabsDocuments:_selectedTabs];
+		}
+		else
+		{
+			for(TabDocument* tabDocument in _selectedTabs)
+			{
+				[_tabController closeTabDocument:tabDocument animated:NO];
+			}
+		}
+	}];
+
+	UIAlertAction* noAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"NO"]
+				   style:UIAlertActionStyleDefault
+				   handler:nil];
+
+	[confirmationController addAction:noAction];
+	[confirmationController addAction:yesAction];
+
+	[[self presentationController] presentViewController:confirmationController animated:YES completion:nil];
 }
 
 - (void)exportButtonPressed:(id)sender
 {
-	if(_selectedTabs.count == 0)
+	if(_selectedTabs.count <= 0)
 	{
 		return;
 	}
@@ -414,7 +441,7 @@
 		UIActivityViewController* activityController = [[UIActivityViewController alloc] initWithActivityItems:@[exportString] applicationActivities:nil];
 		activityController.popoverPresentationController.sourceView = self.navigationController.view;
 
-		[self.navigationController presentViewController:activityController animated:YES completion:nil];
+		[[self presentationController] presentViewController:activityController animated:YES completion:nil];
 	};
 
 	NSString* titleForExample = [_selectedTabs.firstObject title];
@@ -500,7 +527,7 @@
 	popPresenter.sourceView = self.navigationController.view;
 	popPresenter.sourceRect = ((UIBarButtonItem*)sender).view.bounds;
 
-	[self.navigationController presentViewController:formatAlertController animated:YES completion:nil];
+	[[self presentationController] presentViewController:formatAlertController animated:YES completion:nil];
 
 	NSString* labelKey;
 

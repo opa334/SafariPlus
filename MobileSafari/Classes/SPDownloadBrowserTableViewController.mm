@@ -87,19 +87,81 @@
 
 - (BOOL)loadContents
 {
+	BOOL firstLoad = (self.downloadsAtCurrentURL == nil);
+
 	//Populate download array
 	NSMutableArray<SPDownload*>* newDownloads = [downloadManager downloadsAtURL:self.directoryURL];
 
-	BOOL downloadsNeedUpdate = ![newDownloads isEqualToArray:self.downloadsAtCurrentURL];
+	self.downloadsAtCurrentURL = [newDownloads copy];
 
-	if(downloadsNeedUpdate)
+	if(firstLoad)
 	{
-		self.downloadsAtCurrentURL = newDownloads;
+		self.displayedDownloads = [self.downloadsAtCurrentURL copy];
 	}
+
+	BOOL downloadsNeedUpdate = ![self.downloadsAtCurrentURL isEqualToArray:self.displayedDownloads];
 
 	BOOL filesNeedUpdate = [super loadContents];
 
 	return downloadsNeedUpdate || filesNeedUpdate;
+}
+
+- (NSMutableArray<NSIndexPath*>*)indexPathsToAdd
+{
+	NSMutableArray<NSIndexPath*>* addIndexPaths = [super indexPathsToAdd];
+
+	if(!self.displayedDownloads)
+	{
+		return addIndexPaths;
+	}
+
+	NSMutableSet<SPDownload*>* oldDownloadsSet = [NSMutableSet setWithArray:self.displayedDownloads];
+	NSMutableSet<SPDownload*>* newDownloadsSet = [NSMutableSet setWithArray:self.downloadsAtCurrentURL];
+
+	[newDownloadsSet minusSet:oldDownloadsSet];
+
+	for(SPDownload* download in newDownloadsSet)
+	{
+		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[self.downloadsAtCurrentURL indexOfObject:download] inSection:0]];
+	}
+
+	return addIndexPaths;
+}
+
+- (NSMutableArray<NSIndexPath*>*)indexPathsToDelete
+{
+	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [super indexPathsToDelete];
+
+	if(!self.displayedDownloads)
+	{
+		return deleteIndexPaths;
+	}
+
+	NSMutableSet<SPDownload*>* currentDownloadsSet = [NSMutableSet setWithArray:self.downloadsAtCurrentURL];
+	NSMutableSet<SPDownload*>* finishedDownloadsSet = [NSMutableSet setWithArray:self.displayedDownloads];
+
+	[finishedDownloadsSet minusSet:currentDownloadsSet];
+
+	for(SPDownload* download in finishedDownloadsSet)
+	{
+		[deleteIndexPaths addObject:[NSIndexPath indexPathForRow:[self.displayedDownloads indexOfObject:download] inSection:0]];
+	}
+
+	return deleteIndexPaths;
+}
+
+- (void)applyChangesToTable
+{
+	[super applyChangesToTable];
+
+	self.displayedDownloads = [self.downloadsAtCurrentURL copy];
+}
+
+- (void)applyChangesAfterReload
+{
+	self.displayedDownloads = [self.downloadsAtCurrentURL copy];
+
+	[super applyChangesAfterReload];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -396,16 +458,6 @@
 {
 	[fileManager resetHardLinks];
 }
-
-/*- (UIAlertAction*)importToMusicLibraryActionForFile:(SPFile*)file
-   {
-   return [UIAlertAction actionWithTitle:[localizationManager
-    localizedSPStringForKey:@"IMPORT_TO_MUSIC_LIBRARY"]
-    style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-   {
-
-   }];
-   }*/
 
 - (UIAlertAction*)showInFilzaActionForFile:(SPFile*)file
 {

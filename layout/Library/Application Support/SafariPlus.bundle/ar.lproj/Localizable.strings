@@ -131,7 +131,7 @@
 "SHOW_TAB_COUNT" = "إظهار عدد علامات التبويب";
 "SHOW_TAB_COUNT_FOOTER" = "إظهار عدد علامات التبويب المفتوحة في وضع التصفح الحالي على زر فتح مبدل علامات التبويب.";
 
-"FULLSCREEN_SCROLLING_FOOTER" = "إخفاء الشريط العلوي بالكامل عند التمرير لأسفل. \n\nملاحظة: لا تعمل هذه الميزة على iOS 8!";
+"FULLSCREEN_SCROLLING_FOOTER" = "إخفاء الشريط العلوي بالكامل عند التمرير لأسفل.";
 "FULLSCREEN_SCROLLING" = "ملء الشاشة عند التمرير";
 
 "LOCK_BARS" = "قفل الشرائط";
@@ -174,7 +174,7 @@
 "DISABLE_PRIVATE_MODE" = "تعطيل التصفح الخاص بالكامل";
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "منع مربع الحوار الذي يظهر على إصدارات iOS 10 ومابعده عندما يستطيع 'mailto:<email>' الوصول إلى عنوان URL.";
-"SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار (iOS 10+)";
+"SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار";
 
 /*OTHER*/
 /*DISABLE_COMMUNICATION_ERROR*/
@@ -375,4 +375,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "فتح في الوضع العادي";
 "OPEN_IN_PRIVATE_MODE" = "فتح في الوضع الخاص";
-

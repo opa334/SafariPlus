@@ -34,6 +34,8 @@
 
 	_orgInfo = downloadInfo;
 
+	_observerDelegates = [NSHashTable weakObjectsHashTable];
+
 	return self;
 }
 
@@ -51,6 +53,8 @@
 	_resumeData = [decoder decodeObjectForKey:@"resumeData"];
 	_didFinish = [decoder decodeBoolForKey:@"didFinish"];
 	_wasCancelled = [decoder decodeBoolForKey:@"wasCancelled"];
+
+	_observerDelegates = [NSHashTable weakObjectsHashTable];
 
 	return self;
 }
@@ -134,17 +138,35 @@
 		if(paused)
 		{
 			//Download needs to be paused
-			[self.downloadTask cancelByProducingResumeData:^(NSData *resumeData)
+			if(self.downloadTask.state == NSURLSessionTaskStateRunning)
 			{
-				self.resumeData = resumeData;
-				_paused = YES;
+				[self.downloadTask cancelByProducingResumeData:^(NSData *resumeData)
+				{
+					self.resumeData = resumeData;
+					_paused = YES;
 
+					//Update cell delegates
+					[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+					{
+						observerDelegate.paused = YES;
+					} onMainThread:YES];
+
+					//Stop Timer
+					[self setTimerEnabled:NO];
+
+					self.downloadTask = nil;
+
+					//Update data on disk
+					[self.downloadManagerDelegate saveDownloadsToDisk];
+				}];
+			}
+			else
+			{
 				//Update cell delegates
-				dispatch_async(dispatch_get_main_queue(), ^
-					       {
-						       _browserCellDelegate.paused = YES;
-						       _listCellDelegate.paused = YES;
-					       });
+				[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+				{
+					observerDelegate.paused = YES;
+				} onMainThread:YES];
 
 				//Stop Timer
 				[self setTimerEnabled:NO];
@@ -153,7 +175,7 @@
 
 				//Update data on disk
 				[self.downloadManagerDelegate saveDownloadsToDisk];
-			}];
+			}
 		}
 		else
 		{
@@ -175,11 +197,10 @@
 			}
 
 			//Update cell delegates
-			dispatch_async(dispatch_get_main_queue(), ^
+			[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 			{
-				_browserCellDelegate.paused = NO;
-				_listCellDelegate.paused = NO;
-			});
+				observerDelegate.paused = NO;
+			} onMainThread:YES];
 
 			//Start Timer
 			[self setTimerEnabled:YES];
@@ -204,11 +225,10 @@
 		//Also update size of info
 		self.orgInfo.filesize = filesize;
 
-		dispatch_async(dispatch_get_main_queue(), ^
+		[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 		{
-			[self.browserCellDelegate setFilesize:filesize];
-			[self.listCellDelegate setFilesize:filesize];
-		});
+			[observerDelegate setFilesize:filesize];
+		} onMainThread:YES];
 	}
 }
 
@@ -272,8 +292,10 @@
 	self.lastSpeedRefreshTime = currentTime;
 
 	//Update value on cell(s)
-	[self.browserCellDelegate updateDownloadSpeed:self.bytesPerSecond];
-	[self.listCellDelegate updateDownloadSpeed:self.bytesPerSecond];
+	[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+	{
+		[observerDelegate updateDownloadSpeed:self.bytesPerSecond];
+	} onMainThread:YES];
 }
 
 - (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize
@@ -297,9 +319,10 @@
 	//Update totalBytesWritten
 	self.totalBytesWritten = totalBytesWritten;
 
-	//Update cell(s)
-	[self.browserCellDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
-	[self.listCellDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
+	[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+	{
+		[observerDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
+	} onMainThread:YES];
 }
 
 - (int64_t)remainingBytes
@@ -307,9 +330,51 @@
 	return self.filesize - self.totalBytesWritten;
 }
 
+- (void)runBlockOnObserverDelegates:(void (^)(id<DownloadObserverDelegate> receiverDelegate))block onMainThread:(BOOL)mainThread
+{
+	for(id<DownloadObserverDelegate> observerDelegate in _observerDelegates)
+	{
+		if(observerDelegate)
+		{
+			if(![NSThread isMainThread] && mainThread)
+			{
+				dispatch_async(dispatch_get_main_queue(), ^(void)
+				{
+					block(observerDelegate);
+				});
+			}
+			else
+			{
+				block(observerDelegate);
+			}
+		}
+	}
+}
+
+- (void)addObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate
+{
+	if(![_observerDelegates containsObject:observerDelegate])
+	{
+		[_observerDelegates addObject:observerDelegate];
+	}
+}
+
+- (void)removeObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate
+{
+	if([_observerDelegates containsObject:observerDelegate])
+	{
+		[_observerDelegates removeObject:observerDelegate];
+	}
+}
+
+- (NSUInteger)hash
+{
+	return [self description].hash;
+}
+
 - (NSString*)description
 {
-	return [NSString stringWithFormat:@"<SPDownload: filename = %@, targetURL = %@, filesize = %llu>", self.filename, self.targetURL, self.filesize];
+	return [NSString stringWithFormat:@"<SPDownload: filename = %@, targetURL = %@, filesize = %llu, request = %@ downloadTask = %@>", self.filename, self.targetURL, self.filesize, self.request, self.downloadTask];
 }
 
 @end

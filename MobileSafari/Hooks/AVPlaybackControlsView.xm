@@ -125,6 +125,34 @@
 	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
 }
 
+%new
+- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
+{
+	AVPlaybackControlsController* playbackControlsController;
+
+	if([self respondsToSelector:@selector(delegate)])
+	{
+		playbackControlsController = self.delegate.delegate;
+	}
+	else
+	{
+		playbackControlsController = self.transportControlsView.delegate;	//iOS 12
+	}
+
+	WebAVPlayerController* playerController = (WebAVPlayerController*)playbackControlsController.playerController;
+
+	if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
+	{
+		[playerController play:nil];
+		[playerController pause:nil];
+		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
+	}
+	else
+	{
+		completion();
+	}
+}
+
 - (instancetype)initWithFrame:(CGRect)arg1 styleSheet:(id)arg2 captureView:(id)arg3	//iOS 12 and above
 {
 	self = %orig;

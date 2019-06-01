@@ -23,11 +23,14 @@
 @protocol DownloadNavigationControllerDelegate
 @required
 - (void)reloadBrowser;
+- (void)reloadBrowserForced:(BOOL)forced;
 - (void)reloadDownloadList;
+- (void)reloadDownloadListForced:(BOOL)forced;
 - (void)reloadEverything;
+- (void)reloadEverythingForced:(BOOL)forced;
 @end
 
-@protocol DownloadCellDelegate
+@protocol DownloadObserverDelegate
 @required
 @property (nonatomic) BOOL paused;
 - (void)updateDownloadSpeed:(int64_t)bytesPerSecond;
@@ -44,17 +47,12 @@
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 @end
 
-@protocol CellDownloadDelegate
-@required
-- (void)setPaused:(BOOL)paused;
-- (void)cancelDownload;
-@optional
-- (void)setBrowserCellDelegate:(id<DownloadCellDelegate>)cellDelegate;
-- (void)setListCellDelegate:(id<DownloadCellDelegate>)listDelegate;
-@end
-
 @protocol SourceVideoDelegate
 @required
 @property (nonatomic,retain) AVActivityButton* downloadButton;
 - (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion;
+@end
+
+@protocol SPDirectoryPickerDelegate
+- (void)directoryPicker:(id)directoryPicker didSelectDirectoryAtURL:(NSURL*)selectedURL withFilename:(NSString*)filename;
 @end

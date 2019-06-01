@@ -198,6 +198,65 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 + (id)elementActionWithTitle:(id)arg1 actionHandler:(id)arg2;
 @end
 
+/**** WebCore ****/
+
+// *INDENT-OFF*
+/*
+namespace WTF
+{
+	class StringImpl
+	{
+	public:
+		unsigned m_refCount;
+    unsigned m_length;
+		union
+		{
+        const char* m_data8;
+        const char16_t* m_data16;
+        const char* m_data8Char;
+        const char16_t* m_data16Char;
+    };
+		mutable unsigned m_hashAndFlags;
+	};
+
+	class String
+	{
+	public:
+		StringImpl* m_impl;
+	};
+}
+
+#define m_currentSrc_off 159
+
+namespace WebCore
+{
+	class URL
+	{
+	public:
+		operator NSURL*() const;
+	};
+
+	class HTMLMediaElement
+	{
+	public:
+	};
+
+	class PlaybackSessionModel
+	{
+	public:
+		virtual void pause() = 0;
+	};
+
+	class PlaybackSessionModelMediaElement final : public PlaybackSessionModel// final
+	{
+	public:
+		//HTMLMediaElement* m_mediaElement; //This works because this is the first attribute, for everything else we have to add the offset to the object
+		virtual void pause();
+	};
+}
+*/
+// *INDENT-ON*
+
 /**** MediaRemote ****/
 extern "C"
 {

@@ -68,12 +68,25 @@ static NSString *desktopUserAgent;
 %new
 - (BOOL)locked
 {
-	return [cacheManager isTabWithUUIDLocked:castedSelf.UUID];
+	NSNumber* lockedN = objc_getAssociatedObject(self, "locked");
+	BOOL locked = [lockedN boolValue];
+
+	if(!lockedN)
+	{
+		locked = [cacheManager isTabWithUUIDLocked:castedSelf.UUID];
+		lockedN = [NSNumber numberWithBool:locked];
+		objc_setAssociatedObject(self, "locked", lockedN, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	}
+
+	return locked;
 }
 
 %new
 - (void)setLocked:(BOOL)locked
 {
+	NSNumber* lockedN = [NSNumber numberWithBool:locked];
+	objc_setAssociatedObject(self, "locked", lockedN, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+
 	[cacheManager setLocked:locked forTabWithUUID:castedSelf.UUID];
 }
 
@@ -392,7 +405,6 @@ static NSString *desktopUserAgent;
 				{
 					[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:YES];
 				}
-
 			}];
 
 			[actions insertObject:openInOppositeModeAction atIndex:2];

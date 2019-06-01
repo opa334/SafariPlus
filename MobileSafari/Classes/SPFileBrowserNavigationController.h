@@ -22,7 +22,9 @@
 - (NSArray*)tableViewControllersForDirectory:(NSURL*)directoryURL recursive:(BOOL)recursive;
 
 - (void)reloadBrowser;
+- (void)reloadBrowserForced:(BOOL)forced;
 - (void)reloadEverything;
+- (void)reloadEverythingForced:(BOOL)forced;
 
 - (Class)tableControllerClass;
 

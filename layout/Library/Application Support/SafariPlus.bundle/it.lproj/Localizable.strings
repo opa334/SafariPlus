@@ -131,7 +131,7 @@
 /*SHOW_TAB_COUNT*/
 /*SHOW_TAB_COUNT_FOOTER*/
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Nasconde la barra superiore completa quando si scorre verso il basso.\n\nNOTA: non funziona su iOS 8!";
+"FULLSCREEN_SCROLLING_FOOTER" = "Nasconde la barra superiore completa quando si scorre verso il basso.";
 "FULLSCREEN_SCROLLING" = "Scorrimento a schermo intero";
 
 "LOCK_BARS" = "Blocco barra";
@@ -174,7 +174,7 @@
 "DISABLE_PRIVATE_MODE" = "Disattiva completamente la navigazione privata";
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Elimina la finestra di dialogo che appare su iOS 10 e versioni successive quando si accede a un URL \"mailto: <email>\".";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Elimina finestra di dialogo Mailto";
+"SUPPRESS_MAILTO_DIALOG" = "Elimina finestra di dialogo Mailto";
 
 /*OTHER*/
 /*DISABLE_COMMUNICATION_ERROR*/
@@ -375,4 +375,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Apri in modalità normale";
 "OPEN_IN_PRIVATE_MODE" = "Apri in modalità privata";
-

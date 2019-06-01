@@ -131,7 +131,7 @@
 "SHOW_TAB_COUNT" = "Show Tab Count";
 "SHOW_TAB_COUNT_FOOTER" = "Shows the tab count for the current browing mode on the button that opens the tab switcher.";
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Hides the complete top bar when scrolling down.\n\nNOTE: Does not work on iOS 8!";
+"FULLSCREEN_SCROLLING_FOOTER" = "Hides the complete top bar when scrolling down.";
 "FULLSCREEN_SCROLLING" = "Fullscreen Scrolling";
 
 "LOCK_BARS" = "Lock Bars";
@@ -174,7 +174,7 @@
 "DISABLE_PRIVATE_MODE" = "Fully Disable Private Browsing";
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppresses the dialog box that appears on iOS 10 and above when a 'mailto:<email>' URL is accessed.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Suppress Mailto Dialog";
+"SUPPRESS_MAILTO_DIALOG" = "Suppress Mailto Dialog";
 
 "OTHER" = "Other";
 "DISABLE_COMMUNICATION_ERROR" = "Disable Communication Error Alert";
@@ -346,11 +346,15 @@
 "DOWNLOAD_HISTORY" = "Download History";
 "FILES" = "Files";
 "CHOOSE" = "Choose";
+"MANUAL_DOWNLOAD" = "Manual Download";
+"URL_TO_DOWNLOADABLE_FILE" = "URL to downloadable file";
 "START_DOWNLOAD" = "Start Download";
+"UNABLE_TO_FETCH_FILE_INFORMATION" = "Unable to fetch file information";
 "CHOOSE_FILENAME" = "Choose Filename";
+"SELECT_PATH" = "Select Path";
 "FILENAME" = "Filename";
 "CLOSE" = "Close";
-"CANCEL_PICKER" = "Cancel Picker";
+"EXIT_PICKER" = "Exit Picker";
 "PERMISSION_ERROR_MESSAGE" = "Not enough permissions to write to the selected path. Please select another one.\nNOTE: Normally only paths inside the /var directory are writable! You can also use Filza to inspect / change the permissions of a directory.";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
@@ -365,6 +369,8 @@
 
 "SELECT_ALL" = "Select All";
 "DESELECT_ALL" = "Deselect All";
+"CLOSE_TAB_WARNING_MESSAGE" = "Do you really want to close the tab?";
+"CLOSE_TABS_WARNING_MESSAGE" = "Do you really want to close %zu tabs?";
 "CHOOSE_EXPORT_FORMAT" = "Choose Export Format";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "Each selected tab will be one line of text. Choose how each line should be formatted.";
 "ADD_TABS_ALERT" = "Add Tabs";

@@ -148,15 +148,18 @@
 
 - (void)saveDownloadCache:(NSDictionary*)downloadCache
 {
-	NSURL* downloadCacheURL = [_cacheURL URLByAppendingPathComponent:@"downloads.plist"];
+	@synchronized(self)
+	{
+		NSURL* downloadCacheURL = [_cacheURL URLByAppendingPathComponent:@"downloads.plist"];
 
-	//Create archived data from pendingDownloads
-	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:downloadCache];
+		//Create archived data from pendingDownloads
+		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:downloadCache];
 
-	//Write data to file
-	[data writeToURL:downloadCacheURL atomically:YES];
+		//Write data to file
+		[data writeToURL:downloadCacheURL atomically:YES];
 
-	[self updateExcludedFromBackup];
+		[self updateExcludedFromBackup];
+	}
 }
 
 //Clear the download cache by removing the plist file
@@ -321,7 +324,6 @@
 	{
 		if(![self tabExistsWithUUID:UUID])
 		{
-			//NSLog(@"cleaned tab with UUID:%@", UUID);
 			[lockedTabs removeObject:UUID];
 		}
 	}

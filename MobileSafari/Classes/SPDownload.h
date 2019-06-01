@@ -16,9 +16,7 @@
 
 #import "../Protocols.h"
 
-@protocol CellDownloadDelegate;
-
-@interface SPDownload : NSObject <CellDownloadDelegate>
+@interface SPDownload : NSObject
 @property (nonatomic) SPDownloadInfo* orgInfo;
 @property (nonatomic) NSURLRequest* request;
 @property (nonatomic) UIImage* image;
@@ -40,8 +38,7 @@
 @property (nonatomic) BOOL wasCancelled;
 
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
-@property (nonatomic, weak) id<DownloadCellDelegate> browserCellDelegate;
-@property (nonatomic, weak) id<DownloadCellDelegate> listCellDelegate;
+@property (nonatomic) NSHashTable<id<DownloadObserverDelegate> >* observerDelegates;
 
 - (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
@@ -56,4 +53,8 @@
 - (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize;
 
 - (int64_t)remainingBytes;
+
+- (void)runBlockOnObserverDelegates:(void (^)(id<DownloadObserverDelegate> receiverDelegate))block onMainThread:(BOOL)mainThread;
+- (void)addObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate;
+- (void)removeObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate;
 @end

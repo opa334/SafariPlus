@@ -92,7 +92,26 @@
 }
 @end
 
-@implementation UITableViewController (FooterFix)
+@implementation UITableViewController (Fixes)
+
+//Update all header titles (Needed to prevent layout issues in some cases)
+- (void)updateSectionHeaders
+{
+	NSInteger sections = [self numberOfSectionsInTableView:self.tableView];
+
+	[UIView setAnimationsEnabled:NO];
+	[self.tableView beginUpdates];
+
+	for(NSInteger i = 0; i < sections; i++)
+	{
+		UITableViewHeaderFooterView* headerView = [self.tableView headerViewForSection:i];
+		headerView.textLabel.text = [self tableView:self.tableView titleForHeaderInSection:i];
+	}
+
+	[self.tableView endUpdates];
+	[UIView setAnimationsEnabled:YES];
+}
+
 - (void)fixFooterColors
 {
 	for(int i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
@@ -169,11 +188,33 @@
 	CGContextRotateCTM(bitmap, radians);
 
 	CGContextScaleCTM(bitmap, 1.0, -1.0);
-	CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), self.CGImage );
+	CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), self.CGImage);
 
 	UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 
 	return newImage;
+}
+@end
+
+@implementation UIAlertController (TextView)
+- (void)setTextView:(UITextView*)textView
+{
+	textView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+	UIViewController* contentController = [[UIViewController alloc] init];
+	textView.frame = contentController.view.frame;
+	[contentController.view addSubview:textView];
+
+	[self setValue:contentController forKey:@"contentViewController"];
+
+	NSLayoutConstraint* heightConstraint = [NSLayoutConstraint constraintWithItem:textView
+						attribute:NSLayoutAttributeHeight
+						relatedBy:NSLayoutRelationEqual
+						toItem:nil
+						attribute:NSLayoutAttributeNotAnAttribute
+						multiplier:1
+						constant:90];
+
+	[textView addConstraint:heightConstraint];
 }
 @end

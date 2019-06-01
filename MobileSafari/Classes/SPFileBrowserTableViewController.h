@@ -19,17 +19,24 @@
 @interface SPFileBrowserTableViewController : UITableViewController
 
 @property (nonatomic) NSURL* directoryURL;
+@property (nonatomic) NSArray<SPFile*>* displayedFiles;
 @property (nonatomic) NSArray<SPFile*>* filesAtCurrentURL;
 @property (nonatomic) UILongPressGestureRecognizer* longPressRecognizer;
 
 - (instancetype)initWithDirectoryURL:(NSURL*)directoryURL;
 - (BOOL)loadContents;
+- (NSMutableArray<NSIndexPath*>*)indexPathsToAdd;
+- (NSMutableArray<NSIndexPath*>*)indexPathsToDelete;
+- (void)applyChangesToTable;
+- (void)applyChangesAfterReload;
 - (void)reload;
+- (void)reloadForced:(BOOL)forced;
 - (void)setUpRightBarButtonItems;
 - (void)dismiss;
 - (NSInteger)fileSection;
 - (void)didLongPressTable:(UILongPressGestureRecognizer*)gestureRecognizer;
 - (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath;
 - (void)didLongPressFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath;
+- (void)showFileNamed:(NSString*)filename;
 
 @end

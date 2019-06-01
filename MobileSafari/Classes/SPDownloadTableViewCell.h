@@ -18,7 +18,7 @@
 
 @class SPFilePickerNavigationController, SPDownload;
 
-@interface SPDownloadTableViewCell : UITableViewCell <DownloadCellDelegate>
+@interface SPDownloadTableViewCell : UITableViewCell <DownloadObserverDelegate>
 {
 	NSString* _filename;
 }

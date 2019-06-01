@@ -52,13 +52,15 @@
 	self.textLabel.text = nil;
 	self.imageView.image = nil;
 
-	_titleLabel = [UILabel autolayoutView];
+	_titleLabel = [NSClassFromString(@"UITableViewLabel") autolayoutView];
 	_titleLabel.textAlignment = NSTextAlignmentLeft;
 	_titleLabel.font = [_titleLabel.font fontWithSize:14];
+	_titleLabel.tableCell = self;
 
-	_URLLabel = [UILabel autolayoutView];
+	_URLLabel = [NSClassFromString(@"UITableViewLabel") autolayoutView];
 	_URLLabel.textAlignment = NSTextAlignmentLeft;
 	_URLLabel.font = [_URLLabel.font fontWithSize:11];
+	_URLLabel.tableCell = self;
 
 	_tabIconImageView = [UIImageView autolayoutView];
 

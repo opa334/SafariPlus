@@ -17,6 +17,7 @@
 #import "SPFileBrowserTableViewController.h"
 #import "Extensions.h"
 
+#import "../Defines.h"
 #import "../Util.h"
 #import "SPFileBrowserNavigationController.h"
 #import "SPFileTableViewCell.h"
@@ -37,6 +38,9 @@
 		_directoryURL = [fileManager resolveSymlinkForURL:directoryURL];
 	}
 
+	self.tableView.estimatedSectionHeaderHeight = 0;
+	self.tableView.estimatedSectionFooterHeight = 0;
+
 	[self setUpRightBarButtonItems];
 
 	[self.tableView registerClass:[SPFileTableViewCell class] forCellReuseIdentifier:@"SPFileTableViewCell"];
@@ -46,8 +50,7 @@
 
 - (void)setUpRightBarButtonItems
 {
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
-											 localizedSPStringForKey:@"DISMISS"] style:UIBarButtonItemStylePlain
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
 						  target:self action:@selector(dismiss)];
 }
 
@@ -80,6 +83,8 @@
 
 - (BOOL)loadContents
 {
+	BOOL firstLoad = (_filesAtCurrentURL == nil);
+
 	NSMutableArray<SPFile*>* newFiles = [NSMutableArray new];
 
 	//Fetch files from current URL into array
@@ -97,14 +102,14 @@
 		return [a.cellTitle.string caseInsensitiveCompare:b.cellTitle.string];
 	}];
 
-	BOOL filesNeedUpdate = ![_filesAtCurrentURL isEqualToArray:newFiles];
+	_filesAtCurrentURL = [newFiles copy];
 
-	if(filesNeedUpdate)
+	if(firstLoad)
 	{
-		_filesAtCurrentURL = [newFiles copy];
+		_displayedFiles = [_filesAtCurrentURL copy];
 	}
 
-	return filesNeedUpdate;
+	return ![_filesAtCurrentURL isEqualToArray:_displayedFiles];
 }
 
 - (void)refreshControlValueChanged
@@ -123,41 +128,115 @@
 	}
 }
 
+- (NSMutableArray<NSIndexPath*>*)indexPathsToAdd
+{
+	NSMutableArray<NSIndexPath*>* addIndexPaths = [NSMutableArray new];
+
+	if(!_displayedFiles)
+	{
+		return addIndexPaths;
+	}
+
+	NSMutableSet<SPFile*>* newFilesSet = [NSMutableSet setWithArray:_filesAtCurrentURL];
+	NSMutableSet<SPFile*>* oldFilesSet = [NSMutableSet setWithArray:_displayedFiles];
+
+	[newFilesSet minusSet:oldFilesSet];
+
+	for(SPFile* file in newFilesSet)
+	{
+		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[_filesAtCurrentURL indexOfObject:file] inSection:[self fileSection]]];
+	}
+
+	return addIndexPaths;
+}
+
+- (NSMutableArray<NSIndexPath*>*)indexPathsToDelete
+{
+	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [NSMutableArray new];
+
+	if(!_displayedFiles)
+	{
+		return deleteIndexPaths;
+	}
+
+	NSMutableSet<SPFile*>* deletedFilesSet = [NSMutableSet setWithArray:_displayedFiles];
+	NSMutableSet<SPFile*>* currentFilesSet = [NSMutableSet setWithArray:_filesAtCurrentURL];
+
+	[deletedFilesSet minusSet:currentFilesSet];
+
+	for(SPFile* file in deletedFilesSet)
+	{
+		[deleteIndexPaths addObject:[NSIndexPath indexPathForRow:[_displayedFiles indexOfObject:file] inSection:[self fileSection]]];
+	}
+
+	return deleteIndexPaths;
+}
+
+//Reload file section while correctly animating changes
+- (void)applyChangesToTable
+{
+	NSMutableArray<NSIndexPath*>* addIndexPaths = [self indexPathsToAdd];
+	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [self indexPathsToDelete];
+
+	if(addIndexPaths.count > 0 || deleteIndexPaths.count > 0)
+	{
+		dispatch_async(dispatch_get_main_queue(), ^
+		{
+			[self.tableView beginUpdates];
+			[self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+			[self.tableView insertRowsAtIndexPaths:addIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+			[self.tableView endUpdates];
+
+			[self applyChangesAfterReload];
+		});
+	}
+
+	_displayedFiles = [_filesAtCurrentURL copy];
+}
+
+- (void)applyChangesAfterReload
+{
+	_displayedFiles = [_filesAtCurrentURL copy];
+
+	[self updateSectionHeaders];
+}
+
 - (void)reload
+{
+	[self reloadForced:NO];
+}
+
+- (void)reloadForced:(BOOL)forced
 {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 	{
 		//Repopulate dataSources
 		BOOL needsReload = [self loadContents];
 
-		if(needsReload)
+		if(forced)
 		{
-			//Reload tableView with new dataSources
-			NSRange range = NSMakeRange(0, [self numberOfSectionsInTableView:self.tableView]);
-			NSIndexSet* sections = [NSIndexSet indexSetWithIndexesInRange:range];
-
 			dispatch_async(dispatch_get_main_queue(), ^
 			{
-				[self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationFade];
-
-				if([self.refreshControl isRefreshing])
-				{
-					//Stop refresh animation if needed
-					[self.refreshControl endRefreshing];
-				}
+				[self.tableView reloadData];
+				[self applyChangesAfterReload];
 			});
 		}
 		else
 		{
-			dispatch_async(dispatch_get_main_queue(), ^
+			if(needsReload)
 			{
-				if([self.refreshControl isRefreshing])
-				{
-					//Stop refresh animation if needed
-					[self.refreshControl endRefreshing];
-				}
-			});
+				[self applyChangesToTable];
+			}
 		}
+
+		dispatch_async(dispatch_get_main_queue(), ^
+		{
+			if([self.refreshControl isRefreshing])
+			{
+				//Stop refresh animation if needed
+				[self.refreshControl endRefreshing];
+			}
+		});
 	});
 }
 
@@ -207,6 +286,30 @@
 - (void)didLongPressFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
 	return;
+}
+
+- (void)showFileNamed:(NSString*)filename
+{
+	NSInteger index = -1;
+	for(SPFile* file in _filesAtCurrentURL)
+	{
+		if([file.name isEqualToString:filename])
+		{
+			index = [_filesAtCurrentURL indexOfObject:file];
+		}
+	}
+
+	if(index == -1)
+	{
+		return;
+	}
+
+	dispatch_async(dispatch_get_main_queue(),^
+	{
+		NSIndexPath* indexPath = [NSIndexPath indexPathForRow:index inSection:[self fileSection]];
+		[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
+		[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+	});
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

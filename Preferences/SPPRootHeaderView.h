@@ -20,6 +20,7 @@
 {
 	UIImageView* _headerImageView;
 	CGFloat _currentWidth;
+	CGFloat _aspectRatio;
 }
 
 @end

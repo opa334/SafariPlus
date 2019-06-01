@@ -25,6 +25,13 @@
 
 	[self setUpTableViewControllers];
 
+	//Reproduce crash:
+	//1. Open downloads
+	//2. go to downloads tab
+	//3. restart some download
+	//4. let it finish
+	//5. crashed
+
 	//Add observer to reload all files if app enters foreground (after being minimized)
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reloadEverything)
 	 name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -71,14 +78,24 @@
 
 - (void)reloadBrowser
 {
-	[self.viewControllers.lastObject reload];
+	[self reloadBrowserForced:NO];
+}
+
+- (void)reloadBrowserForced:(BOOL)forced
+{
+	[self.viewControllers.lastObject reloadForced:forced];
 }
 
 - (void)reloadEverything
 {
+	[self reloadEverythingForced:NO];
+}
+
+- (void)reloadEverythingForced:(BOOL)forced
+{
 	for(SPFileBrowserTableViewController* viewController in self.viewControllers)
 	{
-		[viewController reload];
+		[viewController reloadForced:forced];
 	}
 }
 

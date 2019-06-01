@@ -220,15 +220,12 @@
 
 - (void)setUpDelegate
 {
-	_download.browserCellDelegate = self;
+	[_download addObserverDelegate:self];
 }
 
 - (void)removeDelegate
 {
-	if([self isEqual:_download.browserCellDelegate])
-	{
-		_download.browserCellDelegate = nil;
-	}
+	[_download removeObserverDelegate:self];
 }
 
 - (void)setPaused:(BOOL)paused

@@ -265,19 +265,7 @@
 	dlogDownloadManager();
 
 	//Cancel all downloads
-	for(SPDownload* download in [self.pendingDownloads reverseObjectEnumerator])
-	{
-		[download cancelDownload];
-	}
-
-	//Reinitialise array
-	self.pendingDownloads = [NSMutableArray new];
-
-	//Save changes
-	[self saveDownloadsToDisk];
-
-	//Reload browser and download list
-	[self.navigationControllerDelegate reloadEverything];
+	[self.pendingDownloads makeObjectsPerformSelector:@selector(cancelDownload)];
 }
 
 - (void)clearDownloadHistory
@@ -312,8 +300,7 @@
 	[self downloadFinished:download];
 
 	//Reload table
-	[self.navigationControllerDelegate reloadBrowser];
-	[self.navigationControllerDelegate reloadDownloadList];
+	[self.navigationControllerDelegate reloadEverything];
 }
 
 - (void)downloadFinished:(SPDownload*)download
@@ -391,13 +378,13 @@
 
 	NSDictionary* downloadCache = [cacheManager loadDownloadCache];
 
-	self.pendingDownloads = [downloadCache objectForKey:@"pendingDownloads"];
+	self.pendingDownloads = [[downloadCache objectForKey:@"pendingDownloads"] mutableCopy];
 	if(!self.pendingDownloads)
 	{
 		self.pendingDownloads = [NSMutableArray new];
 	}
 
-	self.finishedDownloads = [downloadCache objectForKey:@"finishedDownloads"];
+	self.finishedDownloads = [[downloadCache objectForKey:@"finishedDownloads"] mutableCopy];
 	if(!self.finishedDownloads)
 	{
 		self.finishedDownloads = [NSMutableArray new];
@@ -414,7 +401,7 @@
 
 - (void)saveDownloadsToDisk
 {
-	[cacheManager saveDownloadCache:@{@"pendingDownloads" : self.pendingDownloads, @"finishedDownloads" : self.finishedDownloads}];
+	[cacheManager saveDownloadCache:@{@"pendingDownloads" : [self.pendingDownloads copy], @"finishedDownloads" : [self.finishedDownloads copy]}];
 }
 
 - (void)sendNotificationWithText:(NSString*)text
@@ -468,7 +455,7 @@
 }
 
 //When a download url was opened in a new tab, the tab will stay
-//blank after an option was selected, this function closes that tab
+//blank after an option was selected, this method closes that tab
 - (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 {
 	if(downloadInfo)
@@ -598,6 +585,11 @@
 		//Send notification
 		[self sendNotificationWithText:[NSString stringWithFormat:@"%@: %@",
 						[localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"], downloadInfo.filename]];
+
+		if(self.navigationControllerDelegate)
+		{
+			[self.navigationControllerDelegate reloadEverything];
+		}
 	}
 
 	dlogDownloadManager();
@@ -732,21 +724,8 @@
 
 		[downloadAlert addAction:downloadToAction];
 
-		//Copy link options (only on videos)
-		if(downloadInfo.sourceVideo)
-		{
-			UIAlertAction *copyLinkAction = [UIAlertAction
-							 actionWithTitle:[localizationManager
-									  localizedSPStringForKey:@"COPY_LINK"]
-							 style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-			{
-				[UIPasteboard generalPasteboard].string = downloadInfo.request.URL.absoluteString;
-			}];
-
-			[downloadAlert addAction:copyLinkAction];
-		}
 		//Open option (not on videos)
-		else
+		if(!downloadInfo.sourceVideo)
 		{
 			UIAlertAction *openAction = [UIAlertAction actionWithTitle:[localizationManager
 										    localizedSPStringForKey:@"OPEN"]
@@ -759,6 +738,17 @@
 
 			[downloadAlert addAction:openAction];
 		}
+
+		//Copy link options
+		UIAlertAction *copyLinkAction = [UIAlertAction
+						 actionWithTitle:[localizationManager
+								  localizedSPStringForKey:@"COPY_LINK"]
+						 style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+		{
+			[UIPasteboard generalPasteboard].string = downloadInfo.request.URL.absoluteString;
+		}];
+
+		[downloadAlert addAction:copyLinkAction];
 
 		//Cancel option
 		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager
@@ -821,6 +811,7 @@
 									       NSDictionary* info = (__bridge NSDictionary*)(information);
 
 										//This whole method of retrieving the video url only works because it is set as the title by Safari / WebKit, hopefully that doesn't change in the future
+										//Plot Twist: It did change in iOS 12 :(
 									       NSURL* videoURL = [NSURL URLWithString:[info objectForKey:(__bridge NSString*)(kMRMediaRemoteNowPlayingInfoTitle)]];
 
 									       if(videoURL)
@@ -849,33 +840,37 @@
 	dlogDownloadInfo(downloadInfo, @"prepareDownloadFromRequestForDownloadInfo");
 	dlogDownloadManager();
 
-	if(!self.processedVideoDownloadInfo)
+	if(!self.requestFetchDownloadInfo)
 	{
 		NSURLSession* session = self.downloadSession;
 
 		NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:downloadInfo.request];
 
-		self.processedVideoDownloadInfo = downloadInfo;
+		self.requestFetchDownloadInfo = downloadInfo;
 
 		[dataTask resume];
 
-		//After 5 seconds we cancel the task and just use the unresolved downloadInfo if it didn't finish resolving it yet
+		//After 5 seconds we cancel the task and error out
 		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 		{
-			if(self.processedVideoDownloadInfo)
+			if(dataTask.state == NSURLSessionTaskStateRunning)
 			{
 				[dataTask cancel];
-				self.processedVideoDownloadInfo = nil;
+				self.requestFetchDownloadInfo = nil;
 
 				if(downloadInfo.sourceVideo)
 				{
 					[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
 				}
 
-				//Sometimes this name will be accurate, sometimes not
-				downloadInfo.filename = [downloadInfo.request.URL lastPathComponent];
+				UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+								 message:[localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"] preferredStyle:UIAlertControllerStyleAlert];
 
-				[self presentDownloadAlertWithDownloadInfo:downloadInfo];
+				UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
+
+				[errorAlert addAction:closeAction];
+
+				[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
 			}
 		});
 	}
@@ -884,7 +879,12 @@
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
 	SPDirectoryPickerNavigationController* directoryPicker =
-		[[SPDirectoryPickerNavigationController alloc] initWithDownloadInfo:downloadInfo];
+		[[SPDirectoryPickerNavigationController alloc] initWithStartURL:self.defaultDownloadURL];
+
+	directoryPicker.pickerDelegate = self;
+	directoryPicker.placeholderFilename = downloadInfo.filename;
+
+	self.pickerDownloadInfo = downloadInfo;
 
 	[self presentViewController:directoryPicker withDownloadInfo:downloadInfo];
 }
@@ -1058,6 +1058,23 @@
 	});
 }
 
+- (void)directoryPicker:(id)directoryPicker didSelectDirectoryAtURL:(NSURL*)selectedURL withFilename:(NSString*)filename
+{
+	if(!selectedURL)
+	{
+		self.pickerDownloadInfo = nil;
+		return;
+	}
+
+	SPDownloadInfo* downloadInfo = self.pickerDownloadInfo;
+	self.pickerDownloadInfo = nil;
+
+	downloadInfo.filename = filename;
+	downloadInfo.targetURL = selectedURL;
+
+	[self pathSelectionResponseWithDownloadInfo:downloadInfo];
+}
+
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
 	if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
@@ -1088,6 +1105,11 @@
 	SPDownload* download = [self downloadWithTaskIdentifier:downloadTask.taskIdentifier];
 
 	download.didFinish = YES;
+
+	//Get real file size and apply it to download
+	NSNumber* size;
+	[fileManager URLResourceValue:&size forKey:NSURLFileSizeKey forURL:location error:nil];
+	download.filesize = [size longLongValue];
 
 	//Get downloadInfo from download
 	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithDownload:download];
@@ -1129,32 +1151,45 @@
 			return;
 		}
 
-		if([error.localizedDescription isEqualToString:@"cancelled"])
+		if(error.code == -999)
 		{
-			if(download.didFinish)
+			if([error.localizedDescription isEqualToString:@"cancelled"])
 			{
-				//Remove download from array
-				[self downloadFinished:download];
-				[self.navigationControllerDelegate reloadBrowser];
-				[self.navigationControllerDelegate reloadDownloadList];
+				if(download.didFinish)
+				{
+					//Remove download from array
+					[self downloadFinished:download];
+					[self.navigationControllerDelegate reloadEverything];
+				}
+			}
+			else
+			{
+				//Get resumeData
+				NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
+
+				//Connect resumeData with download
+				download.resumeData = resumeData;
+
+				//Count how often this method was called
+				self.processedErrorCount++;
+
+				if(self.processedErrorCount == self.errorCount)
+				{
+					//Function was called as often as expected -> resume all downloads
+					[self resumeDownloadsFromDiskLoad];
+				}
 			}
 		}
 		else
 		{
-			//Get resumeData
 			NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
 
-			//Connect resumeData with download
-			download.resumeData = resumeData;
-
-			//Count how often this method was called
-			self.processedErrorCount++;
-
-			if(self.processedErrorCount == self.errorCount)
+			if(resumeData)
 			{
-				//Function was called as often as expected -> resume all downloads
-				[self resumeDownloadsFromDiskLoad];
+				download.resumeData = resumeData;
 			}
+
+			[download setPaused:YES forced:YES];
 		}
 
 		//Save downloads to disk
@@ -1181,15 +1216,33 @@
 
 	completionHandler(NSURLSessionResponseCancel);
 
-	if(response)
-	{
-		SPDownloadInfo* downloadInfo = self.processedVideoDownloadInfo;
-		self.processedVideoDownloadInfo = nil;
+	SPDownloadInfo* downloadInfo = self.requestFetchDownloadInfo;
+	self.requestFetchDownloadInfo = nil;
 
+	NSInteger statusCode = ((NSHTTPURLResponse*)response).statusCode;
+
+	if(statusCode < 400)	//No error
+	{
 		downloadInfo.filesize = response.expectedContentLength;
 		downloadInfo.filename = response.suggestedFilename;
 
 		[self presentDownloadAlertWithDownloadInfo:downloadInfo];
+	}
+	else	//Error
+	{
+		UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+						 message:[NSString stringWithFormat:@"%lli: %@", (long long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]] preferredStyle:UIAlertControllerStyleAlert];
+
+		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
+
+		[errorAlert addAction:closeAction];
+
+		[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+
+		if(downloadInfo.sourceVideo)
+		{
+			[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+		}
 	}
 }
 

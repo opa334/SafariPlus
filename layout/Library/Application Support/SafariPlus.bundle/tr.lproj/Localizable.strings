@@ -131,7 +131,7 @@
 /*SHOW_TAB_COUNT*/
 /*SHOW_TAB_COUNT_FOOTER*/
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Aşağı kaydırırken tam üstteki çubuğu gizler.\n\nNOT: iOS 8'de çalışmıyor!";
+"FULLSCREEN_SCROLLING_FOOTER" = "Aşağı kaydırırken tam üstteki çubuğu gizler.";
 "FULLSCREEN_SCROLLING" = "Tam Ekran Kaydırma";
 
 "LOCK_BARS" = "Barları kilitle";
@@ -174,7 +174,7 @@
 "DISABLE_PRIVATE_MODE" = "Gizli tarama modunu ve gizli tarama butonunu devre dışı bırak.";
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Bir 'mailto: <email>' URL'sine erişildiğinde, iOS 10 ve üstünde görünen iletişim kutusunu engeller.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) mail yönlendirmelerini engelle";
+"SUPPRESS_MAILTO_DIALOG" = "mail yönlendirmelerini engelle";
 
 /*OTHER*/
 /*DISABLE_COMMUNICATION_ERROR*/
@@ -375,4 +375,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Normal Mod aç";
 "OPEN_IN_PRIVATE_MODE" = "Özel Modda Aç";
-

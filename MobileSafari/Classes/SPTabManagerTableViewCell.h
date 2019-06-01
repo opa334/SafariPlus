@@ -16,17 +16,19 @@
 
 @class TabDocument;
 
+@interface UITableViewLabel : UILabel
+@property (nonatomic,assign) UITableViewCell* tableCell;
+@end
+
 @interface SPTabManagerTableViewCell : UITableViewCell
 {
-	TabDocument* _tabDocument;
-	UILabel* _titleLabel;
-	UILabel* _URLLabel;
+	__weak TabDocument* _tabDocument;
+	UITableViewLabel* _titleLabel;
+	UITableViewLabel* _URLLabel;
 	UIImageView* _tabIconImageView;
 }
-
 - (void)updateContent;
 - (void)applyTabDocument:(TabDocument*)tabDocument;
 - (void)initContent;
 - (void)setUpConstraints;
-
 @end

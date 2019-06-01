@@ -24,7 +24,6 @@
 #import "Classes/SPCommunicationManager.h"
 #import "Classes/SPCacheManager.h"
 
-#import "../Shared/SPPreferenceMerger.h"
 #import <LocalAuthentication/LocalAuthentication.h>
 #import <arpa/inet.h>
 #import <ifaddrs.h>
@@ -36,13 +35,13 @@
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
-SPCommunicationManager* communicationManager;
-SPFileManager* fileManager;
+SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
+SPFileManager* fileManager = [SPFileManager sharedInstance];
 SPPreferenceManager* preferenceManager;
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
-BOOL rocketBootstrapWorks;
+BOOL rocketBootstrapWorks = NO;
 
 #ifdef DEBUG_LOGGING
 
@@ -115,8 +114,7 @@ void _dlogDownload(SPDownload* download, NSString* message)
 	dlog(@"didFinish: %i", download.didFinish);
 	dlog(@"wasCancelled: %i", download.wasCancelled);
 	dlog(@"downloadManagerDelegate: %@", download.downloadManagerDelegate);
-	dlog(@"browserCellDelegate: %@", download.browserCellDelegate);
-	dlog(@"listCellDelegate: %@", download.listCellDelegate);
+	dlog(@"observerDelegates: %@", download.observerDelegates);
 	dlog(@"----------");
 }
 
@@ -151,7 +149,8 @@ void _dlogDownloadManager()
 	dlog(@"errorCount: %lli", downloadManager.errorCount);
 	dlog(@"processedErrorCount: %lli", downloadManager.processedErrorCount);
 	dlog(@"defaultDownloadURL: %@", downloadManager.defaultDownloadURL);
-	dlog(@"processedVideoDownloadInfo: %@", downloadManager.processedVideoDownloadInfo);
+	dlog(@"requestFetchDownloadInfo: %@", downloadManager.requestFetchDownloadInfo);
+	dlog(@"pickerDownloadInfo: %@", downloadManager.pickerDownloadInfo);
 	[downloadManager.downloadSession getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> *tasks)
 	{
 		dlog(@"tasks: %@", tasks);
@@ -397,15 +396,6 @@ extern void initWKFileUploadPanel();
   #ifdef DEBUG_LOGGING
 	initDebug();
   #endif
-
-	communicationManager = [SPCommunicationManager sharedInstance];
-	rocketBootstrapWorks = [communicationManager testConnection];
-
-	fileManager = [SPFileManager sharedInstance];
-
-	#ifndef SIMJECT
-	[SPPreferenceMerger mergeIfNeeded];
-	#endif
 
 	preferenceManager = [SPPreferenceManager sharedInstance];
 

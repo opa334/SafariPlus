@@ -18,7 +18,7 @@
 
 @class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload;
 
-@interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, DownloadManagerDelegate>
+@interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, DownloadManagerDelegate, SPDirectoryPickerDelegate>
 @property (nonatomic) NSMutableArray<SPDownload*>* pendingDownloads;
 @property (nonatomic) NSMutableArray<SPDownload*>* finishedDownloads;
 @property (nonatomic) SPStatusBarNotificationWindow* notificationWindow;
@@ -26,7 +26,8 @@
 @property (nonatomic) NSInteger errorCount;
 @property (nonatomic) NSInteger processedErrorCount;
 @property (nonatomic) NSURL* defaultDownloadURL;
-@property (nonatomic) SPDownloadInfo* processedVideoDownloadInfo;
+@property (nonatomic) SPDownloadInfo* requestFetchDownloadInfo;
+@property (nonatomic) SPDownloadInfo* pickerDownloadInfo;
 @property (copy) void (^applicationBackgroundSessionCompletionHandler)();
 
 @property (nonatomic, weak) id<DownloadNavigationControllerDelegate> navigationControllerDelegate;

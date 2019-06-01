@@ -305,6 +305,8 @@
 	    <string>com.opa334.safariplusprefs</string>
 	    <key>footerText</key>
 	    <string>SUPPRESS_MAILTO_DIALOG_FOOTER</string>
+			<key>minCFVersion</key>
+			<real>1348.00</real>
 	  </dict>
 	  <dict>
 	    <key>PostNotification</key>
@@ -319,6 +321,8 @@
 	    <string>suppressMailToDialog</string>
 	    <key>label</key>
 	    <string>SUPPRESS_MAILTO_DIALOG</string>
+			<key>minCFVersion</key>
+			<real>1348.00</real>
 	  </dict>
 		<dict>
 			<key>cell</key>

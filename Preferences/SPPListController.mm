@@ -42,6 +42,7 @@
 			_specifiers = [self loadSpecifiersFromPlistName:[self plistName] target:self];
 			[localizationManager parseSPLocalizationsForSpecifiers:_specifiers];
 
+			[self removeUnsupportedSpecifiers:_specifiers];
 			_allSpecifiers = [_specifiers copy];
 			[self removeDisabledGroups:_specifiers];
 		}
@@ -49,6 +50,33 @@
 
 	[(UINavigationItem *)self.navigationItem setTitle:[self title]];
 	return _specifiers;
+}
+
+- (void)removeUnsupportedSpecifiers:(NSMutableArray*)specifiers
+{
+	for(PSSpecifier* specifier in [specifiers reverseObjectEnumerator])
+	{
+		NSNumber* minCFVersionNumber = [[specifier properties] objectForKey:@"minCFVersion"];
+		NSNumber* maxCFVersionNumber = [[specifier properties] objectForKey:@"maxCFVersion"];
+
+		if(minCFVersionNumber)
+		{
+			if(kCFCoreFoundationVersionNumber < [minCFVersionNumber floatValue])
+			{
+				[specifiers removeObject:specifier];
+				continue;
+			}
+		}
+
+		if(maxCFVersionNumber)
+		{
+			if(kCFCoreFoundationVersionNumber > [maxCFVersionNumber floatValue])
+			{
+				[specifiers removeObject:specifier];
+				continue;
+			}
+		}
+	}
 }
 
 - (void)removeDisabledGroups:(NSMutableArray*)specifiers;

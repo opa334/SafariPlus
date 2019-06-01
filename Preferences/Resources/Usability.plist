@@ -245,6 +245,8 @@
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
 			<string>SUGGESTION_INSERT_BUTTON_FOOTER</string>
+			<key>maxCFVersion</key>
+			<real>1561.00</real>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -259,6 +261,8 @@
 			<string>suggestionInsertButtonEnabled</string>
 			<key>label</key>
 			<string>SUGGESTION_INSERT_BUTTON</string>
+			<key>maxCFVersion</key>
+			<real>1561.00</real>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -291,6 +295,8 @@
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
 			<string>FULLSCREEN_SCROLLING_FOOTER</string>
+			<key>minCFVersion</key>
+			<real>1240.10</real>
 		</dict>
 		<dict>
 			<key>PostNotification</key>
@@ -305,6 +311,8 @@
 			<string>fullscreenScrollingEnabled</string>
 			<key>label</key>
 			<string>FULLSCREEN_SCROLLING</string>
+			<key>minCFVersion</key>
+			<real>1240.10</real>
 		</dict>
 		<dict>
 			<key>cell</key>

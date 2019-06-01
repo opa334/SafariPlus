@@ -131,7 +131,7 @@
 "SHOW_TAB_COUNT" = "Tab Anzahl anzeigen";
 "SHOW_TAB_COUNT_FOOTER" = "Zeigt die Anzahl an Tabs des aktuellen Surfmodus auf dem Button an, welcher den Tab-Switcher öffnet.";
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.\n\nHINWEIS: Nicht kompatibel mit iOS 8!";
+"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.";
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
 
 "LOCK_BARS" = "Leisten sperren";
@@ -174,7 +174,7 @@
 "DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
 
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";
+"SUPPRESS_MAILTO_DIALOG" = "Mailto Dialog deaktivieren";
 
 "OTHER" = "Anderes";
 "DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
@@ -346,11 +346,15 @@
 "DOWNLOAD_HISTORY" = "Download Verlauf";
 "FILES" = "Dateien";
 "CHOOSE" = "Auswählen";
+"MANUAL_DOWNLOAD" = "Manueller Download";
+"URL_TO_DOWNLOADABLE_FILE" = "URL zu herunterladbarer Datei";
 "START_DOWNLOAD" = "Download starten";
+"UNABLE_TO_FETCH_FILE_INFORMATION" = "Abrufen der Dateiinformationen nicht möglich";
 "CHOOSE_FILENAME" = "Dateinamen auswählen";
+"SELECT_PATH" = "Pfad auswählen";
 "FILENAME" = "Dateiname";
 "CLOSE" = "Schließen";
-"CANCEL_PICKER" = "Auswahl abbrechen";
+"EXIT_PICKER" = "Auswahl abbrechen";
 "PERMISSION_ERROR_MESSAGE" = "Keine Schreibrechte für den ausgewählten Pfad. Bitte wähle einen anderen Pfad.\nHINWEIS: In der Regel sind nur Pfade innerhalb des /var Verzeichnisses beschreibbar. Falls sonstige Probleme auftreten, lassen sich die Berechtigungen eines Verzeichnisses via Filza einsehen und ändern.";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
@@ -365,6 +369,8 @@
 
 "SELECT_ALL" = "Alles";
 "DESELECT_ALL" = "Auswahl aufheben";
+"CLOSE_TAB_WARNING_MESSAGE" = "Soll der Tab wirklich geschlossen werden?";
+"CLOSE_TABS_WARNING_MESSAGE" = "Sollen wirklich %zu Tabs geschlossen werden?";
 "CHOOSE_EXPORT_FORMAT" = "Export-Format auswählen";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "Jeder ausgewählte Tab wird eine Zeile Text sein. Wähle das gewünschte Format für alle Zeilen.";
 "ADD_TABS_ALERT" = "Tabs hinzufügen";

@@ -23,6 +23,7 @@
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPCommunicationManager.h"
+#import "../Shared/SPPreferenceMerger.h"
 
 %hook Application
 
@@ -84,6 +85,8 @@
 %new
 - (void)handleSBConnectionTest
 {
+	rocketBootstrapWorks = [communicationManager testConnection];
+
 	if(!rocketBootstrapWorks && !preferenceManager.communicationErrorDisabled)
 	{
 		sendSimpleAlert([localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR"], [localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR_DESCRIPTION"]);
@@ -192,13 +195,17 @@
 		}
 	}
 
+	[self handleTwitterAlert];
+	[self handleSBConnectionTest];
+
+	#ifndef SIMJECT
+	[SPPreferenceMerger mergeIfNeeded];
+	#endif
+
 	if(preferenceManager.enhancedDownloadsEnabled)
 	{
 		downloadManager = [SPDownloadManager sharedInstance];
 	}
-
-	[self handleTwitterAlert];
-	[self handleSBConnectionTest];
 
 	return orig;
 }
@@ -229,13 +236,17 @@
 		[browserControllers().firstObject modeSwitchAction:preferenceManager.forceModeOnStartFor];
 	}
 
+	[self handleTwitterAlert];
+	[self handleSBConnectionTest];
+
+	#ifndef SIMJECT
+	[SPPreferenceMerger mergeIfNeeded];
+	#endif
+
 	if(preferenceManager.enhancedDownloadsEnabled)
 	{
 		downloadManager = [SPDownloadManager sharedInstance];
 	}
-
-	[self handleTwitterAlert];
-	[self handleSBConnectionTest];
 }
 
 %end

@@ -14,18 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPDownload;
+@class SPDownload, SPDownloadListFinishedTableViewCell;
 
 @interface SPDownloadListTableViewController : UITableViewController
 {
+	NSArray* _displayedPendingDownloads;
 	NSArray* _pendingDownloads;
+	NSArray* _displayedFinishedDownloads;
 	NSArray* _finishedDownloads;
 }
 
 - (void)reload;
+- (void)reloadForced:(BOOL)forced;
 - (BOOL)loadDownloads;
 - (void)dismissButtonPressed;
 - (void)clearButtonPressed;
-- (void)restartDownload:(SPDownload*)download;
+- (void)restartDownload:(SPDownload*)download forCell:(SPDownloadListFinishedTableViewCell*)cell;
 
 @end

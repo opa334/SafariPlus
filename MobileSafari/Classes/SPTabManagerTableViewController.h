@@ -31,6 +31,7 @@
 - (void)setUpTopBar;
 - (void)setUpBottomToolbar;
 - (NSArray<TabDocument*>*)activeTabs;
+- (UIViewController*)presentationController;
 - (TabDocument*)tabDocumentForIndexPath:(NSIndexPath*)indexPath;
 - (void)loadTabs;
 - (void)reloadAnimated:(BOOL)animated;

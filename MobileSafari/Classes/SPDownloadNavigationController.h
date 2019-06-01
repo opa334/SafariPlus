@@ -27,12 +27,16 @@
 	NSArray<SPDownloadBrowserTableViewController*>* _browserTableViewControllers;
 	NSArray<SPDownloadListTableViewController*>* _listTableViewControllers;
 }
-
 - (void)setUpSegmentedControl;
 - (void)setUpPalette;
 - (void)openDirectoryInBrowser:(NSURL*)directoryURL;
+- (void)showFileInBrowser:(NSURL*)fileURL;
 - (void)reloadBrowser;
+- (void)reloadBrowserForced:(BOOL)forced;
 - (void)reloadEverything;
+- (void)reloadEverythingForced:(BOOL)forced;
 - (void)reloadDownloadList;
+- (void)reloadDownloadListForced:(BOOL)forced;
+- (NSArray<SPDownloadBrowserTableViewController*>*)browserTableViewControllers;
 
 @end
