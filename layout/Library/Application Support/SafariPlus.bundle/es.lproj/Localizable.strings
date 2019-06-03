@@ -346,11 +346,15 @@
 "DOWNLOAD_HISTORY" = "Historial se descargas";
 "FILES" = "Archivos";
 "CHOOSE" = "Seleccionar";
+/*MANUAL_DOWNLOAD*/
+/*URL_TO_DOWNLOADABLE_FILE*/
 "START_DOWNLOAD" = "Iniciar descarga";
+/*UNABLE_TO_FETCH_FILE_INFORMATION*/
 "CHOOSE_FILENAME" = "Seleccionar nombre de archivo";
+/*SELECT_PATH*/
 "FILENAME" = "Nombre de archivo";
 "CLOSE" = "Cerrar";
-"CANCEL_PICKER" = "Cancelar";
+/*EXIT_PICKER*/
 "PERMISSION_ERROR_MESSAGE" = "No tienes permisos para escribir en el destino seleccionado. Por favor elige otro.\nNOTA: Normalmente solo destinos dentro de /var son escribibles! También puedes utilizar Filza para inspeccionar / cambiar permisos de un directorio.";
 "PLAY" = "Reproducir";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "El destino elegido en 'Destino por defecto personalizado' no es válido. Por favor corrígelo.";
@@ -365,6 +369,8 @@
 
 /*SELECT_ALL*/
 /*DESELECT_ALL*/
+/*CLOSE_TAB_WARNING_MESSAGE*/
+/*CLOSE_TABS_WARNING_MESSAGE*/
 /*CHOOSE_EXPORT_FORMAT*/
 /*CHOOSE_EXPORT_FORMAT_MESSAGE*/
 /*ADD_TABS_ALERT*/
@@ -375,3 +381,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Abrir en modo normal";
 "OPEN_IN_PRIVATE_MODE" = "Abrir en modo privado";
+

@@ -346,11 +346,15 @@
 "DOWNLOAD_HISTORY" = "سجل التنزيل";
 "FILES" = "الملفات";
 "CHOOSE" = "اختر";
+/*MANUAL_DOWNLOAD*/
+/*URL_TO_DOWNLOADABLE_FILE*/
 "START_DOWNLOAD" = "بدأ التنزيل";
+/*UNABLE_TO_FETCH_FILE_INFORMATION*/
 "CHOOSE_FILENAME" = "اختر اسم الملف";
+/*SELECT_PATH*/
 "FILENAME" = "اسم الملف";
 "CLOSE" = "إغلاق";
-"CANCEL_PICKER" = "إلغاء";
+/*EXIT_PICKER*/
 "PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل  /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";
 "PLAY" = "تشغيل";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "المسار الذي قمت بتعيينه في الإعدادات ضمن 'مسار افتراضي مخصص' غير صالح. يرجى تصحيح ذلك.";
@@ -365,6 +369,8 @@
 
 /*SELECT_ALL*/
 /*DESELECT_ALL*/
+/*CLOSE_TAB_WARNING_MESSAGE*/
+/*CLOSE_TABS_WARNING_MESSAGE*/
 /*CHOOSE_EXPORT_FORMAT*/
 /*CHOOSE_EXPORT_FORMAT_MESSAGE*/
 /*ADD_TABS_ALERT*/

@@ -346,11 +346,15 @@
 "DOWNLOAD_HISTORY" = "Scarica la cronologia";
 "FILES" = "File";
 "CHOOSE" = "Scegli";
+/*MANUAL_DOWNLOAD*/
+/*URL_TO_DOWNLOADABLE_FILE*/
 "START_DOWNLOAD" = "Inizia il download";
+/*UNABLE_TO_FETCH_FILE_INFORMATION*/
 "CHOOSE_FILENAME" = "Scegli il nome del file";
+/*SELECT_PATH*/
 "FILENAME" = "Nome del file";
 "CLOSE" = "Chiudi";
-"CANCEL_PICKER" = "Annulla";
+/*EXIT_PICKER*/
 "PERMISSION_ERROR_MESSAGE" = "Autorizzazioni insufficienti per scrivere nel percorso selezionato. Si prega di selezionare un altro.\nNOTA: Normalmente solo i percorsi all'interno della directory /var sono scrivibili! Puoi anche usare Filza per ispezionare / modificare i permessi di una directory.";
 "PLAY" = "Riproduci";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Il percorso che hai impostato nelle impostazioni sotto \"Percorso predefinito personalizzato\" non è valido. Si prega di correggerlo.";
@@ -365,6 +369,8 @@
 
 /*SELECT_ALL*/
 /*DESELECT_ALL*/
+/*CLOSE_TAB_WARNING_MESSAGE*/
+/*CLOSE_TABS_WARNING_MESSAGE*/
 /*CHOOSE_EXPORT_FORMAT*/
 /*CHOOSE_EXPORT_FORMAT_MESSAGE*/
 /*ADD_TABS_ALERT*/
@@ -375,3 +381,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Apri in modalità normale";
 "OPEN_IN_PRIVATE_MODE" = "Apri in modalità privata";
+

@@ -346,11 +346,15 @@
 "DOWNLOAD_HISTORY" = "Historique de téléchargement";
 /*FILES*/
 /*CHOOSE*/
+/*MANUAL_DOWNLOAD*/
+/*URL_TO_DOWNLOADABLE_FILE*/
 "START_DOWNLOAD" = "Démarrer le téléchargement";
+/*UNABLE_TO_FETCH_FILE_INFORMATION*/
 "CHOOSE_FILENAME" = "Choisissez un nom de fichier";
+/*SELECT_PATH*/
 "FILENAME" = "Nom de fichier";
 "CLOSE" = "Fermer";
-"CANCEL_PICKER" = "Annuler le sélecteur";
+/*EXIT_PICKER*/
 "PERMISSION_ERROR_MESSAGE" = "Pas assez d'autorisations pour écrire sur le chemin sélectionné. Veuillez en sélectionner un autre. \nREMARQUE: seuls les chemins d'accès au répertoire /var sont accessibles en écriture! Vous pouvez également utiliser Filza pour inspecter / modifier les autorisations d'un répertoire . ";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Le chemin que vous avez défini dans les paramètres sous ´Chemin par défaut personnalisé’ n'est pas valide. Veuillez le corriger.";
@@ -365,6 +369,8 @@
 
 /*SELECT_ALL*/
 /*DESELECT_ALL*/
+/*CLOSE_TAB_WARNING_MESSAGE*/
+/*CLOSE_TABS_WARNING_MESSAGE*/
 /*CHOOSE_EXPORT_FORMAT*/
 /*CHOOSE_EXPORT_FORMAT_MESSAGE*/
 /*ADD_TABS_ALERT*/
@@ -375,3 +381,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Ouvrir en mode normal";
 "OPEN_IN_PRIVATE_MODE" = "Ouvrir en mode privé";
+

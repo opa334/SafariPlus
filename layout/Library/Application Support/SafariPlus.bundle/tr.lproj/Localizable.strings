@@ -346,11 +346,15 @@
 "DOWNLOAD_HISTORY" = "İndirme geçmişi";
 "FILES" = "Dosyalar";
 "CHOOSE" = "Seç";
+/*MANUAL_DOWNLOAD*/
+/*URL_TO_DOWNLOADABLE_FILE*/
 "START_DOWNLOAD" = "İndirmeye başla";
+/*UNABLE_TO_FETCH_FILE_INFORMATION*/
 "CHOOSE_FILENAME" = "Dosya Adı Seçin";
+/*SELECT_PATH*/
 "FILENAME" = "Dosya adı";
 "CLOSE" = "Kapat";
-"CANCEL_PICKER" = "İndirmekten vazgeç";
+/*EXIT_PICKER*/
 "PERMISSION_ERROR_MESSAGE" = "Seçilen yola yazmak için yeterli izin yok. Lütfen başka birini seçin.\nNNOT: Normalde sadece / var dizinindeki yollar yazılabilir! Bir dizinin izinlerini incelemek / değiştirmek için Filza'yı da kullanabilirsiniz.";
 "PLAY" = "Oynat";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "’Özel Varsayılan Yol' ayarladığınız yol geçersiz. Lütfen düzeltin.";
@@ -365,6 +369,8 @@
 
 /*SELECT_ALL*/
 /*DESELECT_ALL*/
+/*CLOSE_TAB_WARNING_MESSAGE*/
+/*CLOSE_TABS_WARNING_MESSAGE*/
 /*CHOOSE_EXPORT_FORMAT*/
 /*CHOOSE_EXPORT_FORMAT_MESSAGE*/
 /*ADD_TABS_ALERT*/
@@ -375,3 +381,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Normal Mod aç";
 "OPEN_IN_PRIVATE_MODE" = "Özel Modda Aç";
+
