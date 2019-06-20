@@ -52,7 +52,7 @@
 			<key>label</key>
 			<string>ENHANCED_DOWNLOADS</string>
 			<key>nestedEntryCount</key>
-			<integer>26</integer>
+			<integer>32</integer>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -121,6 +121,28 @@
 			<string>defaultDownloadSectionAutoSwitchEnabled</string>
 			<key>label</key>
 			<string>DEFAULT_SECTION_AUTO_SWITCH</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>PROGRESS_BELOW_DOWNLOADS_BUTTON_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>progressUnderDownloadsButtonEnabled</string>
+			<key>label</key>
+			<string>PROGRESS_BELOW_DOWNLOADS_BUTTON</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -315,6 +337,50 @@
 			<string>onlyDownloadOnWifiEnabled</string>
 			<key>label</key>
 			<string>ONLY_DOWNLOAD_ON_WIFI</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>autosaveToMediaLibraryEnabled</string>
+			<key>label</key>
+			<string>AUTOSAVE_TO_MEDIA_LIBRARY</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>privateModeDownloadHistoryDisabled</string>
+			<key>label</key>
+			<string>DISABLE_HISTORY_FOR_PRIVATE_MODE</string>
 		</dict>
 		<dict>
 			<key>cell</key>

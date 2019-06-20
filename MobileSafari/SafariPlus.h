@@ -47,6 +47,8 @@ extern const enum sandbox_filter_type SANDBOX_CHECK_NO_REPORT __attribute__((wea
 
 int sandbox_check(pid_t pid, const char *operation, int type, ...);
 
+CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
+
 #if defined __cplusplus
 };
 #endif
@@ -55,6 +57,19 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 @property (assign) NSInteger openStrategy;
 + (void)getAppLinkWithURL:(id)arg1 completionHandler:(void (^)(LSAppLink*,NSError*))arg2;
 - (void)openInWebBrowser:(BOOL)arg1 setOpenStrategy:(NSInteger)arg2 webBrowserState:(id)arg3 completionHandler:(id)arg4;
+@end
+
+@interface _LSLazyPropertyList : NSObject
+@property (readonly) NSDictionary* propertyList;
++ (id)lazyPropertyListWithPropertyList:(id)arg1;
+@end
+
+@interface LSDocumentProxy : NSObject
+@property (nonatomic,readonly) NSString* containerOwnerApplicationIdentifier;
+@property (setter=_setBoundIconsDictionary:,nonatomic,copy) _LSLazyPropertyList* _boundIconsDictionary;
+@property (nonatomic,readonly) NSDictionary* iconsDictionary;
++ (id)documentProxyForURL:(id)arg1;
++ (id)documentProxyForName:(id)arg1 type:(id)arg2 MIMEType:(id)arg3;
 @end
 
 @interface NSUserDefaults (Safari)
@@ -96,6 +111,9 @@ int sandbox_check(pid_t pid, const char *operation, int type, ...);
 @end
 
 @interface UIImage (Private)
++ (UIImage*)_iconForResourceProxy:(LSDocumentProxy*)arg1 variant:(int)arg2 variantsScale:(CGFloat)arg3;
++ (UIImage*)_iconForResourceProxy:(LSDocumentProxy*)arg1 format:(int)arg2 options:(NSUInteger)arg3;
++ (UIImage*)imageNamed:(NSString*)arg1 inBundle:(NSBundle*)arg2;
 - (UIImage*)_flatImageWithColor:(UIColor*)color;
 @end
 
@@ -539,6 +557,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)updateTintColor;
 //new stuff below
 @property (nonatomic,retain) UIBarButtonItem* _downloadsItem;
+@property (nonatomic,retain) UIBarButtonItem *_reloadItem;
 @property (nonatomic,retain) UILabel* tabCountLabel;
 @property (nonatomic,retain) UIImage *tabExposeImage;
 - (void)setDownloadsEnabled:(BOOL)enabled;
@@ -582,6 +601,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface NavigationBar : _SFNavigationBar
+@property (nonatomic,readonly) UIButton* reloadButton;
 @property (nonatomic,readonly) UnifiedField* textField;
 - (UIImage*)_lockImageWithTint:(UIColor*)tint usingMiniatureVersion:(BOOL)miniatureVersion;
 - (void)_updateControlTints;
@@ -716,6 +736,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (_WKElementAction*)_openInNewPageActionForElement:(_WKActivatedElementInfo*)arg1;	//iOS 8
 - (_WKElementAction*)_openInNewPageActionForElement:(_WKActivatedElementInfo*)arg1 previewViewController:(id)arg2;	//iOS 9 and above
 - (void)requestDesktopSite;	//iOS 8
+- (BOOL)isPrivateBrowsingEnabled;
+- (BOOL)privateBrowsingEnabled;
 //new stuff below
 - (BOOL)updateDesktopMode;
 - (BOOL)handleAlwaysOpenInNewTabForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;

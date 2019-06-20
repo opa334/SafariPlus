@@ -471,6 +471,7 @@ static NSString *desktopUserAgent;
 				downloadInfo.filename = @"site.html";
 				downloadInfo.customPath = YES;
 				downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
+				downloadInfo.sourceDocument = self;
 
 				//Call downloadManager
 				[downloadManager configureDownloadWithInfo:downloadInfo];
@@ -513,6 +514,7 @@ static NSString *desktopUserAgent;
 				downloadInfo.filename = @"image.png";
 				downloadInfo.customPath = YES;
 				downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
+				downloadInfo.sourceDocument = self;
 
 				//Call SPDownloadManager with image
 				[downloadManager configureDownloadWithInfo:downloadInfo];

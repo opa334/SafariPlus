@@ -16,35 +16,27 @@
 
 #import "../Protocols.h"
 
-@class SPFilePickerNavigationController, SPDownload;
+@class SPFilePickerNavigationController, SPDownload, SPCellIconLabelView, SPCellDownloadProgressView, SPCellButtonsView;
 
 @interface SPDownloadTableViewCell : UITableViewCell <DownloadObserverDelegate>
 {
 	NSString* _filename;
 }
 
-@property (nonatomic) UIProgressView* progressView;
-@property (nonatomic) UIImageView* iconView;
-@property (nonatomic) UILabel* filenameLabel;
-@property (nonatomic) UILabel* percentProgress;
-@property (nonatomic) UILabel* sizeProgress;
-@property (nonatomic) UILabel* sizeSpeedSeperator;
-@property (nonatomic) UILabel* downloadSpeed;
-@property (nonatomic) UIButton* pauseResumeButton;
-@property (nonatomic) UIButton* stopButton;
-@property (nonatomic) BOOL paused;
+@property (nonatomic) SPCellIconLabelView* iconLabelView;
+@property (nonatomic) SPCellDownloadProgressView* downloadProgressView;
+@property (nonatomic) SPCellButtonsView* buttonsView;
+@property (nonatomic) UILabel* sizeLabel;
+
+@property (nonatomic) NSLayoutConstraint* bottomConstraint;
 
 @property (nonatomic, weak) SPDownload* download;
 
 - (void)applyDownload:(SPDownload*)download;
-- (void)initContent;
 - (void)setUpContent;
-- (void)setFilesize:(int64_t)filesize;
-- (NSDictionary*)viewsForConstraints;
 - (void)setUpConstraints;
 - (void)setUpDelegate;
 - (void)removeDelegate;
-- (void)setPaused:(BOOL)paused;
 - (void)pauseResumeButtonPressed;
 - (void)stopButtonPressed;
 @end

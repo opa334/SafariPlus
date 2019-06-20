@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPDownload, SPDownloadInfo, SPFilePickerNavigationController, AVActivityButton;
+@class SPDownload, SPDownloadInfo, SPDownloadManager, SPFilePickerNavigationController, AVActivityButton;
 
 @protocol filePickerDelegate<NSObject>
 - (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs;
@@ -32,10 +32,15 @@
 
 @protocol DownloadObserverDelegate
 @required
-@property (nonatomic) BOOL paused;
-- (void)updateDownloadSpeed:(int64_t)bytesPerSecond;
-- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated;
-- (void)setFilesize:(int64_t)filesize;
+- (void)filesizeDidChangeForDownload:(SPDownload*)download;
+- (void)pauseStateDidChangeForDownload:(SPDownload*)download;
+- (void)downloadSpeedDidChangeForDownload:(SPDownload*)download;
+- (void)progressDidChangeForDownload:(SPDownload*)download shouldAnimateChange:(BOOL)shouldAnimate;
+@end
+
+@protocol DownloadsObserverDelegate
+- (void)totalProgressDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
+- (void)runningDownloadsCountDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
 @end
 
 @protocol DownloadManagerDelegate
@@ -45,6 +50,8 @@
 - (void)saveDownloadsToDisk;
 - (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)totalProgressDidChange;
+- (void)runningDownloadsCountDidChange;
 @end
 
 @protocol SourceVideoDelegate

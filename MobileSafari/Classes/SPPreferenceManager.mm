@@ -82,6 +82,7 @@ void reloadPrefs()
 	[_preferences registerBool:&_videoDownloadingEnabled default:NO forKey:@"videoDownloadingEnabled"];
 	[_preferences registerInteger:&_defaultDownloadSection default:0 forKey:@"defaultDownloadSection"];
 	[_preferences registerBool:&_defaultDownloadSectionAutoSwitchEnabled default:NO forKey:@"defaultDownloadSectionAutoSwitchEnabled"];
+	[_preferences registerBool:&_progressUnderDownloadsButtonEnabled default:YES forKey:@"progressUnderDownloadsButtonEnabled"];
 	[_preferences registerBool:&_downloadSiteToActionEnabled default:YES forKey:@"downloadSiteToActionEnabled"];
 	[_preferences registerBool:&_downloadImageToActionEnabled default:YES forKey:@"downloadImageToActionEnabled"];
 	[_preferences registerBool:&_instantDownloadsEnabled default:NO forKey:@"instantDownloadsEnabled"];
@@ -91,6 +92,8 @@ void reloadPrefs()
 	[_preferences registerBool:&_pinnedLocationsEnabled default:NO forKey:@"pinnedLocationsEnabled"];
 	[_preferences registerObject:&_pinnedLocations default:nil forKey:@"pinnedLocations"];
 	[_preferences registerBool:&_onlyDownloadOnWifiEnabled default:NO forKey:@"onlyDownloadOnWifiEnabled"];
+	[_preferences registerBool:&_autosaveToMediaLibraryEnabled default:NO forKey:@"autosaveToMediaLibraryEnabled"];
+	[_preferences registerBool:&_privateModeDownloadHistoryDisabled default:NO forKey:@"privateModeDownloadHistoryDisabled"];
 	[_preferences registerBool:&_disablePushNotificationsEnabled default:NO forKey:@"disablePushNotificationsEnabled"];
 	[_preferences registerBool:&_disableBarNotificationsEnabled default:NO forKey:@"disableBarNotificationsEnabled"];
 
@@ -244,6 +247,8 @@ void reloadPrefs()
 		NSNumber* defaultDownloadSection = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("defaultDownloadSection"), appID);
 		_defaultDownloadSection = defaultDownloadSection ? [defaultDownloadSection intValue] : 1;
 		_defaultDownloadSectionAutoSwitchEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("defaultDownloadSectionAutoSwitchEnabled"), appID) boolValue];
+		NSNumber* progressUnderDownloadsButtonEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("progressUnderDownloadsButtonEnabled"), appID);
+		_progressUnderDownloadsButtonEnabled = progressUnderDownloadsButtonEnabled ? [progressUnderDownloadsButtonEnabled boolValue] : YES;
 		NSNumber* downloadSiteToActionEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadSiteToActionEnabled"), appID);
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
 		NSNumber* downloadImageToActionEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadImageToActionEnabled"), appID);
@@ -255,6 +260,8 @@ void reloadPrefs()
 		_pinnedLocationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("pinnedLocationsEnabled"), appID) boolValue];
 		_pinnedLocations = (__bridge NSArray*)CFPreferencesCopyAppValue(CFSTR("pinnedLocations"), appID);
 		_onlyDownloadOnWifiEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("onlyDownloadOnWifiEnabled"), appID) boolValue];
+		_autosaveToMediaLibraryEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("autosaveToMediaLibraryEnabled"), appID) boolValue];
+		_privateModeDownloadHistoryDisabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("privateModeDownloadHistoryDisabled"), appID) boolValue];
 		_disablePushNotificationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disablePushNotificationsEnabled"), appID) boolValue];
 		_disableBarNotificationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disableBarNotificationsEnabled"), appID) boolValue];
 
@@ -388,6 +395,8 @@ void reloadPrefs()
 		NSNumber* defaultDownloadSection = [prefDict objectForKey:@"defaultDownloadSection"];
 		_defaultDownloadSection = defaultDownloadSection ? [defaultDownloadSection intValue] : 1;
 		_defaultDownloadSectionAutoSwitchEnabled = [[prefDict objectForKey:@"defaultDownloadSectionAutoSwitchEnabled"] boolValue];
+		NSNumber* progressUnderDownloadsButtonEnabled = [prefDict objectForKey:@"progressUnderDownloadsButtonEnabled"];
+		_progressUnderDownloadsButtonEnabled =  progressUnderDownloadsButtonEnabled ? [progressUnderDownloadsButtonEnabled boolValue] : YES;
 		NSNumber* downloadSiteToActionEnabled = [prefDict objectForKey:@"downloadSiteToActionEnabled"];
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
 		NSNumber* downloadImageToActionEnabled = [prefDict objectForKey:@"downloadImageToActionEnabled"];
@@ -399,6 +408,8 @@ void reloadPrefs()
 		_pinnedLocationsEnabled = [[prefDict objectForKey:@"pinnedLocationsEnabled"] boolValue];
 		_pinnedLocations = [prefDict objectForKey:@"pinnedLocations"];
 		_onlyDownloadOnWifiEnabled = [[prefDict objectForKey:@"onlyDownloadOnWifiEnabled"] boolValue];
+		_autosaveToMediaLibraryEnabled = [[prefDict objectForKey:@"autosaveToMediaLibraryEnabled"] boolValue];
+		_privateModeDownloadHistoryDisabled = [[prefDict objectForKey:@"privateModeDownloadHistoryDisabled"] boolValue];
 		_disablePushNotificationsEnabled = [[prefDict objectForKey:@"disablePushNotificationsEnabled"] boolValue];
 		_disableBarNotificationsEnabled = [[prefDict objectForKey:@"disableBarNotificationsEnabled"] boolValue];
 
@@ -507,6 +518,11 @@ void reloadPrefs()
 		_tabSwitcherPrivateToolbarBackgroundColor = [prefDict objectForKey:@"tabSwitcherPrivateToolbarBackgroundColor"];
 
 		#endif
+
+		_topToolbarCustomOrderEnabled = [[prefDict objectForKey:@"topToolbarCustomOrderEnabled"] boolValue];
+		_topToolbarCustomOrder = [prefDict objectForKey:@"topToolbarCustomOrder"];
+		_bottomToolbarCustomOrderEnabled = [[prefDict objectForKey:@"bottomToolbarCustomOrderEnabled"] boolValue];
+		_bottomToolbarCustomOrder = [prefDict objectForKey:@"bottomToolbarCustomOrder"];
 	}
 
 
@@ -534,6 +550,7 @@ void reloadPrefs()
 - (BOOL)videoDownloadingEnabled { return [[_preferences objectForKey:@"videoDownloadingEnabled"] boolValue]; }
 - (NSInteger)defaultDownloadSection { return [_preferences objectForKey:@"defaultDownloadSection"] ? [[_preferences objectForKey:@"defaultDownloadSection"] integerValue] : 1; }
 - (BOOL)defaultDownloadSectionAutoSwitchEnabled { return [[_preferences objectForKey:@"defaultDownloadSectionAutoSwitchEnabled"] boolValue]; }
+- (BOOL)progressUnderDownloadsButtonEnabled { return [[_preferences objectForKey:@"progressUnderDownloadsButtonEnabled"] boolValue]; }
 - (BOOL)downloadSiteToActionEnabled { return [_preferences objectForKey:@"downloadSiteToActionEnabled"] ? [[_preferences objectForKey:@"downloadSiteToActionEnabled"] boolValue] : YES; }
 - (BOOL)downloadImageToActionEnabled { return [_preferences objectForKey:@"downloadImageToActionEnabled"] ? [[_preferences objectForKey:@"downloadImageToActionEnabled"] boolValue] : YES; }
 - (BOOL)instantDownloadsEnabled { return [[_preferences objectForKey:@"instantDownloadsEnabled"] boolValue]; }
@@ -543,6 +560,8 @@ void reloadPrefs()
 - (BOOL)pinnedLocationsEnabled { return [[_preferences objectForKey:@"pinnedLocationsEnabled"] boolValue]; }
 - (NSArray*)pinnedLocations { return [_preferences objectForKey:@"pinnedLocations"]; }
 - (BOOL)onlyDownloadOnWifiEnabled { return [[_preferences objectForKey:@"onlyDownloadOnWifiEnabled"] boolValue]; }
+- (BOOL)autosaveToMediaLibraryEnabled { return [[_preferences objectForKey:@"autosaveToMediaLibraryEnabled"] boolValue]; }
+- (BOOL)privateModeDownloadHistoryDisabled { return [[_preferences objectForKey:@"privateModeDownloadHistoryDisabled"] boolValue]; }
 - (BOOL)disablePushNotificationsEnabled { return [[_preferences objectForKey:@"disablePushNotificationsEnabled"] boolValue]; }
 - (BOOL)disableBarNotificationsEnabled { return [[_preferences objectForKey:@"disableBarNotificationsEnabled"] boolValue]; }
 

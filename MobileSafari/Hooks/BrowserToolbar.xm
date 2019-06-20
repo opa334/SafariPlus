@@ -18,6 +18,7 @@
 #import "Extensions.h"
 
 #import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPDownloadsBarButtonItem.h"
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
@@ -69,6 +70,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 %hook BrowserToolbar
 
 %property (nonatomic,retain) UIBarButtonItem *_downloadsItem;
+%property (nonatomic,retain) UIBarButtonItem *_reloadItem;
 %property (nonatomic,retain) UILabel *tabCountLabel;
 %property (nonatomic,retain) UIImage *tabExposeImage;
 
@@ -173,19 +175,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		addToDict(allItems, MSHookIvar<UIBarButtonItem*>(self, "_tabExposeItem"), @(BrowserToolbarTabExposeItem));
 
 		target = self;
-	}
-
-	if([orderM containsObject:@(BrowserToolbarDownloadsItem)])
-	{
-		if(!self._downloadsItem)
-		{
-			self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage
-										      imageNamed:@"DownloadsButton.png" inBundle:SPBundle
-										      compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain
-					       target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
-		}
-
-		addToDict(allItems, self._downloadsItem, @(BrowserToolbarDownloadsItem));
 	}
 
 	if([orderM containsObject:@(BrowserToolbarBackItem)])
@@ -296,23 +285,64 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		addTabItem.imageInsets = UIEdgeInsetsMake(addTabItem.imageInsets.top, 0, addTabItem.imageInsets.bottom, 0);
 	}
 
+	if([orderM containsObject:@(BrowserToolbarDownloadsItem)])
+	{
+		if(!self._downloadsItem)
+		{
+			if(preferenceManager.progressUnderDownloadsButtonEnabled)
+			{
+				self._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:self.browserDelegate action:@selector(downloadsFromButtonBar)];
+			}
+			else
+			{
+				self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"DownloadsButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
+			}
+		}
+
+		addToDict(allItems, self._downloadsItem, @(BrowserToolbarDownloadsItem));
+	}
+
+	if([orderM containsObject:@(BrowserToolbarReloadItem)])
+	{
+		UIImage* itemImage;
+		[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
+
+		UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+		{
+			reloadButton.frame = CGRectMake(0,0,35,44);
+		}
+		else
+		{
+			reloadButton.frame = CGRectMake(0,0,25,25);
+		}
+
+		[reloadButton setImage:itemImage forState:UIControlStateNormal];
+		[reloadButton addTarget:self.browserDelegate.navigationBar action:@selector(_reloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+
+		if([self.browserDelegate.navigationBar respondsToSelector:@selector(_reloadButtonLongPressed:)])
+		{
+			UILongPressGestureRecognizer* longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self.browserDelegate.navigationBar action:@selector(_reloadButtonLongPressed:)];
+			[reloadButton addGestureRecognizer:longPressGestureRecognizer];
+		}
+
+		self._reloadItem = [[UIBarButtonItem alloc] initWithCustomView:reloadButton];
+
+		addToDict(allItems, self._reloadItem, @(BrowserToolbarReloadItem));
+	}
+
 	NSMutableArray* dynamicItems = [NSMutableArray new];
 
 	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
 	if(MSHookIvar<NSInteger>(self, "_placement"))	//Bottom Toolbar
 	{
-		BOOL first = YES;
-
 		for(NSNumber* num in orderM)
 		{
-			if(!first)
+			if(![num isEqual:orderM.firstObject])
 			{
 				[dynamicItems addObject:flexibleSpace];
-			}
-			else
-			{
-				first = NO;
 			}
 
 			UIBarButtonItem* item = [allItems objectForKey:num];
@@ -508,144 +538,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	}
 
 	return %orig;
-	/*if(preferenceManager.enhancedDownloadsEnabled)
-	   {
-	        NSMutableArray* orig = %orig;
-
-	        if(![orig containsObject:self._downloadsItem])
-	        {
-	                if(!self._downloadsItem)
-	                {
-	                        self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage
-	                                                                                      imageNamed:@"DownloadsButton.png" inBundle:SPBundle
-	                                                                                      compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain
-	                                               target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
-	                }
-
-	                NSInteger placement = MSHookIvar<NSInteger>(self, "_placement");
-
-	                //Landscape on newer devices, portrait + landscape on iOS 8 iPads
-	                if(placement == 0 || (IS_PAD && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0))
-	                {
-	                        //iPads
-	                        if(IS_PAD)
-	                        {
-	                                ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 3;
-	                                ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 3;
-	                        }
-	                        else
-	                        {
-	                                //Plus iPhones
-	                                if([orig count] > 14)
-	                                {
-	                                        ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 10;
-	                                        ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 10;
-	                                        ((UIBarButtonItem*)orig.lastObject).width = 0;
-	                                }
-	                                //Non plus iPhones
-	                                else
-	                                {
-	                                        ((UIBarButtonItem*)orig[10]).width = 0;
-	                                        ((UIBarButtonItem*)orig[12]).width = 0;
-	                                }
-	                        }
-
-	                        [orig insertObject:orig[10] atIndex:8];
-	                        [orig insertObject:self._downloadsItem atIndex:8];
-	                }
-	                //Portrait mode on all iPhones, landscape on smaller iPhones + split view on smaller iPads
-	                else
-	                {
-	                        UIBarButtonItem* flexibleSpace = [[UIBarButtonItem alloc]
-	                                                          initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-	                                                          target:nil action:nil];
-
-	                        BrowserController* browserController = self.browserDelegate;
-
-	                        BOOL tabBarTweakActive = NO;
-
-	                        if([browserController respondsToSelector:@selector(_shouldShowTabBar)])
-	                        {
-	                                tabBarTweakActive = [browserController _shouldShowTabBar] && [browserControllers() count] <= 1;
-	                        }
-	                        else
-	                        {
-	                                //Unfortunately there isn't a better way to detect this reliably :/
-	                                [browserController updateUsesTabBar];
-
-	                                tabBarTweakActive = browserController.tabController.usesTabBar;
-	                        }
-
-	                        if(tabBarTweakActive)
-	                        {
-	                                orig = [@[orig[1], flexibleSpace, flexibleSpace,
-	                                          orig[4], flexibleSpace, orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
-	                                          flexibleSpace, orig[13]] mutableCopy];
-
-	                                if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_2)
-	                                {
-	                                        if([self respondsToSelector:@selector(addTabItemManual)])
-	                                        {
-	                                                [orig addObject:flexibleSpace];
-	                                                [orig addObject:self.addTabItemManual];
-	                                        }
-	                                }
-	                                else
-	                                {
-	                                        //Add FullSafari button to final array
-	                                        //Code from https://github.com/Bensge/FullSafari/blob/master/Tweak.xm
-	                                        GestureRecognizingBarButtonItem *addTabItem = [self valueForKey:@"_addTabItem"];
-
-	                                        if(!addTabItem || ![orig containsObject:addTabItem])
-	                                        {
-	                                                if(!addTabItem)
-	                                                {
-	                                                        addTabItem = [[%c(GestureRecognizingBarButtonItem) alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:self.browserDelegate action:@selector(addTabFromButtonBar)];
-	                                                        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
-	                                                        recognizer.allowableMovement = 3.0;
-	                                                        addTabItem.gestureRecognizer = recognizer;
-	                                                }
-	                                                [orig addObject:flexibleSpace];
-	                                                [orig addObject:addTabItem];
-	                                        }
-	                                }
-	                        }
-	                        else
-	                        {
-	                                UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc]
-	                                                               initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-	                                                               target:nil action:nil];
-
-	                                UIBarButtonItem *fixedSpaceHalf = [[UIBarButtonItem alloc]
-	                                                                   initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-	                                                                   target:nil action:nil];
-
-	                                UIBarButtonItem *fixedSpaceTwo = [[UIBarButtonItem alloc]
-	                                                                  initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-	                                                                  target:nil action:nil];
-
-	                                fixedSpace.width = 15;
-	                                fixedSpaceHalf.width = 7.5f;
-	                                fixedSpaceTwo.width = 6;
-
-	                                orig = [@[orig[1], fixedSpace, flexibleSpace,
-	                                          fixedSpaceHalf, orig[4], fixedSpaceHalf, flexibleSpace, fixedSpaceTwo,
-	                                          orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
-	                                          flexibleSpace, orig[13]] mutableCopy];
-	                        }
-	                }
-
-	                NSMutableDictionary* defaultItemsForToolbarSize =
-	                        MSHookIvar<NSMutableDictionary*>(self, "_defaultItemsForToolbarSize");
-
-	                //Save items to dictionary
-	                defaultItemsForToolbarSize[@(self.toolbarSize)] = orig;
-
-	                return orig;
-	        }
-	   }
-
-	   return %orig;*/
 }
 
 - (instancetype)initWithPlacement:(NSInteger)placement

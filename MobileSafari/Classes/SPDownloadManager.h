@@ -19,6 +19,7 @@
 @class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload;
 
 @interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, DownloadManagerDelegate, SPDirectoryPickerDelegate>
+@property (nonatomic) BOOL isReconnectingDownloads;
 @property (nonatomic) NSMutableArray<SPDownload*>* pendingDownloads;
 @property (nonatomic) NSMutableArray<SPDownload*>* finishedDownloads;
 @property (nonatomic) SPStatusBarNotificationWindow* notificationWindow;
@@ -31,6 +32,7 @@
 @property (copy) void (^applicationBackgroundSessionCompletionHandler)();
 
 @property (nonatomic, weak) id<DownloadNavigationControllerDelegate> navigationControllerDelegate;
+@property (nonatomic) NSHashTable<id<DownloadsObserverDelegate> >* observerDelegates;
 
 + (instancetype)sharedInstance;
 
@@ -48,6 +50,8 @@
 - (void)forceCancelDownload:(SPDownload*)download;
 
 - (void)downloadFinished:(SPDownload*)download;
+- (void)downloadFailed:(SPDownload*)download withError:(NSError*)error;
+- (void)moveDownloadFromPendingToHistory:(SPDownload*)download;
 - (void)removeDownloadFromHistory:(SPDownload*)download;
 - (NSString*)pathForResumeData:(NSData*)resumeData;
 - (void)removeTemporaryFileForResumeData:(NSData*)resumeData;
@@ -59,6 +63,13 @@
 
 - (int64_t)freeDiscspace;
 - (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (float)progressOfAllRunningDownloads;
+- (NSUInteger)runningDownloadsCount;
+
+- (void)addObserverDelegate:(id<DownloadsObserverDelegate>)observerDelegate;
+- (void)removeObserverDelegate:(id<DownloadsObserverDelegate>)observerDelegate;
+- (void)totalProgressDidChange;
+- (void)runningDownloadsCountDidChange;
 
 - (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 

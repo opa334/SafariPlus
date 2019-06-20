@@ -24,6 +24,18 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
+#import "SPFile.h"
+#import "SPDownload.h"
+
+#import <QuickLook/QuickLook.h>
+@interface QLThumbnail : NSObject
+- (id)initWithURL:(id)arg1;
+- (id)imageForUseMode:(NSUInteger)arg1 descriptor:(id)arg2 generateIfNeeded:(BOOL)arg3 contentRect:(CGRect*)arg4 error:(id*)arg5;
+@end
+
+@interface QLThumbnailGenerator : NSObject
++ (void)generateThumbnailOfMaximumSize:(CGSize)arg1 scale:(double)arg2 forURL:(id)arg3 completionHandler:(void (^)(id arg1))completion;
+@end
 
 #ifndef PREFERENCES
 
@@ -112,11 +124,11 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	{
 		if(![self isURLReadable:URL] || ![self isURLWritable:URL] || forced)
 		{
-			NSURL* newURL = [_hardLinkURL URLByAppendingPathComponent:URL.lastPathComponent];
+			NSURL* hardLinkURL = [_hardLinkURL URLByAppendingPathComponent:URL.lastPathComponent];
 
-			[self linkItemAtURL:URL toURL:newURL error:nil];
+			[self linkItemAtURL:URL toURL:hardLinkURL error:nil];
 
-			return newURL;
+			return hardLinkURL;
 		}
 	}
 
@@ -669,24 +681,75 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 #endif
 
-- (UIImage*)fileIcon
+- (UIImage*)iconForDownload:(SPDownload*)download
 {
-	if(!_fileIcon)
-	{
-		_fileIcon = [UIImage imageNamed:@"File.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
-	}
+	LSDocumentProxy* documentProxy = [LSDocumentProxy documentProxyForName:download.filename type:nil MIMEType:nil];
 
-	return _fileIcon;
+	return [self fileIconForDocumentProxy:documentProxy];
 }
 
-- (UIImage*)directoryIcon
+- (UIImage*)iconForFile:(SPFile*)file
 {
-	if(!_directoryIcon)
+	LSDocumentProxy* documentProxy = [LSDocumentProxy documentProxyForName:nil type:(__bridge NSString*)file.fileUTI MIMEType:nil];
+
+	return [self fileIconForDocumentProxy:documentProxy];
+}
+
+- (UIImage*)fileIconForDocumentProxy:(LSDocumentProxy*)documentProxy
+{
+	//A little bit bigger but has an annoying mega icon on all files without an other icon
+	//UIImage* icon = [UIImage _iconForResourceProxy:documentProxy format:13 options:0];
+
+	UIImage* icon = [UIImage _iconForResourceProxy:documentProxy variant:19 variantsScale:[UIScreen mainScreen].scale];
+	//26 and 36 are also possible variants
+
+	if(!icon)
 	{
-		_directoryIcon = [UIImage imageNamed:@"Directory.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+		return [self genericFileIcon];
 	}
 
-	return _directoryIcon;
+	return icon;
+}
+
+- (UIImage*)genericFileIcon
+{
+	static dispatch_once_t fileOnceToken;
+
+	dispatch_once(&fileOnceToken, ^
+	{
+		CGSize size = CGSizeMake(1,1);
+		UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+		[[UIColor clearColor] setFill];
+		UIRectFill(CGRectMake(0, 0, size.width, size.height));
+		UIImage* clearImage = UIGraphicsGetImageFromCurrentImageContext();
+		UIGraphicsEndImageContext();
+
+		CGImageRef iconCG = LICreateIconForImage(clearImage.CGImage, 19, 0);
+		_genericFileIcon = [[UIImage alloc] initWithCGImage:iconCG scale:[UIScreen mainScreen].scale orientation:0];
+	});
+
+	return _genericFileIcon;
+}
+
+- (UIImage*)genericDirectoryIcon
+{
+	static dispatch_once_t directoryOnceToken;
+
+	dispatch_once(&directoryOnceToken, ^
+	{
+		NSBundle* bundle = [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/DocumentManager.framework"];
+
+		if(bundle)
+		{
+			_genericDirectoryIcon = [UIImage imageNamed:@"Folder-Light-29" inBundle:bundle];
+		}
+		else
+		{
+			_genericDirectoryIcon = [UIImage imageNamed:@"Directory.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+		}
+	});
+
+	return _genericDirectoryIcon;
 }
 
 @end

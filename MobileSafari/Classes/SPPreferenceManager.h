@@ -50,6 +50,7 @@ static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) BOOL videoDownloadingEnabled;
 @property (nonatomic, readonly) NSInteger defaultDownloadSection;
 @property (nonatomic, readonly) BOOL defaultDownloadSectionAutoSwitchEnabled;
+@property (nonatomic, readonly) BOOL progressUnderDownloadsButtonEnabled;
 @property (nonatomic, readonly) BOOL downloadSiteToActionEnabled;
 @property (nonatomic, readonly) BOOL downloadImageToActionEnabled;
 @property (nonatomic, readonly) BOOL instantDownloadsEnabled;
@@ -59,6 +60,8 @@ static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) BOOL pinnedLocationsEnabled;
 @property (nonatomic, readonly) NSArray* pinnedLocations;
 @property (nonatomic, readonly) BOOL onlyDownloadOnWifiEnabled;
+@property (nonatomic, readonly) BOOL autosaveToMediaLibraryEnabled;
+@property (nonatomic, readonly) BOOL privateModeDownloadHistoryDisabled;
 @property (nonatomic, readonly) BOOL disablePushNotificationsEnabled;
 @property (nonatomic, readonly) BOOL disableBarNotificationsEnabled;
 

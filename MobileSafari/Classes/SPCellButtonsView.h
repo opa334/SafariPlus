@@ -1,4 +1,4 @@
-// SPFileTableViewCell.h
+// SPCellButtonsView.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPFile, SPCellIconLabelView;
-
-@interface SPFileTableViewCell : UITableViewCell
+@interface SPCellButtonsView : UIView
 {
-	SPCellIconLabelView* _iconLabelView;
-	UILabel* _sizeLabel;
+	NSArray<NSLayoutConstraint*>* _oneButtonConstraints;
+	NSArray<NSLayoutConstraint*>* _allButtonsConstraints;
+	NSArray<NSLayoutConstraint*>* _sharedConstraints;
 }
-- (void)setUpContent;
-- (void)setUpConstraints;
-- (void)applyFile:(SPFile*)file;
+
+@property (nonatomic) BOOL displaysBottomButton;
+
+@property (nonatomic) UIButton* topButton;
+@property (nonatomic) UIButton* bottomButton;
+
 @end

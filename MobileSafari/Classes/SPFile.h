@@ -25,6 +25,7 @@
 @property (nonatomic, readonly) BOOL isHidden;
 @property (nonatomic, readonly) BOOL isWritable;
 @property (nonatomic, readonly) CFStringRef fileUTI;
+@property (nonatomic, readonly) BOOL isPreviewable;
 
 - (instancetype)initWithFileURL:(NSURL*)fileURL;
 

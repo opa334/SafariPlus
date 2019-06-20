@@ -1,4 +1,4 @@
-// SPFileTableViewCell.h
+// SPTouchView.mm
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPFile, SPCellIconLabelView;
+#import "SPTouchView.h"
 
-@interface SPFileTableViewCell : UITableViewCell
+@implementation SPTouchView
+
+- (instancetype)initWithFrame:(CGRect)frame touchReceiver:(UIView*)touchReceiver
 {
-	SPCellIconLabelView* _iconLabelView;
-	UILabel* _sizeLabel;
+	self = [super initWithFrame:frame];
+	self.touchReceiver = touchReceiver;
+	return self;
 }
-- (void)setUpContent;
-- (void)setUpConstraints;
-- (void)applyFile:(SPFile*)file;
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent*)event
+{
+	UIView* hitView = [super hitTest:point withEvent:event];
+
+	if(hitView == self)
+	{
+		return self.touchReceiver;
+	}
+
+	return hitView;
+}
+
 @end

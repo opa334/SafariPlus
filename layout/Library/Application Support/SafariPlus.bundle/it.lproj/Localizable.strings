@@ -335,7 +335,7 @@
 "DELETE" = "Elimina";
 "RENAME" = "Rinomina";
 "DOWNLOAD_STARTED" = "Download avviato";
-"DOWNLOAD_SUCCESS" = "Download riuscito";
+"DOWNLOAD_SUCCEEDED" = "Download riuscito";
 "SAVED_IMAGE" = "Immagine salvata";
 "ERROR" = "Errore";
 "FILE_EXISTS_MESSAGE" = "Un file o un download in attesa esiste già nel percorso di destinazione!";

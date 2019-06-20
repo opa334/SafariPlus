@@ -16,28 +16,24 @@
 
 #import "SPDownloadTableViewCell.h"
 
-@class SPDownload, SPDownloadListTableViewController;
+@class SPDownload, SPDownloadListTableViewController, SPCellButtonsView, SPCellIconLabelView;
 
 @interface SPDownloadListFinishedTableViewCell : UITableViewCell
 {
 	SPDownload* _download;
-	NSMutableArray<NSLayoutConstraint*>* _allConstraints;
+	UILabel* _targetLabel;
+	UILabel* _sizeLabel;
 }
 
-@property (nonatomic) UIImageView* iconView;
-@property (nonatomic) UILabel* filenameLabel;
-@property (nonatomic) UIButton* restartButton;
-@property (nonatomic) UIButton* openDirectoryButton;
-@property (nonatomic) UILabel* targetLabel;
-@property (nonatomic) BOOL showsOpenButton;
-
 @property (nonatomic, weak) SPDownloadListTableViewController* tableViewController;
+@property (nonatomic) SPCellButtonsView* buttonsView;
+@property (nonatomic) SPCellIconLabelView* iconLabelView;
 
-- (void)initContent;
 - (void)applyDownload:(SPDownload*)download;
 - (void)setUpContent;
-- (NSDictionary*)viewsForConstraints;
 - (void)setUpConstraints;
+- (void)updateButtons;
+- (void)setFilesize:(int64_t)filesize;
 - (void)restartButtonPressed;
 - (void)openDirectoryButtonPressed;
 @end

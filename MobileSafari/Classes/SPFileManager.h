@@ -19,11 +19,13 @@ typedef NSString *NSURLResourceKey;
 typedef NSString *NSFileAttributeKey;
 #endif
 
+@class SPFile, SPDownload, LSDocumentProxy;
+
 @interface SPFileManager : NSFileManager
 {
 	NSURL* _hardLinkURL;
-	UIImage* _fileIcon;
-	UIImage* _directoryIcon;
+	UIImage* _genericFileIcon;
+	UIImage* _genericDirectoryIcon;
 	NSDictionary* _displayNamesForPaths;
 }
 
@@ -48,7 +50,10 @@ typedef NSString *NSFileAttributeKey;
 - (BOOL)URLResourceValue:(id*)value forKey:(NSURLResourceKey)key forURL:(NSURL*)url error:(NSError**)error;
 - (NSString*)resolveSymlinkForPath:(NSString*)path;
 - (NSURL*)resolveSymlinkForURL:(NSURL*)url;
-- (UIImage*)fileIcon;
-- (UIImage*)directoryIcon;
+- (UIImage*)iconForDownload:(SPDownload*)download;
+- (UIImage*)iconForFile:(SPFile*)file;
+- (UIImage*)fileIconForDocumentProxy:(LSDocumentProxy*)documentProxy;
+- (UIImage*)genericFileIcon;
+- (UIImage*)genericDirectoryIcon;
 
 @end

@@ -122,7 +122,7 @@
 }
 @end
 
-@implementation UIImage (WidthChange)
+@implementation UIImage (SizeChange)
 //Roughly based around https://stackoverflow.com/questions/20021478/add-transparent-space-around-a-uiimage
 //alignment -1: left; 0: center; 1: right;
 - (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment
@@ -166,6 +166,18 @@
 		}
 	}
 
+	return newImage;
+}
+
+- (UIImage*)scaledImageWithHeight:(CGFloat)newHeight
+{
+	CGFloat aspectRatio = self.size.width / self.size.height;
+	CGFloat newWidth = newHeight * aspectRatio;
+
+	UIGraphicsBeginImageContextWithOptions(CGSizeMake(newWidth, newHeight), NO, 0.0);
+	[self drawInRect:CGRectMake(0,0,newWidth,newHeight)];
+	UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
 	return newImage;
 }
 @end

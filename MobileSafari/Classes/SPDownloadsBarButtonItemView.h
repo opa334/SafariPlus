@@ -1,4 +1,4 @@
-// SPFileTableViewCell.h
+// SPDownloadsBarButtonItemView.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPFile, SPCellIconLabelView;
+@class SPDownloadsBarButtonItem;
 
-@interface SPFileTableViewCell : UITableViewCell
+@interface SPDownloadsBarButtonItemView : UIView
 {
-	SPCellIconLabelView* _iconLabelView;
-	UILabel* _sizeLabel;
+	UIProgressView* _progressView;
+	UIButton* _downloadsButton;
+	SPDownloadsBarButtonItem* _item;
+
+	NSArray<NSLayoutConstraint*>* _progressViewHiddenConstraints;
+	NSArray<NSLayoutConstraint*>* _progressViewShownConstraints;
 }
-- (void)setUpContent;
+
+@property (nonatomic) BOOL progressViewHidden;
+
+- (instancetype)initWithItem:(SPDownloadsBarButtonItem*)item progressViewHidden:(BOOL)progressViewHidden initialProgress:(float)initialProgress;
 - (void)setUpConstraints;
-- (void)applyFile:(SPFile*)file;
+- (void)updateProgress:(float)progress animated:(BOOL)animated;
+- (UIButton*)downloadsButton;
 @end

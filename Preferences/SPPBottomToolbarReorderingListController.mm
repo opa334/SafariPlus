@@ -49,7 +49,7 @@
 
 	NSMutableArray* allItems = [NSMutableArray new];
 
-	for(NSInteger i = BrowserToolbarBackItem; i <= BrowserToolbarDownloadsItem; i++)
+	for(NSInteger i = BrowserToolbarBackItem; i <= BrowserToolbarReloadItem; i++)
 	{
 		if(![self searchBarIncluded] && i == BrowserToolbarSearchBarSpace)
 		{
@@ -199,6 +199,9 @@
 	case BrowserToolbarDownloadsItem:
 		return [localizationManager localizedSPStringForKey:@"DOWNLOADS"];
 
+	case BrowserToolbarReloadItem:
+		return [localizationManager localizedSPStringForKey:@"RELOAD"];
+
 	default:
 		return @"";
 	}
@@ -271,6 +274,11 @@
 				itemImage = [UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
 				break;
 			}
+
+			case BrowserToolbarReloadItem:
+			{
+				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
+			}
 			}
 
 			if(itemImage)
@@ -311,7 +319,6 @@
 	UIImage* image = [self imageForItem:[itemNumber intValue]];
 
 	cell.imageView.image = image;
-	cell.imageView.adjustsImageSizeForAccessibilityContentSizeCategory = YES;
 	cell.separatorInset = UIEdgeInsetsMake(0,0,0,0);
 
 	return cell;
@@ -376,7 +383,7 @@
 		NSNumber* affectedItem = [_enabledItems objectAtIndex:indexPath.row];
 		[_enabledItems removeObjectAtIndex:indexPath.row];
 		[_disabledItems insertObject:affectedItem atIndex:disabledIndexPath.row];
-		PSSpecifier* specifier = [self specifierAtIndexPath:indexPath];
+		PSSpecifier* specifier = [self specifierAtIndex:[self indexForIndexPath:indexPath]];
 		[self removeSpecifierAtIndex:[self indexForIndexPath:indexPath] animated:YES];
 		[self insertSpecifier:specifier atIndex:[self indexForIndexPath:disabledIndexPath] animated:YES];
 	}
@@ -386,7 +393,7 @@
 		NSNumber* affectedItem = [_disabledItems objectAtIndex:indexPath.row];
 		[_disabledItems removeObjectAtIndex:indexPath.row];
 		[_enabledItems insertObject:affectedItem atIndex:enabledIndexPath.row];
-		PSSpecifier* specifier = [self specifierAtIndexPath:indexPath];
+		PSSpecifier* specifier = [self specifierAtIndex:[self indexForIndexPath:indexPath]];
 		[self removeSpecifierAtIndex:[self indexForIndexPath:indexPath] animated:YES];
 		[self insertSpecifier:specifier atIndex:[self indexForIndexPath:enabledIndexPath] animated:YES];
 	}

@@ -205,6 +205,7 @@
 	if(preferenceManager.enhancedDownloadsEnabled)
 	{
 		downloadManager = [SPDownloadManager sharedInstance];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
 	}
 
 	return orig;
@@ -246,6 +247,7 @@
 	if(preferenceManager.enhancedDownloadsEnabled)
 	{
 		downloadManager = [SPDownloadManager sharedInstance];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
 	}
 }
 

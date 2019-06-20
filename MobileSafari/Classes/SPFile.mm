@@ -22,6 +22,7 @@
 #import "SPCommunicationManager.h"
 
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <QuickLook/QuickLook.h>
 
 @implementation SPFile
 
@@ -76,6 +77,8 @@
 
 	CFStringRef fileExtension = (__bridge CFStringRef)[_fileURL pathExtension];
 	_fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+
+	_isPreviewable = [QLPreviewController canPreviewItem:_fileURL];
 
 	return self;
 }

@@ -29,6 +29,7 @@
 @property (nonatomic) int64_t startBytes;
 @property (nonatomic) int64_t totalBytesWritten;
 @property (nonatomic) int64_t bytesPerSecond;
+@property (nonatomic) BOOL startedFromPrivateBrowsingMode;
 
 @property (nonatomic) NSData* resumeData;
 @property (nonatomic) NSUInteger taskIdentifier;

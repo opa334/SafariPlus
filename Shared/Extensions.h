@@ -40,8 +40,9 @@
 - (void)fixFooterColors;
 @end
 
-@interface UIImage (WidthChange)
+@interface UIImage (SizeChange)
 - (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment;
+- (UIImage*)scaledImageWithHeight:(CGFloat)height;
 @end
 
 @interface UIImage (Rotate)

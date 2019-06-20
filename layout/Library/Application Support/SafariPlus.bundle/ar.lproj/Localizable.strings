@@ -335,7 +335,7 @@
 "DELETE" = "حذف";
 "RENAME" = "إعادة تسمية";
 "DOWNLOAD_STARTED" = "بدأ تنزيل";
-"DOWNLOAD_SUCCESS" = "تم التنزيل بنجاح";
+"DOWNLOAD_SUCCEEDED" = "تم التنزيل بنجاح";
 "SAVED_IMAGE" = "تم حفظ الصورة";
 "ERROR" = "خطأ";
 "FILE_EXISTS_MESSAGE" = "يوجد ملف أو تنزيل معلق بالفعل في نفس هذا المسار!";

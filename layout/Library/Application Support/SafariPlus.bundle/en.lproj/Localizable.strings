@@ -59,6 +59,9 @@
 "DEFAULT_SECTION_FOOTER" = "Choose the selected section of the download menu when it gets opened. The 'Auto Switch' option will only choose the selected section if there are still active downloads left, otherwise the other section will get selected.";
 "DEFAULT_SECTION_AUTO_SWITCH" = "Auto Switch";
 
+"PROGRESS_BELOW_DOWNLOADS_BUTTON" = "Progress Below Downloads Button";
+"PROGRESS_BELOW_DOWNLOADS_BUTTON_FOOTER" = "Shows a progress bar for all currently running (non-paused) downloads under the downloads button in the toolbar. Automatically gets hidden if no downloads are running. Inspired by iOS 13.";
+
 "LINK_DOWNLOAD_OPTIONS_FOOTER" = "Adds options to download a site / an image to the menu that appears when long pressing site elements.";
 "DOWNLOAD_SITE_TO_OPTION" = "'Download Site to...' Option";
 "DOWNLOAD_IMAGE_TO_OPTION" = "'Download Image to...' Option";
@@ -85,6 +88,12 @@
 
 "ONLY_DOWNLOAD_ON_WIFI" = "Only Download on Wifi";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Only allow downloading while the device is connected to a wifi network.";
+
+"AUTOSAVE_TO_MEDIA_LIBRARY" = "Autosave to Media Library";
+"AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER" = "Automatically save image, audio and video files to the media library when they finish downloading.";
+
+"DISABLE_HISTORY_FOR_PRIVATE_MODE" = "Disable History for Private Mode";
+"DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER" = "Prevent downloads that were started inside private browsing mode from being saved to the download history.";
 
 "DISABLE_PUSH_NOTIFICATIONS" = "Disable Push Notifications";
 "DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "By default, you will recieve a push notification when a download finishes while the app is inactive. This option will disable that.";
@@ -272,6 +281,7 @@
 "TABS" = "Tabs";
 "ADD_TAB" = "Add Tab";
 "SEARCH_BAR_SPACE" = "Search Bar Space";
+"RELOAD" = "Reload";
 
 /* Credits */
 
@@ -335,7 +345,8 @@
 "DELETE" = "Delete";
 "RENAME" = "Rename";
 "DOWNLOAD_STARTED" = "Download started";
-"DOWNLOAD_SUCCESS" = "Download succeeded";
+"DOWNLOAD_SUCCEEDED" = "Download succeeded";
+"DOWNLOAD_FAILED" = "Download failed";
 "SAVED_IMAGE" = "Saved Image";
 "ERROR" = "Error";
 "FILE_EXISTS_MESSAGE" = "A file or a pending download already exists at the target path!";
@@ -356,6 +367,7 @@
 "CLOSE" = "Close";
 "EXIT_PICKER" = "Exit Picker";
 "PERMISSION_ERROR_MESSAGE" = "Not enough permissions to write to the selected path. Please select another one.\nNOTE: Normally only paths inside the /var directory are writable! You can also use Filza to inspect / change the permissions of a directory.";
+"PREVIEW" = "Preview";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
 "VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";

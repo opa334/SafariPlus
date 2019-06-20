@@ -142,13 +142,12 @@
 
 	if(_isFiltering)
 	{
-		NSMutableArray* filteredM = [NSMutableArray new];
-
 		NSString* searchString = [_searchController.searchBar.text lowercaseString];
 
-		//Probably not the best way, TODO: check if this can be improved
-		for(TabDocument* document in _allTabs)
+		_filteredTabs = [_allTabs filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id evaluatedObject, NSDictionary<NSString *,id>* bindings)
 		{
+			TabDocument* document = evaluatedObject;
+
 			BOOL URLMatch = NO;
 			BOOL titleMatch = NO;
 
@@ -164,13 +163,8 @@
 				titleMatch = [title containsString:searchString];
 			}
 
-			if(URLMatch || titleMatch)
-			{
-				[filteredM addObject:document];
-			}
-		}
-
-		_filteredTabs = [filteredM copy];
+			return (URLMatch || titleMatch);
+		}]];
 	}
 	else
 	{

@@ -335,7 +335,7 @@
 "DELETE" = "Borrar";
 "RENAME" = "Renombrar";
 "DOWNLOAD_STARTED" = "Descarga iniciada";
-"DOWNLOAD_SUCCESS" = "Descarga completa";
+"DOWNLOAD_SUCCEEDED" = "Descarga completa";
 "SAVED_IMAGE" = "Imagen guardada";
 "ERROR" = "Error";
 "FILE_EXISTS_MESSAGE" = "Un archivo o una descarga pendiente ya existe en el destino especificado!";

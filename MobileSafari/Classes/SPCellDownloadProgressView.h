@@ -1,4 +1,4 @@
-// SPFileTableViewCell.h
+// SPCellDownloadProgressView.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPFile, SPCellIconLabelView;
+@interface SPCellDownloadProgressView : UIView
+@property (nonatomic) UILabel* sizeProgressLabel;
+@property (nonatomic) UILabel* sizeSpeedSeperatorLabel;
+@property (nonatomic) UILabel* downloadSpeedLabel;
+@property (nonatomic) UIProgressView* progressView;
+@property (nonatomic) UILabel* percentProgressLabel;
 
-@interface SPFileTableViewCell : UITableViewCell
-{
-	SPCellIconLabelView* _iconLabelView;
-	UILabel* _sizeLabel;
-}
-- (void)setUpContent;
 - (void)setUpConstraints;
-- (void)applyFile:(SPFile*)file;
+- (void)setColor:(UIColor*)color;
 @end

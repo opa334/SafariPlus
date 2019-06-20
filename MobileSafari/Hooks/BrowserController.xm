@@ -36,13 +36,14 @@
 %new
 - (void)downloadsFromButtonBar
 {
-	//Create SPDownloadNavigationController
-	SPDownloadNavigationController* downloadsController =
-		[[SPDownloadNavigationController alloc] init];
+	dispatch_async(dispatch_get_main_queue(), ^
+	{
+		//Create SPDownloadNavigationController
+		SPDownloadNavigationController* downloadsController = [[SPDownloadNavigationController alloc] init];
 
-	//Present SPDownloadNavigationController
-	[rootViewControllerForBrowserController(self) presentViewController:downloadsController
-	 animated:YES completion:nil];
+		//Present SPDownloadNavigationController
+		[rootViewControllerForBrowserController(self) presentViewController:downloadsController animated:YES completion:nil];
+	});
 }
 
 //URL Swipe actions

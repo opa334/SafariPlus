@@ -1,4 +1,4 @@
-// SPFileTableViewCell.h
+// SPDownloadsBarButtonItem.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPFile, SPCellIconLabelView;
+#import "../Protocols.h"
 
-@interface SPFileTableViewCell : UITableViewCell
+@class SPDownloadsBarButtonItemView, SPTouchView;
+
+@interface SPDownloadsBarButtonItem : UIBarButtonItem <DownloadsObserverDelegate>
 {
-	SPCellIconLabelView* _iconLabelView;
-	UILabel* _sizeLabel;
+	SPDownloadsBarButtonItemView* _itemView;
+	SPTouchView* _touchView;
 }
-- (void)setUpContent;
-- (void)setUpConstraints;
-- (void)applyFile:(SPFile*)file;
+- (instancetype)initWithTarget:(id)target action:(SEL)action;
 @end

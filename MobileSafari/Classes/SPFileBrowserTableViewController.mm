@@ -190,8 +190,6 @@
 			[self applyChangesAfterReload];
 		});
 	}
-
-	_displayedFiles = [_filesAtCurrentURL copy];
 }
 
 - (void)applyChangesAfterReload
@@ -322,6 +320,16 @@
 {
 	//Return amount of files at current path
 	return [_filesAtCurrentURL count];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return UITableViewAutomaticDimension;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return UITableViewAutomaticDimension;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

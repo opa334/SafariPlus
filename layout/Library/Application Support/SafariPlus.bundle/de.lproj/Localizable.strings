@@ -59,6 +59,9 @@
 "DEFAULT_SECTION_FOOTER" = "Wähle die standardmäßig beim Öffnen des Download-Menüs ausgewählte Sektion aus. Die 'Automatisches Wechseln' Option wählt die angegebene Sektion nur dann aus, wenn noch aktive Downloads existieren, andernfalls wird die jeweils andere Sektion ausgewählt.";
 "DEFAULT_SECTION_AUTO_SWITCH" = "Automatisches Wechseln";
 
+"PROGRESS_BELOW_DOWNLOADS_BUTTON" = "Fortschritt unter Downloads Button";
+"PROGRESS_BELOW_DOWNLOADS_BUTTON_FOOTER" = "Zeigt eine Fortschrittsleiste unter dem Downloads Button in der Toolbar an, welche den Gesamtfortschritt aller nicht pausierten Downloads enthält. Verschwindet automatisch, wenn keine aktiven Downloads existieren. Inspiriert von iOS 13.";
+
 "LINK_DOWNLOAD_OPTIONS_FOOTER" = "Fügt Optionen zum Herunterladen einer Seite / eines Bildes zum Menü hinzu, welches beim langen gedrückt halten eines Seitenelements erscheint.";
 "DOWNLOAD_SITE_TO_OPTION" = "'Seite herunterladen nach ...' Option";
 "DOWNLOAD_IMAGE_TO_OPTION" = "'Bild herunterladen nach ...' Option";
@@ -85,6 +88,12 @@
 
 "ONLY_DOWNLOAD_ON_WIFI" = "Nur über WLAN herunterladen";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Erlaubt das Herunterladen von Dateien nur, während das Gerät mit einem WLAN-Netzwerk verbunden ist.";
+
+"AUTOSAVE_TO_MEDIA_LIBRARY" = "Automatisch in die Medienbibliothek speichern";
+"AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER" = "Automatisches Speichern von Bild-, Audio- und Videodateien, wenn diese fertig heruntergeladen wurden.";
+
+"DISABLE_HISTORY_FOR_PRIVATE_MODE" = "Verlauf für Privaten Modus deaktivieren";
+"DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER" = "Verhindert das Speichern von Downloads in den Downloadverlauf, wenn diese aus dem privaten Surfmodus heraus gestartet wurden.";
 
 "DISABLE_PUSH_NOTIFICATIONS" = "Push-Mitteilungen deaktivieren";
 "DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Standardmäßig erhälst du eine Push-Mitteilung, wenn ein Download fertiggestellt wurde, diese Option deaktiviert das.";
@@ -272,6 +281,7 @@
 "TABS" = "Tabs";
 "ADD_TAB" = "Tab hinzufügen";
 "SEARCH_BAR_SPACE" = "Platz für die Suchleiste";
+"RELOAD" = "Neu laden";
 
 /* Credits */
 
@@ -335,7 +345,7 @@
 "DELETE" = "Löschen";
 "RENAME" = "Umbenennen";
 "DOWNLOAD_STARTED" = "Download gestartet";
-"DOWNLOAD_SUCCESS" = "Download abgeschlossen";
+"DOWNLOAD_SUCCEEDED" = "Download abgeschlossen";
 "SAVED_IMAGE" = "Bild gespeichert";
 "ERROR" = "Fehler";
 "FILE_EXISTS_MESSAGE" = "Am Zielpfad existiert bereits eine Datei oder ein ausstehender Download mit dem aktuellen Namen!";
@@ -356,6 +366,7 @@
 "CLOSE" = "Schließen";
 "EXIT_PICKER" = "Auswahl abbrechen";
 "PERMISSION_ERROR_MESSAGE" = "Keine Schreibrechte für den ausgewählten Pfad. Bitte wähle einen anderen Pfad.\nHINWEIS: In der Regel sind nur Pfade innerhalb des /var Verzeichnisses beschreibbar. Falls sonstige Probleme auftreten, lassen sich die Berechtigungen eines Verzeichnisses via Filza einsehen und ändern.";
+"PREVIEW" = "Vorschau";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
 "VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden, die aktuelle Seite wird wahrscheinlich nicht unterstützt!";

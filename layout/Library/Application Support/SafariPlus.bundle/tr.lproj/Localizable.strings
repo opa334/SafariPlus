@@ -335,7 +335,7 @@
 "DELETE" = "Sil";
 "RENAME" = "Adını değiştir";
 "DOWNLOAD_STARTED" = "İndirme başladı";
-"DOWNLOAD_SUCCESS" = "İndirme başarılı";
+"DOWNLOAD_SUCCEEDED" = "İndirme başarılı";
 "SAVED_IMAGE" = "Kaydedilmiş Resim";
 "ERROR" = "Hata";
 "FILE_EXISTS_MESSAGE" = "Hedef yolda bir dosya veya bekleyen indirme zaten var!";

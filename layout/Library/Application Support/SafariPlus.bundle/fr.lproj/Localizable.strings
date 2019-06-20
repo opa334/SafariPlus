@@ -335,7 +335,7 @@
 "DELETE" = "Supprimer";
 "RENAME" = "Renommer";
 "DOWNLOAD_STARTED" = "Téléchargement commencé";
-"DOWNLOAD_SUCCESS" = "Le téléchargement a réussi";
+"DOWNLOAD_SUCCEEDED" = "Le téléchargement a réussi";
 "SAVED_IMAGE" = "Image enregistrée";
 "ERROR" = "Erreur";
 "FILE_EXISTS_MESSAGE" = "Un fichier ou un téléchargement en attente existe déjà sur le chemin cible!";

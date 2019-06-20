@@ -15,28 +15,31 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPFileBrowserTableViewController.h"
+#import <QuickLook/QuickLook.h>
 
-@class SPDownload;
+@class SPDownload, SPFile;
 
 @interface UIApplication (iOS10)
 - (void)openURL:(id)arg1 options:(id)arg2 completionHandler:(id)arg3;
 @end
 
-@interface SPDownloadBrowserTableViewController : SPFileBrowserTableViewController <UIDocumentInteractionControllerDelegate>
+@interface SPDownloadBrowserTableViewController : SPFileBrowserTableViewController <UIDocumentInteractionControllerDelegate, QLPreviewControllerDataSource, QLPreviewControllerDelegate>
 {
 	BOOL _filzaInstalled;
+	NSArray<SPFile*>* _previewFiles;
 }
 @property (nonatomic) NSArray<SPDownload*>* downloadsAtCurrentURL;
 @property (nonatomic) NSArray<SPDownload*>* displayedDownloads;
 @property (nonatomic, strong) UIDocumentInteractionController* documentController;
+@property (nonatomic, strong) QLPreviewController* previewController;
 - (void)unselectRow;
 - (void)startPlayerWithMedia:(NSURL*)mediaURL;
 - (void)openScheme:(NSString *)scheme;
+- (UIAlertAction*)previewActionForFile:(SPFile*)file;
 - (UIAlertAction*)playActionForFile:(SPFile*)file;
 - (UIAlertAction*)openInActionForFile:(SPFile*)file;
 - (UIAlertAction*)importToMediaLibraryActionForImageWithURL:(NSURL*)URL;
 - (UIAlertAction*)importToMediaLibraryActionForVideoWithURL:(NSURL*)URL;
-//- (UIAlertAction*)importToMusicLibraryActionForFile:(SPFile*)file;
 - (UIAlertAction*)showInFilzaActionForFile:(SPFile*)file;
 - (UIAlertAction*)renameActionForFile:(SPFile*)file;
 - (UIAlertAction*)deleteActionForFile:(SPFile*)file;

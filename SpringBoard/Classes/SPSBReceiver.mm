@@ -42,9 +42,6 @@
 	[_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.fileOperation" target:self
 	 selector:@selector(handleFileOperation:withUserInfo:)];
 
-	/*[_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.importToMusicLibrary" target:self
-	   selector:@selector(importToMusicLibrary:withUserInfo:)];*/
-
 	[_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.getApplicationDisplayNames" target:self
 	 selector:@selector(getApplicationDisplayNames:withUserInfo:)];
 

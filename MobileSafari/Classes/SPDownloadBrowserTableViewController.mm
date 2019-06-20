@@ -31,7 +31,6 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVPlayerViewController.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-#import <Photos/Photos.h>
 
 @implementation SPDownloadBrowserTableViewController
 
@@ -150,13 +149,6 @@
 	return deleteIndexPaths;
 }
 
-- (void)applyChangesToTable
-{
-	[super applyChangesToTable];
-
-	self.displayedDownloads = [self.downloadsAtCurrentURL copy];
-}
-
 - (void)applyChangesAfterReload
 {
 	self.displayedDownloads = [self.downloadsAtCurrentURL copy];
@@ -205,23 +197,6 @@
 	return [super tableView:tableView cellForRowAtIndexPath:indexPath];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	switch(indexPath.section)
-	{
-	case 0:
-		return 66.0;
-
-	default:
-		return UITableViewAutomaticDimension;
-	}
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
-}
-
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if(indexPath.section == 0)
@@ -267,6 +242,26 @@
 	}
 }
 
+- (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller;
+{
+	return _previewFiles.count;
+}
+
+- (id<QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
+{
+	NSURL* fileURL = [_previewFiles objectAtIndex:index].fileURL;
+	return [fileManager accessibleHardLinkForFileAtURL:fileURL forced:NO];
+}
+
+- (void)previewControllerDidDismiss:(QLPreviewController *)controller
+{
+	_previewFiles = nil;
+	self.previewController = nil;
+
+	[self unselectRow];
+	[fileManager resetHardLinks];
+}
+
 - (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
 	if(file.isRegularFile)
@@ -284,32 +279,27 @@
 			[openAlert addAction:[self playActionForFile:file]];
 		}
 
-		/*if([file conformsTo:kUTTypeAudio])
-		   {
-		   //File is audio -> Add option to import to library
-		   [openAlert addAction:[self importToMusicLibraryActionForFile:file]];
-		   }*/
+		if(file.isPreviewable)
+		{
+			[openAlert addAction:[self previewActionForFile:file]];
+		}
 
 		[openAlert addAction:[self openInActionForFile:file]];
 
 		if([file conformsTo:kUTTypeAudiovisualContent] || [file conformsTo:kUTTypeImage])
 		{
-			NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
-
 			if([file conformsTo:kUTTypeAudiovisualContent])
 			{
+				NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 				if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(hardLinkedURL.path))
 				{
-					[openAlert addAction:[self importToMediaLibraryActionForVideoWithURL:hardLinkedURL]];
+					[openAlert addAction:[self importToMediaLibraryActionForVideoWithURL:file.fileURL]];
 				}
-				else
-				{
-					[fileManager removeItemAtURL:hardLinkedURL error:nil];
-				}
+				[fileManager removeItemAtURL:hardLinkedURL error:nil];
 			}
 			else
 			{
-				[openAlert addAction:[self importToMediaLibraryActionForImageWithURL:hardLinkedURL]];
+				[openAlert addAction:[self importToMediaLibraryActionForImageWithURL:file.fileURL]];
 			}
 		}
 
@@ -398,6 +388,26 @@
 	}
 }
 
+- (UIAlertAction*)previewActionForFile:(SPFile*)file
+{
+	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"PREVIEW"]
+		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+	{
+		_previewFiles = [self.filesAtCurrentURL filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id evaluatedObject, NSDictionary<NSString *,id>* bindings)
+		{
+			SPFile* file = evaluatedObject;
+			return file.isPreviewable;
+		}]];
+
+		self.previewController = [[QLPreviewController alloc] init];
+		self.previewController.dataSource = self;
+		self.previewController.delegate = self;
+		self.previewController.currentPreviewItemIndex = [_previewFiles indexOfObject:file];
+
+		[self.navigationController presentViewController:self.previewController animated:YES completion:nil];
+	}];
+}
+
 - (UIAlertAction*)playActionForFile:(SPFile*)file
 {
 	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
@@ -437,7 +447,8 @@
 					       localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		UIImage* image = [UIImage imageWithContentsOfFile:URL.path];
+		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
+		UIImage* image = [UIImage imageWithContentsOfFile:hardLinkedURL.path];
 		UIImageWriteToSavedPhotosAlbum(image, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 		[self unselectRow];
 	}];
@@ -449,7 +460,8 @@
 					       localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		UISaveVideoAtPathToSavedPhotosAlbum(URL.path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
+		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
+		UISaveVideoAtPathToSavedPhotosAlbum(hardLinkedURL.path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 		[self unselectRow];
 	}];
 }

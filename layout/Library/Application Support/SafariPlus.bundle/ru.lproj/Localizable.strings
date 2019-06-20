@@ -335,7 +335,7 @@
 "DELETE" = "Удалить";
 "RENAME" = "Ок";
 "DOWNLOAD_STARTED" = "Начало загрузки";
-"DOWNLOAD_SUCCESS" = "Загрузка завершена";
+"DOWNLOAD_SUCCEEDED" = "Загрузка завершена";
 "SAVED_IMAGE" = "Изображение Сохранено";
 "ERROR" = "Ошибка";
 "FILE_EXISTS_MESSAGE" = "В этой директории такой файл уже существует или загружается!";

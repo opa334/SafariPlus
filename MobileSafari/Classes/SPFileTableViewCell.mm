@@ -20,35 +20,80 @@
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
 #import "SPFile.h"
+#import "SPCellIconLabelView.h"
+#import "Extensions.h"
 
 @implementation SPFileTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+
+	[self setUpContent];
+	[self setUpConstraints];
+
+	return self;
+}
+
+- (void)setUpContent
+{
+	_iconLabelView = [[SPCellIconLabelView alloc] init];
+	_iconLabelView.translatesAutoresizingMaskIntoConstraints = NO;
+
+	[self.contentView addSubview:_iconLabelView];
+
+	_sizeLabel = [[UILabel alloc] init];
+	_sizeLabel.textColor = [UIColor lightGrayColor];
+	_sizeLabel.font = [_sizeLabel.font fontWithSize:10];
+	_sizeLabel.textAlignment = NSTextAlignmentCenter;
+	_sizeLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+	self.accessoryView = _sizeLabel;
+}
+
+- (void)setUpConstraints
+{
+	[NSLayoutConstraint activateConstraints:@[
+		//Horizontal
+		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0],
+		//[_iconLabelView.leadingAnchor constraintEqualToAnchor:self.contentView.layoutMarginsGuide.leadingAnchor],
+
+		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeTrailingMargin multiplier:1 constant:0],
+		//[_iconLabelView.trailingAnchor constraintEqualToAnchor:self.contentView.layoutMarginsGuide.trailingAnchor],
+
+		//Vertical
+		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+		//[_iconLabelView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
+
+		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
+		//[_iconLabelView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
+	]];
+}
 
 - (void)applyFile:(SPFile*)file
 {
 	//Set label of cell to filename
-	self.textLabel.attributedText = file.cellTitle;
+	_iconLabelView.label.attributedText = file.cellTitle;
 
 	if(file.isRegularFile)
 	{
 		//URL is file -> set imageView to file icon
-		self.imageView.image = [fileManager fileIcon];
+		_iconLabelView.iconView.image = [fileManager iconForFile:file];
 
 		//Remove possibly reused arrow on the right
 		self.accessoryType = UITableViewCellAccessoryNone;
 
-		//Create sizeLabel from filesize and set it to accessoryView
-		UILabel* sizeLabel = [[UILabel alloc] init];
-		sizeLabel.text = [NSByteCountFormatter stringFromByteCount:file.size countStyle:NSByteCountFormatterCountStyleFile];
-		sizeLabel.textColor = [UIColor lightGrayColor];
-		sizeLabel.font = [sizeLabel.font fontWithSize:10];
-		sizeLabel.textAlignment = NSTextAlignmentCenter;
-		sizeLabel.frame = CGRectMake(0,0, sizeLabel.intrinsicContentSize.width, 15);
-		self.accessoryView = sizeLabel;
+		//Update filesize
+		_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:file.size countStyle:NSByteCountFormatterCountStyleFile];
+		_sizeLabel.frame = CGRectMake(0,0, _sizeLabel.intrinsicContentSize.width, 15);
 	}
 	else
 	{
 		//URL is directory -> set imageView to directory icon
-		self.imageView.image = [fileManager directoryIcon];
+		_iconLabelView.iconView.image = [fileManager genericDirectoryIcon];
 
 		//Set accessoryType to disclosureIndicator (arrow to the right)
 		self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -60,14 +105,12 @@
 	if(file.isHidden)
 	{
 		//File is hidden -> modify alpha
-		self.imageView.alpha = 0.4;
-		self.textLabel.alpha = 0.4;
+		_iconLabelView.alpha = 0.5;
 	}
 	else
 	{
 		//File is not hidden -> Set alpha to normal values (after cell reuse)
-		self.imageView.alpha = 1;
-		self.textLabel.alpha = 1;
+		_iconLabelView.alpha = 1;
 	}
 
 	//Enable seperators between imageViews

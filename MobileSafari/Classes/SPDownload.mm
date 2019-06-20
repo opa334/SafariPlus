@@ -17,6 +17,7 @@
 #import "SPDownload.h"
 
 #import "../Util.h"
+#import "../SafariPlus.h"
 #import "SPDownloadInfo.h"
 #import "SPPreferenceManager.h"
 #import "SPLocalizationManager.h"
@@ -31,6 +32,22 @@
 	_filesize = downloadInfo.filesize;
 	_filename = downloadInfo.filename;
 	_targetURL = downloadInfo.targetURL;
+
+	if(downloadInfo.sourceDocument)
+	{
+		if([downloadInfo.sourceDocument respondsToSelector:@selector(isPrivateBrowsingEnabled)])
+		{
+			_startedFromPrivateBrowsingMode = [downloadInfo.sourceDocument isPrivateBrowsingEnabled];
+		}
+		else
+		{
+			_startedFromPrivateBrowsingMode = [downloadInfo.sourceDocument privateBrowsingEnabled];
+		}
+	}
+	else
+	{
+		_startedFromPrivateBrowsingMode = NO;
+	}
 
 	_orgInfo = downloadInfo;
 
@@ -53,6 +70,7 @@
 	_resumeData = [decoder decodeObjectForKey:@"resumeData"];
 	_didFinish = [decoder decodeBoolForKey:@"didFinish"];
 	_wasCancelled = [decoder decodeBoolForKey:@"wasCancelled"];
+	_startedFromPrivateBrowsingMode = [decoder decodeBoolForKey:@"startedFromPrivateBrowsingMode"];
 
 	_observerDelegates = [NSHashTable weakObjectsHashTable];
 
@@ -71,6 +89,7 @@
 	[coder encodeObject:_resumeData forKey:@"resumeData"];
 	[coder encodeBool:_didFinish forKey:@"didFinish"];
 	[coder encodeBool:_wasCancelled forKey:@"wasCancelled"];
+	[coder encodeBool:_startedFromPrivateBrowsingMode forKey:@"startedFromPrivateBrowsingMode"];
 }
 
 - (void)setDownloadTask:(NSURLSessionDownloadTask*)downloadTask
@@ -148,8 +167,10 @@
 					//Update cell delegates
 					[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 					{
-						observerDelegate.paused = YES;
+						[observerDelegate pauseStateDidChangeForDownload:self];
 					} onMainThread:YES];
+
+					[self.downloadManagerDelegate runningDownloadsCountDidChange];
 
 					//Stop Timer
 					[self setTimerEnabled:NO];
@@ -165,8 +186,10 @@
 				//Update cell delegates
 				[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 				{
-					observerDelegate.paused = YES;
+					[observerDelegate pauseStateDidChangeForDownload:self];
 				} onMainThread:YES];
+
+				[self.downloadManagerDelegate runningDownloadsCountDidChange];
 
 				//Stop Timer
 				[self setTimerEnabled:NO];
@@ -199,8 +222,10 @@
 			//Update cell delegates
 			[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 			{
-				observerDelegate.paused = NO;
+				[observerDelegate pauseStateDidChangeForDownload:self];
 			} onMainThread:YES];
+
+			[self.downloadManagerDelegate runningDownloadsCountDidChange];
 
 			//Start Timer
 			[self setTimerEnabled:YES];
@@ -227,8 +252,10 @@
 
 		[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 		{
-			[observerDelegate setFilesize:filesize];
+			[observerDelegate filesizeDidChangeForDownload:self];
 		} onMainThread:YES];
+
+		[self.downloadManagerDelegate totalProgressDidChange];
 	}
 }
 
@@ -294,7 +321,7 @@
 	//Update value on cell(s)
 	[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 	{
-		[observerDelegate updateDownloadSpeed:self.bytesPerSecond];
+		[observerDelegate downloadSpeedDidChangeForDownload:self];
 	} onMainThread:YES];
 }
 
@@ -318,10 +345,11 @@
 
 	//Update totalBytesWritten
 	self.totalBytesWritten = totalBytesWritten;
+	[self.downloadManagerDelegate totalProgressDidChange];
 
 	[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 	{
-		[observerDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
+		[observerDelegate progressDidChangeForDownload:self shouldAnimateChange:YES];
 	} onMainThread:YES];
 }
 
@@ -356,6 +384,12 @@
 	if(![_observerDelegates containsObject:observerDelegate])
 	{
 		[_observerDelegates addObject:observerDelegate];
+
+		//Welcome the new delegate by running updates
+		[observerDelegate filesizeDidChangeForDownload:self];
+		[observerDelegate pauseStateDidChangeForDownload:self];
+		[observerDelegate downloadSpeedDidChangeForDownload:self];
+		[observerDelegate progressDidChangeForDownload:self shouldAnimateChange:NO];
 	}
 }
 

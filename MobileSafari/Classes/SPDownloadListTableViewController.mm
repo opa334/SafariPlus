@@ -26,6 +26,7 @@
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPFileManager.h"
+#import "../Classes/SPCellButtonsView.h"
 #import "../SafariPlus.h"
 
 @implementation SPDownloadListTableViewController
@@ -65,6 +66,14 @@
 - (void)viewDidAppear:(BOOL)animated
 {
 	[super viewDidAppear:animated];
+
+	for(__kindof UITableViewCell* cell in self.tableView.visibleCells)
+	{
+		if([cell isMemberOfClass:[SPDownloadListFinishedTableViewCell class]])
+		{
+			[cell updateButtons];
+		}
+	}
 
 	[self fixFooterColors];
 }
@@ -314,7 +323,7 @@
 {
 	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:download.request];
 	downloadInfo.presentationController = self.navigationController;
-	downloadInfo.sourceRect = [cell.contentView convertRect:cell.restartButton.frame toView:self.navigationController.view];
+	downloadInfo.sourceRect = [cell.buttonsView convertRect:cell.buttonsView.topButton.frame toView:self.navigationController.view];
 	[downloadManager prepareDownloadFromRequestForDownloadInfo:downloadInfo];
 }
 
@@ -341,22 +350,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	switch(indexPath.section)
-	{
-	case 0:
-		return 88.0;
-
-	case 1:
-		return 60.5;
-
-	default:
-		return UITableViewAutomaticDimension;
-	}
+	return UITableViewAutomaticDimension;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
+	return UITableViewAutomaticDimension;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
