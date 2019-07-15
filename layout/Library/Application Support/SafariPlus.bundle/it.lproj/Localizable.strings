@@ -9,14 +9,18 @@
 /*PRIVACY*/
 /*UPLOADS_AND_DOWNLOADS*/
 /*USABILITY*/
-/*BEHAVIOUR*/
+/*ACTIONS*/
 /*GESTURES*/
 /*CUSTOMIZATION*/
+
+/*ABOUT_THIS_TWEAK*/
+/*TWEAK_SPECIFIC_SETTINGS*/
+"SOURCE_CODE" = "Codice sorgente";
+"CREDITS" = "Crediti";
+
 /*ABOUT_ME*/
 "TWITTER" = "Twitter";
 "DONATE" = "Dona";
-/*ABOUT_THIS_TWEAK*/
-"SOURCE_CODE" = "Codice sorgente";
 
 /* Privacy */
 
@@ -49,23 +53,19 @@
 "UPLOAD_ANY_FILE_FOOTER" = "Aggiunge una nuova opzione al menu di caricamento del documento che ti consente di scegliere qualsiasi file dalla root del tuo dispositivo. Puoi anche selezionare e caricare più file premendo a lungo su un file.";
 "UPLOAD_ANY_FILE" = "Carica qualsiasi file";
 
-"ENHANCED_DOWNLOADS" = "Download ottimizzati";
-"ENHANCED_DOWNLOADS_FOOTER" = "Aggiunge un pulsante alla barra degli strumenti in basso che aprirà la vista download. Qui puoi vedere e gestire i download in sospeso e già finiti. Il file browser può essere utilizzato per accedere e gestire i file scaricati. Prima dell'avvio di un download, viene visualizzato un avviso che contiene opzioni per salvare il file in una directory locale (/var/mobile/Download per impostazione predefinita). I download continueranno in background e ti verrà notificato al termine del download. Quando Safari viene chiuso dallo switcher dell'app, tutti i download in sospeso verranno \"congelati\" e continueranno all'avvio successivo di Safari.";
+/*DOWNLOAD_MANAGER*/
+/*DOWNLOAD_MANAGER_FOOTER*/
+
+/*CONTENT_OPTIONS*/
 
 "VIDEO_DOWNLOADING" = "Scarica video";
 "VIDEO_DOWNLOADING_FOOTER" = "Aggiunge un pulsante al lettore video che può essere utilizzato per scaricare il video.\n\nNOTA: Potrebbe non funzionare su alcuni siti a causa dell'URL che non è facilmente recuperabile. Inoltre, alcuni siti utilizzano i file m3u8 per lo streaming dei loro contenuti, è possibile salvare questi file, ma non contengono alcun video.";
 
-"DEFAULT_SECTION" = "Sezione predefinita";
-"DEFAULT_SECTION_FOOTER" = "Scegli la sezione selezionata del menu di download quando viene aperto. L'opzione \"Auto Switch\" sceglierà la sezione selezionata solo se rimangono ancora dei download attivi, altrimenti verrà selezionata l'altra sezione.";
-"DEFAULT_SECTION_AUTO_SWITCH" = "Cambio automatico";
+/*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
+/*DOWNLOAD_SITE_TO_ACTION*/
+/*DOWNLOAD_IMAGE_TO_ACTION*/
 
-"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Aggiunge opzioni per scaricare un sito / un'immagine al menu che appare quando si preme a lungo gli elementi del sito.";
-"DOWNLOAD_SITE_TO_OPTION" = "Opzione \"Scarica sito su ...\"";
-"DOWNLOAD_IMAGE_TO_OPTION" = "Opzione 'Scarica immagine in ...'";
-
-"INSTANT_DOWNLOAD" = "Download istantaneo";
-"INSTANT_DOWNLOAD_FOOTER" = "Sopprime l'avviso di download e sceglie sempre l'opzione selezionata per impostazione predefinita.";
-"OPTION" = "Opzione";
+/*PATH_OPTIONS*/
 
 "CUSTOM_DEFAULT_PATH" = "Percorso predefinito personalizzato";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "Scegli un percorso personalizzato in cui scaricare i file quando è selezionata l'opzione di download.\n\nNota: è possibile scaricare file in percorsi scrivibili, quindi qualsiasi cosa all'interno della directory /var dovrebbe funzionare!";
@@ -83,21 +83,43 @@
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Vuoi scegliere il percorso\n%@?";
 "ERROR_INVALID_NAME_OR_PATH" = "Nome o percorso non valido";
 
+/*INTERFACE*/
+
+/*PREVIEW_DOWNLOAD_PROGRESS*/
+/*PREVIEW_DOWNLOAD_PROGRESS_FOOTER*/
+
+"DEFAULT_SECTION" = "Sezione predefinita";
+"DEFAULT_SECTION_FOOTER" = "Scegli la sezione selezionata del menu di download quando viene aperto. L'opzione \"Auto Switch\" sceglierà la sezione selezionata solo se rimangono ancora dei download attivi, altrimenti verrà selezionata l'altra sezione.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Cambio automatico";
+
+/*BEHAVIOUR*/
+
+"INSTANT_DOWNLOAD" = "Download istantaneo";
+"INSTANT_DOWNLOAD_FOOTER" = "Sopprime l'avviso di download e sceglie sempre l'opzione selezionata per impostazione predefinita.";
+
 "ONLY_DOWNLOAD_ON_WIFI" = "Scarica solo su Wifi";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Consentire il download solo mentre il dispositivo è connesso a una rete Wi-Fi.";
 
-"DISABLE_PUSH_NOTIFICATIONS" = "Disabilita notifiche push";
-"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Per impostazione predefinita, riceverai una notifica push al termine del download mentre l'app non è attiva. Questa opzione lo disabiliterà.";
+/*AUTOSAVE_TO_MEDIA_LIBRARY*/
+/*AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER*/
 
-"DISABLE_BAR_NOTIFICATIONS" = "Disabilita le notifiche della barra di stato";
-"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Per impostazione predefinita, riceverai una notifica sulla barra di stato quando un download inizia / termina mentre l'app è attiva. Questa opzione lo disabiliterà.";
+/*DISABLE_HISTORY_FOR_PRIVATE_MODE*/
+/*DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER*/
+
+/*NOTIFICATIONS*/
+
+/*PUSH_NOTIFICATIONS*/
+/*PUSH_NOTIFICATIONS_FOOTER*/
+
+/*STATUS_BAR_NOTIFICATIONS*/
+/*STATUS_BAR_NOTIFICATIONS_FOOTER*/
 
 /* Usability */
 
 /*URL_ACTIONS*/
 
-/*BOTH_TAB_OPEN_ACTIONS*/
-/*BOTH_TAB_OPEN_ACTIONS_FOOTER*/
+/*BOTH_LINK_OPENING_ACTIONS*/
+/*BOTH_LINK_OPENING_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Aggiunge un'opzione al menu che appare quando un collegamento viene premuto a lungo, che può essere utilizzato per aprire il collegamento nella modalità di navigazione opposta.\n(Modalità normale -> Opzione per aprire in modalità privata,\nModalità privata -> Opzione per aprire in modalità normale)";
 "OPEN_IN_OPPOSITE_MODE" = "Apri in modalità opposta";
@@ -109,12 +131,17 @@
 
 /*TAB_MANAGER*/
 /*TAB_MANAGER_FOOTER*/
+/*SCROLL_POSITION_FROM_TAB_SWITCHER*/
 
 /*DISABLE_TAB_LIMIT*/
 /*DISABLE_TAB_LIMIT_FOOTER*/
 
-/*CUSTOM_START_SITE*/
-/*CUSTOM_START_SITE_FOOTER*/
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Apre sempre i link cliccati in nuove schede.";
+"ALWAYS_OPEN_NEW_TAB" = "Apri sempre i collegamenti in una nuova scheda";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Apri una nuova scheda in background";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Disabilita la modalità di navigazione privata e rimuove il pulsante 'Privato'. (Funzionalità di riserva nascosta)";
+"DISABLE_PRIVATE_MODE" = "Disattiva completamente la navigazione privata";
 
 /*SUGGESTIONS*/
 
@@ -137,7 +164,13 @@
 "LOCK_BARS" = "Blocco barra";
 "LOCK_BARS_FOOTER" = "Blocca il fondo e la barra superiore in posizione, in modo che non vengano più nascosti quando si scorre la pagina verso il basso.";
 
-/* Behaviour */
+/*SHOW_FULL_SITE_URL*/
+/*SHOW_FULL_SITE_URL_FOOTER*/
+
+"SUPPRESS_MAILTO_DIALOG" = "Elimina finestra di dialogo Mailto";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Elimina la finestra di dialogo che appare su iOS 10 e versioni successive quando si accede a un URL \"mailto: <email>\".";
+
+/* Actions */
 
 "NORMAL_MODE" = "Modalità di navigazione normale";
 "PRIVATE_MODE" = "Modalità di navigazione privata";
@@ -146,15 +179,13 @@
 "FOR" = "per...";
 
 "CHANGE_MODE_ON" = "Cambia la modalità di navigazione su ...";
+/*CHANGE_MODE_ON_FOOTER*/
 
-"LAUNCH_MODE_FOOTER" = "Passa alla modalità di navigazione specificata all'avvio di Safari.";
 "LAUNCH_MODE_LABEL" = "Inizio applicazione";
-
-"RESUME_FOOTER" = "Passa alla modalità di navigazione specificata quando viene ripristinato Safari.";
 "RESUME_LABEL" = "Ripresa dell'app";
-
-"EXTERNAL_URL_FOOTER" = "Passa alla modalità di navigazione specificata quando un URL esterno (da un'altra app) viene aperto con Safari.";
 "EXTERNAL_URL_LABEL" = "Link esterno aperto";
+
+/*AUTOMATIC_ACTIONS*/
 
 "AUTO_CLOSE_TABS_FOOTER" = "Chiude le schede della modalità di navigazione specificata quando si verifica il caso specificato.";
 "AUTO_CLOSE_TABS_LABEL" = "Schede di chiusura automatica";
@@ -166,34 +197,17 @@
 "ACTIVE_MODE" = "Modalità di navigazione attiva";
 "BOTH_MODES" = "Entrambe le modalità di navigazione";
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Apre sempre i link cliccati in nuove schede.";
-"ALWAYS_OPEN_NEW_TAB" = "Apri sempre i collegamenti in una nuova scheda";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Apri una nuova scheda in background";
-
-"DISABLE_PRIVATE_MODE_FOOTER" = "Disabilita la modalità di navigazione privata e rimuove il pulsante 'Privato'. (Funzionalità di riserva nascosta)";
-"DISABLE_PRIVATE_MODE" = "Disattiva completamente la navigazione privata";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Elimina la finestra di dialogo che appare su iOS 10 e versioni successive quando si accede a un URL \"mailto: <email>\".";
-"SUPPRESS_MAILTO_DIALOG" = "Elimina finestra di dialogo Mailto";
-
-/*OTHER*/
-/*DISABLE_COMMUNICATION_ERROR*/
-/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
-
 /* Gestures */
 
 "ACTION" = "Azione";
 
 "URL_BAR_GESTURES" = "Gesti barra Url";
+/*TOOLBAR_GESTURES*/
 
-"SWIPE_LEFT_GESTURE_FOOTER" = "Esegue un'azione specificata quando la barra degli URL viene trascinata a sinistra.";
 "SWIPE_LEFT_GESTURE" = "Gesto di scorrimento verso sinistra";
-
-"SWIPE_RIGHT_GESTURE_FOOTER" = "Esegue un'azione specificata quando la barra degli URL viene spostata a destra.";
 "SWIPE_RIGHT_GESTURE" = "Gesto di scorrimento verso destra";
-
-"SWIPE_DOWN_GESTURE_FOOTER" = "Esegue l'azione specificata quando la barra degli URL viene trascinata verso il basso.";
 "SWIPE_DOWN_GESTURE" = "Gesto di scorrimento verso il basso";
+/*SWIPE_UP_DOWN_GESTURE*/
 
 "CLOSE_ACTIVE_TAB" = "Chiudi scheda attiva";
 "OPEN_NEW_TAB" = "Apri una nuova scheda";
@@ -206,7 +220,8 @@
 "REQUEST_DESTKOP_SITE" = "Richiedi sito desktop";
 "OPEN_FIND_ON_PAGE" = "Apri \"Trova nella pagina\"";
 
-"BACKGROUND" = "Scheda duplicata in background";
+/*ALLOW_GESTURES_IN_TAB_SWITCHER*/
+/*RUN_ACTIONS_IN_BACKGROUND*/
 
 /* Customization */
 
@@ -272,10 +287,35 @@
 /*TABS*/
 /*ADD_TAB*/
 /*SEARCH_BAR_SPACE*/
+/*RELOAD*/
+
+/*BROWSING*/
+
+/*CUSTOM_START_SITE*/
+/*CUSTOM_START_SITE_FOOTER*/
+
+/*CUSTOM_SEARCH_ENGINE*/
+/*CUSTOM_SEARCH_ENGINE_FOOTER*/
+/*SEARCH_ENGINE_NAME*/
+/*SEARCH_URL*/
+/*SEARCH_SUGGESTIONS_URL*/
+
+/*CUSTOM_USER_AGENT*/
+/*CUSTOM_USER_AGENT_FOOTER*/
+
+/*CUSTOM_DESKTOP_USER_AGENT*/
+/*CUSTOM_DESKTOP_USER_AGENT_FOOTER*/
+
+/* Tweak Specifc Settings */
+
+/*LARGE_TITLES*/
+/*LARGE_TITLES_FOOTER*/
+
+/*DISABLE_COMMUNICATION_ERROR*/
+/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /* Credits */
 
-"CREDITS" = "Crediti";
 "PICKER_INSPIRED" = "Raccoglitore di file ispirato da";
 
 /* In app */
@@ -336,6 +376,7 @@
 "RENAME" = "Rinomina";
 "DOWNLOAD_STARTED" = "Download avviato";
 "DOWNLOAD_SUCCEEDED" = "Download riuscito";
+/*DOWNLOAD_FAILED*/
 "SAVED_IMAGE" = "Immagine salvata";
 "ERROR" = "Errore";
 "FILE_EXISTS_MESSAGE" = "Un file o un download in attesa esiste già nel percorso di destinazione!";
@@ -356,6 +397,7 @@
 "CLOSE" = "Chiudi";
 /*EXIT_PICKER*/
 "PERMISSION_ERROR_MESSAGE" = "Autorizzazioni insufficienti per scrivere nel percorso selezionato. Si prega di selezionare un altro.\nNOTA: Normalmente solo i percorsi all'interno della directory /var sono scrivibili! Puoi anche usare Filza per ispezionare / modificare i permessi di una directory.";
+/*PREVIEW*/
 "PLAY" = "Riproduci";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Il percorso che hai impostato nelle impostazioni sotto \"Percorso predefinito personalizzato\" non è valido. Si prega di correggerlo.";
 "VIDEO_URL_NOT_FOUND" = "Nessun URL video trovato, il sito attuale probabilmente non è supportato!";
@@ -376,8 +418,10 @@
 /*ADD_TABS_ALERT*/
 /*ADD_TABS_ALERT_MESSAGE*/
 /*USE_CLIPBOARD*/
+/*ADD_BOOKMARKS*/
 
 /* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "Apri in modalità normale";
 "OPEN_IN_PRIVATE_MODE" = "Apri in modalità privata";
+

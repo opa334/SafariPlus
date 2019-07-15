@@ -9,14 +9,18 @@
 "PRIVACY" = "الخصوصية";
 "UPLOADS_AND_DOWNLOADS" = "التحميلات والتنزيلات";
 "USABILITY" = "إمكانية الاستخدام";
-"BEHAVIOUR" = "السلوك";
+/*ACTIONS*/
 "GESTURES" = "الإيماءات";
 "CUSTOMIZATION" = "التخصيص";
+
+"ABOUT_THIS_TWEAK" = "حول هذه الأداة";
+/*TWEAK_SPECIFIC_SETTINGS*/
+"SOURCE_CODE" = "شفرة المصدر";
+"CREDITS" = "الاعتمادات";
+
 "ABOUT_ME" = "عني";
 "TWITTER" = "تويتر";
 "DONATE" = "تبرع";
-"ABOUT_THIS_TWEAK" = "حول هذه الأداة";
-"SOURCE_CODE" = "شفرة المصدر";
 
 /* Privacy */
 
@@ -49,23 +53,19 @@
 "UPLOAD_ANY_FILE_FOOTER" = "إضافة خيار إلى قائمة تحميل المستندات يمكن من خلاله اختيار أي ملف من جذر جهازك. يمكنك أيضًا تحديد وتحميل عدة ملفات في آنً واحد من خلال الضغط لفترة طويلة على أي ملف.";
 "UPLOAD_ANY_FILE" = "تحميل أي ملف";
 
-"ENHANCED_DOWNLOADS" = "التنزيلات المحسنة";
-"ENHANCED_DOWNLOADS_FOOTER" = "عند تفعيل هذا الخيار:\n١- سيتم إضافة زر في شريط الأدوات السفلي الخاص بمتصفح Safari يمكن من خلاله استعراض وإدارة التنزيلات الجارية والمكتملة والمعلقة.\n٢- ستتمكن من الوصول إلى الملفات المنزلة وإدارتها عن طريق قسم 'تصفح الملفات'.\n٣- قبل بدأ التنزيل سيظهر تنبيه يمكن من خلاله حفظ الملف المراد تنزيله في مسار آخر غير المسار الافتراضي، حيث أن المسار الافتراضي هو (/var/mobile/Downloads).\n٤- ستستمر التنزيلات في الخلفية وستحصل على إشعار فور انتهاء التنزيل.\n٥- عند إغلاق Safari من مبدل التطبيقات ستتجمد التنزيلات الجارية وستظل مجمدة حتى يتم إعادة تشغيل Safari مرة أخرى.";
+/*DOWNLOAD_MANAGER*/
+/*DOWNLOAD_MANAGER_FOOTER*/
+
+/*CONTENT_OPTIONS*/
 
 "VIDEO_DOWNLOADING" = "تنزيل الفيديوهات";
 "VIDEO_DOWNLOADING_FOOTER" = "عند التفعيل، سيتم إضافة زر إلى مشغل الفيديوهات يمكن من خلاله تنزيل الفيديو الذي يجرِ تشغيله.\n\nملاحظة: قد لا تعمل هذه الميزة في بعض المواقع بسبب عدم إمكانية الحصول على عناوين URL الخاصة بالفيديوهات من هذه المواقع بسهولة، أيضًا بعض المواقع تستخدم ملفات m3u8 لتدفق محتواها، وبالتالي ستتمكن من حفظ هذه الملفات ولكن لن تستفيد شيء لأنك لن تصل إلى مرادك.";
 
-"DEFAULT_SECTION" = "القسم الافتراضي";
-"DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات نشطة، وعندما لا تكون هناك تنزيلات نشطة سيتم فتح القسم الآخر.";
-"DEFAULT_SECTION_AUTO_SWITCH" = "تبديل تلقائي";
+/*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
+/*DOWNLOAD_SITE_TO_ACTION*/
+/*DOWNLOAD_IMAGE_TO_ACTION*/
 
-"LINK_DOWNLOAD_OPTIONS_FOOTER" = "إضافة خيارات تنزيل موقع / صورة إلى القائمة التي تظهر عند الضغط مطولًا على عناصر الموقع.";
-"DOWNLOAD_SITE_TO_OPTION" = "خيار 'تنزيل الموقع إلى...'";
-"DOWNLOAD_IMAGE_TO_OPTION" = "خيار 'تنزيل الصورة إلى...'";
-
-"INSTANT_DOWNLOAD" = "التنزيل الفوري";
-"INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الخيار المحدد بشكل افتراضي دائمًا.";
-"OPTION" = "Option";
+/*PATH_OPTIONS*/
 
 "CUSTOM_DEFAULT_PATH" = "مسار افتراضي مخصص";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "اختر مسارًا مخصصًا يتم تنزيل الملفات إليه عندما يكون هذا الخيار مفعلًا.\n\nملاحظة: يمكن تنزيل الملفات في مسارات قابلة للكتابة فقط، مما يعني أن أي مسار داخل  /var يمكن اختياره.";
@@ -83,21 +83,43 @@
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "هل تريد اختيار المسار\n%@؟";
 "ERROR_INVALID_NAME_OR_PATH" = "اسم أو مسار غير صالح";
 
+"INTERFACE" = "Interface";
+
+/*PREVIEW_DOWNLOAD_PROGRESS*/
+/*PREVIEW_DOWNLOAD_PROGRESS_FOOTER*/
+
+"DEFAULT_SECTION" = "القسم الافتراضي";
+"DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات نشطة، وعندما لا تكون هناك تنزيلات نشطة سيتم فتح القسم الآخر.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "تبديل تلقائي";
+
+"BEHAVIOUR" = "السلوك";
+
+"INSTANT_DOWNLOAD" = "التنزيل الفوري";
+"INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الخيار المحدد بشكل افتراضي دائمًا.";
+
 "ONLY_DOWNLOAD_ON_WIFI" = "التنزيل باستخدام WiFi فقط";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "عند تفعيل هذا الخيار لن تتمكن من تنزيل أي شيء إلا عندما تكون متصلًا بشبكة WiFi.";
 
-"DISABLE_PUSH_NOTIFICATIONS" = "تعطيل تلقي الإشعارات";
-"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "بشكل افتراضي، ستتلقى إشعارات عند انتهاء تنزيل شيء عندما يكون متصفح Safari ليس نشطًا (أي مشغلًا في الخلفية)، هذا الخيار يقوم بتعطيل هذه الإشعارات.";
+/*AUTOSAVE_TO_MEDIA_LIBRARY*/
+/*AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER*/
 
-"DISABLE_BAR_NOTIFICATIONS" = "تعطيل إشعارات شريط الحالة";
-"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "بشكل افتراضي، ستتلقى إشعارات عند بدء / انتهاء تنزيل شيء عندما يكون Safari نشطًا (قيد الاستخدام)، هذا الخيار يقوم بتعطيل هذه الإشعارات.";
+/*DISABLE_HISTORY_FOR_PRIVATE_MODE*/
+/*DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER*/
+
+/*NOTIFICATIONS*/
+
+/*PUSH_NOTIFICATIONS*/
+/*PUSH_NOTIFICATIONS_FOOTER*/
+
+/*STATUS_BAR_NOTIFICATIONS*/
+/*STATUS_BAR_NOTIFICATIONS_FOOTER*/
 
 /* Usability */
 
 "URL_ACTIONS" = "إجراءات عنوان URL";
 
-/*BOTH_TAB_OPEN_ACTIONS*/
-/*BOTH_TAB_OPEN_ACTIONS_FOOTER*/
+/*BOTH_LINK_OPENING_ACTIONS*/
+/*BOTH_LINK_OPENING_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "إضافة خيار إلى قائمة الخيارات التي تظهر عند الضغط مطولًا على رابط من شأنه فتح الرابط في وضع التصفح المعاكس.\n(الوضع العادي -> خيار للفتح في الوضع الخاص،\nالوضع الخاص -> خيار للفتح في الوضع العادي)";
 "OPEN_IN_OPPOSITE_MODE" = "خيار فتح في الوضع المعاكس";
@@ -109,12 +131,17 @@
 
 /*TAB_MANAGER*/
 /*TAB_MANAGER_FOOTER*/
+/*SCROLL_POSITION_FROM_TAB_SWITCHER*/
 
 "DISABLE_TAB_LIMIT" = "تعطيل حد علامة التبويب";
 "DISABLE_TAB_LIMIT_FOOTER" = "تعطيل حد علامة التبويب الذي تفرضه Apple والذي يختلف بناءً على إصدار iOS ونوع الجهاز. قد يكون هناك سبب وجيه جعل Apple تفعل هذا ولذلك فإن استخدام هذه الميزة يكون على مسؤوليتك الخاصة.";
 
-"CUSTOM_START_SITE" = "موقع بدء مخصص";
-"CUSTOM_START_SITE_FOOTER" = "استبدال صفحة المفضلة التي تظهر عند فتح علامة تبويب جديدة بموقع مخصص.";
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "فتح الروابط التي يتم النقر عليها في علامات تبويب جديدة دائمًا.";
+"ALWAYS_OPEN_NEW_TAB" = "فتح الروابط في علامة تبويب جديدة دائمًا";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "فتح علامة تبويب جديدة في الخلفية";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "تعطيل وضع التصفح الخاص وإزالة زر 'خاص'. (ميزة مخفية في النظام)";
+"DISABLE_PRIVATE_MODE" = "تعطيل التصفح الخاص بالكامل";
 
 "SUGGESTIONS" = "الاقتراحات";
 
@@ -137,7 +164,13 @@
 "LOCK_BARS" = "قفل الشرائط";
 "LOCK_BARS_FOOTER" = "قفل الشريط السفلي والشريط العلوي وإبقاؤهما في مكانهما، وبالتالي لن يختفيا عند تمرير الصفحة إلى أسفل.";
 
-/* Behaviour */
+/*SHOW_FULL_SITE_URL*/
+/*SHOW_FULL_SITE_URL_FOOTER*/
+
+"SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "منع مربع الحوار الذي يظهر على إصدارات iOS 10 ومابعده عندما يستطيع 'mailto:<email>' الوصول إلى عنوان URL.";
+
+/* Actions */
 
 "NORMAL_MODE" = "وضع التصفح العادي";
 "PRIVATE_MODE" = "وضع التصفح الخاص";
@@ -146,15 +179,13 @@
 "FOR" = "لـ...";
 
 "CHANGE_MODE_ON" = "تغيير وضع التصفح على...";
+/*CHANGE_MODE_ON_FOOTER*/
 
-"LAUNCH_MODE_FOOTER" = "التغيير إلى وضع التصفح المحدد عند بدء Safari.";
 "LAUNCH_MODE_LABEL" = "بدء التطبيق";
-
-"RESUME_FOOTER" = "التغيير إلى وضع التصفح المحدد عند استئناف Safari.";
 "RESUME_LABEL" = "استئناف التطبيق";
-
-"EXTERNAL_URL_FOOTER" = "التغيير إلى وضع التصفح المحدد عند فتح رابط خارجي (من تطبيق آخر) مع Safari.";
 "EXTERNAL_URL_LABEL" = "فتح الرابط الخارجي";
+
+/*AUTOMATIC_ACTIONS*/
 
 "AUTO_CLOSE_TABS_FOOTER" = "إغلاق علامات التبويب لوضع التصفح عند حدوث حالة محددة.";
 "AUTO_CLOSE_TABS_LABEL" = "إغلاق تلقائي لعلامات التبويب";
@@ -166,34 +197,17 @@
 "ACTIVE_MODE" = "وضع التصفح النشط";
 "BOTH_MODES" = "كلا وضعي التصفح";
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "فتح الروابط التي يتم النقر عليها في علامات تبويب جديدة دائمًا.";
-"ALWAYS_OPEN_NEW_TAB" = "فتح الروابط في علامة تبويب جديدة دائمًا";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "فتح علامة تبويب جديدة في الخلفية";
-
-"DISABLE_PRIVATE_MODE_FOOTER" = "تعطيل وضع التصفح الخاص وإزالة زر 'خاص'. (ميزة مخفية في النظام)";
-"DISABLE_PRIVATE_MODE" = "تعطيل التصفح الخاص بالكامل";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "منع مربع الحوار الذي يظهر على إصدارات iOS 10 ومابعده عندما يستطيع 'mailto:<email>' الوصول إلى عنوان URL.";
-"SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار";
-
-/*OTHER*/
-/*DISABLE_COMMUNICATION_ERROR*/
-/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
-
 /* Gestures */
 
 "ACTION" = "الإجراء";
 
 "URL_BAR_GESTURES" = "إيماءات شريط URL";
+/*TOOLBAR_GESTURES*/
 
-"SWIPE_LEFT_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL لليسار.";
 "SWIPE_LEFT_GESTURE" = "إيماءة التمرير لليسار";
-
-"SWIPE_RIGHT_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL لليمين.";
 "SWIPE_RIGHT_GESTURE" = "إيماءة التمرير لليمين";
-
-"SWIPE_DOWN_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL للأسفل.";
 "SWIPE_DOWN_GESTURE" = "إيماءة التمرير للأسفل";
+/*SWIPE_UP_DOWN_GESTURE*/
 
 "CLOSE_ACTIVE_TAB" = "إغلاق علامة التبويب النشطة";
 "OPEN_NEW_TAB" = "فتح علامة تبويب جديدة";
@@ -206,7 +220,8 @@
 "REQUEST_DESTKOP_SITE" = "طلب موقع سطح المكتب";
 "OPEN_FIND_ON_PAGE" = "فتح 'البحث على الصفحة'";
 
-"BACKGROUND" = "تكرار علامة التبويب في الخلفية";
+/*ALLOW_GESTURES_IN_TAB_SWITCHER*/
+/*RUN_ACTIONS_IN_BACKGROUND*/
 
 /* Customization */
 
@@ -272,10 +287,35 @@
 "TABS" = "علامات التبويب";
 "ADD_TAB" = "إضافة علامة تبويب";
 "SEARCH_BAR_SPACE" = "فراغ شريط البحث";
+/*RELOAD*/
+
+/*BROWSING*/
+
+"CUSTOM_START_SITE" = "موقع بدء مخصص";
+"CUSTOM_START_SITE_FOOTER" = "استبدال صفحة المفضلة التي تظهر عند فتح علامة تبويب جديدة بموقع مخصص.";
+
+/*CUSTOM_SEARCH_ENGINE*/
+/*CUSTOM_SEARCH_ENGINE_FOOTER*/
+/*SEARCH_ENGINE_NAME*/
+/*SEARCH_URL*/
+/*SEARCH_SUGGESTIONS_URL*/
+
+/*CUSTOM_USER_AGENT*/
+/*CUSTOM_USER_AGENT_FOOTER*/
+
+/*CUSTOM_DESKTOP_USER_AGENT*/
+/*CUSTOM_DESKTOP_USER_AGENT_FOOTER*/
+
+/* Tweak Specifc Settings */
+
+/*LARGE_TITLES*/
+/*LARGE_TITLES_FOOTER*/
+
+/*DISABLE_COMMUNICATION_ERROR*/
+/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /* Credits */
 
-"CREDITS" = "الاعتمادات";
 "PICKER_INSPIRED" = "تقنية انتقاء الملف مستوحاة بواسطة:";
 
 /* In app */
@@ -336,6 +376,7 @@
 "RENAME" = "إعادة تسمية";
 "DOWNLOAD_STARTED" = "بدأ تنزيل";
 "DOWNLOAD_SUCCEEDED" = "تم التنزيل بنجاح";
+/*DOWNLOAD_FAILED*/
 "SAVED_IMAGE" = "تم حفظ الصورة";
 "ERROR" = "خطأ";
 "FILE_EXISTS_MESSAGE" = "يوجد ملف أو تنزيل معلق بالفعل في نفس هذا المسار!";
@@ -356,6 +397,7 @@
 "CLOSE" = "إغلاق";
 /*EXIT_PICKER*/
 "PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل  /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";
+/*PREVIEW*/
 "PLAY" = "تشغيل";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "المسار الذي قمت بتعيينه في الإعدادات ضمن 'مسار افتراضي مخصص' غير صالح. يرجى تصحيح ذلك.";
 "VIDEO_URL_NOT_FOUND" = "لم يتم العثور على عنوان URL لهذا الفيديو، ربما يكون الموقع الحالي غير مدعوم!";
@@ -376,8 +418,10 @@
 /*ADD_TABS_ALERT*/
 /*ADD_TABS_ALERT_MESSAGE*/
 /*USE_CLIPBOARD*/
+/*ADD_BOOKMARKS*/
 
 /* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "فتح في الوضع العادي";
 "OPEN_IN_PRIVATE_MODE" = "فتح في الوضع الخاص";
+
