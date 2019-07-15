@@ -30,7 +30,7 @@
 - (void)applyChangesToTable;
 - (void)applyChangesAfterReload;
 - (void)reload;
-- (void)reloadForced:(BOOL)forced;
+- (void)reloadAnimated:(BOOL)animated;
 - (void)setUpRightBarButtonItems;
 - (void)dismiss;
 - (NSInteger)fileSection;

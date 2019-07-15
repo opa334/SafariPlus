@@ -295,7 +295,7 @@
 				{
 					[openAlert addAction:[self importToMediaLibraryActionForVideoWithURL:file.fileURL]];
 				}
-				[fileManager removeItemAtURL:hardLinkedURL error:nil];
+				[fileManager resetHardLinks];
 			}
 			else
 			{

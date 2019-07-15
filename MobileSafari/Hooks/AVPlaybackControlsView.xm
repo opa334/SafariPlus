@@ -33,7 +33,7 @@
 %new
 - (void)setUpDownloadButton
 {
-	if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled && !self.downloadButton)
+	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled && !self.downloadButton)
 	{
 		self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
 
@@ -55,7 +55,7 @@
 - (void)layoutSubviews
 {
 	%orig;
-	if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
+	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled)
 	{
 		AVPlaybackControlsController* playbackControlsController;
 

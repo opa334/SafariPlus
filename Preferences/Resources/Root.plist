@@ -70,9 +70,9 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>detail</key>
-			<string>SPPBehaviourListController</string>
+			<string>SPPActionsListController</string>
 			<key>label</key>
-			<string>BEHAVIOUR</string>
+			<string>ACTIONS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -98,6 +98,42 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
+			<string>ABOUT_THIS_TWEAK</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPTweakSpecificSettingsListController</string>
+			<key>label</key>
+			<string>TWEAK_SPECIFIC_SETTINGS</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>detail</key>
+			<string>SPPCreditsListController</string>
+			<key>label</key>
+			<string>CREDITS</string>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>sourceLink</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>icon</key>
+			<string>GitHub.png</string>
+			<key>label</key>
+			<string>SOURCE_CODE</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
 			<string>ABOUT_ME</string>
 		</dict>
 		<dict>
@@ -115,32 +151,6 @@
 			<string>PSButtonCell</string>
 			<key>label</key>
 			<string>DONATE</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>ABOUT_THIS_TWEAK</string>
-		</dict>
-		<dict>
-			<key>action</key>
-			<string>sourceLink</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>icon</key>
-			<string>GitHub.png</string>
-			<key>label</key>
-			<string>SOURCE_CODE</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>detail</key>
-			<string>SPPCreditsListController</string>
-			<key>label</key>
-			<string>CREDITS</string>
 		</dict>
 		<dict>
 			<key>cell</key>

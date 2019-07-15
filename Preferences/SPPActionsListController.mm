@@ -1,4 +1,4 @@
-// SPPBehaviourListController.mm
+// SPPActionsListController.mm
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,19 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "SPPBehaviourListController.h"
+#import "SPPActionsListController.h"
 #import "SafariPlusPrefs.h"
 
-@implementation SPPBehaviourListController
+@implementation SPPActionsListController
 
 - (NSString*)plistName
 {
-	return @"Behaviour";
+	return @"Actions";
 }
 
 - (NSString*)title
 {
-	return [localizationManager localizedSPStringForKey:@"BEHAVIOUR"];
+	return [localizationManager localizedSPStringForKey:@"ACTIONS"];
 }
 
 - (NSArray *)modeValues

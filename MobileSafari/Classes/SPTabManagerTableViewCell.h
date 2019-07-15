@@ -23,11 +23,29 @@
 @interface SPTabManagerTableViewCell : UITableViewCell
 {
 	__weak TabDocument* _tabDocument;
-	UITableViewLabel* _titleLabel;
-	UITableViewLabel* _URLLabel;
+
 	UIImageView* _tabIconImageView;
+	UIView* _titleLockView;
+	UILabel* _URLLabel;
+
+	UIImageView* _lockIconView;
+	UILabel* _titleLabel;
+
+	NSArray<NSLayoutConstraint*>* _tabIconConstraints;
+	NSArray<NSLayoutConstraint*>* _noTabIconConstraints;
+
+	NSArray<NSLayoutConstraint*>* _URLLabelConstraints;
+	NSArray<NSLayoutConstraint*>* _noURLLabelConstraints;
+
+	NSArray<NSLayoutConstraint*>* _lockViewConstraints;
+	NSArray<NSLayoutConstraint*>* _noLockViewConstraints;
 }
+@property (nonatomic) BOOL showsTabIcon;
+@property (nonatomic) BOOL showsURLLabel;
+@property (nonatomic) BOOL showsLockIcon;
 - (void)updateContent;
+- (void)updateContentAnimated:(BOOL)animated;
+- (void)setShowsLockIcon:(BOOL)showsLockIcon animated:(BOOL)animated;
 - (void)applyTabDocument:(TabDocument*)tabDocument;
 - (void)initContent;
 - (void)setUpConstraints;

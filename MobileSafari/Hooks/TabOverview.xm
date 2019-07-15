@@ -206,14 +206,14 @@
 		{
 			if(item.thumbnailView.lockButton == button)
 			{
-				[self.delegate tabOverview:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 		else
 		{
 			if(item.layoutInfo.itemView.lockButton == button)
 			{
-				[self.delegate tabOverview:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 	}
@@ -225,7 +225,7 @@
 	{
 		if([self.delegate currentItemForTabOverview:self] != item)
 		{
-			TabDocument* tabDocument = [self.delegate _tabDocumentRepresentedByTabOverviewItem:item];
+			TabDocument* tabDocument = tabDocumentForItem(self.delegate, item);
 
 			if(tabDocument.locked)
 			{
@@ -263,7 +263,7 @@
 		if([item.thumbnailView.lockButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].count == 0)
 		{
 			[item.thumbnailView.lockButton addTarget:self action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-			item.thumbnailView.lockButton.selected = [self.delegate _tabDocumentRepresentedByTabOverviewItem:item].locked;
+			item.thumbnailView.lockButton.selected = tabDocumentForItem(self.delegate, item).locked;
 		}
 	}
 }

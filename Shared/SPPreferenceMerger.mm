@@ -20,10 +20,20 @@
 #import "../MobileSafari/Classes/SPFileManager.h"
 #import "Simulator.h"
 
+#ifdef PREFERENCES
+@interface PSRootController : UINavigationController
++ (void)setPreferenceValue:(id)arg1 specifier:(id)arg2;
++ (id)readPreferenceValue:(id)arg1;
+@end
+#import <Preferences/PSSpecifier.h>
+#endif
+
 #ifndef SIMJECT
 
+#ifndef NO_CEPHEI
 #ifndef PREFERENCES
 #import <Cephei/HBPreferences.h>
+#endif
 #endif
 
 @implementation SPPreferenceMerger
@@ -38,6 +48,7 @@
 
 + (void)mergeIfNeeded
 {
+	#ifndef NO_CEPHEI
 	BOOL needed = [self needsMerge];
 
 	if(!needed)
@@ -45,11 +56,11 @@
 		return;
 	}
 
-	NSString* defaults = @"com.opa334.safariplusprefs";
-
+	#ifndef NO_CEPHEI
   #ifndef PREFERENCES
-	HBPreferences* tmpPreferences = [[HBPreferences alloc] initWithIdentifier:defaults];
+	HBPreferences* tmpPreferences = [[HBPreferences alloc] initWithIdentifier:preferenceDomainName];
   #endif
+	#endif
 
 	NSDictionary* colorDict = [NSDictionary dictionaryWithContentsOfFile:rPath(colorPrefsPath)];
 	if(colorDict)
@@ -60,8 +71,8 @@
 			NSString* lcscpHex = [self LCSCPHexFromLCPHex:lcpHex];
 
       #ifdef PREFERENCES
-			CFPreferencesSetValue((__bridge CFStringRef)key, (__bridge CFPropertyListRef)lcscpHex, (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-			CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSetValue((__bridge CFStringRef)key, (__bridge CFPropertyListRef)lcscpHex, (__bridge CFStringRef)preferenceDomainName, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSynchronize((__bridge CFStringRef)preferenceDomainName, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
       #else
 			[tmpPreferences setObject:lcscpHex forKey:key];
       #endif
@@ -81,8 +92,8 @@
 		if(forceHTTPSExceptions)
 		{
       #ifdef PREFERENCES
-			CFPreferencesSetValue((__bridge CFStringRef)@"forceHTTPSExceptions", (__bridge CFPropertyListRef)forceHTTPSExceptions, (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-			CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSetValue((__bridge CFStringRef)@"forceHTTPSExceptions", (__bridge CFPropertyListRef)forceHTTPSExceptions, (__bridge CFStringRef)preferenceDomainName, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			CFPreferencesSynchronize((__bridge CFStringRef)preferenceDomainName, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
       #else
 			[tmpPreferences setObject:forceHTTPSExceptions forKey:@"forceHTTPSExceptions"];
       #endif
@@ -103,17 +114,19 @@
 					[pinnedLocationsM addObject:location];
 				}
 
-	#ifdef PREFERENCES
-				CFPreferencesSetValue((__bridge CFStringRef)@"pinnedLocations", (__bridge CFPropertyListRef)[pinnedLocationsM copy], (__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-				CFPreferencesSynchronize((__bridge CFStringRef)defaults, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
-	#else
+				#ifdef PREFERENCES
+				CFPreferencesSetValue((__bridge CFStringRef)@"pinnedLocations", (__bridge CFPropertyListRef)[pinnedLocationsM copy], (__bridge CFStringRef)preferenceDomainName, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+				CFPreferencesSynchronize((__bridge CFStringRef)preferenceDomainName, kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+				#else
 				[tmpPreferences setObject:[pinnedLocationsM copy] forKey:@"pinnedLocations"];
-	#endif
+				#endif
 			}
 
 			[fileManager removeItemAtPath:rPath(otherPlistPath) error:nil];
 		}
 	}
+
+	#endif
 }
 
 + (NSString*)LCSCPHexFromLCPHex:(NSString*)lcpHex

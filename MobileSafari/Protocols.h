@@ -23,11 +23,11 @@
 @protocol DownloadNavigationControllerDelegate
 @required
 - (void)reloadBrowser;
-- (void)reloadBrowserForced:(BOOL)forced;
+- (void)reloadBrowserAnimated:(BOOL)animated;
 - (void)reloadDownloadList;
-- (void)reloadDownloadListForced:(BOOL)forced;
+- (void)reloadDownloadListAnimated:(BOOL)animated;
 - (void)reloadEverything;
-- (void)reloadEverythingForced:(BOOL)forced;
+- (void)reloadEverythingAnimated:(BOOL)animated;
 @end
 
 @protocol DownloadObserverDelegate
@@ -62,4 +62,9 @@
 
 @protocol SPDirectoryPickerDelegate
 - (void)directoryPicker:(id)directoryPicker didSelectDirectoryAtURL:(NSURL*)selectedURL withFilename:(NSString*)filename;
+@end
+
+//iOS >=12.2
+@protocol TabCollectionItem <NSObject>
+@property (readonly, nonatomic) NSUUID *UUID;
 @end

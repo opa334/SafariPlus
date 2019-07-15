@@ -14,7 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#import "SPNavigationController.h"
+
+#ifndef PREFERENCES
+@interface SPFileBrowserNavigationController : SPNavigationController
+#else
 @interface SPFileBrowserNavigationController : UINavigationController
+#endif
 @property (nonatomic) BOOL loadParentDirectories;
 @property (nonatomic) NSURL* startURL;
 
@@ -22,9 +28,9 @@
 - (NSArray*)tableViewControllersForDirectory:(NSURL*)directoryURL recursive:(BOOL)recursive;
 
 - (void)reloadBrowser;
-- (void)reloadBrowserForced:(BOOL)forced;
+- (void)reloadBrowserAnimated:(BOOL)animated;
 - (void)reloadEverything;
-- (void)reloadEverythingForced:(BOOL)forced;
+- (void)reloadEverythingAnimated:(BOOL)animated;
 
 - (Class)tableControllerClass;
 

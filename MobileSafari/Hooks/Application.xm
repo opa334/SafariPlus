@@ -202,7 +202,7 @@
 	[SPPreferenceMerger mergeIfNeeded];
 	#endif
 
-	if(preferenceManager.enhancedDownloadsEnabled)
+	if(preferenceManager.downloadManagerEnabled)
 	{
 		downloadManager = [SPDownloadManager sharedInstance];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
@@ -244,7 +244,7 @@
 	[SPPreferenceMerger mergeIfNeeded];
 	#endif
 
-	if(preferenceManager.enhancedDownloadsEnabled)
+	if(preferenceManager.downloadManagerEnabled)
 	{
 		downloadManager = [SPDownloadManager sharedInstance];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];

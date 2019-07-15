@@ -41,7 +41,7 @@
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		[self.contentView.lockButton addTarget:self.tiltedTabView action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		self.contentView.lockButton.selected = [self.tiltedTabView.delegate _tabDocumentRepresentedByTiltedTabItem:self.item].locked;
+		self.contentView.lockButton.selected = tabDocumentForItem(self.tiltedTabView.delegate, self.item).locked;
 	}
 }
 

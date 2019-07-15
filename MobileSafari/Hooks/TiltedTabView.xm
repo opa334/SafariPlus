@@ -33,14 +33,14 @@
 		{
 			if(item.contentView.lockButton == button)
 			{
-				[self.delegate tiltedTabView:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 		else
 		{
 			if(item.layoutInfo.contentView.lockButton == button)
 			{
-				[self.delegate tiltedTabView:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 	}
@@ -56,15 +56,29 @@
 
 			if([self.delegate currentItemForTiltedTabView:self] != tappedItem)
 			{
-				TabDocument* tabDocument = [self.delegate _tabDocumentRepresentedByTiltedTabItem:tappedItem];
+				TabDocument* tabDocument = tabDocumentForItem(self.delegate, tappedItem);
 
 				if(tabDocument.locked)
 				{
 					requestAuthentication([localizationManager localizedSPStringForKey:@"ACCESS_LOCKED_TAB"], ^
 					{
 						tabDocument.accessAuthenticated = YES;
-						[self.delegate tiltedTabView:self didSelectItem:tappedItem];
-						[self setPresented:NO animated:YES];
+						if([self.delegate respondsToSelector:@selector(tabCollectionView:didSelectItem:)])
+						{
+							[self.delegate tabCollectionView:self didSelectItem:tappedItem];
+						}
+						else
+						{
+							[self.delegate tiltedTabView:self didSelectItem:tappedItem];
+						}
+						if([self respondsToSelector:@selector(dismissAnimated:)])
+						{
+							[self dismissAnimated:YES];
+						}
+						else
+						{
+							[self setPresented:NO animated:YES];
+						}
 					});
 
 					return;
@@ -94,7 +108,7 @@
 	for(TiltedTabItem* item in itemsInvolvedInAnimation)
 	{
 		[item.contentView.lockButton addTarget:self action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		item.contentView.lockButton.selected = [self.delegate _tabDocumentRepresentedByTiltedTabItem:item].locked;
+		item.contentView.lockButton.selected = tabDocumentForItem(self.delegate, item).locked;
 	}
 }
 

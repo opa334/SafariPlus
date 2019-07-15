@@ -71,39 +71,39 @@ void reloadPrefs()
 	[_preferences registerBool:&_lockedTabsEnabled default:NO forKey:@"lockedTabsEnabled"];
 	[_preferences registerBool:&_biometricProtectionEnabled default:NO forKey:@"biometricProtectionEnabled"];
 	[_preferences registerBool:&_biometricProtectionSwitchModeEnabled default:NO forKey:@"biometricProtectionSwitchModeEnabled"];
-	[_preferences registerBool:&_biometricProtectionOpenTabEnabled default:NO forKey:@"biometricProtectionOpenTabEnabled"];
-	[_preferences registerBool:&_biometricProtectionCloseTabEnabled default:NO forKey:@"biometricProtectionCloseTabEnabled"];
 	[_preferences registerBool:&_biometricProtectionLockTabEnabled default:NO forKey:@"biometricProtectionLockTabEnabled"];
 	[_preferences registerBool:&_biometricProtectionUnlockTabEnabled default:NO forKey:@"biometricProtectionUnlockTabEnabled"];
 	[_preferences registerBool:&_biometricProtectionAccessLockedTabEnabled default:NO forKey:@"biometricProtectionAccessLockedTabEnabled"];
 
 	[_preferences registerBool:&_uploadAnyFileOptionEnabled default:NO forKey:@"uploadAnyFileOptionEnabled"];
-	[_preferences registerBool:&_enhancedDownloadsEnabled default:NO forKey:@"enhancedDownloadsEnabled"];
+	[_preferences registerBool:&_downloadManagerEnabled default:NO forKey:@"enhancedDownloadsEnabled"];
 	[_preferences registerBool:&_videoDownloadingEnabled default:NO forKey:@"videoDownloadingEnabled"];
-	[_preferences registerInteger:&_defaultDownloadSection default:0 forKey:@"defaultDownloadSection"];
-	[_preferences registerBool:&_defaultDownloadSectionAutoSwitchEnabled default:NO forKey:@"defaultDownloadSectionAutoSwitchEnabled"];
-	[_preferences registerBool:&_progressUnderDownloadsButtonEnabled default:YES forKey:@"progressUnderDownloadsButtonEnabled"];
 	[_preferences registerBool:&_downloadSiteToActionEnabled default:YES forKey:@"downloadSiteToActionEnabled"];
 	[_preferences registerBool:&_downloadImageToActionEnabled default:YES forKey:@"downloadImageToActionEnabled"];
-	[_preferences registerBool:&_instantDownloadsEnabled default:NO forKey:@"instantDownloadsEnabled"];
-	[_preferences registerInteger:&_instantDownloadsOption default:NO forKey:@"instantDownloadsOption"];
 	[_preferences registerBool:&_customDefaultPathEnabled default:NO forKey:@"customDefaultPathEnabled"];
 	[_preferences registerObject:&_customDefaultPath default:defaultDownloadPath forKey:@"customDefaultPath"];
 	[_preferences registerBool:&_pinnedLocationsEnabled default:NO forKey:@"pinnedLocationsEnabled"];
 	[_preferences registerObject:&_pinnedLocations default:nil forKey:@"pinnedLocations"];
+	[_preferences registerBool:&_previewDownloadProgressEnabled default:YES forKey:@"previewDownloadProgressEnabled"];
+	[_preferences registerInteger:&_defaultDownloadSection default:0 forKey:@"defaultDownloadSection"];
+	[_preferences registerBool:&_defaultDownloadSectionAutoSwitchEnabled default:NO forKey:@"defaultDownloadSectionAutoSwitchEnabled"];
+	[_preferences registerBool:&_instantDownloadsEnabled default:NO forKey:@"instantDownloadsEnabled"];
+	[_preferences registerInteger:&_instantDownloadsOption default:NO forKey:@"instantDownloadsOption"];
 	[_preferences registerBool:&_onlyDownloadOnWifiEnabled default:NO forKey:@"onlyDownloadOnWifiEnabled"];
 	[_preferences registerBool:&_autosaveToMediaLibraryEnabled default:NO forKey:@"autosaveToMediaLibraryEnabled"];
 	[_preferences registerBool:&_privateModeDownloadHistoryDisabled default:NO forKey:@"privateModeDownloadHistoryDisabled"];
-	[_preferences registerBool:&_disablePushNotificationsEnabled default:NO forKey:@"disablePushNotificationsEnabled"];
-	[_preferences registerBool:&_disableBarNotificationsEnabled default:NO forKey:@"disableBarNotificationsEnabled"];
+	[_preferences registerBool:&_pushNotificationsEnabled default:YES forKey:@"pushNotificationsEnabled"];
+	[_preferences registerBool:&_statusBarNotificationsEnabled default:YES forKey:@"statusBarNotificationsEnabled"];
 
 	[_preferences registerBool:&_bothTabOpenActionsEnabled default:NO forKey:@"bothTabOpenActionsEnabled"];
 	[_preferences registerBool:&_openInOppositeModeOptionEnabled default:NO forKey:@"openInOppositeModeOptionEnabled"];
 	[_preferences registerBool:&_desktopButtonEnabled default:NO forKey:@"desktopButtonEnabled"];
-	[_preferences registerBool:&_disableTabLimit default:NO forKey:@"disableTabLimit"];
 	[_preferences registerBool:&_tabManagerEnabled default:NO forKey:@"tabManagerEnabled"];
-	[_preferences registerBool:&_customStartSiteEnabled default:NO forKey:@"customStartSiteEnabled"];
-	[_preferences registerObject:&_customStartSite default:nil forKey:@"customStartSite"];
+	[_preferences registerBool:&_tabManagerScrollPositionFromTabSwitcherEnabled default:NO forKey:@"tabManagerScrollPositionFromTabSwitcherEnabled"];
+	[_preferences registerBool:&_disableTabLimit default:NO forKey:@"disableTabLimit"];
+	[_preferences registerBool:&_alwaysOpenNewTabEnabled default:NO forKey:@"alwaysOpenNewTabEnabled"];
+	[_preferences registerBool:&_alwaysOpenNewTabInBackgroundEnabled default:NO forKey:@"alwaysOpenNewTabInBackgroundEnabled"];
+	[_preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
 	[_preferences registerBool:&_longPressSuggestionsEnabled default:NO forKey:@"longPressSuggestionsEnabled"];
 	[_preferences registerFloat:&_longPressSuggestionsDuration default:1 forKey:@"longPressSuggestionsDuration"];
 	[_preferences registerBool:&_longPressSuggestionsFocusEnabled default:YES forKey:@"longPressSuggestionsFocusEnabled"];
@@ -111,6 +111,8 @@ void reloadPrefs()
 	[_preferences registerBool:&_showTabCountEnabled default:NO forKey:@"showTabCountEnabled"];
 	[_preferences registerBool:&_fullscreenScrollingEnabled default:NO forKey:@"fullscreenScrollingEnabled"];
 	[_preferences registerBool:&_lockBars default:NO forKey:@"lockBars"];
+	[_preferences registerBool:&_showFullSiteURLEnabled default:NO forKey:@"showFullSiteURLEnabled"];
+	[_preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
 
 	[_preferences registerBool:&_forceModeOnStartEnabled default:NO forKey:@"forceModeOnStartEnabled"];
 	[_preferences registerInteger:&_forceModeOnStartFor default:0 forKey:@"forceModeOnStartFor"];
@@ -130,12 +132,14 @@ void reloadPrefs()
 	[_preferences registerInteger:&_URLRightSwipeAction default:0 forKey:@"URLRightSwipeAction"];
 	[_preferences registerBool:&_URLDownSwipeGestureEnabled default:NO forKey:@"URLDownSwipeGestureEnabled"];
 	[_preferences registerInteger:&_URLDownSwipeAction default:0 forKey:@"URLDownSwipeAction"];
-	[_preferences registerBool:&_gestureBackground default:NO forKey:@"gestureBackground"];
-	[_preferences registerBool:&_alwaysOpenNewTabEnabled default:NO forKey:@"alwaysOpenNewTabEnabled"];
-	[_preferences registerBool:&_alwaysOpenNewTabInBackgroundEnabled default:NO forKey:@"alwaysOpenNewTabInBackgroundEnabled"];
-	[_preferences registerBool:&_disablePrivateMode default:NO forKey:@"disablePrivateMode"];
-	[_preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
-	[_preferences registerBool:&_communicationErrorDisabled default:NO forKey:@"communicationErrorDisabled"];
+	[_preferences registerBool:&_toolbarLeftSwipeGestureEnabled default:NO forKey:@"toolbarLeftSwipeGestureEnabled"];
+	[_preferences registerInteger:&_toolbarLeftSwipeAction default:0 forKey:@"toolbarLeftSwipeAction"];
+	[_preferences registerBool:&_toolbarRightSwipeGestureEnabled default:NO forKey:@"toolbarRightSwipeGestureEnabled"];
+	[_preferences registerInteger:&_toolbarRightSwipeAction default:0 forKey:@"toolbarRightSwipeAction"];
+	[_preferences registerBool:&_toolbarUpDownSwipeGestureEnabled default:NO forKey:@"toolbarUpDownSwipeGestureEnabled"];
+	[_preferences registerInteger:&_toolbarUpDownSwipeAction default:0 forKey:@"toolbarUpDownSwipeAction"];
+	[_preferences registerBool:&_gesturesInTabSwitcherEnabled default:NO forKey:@"gesturesInTabSwitcherEnabled"];
+	[_preferences registerBool:&_gestureActionsInBackgroundEnabled default:NO forKey:@"gestureActionsInBackgroundEnabled"];
 
 	#if !defined(NO_LIBCSCOLORPICKER)
 
@@ -210,6 +214,21 @@ void reloadPrefs()
 	[_preferences registerBool:&_bottomToolbarCustomOrderEnabled default:NO forKey:@"bottomToolbarCustomOrderEnabled"];
 	[_preferences registerObject:&_bottomToolbarCustomOrder default:@[@(BrowserToolbarBackItem),@(BrowserToolbarForwardItem),@(BrowserToolbarShareItem),@(BrowserToolbarBookmarksItem),@(BrowserToolbarTabExposeItem)] forKey:@"bottomToolbarCustomOrder"];
 
+	[_preferences registerBool:&_customStartSiteEnabled default:NO forKey:@"customStartSiteEnabled"];
+	[_preferences registerObject:&_customStartSite default:nil forKey:@"customStartSite"];
+	[_preferences registerBool:&_customSearchEngineEnabled default:NO forKey:@"customSearchEngineEnabled"];
+	[_preferences registerObject:&_customSearchEngineName default:@"" forKey:@"customSearchEngineName"];
+	[_preferences registerObject:&_customSearchEngineURL default:@"" forKey:@"customSearchEngineURL"];
+	[_preferences registerObject:&_customSearchEngineSuggestionsURL default:@"" forKey:@"customSearchEngineSuggestionsURL"];
+	[_preferences registerBool:&_customUserAgentEnabled default:NO forKey:@"customUserAgentEnabled"];
+	[_preferences registerObject:&_customUserAgent default:@"" forKey:@"customUserAgent"];
+	[_preferences registerBool:&_customDesktopUserAgentEnabled default:NO forKey:@"customDesktopUserAgentEnabled"];
+	[_preferences registerObject:&_customDesktopUserAgent default:@"" forKey:@"customDesktopUserAgent"];
+
+	[_preferences registerBool:&_largeTitlesEnabled default:NO forKey:@"largeTitlesEnabled"];
+	[_preferences registerBool:&_communicationErrorDisabled default:NO forKey:@"communicationErrorDisabled"];
+
+
   #endif
 
 	return self;
@@ -242,36 +261,40 @@ void reloadPrefs()
 		_biometricProtectionAccessLockedTabEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("biometricProtectionAccessLockedTabEnabled"), appID) boolValue];
 
 		_uploadAnyFileOptionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("uploadAnyFileOptionEnabled"), appID) boolValue];
-		_enhancedDownloadsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("enhancedDownloadsEnabled"), appID) boolValue];
+		_downloadManagerEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("enhancedDownloadsEnabled"), appID) boolValue];
 		_videoDownloadingEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("videoDownloadingEnabled"), appID) boolValue];
-		NSNumber* defaultDownloadSection = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("defaultDownloadSection"), appID);
-		_defaultDownloadSection = defaultDownloadSection ? [defaultDownloadSection intValue] : 1;
-		_defaultDownloadSectionAutoSwitchEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("defaultDownloadSectionAutoSwitchEnabled"), appID) boolValue];
-		NSNumber* progressUnderDownloadsButtonEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("progressUnderDownloadsButtonEnabled"), appID);
-		_progressUnderDownloadsButtonEnabled = progressUnderDownloadsButtonEnabled ? [progressUnderDownloadsButtonEnabled boolValue] : YES;
 		NSNumber* downloadSiteToActionEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadSiteToActionEnabled"), appID);
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
 		NSNumber* downloadImageToActionEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadImageToActionEnabled"), appID);
 		_downloadImageToActionEnabled = downloadImageToActionEnabled ? [downloadImageToActionEnabled boolValue] : YES;
-		_instantDownloadsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("instantDownloadsEnabled"), appID) boolValue];
-		_instantDownloadsOption = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("instantDownloadsOption"), appID) intValue];
-		_customDefaultPathEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("customDefaultPathEnabled"), appID) boolValue];
-		_customDefaultPath = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customDefaultPath"), appID);
 		_pinnedLocationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("pinnedLocationsEnabled"), appID) boolValue];
 		_pinnedLocations = (__bridge NSArray*)CFPreferencesCopyAppValue(CFSTR("pinnedLocations"), appID);
+		NSNumber* previewDownloadProgressEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("previewDownloadProgressEnabled"), appID);
+		_previewDownloadProgressEnabled = previewDownloadProgressEnabled ? [previewDownloadProgressEnabled boolValue] : YES;
+		NSNumber* defaultDownloadSection = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("defaultDownloadSection"), appID);
+		_defaultDownloadSection = defaultDownloadSection ? [defaultDownloadSection intValue] : 1;
+		_defaultDownloadSectionAutoSwitchEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("defaultDownloadSectionAutoSwitchEnabled"), appID) boolValue];
+		_instantDownloadsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("instantDownloadsEnabled"), appID) boolValue];
+		_instantDownloadsOption = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("instantDownloadsOption"), appID) intValue];
 		_onlyDownloadOnWifiEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("onlyDownloadOnWifiEnabled"), appID) boolValue];
 		_autosaveToMediaLibraryEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("autosaveToMediaLibraryEnabled"), appID) boolValue];
 		_privateModeDownloadHistoryDisabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("privateModeDownloadHistoryDisabled"), appID) boolValue];
-		_disablePushNotificationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disablePushNotificationsEnabled"), appID) boolValue];
-		_disableBarNotificationsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disableBarNotificationsEnabled"), appID) boolValue];
+		NSNumber* pushNotificationsEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("pushNotificationsEnabled"), appID);
+		_pushNotificationsEnabled = pushNotificationsEnabled ? [pushNotificationsEnabled boolValue] : YES;
+		NSNumber* statusBarNotificationsEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("statusBarNotificationsEnabled"), appID);
+		_statusBarNotificationsEnabled = statusBarNotificationsEnabled ? [statusBarNotificationsEnabled boolValue] : YES;
 
 		_bothTabOpenActionsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("bothTabOpenActionsEnabled"), appID) boolValue];
 		_openInOppositeModeOptionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("openInOppositeModeOptionEnabled"), appID) boolValue];
 		_desktopButtonEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("desktopButtonEnabled"), appID) boolValue];
-		_disableTabLimit = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disableTabLimit"), appID) boolValue];
 		_tabManagerEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("tabManagerEnabled"), appID) boolValue];
+		_tabManagerScrollPositionFromTabSwitcherEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("tabManagerScrollPositionFromTabSwitcherEnabled"), appID) boolValue];
+		_disableTabLimit = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disableTabLimit"), appID) boolValue];
 		_customStartSiteEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("customStartSiteEnabled"), appID) boolValue];
 		_customStartSite = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customStartSite"), appID);
+		_alwaysOpenNewTabEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("alwaysOpenNewTabEnabled"), appID) boolValue];
+		_alwaysOpenNewTabInBackgroundEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("alwaysOpenNewTabInBackgroundEnabled"), appID) boolValue];
+		_disablePrivateMode = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disablePrivateMode"), appID) boolValue];
 		_longPressSuggestionsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("longPressSuggestionsEnabled"), appID) boolValue];
 		NSNumber* longPressSuggestionsDuration = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("longPressSuggestionsDuration"), appID);
 		_longPressSuggestionsDuration = longPressSuggestionsDuration ? [longPressSuggestionsDuration floatValue] : 0.5;
@@ -280,13 +303,15 @@ void reloadPrefs()
 		_showTabCountEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("showTabCountEnabled"), appID) boolValue];
 		_fullscreenScrollingEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("fullscreenScrollingEnabled"), appID) boolValue];
 		_lockBars = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("lockBars"), appID) boolValue];
+		_showFullSiteURLEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("showFullSiteURLEnabled"), appID) boolValue];
+		_suppressMailToDialog = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("suppressMailToDialog"), appID) boolValue];
 
 		_forceModeOnStartEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnStartEnabled"), appID) boolValue];
 		_forceModeOnStartFor = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnStartFor"), appID) intValue];
 		_forceModeOnResumeEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnResumeEnabled"), appID) boolValue];
 		_forceModeOnResumeFor = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnResumeFor"), appID) intValue];
 		_forceModeOnExternalLinkEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnExternalLinkEnabled"), appID) boolValue];
-		_forceModeOnExternalLinkFor = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnExternalLinkFor"), appID) boolValue];
+		_forceModeOnExternalLinkFor = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnExternalLinkFor"), appID) intValue];
 		_autoCloseTabsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("autoCloseTabsEnabled"), appID) boolValue];
 		_autoCloseTabsOn = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("autoCloseTabsOn"), appID) intValue];
 		_autoCloseTabsFor = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("autoCloseTabsFor"), appID) intValue];
@@ -299,11 +324,14 @@ void reloadPrefs()
 		_URLRightSwipeAction = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("URLRightSwipeAction"), appID) intValue];
 		_URLDownSwipeGestureEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("URLDownSwipeGestureEnabled"), appID) boolValue];
 		_URLDownSwipeAction = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("URLDownSwipeAction"), appID) intValue];
-		_gestureBackground = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("gestureBackground"), appID) boolValue];
-		_alwaysOpenNewTabEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("alwaysOpenNewTabEnabled"), appID) boolValue];
-		_alwaysOpenNewTabInBackgroundEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("alwaysOpenNewTabInBackgroundEnabled"), appID) boolValue];
-		_disablePrivateMode = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("disablePrivateMode"), appID) boolValue];
-		_suppressMailToDialog = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("suppressMailToDialog"), appID) boolValue];
+		_toolbarLeftSwipeGestureEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("toolbarLeftSwipeGestureEnabled"), appID) boolValue];
+		_toolbarLeftSwipeAction = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("toolbarLeftSwipeAction"), appID) intValue];
+		_toolbarRightSwipeGestureEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("toolbarRightSwipeGestureEnabled"), appID) boolValue];
+		_toolbarRightSwipeAction = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("toolbarRightSwipeAction"), appID) intValue];
+		_toolbarUpDownSwipeGestureEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("toolbarUpDownSwipeGestureEnabled"), appID) boolValue];
+		_toolbarUpDownSwipeAction = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("toolbarUpDownSwipeAction"), appID) intValue];
+		_gesturesInTabSwitcherEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("gesturesInTabSwitcherEnabled"), appID) boolValue];
+		_gestureActionsInBackgroundEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("gestureActionsInBackgroundEnabled"), appID) boolValue];
 
 		 #if !defined(NO_LIBCSCOLORPICKER)
 
@@ -373,10 +401,24 @@ void reloadPrefs()
 
 		 #endif
 
-		 _topToolbarCustomOrderEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("topToolbarCustomOrderEnabled"), appID) boolValue];
-		 _topToolbarCustomOrder = (__bridge NSArray*)CFPreferencesCopyAppValue(CFSTR("topToolbarCustomOrder"), appID);
-		 _bottomToolbarCustomOrderEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("bottomToolbarCustomOrderEnabled"), appID) boolValue];
-		 _bottomToolbarCustomOrder = (__bridge NSArray*)CFPreferencesCopyAppValue(CFSTR("bottomToolbarCustomOrder"), appID);
+		_topToolbarCustomOrderEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("topToolbarCustomOrderEnabled"), appID) boolValue];
+		_topToolbarCustomOrder = (__bridge NSArray*)CFPreferencesCopyAppValue(CFSTR("topToolbarCustomOrder"), appID);
+		_bottomToolbarCustomOrderEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("bottomToolbarCustomOrderEnabled"), appID) boolValue];
+		_bottomToolbarCustomOrder = (__bridge NSArray*)CFPreferencesCopyAppValue(CFSTR("bottomToolbarCustomOrder"), appID);
+
+		_customDefaultPathEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("customDefaultPathEnabled"), appID) boolValue];
+		_customDefaultPath = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customDefaultPath"), appID);
+		_customSearchEngineEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("customSearchEngineEnabled"), appID) boolValue];
+		_customSearchEngineName = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customSearchEngineName"), appID);
+		_customSearchEngineURL = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customSearchEngineURL"), appID);
+		_customSearchEngineSuggestionsURL = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customSearchEngineSuggestionsURL"), appID);
+		_customUserAgentEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("customUserAgentEnabled"), appID) boolValue];
+		_customUserAgent = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customUserAgent"), appID);
+		_customDesktopUserAgentEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("customDesktopUserAgentEnabled"), appID) boolValue];
+		_customDesktopUserAgent = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customDesktopUserAgent"), appID);
+
+		_largeTitlesEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("largeTitlesEnabled"), appID) boolValue];
+		_communicationErrorDisabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("communicationErrorDisabled"), appID) boolValue];
 	}
 	else
 	{
@@ -388,38 +430,45 @@ void reloadPrefs()
 		_forceHTTPSEnabled = [[prefDict objectForKey:@"forceHTTPSEnabled"] boolValue];
 		_forceHTTPSExceptions = [prefDict objectForKey:@"forceHTTPSExceptions"];
 		_lockedTabsEnabled = [[prefDict objectForKey:@"lockedTabsEnabled"] boolValue];
+		_biometricProtectionEnabled = [[prefDict objectForKey:@"biometricProtectionEnabled"] boolValue];
+		_biometricProtectionSwitchModeEnabled = [[prefDict objectForKey:@"biometricProtectionSwitchModeEnabled"] boolValue];
+		_biometricProtectionLockTabEnabled = [[prefDict objectForKey:@"biometricProtectionLockTabEnabled"] boolValue];
+		_biometricProtectionUnlockTabEnabled = [[prefDict objectForKey:@"biometricProtectionUnlockTabEnabled"] boolValue];
+		_biometricProtectionAccessLockedTabEnabled = [[prefDict objectForKey:@"biometricProtectionAccessLockedTabEnabled"] boolValue];
 
 		_uploadAnyFileOptionEnabled = [[prefDict objectForKey:@"uploadAnyFileOptionEnabled"] boolValue];
-		_enhancedDownloadsEnabled = [[prefDict objectForKey:@"enhancedDownloadsEnabled"] boolValue];
+		_downloadManagerEnabled = [[prefDict objectForKey:@"enhancedDownloadsEnabled"] boolValue];
 		_videoDownloadingEnabled = [[prefDict objectForKey:@"videoDownloadingEnabled"] boolValue];
-		NSNumber* defaultDownloadSection = [prefDict objectForKey:@"defaultDownloadSection"];
-		_defaultDownloadSection = defaultDownloadSection ? [defaultDownloadSection intValue] : 1;
-		_defaultDownloadSectionAutoSwitchEnabled = [[prefDict objectForKey:@"defaultDownloadSectionAutoSwitchEnabled"] boolValue];
-		NSNumber* progressUnderDownloadsButtonEnabled = [prefDict objectForKey:@"progressUnderDownloadsButtonEnabled"];
-		_progressUnderDownloadsButtonEnabled =  progressUnderDownloadsButtonEnabled ? [progressUnderDownloadsButtonEnabled boolValue] : YES;
 		NSNumber* downloadSiteToActionEnabled = [prefDict objectForKey:@"downloadSiteToActionEnabled"];
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
 		NSNumber* downloadImageToActionEnabled = [prefDict objectForKey:@"downloadImageToActionEnabled"];
 		_downloadImageToActionEnabled = downloadImageToActionEnabled ? [downloadImageToActionEnabled boolValue] : YES;
-		_instantDownloadsEnabled = [[prefDict objectForKey:@"instantDownloadsEnabled"] boolValue];
-		_instantDownloadsOption = [[prefDict objectForKey:@"instantDownloadsOption"] intValue];
-		_customDefaultPathEnabled = [[prefDict objectForKey:@"customDefaultPathEnabled"] boolValue];
-		_customDefaultPath = [prefDict objectForKey:@"customDefaultPath"];
 		_pinnedLocationsEnabled = [[prefDict objectForKey:@"pinnedLocationsEnabled"] boolValue];
 		_pinnedLocations = [prefDict objectForKey:@"pinnedLocations"];
+		NSNumber* previewDownloadProgressEnabled = [prefDict objectForKey:@"previewDownloadProgressEnabled"];
+		_previewDownloadProgressEnabled =  previewDownloadProgressEnabled ? [previewDownloadProgressEnabled boolValue] : YES;
+		NSNumber* defaultDownloadSection = [prefDict objectForKey:@"defaultDownloadSection"];
+		_defaultDownloadSection = defaultDownloadSection ? [defaultDownloadSection intValue] : 1;
+		_defaultDownloadSectionAutoSwitchEnabled = [[prefDict objectForKey:@"defaultDownloadSectionAutoSwitchEnabled"] boolValue];
+		_instantDownloadsEnabled = [[prefDict objectForKey:@"instantDownloadsEnabled"] boolValue];
+		_instantDownloadsOption = [[prefDict objectForKey:@"instantDownloadsOption"] intValue];
 		_onlyDownloadOnWifiEnabled = [[prefDict objectForKey:@"onlyDownloadOnWifiEnabled"] boolValue];
 		_autosaveToMediaLibraryEnabled = [[prefDict objectForKey:@"autosaveToMediaLibraryEnabled"] boolValue];
 		_privateModeDownloadHistoryDisabled = [[prefDict objectForKey:@"privateModeDownloadHistoryDisabled"] boolValue];
-		_disablePushNotificationsEnabled = [[prefDict objectForKey:@"disablePushNotificationsEnabled"] boolValue];
-		_disableBarNotificationsEnabled = [[prefDict objectForKey:@"disableBarNotificationsEnabled"] boolValue];
+		_pushNotificationsEnabled = [[prefDict objectForKey:@"pushNotificationsEnabled"] boolValue];
+		_statusBarNotificationsEnabled = [[prefDict objectForKey:@"statusBarNotificationsEnabled"] boolValue];
 
 		_bothTabOpenActionsEnabled = [[prefDict objectForKey:@"bothTabOpenActionsEnabled"] boolValue];
 		_openInOppositeModeOptionEnabled = [[prefDict objectForKey:@"openInOppositeModeOptionEnabled"] boolValue];
 		_desktopButtonEnabled = [[prefDict objectForKey:@"desktopButtonEnabled"] boolValue];
 		_disableTabLimit = [[prefDict objectForKey:@"disableTabLimit"] boolValue];
 		_tabManagerEnabled = [[prefDict objectForKey:@"tabManagerEnabled"] boolValue];
+		_tabManagerScrollPositionFromTabSwitcherEnabled = [[prefDict objectForKey:@"tabManagerScrollPositionFromTabSwitcherEnabled"] boolValue];
 		_customStartSiteEnabled = [[prefDict objectForKey:@"customStartSiteEnabled"] boolValue];
 		_customStartSite = [prefDict objectForKey:@"customStartSite"];
+		_alwaysOpenNewTabEnabled = [[prefDict objectForKey:@"alwaysOpenNewTabEnabled"] boolValue];
+		_alwaysOpenNewTabInBackgroundEnabled = [[prefDict objectForKey:@"alwaysOpenNewTabInBackgroundEnabled"] boolValue];
+		_disablePrivateMode = [[prefDict objectForKey:@"disablePrivateMode"] boolValue];
 		_longPressSuggestionsEnabled = [[prefDict objectForKey:@"longPressSuggestionsEnabled"] boolValue];
 		NSNumber* longPressSuggestionsDuration = [prefDict objectForKey:@"longPressSuggestionsDuration"];
 		_longPressSuggestionsDuration = longPressSuggestionsDuration ? [longPressSuggestionsDuration floatValue] : 0.5;
@@ -428,13 +477,15 @@ void reloadPrefs()
 		_showTabCountEnabled = [[prefDict objectForKey:@"showTabCountEnabled"] boolValue];
 		_fullscreenScrollingEnabled = [[prefDict objectForKey:@"fullscreenScrollingEnabled"] boolValue];
 		_lockBars = [[prefDict objectForKey:@"lockBars"] boolValue];
+		_showFullSiteURLEnabled = [[prefDict objectForKey:@"showFullSiteURLEnabled"] boolValue];
+		_suppressMailToDialog = [[prefDict objectForKey:@"suppressMailToDialog"] boolValue];
 
 		_forceModeOnStartEnabled = [[prefDict objectForKey:@"forceModeOnStartEnabled"] boolValue];
 		_forceModeOnStartFor = [[prefDict objectForKey:@"forceModeOnStartFor"] intValue];
 		_forceModeOnResumeEnabled = [[prefDict objectForKey:@"forceModeOnResumeEnabled"] boolValue];
 		_forceModeOnResumeFor = [[prefDict objectForKey:@"forceModeOnResumeFor"] intValue];
 		_forceModeOnExternalLinkEnabled = [[prefDict objectForKey:@"forceModeOnExternalLinkEnabled"] boolValue];
-		_forceModeOnExternalLinkFor = [[prefDict objectForKey:@"forceModeOnExternalLinkFor"] boolValue];
+		_forceModeOnExternalLinkFor = [[prefDict objectForKey:@"forceModeOnExternalLinkFor"] intValue];
 		_autoCloseTabsEnabled = [[prefDict objectForKey:@"autoCloseTabsEnabled"] boolValue];
 		_autoCloseTabsOn = [[prefDict objectForKey:@"autoCloseTabsOn"] intValue];
 		_autoCloseTabsFor = [[prefDict objectForKey:@"autoCloseTabsFor"] intValue];
@@ -447,11 +498,14 @@ void reloadPrefs()
 		_URLRightSwipeAction = [[prefDict objectForKey:@"URLRightSwipeAction"] intValue];
 		_URLDownSwipeGestureEnabled = [[prefDict objectForKey:@"URLDownSwipeGestureEnabled"] boolValue];
 		_URLDownSwipeAction = [[prefDict objectForKey:@"URLDownSwipeAction"] intValue];
-		_gestureBackground = [[prefDict objectForKey:@"gestureBackground"] boolValue];
-		_alwaysOpenNewTabEnabled = [[prefDict objectForKey:@"alwaysOpenNewTabEnabled"] boolValue];
-		_alwaysOpenNewTabInBackgroundEnabled = [[prefDict objectForKey:@"alwaysOpenNewTabInBackgroundEnabled"] boolValue];
-		_disablePrivateMode = [[prefDict objectForKey:@"disablePrivateMode"] boolValue];
-		_suppressMailToDialog = [[prefDict objectForKey:@"suppressMailToDialog"] boolValue];
+		_toolbarLeftSwipeGestureEnabled = [[prefDict objectForKey:@"toolbarLeftSwipeGestureEnabled"] boolValue];
+		_toolbarLeftSwipeAction = [[prefDict objectForKey:@"toolbarLeftSwipeAction"] intValue];
+		_toolbarRightSwipeGestureEnabled = [[prefDict objectForKey:@"toolbarRightSwipeGestureEnabled"] boolValue];
+		_toolbarRightSwipeAction = [[prefDict objectForKey:@"toolbarRightSwipeAction"] intValue];
+		_toolbarUpDownSwipeGestureEnabled = [[prefDict objectForKey:@"toolbarUpDownSwipeGestureEnabled"] boolValue];
+		_toolbarUpDownSwipeAction = [[prefDict objectForKey:@"toolbarUpDownSwipeAction"] intValue];
+		_gesturesInTabSwitcherEnabled = [[prefDict objectForKey:@"gesturesInTabSwitcherEnabled"] boolValue];
+		_gestureActionsInBackgroundEnabled = [[prefDict objectForKey:@"gestureActionsInBackgroundEnabled"] boolValue];
 
 		 #if !defined(NO_LIBCSCOLORPICKER)
 
@@ -523,6 +577,20 @@ void reloadPrefs()
 		_topToolbarCustomOrder = [prefDict objectForKey:@"topToolbarCustomOrder"];
 		_bottomToolbarCustomOrderEnabled = [[prefDict objectForKey:@"bottomToolbarCustomOrderEnabled"] boolValue];
 		_bottomToolbarCustomOrder = [prefDict objectForKey:@"bottomToolbarCustomOrder"];
+
+		_customDefaultPathEnabled = [[prefDict objectForKey:@"customDefaultPathEnabled"] boolValue];
+		_customDefaultPath = [prefDict objectForKey:@"customDefaultPath"];
+		_customSearchEngineEnabled = [[prefDict objectForKey:@"customSearchEngineEnabled"] boolValue];
+		_customSearchEngineName = [prefDict objectForKey:@"customSearchEngineName"];
+		_customSearchEngineURL = [prefDict objectForKey:@"customSearchEngineURL"];
+		_customSearchEngineSuggestionsURL = [prefDict objectForKey:@"customSearchEngineSuggestionsURL"];
+		_customUserAgentEnabled = [[prefDict objectForKey:@"customUserAgentEnabled"] boolValue];
+		_customUserAgent = [prefDict objectForKey:@"customUserAgent"];
+		_customDesktopUserAgentEnabled = [[prefDict objectForKey:@"customDesktopUserAgentEnabled"] boolValue];
+		_customDesktopUserAgent = [prefDict objectForKey:@"customDesktopUserAgent"];
+
+		_largeTitlesEnabled = [[prefDict objectForKey:@"largeTitlesEnabled"] boolValue];
+		_communicationErrorDisabled = [[prefDict objectForKey:@"communicationErrorDisabled"] boolValue];
 	}
 
 
@@ -538,32 +606,51 @@ void reloadPrefs()
 
 - (BOOL)forceHTTPSEnabled { return [[_preferences objectForKey:@"forceHTTPSEnabled"] boolValue]; }
 - (NSArray*)forceHTTPSExceptions { return [_preferences objectForKey:@"forceHTTPSExceptions"]; }
-- (BOOL)openInOppositeModeOptionEnabled { return [[_preferences objectForKey:@"openInOppositeModeOptionEnabled"] boolValue]; }
-- (BOOL)bothTabOpenActionsEnabled { return [[_preferences objectForKey:@"bothTabOpenActionsEnabled"] boolValue]; }
-- (BOOL)uploadAnyFileOptionEnabled { return [[_preferences objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
-- (BOOL)desktopButtonEnabled { return [[_preferences objectForKey:@"desktopButtonEnabled"] boolValue]; }
-- (BOOL)longPressSuggestionsEnabled { return [[_preferences objectForKey:@"longPressSuggestionsEnabled"] boolValue]; }
-- (CGFloat)longPressSuggestionsDuration { return [_preferences objectForKey:@"longPressSuggestionsDuration"] ? [[_preferences objectForKey:@"longPressSuggestionsDuration"] floatValue] : 0.5; }
-- (BOOL)longPressSuggestionsFocusEnabled { return [[_preferences objectForKey:@"longPressSuggestionsFocusEnabled"] boolValue]; }
+- (BOOL)lockedTabsEnabled { return [[_preferences objectForKey:@"lockedTabsEnabled"] boolValue]; }
+- (BOOL)biometricProtectionEnabled { return [[_preferences objectForKey:@"biometricProtectionEnabled"] boolValue]; }
+- (BOOL)biometricProtectionSwitchModeEnabled { return [[_preferences objectForKey:@"biometricProtectionSwitchModeEnabled"] boolValue]; }
+- (BOOL)biometricProtectionLockTabEnabled { return [[_preferences objectForKey:@"biometricProtectionLockTabEnabled"] boolValue]; }
+- (BOOL)biometricProtectionUnlockTabEnabled { return [[_preferences objectForKey:@"biometricProtectionUnlockTabEnabled"] boolValue]; }
+- (BOOL)biometricProtectionAccessLockedTabEnabled { return [[_preferences objectForKey:@"biometricProtectionAccessLockedTabEnabled"] boolValue]; }
 
-- (BOOL)enhancedDownloadsEnabled { return [[_preferences objectForKey:@"enhancedDownloadsEnabled"] boolValue]; }
+- (BOOL)uploadAnyFileOptionEnabled { return [[_preferences objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
+- (BOOL)downloadManagerEnabled { return [[_preferences objectForKey:@"enhancedDownloadsEnabled"] boolValue]; }
 - (BOOL)videoDownloadingEnabled { return [[_preferences objectForKey:@"videoDownloadingEnabled"] boolValue]; }
-- (NSInteger)defaultDownloadSection { return [_preferences objectForKey:@"defaultDownloadSection"] ? [[_preferences objectForKey:@"defaultDownloadSection"] integerValue] : 1; }
-- (BOOL)defaultDownloadSectionAutoSwitchEnabled { return [[_preferences objectForKey:@"defaultDownloadSectionAutoSwitchEnabled"] boolValue]; }
-- (BOOL)progressUnderDownloadsButtonEnabled { return [[_preferences objectForKey:@"progressUnderDownloadsButtonEnabled"] boolValue]; }
 - (BOOL)downloadSiteToActionEnabled { return [_preferences objectForKey:@"downloadSiteToActionEnabled"] ? [[_preferences objectForKey:@"downloadSiteToActionEnabled"] boolValue] : YES; }
 - (BOOL)downloadImageToActionEnabled { return [_preferences objectForKey:@"downloadImageToActionEnabled"] ? [[_preferences objectForKey:@"downloadImageToActionEnabled"] boolValue] : YES; }
-- (BOOL)instantDownloadsEnabled { return [[_preferences objectForKey:@"instantDownloadsEnabled"] boolValue]; }
-- (NSInteger)instantDownloadsOption { return [[_preferences objectForKey:@"instantDownloadsOption"] integerValue]; }
-- (BOOL)customDefaultPathEnabled { return [[_preferences objectForKey:@"customDefaultPathEnabled"] boolValue]; }
-- (NSString*)customDefaultPath { return [_preferences objectForKey:@"customDefaultPath"]; }
 - (BOOL)pinnedLocationsEnabled { return [[_preferences objectForKey:@"pinnedLocationsEnabled"] boolValue]; }
 - (NSArray*)pinnedLocations { return [_preferences objectForKey:@"pinnedLocations"]; }
+- (BOOL)previewDownloadProgressEnabled { return [[_preferences objectForKey:@"previewDownloadProgressEnabled"] boolValue]; }
+- (NSInteger)defaultDownloadSection { return [_preferences objectForKey:@"defaultDownloadSection"] ? [[_preferences objectForKey:@"defaultDownloadSection"] integerValue] : 1; }
+- (BOOL)defaultDownloadSectionAutoSwitchEnabled { return [[_preferences objectForKey:@"defaultDownloadSectionAutoSwitchEnabled"] boolValue]; }
+- (BOOL)instantDownloadsEnabled { return [[_preferences objectForKey:@"instantDownloadsEnabled"] boolValue]; }
+- (NSInteger)instantDownloadsOption { return [[_preferences objectForKey:@"instantDownloadsOption"] integerValue]; }
 - (BOOL)onlyDownloadOnWifiEnabled { return [[_preferences objectForKey:@"onlyDownloadOnWifiEnabled"] boolValue]; }
 - (BOOL)autosaveToMediaLibraryEnabled { return [[_preferences objectForKey:@"autosaveToMediaLibraryEnabled"] boolValue]; }
 - (BOOL)privateModeDownloadHistoryDisabled { return [[_preferences objectForKey:@"privateModeDownloadHistoryDisabled"] boolValue]; }
-- (BOOL)disablePushNotificationsEnabled { return [[_preferences objectForKey:@"disablePushNotificationsEnabled"] boolValue]; }
-- (BOOL)disableBarNotificationsEnabled { return [[_preferences objectForKey:@"disableBarNotificationsEnabled"] boolValue]; }
+- (BOOL)pushNotificationsEnabled { return [[_preferences objectForKey:@"pushNotificationsEnabled"] boolValue]; }
+- (BOOL)statusBarNotificationsEnabled { return [[_preferences objectForKey:@"statusBarNotificationsEnabled"] boolValue]; }
+
+- (BOOL)bothTabOpenActionsEnabled { return [[_preferences objectForKey:@"bothTabOpenActionsEnabled"] boolValue]; }
+- (BOOL)openInOppositeModeOptionEnabled { return [[_preferences objectForKey:@"openInOppositeModeOptionEnabled"] boolValue]; }
+- (BOOL)desktopButtonEnabled { return [[_preferences objectForKey:@"desktopButtonEnabled"] boolValue]; }
+- (BOOL)tabManagerEnabled { return [[_preferences objectForKey:@"tabManagerEnabled"] boolValue]; }
+- (BOOL)tabManagerScrollPositionFromTabSwitcherEnabled { return [[_preferences objectForKey:@"tabManagerScrollPositionFromTabSwitcherEnabled"] boolValue]; }
+- (BOOL)disableTabLimit { return [[_preferences objectForKey:@"disableTabLimit"] boolValue]; }
+- (BOOL)customStartSiteEnabled { return [[_preferences objectForKey:@"customStartSiteEnabled"] boolValue]; }
+- (NSString*)customStartSite { return [_preferences objectForKey:@"customStartSite"]; }
+- (BOOL)alwaysOpenNewTabEnabled { return [[_preferences objectForKey:@"alwaysOpenNewTabEnabled"] boolValue]; }
+- (BOOL)alwaysOpenNewTabInBackgroundEnabled { return [[_preferences objectForKey:@"alwaysOpenNewTabInBackgroundEnabled"] boolValue]; }
+- (BOOL)disablePrivateMode { return [[_preferences objectForKey:@"disablePrivateMode"] boolValue]; }
+- (BOOL)longPressSuggestionsEnabled { return [[_preferences objectForKey:@"longPressSuggestionsEnabled"] boolValue]; }
+- (CGFloat)longPressSuggestionsDuration { return [_preferences objectForKey:@"longPressSuggestionsDuration"] ? [[_preferences objectForKey:@"longPressSuggestionsDuration"] floatValue] : 0.5; }
+- (BOOL)longPressSuggestionsFocusEnabled { return [[_preferences objectForKey:@"longPressSuggestionsFocusEnabled"] boolValue]; }
+- (BOOL)suggestionInsertButtonEnabled { return [[_preferences objectForKey:@"suggestionInsertButtonEnabled"] boolValue]; }
+- (BOOL)showTabCountEnabled { return [[_preferences objectForKey:@"showTabCountEnabled"] boolValue]; }
+- (BOOL)fullscreenScrollingEnabled { return [[_preferences objectForKey:@"fullscreenScrollingEnabled"] boolValue]; }
+- (BOOL)lockBars { return [[_preferences objectForKey:@"lockBars"] boolValue]; }
+- (BOOL)showFullSiteURLEnabled { return [[_preferences objectForKey:@"showFullSiteURLEnabled"] boolValue]; }
+- (BOOL)suppressMailToDialog { return [[_preferences objectForKey:@"suppressMailToDialog"] boolValue]; }
 
 - (BOOL)forceModeOnStartEnabled { return [[_preferences objectForKey:@"forceModeOnStartEnabled"] boolValue]; }
 - (NSInteger)forceModeOnStartFor { return [[_preferences objectForKey:@"forceModeOnStartFor"] integerValue]; }
@@ -583,15 +670,14 @@ void reloadPrefs()
 - (NSInteger)URLRightSwipeAction { return [[_preferences objectForKey:@"URLRightSwipeAction"] integerValue]; }
 - (BOOL)URLDownSwipeGestureEnabled { return [[_preferences objectForKey:@"URLDownSwipeGestureEnabled"] boolValue]; }
 - (NSInteger)URLDownSwipeAction { return [[_preferences objectForKey:@"URLDownSwipeAction"] integerValue]; }
-- (BOOL)gestureBackground { return [[_preferences objectForKey:@"gestureBackground"] boolValue]; }
-
-- (BOOL)fullscreenScrollingEnabled { return [[_preferences objectForKey:@"fullscreenScrollingEnabled"] boolValue]; }
-- (BOOL)disableTabLimit { return [[_preferences objectForKey:@"disableTabLimit"] boolValue]; }
-- (BOOL)lockBars { return [[_preferences objectForKey:@"lockBars"] boolValue]; }
-- (BOOL)disablePrivateMode { return [[_preferences objectForKey:@"disablePrivateMode"] boolValue]; }
-- (BOOL)alwaysOpenNewTabEnabled { return [[_preferences objectForKey:@"alwaysOpenNewTabEnabled"] boolValue]; }
-- (BOOL)alwaysOpenNewTabInBackgroundEnabled { return [[_preferences objectForKey:@"alwaysOpenNewTabInBackgroundEnabled"] boolValue]; }
-- (BOOL)suppressMailToDialog { return [[_preferences objectForKey:@"suppressMailToDialog"] boolValue]; }
+- (BOOL)toolbarLeftSwipeGestureEnabled { return [[_preferences objectForKey:@"toolbarLeftSwipeGestureEnabled"] boolValue]; }
+- (NSInteger)toolbarLeftSwipeAction { return [[_preferences objectForKey:@"toolbarLeftSwipeAction"] integerValue]; }
+- (BOOL)toolbarRightSwipeGestureEnabled { return [[_preferences objectForKey:@"toolbarRightSwipeGestureEnabled"] boolValue]; }
+- (NSInteger)toolbarRightSwipeAction { return [[_preferences objectForKey:@"toolbarRightSwipeAction"] integerValue]; }
+- (BOOL)toolbarUpDownSwipeGestureEnabled { return [[_preferences objectForKey:@"toolbarUpDownSwipeGestureEnabled"] boolValue]; }
+- (NSInteger)toolbarUpDownSwipeAction { return [[_preferences objectForKey:@"toolbarUpDownSwipeAction"] integerValue]; }
+- (BOOL)gesturesInTabSwitcherEnabled { return [[_preferences objectForKey:@"gesturesInTabSwitcherEnabled"] boolValue]; }
+- (BOOL)gestureActionsInBackgroundEnabled { return [[_preferences objectForKey:@"gestureActionsInBackgroundEnabled"] boolValue]; }
 
 #if !defined(NO_LIBCSCOLORPICKER)
 
@@ -626,6 +712,25 @@ void reloadPrefs()
 - (BOOL)tabTitleBarPrivateBackgroundColorEnabled { return [[_preferences objectForKey:@"tabTitleBarPrivateBackgroundColorEnabled"] boolValue]; }
 
 #endif
+
+- (BOOL)topToolbarCustomOrderEnabled { return [[_preferences objectForKey:@"topToolbarCustomOrderEnabled"] boolValue]; }
+- (NSArray*)topToolbarCustomOrder { return [_preferences objectForKey:@"topToolbarCustomOrder"]; }
+- (BOOL)bottomToolbarCustomOrderEnabled { return [[_preferences objectForKey:@"bottomToolbarCustomOrderEnabled"] boolValue]; }
+- (NSArray*)bottomToolbarCustomOrder { return [_preferences objectForKey:@"bottomToolbarCustomOrder"]; }
+
+- (BOOL)customDefaultPathEnabled { return [[_preferences objectForKey:@"customDefaultPathEnabled"] boolValue]; }
+- (NSString*)customDefaultPath { return [_preferences objectForKey:@"customDefaultPath"]; }
+- (BOOL)customSearchEngineEnabled { return [[_preferences objectForKey:@"customSearchEngineEnabled"] boolValue]; }
+- (NSString*)customSearchEngineName { return [_preferences objectForKey:@"customSearchEngineName"]; }
+- (NSString*)customSearchEngineURL { return [_preferences objectForKey:@"customSearchEngineURL"]; }
+- (NSString*)customSearchEngineSuggestionsURL { return [_preferences objectForKey:@"customSearchEngineSuggestionsURL"]; }
+- (BOOL)customUserAgentEnabled { return [[_preferences objectForKey:@"customUserAgentEnabled"] boolValue]; }
+- (NSString*)customUserAgent { return [_preferences objectForKey:@"topToolbarCustomOrder"]; }
+- (BOOL)customDesktopUserAgentEnabled { return [[_preferences objectForKey:@"customDesktopUserAgentEnabled"] boolValue]; }
+- (NSString*)customDesktopUserAgent { return [_preferences objectForKey:@"customDesktopUserAgent"]; }
+
+- (BOOL)largeTitlesEnabled { return [[_preferences objectForKey:@"largeTitlesEnabled"] boolValue]; }
+- (BOOL)communicationErrorDisabled { return [[_preferences objectForKey:@"communicationErrorDisabled"] boolValue]; }
 
 #endif
 

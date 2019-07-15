@@ -15,8 +15,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import <WebKit/WKWebView.h>
+#import "Protocols.h"
 
-@class BrowserController, BrowserRootViewController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView, WebAVPlayerController;
+@class BrowserController, BrowserRootViewController, BrowserToolbar, TabController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView, NavigationBar, WebAVPlayerController;
 
 extern BOOL showAlert;
 extern SPFileManager* fileManager;
@@ -37,6 +38,13 @@ extern NSArray<SafariWebView*>* activeWebViews();
 extern BrowserController* browserControllerForTabDocument(TabDocument* document);
 extern BrowserRootViewController* rootViewControllerForBrowserController(BrowserController* controller);
 extern BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document);
+extern NavigationBar* navigationBarForBrowserController(BrowserController* browserController);
+extern BrowserToolbar* activeToolbarForBrowserController(BrowserController* browserController);
+extern BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToolbar);
+extern TabDocument* tabDocumentForItem(TabController* tabController, id<TabCollectionItem> item);
+extern BOOL browserControllerIsShowingTabView(BrowserController* browserController);
+extern BOOL updateTabExposeActionsForLockedTabs(BrowserController* browserController, UIAlertController* tabExposeAlertController);
+extern void closeTabDocuments(TabController* tabController, NSArray<TabDocument*>* tabDocuments, BOOL animated);
 extern void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying> key);
 extern void requestAuthentication(NSString* reason, void (^successHandler)(void));
 extern void sendSimpleAlert(NSString* title, NSString* message);

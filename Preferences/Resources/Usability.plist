@@ -10,7 +10,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>BOTH_TAB_OPEN_ACTIONS_FOOTER</string>
+			<string>BOTH_LINK_OPENING_ACTIONS_FOOTER</string>
 			<key>label</key>
 			<string>URL_ACTIONS</string>
 		</dict>
@@ -26,7 +26,7 @@
 			<key>key</key>
 			<string>bothTabOpenActionsEnabled</string>
 			<key>label</key>
-			<string>BOTH_TAB_OPEN_ACTIONS</string>
+			<string>BOTH_LINK_OPENING_ACTIONS</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -95,6 +95,22 @@
 			<string>tabManagerEnabled</string>
 			<key>label</key>
 			<string>TAB_MANAGER</string>
+			<key>nestedEntryCount</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>tabManagerScrollPositionFromTabSwitcherEnabled</string>
+			<key>label</key>
+			<string>SCROLL_POSITION_FROM_TAB_SWITCHER</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -119,57 +135,65 @@
 			<string>DISABLE_TAB_LIMIT</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>CUSTOM_START_SITE_FOOTER</string>
-		</dict>
+	    <key>cell</key>
+	    <string>PSGroupCell</string>
+	    <key>defaults</key>
+	    <string>com.opa334.safariplusprefs</string>
+	    <key>footerText</key>
+	    <string>ALWAYS_OPEN_NEW_TAB_FOOTER</string>
+	  </dict>
+	  <dict>
+	    <key>PostNotification</key>
+	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+	    <key>cell</key>
+	    <string>PSSwitchCell</string>
+	    <key>default</key>
+	    <false/>
+	    <key>defaults</key>
+	    <string>com.opa334.safariplusprefs</string>
+	    <key>key</key>
+	    <string>alwaysOpenNewTabEnabled</string>
+	    <key>label</key>
+	    <string>ALWAYS_OPEN_NEW_TAB</string>
+	    <key>nestedEntryCount</key>
+	    <integer>1</integer>
+	  </dict>
 		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>customStartSiteEnabled</string>
-			<key>label</key>
-			<string>CUSTOM_START_SITE</string>
-			<key>nestedEntryCount</key>
-			<integer>2</integer>
-		</dict>
+	    <key>PostNotification</key>
+	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+	    <key>cell</key>
+	    <string>PSSwitchCell</string>
+	    <key>default</key>
+	    <false/>
+	    <key>defaults</key>
+	    <string>com.opa334.safariplusprefs</string>
+	    <key>key</key>
+	    <string>alwaysOpenNewTabInBackgroundEnabled</string>
+	    <key>label</key>
+	    <string>OPEN_NEW_TAB_IN_BACKGROUND</string>
+	  </dict>
 		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSEditTextCell</string>
-			<key>default</key>
-			<string></string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>isURL</key>
-			<string>true</string>
-			<key>key</key>
-			<string>customStartSite</string>
-			<key>placeholder</key>
-			<string>https://google.com/</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSButtonCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>label</key>
-			<string>SAVE</string>
-			<key>action</key>
-			<string>closeKeyboard</string>
-		</dict>
+	    <key>cell</key>
+	    <string>PSGroupCell</string>
+	    <key>defaults</key>
+	    <string>com.opa334.safariplusprefs</string>
+	    <key>footerText</key>
+	    <string>DISABLE_PRIVATE_MODE_FOOTER</string>
+	  </dict>
+	  <dict>
+	    <key>PostNotification</key>
+	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+	    <key>cell</key>
+	    <string>PSSwitchCell</string>
+	    <key>default</key>
+	    <false/>
+	    <key>defaults</key>
+	    <string>com.opa334.safariplusprefs</string>
+	    <key>key</key>
+	    <string>disablePrivateMode</string>
+	    <key>label</key>
+	    <string>DISABLE_PRIVATE_MODE</string>
+	  </dict>
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
@@ -336,6 +360,54 @@
 			<key>label</key>
 			<string>LOCK_BARS</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>footerText</key>
+			<string>SHOW_FULL_SITE_URL_FOOTER</string>
+		</dict>
+		<dict>
+			<key>PostNotification</key>
+			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.opa334.safariplusprefs</string>
+			<key>key</key>
+			<string>showFullSiteURLEnabled</string>
+			<key>label</key>
+			<string>SHOW_FULL_SITE_URL</string>
+		</dict>
+		<dict>
+	    <key>cell</key>
+	    <string>PSGroupCell</string>
+	    <key>defaults</key>
+	    <string>com.opa334.safariplusprefs</string>
+	    <key>footerText</key>
+	    <string>SUPPRESS_MAILTO_DIALOG_FOOTER</string>
+			<key>minCFVersion</key>
+			<real>1348.00</real>
+	  </dict>
+	  <dict>
+	    <key>PostNotification</key>
+	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
+	    <key>cell</key>
+	    <string>PSSwitchCell</string>
+	    <key>default</key>
+	    <false/>
+	    <key>defaults</key>
+	    <string>com.opa334.safariplusprefs</string>
+	    <key>key</key>
+	    <string>suppressMailToDialog</string>
+	    <key>label</key>
+	    <string>SUPPRESS_MAILTO_DIALOG</string>
+			<key>minCFVersion</key>
+			<real>1348.00</real>
+	  </dict>
 	</array>
 	<key>title</key>
 	<string>USABILITY</string>

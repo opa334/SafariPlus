@@ -17,27 +17,7 @@
 #import "SPDownloadsBarButtonItemView.h"
 #import "SPDownloadsBarButtonItem.h"
 #import "../Util.h"
-/*
-@interface SPExtendedTouchButton : UIButton
-@property UIView* touchView;
-@end
 
-@implementation SPExtendedTouchButton
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-{
-	if(self.bounds.size.width < 25)
-	{
-		//Extend touchable area back to 25 * 25
-		CGRect touchArea = CGRectMake(-self.frame.origin.x, 0.0, 25.0, 25.0);
-		return CGRectContainsPoint(touchArea, point);
-	}
-
-	return [super pointInside:point withEvent:event];
-}
-
-@end
-*/
 @implementation SPDownloadsBarButtonItemView
 
 - (instancetype)initWithItem:(SPDownloadsBarButtonItem*)item progressViewHidden:(BOOL)progressViewHidden initialProgress:(float)initialProgress;

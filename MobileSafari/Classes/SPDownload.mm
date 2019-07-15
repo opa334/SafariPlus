@@ -266,7 +266,7 @@
 
 	dlogDownload(self, @"cancelDownload");
 
-	if(self.downloadTask)
+	if(self.downloadTask && self.downloadTask.state == NSURLSessionTaskStateRunning)
 	{
 		//Cancel task
 		[self.downloadTask cancel];

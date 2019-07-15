@@ -23,6 +23,7 @@
 #import "Classes/SPLocalizationManager.h"
 #import "Classes/SPCommunicationManager.h"
 #import "Classes/SPCacheManager.h"
+#import "SPPreferenceMerger.h"
 
 #import <LocalAuthentication/LocalAuthentication.h>
 #import <arpa/inet.h>
@@ -275,11 +276,327 @@ BrowserRootViewController* rootViewControllerForBrowserController(BrowserControl
 	return rootViewController;
 }
 
-
 //Get rootViewController from tabDocument
 BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document)
 {
 	return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
+}
+
+NavigationBar* navigationBarForBrowserController(BrowserController* browserController)
+{
+	if([browserController respondsToSelector:@selector(navigationBar)])
+	{
+		return browserController.navigationBar;
+	}
+	else
+	{
+		return rootViewControllerForBrowserController(browserController).navigationBar;
+	}
+}
+
+BrowserToolbar* activeToolbarForBrowserController(BrowserController* browserController)
+{
+	if([browserController respondsToSelector:@selector(activeToolbar)])
+	{
+		return browserController.activeToolbar;
+	}
+	else
+	{
+		BrowserRootViewController* rootVC = rootViewControllerForBrowserController(browserController);
+		if(rootVC.toolbarPlacement == 1)
+		{
+			return rootVC.bottomToolbar;
+		}
+		else
+		{
+			return [rootVC.navigationBar toolbarPlacedOnTop];
+		}
+	}
+}
+
+BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToolbar)
+{
+	if([browserToolbar respondsToSelector:@selector(browserDelegate)])
+	{
+		return browserToolbar.browserDelegate;
+	}
+	else
+	{
+		return MSHookIvar<_SFBarManager*>(MSHookIvar<SFBarRegistration*>(browserToolbar, "_barRegistration"), "_barManager").delegate;
+	}
+}
+
+BOOL browserControllerIsShowingTabView(BrowserController* browserController)
+{
+	if([browserController.tabController respondsToSelector:@selector(tabThumbnailCollectionView)])
+	{
+		NSInteger presentationState = browserController.tabController.tabThumbnailCollectionView.presentationState;
+		//0: not showing tab view, 1: in animation, 2: inside tabView
+		return (presentationState == 1) || (presentationState == 2);
+	}
+	else if([browserController respondsToSelector:@selector(isShowingTabView)])
+	{
+		return [browserController isShowingTabView];
+	}
+	else
+	{
+		return MSHookIvar<BOOL>(browserController, "_isShowingTabView");
+	}
+}
+
+void closeTabDocuments(TabController* tabController, NSArray<TabDocument*>* tabDocuments, BOOL animated)
+{
+	if([tabDocuments count] <= 0)
+	{
+		return;
+	}
+
+	BrowserController* browserController = MSHookIvar<BrowserController*>(tabController, "_browserController");
+
+	if(tabController.tiltedTabView && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
+	{
+		NSMutableSet* tabDocumentsAboutToBeClosedInTiltedTabView = MSHookIvar<NSMutableSet*>(tabController, "_tabDocumentsAboutToBeClosedInTiltedTabView");
+		[tabDocumentsAboutToBeClosedInTiltedTabView addObjectsFromArray:[tabDocuments copy]];
+		[tabController _updateTiltedTabViewItemsAnimated:animated];
+	}
+
+	NSMutableArray* privateTabDocuments = [NSMutableArray new];
+	NSMutableArray* normalTabDocuments = [NSMutableArray new];
+
+	for(TabDocument* tabDocument in tabDocuments)
+	{
+		BOOL privateTab = NO;
+
+		if([tabDocument respondsToSelector:@selector(privateBrowsingEnabled)])
+		{
+			privateTab = [tabDocument privateBrowsingEnabled];
+		}
+		else
+		{
+			privateTab = [tabDocument isPrivateBrowsingEnabled];
+		}
+
+		if(privateTab)
+		{
+			[privateTabDocuments addObject:tabDocument];
+		}
+		else
+		{
+			[normalTabDocuments addObject:tabDocument];
+		}
+	}
+
+	NSArray* currentModeTabs;
+	NSArray* otherModeTabs;
+
+	if(privateBrowsingEnabled(browserController))
+	{
+		currentModeTabs = [privateTabDocuments copy];
+		otherModeTabs = [normalTabDocuments copy];
+	}
+	else
+	{
+		currentModeTabs = [normalTabDocuments copy];
+		otherModeTabs = [privateTabDocuments copy];
+	}
+
+	if(currentModeTabs.count >= 1)
+	{
+		if([tabController respondsToSelector:@selector(_closeTabDocuments:animated:temporarily:allowAddingToRecentlyClosedTabs:keepWebViewAlive:)])
+		{
+			[tabController _closeTabDocuments:currentModeTabs animated:animated temporarily:NO allowAddingToRecentlyClosedTabs:YES keepWebViewAlive:NO];
+		}
+		else
+		{
+			for(TabDocument* tabDocument in [currentModeTabs reverseObjectEnumerator])
+			{
+				[tabController closeTabDocument:tabDocument animated:animated];
+			}
+		}
+	}
+
+	if(otherModeTabs.count >= 1)
+	{
+		togglePrivateBrowsing(browserController);
+
+		if([tabController respondsToSelector:@selector(_closeTabDocuments:animated:temporarily:allowAddingToRecentlyClosedTabs:keepWebViewAlive:)])
+		{
+			[tabController _closeTabDocuments:otherModeTabs animated:animated temporarily:NO allowAddingToRecentlyClosedTabs:YES keepWebViewAlive:NO];
+		}
+		else
+		{
+			for(TabDocument* tabDocument in [otherModeTabs reverseObjectEnumerator])
+			{
+				[tabController closeTabDocument:tabDocument animated:animated];
+			}
+		}
+
+		togglePrivateBrowsing(browserController);
+	}
+}
+
+TabDocument* tabDocumentForItem(TabController* tabController, id<TabCollectionItem> item)
+{
+	if([tabController respondsToSelector:@selector(_tabDocumentRepresentedByTiltedTabItem:)])
+	{
+		if([item isKindOfClass:[%c(TabBarItem) class]])
+		{
+			return [tabController _tabDocumentRepresentedByTabBarItem:item];
+		}
+		else if ([item isKindOfClass:[%c(TiltedTabItem) class]])
+		{
+			return [tabController _tabDocumentRepresentedByTiltedTabItem:item];
+		}
+		else if ([item isKindOfClass:[%c(TabOverviewItem) class]])
+		{
+			return [tabController _tabDocumentRepresentedByTabOverviewItem:item];
+		}
+	}
+	else if([tabController respondsToSelector:@selector(tabDocumentWithUUID:)])
+	{
+		return [tabController tabDocumentWithUUID:[item UUID]];
+	}
+
+	return nil;
+}
+
+//Modify tab expose alert for locked tabs (purely cosmetical) return: did anything?
+BOOL updateTabExposeActionsForLockedTabs(BrowserController* browserController, UIAlertController* tabExposeAlertController)
+{
+	if(!tabExposeAlertController)
+	{
+		return NO;
+	}
+
+	NSUInteger nonLockedTabCount = 0;
+
+	NSMutableArray<UIAlertAction*>* actions = MSHookIvar<NSMutableArray<UIAlertAction*>*>(tabExposeAlertController, "_actions");
+
+	NSString* searchTerm = nil;
+	BOOL hasSearchTerm = NO;
+	BOOL reloadActions = NO;
+
+	if([browserController.tabController respondsToSelector:@selector(searchTerm)])
+	{
+		searchTerm = browserController.tabController.searchTerm;
+	}
+	else if([browserController.tabController respondsToSelector:@selector(tabThumbnailCollectionView)])
+	{
+		searchTerm = browserController.tabController.tabThumbnailCollectionView.searchTerm;
+	}
+
+	if(searchTerm)
+	{
+		hasSearchTerm = (searchTerm.length > 0);
+	}
+
+	if(!hasSearchTerm)
+	{
+		for(TabDocument* document in browserController.tabController.currentTabDocuments)
+		{
+			if(!document.locked)
+			{
+				nonLockedTabCount++;
+			}
+		}
+
+		if(browserController.tabController.currentTabDocuments.count == nonLockedTabCount)
+		{
+			return NO;	//No tabs locked, nothing else to do
+		}
+
+		UIAlertAction* closeAllTabsAction;
+		UIAlertAction* closeTabAction;
+
+		BOOL isShowingTabView = browserControllerIsShowingTabView(browserController);
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0 && !isShowingTabView)
+		{
+			if(browserController.tabController.currentTabDocuments.count > 1)
+			{
+				closeTabAction = [actions objectAtIndex:1];
+			}
+			else
+			{
+				closeTabAction = actions.firstObject;
+			}
+		}
+
+		if(isShowingTabView || browserController.tabController.currentTabDocuments.count > 1)
+		{
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+			{
+				closeAllTabsAction = actions.firstObject;
+			}
+			else
+			{
+				closeAllTabsAction = [actions objectAtIndex:actions.count - 2];
+			}
+
+			//If there are no nonlocked tabs outside of the current active tab, we remove the option to close all tabs, otherwise we change the title
+			if(nonLockedTabCount > 1)
+			{
+				[closeAllTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedTabCount]];
+			}
+			else if((isShowingTabView || browserController.tabController.activeTabDocument.locked || kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0) && nonLockedTabCount == 1)
+			{
+				[closeAllTabsAction setTitle:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"]];
+			}
+			else
+			{
+				[actions removeObject:closeAllTabsAction];
+				reloadActions = YES;
+			}
+		}
+
+		//If the active tab is locked, we remove the option to close it
+		if(browserController.tabController.activeTabDocument.locked && closeTabAction)
+		{
+			[actions removeObject:closeTabAction];
+			reloadActions = YES;
+		}
+	}
+	else if(hasSearchTerm)
+	{
+		UIAlertAction* closeMatchingTabsAction = actions.firstObject;
+
+		for(TabDocument* document in browserController.tabController.tabDocumentsMatchingSearchTerm)
+		{
+			if(!document.locked)
+			{
+				nonLockedTabCount++;
+			}
+		}
+
+		if(browserController.tabController.tabDocumentsMatchingSearchTerm.count == nonLockedTabCount)
+		{
+			return NO;	//No matching tabs locked, nothing else to do
+		}
+
+		if(nonLockedTabCount == 0)
+		{
+			[actions removeObject:closeMatchingTabsAction];
+			reloadActions = YES;
+		}
+		else if(nonLockedTabCount == 1)
+		{
+			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB_MATCHING"], searchTerm]];
+		}
+		else
+		{
+			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS_MATCHING"], nonLockedTabCount, searchTerm]];
+		}
+	}
+
+	//If any action has been removed, we need to manually remove and readd all actions so that the UI actually updates
+	if(reloadActions)
+	{
+		NSArray* newActions = [actions copy];
+		[tabExposeAlertController _removeAllActions];
+		[tabExposeAlertController _setActions:newActions];
+	}
+
+	return YES;
 }
 
 //Only add object to dict if it's not nil (to combat crashes)
@@ -382,8 +699,16 @@ extern void initBrowserToolbar();
 extern void initCatalogViewController();
 extern void initColors();
 extern void initFeatureManager();
+extern void initNavigationBar();
+extern void initNavigationBarItem();
+extern void initSafariWebView();
+extern void initSearchEngineController();
+extern void initSPTabManagerBookmarkPicker();
+extern void initTabItemLayoutInfo();
+extern void initTabBarItemView();
 extern void initTabController();
 extern void initTabDocument();
+extern void initTabExposeActionsController();
 extern void initTabOverview();
 extern void initTabOverviewItemLayoutInfo();
 extern void initTabThumbnailView();
@@ -411,8 +736,16 @@ extern void initWKFileUploadPanel();
 		initCatalogViewController();
 		initColors();
 		initFeatureManager();
+		initNavigationBar();
+		initNavigationBarItem();
+		initSafariWebView();
+		initSearchEngineController();
+		initSPTabManagerBookmarkPicker();
+		initTabItemLayoutInfo();
+		initTabBarItemView();
 		initTabController();
 		initTabDocument();
+		initTabExposeActionsController();
 		initTabOverview();
 		initTabOverviewItemLayoutInfo();
 		initTabThumbnailView();

@@ -24,12 +24,12 @@ SafariPlus_CFLAGS += -D NO_ROCKETBOOTSTRAP=1
 endif
 
 ifeq ($(DEBUG_LOGGING),1)
-	SafariPlus_CFLAGS += -D DEBUG_LOGGING=1
+SafariPlus_CFLAGS += -D DEBUG_LOGGING=1
 endif
 
 ifeq ($(SIMJECT),1)
-	dir_string := @"\"$(CURDIR)\""
-	SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
+dir_string := @"\"$(CURDIR)\""
+SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
 SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote MobileIcons

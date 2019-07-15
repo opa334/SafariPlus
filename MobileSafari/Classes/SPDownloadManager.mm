@@ -60,7 +60,7 @@
 
 	[self migrateFromSandbox];
 
-	if(!preferenceManager.disableBarNotificationsEnabled)
+	if(preferenceManager.statusBarNotificationsEnabled)
 	{
 		//Init notification window for status bar notifications
 		self.notificationWindow = [[SPStatusBarNotificationWindow alloc] init];
@@ -445,9 +445,9 @@
 - (void)sendNotificationWithText:(NSString*)text
 {
 	if([[UIApplication sharedApplication] applicationState] == 0 &&
-	   !preferenceManager.disableBarNotificationsEnabled && self.notificationWindow)
+	   preferenceManager.statusBarNotificationsEnabled && self.notificationWindow)
 	{
-		//Application is active -> Use status bar notification if not disabled
+		//Application is active -> Use status bar notification if enabled
 		//Dissmiss current status notification (if one exists)
 		[self.notificationWindow dismissWithCompletion:^
 		{
@@ -456,9 +456,9 @@
 		}];
 	}
 	else if([[UIApplication sharedApplication] applicationState] != 0 &&
-		!preferenceManager.disablePushNotificationsEnabled)
+		preferenceManager.pushNotificationsEnabled)
 	{
-		//Application is inactive -> Use push notification if not disabled
+		//Application is inactive -> Use push notification if enabled
 		[communicationManager dispatchPushNotificationWithIdentifier:@"com.apple.mobilesafari" title:@"Safari" message:text];
 	}
 }
@@ -498,7 +498,7 @@
 
 	for(SPDownload* download in [self.pendingDownloads copy])
 	{
-		if(!download.paused)
+		if(!download.paused && download.filesize > 0)
 		{
 			totalFilesize += download.filesize;
 			totalBytesWritten += download.totalBytesWritten;

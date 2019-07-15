@@ -78,24 +78,24 @@
 
 - (void)reloadBrowser
 {
-	[self reloadBrowserForced:NO];
+	[self reloadBrowserAnimated:YES];
 }
 
-- (void)reloadBrowserForced:(BOOL)forced
+- (void)reloadBrowserAnimated:(BOOL)animated
 {
-	[self.viewControllers.lastObject reloadForced:forced];
+	[self.viewControllers.lastObject reloadAnimated:animated];
 }
 
 - (void)reloadEverything
 {
-	[self reloadEverythingForced:NO];
+	[self reloadEverythingAnimated:YES];
 }
 
-- (void)reloadEverythingForced:(BOOL)forced
+- (void)reloadEverythingAnimated:(BOOL)animated
 {
 	for(SPFileBrowserTableViewController* viewController in self.viewControllers)
 	{
-		[viewController reloadForced:forced];
+		[viewController reloadAnimated:animated];
 	}
 }
 

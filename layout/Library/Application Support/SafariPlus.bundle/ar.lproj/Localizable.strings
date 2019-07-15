@@ -184,7 +184,7 @@
 
 "ACTION" = "الإجراء";
 
-"URL_BAR_GESTURES_LABEL" = "إيماءات شريط URL";
+"URL_BAR_GESTURES" = "إيماءات شريط URL";
 
 "SWIPE_LEFT_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL لليسار.";
 "SWIPE_LEFT_GESTURE" = "إيماءة التمرير لليسار";

@@ -10,7 +10,7 @@
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
 			<key>footerText</key>
-			<string>LAUNCH_MODE_FOOTER</string>
+			<string>CHANGE_MODE_ON_FOOTER</string>
 			<key>label</key>
 			<string>CHANGE_MODE_ON</string>
 		</dict>
@@ -19,6 +19,8 @@
 			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>SPPSwitchNoSeparatorOnEnableCell</string>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -49,20 +51,12 @@
 			<string>modeValues</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>RESUME_FOOTER</string>
-			<key>label</key>
-			<string>CHANGE_MODE_ON</string>
-		</dict>
-		<dict>
 			<key>PostNotification</key>
 			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>SPPSwitchNoSeparatorOnEnableCell</string>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -93,20 +87,12 @@
 			<string>modeValues</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>EXTERNAL_URL_FOOTER</string>
-			<key>label</key>
-			<string>CHANGE_MODE_ON</string>
-		</dict>
-		<dict>
 			<key>PostNotification</key>
 			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
 			<key>cell</key>
 			<string>PSSwitchCell</string>
+			<key>cellClass</key>
+			<string>SPPSwitchNoSeparatorOnEnableCell</string>
 			<key>default</key>
 			<false/>
 			<key>defaults</key>
@@ -141,6 +127,8 @@
 			<string>PSGroupCell</string>
 			<key>defaults</key>
 			<string>com.opa334.safariplusprefs</string>
+			<key>label</key>
+			<string>AUTOMATIC_ACTIONS</string>
 			<key>footerText</key>
 			<string>AUTO_CLOSE_TABS_FOOTER</string>
 		</dict>
@@ -237,116 +225,6 @@
 			<string>stateTitles</string>
 			<key>valuesDataSource</key>
 			<string>stateValues</string>
-		</dict>
-		<dict>
-	    <key>cell</key>
-	    <string>PSGroupCell</string>
-	    <key>defaults</key>
-	    <string>com.opa334.safariplusprefs</string>
-	    <key>footerText</key>
-	    <string>DISABLE_PRIVATE_MODE_FOOTER</string>
-	  </dict>
-	  <dict>
-	    <key>PostNotification</key>
-	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
-	    <key>cell</key>
-	    <string>PSSwitchCell</string>
-	    <key>default</key>
-	    <false/>
-	    <key>defaults</key>
-	    <string>com.opa334.safariplusprefs</string>
-	    <key>key</key>
-	    <string>disablePrivateMode</string>
-	    <key>label</key>
-	    <string>DISABLE_PRIVATE_MODE</string>
-	  </dict>
-	  <dict>
-	    <key>cell</key>
-	    <string>PSGroupCell</string>
-	    <key>defaults</key>
-	    <string>com.opa334.safariplusprefs</string>
-	    <key>footerText</key>
-	    <string>ALWAYS_OPEN_NEW_TAB_FOOTER</string>
-	  </dict>
-	  <dict>
-	    <key>PostNotification</key>
-	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
-	    <key>cell</key>
-	    <string>PSSwitchCell</string>
-	    <key>default</key>
-	    <false/>
-	    <key>defaults</key>
-	    <string>com.opa334.safariplusprefs</string>
-	    <key>key</key>
-	    <string>alwaysOpenNewTabEnabled</string>
-	    <key>label</key>
-	    <string>ALWAYS_OPEN_NEW_TAB</string>
-	    <key>nestedEntryCount</key>
-	    <integer>1</integer>
-	  </dict>
-	  <dict>
-	    <key>PostNotification</key>
-	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
-	    <key>cell</key>
-	    <string>PSSwitchCell</string>
-	    <key>default</key>
-	    <false/>
-	    <key>defaults</key>
-	    <string>com.opa334.safariplusprefs</string>
-	    <key>key</key>
-	    <string>alwaysOpenNewTabInBackgroundEnabled</string>
-	    <key>label</key>
-	    <string>OPEN_NEW_TAB_IN_BACKGROUND</string>
-	  </dict>
-	  <dict>
-	    <key>cell</key>
-	    <string>PSGroupCell</string>
-	    <key>defaults</key>
-	    <string>com.opa334.safariplusprefs</string>
-	    <key>footerText</key>
-	    <string>SUPPRESS_MAILTO_DIALOG_FOOTER</string>
-			<key>minCFVersion</key>
-			<real>1348.00</real>
-	  </dict>
-	  <dict>
-	    <key>PostNotification</key>
-	    <string>com.opa334.safariplusprefs/ReloadPrefs</string>
-	    <key>cell</key>
-	    <string>PSSwitchCell</string>
-	    <key>default</key>
-	    <false/>
-	    <key>defaults</key>
-	    <string>com.opa334.safariplusprefs</string>
-	    <key>key</key>
-	    <string>suppressMailToDialog</string>
-	    <key>label</key>
-	    <string>SUPPRESS_MAILTO_DIALOG</string>
-			<key>minCFVersion</key>
-			<real>1348.00</real>
-	  </dict>
-		<dict>
-			<key>cell</key>
-			<string>PSGroupCell</string>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>footerText</key>
-			<string>DISABLE_COMMUNICATION_ERROR_FOOTER</string>
-			<key>label</key>
-			<string>OTHER</string>
-		</dict>
-		<dict>
-			<key>PostNotification</key>
-			<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.opa334.safariplusprefs</string>
-			<key>key</key>
-			<string>communicationErrorDisabled</string>
-			<key>label</key>
-			<string>DISABLE_COMMUNICATION_ERROR</string>
 		</dict>
 	</array>
 	<key>title</key>

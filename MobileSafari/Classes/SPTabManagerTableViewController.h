@@ -18,22 +18,30 @@
 
 @interface SPTabManagerTableViewController : UITableViewController <UISearchResultsUpdating>
 {
+	TabController* _tabController;
 	NSArray<TabDocument*>* _allTabs;
 	NSArray<TabDocument*>* _filteredTabs;
 	NSArray<TabDocument*>* _selectedTabs;
-	TabController* _tabController;
+	NSArray<TabDocument*>* _displayedTabs;
+	TabDocument* _initialVisibleTab;
 	BOOL _isFiltering;
 	BOOL _shouldUpdateOnSelectionChange;
 	UISearchController* _searchController;
+	UIBarButtonItem* _addTabsBarButtonItem;
+	UIBarButtonItem* _exportBarButtonItem;
+	UIBarButtonItem* _addToBookmarksBarButtonItem;
+	UIBarButtonItem* _closeTabsBarButtonItem;
+	UIBarButtonItem* _lockUnlockBarButtonItem;
 }
-
+@property (nonatomic) BOOL lockBarButtonIsUnlockButton;
 - (instancetype)initWithTabController:(TabController*)tabController;
 - (void)setUpTopBar;
 - (void)setUpBottomToolbar;
 - (NSArray<TabDocument*>*)activeTabs;
 - (UIViewController*)presentationController;
 - (TabDocument*)tabDocumentForIndexPath:(NSIndexPath*)indexPath;
-- (void)loadTabs;
+- (NSIndexPath*)indexPathForTabDocument:(TabDocument*)tabDocument;
+- (BOOL)loadTabs;
 - (void)reloadAnimated:(BOOL)animated;
 - (void)updateSelectAllButton;
 - (void)selectAll;
@@ -46,6 +54,4 @@
 - (void)closeTabsButtonPressed;
 - (void)exportButtonPressed:(id)sender;
 - (void)updateSelectedTabs;
-
-
 @end

@@ -116,7 +116,7 @@
 {
 	if(!self.tableView.isDragging)
 	{
-		[self reload];
+		[self reloadAnimated:NO];
 	}
 }
 
@@ -124,7 +124,7 @@
 {
 	if([self.refreshControl isRefreshing])
 	{
-		[self reload];
+		[self reloadAnimated:NO];
 	}
 }
 
@@ -178,18 +178,18 @@
 	NSMutableArray<NSIndexPath*>* addIndexPaths = [self indexPathsToAdd];
 	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [self indexPathsToDelete];
 
-	if(addIndexPaths.count > 0 || deleteIndexPaths.count > 0)
+	dispatch_sync(dispatch_get_main_queue(), ^
 	{
-		dispatch_async(dispatch_get_main_queue(), ^
+		if(addIndexPaths.count > 0 || deleteIndexPaths.count > 0)
 		{
 			[self.tableView beginUpdates];
 			[self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 			[self.tableView insertRowsAtIndexPaths:addIndexPaths withRowAnimation:UITableViewRowAnimationFade];
 			[self.tableView endUpdates];
+		}
 
-			[self applyChangesAfterReload];
-		});
-	}
+		[self applyChangesAfterReload];
+	});
 }
 
 - (void)applyChangesAfterReload
@@ -197,44 +197,57 @@
 	_displayedFiles = [_filesAtCurrentURL copy];
 
 	[self updateSectionHeaders];
+
+	dispatch_async(dispatch_get_main_queue(), ^
+	{
+		if([self.refreshControl isRefreshing])
+		{
+			//Stop refresh animation if needed
+			[self.refreshControl endRefreshing];
+		}
+	});
 }
 
 - (void)reload
 {
-	[self reloadForced:NO];
+	[self reloadAnimated:YES];
 }
 
-- (void)reloadForced:(BOOL)forced
+- (void)reloadAnimated:(BOOL)animated
 {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 	{
-		//Repopulate dataSources
-		BOOL needsReload = [self loadContents];
+		@synchronized(self)
+		{
+			BOOL needsReload = [self loadContents];
 
-		if(forced)
-		{
-			dispatch_async(dispatch_get_main_queue(), ^
-			{
-				[self.tableView reloadData];
-				[self applyChangesAfterReload];
-			});
-		}
-		else
-		{
 			if(needsReload)
 			{
-				[self applyChangesToTable];
+				if(animated)
+				{
+					[self applyChangesToTable];
+				}
+				else
+				{
+					dispatch_sync(dispatch_get_main_queue(), ^
+					{
+						[self.tableView reloadData];
+						[self applyChangesAfterReload];
+					});
+				}
+			}
+			else
+			{
+				dispatch_async(dispatch_get_main_queue(), ^
+				{
+					if([self.refreshControl isRefreshing])
+					{
+						//Stop refresh animation if needed
+						[self.refreshControl endRefreshing];
+					}
+				});
 			}
 		}
-
-		dispatch_async(dispatch_get_main_queue(), ^
-		{
-			if([self.refreshControl isRefreshing])
-			{
-				//Stop refresh animation if needed
-				[self.refreshControl endRefreshing];
-			}
-		});
 	});
 }
 

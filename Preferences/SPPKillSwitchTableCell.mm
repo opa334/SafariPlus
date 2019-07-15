@@ -14,9 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+@interface UITableViewCell (Private)
+- (void)_setDrawsSeparatorAtTopOfSection:(BOOL)arg1;
+@end
+
 #import "SPPKillSwitchTableCell.h"
 
 @implementation SPPKillSwitchTableCell
+
+- (void)_setDrawsSeparatorAtTopOfSection:(BOOL)arg1
+{
+	[super _setDrawsSeparatorAtTopOfSection:NO];
+}
 
 - (void)layoutSubviews
 {

@@ -184,7 +184,7 @@
 
 "ACTION" = "Azione";
 
-"URL_BAR_GESTURES_LABEL" = "Gesti barra Url";
+"URL_BAR_GESTURES" = "Gesti barra Url";
 
 "SWIPE_LEFT_GESTURE_FOOTER" = "Esegue un'azione specificata quando la barra degli URL viene trascinata a sinistra.";
 "SWIPE_LEFT_GESTURE" = "Gesto di scorrimento verso sinistra";
@@ -242,8 +242,8 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Colore dello sfondo del titolo della scheda";
 /*TOOLBAR_BACKGROUND_COLOR*/
 
-"TAB_BAR_NOTE" = "NOTA: la barra delle schede non esiste in tutte le dimensioni / orientamenti dei dispositivi.";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTA: alcune impostazioni richiedono il riavvio dell'app per essere applicate.";
+"TAB_BAR_NOTE" = "la barra delle schede non esiste in tutte le dimensioni / orientamenti dei dispositivi.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "alcune impostazioni richiedono il riavvio dell'app per essere applicate.";
 
 "WHITE" = "Bianco";
 "BLACK" = "Nero";
@@ -381,4 +381,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Apri in modalità normale";
 "OPEN_IN_PRIVATE_MODE" = "Apri in modalità privata";
-

@@ -46,7 +46,7 @@
 {
 	%orig;
 
-	if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
+	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled)
 	{
 		//Get asset
 		AVAsset* currentPlayerAsset = self.playerViewController.player.currentItem.asset;

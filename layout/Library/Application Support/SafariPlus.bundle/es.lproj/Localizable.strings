@@ -184,7 +184,7 @@
 
 "ACTION" = "Acción";
 
-"URL_BAR_GESTURES_LABEL" = "Gestos en la barra de direcciones";
+"URL_BAR_GESTURES" = "Gestos en la barra de direcciones";
 
 "SWIPE_LEFT_GESTURE_FOOTER" = "Realiza la acción especificada cuando la barra se desliza a la izquierda.";
 "SWIPE_LEFT_GESTURE" = "Gesto de deslizar a la izquierda";
@@ -242,8 +242,8 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Color del fondo del título de la pestaña";
 /*TOOLBAR_BACKGROUND_COLOR*/
 
-"TAB_BAR_NOTE" = "NOTA: La barra de pestañas no existe en todos los tamaños de dispositivo / orientaciones.";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTA: Algunos ajustes requieren relanzar Safari para aplicarse.";
+"TAB_BAR_NOTE" = "La barra de pestañas no existe en todos los tamaños de dispositivo / orientaciones.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "Algunos ajustes requieren relanzar Safari para aplicarse.";
 
 "WHITE" = "Blanco";
 "BLACK" = "Negro";
@@ -381,4 +381,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Abrir en modo normal";
 "OPEN_IN_PRIVATE_MODE" = "Abrir en modo privado";
-

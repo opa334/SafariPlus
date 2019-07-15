@@ -184,7 +184,7 @@
 
 "ACTION" = "Aksiyon";
 
-"URL_BAR_GESTURES_LABEL" = "Url Bar Hareketleri";
+"URL_BAR_GESTURES" = "Url Bar Hareketleri";
 
 "SWIPE_LEFT_GESTURE_FOOTER" = "URL çubuğu sola kaydırıldığında belirtilen işlemi gerçekleştirir.";
 "SWIPE_LEFT_GESTURE" = "Sol Kaydırma hareketi";
@@ -242,8 +242,8 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Sekme Başlığı Arkaplan Rengi";
 /*TOOLBAR_BACKGROUND_COLOR*/
 
-"TAB_BAR_NOTE" = "NOT: Sekme çubuğu, tüm cihaz boyutlarında / oryantasyonlarında mevcut değil.";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "NOT: Bazı ayarlar uygulanacak uygulamanın yeniden başlatılmasını gerektirecek.";
+"TAB_BAR_NOTE" = "Sekme çubuğu, tüm cihaz boyutlarında / oryantasyonlarında mevcut değil.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "Bazı ayarlar uygulanacak uygulamanın yeniden başlatılmasını gerektirecek.";
 
 "WHITE" = "Beyaz";
 "BLACK" = "Siyah";
@@ -381,4 +381,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Normal Mod aç";
 "OPEN_IN_PRIVATE_MODE" = "Özel Modda Aç";
-

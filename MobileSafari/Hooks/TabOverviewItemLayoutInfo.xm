@@ -45,7 +45,7 @@
 		{
 			TabOverviewItemView* itemView = MSHookIvar<TabOverviewItemView*>(self, "_itemView");
 			[itemView.lockButton addTarget:self.tabOverview action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-			itemView.lockButton.selected = [self.tabOverview.delegate _tabDocumentRepresentedByTabOverviewItem:self.tabOverviewItem].locked;
+			itemView.lockButton.selected = tabDocumentForItem(self.tabOverview.delegate, self.tabOverviewItem).locked;
 		}
 	}
 }

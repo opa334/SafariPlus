@@ -57,8 +57,6 @@
 
 	self.title = [localizationManager localizedSPStringForKey:@"DOWNLOAD_OVERVIEW"];
 
-	self.tableView.allowsMultipleSelectionDuringEditing = NO;
-
 	[self.tableView registerClass:[SPDownloadListTableViewCell class] forCellReuseIdentifier:@"SPDownloadListTableViewCell"];
 	[self.tableView registerClass:[SPDownloadListFinishedTableViewCell class] forCellReuseIdentifier:@"SPDownloadListFinishedTableViewCell"];
 }
@@ -76,11 +74,6 @@
 	}
 
 	[self fixFooterColors];
-}
-
-- (void)reload
-{
-	[self reloadForced:NO];
 }
 
 - (void)applyChangesAfterReload
@@ -139,37 +132,47 @@
 		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[_finishedDownloads indexOfObject:download] inSection:1]];
 	}
 
-	dispatch_async(dispatch_get_main_queue(), ^
+	dispatch_sync(dispatch_get_main_queue(), ^
 	{
-		[self.tableView beginUpdates];
-		[self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-		[self.tableView insertRowsAtIndexPaths:addIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-		[self.tableView endUpdates];
+		if(addIndexPaths.count > 0 || deleteIndexPaths.count > 0)
+		{
+			[self.tableView beginUpdates];
+			[self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+			[self.tableView insertRowsAtIndexPaths:addIndexPaths withRowAnimation:UITableViewRowAnimationFade];
+			[self.tableView endUpdates];
+		}
 
 		[self applyChangesAfterReload];
 	});
 }
 
-- (void)reloadForced:(BOOL)forced
+- (void)reload
+{
+	[self reloadAnimated:YES];
+}
+
+- (void)reloadAnimated:(BOOL)animated
 {
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 	{
-		//Repopulate dataSources
-		BOOL needsReload = [self loadDownloads];
+		@synchronized(self)
+		{
+			BOOL needsReload = [self loadDownloads];
 
-		if(forced)
-		{
-			dispatch_async(dispatch_get_main_queue(), ^
-			{
-				[self.tableView reloadData];
-				[self applyChangesAfterReload];
-			});
-		}
-		else
-		{
 			if(needsReload)
 			{
-				[self applyChangesToTable];
+				if(animated)
+				{
+					[self applyChangesToTable];
+				}
+				else
+				{
+					dispatch_sync(dispatch_get_main_queue(), ^
+					{
+						[self.tableView reloadData];
+						[self applyChangesAfterReload];
+					});
+				}
 			}
 		}
 	});

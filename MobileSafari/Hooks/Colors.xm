@@ -488,7 +488,7 @@
 		UILabel* titleLabel = MSHookIvar<UILabel*>(self, "_titleLabel");
 		UILabel* titleOverlayLabel = MSHookIvar<UILabel*>(self, "_titleOverlayLabel");
 
-		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && tabBar.barStyle == 0)
+		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
 		{
 			[titleLabel.layer setCompositingFilter:nil];
 
@@ -507,7 +507,7 @@
 				titleOverlayLabel.alpha = preferenceManager.topBarNormalTabBarInactiveTitleOpacity;
 			}
 		}
-		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
+		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
 		{
 			[titleLabel.layer setCompositingFilter:nil];
 
@@ -538,11 +538,11 @@
 		TabBar* tabBar = MSHookIvar<TabBar*>(self, "_tabBar");
 		UILabel* titleLabel = MSHookIvar<UILabel*>(self, "_titleLabel");
 
-		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && tabBar.barStyle == 0)
+		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
 		{
 			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
-		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
+		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
 		{
 			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
@@ -558,12 +558,12 @@
 		TabBar* tabBar = MSHookIvar<TabBar*>(self, "_tabBar");
 		UIColor* colorToSet;
 
-		if(preferenceManager.topBarNormalTabBarCloseButtonColorEnabled && tabBar.barStyle == 0)
+		if(preferenceManager.topBarNormalTabBarCloseButtonColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
 		{
 			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarCloseButtonColor];
 			//titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
-		else if(preferenceManager.topBarPrivateTabBarCloseButtonColorEnabled && tabBar.barStyle == 1)
+		else if(preferenceManager.topBarPrivateTabBarCloseButtonColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
 		{
 			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarCloseButtonColor];
 			//titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
@@ -705,24 +705,15 @@
 %new
 - (void)updateCustomBackgroundColorForStyle:(NSUInteger)style
 {
-	BOOL showingTabView;
-
-	if([self.browserDelegate respondsToSelector:@selector(isShowingTabView)])
-	{
-		showingTabView = self.browserDelegate.showingTabView;
-	}
-	else
-	{
-		showingTabView = MSHookIvar<BOOL>(self.browserDelegate, "_showingTabView");
-	}
+	BrowserController* browserController = browserControllerForBrowserToolbar(self);
 
 	_UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
 
-	BOOL privateBrowsing = privateBrowsingEnabled(self.browserDelegate);
+	BOOL privateBrowsing = privateBrowsingEnabled(browserController);
 
 	UIColor* colorToSet;
 
-	if(showingTabView)
+	if(browserControllerIsShowingTabView(browserController))
 	{
 		if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled)
 		{
@@ -910,18 +901,7 @@
 			browserController = browserControllers().firstObject;
 		}
 
-		BOOL showingTabView;
-
-		if([browserController respondsToSelector:@selector(isShowingTabView)])
-		{
-			showingTabView = browserController.showingTabView;
-		}
-		else
-		{
-			showingTabView = MSHookIvar<BOOL>(browserController, "_showingTabView");
-		}
-
-		if(!showingTabView)
+		if(!browserControllerIsShowingTabView(browserController))
 		{
 			BOOL privateMode = (statusBarStyle == UIStatusBarStyleLightContent);
 

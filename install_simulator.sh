@@ -38,6 +38,8 @@ SIMULATOR_ROOT=/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.pla
 SIMULATOR_BUNDLES_PATH=$SIMULATOR_ROOT/Library/PreferenceBundles
 SIMULATOR_PLISTS_PATH=$SIMULATOR_ROOT/Library/PreferenceLoader/Preferences
 
+echo "Installing PreferenceBundle to $SIMULATOR_ROOT"
+
 if [ -d "$SIMULATOR_BUNDLES_PATH" ]; then
   rm -rf "$SIMULATOR_BUNDLES_PATH/SafariPlusPrefs.bundle" ||:
   cp -rf "$THEOS_OBJ_DIR/SafariPlusPrefs.bundle" "$SIMULATOR_BUNDLES_PATH"

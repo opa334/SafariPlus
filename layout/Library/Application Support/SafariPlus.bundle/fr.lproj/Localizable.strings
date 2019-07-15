@@ -20,7 +20,7 @@
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "Applique globalement le protocole HTTPS. \n\nNOTE: Vous pouvez ajouter des sites qui ne prennent pas en charge HTTPS aux exceptions.";
+"FORCE_HTTPS_FOOTER" = "Applique globalement le protocole HTTPS. \n\nREMARQUE: Vous pouvez ajouter des sites qui ne prennent pas en charge HTTPS aux exceptions.";
 "FORCE_HTTPS" = "Forcer HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "Exceptions ...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";
@@ -184,7 +184,7 @@
 
 "ACTION" = "Action";
 
-"URL_BAR_GESTURES_LABEL" = "Gestes de la barre d'URL";
+"URL_BAR_GESTURES" = "Gestes de la barre d'URL";
 
 "SWIPE_LEFT_GESTURE_FOOTER" = "Exécute une action spécifiée lorsque la barre d'URL est déplacée vers la gauche.";
 "SWIPE_LEFT_GESTURE" = "Le geste, glisser à gauche";
@@ -242,8 +242,8 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Couleur de l'arrière-plan du titre de l'onglet";
 /*TOOLBAR_BACKGROUND_COLOR*/
 
-"TAB_BAR_NOTE" = "REMARQUE: la barre d'onglets n'existe pas sur toutes les tailles de périphériques / orientations.";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "REMARQUE: Certains paramètres nécessiteront le redémarrage d'une application pour être appliqués.";
+"TAB_BAR_NOTE" = "La barre d'onglets n'existe pas sur toutes les tailles de périphériques / orientations.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "Certains paramètres nécessiteront le redémarrage d'une application pour être appliqués.";
 
 "WHITE" = "Blanc";
 /*BLACK*/
@@ -381,4 +381,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Ouvrir en mode normal";
 "OPEN_IN_PRIVATE_MODE" = "Ouvrir en mode privé";
-

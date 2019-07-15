@@ -25,7 +25,7 @@
 }
 
 - (void)reload;
-- (void)reloadForced:(BOOL)forced;
+- (void)reloadAnimated:(BOOL)animated;
 - (BOOL)loadDownloads;
 - (void)dismissButtonPressed;
 - (void)clearButtonPressed;

@@ -157,37 +157,37 @@
 
 - (void)reloadBrowser
 {
-	[self reloadBrowserForced:NO];
+	[self reloadBrowserAnimated:YES];
 }
 
-- (void)reloadBrowserForced:(BOOL)forced
+- (void)reloadBrowserAnimated:(BOOL)animated
 {
-	[[self browserTableViewControllers].lastObject reloadForced:forced];
+	[[self browserTableViewControllers].lastObject reloadAnimated:animated];
 }
 
 - (void)reloadEverything
 {
-	[self reloadEverythingForced:NO];
+	[self reloadEverythingAnimated:YES];
 }
 
-- (void)reloadEverythingForced:(BOOL)forced
+- (void)reloadEverythingAnimated:(BOOL)animated
 {
 	for(SPFileBrowserTableViewController* viewController in [self browserTableViewControllers])
 	{
-		[viewController reloadForced:forced];
+		[viewController reloadAnimated:animated];
 	}
 
-	[self reloadDownloadListForced:forced];
+	[self reloadDownloadListAnimated:animated];
 }
 
 - (void)reloadDownloadList
 {
-	[self reloadDownloadListForced:NO];
+	[self reloadDownloadListAnimated:YES];
 }
 
-- (void)reloadDownloadListForced:(BOOL)forced
+- (void)reloadDownloadListAnimated:(BOOL)animated
 {
-	[[self listTableViewControllers].firstObject reloadForced:forced];
+	[[self listTableViewControllers].firstObject reloadAnimated:animated];
 }
 
 - (Class)tableControllerClass

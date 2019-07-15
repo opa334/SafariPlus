@@ -32,11 +32,11 @@
 - (void)openDirectoryInBrowser:(NSURL*)directoryURL;
 - (void)showFileInBrowser:(NSURL*)fileURL;
 - (void)reloadBrowser;
-- (void)reloadBrowserForced:(BOOL)forced;
+- (void)reloadBrowserAnimated:(BOOL)animated;
 - (void)reloadEverything;
-- (void)reloadEverythingForced:(BOOL)forced;
+- (void)reloadEverythingAnimated:(BOOL)animated;
 - (void)reloadDownloadList;
-- (void)reloadDownloadListForced:(BOOL)forced;
+- (void)reloadDownloadListAnimated:(BOOL)animated;
 - (NSArray<SPDownloadBrowserTableViewController*>*)browserTableViewControllers;
 
 @end

@@ -47,7 +47,6 @@
 	_sizeLabel.font = [_sizeLabel.font fontWithSize:10];
 	_sizeLabel.textAlignment = NSTextAlignmentCenter;
 	_sizeLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-	self.accessoryView = _sizeLabel;
 }
 
 - (void)setUpConstraints
@@ -78,38 +77,27 @@
 	//Set label of cell to filename
 	_iconLabelView.label.attributedText = file.cellTitle;
 
-	if(file.isRegularFile)
+	if(file.isRegularFile)	//File icon with filesize as accessoryView
 	{
-		//URL is file -> set imageView to file icon
 		_iconLabelView.iconView.image = [fileManager iconForFile:file];
-
-		//Remove possibly reused arrow on the right
 		self.accessoryType = UITableViewCellAccessoryNone;
-
-		//Update filesize
+		self.accessoryView = _sizeLabel;
 		_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:file.size countStyle:NSByteCountFormatterCountStyleFile];
 		_sizeLabel.frame = CGRectMake(0,0, _sizeLabel.intrinsicContentSize.width, 15);
 	}
-	else
+	else	//Directory icon with arrow as accessoryType
 	{
-		//URL is directory -> set imageView to directory icon
 		_iconLabelView.iconView.image = [fileManager genericDirectoryIcon];
-
-		//Set accessoryType to disclosureIndicator (arrow to the right)
 		self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
-		//Remove possibly existing accessoryView
 		self.accessoryView = nil;
 	}
 
 	if(file.isHidden)
 	{
-		//File is hidden -> modify alpha
 		_iconLabelView.alpha = 0.5;
 	}
 	else
 	{
-		//File is not hidden -> Set alpha to normal values (after cell reuse)
 		_iconLabelView.alpha = 1;
 	}
 

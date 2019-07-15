@@ -1,4 +1,4 @@
-// SPPBehaviourListController.h
+// SPTabManagerBookmarkPicker.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -14,7 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#import "SPPListController.h"
+#import "../SafariPlus.h"
 
-@interface SPPBehaviourListController : SPPListController
+@class TabDocument;
+
+@interface SPTabManagerBookmarkPicker : BookmarkInfoViewController
+@property (nonatomic, retain) NSArray<TabDocument*>* tabDocuments;
+- (instancetype)initWithTabDocuments:(NSArray<TabDocument*>*)tabDocuments;
 @end

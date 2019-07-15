@@ -16,6 +16,7 @@
 
 #import "../SafariPlus.h"
 #import "../Defines.h"
+#import "../Util.h"
 
 %hook NavigationBar
 
@@ -23,9 +24,9 @@
 - (void)_updateNavigationBarTrailingButtonsVisibility
 {
 	%orig;
-	if(self.delegate.activeToolbar._reloadItem)
+	if(activeToolbarForBrowserController(self.delegate)._reloadItem)
 	{
-		self.delegate.activeToolbar._reloadItem.enabled = !MSHookIvar<UIButton*>(self, "_reloadButton").hidden;
+		activeToolbarForBrowserController(self.delegate)._reloadItem.enabled = !MSHookIvar<UIButton*>(self, "_reloadButton").hidden;
 	}
 }
 %end
@@ -34,9 +35,9 @@
 - (void)_updateNavigationBarRightButtonsVisibility
 {
 	%orig;
-	if(self.delegate.activeToolbar._reloadItem)
+	if(activeToolbarForBrowserController(self.delegate)._reloadItem)
 	{
-		self.delegate.activeToolbar._reloadItem.enabled = !MSHookIvar<UIButton*>(self, "_reloadButton").hidden;
+		activeToolbarForBrowserController(self.delegate)._reloadItem.enabled = !MSHookIvar<UIButton*>(self, "_reloadButton").hidden;
 	}
 }
 %end
@@ -45,16 +46,16 @@
 - (void)_updateStopReloadButtonVisibility
 {
 	%orig;
-	if(self.delegate.activeToolbar._reloadItem)
+	if(activeToolbarForBrowserController(self.delegate)._reloadItem)
 	{
-		self.delegate.activeToolbar._reloadItem.enabled = !MSHookIvar<UIButton*>(self, "_reloadButton").hidden;
+		activeToolbarForBrowserController(self.delegate)._reloadItem.enabled = !MSHookIvar<UIButton*>(self, "_reloadButton").hidden;
 	}
 }
 %end
 
 %end
 
-%ctor
+void initNavigationBar()
 {
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
 	{
