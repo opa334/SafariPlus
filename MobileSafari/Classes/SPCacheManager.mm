@@ -227,7 +227,6 @@
 		[self loadDesktopButtonStates];
 	}
 
-
 	if(UUID)
 	{
 		return [[_desktopButtonStates objectForKey:UUID] boolValue];
@@ -249,13 +248,6 @@
 	if(!_tabStateAdditions)
 	{
 		_tabStateAdditions = [NSMutableDictionary new];
-	}
-	else
-	{
-		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-		{
-			[self cleanUpTabStateAdditions];
-		});
 	}
 }
 
@@ -288,12 +280,16 @@
 
 - (void)setLocked:(BOOL)locked forTabWithUUID:(NSUUID*)UUID
 {
+	if(!_tabStateAdditions)
+	{
+		[self loadTabStateAdditions];
+	}
+
 	NSMutableSet* lockedTabs = [_tabStateAdditions objectForKey:@"lockedTabs"];
 
 	if(!lockedTabs)
 	{
 		lockedTabs = [NSMutableSet new];
-		[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
 	}
 
 	if(locked)
@@ -305,10 +301,8 @@
 		[lockedTabs removeObject:UUID];
 	}
 
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-	{
-		[self saveTabStateAdditions];
-	});
+	[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
+	[self saveTabStateAdditions];
 }
 
 - (void)cleanUpTabStateAdditions
@@ -320,16 +314,19 @@
 
 	NSMutableSet* lockedTabs = [[_tabStateAdditions objectForKey:@"lockedTabs"] mutableCopy];
 
-	for(NSUUID* UUID in [lockedTabs copy])
+	if(lockedTabs)
 	{
-		if(![self tabExistsWithUUID:UUID])
+		for(NSUUID* UUID in [lockedTabs copy])
 		{
-			[lockedTabs removeObject:UUID];
+			if(![self tabExistsWithUUID:UUID])
+			{
+				[lockedTabs removeObject:UUID];
+			}
 		}
-	}
 
-	[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
-	[self saveTabStateAdditions];
+		[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
+		[self saveTabStateAdditions];
+	}
 }
 
 - (BOOL)tabExistsWithUUID:(NSUUID*)UUID

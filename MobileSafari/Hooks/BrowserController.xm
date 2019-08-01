@@ -172,20 +172,27 @@
 
 	case GestureActionReloadActiveTab:
 	{
-		[self.tabController.activeTabDocument reload];
+		if(!self.tabController.activeTabDocument.isBlankDocument)
+		{
+			[self.tabController.activeTabDocument reload];
+		}
 		break;
 	}
 
 	case GestureActionRequestDesktopSite:
 	{
-		if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
+		if(!self.tabController.activeTabDocument.isBlankDocument)
 		{
-			[self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+			if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
+			{
+				[self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+			}
+			else
+			{
+				[self.tabController.activeTabDocument requestDesktopSite];
+			}
 		}
-		else
-		{
-			[self.tabController.activeTabDocument requestDesktopSite];
-		}
+
 		break;
 	}
 
@@ -214,8 +221,7 @@
 		//Remove private mode message
 		if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView:animated:)])
 		{
-			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
-			 animated:NO];
+			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO animated:NO];
 		}
 		else
 		{
@@ -270,6 +276,11 @@
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled && preferenceManager.biometricProtectionSwitchModeAllowAutomaticActionsEnabled)
+	{
+		skipBiometricProtectionOnce = YES;
+	}
+
 	if(switchToMode == ModeSwitchActionNormalMode)
 	{
 		//Switch to normal browsing mode
@@ -290,6 +301,8 @@
 			[self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
 		}
 	}
+
+	skipBiometricProtectionOnce = NO;
 }
 
 //Full screen scrolling
@@ -321,7 +334,7 @@
 
 	if(preferenceManager.tabManagerEnabled && tabController.presentedTabManager)
 	{
-		[(SPTabManagerTableViewController*)tabController.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
+		[(SPTabManagerTableViewController*) tabController.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
 	}
 }
 
@@ -435,7 +448,7 @@
 
 %end
 
-%group iOS11to12_1_4
+%group iOS11_3to12_1_4
 
 - (void)_updateTabExposeAlertController
 {
@@ -469,6 +482,11 @@
 			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 			{
 				%orig;
+
+				if(preferenceManager.showTabCountEnabled)
+				{
+					[activeToolbarForBrowserController(self) updateTabCount];
+				}
 			});
 
 			return;
@@ -476,11 +494,16 @@
 	}
 
 	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		[activeToolbarForBrowserController(self) updateTabCount];
+	}
 }
 
 %end
 
-%group iOS10Down
+%group iOS10to11_2_6
 
 - (void)updateTabExposePopoverActions
 {
@@ -492,6 +515,10 @@
 	}
 }
 
+%end
+
+%group iOS10Down
+
 - (void)togglePrivateBrowsingEnabled
 {
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
@@ -499,12 +526,22 @@
 		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 		{
 			%orig;
+
+			if(preferenceManager.showTabCountEnabled)
+			{
+				[activeToolbarForBrowserController(self) updateTabCount];
+			}
 		});
 
 		return;
 	}
 
 	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		[activeToolbarForBrowserController(self) updateTabCount];
+	}
 }
 
 - (void)togglePrivateBrowsing
@@ -514,12 +551,22 @@
 		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 		{
 			%orig;
+
+			if(preferenceManager.showTabCountEnabled)
+			{
+				[activeToolbarForBrowserController(self) updateTabCount];
+			}
 		});
 
 		return;
 	}
 
 	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		[activeToolbarForBrowserController(self) updateTabCount];
+	}
 }
 
 %end
@@ -561,9 +608,9 @@
 	{
 		toolbar = self.topToolbar;
 	}
-	else
+	else if([self.rootViewController.navigationBar respondsToSelector:@selector(sp_toolbar)])
 	{
-		toolbar = [self.rootViewController.navigationBar toolbarPlacedOnTop];
+		toolbar = self.rootViewController.navigationBar.sp_toolbar;
 	}
 
 	if(toolbar)
@@ -606,13 +653,18 @@ void initBrowserController()
 		}
 	}
 
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_3)
+	{
+		%init(iOS10to11_2_6);
+	}
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
 	{
 		%init(iOS11Up);
 
-		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
 		{
-			%init(iOS11to12_1_4);
+			%init(iOS11_3to12_1_4);
 		}
 	}
 	else

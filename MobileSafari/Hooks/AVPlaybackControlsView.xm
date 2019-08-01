@@ -120,7 +120,7 @@
 	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
 	downloadInfo.sourceVideo = self;
 	downloadInfo.presentationController = playbackControlsController.playerViewController.fullScreenViewController;
-	downloadInfo.sourceRect = [self.screenModeControls.contentView convertRect:self.downloadButton.frame toView:playbackControlsController.playerViewController.fullScreenViewController.view];
+	downloadInfo.sourceRect = [[self.downloadButton superview] convertRect:self.downloadButton.frame toView:downloadInfo.presentationController.view];
 
 	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
 }

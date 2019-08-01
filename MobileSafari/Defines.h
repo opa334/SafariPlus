@@ -34,7 +34,8 @@
 #define SPCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari Plus"]
 #endif
 
-#define preferenceDomainName @"com.opa334.safariplusprefs.plist"
+#define preferenceDomainName @"com.opa334.safariplusprefs"
+#define preferencePlistName [preferenceDomainName stringByAppendingString:@".plist"];
 #define prefPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"
 #define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"	//NO LONGER USED
 #define colorPrefsPath @"/var/mobile/Library/Preferences/com.opa334.safaripluscolorprefs.plist"	//NO LONGER USED

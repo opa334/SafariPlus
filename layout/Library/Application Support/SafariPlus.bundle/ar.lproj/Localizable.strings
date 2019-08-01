@@ -19,7 +19,7 @@
 "CREDITS" = "الاعتمادات";
 
 "ABOUT_ME" = "عني";
-"TWITTER" = "تويتر";
+/*FOLLOW_ME_ON_TWITTER*/
 "DONATE" = "تبرع";
 
 /* Privacy */
@@ -41,9 +41,13 @@
 "BIOMETRIC_PROTECTION" = "حماية البصمة";
 "BIOMETRIC_PROTECTION_FOOTER" = "حماية الإجراءات المحددة بالبصمة سواءً الإصبع أو الوجه.";
 "SWITCH_BROWSING_MODE" = "تبديل وضع التصفح";
+/*ALLOW_AUTOMATIC_ACTIONS*/
 "LOCK_TAB" = "قفل علامة التبويب";
 "UNLOCK_TAB" = "فتح قفل علامة التبويب";
 "ACCESS_LOCKED_TAB" = "الوصول إلى علامة التبويب المقفلة";
+/*AUTHENTICATE*/
+/*AUTHENTICATION_ERROR*/
+/*ACCESS_BIOMETRIC_PROTECTION*/
 
 /* Uploads & Downloads */
 
@@ -288,6 +292,7 @@
 "ADD_TAB" = "إضافة علامة تبويب";
 "SEARCH_BAR_SPACE" = "فراغ شريط البحث";
 /*RELOAD*/
+/*CLEAR_HISTORY*/
 
 /*BROWSING*/
 
@@ -313,6 +318,9 @@
 
 /*DISABLE_COMMUNICATION_ERROR*/
 /*DISABLE_COMMUNICATION_ERROR_FOOTER*/
+
+/*RESET_ALL_PREFERENCES*/
+/*RESET_ALL_PREFERENCES_CONFIRMATION*/
 
 /* Credits */
 
@@ -415,6 +423,7 @@
 /*CLOSE_TABS_WARNING_MESSAGE*/
 /*CHOOSE_EXPORT_FORMAT*/
 /*CHOOSE_EXPORT_FORMAT_MESSAGE*/
+/*WITH_CLICKABLE_URL*/
 /*ADD_TABS_ALERT*/
 /*ADD_TABS_ALERT_MESSAGE*/
 /*USE_CLIPBOARD*/

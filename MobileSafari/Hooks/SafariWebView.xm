@@ -120,7 +120,14 @@
 	}
 	else if(preferenceManager.customUserAgentEnabled && ![preferenceManager.customUserAgent isEqualToString:@""])
 	{
-		cSelf.customUserAgent = preferenceManager.customUserAgent;
+		if([cSelf respondsToSelector:@selector(_setCustomUserAgent:)])
+		{
+			[cSelf _setCustomUserAgent:preferenceManager.customUserAgent];
+		}
+		else
+		{
+			[cSelf setCustomUserAgent:preferenceManager.customUserAgent];
+		}
 	}
 }
 

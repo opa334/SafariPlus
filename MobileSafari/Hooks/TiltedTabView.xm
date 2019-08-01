@@ -50,7 +50,18 @@
 {
 	if(preferenceManager.lockedTabsEnabled && preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionAccessLockedTabEnabled)
 	{
-		if(MSHookIvar<NSInteger>(self, "_currentTabPreviewState") != 2)
+		BOOL iForgotWhatThisWasForButItCrashesOnIOS8;
+
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
+		{
+			iForgotWhatThisWasForButItCrashesOnIOS8 = YES;
+		}
+		else
+		{
+			iForgotWhatThisWasForButItCrashesOnIOS8 = MSHookIvar<NSInteger>(self, "_currentTabPreviewState") != 2;
+		}
+
+		if(iForgotWhatThisWasForButItCrashesOnIOS8)
 		{
 			TiltedTabItem* tappedItem = [self _tiltedTabItemForLocation:[recognizer locationInView:MSHookIvar<UIView*>(self, "_scrollView")]];
 

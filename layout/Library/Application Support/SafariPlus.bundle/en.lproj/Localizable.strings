@@ -19,7 +19,7 @@
 "CREDITS" = "Credits";
 
 "ABOUT_ME" = "About me";
-"TWITTER" = "Twitter";
+"FOLLOW_ME_ON_TWITTER" = "Follow me on Twitter";
 "DONATE" = "Donate";
 
 /* Privacy */
@@ -41,9 +41,13 @@
 "BIOMETRIC_PROTECTION" = "Biometric Protection";
 "BIOMETRIC_PROTECTION_FOOTER" = "Protect the selected actions with Touch ID or Face ID.";
 "SWITCH_BROWSING_MODE" = "Switch Browsing Mode";
+"ALLOW_AUTOMATIC_ACTIONS" = "Allow Automatic Actions";
 "LOCK_TAB" = "Lock Tab";
 "UNLOCK_TAB" = "Unlock Tab";
 "ACCESS_LOCKED_TAB" = "Access Locked Tab";
+"AUTHENTICATE" = "Authenticate";
+"AUTHENTICATION_ERROR" = "Authentication Error";
+"ACCESS_BIOMETRIC_PROTECTION" = "Access Biometric Protection";
 
 /* Uploads & Downloads */
 
@@ -288,6 +292,7 @@
 "ADD_TAB" = "Add Tab";
 "SEARCH_BAR_SPACE" = "Search Bar Space";
 "RELOAD" = "Reload";
+"CLEAR_HISTORY" = "Clear History";
 
 "BROWSING" = "Browsing";
 
@@ -313,6 +318,9 @@
 
 "DISABLE_COMMUNICATION_ERROR" = "Disable Communication Error Alert";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disable the communication error alert that appears on app launch when rocketbootstrap is not available for some reason. Use on your own risk.";
+
+"RESET_ALL_PREFERENCES" = "Reset All Preferences";
+"RESET_ALL_PREFERENCES_CONFIRMATION" = "Are you sure that you want to reset all preferences?";
 
 /* Credits */
 
@@ -415,6 +423,7 @@
 "CLOSE_TABS_WARNING_MESSAGE" = "You are about to close %zu tabs, do you want to proceed?";
 "CHOOSE_EXPORT_FORMAT" = "Choose Export Format";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "Each selected tab will be one line of text. Choose how each line should be formatted.";
+"WITH_CLICKABLE_URL" = "With Clickable URL";
 "ADD_TABS_ALERT" = "Add Tabs";
 "ADD_TABS_ALERT_MESSAGE" = "Enter some URLs in the text field. Anything that's not an URL will be ignored!";
 "USE_CLIPBOARD" = "Use Clipboard";

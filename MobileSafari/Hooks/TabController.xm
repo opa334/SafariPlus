@@ -140,7 +140,7 @@
 
 		NSMutableArray* newM = [old mutableCopy];
 
-		if([old count] < 6)
+		if([old count] < 6)	//Fix for iOS 8 when private browsing is disabled
 		{
 			[newM insertObject:flexibleSpace atIndex:0];
 		}
@@ -224,8 +224,64 @@
 		if(tabDocument.webView)
 		{
 			[tabDocument.webView sp_updateCustomUserAgent];
-			[tabDocument.webView sp_applyCustomUserAgent];
+
+			if(!tabDocument.isBlankDocument)
+			{
+				[tabDocument.webView sp_applyCustomUserAgent];
+			}
 		}
+	}
+}
+
+- (void)tabDocumentDidUpdateUUID:(TabDocument*)tabDocument previousUUID:(NSUUID*)UUID
+{
+	%orig;
+
+	if(tabDocument.locked)
+	{
+		[tabDocument writeLockStateToCache];
+	}
+	else
+	{
+		[tabDocument updateLockStateFromCache];
+		[tabDocument updateLockButtons];
+	}
+}
+
+- (void)tabDocumentDidUpdateUUID:(TabDocument*)tabDocument
+{
+	%orig;
+
+	if(tabDocument.locked)
+	{
+		[tabDocument writeLockStateToCache];
+	}
+	else
+	{
+		[tabDocument updateLockStateFromCache];
+		[tabDocument updateLockButtons];
+	}
+}
+
+- (void)_restorePersistentDocumentState:(id)arg1 into:(id)arg2 withCurrentActiveDocument:(id)arg3 activeDocumentIsValid:(BOOL)arg4 restoredActiveDocumentIndex:(NSUInteger)arg5 shouldRestoreSessionData:(BOOL)arg6
+{
+	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+		[activeToolbarForBrowserController(browserController) updateTabCount];
+	}
+}
+
+- (void)_restorePersistentDocumentState:(id)arg1 into:(id)arg2 withCurrentActiveDocument:(id)arg3 activeDocumentIsValid:(BOOL)arg4 restoredActiveDocumentIndex:(NSUInteger)arg5
+{
+	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+		[activeToolbarForBrowserController(browserController) updateTabCount];
 	}
 }
 
@@ -314,18 +370,6 @@
 
 	return %orig;
 }
-
-- (void)_restorePersistentDocumentState:(id)arg1 into:(id)arg2 withCurrentActiveDocument:(id)arg3 activeDocumentIsValid:(_Bool)arg4 restoredActiveDocumentIndex:(unsigned long long)arg5
-{
-	%orig;
-
-	if(preferenceManager.showTabCountEnabled)
-	{
-		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
-		[activeToolbarForBrowserController(browserController) updateTabCount];
-	}
-}
-
 
 %end
 

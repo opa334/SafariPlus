@@ -19,7 +19,7 @@
 "CREDITS" = "Credits";
 
 "ABOUT_ME" = "Über mich";
-"TWITTER" = "Twitter";
+"FOLLOW_ME_ON_TWITTER" = "Folge mir auf Twitter";
 "DONATE" = "Spenden";
 
 /* Privacy */
@@ -41,9 +41,13 @@
 "BIOMETRIC_PROTECTION" = "Biometrischer Schutz";
 "BIOMETRIC_PROTECTION_FOOTER" = "Schützt die ausgewählten Aktionen mit Touch ID oder Face ID.";
 "SWITCH_BROWSING_MODE" = "Surfmodus wechseln";
+"ALLOW_AUTOMATIC_ACTIONS" = "Automatische Aktionen zulassen";
 "LOCK_TAB" = "Tab verriegeln";
 "UNLOCK_TAB" = "Tab entriegeln";
 "ACCESS_LOCKED_TAB" = "Zugriff auf verriegelten Tab";
+"AUTHENTICATE" = "Authentifizieren";
+"AUTHENTICATION_ERROR" = "Fehler beim Authentifizieren";
+"ACCESS_BIOMETRIC_PROTECTION" = "Zugriff auf biometrischen Schutz";
 
 /* Uploads & Downloads */
 
@@ -288,6 +292,7 @@
 "ADD_TAB" = "Tab hinzufügen";
 "SEARCH_BAR_SPACE" = "Platz für die Suchleiste";
 "RELOAD" = "Neu laden";
+"CLEAR_HISTORY" = "Verlauf leeren";
 
 "BROWSING" = "Browsing";
 
@@ -313,6 +318,9 @@
 
 "DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
+
+"RESET_ALL_PREFERENCES" = "Alle Einstellungen zurücksetzen";
+"RESET_ALL_PREFERENCES_CONFIRMATION" = "Bist du sicher, dass alle Einstellungen zurück gesetzt werden sollen?";
 
 /* Credits */
 
@@ -415,6 +423,7 @@
 "CLOSE_TABS_WARNING_MESSAGE" = "Du bist dabei %zu Tabs zu schließen. Soll der Vorgang fortgeführt werden?";
 "CHOOSE_EXPORT_FORMAT" = "Export-Format auswählen";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "Jeder ausgewählte Tab wird eine Zeile Text sein. Wähle das gewünschte Format für alle Zeilen.";
+"WITH_CLICKABLE_URL" = "Mit anklickbarer URL";
 "ADD_TABS_ALERT" = "Tabs hinzufügen";
 "ADD_TABS_ALERT_MESSAGE" = "Gebe URLs ins Text Feld ein. Alles was keine URL ist, wird ignoriert.";
 "USE_CLIPBOARD" = "Verwende Zwischenablage";

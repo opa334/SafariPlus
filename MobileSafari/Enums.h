@@ -96,5 +96,6 @@ enum
 	BrowserToolbarTabExposeItem,
 	BrowserToolbarSearchBarSpace,
 	BrowserToolbarDownloadsItem,
-	BrowserToolbarReloadItem
+	BrowserToolbarReloadItem,
+	BrowserToolbarClearDataItem
 };

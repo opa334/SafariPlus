@@ -50,6 +50,15 @@ void reloadPrefs()
 	return sharedInstance;
 }
 
+#ifndef NO_CEPHEI
+
+- (HBPreferences*)preferences
+{
+	return _preferences;
+}
+
+#endif
+
 - (id)init
 {
 	self = [super init];
@@ -62,7 +71,7 @@ void reloadPrefs()
 
 	#else
 
-	_preferences = [[HBPreferences alloc] initWithIdentifier:SPPrefsDomain];
+	_preferences = [[HBPreferences alloc] initWithIdentifier:preferenceDomainName];
 
 	[_preferences registerBool:&_tweakEnabled default:YES forKey:@"tweakEnabled"];
 
@@ -71,12 +80,13 @@ void reloadPrefs()
 	[_preferences registerBool:&_lockedTabsEnabled default:NO forKey:@"lockedTabsEnabled"];
 	[_preferences registerBool:&_biometricProtectionEnabled default:NO forKey:@"biometricProtectionEnabled"];
 	[_preferences registerBool:&_biometricProtectionSwitchModeEnabled default:NO forKey:@"biometricProtectionSwitchModeEnabled"];
+	[_preferences registerBool:&_biometricProtectionSwitchModeAllowAutomaticActionsEnabled default:NO forKey:@"biometricProtectionSwitchModeAllowAutomaticActionsEnabled"];
 	[_preferences registerBool:&_biometricProtectionLockTabEnabled default:NO forKey:@"biometricProtectionLockTabEnabled"];
 	[_preferences registerBool:&_biometricProtectionUnlockTabEnabled default:NO forKey:@"biometricProtectionUnlockTabEnabled"];
 	[_preferences registerBool:&_biometricProtectionAccessLockedTabEnabled default:NO forKey:@"biometricProtectionAccessLockedTabEnabled"];
 
 	[_preferences registerBool:&_uploadAnyFileOptionEnabled default:NO forKey:@"uploadAnyFileOptionEnabled"];
-	[_preferences registerBool:&_downloadManagerEnabled default:NO forKey:@"enhancedDownloadsEnabled"];
+	[_preferences registerBool:&_downloadManagerEnabled default:NO forKey:@"downloadManagerEnabled"];
 	[_preferences registerBool:&_videoDownloadingEnabled default:NO forKey:@"videoDownloadingEnabled"];
 	[_preferences registerBool:&_downloadSiteToActionEnabled default:YES forKey:@"downloadSiteToActionEnabled"];
 	[_preferences registerBool:&_downloadImageToActionEnabled default:YES forKey:@"downloadImageToActionEnabled"];
@@ -240,7 +250,7 @@ void reloadPrefs()
 
 - (void)reloadPrefs
 {
-	CFStringRef appID = (__bridge CFStringRef)SPPrefsDomain;
+	CFStringRef appID = (__bridge CFStringRef)preferenceDomainName;
 
 	CFPreferencesAppSynchronize(appID);
 
@@ -256,12 +266,13 @@ void reloadPrefs()
 		_lockedTabsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("lockedTabsEnabled"), appID) boolValue];
 		_biometricProtectionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("biometricProtectionEnabled"), appID) boolValue];
 		_biometricProtectionSwitchModeEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("biometricProtectionSwitchModeEnabled"), appID) boolValue];
+		_biometricProtectionSwitchModeAllowAutomaticActionsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("biometricProtectionSwitchModeAllowAutomaticActionsEnabled"), appID) boolValue];
 		_biometricProtectionLockTabEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("biometricProtectionLockTabEnabled"), appID) boolValue];
 		_biometricProtectionUnlockTabEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("biometricProtectionUnlockTabEnabled"), appID) boolValue];
 		_biometricProtectionAccessLockedTabEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("biometricProtectionAccessLockedTabEnabled"), appID) boolValue];
 
 		_uploadAnyFileOptionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("uploadAnyFileOptionEnabled"), appID) boolValue];
-		_downloadManagerEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("enhancedDownloadsEnabled"), appID) boolValue];
+		_downloadManagerEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadManagerEnabled"), appID) boolValue];
 		_videoDownloadingEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("videoDownloadingEnabled"), appID) boolValue];
 		NSNumber* downloadSiteToActionEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadSiteToActionEnabled"), appID);
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
@@ -432,12 +443,13 @@ void reloadPrefs()
 		_lockedTabsEnabled = [[prefDict objectForKey:@"lockedTabsEnabled"] boolValue];
 		_biometricProtectionEnabled = [[prefDict objectForKey:@"biometricProtectionEnabled"] boolValue];
 		_biometricProtectionSwitchModeEnabled = [[prefDict objectForKey:@"biometricProtectionSwitchModeEnabled"] boolValue];
+		_biometricProtectionSwitchModeAllowAutomaticActionsEnabled = [[prefDict objectForKey:@"biometricProtectionSwitchModeAllowAutomaticActionsEnabled"] boolValue];
 		_biometricProtectionLockTabEnabled = [[prefDict objectForKey:@"biometricProtectionLockTabEnabled"] boolValue];
 		_biometricProtectionUnlockTabEnabled = [[prefDict objectForKey:@"biometricProtectionUnlockTabEnabled"] boolValue];
 		_biometricProtectionAccessLockedTabEnabled = [[prefDict objectForKey:@"biometricProtectionAccessLockedTabEnabled"] boolValue];
 
 		_uploadAnyFileOptionEnabled = [[prefDict objectForKey:@"uploadAnyFileOptionEnabled"] boolValue];
-		_downloadManagerEnabled = [[prefDict objectForKey:@"enhancedDownloadsEnabled"] boolValue];
+		_downloadManagerEnabled = [[prefDict objectForKey:@"downloadManagerEnabled"] boolValue];
 		_videoDownloadingEnabled = [[prefDict objectForKey:@"videoDownloadingEnabled"] boolValue];
 		NSNumber* downloadSiteToActionEnabled = [prefDict objectForKey:@"downloadSiteToActionEnabled"];
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
@@ -609,12 +621,13 @@ void reloadPrefs()
 - (BOOL)lockedTabsEnabled { return [[_preferences objectForKey:@"lockedTabsEnabled"] boolValue]; }
 - (BOOL)biometricProtectionEnabled { return [[_preferences objectForKey:@"biometricProtectionEnabled"] boolValue]; }
 - (BOOL)biometricProtectionSwitchModeEnabled { return [[_preferences objectForKey:@"biometricProtectionSwitchModeEnabled"] boolValue]; }
+- (BOOL)biometricProtectionSwitchModeAllowAutomaticActionsEnabled { return [[_preferences objectForKey:@"biometricProtectionSwitchModeAllowAutomaticActionsEnabled"] boolValue]; }
 - (BOOL)biometricProtectionLockTabEnabled { return [[_preferences objectForKey:@"biometricProtectionLockTabEnabled"] boolValue]; }
 - (BOOL)biometricProtectionUnlockTabEnabled { return [[_preferences objectForKey:@"biometricProtectionUnlockTabEnabled"] boolValue]; }
 - (BOOL)biometricProtectionAccessLockedTabEnabled { return [[_preferences objectForKey:@"biometricProtectionAccessLockedTabEnabled"] boolValue]; }
 
 - (BOOL)uploadAnyFileOptionEnabled { return [[_preferences objectForKey:@"uploadAnyFileOptionEnabled"] boolValue]; }
-- (BOOL)downloadManagerEnabled { return [[_preferences objectForKey:@"enhancedDownloadsEnabled"] boolValue]; }
+- (BOOL)downloadManagerEnabled { return [[_preferences objectForKey:@"downloadManagerEnabled"] boolValue]; }
 - (BOOL)videoDownloadingEnabled { return [[_preferences objectForKey:@"videoDownloadingEnabled"] boolValue]; }
 - (BOOL)downloadSiteToActionEnabled { return [_preferences objectForKey:@"downloadSiteToActionEnabled"] ? [[_preferences objectForKey:@"downloadSiteToActionEnabled"] boolValue] : YES; }
 - (BOOL)downloadImageToActionEnabled { return [_preferences objectForKey:@"downloadImageToActionEnabled"] ? [[_preferences objectForKey:@"downloadImageToActionEnabled"] boolValue] : YES; }

@@ -62,19 +62,31 @@ static BOOL fakeOpenLinksValue = NO;
 %property (nonatomic,assign) BOOL accessAuthenticated;
 
 %new
+- (void)updateLockStateFromCache
+{
+	BOOL locked = [cacheManager isTabWithUUIDLocked:castedSelf.UUID];
+	NSNumber* lockedN = [NSNumber numberWithBool:locked];
+	objc_setAssociatedObject(self, @selector(locked), lockedN, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+%new
 - (BOOL)locked
 {
 	NSNumber* lockedN = objc_getAssociatedObject(self, @selector(locked));
-	BOOL locked = [lockedN boolValue];
 
 	if(!lockedN)
 	{
-		locked = [cacheManager isTabWithUUIDLocked:castedSelf.UUID];
-		lockedN = [NSNumber numberWithBool:locked];
-		objc_setAssociatedObject(self, @selector(locked), lockedN, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		[self updateLockStateFromCache];
+		lockedN = objc_getAssociatedObject(self, @selector(locked));
 	}
 
-	return locked;
+	return [lockedN boolValue];
+}
+
+%new
+- (void)writeLockStateToCache
+{
+	[cacheManager setLocked:castedSelf.locked forTabWithUUID:castedSelf.UUID];
 }
 
 %new
@@ -83,9 +95,9 @@ static BOOL fakeOpenLinksValue = NO;
 	NSNumber* lockedN = [NSNumber numberWithBool:locked];
 	objc_setAssociatedObject(self, @selector(locked), lockedN, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 
-	[cacheManager setLocked:locked forTabWithUUID:castedSelf.UUID];
+	[self writeLockStateToCache];
 
-	[self updateLockButtonStates];
+	[self updateLockButtons];
 
 	if(preferenceManager.tabManagerEnabled && castedSelf.tabManagerViewCell)
 	{
@@ -94,7 +106,7 @@ static BOOL fakeOpenLinksValue = NO;
 }
 
 %new
-- (void)updateLockButtonStates
+- (void)updateLockButtons
 {
 	if(castedSelf.tiltedTabItem)
 	{
@@ -224,7 +236,7 @@ static BOOL fakeOpenLinksValue = NO;
 										     @"updateAppLinkOpenStrategy" : @YES
 						};
 
-						if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11
+						if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11 and above
 						{
 							[castedSelf _openAppLinkInApp:appLink fromOriginalRequest:navigationAction.request updateAppLinkStrategy:YES webBrowserState:browserState completionHandler:nil];
 						}
@@ -448,8 +460,7 @@ static BOOL fakeOpenLinksValue = NO;
 
 		if(preferenceManager.bothTabOpenActionsEnabled)
 		{
-			//Only needed when there is no tabBar
-			BOOL usesTabBar;
+			BOOL usesTabBar = NO;
 
 			if([browserController.tabController respondsToSelector:@selector(usesTabBar)])
 			{
@@ -460,41 +471,46 @@ static BOOL fakeOpenLinksValue = NO;
 				usesTabBar = browserController.usesTabBar;
 			}
 
-			if(!usesTabBar)
+			_WKElementAction* openInNewTabAction;
+			_WKElementAction* openInBackgroundAction;
+
+			shouldFakeOpenLinksKey = YES;
+			fakeOpenLinksValue = NO;
+
+			if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
 			{
-				_WKElementAction* openInNewTabAction;
-				_WKElementAction* openInBackgroundAction;
-
-				shouldFakeOpenLinksKey = YES;
-				fakeOpenLinksValue = NO;
-
-				if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
-				{
-					openInNewTabAction = [self _openInNewPageActionForElement:element];
-				}
-				else
-				{
-					openInNewTabAction = [self _openInNewPageActionForElement:element previewViewController:nil];
-				}
-
-				fakeOpenLinksValue = YES;
-
-				if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
-				{
-					openInBackgroundAction = [self _openInNewPageActionForElement:element];
-				}
-				else
-				{
-					openInBackgroundAction = [self _openInNewPageActionForElement:element previewViewController:nil];
-				}
-
-				shouldFakeOpenLinksKey = NO;
-				fakeOpenLinksValue = NO;
-
-				[actions removeObjectAtIndex:1];
-				[actions insertObject:openInBackgroundAction atIndex:1];
-				[actions insertObject:openInNewTabAction atIndex:1];
+				openInNewTabAction = [self _openInNewPageActionForElement:element];
 			}
+			else
+			{
+				openInNewTabAction = [self _openInNewPageActionForElement:element previewViewController:nil];
+			}
+
+			fakeOpenLinksValue = YES;
+
+			if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
+			{
+				openInBackgroundAction = [self _openInNewPageActionForElement:element];
+			}
+			else
+			{
+				openInBackgroundAction = [self _openInNewPageActionForElement:element previewViewController:nil];
+			}
+
+			//If a tabBar is used, the action returned by _openInNewPageActionForElement will always
+			//have the title 'Open in New Tab', even if it should be 'Open in Background'
+			//Therefore we need to manually set it to 'Open in Background'
+			if(usesTabBar)
+			{
+				MSHookIvar<NSString*>(openInBackgroundAction, "_title") = [localizationManager localizedMSStringForKey:@"Open Link in Background Tab"];
+			}
+
+			shouldFakeOpenLinksKey = NO;
+			fakeOpenLinksValue = NO;
+
+			[actions removeObjectAtIndex:1];
+			[actions insertObject:openInBackgroundAction atIndex:1];
+			[actions insertObject:openInNewTabAction atIndex:1];
 		}
 	}
 
@@ -714,11 +730,15 @@ static BOOL fakeOpenLinksValue = NO;
 - (void)_webView:(WKWebView *)webView
 	decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
 	userInfo:(NSDictionary*)userInfo
-	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+	decisionHandler:(void (^)(WKNavigationActionPolicy, _WKWebsitePolicies*))decisionHandler
 {
 	if(preferenceManager.alwaysOpenNewTabEnabled)
 	{
-		if(![self handleAlwaysOpenInNewTabForNavigationAction:navigationAction decisionHandler:decisionHandler])
+		if(![self handleAlwaysOpenInNewTabForNavigationAction:navigationAction decisionHandler:^(WKNavigationActionPolicy policy)
+		{
+			//Wrap around new decisionHandler that takes 2 args now
+			decisionHandler(policy, [[%c(_WKWebsitePolicies) alloc] init]);
+		}])
 		{
 			return;
 		}
@@ -726,7 +746,11 @@ static BOOL fakeOpenLinksValue = NO;
 
 	if(preferenceManager.forceHTTPSEnabled)
 	{
-		if(![self handleForceHTTPSForNavigationAction:navigationAction decisionHandler:decisionHandler])
+		if(![self handleForceHTTPSForNavigationAction:navigationAction decisionHandler:^(WKNavigationActionPolicy policy)
+		{
+			//Wrap around new decisionHandler that takes 2 args now
+			decisionHandler(policy, [[%c(_WKWebsitePolicies) alloc] init]);
+		}])
 		{
 			return;
 		}

@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPTouchView.h"
+#import "../Defines.h"
 
 @implementation SPTouchView
 
@@ -29,7 +30,16 @@
 {
 	UIView* hitView = [super hitTest:point withEvent:event];
 
-	if(hitView == self)
+	CGFloat extendedWidth = 0;
+	CGFloat extendedHeight = 0;
+
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
+	{
+		extendedWidth = 11;
+		extendedHeight = 2.5;
+	}
+
+	if((point.x > -extendedWidth && point.x <= self.frame.size.width + extendedWidth) && (point.y > -extendedHeight && point.y <= self.frame.size.height + extendedHeight))
 	{
 		return self.touchReceiver;
 	}

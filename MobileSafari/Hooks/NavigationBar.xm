@@ -20,6 +20,19 @@
 
 %hook NavigationBar
 
+%property (nonatomic,retain) BrowserToolbar *sp_toolbar;
+
+%group iOS12_2Up
+- (BrowserToolbar*)toolbarPlacedOnTop
+{
+	BrowserToolbar* toolbar = %orig;
+
+	self.sp_toolbar = toolbar;
+
+	return toolbar;
+}
+%end
+
 %group iOS11_3Up
 - (void)_updateNavigationBarTrailingButtonsVisibility
 {
@@ -57,6 +70,13 @@
 
 void initNavigationBar()
 {
+	%init();
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
+	{
+		%init(iOS12_2Up);
+	}
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
 	{
 		%init(iOS11_3Up);

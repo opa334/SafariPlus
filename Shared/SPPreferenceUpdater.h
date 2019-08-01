@@ -1,4 +1,4 @@
-// SPPreferenceMerger.h
+// SPPreferenceUpdater.h
 // (c) 2017 - 2019 opa334
 
 // This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,9 @@
 
 #ifndef SIMJECT
 
-@interface SPPreferenceMerger : NSObject
+@interface SPPreferenceUpdater : NSObject
++ (void)update;
 + (BOOL)needsMerge;
-+ (void)mergeIfNeeded;
 + (NSString*)LCSCPHexFromLCPHex:(NSString*)lcpHex;	//libColorPicker -> libCSColorPicker
 + (NSDictionary*)locationWithName:(NSString*)name path:(NSString*)path;
 @end

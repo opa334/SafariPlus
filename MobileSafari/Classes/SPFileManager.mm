@@ -46,6 +46,13 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 	NSDictionary* response = [communicationManager executeFileOperationOnSpringBoard:dict];
 
+	NSException* exception = [response objectForKey:@"exception"];
+	if(exception)
+	{
+		//Redirect SpringBoard crashes to Safari
+		@throw(exception);
+	}
+
 	if(error)
 	{
 		NSError* responseError = [response objectForKey:@"error"];

@@ -16,8 +16,6 @@
 
 @class SPPreferenceManager, HBPreferences;
 
-static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
-
 @interface SPPreferenceManager : NSObject
 {
   #ifndef NO_CEPHEI
@@ -39,6 +37,7 @@ static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
 @property (nonatomic, readonly) BOOL lockedTabsEnabled;
 @property (nonatomic, readonly) BOOL biometricProtectionEnabled;
 @property (nonatomic, readonly) BOOL biometricProtectionSwitchModeEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionSwitchModeAllowAutomaticActionsEnabled;
 @property (nonatomic, readonly) BOOL biometricProtectionLockTabEnabled;
 @property (nonatomic, readonly) BOOL biometricProtectionUnlockTabEnabled;
 @property (nonatomic, readonly) BOOL biometricProtectionAccessLockedTabEnabled;
@@ -193,6 +192,8 @@ static NSString *const SPPrefsDomain = @"com.opa334.safariplusprefs";
 
 #ifdef NO_CEPHEI
 - (void)reloadPrefs;
+#else
+- (HBPreferences*)preferences;
 #endif
 
 @end

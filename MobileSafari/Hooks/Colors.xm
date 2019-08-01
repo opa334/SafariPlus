@@ -670,31 +670,34 @@
 		_UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self, "_header");
 		_UIBackdropViewSettings* settings = [_UIBackdropViewSettings settingsForPrivateStyle:2030];
 
-		BOOL privateBrowsing = privateBrowsingEnabled(MSHookIvar<BrowserController*>(self.delegate, "_browserController"));
-
-		UIColor* colorToSet;
-
-		if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherNormalToolbarBackgroundColor && !privateBrowsing)
+		if([header isKindOfClass:NSClassFromString(@"_UIBackdropView")])
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalToolbarBackgroundColor];
-		}
-		else if(preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherPrivateToolbarBackgroundColor && privateBrowsing)
-		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateToolbarBackgroundColor];
-		}
+			BOOL privateBrowsing = privateBrowsingEnabled(MSHookIvar<BrowserController*>(self.delegate, "_browserController"));
 
-		if(colorToSet)
-		{
-			settings.usesGrayscaleTintView = NO;
-			settings.usesColorTintView = YES;
-			settings.colorTint = [colorToSet colorWithAlphaComponent:1.0];
-			CGFloat alpha;
-			[colorToSet getRed:nil green:nil blue:nil alpha:&alpha];
-			settings.colorTintAlpha = alpha;
-			settings.grayscaleTintAlpha = 0;
-		}
+			UIColor* colorToSet;
 
-		[header transitionToSettings:settings];
+			if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherNormalToolbarBackgroundColor && !privateBrowsing)
+			{
+				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalToolbarBackgroundColor];
+			}
+			else if(preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherPrivateToolbarBackgroundColor && privateBrowsing)
+			{
+				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateToolbarBackgroundColor];
+			}
+
+			if(colorToSet)
+			{
+				settings.usesGrayscaleTintView = NO;
+				settings.usesColorTintView = YES;
+				settings.colorTint = [colorToSet colorWithAlphaComponent:1.0];
+				CGFloat alpha;
+				[colorToSet getRed:nil green:nil blue:nil alpha:&alpha];
+				settings.colorTintAlpha = alpha;
+				settings.grayscaleTintAlpha = 0;
+			}
+
+			[header transitionToSettings:settings];
+		}
 	}
 }
 

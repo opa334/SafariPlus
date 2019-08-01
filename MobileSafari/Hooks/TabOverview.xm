@@ -36,7 +36,7 @@
 	if(preferenceManager.desktopButtonEnabled || preferenceManager.tabManagerEnabled)
 	{
 		UISearchBar* searchBar = MSHookIvar<UISearchBar*>(self, "_searchBar");
-		UIView* superview = [self.privateBrowsingButton superview];
+		UIView* superview = [self.addTabButton superview];
 
 		BOOL desktopButtonAdded = NO;
 		BOOL tabManagerButtonAdded = NO;
@@ -83,19 +83,39 @@
 
 		//Update position
 
-		CGFloat gap = self.addTabButton.frame.origin.x - (self.privateBrowsingButton.frame.origin.x + self.privateBrowsingButton.frame.size.width);
+		CGRect rightFrame;	//Fix for iOS 8 when private browsing is disabled
+		CGRect righterFrame;
+		BOOL set = NO;
+
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
+		{
+			if(![MSHookIvar<BrowserController*>(self.delegate, "_browserController") isPrivateBrowsingAvailable])
+			{
+				rightFrame = self.addTabButton.frame;
+				righterFrame = MSHookIvar<UIButton*>(self, "_doneButton").frame;
+				set = YES;
+			}
+		}
+
+		if(!set)
+		{
+			rightFrame = self.privateBrowsingButton.frame;
+			righterFrame = self.addTabButton.frame;
+		}
+
+		CGFloat gap = righterFrame.origin.x - (rightFrame.origin.x + rightFrame.size.width);
 
 		CGRect pos1 = CGRectMake(
-			self.privateBrowsingButton.frame.origin.x - (gap + self.privateBrowsingButton.frame.size.height),
-			self.privateBrowsingButton.frame.origin.y,
-			self.privateBrowsingButton.frame.size.height,
-			self.privateBrowsingButton.frame.size.height);
+			rightFrame.origin.x - (gap + rightFrame.size.height),
+			rightFrame.origin.y,
+			rightFrame.size.height,
+			rightFrame.size.height);
 
 		CGRect pos2 = CGRectMake(
-			self.privateBrowsingButton.frame.origin.x - ((gap + self.privateBrowsingButton.frame.size.height) * 2),
-			self.privateBrowsingButton.frame.origin.y,
-			self.privateBrowsingButton.frame.size.height,
-			self.privateBrowsingButton.frame.size.height);
+			rightFrame.origin.x - ((gap + rightFrame.size.height) * 2),
+			rightFrame.origin.y,
+			rightFrame.size.height,
+			rightFrame.size.height);
 
 		if(preferenceManager.desktopButtonEnabled && preferenceManager.tabManagerEnabled)
 		{
@@ -169,7 +189,7 @@
 	{
 		if(!self.delegate)
 		{
-			return; //please don't break anything, please (fix for weird crash)
+			return;	//please don't break anything, please (fix for weird crash)
 		}
 	}
 

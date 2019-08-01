@@ -29,6 +29,7 @@ extern SPCacheManager* cacheManager;
 extern NSBundle* SPBundle;
 extern NSBundle* MSBundle;
 extern BOOL rocketBootstrapWorks;
+extern BOOL skipBiometricProtectionOnce;
 
 extern BOOL privateBrowsingEnabled(BrowserController* controller);
 extern void togglePrivateBrowsing(BrowserController* controller);

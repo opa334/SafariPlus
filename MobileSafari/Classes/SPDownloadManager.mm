@@ -1235,7 +1235,7 @@
 	//Remove file if it exists
 	[downloadInfo removeExistingFile];
 
-	//Move downloaded file to desired location
+	//Move downloaded file to picked location
 	[fileManager moveItemAtURL:location toURL:[downloadInfo pathURL] error:nil];
 
 	if(preferenceManager.autosaveToMediaLibraryEnabled)

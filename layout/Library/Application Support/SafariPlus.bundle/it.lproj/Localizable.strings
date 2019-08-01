@@ -19,7 +19,7 @@
 "CREDITS" = "Crediti";
 
 "ABOUT_ME" = "Chi sono";
-"TWITTER" = "Twitter";
+/*FOLLOW_ME_ON_TWITTER*/
 "DONATE" = "Dona";
 
 /* Privacy */
@@ -41,9 +41,13 @@
 "BIOMETRIC_PROTECTION" = "Protezione biometrica";
 "BIOMETRIC_PROTECTION_FOOTER" = "Protegge le azioni selezionate con il Touch ID o il Face ID.";
 "SWITCH_BROWSING_MODE" = "Cambia modalità di navigazione";
+/*ALLOW_AUTOMATIC_ACTIONS*/
 "LOCK_TAB" = "Ancora scheda";
 "UNLOCK_TAB" = "Disancora scheda";
 "ACCESS_LOCKED_TAB" = "Accedi alle schede ancorate";
+/*AUTHENTICATE*/
+/*AUTHENTICATION_ERROR*/
+/*ACCESS_BIOMETRIC_PROTECTION*/
 
 /* Uploads & Downloads */
 
@@ -288,6 +292,7 @@
 "ADD_TAB" = "Aggiungi scheda";
 "SEARCH_BAR_SPACE" = "Barra di ricerca";
 "RELOAD" = "Aggiorna";
+/*CLEAR_HISTORY*/
 
 /*BROWSING*/
 
@@ -313,6 +318,9 @@
 
 "DISABLE_COMMUNICATION_ERROR" = "Disattiva avviso errore di comunicazione";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disattiva l'avviso di errore di comunicazione che appare aprendo l'app quando rocketbootstrap non è disponibile per qualche ragione. Usa a tuo rischio e pericolo.";
+
+/*RESET_ALL_PREFERENCES*/
+/*RESET_ALL_PREFERENCES_CONFIRMATION*/
 
 /* Credits */
 
@@ -415,6 +423,7 @@
 "CLOSE_TABS_WARNING_MESSAGE" = "Vuoi davvero chiudere %zu schede?";
 "CHOOSE_EXPORT_FORMAT" = "Scegli formato d'esporazione";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "Ogni scheda selezionata sarà una riga di testo. Scegli come vuoi che ogni riga venga formattata.";
+/*WITH_CLICKABLE_URL*/
 "ADD_TABS_ALERT" = "Aggiungi scheda";
 "ADD_TABS_ALERT_MESSAGE" = "Inserisci qualche URL nel campo di testo. Tutto quello che non è un URL verrà ignorato!";
 "USE_CLIPBOARD" = "Usa appunti";

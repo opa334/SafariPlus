@@ -20,7 +20,7 @@ SPSBReceiver* receiver;
 
 %hook SpringBoard
 
-//Use rocketbootstrap to recieve messages through CPDistributedMessagingCenter
+//Use rocketbootstrap to receive messages through CPDistributedMessagingCenter
 - (id)init
 {
 	id orig = %orig;

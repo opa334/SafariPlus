@@ -50,7 +50,7 @@
 - (void)selectAllButtonPressed;
 - (void)addTabsButtonPressed;
 - (void)openAllURLsInsideString:(NSString*)string;
-- (void)addToBookmarksButtonPressed;
+- (void)addToBookmarksButtonPressed:(UIBarButtonItem*)sender;
 - (void)closeTabsButtonPressed;
 - (void)exportButtonPressed:(id)sender;
 - (void)updateSelectedTabs;

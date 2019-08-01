@@ -243,6 +243,9 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 + (id)elementActionWithTitle:(id)arg1 actionHandler:(id)arg2;
 @end
 
+@interface _WKWebsitePolicies : NSObject
+@end
+
 /**** WebCore ****/
 
 // *INDENT-OFF*
@@ -526,6 +529,8 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic,readonly) NSArray* browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new stuff below
+- (void)sp_preAppLaunch;
+- (void)sp_postAppLaunchWithOptions:(NSDictionary*)launchOptions;
 - (void)handleTwitterAlert;
 - (void)handleSBConnectionTest;
 - (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void (^)(void))completionHandler;
@@ -605,8 +610,10 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 //new stuff below
 @property (nonatomic,retain) UIBarButtonItem* _downloadsItem;
 @property (nonatomic,retain) UIBarButtonItem *_reloadItem;
+@property (nonatomic,retain) UIBarButtonItem *_clearDataItem;
 @property (nonatomic,retain) UILabel* tabCountLabel;
-@property (nonatomic,retain) UIImage *tabExposeImage;
+@property (nonatomic,retain) UIImage* tabExposeImage;
+@property (nonatomic,retain) UIImage* tabExposeImageWithCount;
 - (void)setDownloadsEnabled:(BOOL)enabled;
 - (void)updateTabCount;
 - (NSMutableArray*)dynamicItemsForOrder:(NSArray*)order;
@@ -659,6 +666,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)_updateControlTints;
 - (UIColor*)_placeholderColor;
 //iOS >=12.2
+@property (nonatomic, assign) BrowserToolbar *sp_toolbar;	//new
 - (BrowserToolbar*)toolbarPlacedOnTop;
 @end
 
@@ -761,7 +769,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (readonly, nonatomic) NSArray* tabDocumentsMatchingSearchTerm;	//iOS 11 and above
 @property (readonly, retain, nonatomic) TabBar* tabBar;
 @property (readonly, nonatomic) UIView<TabThumbnailCollectionView>* tabThumbnailCollectionView;	//iOS 12.2 and above
-@property(readonly, nonatomic) NSUInteger numberOfCurrentNonHiddenTabs; //iOS 12 and above
+@property (readonly, nonatomic) NSUInteger numberOfCurrentNonHiddenTabs;//iOS 12 and above
 - (id)tabDocumentWithUUID:(NSUUID*)arg1;//iOS 11 and above
 - (void)setActiveTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)closeTabDocument:(id)arg1 animated:(BOOL)arg2;
@@ -854,8 +862,10 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (BOOL)handleForceHTTPSForNavigationAction:(WKNavigationAction*)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
 - (BOOL)handleDownloadAlertForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler;
 - (void)addAdditionalActionsForElement:(_WKActivatedElementInfo*)element toActions:(NSMutableArray*)actions;
+- (void)updateLockStateFromCache;
+- (void)writeLockStateToCache;
 @property (nonatomic,assign) BOOL locked;
-- (void)updateLockButtonStates;
+- (void)updateLockButtons;
 @property (nonatomic,assign) BOOL accessAuthenticated;
 @property (nonatomic, retain) SPTabManagerTableViewCell* tabManagerViewCell;
 @property (nonatomic, retain) UIImage* currentTabIcon;

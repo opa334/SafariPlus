@@ -71,8 +71,10 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 %property (nonatomic,retain) UIBarButtonItem *_downloadsItem;
 %property (nonatomic,retain) UIBarButtonItem *_reloadItem;
+%property (nonatomic,retain) UIBarButtonItem *_clearDataItem;
 %property (nonatomic,retain) UILabel *tabCountLabel;
 %property (nonatomic,retain) UIImage *tabExposeImage;
+%property (nonatomic,retain) UIImage *tabExposeImageWithCount;
 
 - (instancetype)initWithPlacement:(NSInteger)placement
 {
@@ -433,6 +435,12 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		addToDict(allItems, self._reloadItem, @(BrowserToolbarReloadItem));
 	}
 
+	if([orderM containsObject:@(BrowserToolbarClearDataItem)])
+	{
+		self._clearDataItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:browserControllerForBrowserToolbar(self) action:@selector(clearData)];
+		addToDict(allItems, self._clearDataItem, @(BrowserToolbarClearDataItem));
+	}
+
 	NSMutableArray* dynamicItems = [NSMutableArray new];
 
 	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -576,7 +584,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	return dynamicItems;
 }
 
-//Add downloads button to toolbar
 - (NSMutableArray *)defaultItems
 {
 	if(preferenceManager.bottomToolbarCustomOrderEnabled || preferenceManager.topToolbarCustomOrderEnabled || preferenceManager.downloadManagerEnabled)
@@ -641,29 +648,24 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	return %orig;
 }
 
-- (void)layoutSubviews
-{
-	%orig;
-
-	if(preferenceManager.showTabCountEnabled)
-	{
-		[self updateTabCount];
-	}
-}
-
 %new
 - (void)updateTabCount
 {
+	NSLog(@"SafariPlus.dylib updateTabCount");
+
 	if(self.tabCountLabel)
 	{
 		void (^updateBlock)(void) = ^
 		{
-			if(self.replacementToolbar || !self.tabCountLabel)
-			{
-				return;
-			}
-
 			UIBarButtonItem* tabExposeItem;
+
+			if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
+			{
+				if(self.replacementToolbar)
+				{
+					return;
+				}
+			}
 
 			if([self respondsToSelector:@selector(_tabExposeItemLayer)])
 			{
@@ -673,6 +675,11 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			{
 				SFBarRegistration* barRegistration = MSHookIvar<SFBarRegistration*>(self, "_barRegistration");
 				tabExposeItem = [barRegistration UIBarButtonItemForItem:5];
+			}
+
+			if(!tabExposeItem)
+			{
+				return;
 			}
 
 			//Adding the label as a subview causes issues so we have to directly modify the image!
@@ -696,9 +703,14 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				newTabCount = [browserControllerForBrowserToolbar(self).tabController.currentTabDocuments count];
 			}
 
+			if(newTabCount == 0)
+			{
+				newTabCount = 1;
+			}
+
 			NSString* newText = [NSString stringWithFormat:@"%llu", (unsigned long long)newTabCount];
 
-			if(![self.tabCountLabel.text isEqualToString:newText])
+			if(![self.tabCountLabel.text isEqualToString:newText])	//If label changed, update image
 			{
 				//Set current label count as text
 				self.tabCountLabel.text = newText;
@@ -714,12 +726,12 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				CGRect rect = CGRectMake(0,0,self.tabExposeImage.size.width,self.tabExposeImage.size.height);
 				[self.tabExposeImage drawInRect:rect];
 				[labelImg drawInRect:CGRectMake(self.tabCountLabel.frame.origin.x,self.tabCountLabel.frame.origin.y,self.tabExposeImage.size.width,self.tabExposeImage.size.height)];
-				UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+				self.tabExposeImageWithCount = UIGraphicsGetImageFromCurrentImageContext();
 				UIGraphicsEndImageContext();
-
-				//Apply new image
-				[tabExposeItem setImage:newImage];
 			}
+
+			//Apply image with count
+			[tabExposeItem setImage:self.tabExposeImageWithCount];
 		};
 
 		if([NSThread isMainThread])
@@ -731,6 +743,16 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			//Execute in main thread if we are not in one already
 			dispatch_async(dispatch_get_main_queue(), updateBlock);
 		}
+	}
+}
+
+- (void)layoutSubviews
+{
+	%orig;
+
+	if(self.tabCountLabel)
+	{
+		[self updateTabCount];
 	}
 }
 

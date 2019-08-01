@@ -23,9 +23,45 @@
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPCommunicationManager.h"
-#import "../Shared/SPPreferenceMerger.h"
+#import "../Shared/SPPreferenceUpdater.h"
 
 %hook Application
+
+%new
+- (void)sp_preAppLaunch
+{
+	#ifndef SIMJECT
+	[SPPreferenceUpdater update];
+	#endif
+}
+
+%new
+- (void)sp_postAppLaunchWithOptions:(NSDictionary*)launchOptions
+{
+	//Auto switch mode on launch
+	if(preferenceManager.forceModeOnStartEnabled && !launchOptions[UIApplicationLaunchOptionsURLKey])
+	{
+		for(BrowserController* controller in browserControllers())
+		{
+			//Switch mode to specified mode
+			[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
+		}
+	}
+
+	[self handleTwitterAlert];
+	[self handleSBConnectionTest];
+
+	if(preferenceManager.downloadManagerEnabled)
+	{
+		downloadManager = [SPDownloadManager sharedInstance];
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
+	}
+
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		[cacheManager cleanUpTabStateAdditions];
+	}
+}
 
 %new
 - (void)handleTwitterAlert
@@ -183,30 +219,11 @@
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
+	[self sp_preAppLaunch];
+
 	BOOL orig = %orig;
 
-	//Auto switch mode on launch
-	if(preferenceManager.forceModeOnStartEnabled && !launchOptions[UIApplicationLaunchOptionsURLKey])
-	{
-		for(BrowserController* controller in browserControllers())
-		{
-			//Switch mode to specified mode
-			[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
-		}
-	}
-
-	[self handleTwitterAlert];
-	[self handleSBConnectionTest];
-
-	#ifndef SIMJECT
-	[SPPreferenceMerger mergeIfNeeded];
-	#endif
-
-	if(preferenceManager.downloadManagerEnabled)
-	{
-		downloadManager = [SPDownloadManager sharedInstance];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
-	}
+	[self sp_postAppLaunchWithOptions:launchOptions];
 
 	return orig;
 }
@@ -226,29 +243,13 @@
 	%orig;
 }
 
-- (void)applicationDidFinishLaunching:(id)arg1
+- (void)applicationDidFinishLaunching:(UIApplication *)application
 {
+	[self sp_preAppLaunch];
+
 	%orig;
 
-	//Auto switch mode on launch
-	if(preferenceManager.forceModeOnStartEnabled)
-	{
-		//Switch mode to specified mode
-		[browserControllers().firstObject modeSwitchAction:preferenceManager.forceModeOnStartFor];
-	}
-
-	[self handleTwitterAlert];
-	[self handleSBConnectionTest];
-
-	#ifndef SIMJECT
-	[SPPreferenceMerger mergeIfNeeded];
-	#endif
-
-	if(preferenceManager.downloadManagerEnabled)
-	{
-		downloadManager = [SPDownloadManager sharedInstance];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
-	}
+	[self sp_postAppLaunchWithOptions:nil];
 }
 
 %end

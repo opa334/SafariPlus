@@ -17,6 +17,10 @@
 #import "SPPPrivacyListController.h"
 #import "SafariPlusPrefs.h"
 
+#import <Preferences/PSSpecifier.h>
+#import <Preferences/PSTableCell.h>
+#import <LocalAuthentication/LocalAuthentication.h>
+
 @implementation SPPPrivacyListController
 
 - (NSString*)plistName
@@ -27,6 +31,64 @@
 - (NSString*)title
 {
 	return [localizationManager localizedSPStringForKey:@"PRIVACY"];
+}
+
+- (void)unlockBiometricProtectionSpecifiers
+{
+	for(PSSpecifier* specifier in [self valueForKey:@"_allSpecifiers"])
+	{
+		NSString* key = [specifier propertyForKey:@"key"];
+		if([key hasPrefix:@"biometricProtection"])	//Enable all biometric options
+		{
+			[specifier setProperty:@YES forKey:@"enabled"];
+			PSTableCell* cell = [specifier propertyForKey:@"cellObject"];
+			[cell setCellEnabled:YES];
+		}
+		else if([specifier.identifier isEqualToString:@"AUTHENTICATE"])	//Disable authenticate button
+		{
+			[specifier setProperty:@NO forKey:@"enabled"];
+			PSTableCell* cell = [specifier propertyForKey:@"cellObject"];
+			[cell setCellEnabled:NO];
+		}
+	}
+}
+
+- (void)authenticate
+{
+	LAContext* myContext = [[LAContext alloc] init];
+	NSError* authError = nil;
+	if([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError])
+	{
+		[myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+		 localizedReason:[localizationManager localizedSPStringForKey:@"ACCESS_BIOMETRIC_PROTECTION"] reply:^(BOOL success, NSError* error)
+		{
+			if(success)
+			{
+				dispatch_async(dispatch_get_main_queue(), ^
+					       {
+						       [self unlockBiometricProtectionSpecifiers];
+					       });
+			}
+			else if(error.code != -2)
+			{
+				UIAlertController* authenticationAlert = [UIAlertController alertControllerWithTitle:
+									  [localizationManager localizedSPStringForKey:@"AUTHENTICATION_ERROR"]
+									  message:[NSString stringWithFormat:@"%li: %@", (long)error.code, error.localizedDescription]
+									  preferredStyle:UIAlertControllerStyleAlert];
+
+				UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
+							      style:UIAlertActionStyleDefault handler:nil];
+
+				[authenticationAlert addAction:closeAction];
+
+				[self presentViewController:authenticationAlert animated:YES completion:nil];
+			}
+		}];
+	}
+	else
+	{
+		[self unlockBiometricProtectionSpecifiers];
+	}
 }
 
 @end

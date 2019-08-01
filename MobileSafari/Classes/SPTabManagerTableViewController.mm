@@ -124,7 +124,7 @@
 	_exportBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(exportButtonPressed:)];
 
 	//Option to save tabs to bookmarks
-	_addToBookmarksBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(addToBookmarksButtonPressed)];
+	_addToBookmarksBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(addToBookmarksButtonPressed:)];
 
 	//Option to batch-close tabs
 	_closeTabsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closeTabsButtonPressed)];
@@ -557,11 +557,18 @@
 	}
 }
 
-- (void)addToBookmarksButtonPressed
+- (void)addToBookmarksButtonPressed:(UIBarButtonItem*)sender
 {
 	SPTabManagerBookmarkPicker* bookmarkPicker = [[NSClassFromString(@"SPTabManagerBookmarkPicker") alloc] initWithTabDocuments:_selectedTabs];
 
 	UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:bookmarkPicker];
+
+	if(IS_PAD)
+	{
+		navigationController.modalPresentationStyle = UIModalPresentationPopover;
+		navigationController.popoverPresentationController.sourceView = [self presentationController].view;
+		navigationController.popoverPresentationController.sourceRect = [[sender.view superview] convertRect:sender.view.frame toView:[self presentationController].view];
+	}
 
 	[[self presentationController] presentViewController:navigationController animated:YES completion:nil];
 }
@@ -607,17 +614,20 @@
 	[[self presentationController] presentViewController:confirmationController animated:YES completion:nil];
 }
 
-- (void)exportButtonPressed:(id)sender
+- (void)exportButtonPressed:(UIBarButtonItem*)sender
 {
 	if(_selectedTabs.count <= 0)
 	{
 		return;
 	}
 
+	CGRect sourceRect = [[sender.view superview] convertRect:sender.view.frame toView:[self presentationController].view];
+
 	void (^presentActivityController)(id) = ^void (id exportString)
 	{
 		UIActivityViewController* activityController = [[UIActivityViewController alloc] initWithActivityItems:@[exportString] applicationActivities:nil];
-		activityController.popoverPresentationController.sourceView = self.navigationController.view;
+		activityController.popoverPresentationController.sourceView = [self presentationController].view;
+		activityController.popoverPresentationController.sourceRect = sourceRect;
 
 		[[self presentationController] presentViewController:activityController animated:YES completion:nil];
 	};
@@ -673,7 +683,8 @@
 		presentActivityController([tabsString copy]);
 	}];
 
-	UIAlertAction* hyperlinkAction = [UIAlertAction actionWithTitle:@""
+	//Title as fallback for when the attributed string doesn't work (on some iPads)
+	UIAlertAction* hyperlinkAction = [UIAlertAction actionWithTitle:[titleForExample stringByAppendingString:[NSString stringWithFormat:@" (%@)", [localizationManager localizedSPStringForKey:@"WITH_CLICKABLE_URL"]]]
 					  style:UIAlertActionStyleDefault
 					  handler:^(UIAlertAction* action)
 	{
@@ -701,9 +712,8 @@
 	[formatAlertController addAction:hyperlinkAction];
 	[formatAlertController addAction:cancelAction];
 
-	UIPopoverPresentationController* popPresenter = [formatAlertController popoverPresentationController];
-	popPresenter.sourceView = self.navigationController.view;
-	popPresenter.sourceRect = ((UIBarButtonItem*)sender).view.bounds;
+	formatAlertController.popoverPresentationController.sourceView = [self presentationController].view;
+	formatAlertController.popoverPresentationController.sourceRect = sourceRect;
 
 	[[self presentationController] presentViewController:formatAlertController animated:YES completion:nil];
 

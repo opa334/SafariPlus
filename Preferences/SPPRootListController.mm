@@ -19,7 +19,7 @@
 #import <dlfcn.h>
 #import "Simulator.h"
 
-#import "../Shared/SPPreferenceMerger.h"
+#import "../Shared/SPPreferenceUpdater.h"
 
 SPFileManager* fileManager;
 SPLocalizationManager* localizationManager;
@@ -40,7 +40,7 @@ NSBundle* SSBundle;	//SafariServices
 	SSBundle = [NSBundle bundleWithPath:rPath(@"/System/Library/Frameworks/SafariServices.framework/")];
 
 	#ifndef SIMJECT
-	[SPPreferenceMerger mergeIfNeeded];
+	[SPPreferenceUpdater update];
 	#endif
 
 	return self;

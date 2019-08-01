@@ -117,7 +117,7 @@
 	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
 	downloadInfo.sourceVideo = self;
 	downloadInfo.presentationController = self;
-	downloadInfo.sourceRect = self.downloadButton.frame;
+	downloadInfo.sourceRect = [[self.downloadButton superview] convertRect:self.downloadButton.frame toView:self.view];
 
 	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
 }

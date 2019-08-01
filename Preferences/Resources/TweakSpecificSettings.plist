@@ -52,6 +52,20 @@
 				<key>label</key>
 				<string>DISABLE_COMMUNICATION_ERROR</string>
 			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSButtonCell</string>
+				<key>label</key>
+				<string>RESET_ALL_PREFERENCES</string>
+				<key>action</key>
+				<string>resetAllPreferences</string>
+			</dict>
 		</array>
 		<key>title</key>
 		<string>TWEAK_SPECIFIC_SETTINGS</string>

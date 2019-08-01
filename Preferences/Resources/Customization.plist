@@ -220,7 +220,7 @@
 				<key>key</key>
 				<string>customSearchEngineURL</string>
 				<key>placeholder</key>
-				<string>https://google.com?q={searchTerms}</string>
+				<string>https://google.com/search?q={searchTerms}</string>
 			</dict>
 			<dict>
 				<key>cell</key>

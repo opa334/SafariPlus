@@ -49,7 +49,7 @@
 
 	NSMutableArray* allItems = [NSMutableArray new];
 
-	for(NSInteger i = BrowserToolbarBackItem; i <= BrowserToolbarReloadItem; i++)
+	for(NSInteger i = BrowserToolbarBackItem; i <= BrowserToolbarClearDataItem; i++)
 	{
 		if(![self searchBarIncluded] && i == BrowserToolbarSearchBarSpace)
 		{
@@ -202,6 +202,9 @@
 	case BrowserToolbarReloadItem:
 		return [localizationManager localizedSPStringForKey:@"RELOAD"];
 
+	case BrowserToolbarClearDataItem:
+		return [localizationManager localizedSPStringForKey:@"CLEAR_HISTORY"];
+
 	default:
 		return @"";
 	}
@@ -278,6 +281,13 @@
 			case BrowserToolbarReloadItem:
 			{
 				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
+				break;
+			}
+
+			case BrowserToolbarClearDataItem:
+			{
+				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemTrash usingItemStyle:0];
+				break;
 			}
 			}
 

@@ -536,8 +536,7 @@
 		{
 			//Rename file
 			[fileManager moveItemAtURL:file.fileURL toURL:[[file.fileURL URLByDeletingLastPathComponent]
-								       URLByAppendingPathComponent:selectFilenameController.textFields[0].text]
-			 error:nil];
+								       URLByAppendingPathComponent:selectFilenameController.textFields[0].text] error:nil];
 
 			//Reload files
 			[self reload];

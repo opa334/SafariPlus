@@ -23,7 +23,7 @@
 #import "Classes/SPLocalizationManager.h"
 #import "Classes/SPCommunicationManager.h"
 #import "Classes/SPCacheManager.h"
-#import "SPPreferenceMerger.h"
+#import "SPPreferenceUpdater.h"
 
 #import <LocalAuthentication/LocalAuthentication.h>
 #import <arpa/inet.h>
@@ -43,6 +43,7 @@ SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstan
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
 BOOL rocketBootstrapWorks = NO;
+BOOL skipBiometricProtectionOnce = NO;
 
 #ifdef DEBUG_LOGGING
 
@@ -309,7 +310,7 @@ BrowserToolbar* activeToolbarForBrowserController(BrowserController* browserCont
 		}
 		else
 		{
-			return [rootVC.navigationBar toolbarPlacedOnTop];
+			return rootVC.navigationBar.sp_toolbar;
 		}
 	}
 }
@@ -340,7 +341,7 @@ BOOL browserControllerIsShowingTabView(BrowserController* browserController)
 	}
 	else
 	{
-		return MSHookIvar<BOOL>(browserController, "_isShowingTabView");
+		return MSHookIvar<BOOL>(browserController, "_showingTabView");
 	}
 }
 
@@ -610,6 +611,13 @@ void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying> key)
 
 void requestAuthentication(NSString* reason, void (^successHandler)(void))
 {
+	if(skipBiometricProtectionOnce)
+	{
+		skipBiometricProtectionOnce = NO;
+		successHandler();
+		return;
+	}
+
 	BOOL mainThread = [NSThread isMainThread];
 	LAContext* myContext = [[LAContext alloc] init];
 	NSError* authError = nil;
@@ -629,7 +637,18 @@ void requestAuthentication(NSString* reason, void (^successHandler)(void))
 					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), successHandler);
 				}
 			}
+			else if(error.code != -2)
+			{
+				dispatch_async(dispatch_get_main_queue(), ^
+					       {
+						       sendSimpleAlert([localizationManager localizedSPStringForKey:@"AUTHENTICATION_ERROR"], [NSString stringWithFormat:@"%li: %@", (long)error.code, error.localizedDescription]);
+					       });
+			}
 		}];
+	}
+	else
+	{
+		sendSimpleAlert([localizationManager localizedSPStringForKey:@"AUTHENTICATION_ERROR"], [NSString stringWithFormat:@"%li: %@", (long)authError.code, authError.localizedDescription]);
 	}
 }
 
