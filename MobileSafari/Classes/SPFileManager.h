@@ -45,6 +45,7 @@ typedef NSString *NSFileAttributeKey;
 - (BOOL)isURLWritable:(NSURL*)URL;
 #endif
 #endif
+- (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error;
 - (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error;
 - (BOOL)isDirectoryAtURL:(NSURL*)url error:(NSError**)error;
 - (BOOL)URLResourceValue:(id*)value forKey:(NSURLResourceKey)key forURL:(NSURL*)url error:(NSError**)error;

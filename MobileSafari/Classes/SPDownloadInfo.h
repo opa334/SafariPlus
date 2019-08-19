@@ -29,6 +29,7 @@
 @property (nonatomic) TabDocument* sourceDocument;
 @property (nonatomic) UIViewController* presentationController;
 @property (nonatomic) CGRect sourceRect;
+@property (nonatomic) BOOL isHLSDownload;
 
 - (SPDownloadInfo*)initWithRequest:(NSURLRequest*)request;
 - (SPDownloadInfo*)initWithImage:(UIImage*)image;
@@ -37,4 +38,6 @@
 - (NSURL*)pathURL;
 - (BOOL)fileExists;
 - (void)removeExistingFile;
+
+- (void)updateHLSForSuggestedFilename:(NSString*)suggestedFilename;
 @end

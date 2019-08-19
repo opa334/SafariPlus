@@ -24,6 +24,7 @@
 @property (nonatomic) UILongPressGestureRecognizer* longPressRecognizer;
 
 - (instancetype)initWithDirectoryURL:(NSURL*)directoryURL;
+- (BOOL)fileIsDirectory:(SPFile*)file;
 - (BOOL)loadContents;
 - (NSMutableArray<NSIndexPath*>*)indexPathsToAdd;
 - (NSMutableArray<NSIndexPath*>*)indexPathsToDelete;

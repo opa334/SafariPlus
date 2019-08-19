@@ -19,8 +19,12 @@
 #import "../SafariPlusSB.h"
 #import "../../MobileSafari/Enums.h"
 #import "../../MobileSafari/Defines.h"
+#import "../../Shared/SPFile.h"
+#import "../../Shared/NSFileManager+DirectorySize.h"
 
 #import <AVFoundation/AVFoundation.h>
+
+#include <dlfcn.h>
 
 @implementation SPSBReceiver
 
@@ -36,9 +40,6 @@
 	[_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.testConnection" target:self
 	 selector:@selector(testConnection:withUserInfo:)];
 
-	[_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.pushNotification" target:self
-	 selector:@selector(pushBulletin:withUserInfo:)];
-
 	[_messagingCenter registerForMessageName:@"com.opa334.SafariPlus.fileOperation" target:self
 	 selector:@selector(handleFileOperation:withUserInfo:)];
 
@@ -51,17 +52,6 @@
 - (NSDictionary*)testConnection:(NSString*)name withUserInfo:(NSDictionary*)userInfo
 {
 	return userInfo;
-}
-
-//Dispatch push notification (bulletin) through libbulletin
-- (NSDictionary*)pushBulletin:(NSString*)name withUserInfo:(NSDictionary*)userInfo
-{
-	[[NSClassFromString(@"JBBulletinManager") sharedInstance]
-	 showBulletinWithTitle:[userInfo objectForKey:@"title"]
-	 message:[userInfo objectForKey:@"message"]
-	 bundleID:[userInfo objectForKey:@"bundleIdentifier"]];
-
-	return nil;
 }
 
 //Calls NSFileManager to execute the passed file operation
@@ -90,6 +80,11 @@
 		case FileOperation_DirectoryContents_URL:
 		{
 			ret = [fileManager contentsOfDirectoryAtURL:[userInfo objectForKey:@"url"] includingPropertiesForKeys:[userInfo objectForKey:@"keys"] options:[[userInfo objectForKey:@"mask"] intValue] error:&error];
+			break;
+		}
+		case FileOperation_DirectoryContents_SPFile:
+		{
+			ret = [SPFile filesAtURL:[userInfo objectForKey:@"url"] error:&error];
 			break;
 		}
 		case FileOperation_CreateDirectory:
@@ -197,6 +192,11 @@
 		case FileOperation_ResolveSymlinks_URL:
 		{
 			ret = ((NSURL*)[userInfo objectForKey:@"url"]).URLByResolvingSymlinksInPath;
+			break;
+		}
+		case FileOperation_DirectorySize_URL:
+		{
+			ret = [NSNumber numberWithUnsignedInteger:[fileManager sizeOfDirectoryAtURL:[userInfo objectForKey:@"url"]]];
 			break;
 		}
 		}

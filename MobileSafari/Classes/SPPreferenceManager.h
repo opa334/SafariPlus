@@ -61,6 +61,7 @@
 @property (nonatomic, readonly) BOOL privateModeDownloadHistoryDisabled;
 @property (nonatomic, readonly) BOOL pushNotificationsEnabled;
 @property (nonatomic, readonly) BOOL statusBarNotificationsEnabled;
+@property (nonatomic, readonly) BOOL applicationBadgeEnabled;
 
 @property (nonatomic, readonly) BOOL bothTabOpenActionsEnabled;
 @property (nonatomic, readonly) BOOL openInOppositeModeOptionEnabled;
@@ -188,6 +189,7 @@
 @property (nonatomic, readonly) NSString* customSearchEngineSuggestionsURL;
 
 @property (nonatomic, readonly) BOOL largeTitlesEnabled;
+@property (nonatomic, readonly) BOOL sortDirectoriesAboveFiles;
 @property (nonatomic, readonly) BOOL communicationErrorDisabled;
 
 #ifdef NO_CEPHEI

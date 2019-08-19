@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-@class SPDownload, SPDownloadInfo, SPDownloadManager, SPFilePickerNavigationController, AVActivityButton;
+@class SPDownload, SPDownloadInfo, SPDownloadManager, SPFilePickerNavigationController, AVActivityButton, AVAssetDownloadURLSession;
 
 @protocol filePickerDelegate<NSObject>
 - (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs;
@@ -33,6 +33,7 @@
 @protocol DownloadObserverDelegate
 @required
 - (void)filesizeDidChangeForDownload:(SPDownload*)download;
+- (void)expectedDurationDidChangeForDownload:(SPDownload*)download;
 - (void)pauseStateDidChangeForDownload:(SPDownload*)download;
 - (void)downloadSpeedDidChangeForDownload:(SPDownload*)download;
 - (void)progressDidChangeForDownload:(SPDownload*)download shouldAnimateChange:(BOOL)shouldAnimate;
@@ -46,6 +47,7 @@
 @protocol DownloadManagerDelegate
 @required
 - (NSURLSession*)sharedDownloadSession;
+- (AVAssetDownloadURLSession*)sharedAVDownloadSession;
 - (void)forceCancelDownload:(SPDownload*)download;
 - (void)saveDownloadsToDisk;
 - (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;

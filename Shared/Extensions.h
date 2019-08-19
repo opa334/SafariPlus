@@ -37,7 +37,7 @@
 
 @interface UITableViewController (Fixes)
 - (void)updateSectionHeaders;
-- (void)fixFooterColors;
+- (void)fixHeaderColors;
 @end
 
 @interface UIImage (SizeChange)

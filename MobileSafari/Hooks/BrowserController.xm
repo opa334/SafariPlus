@@ -247,6 +247,11 @@
 %new
 - (void)autoCloseAction
 {
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled && preferenceManager.biometricProtectionSwitchModeAllowAutomaticActionsEnabled)
+	{
+		skipBiometricProtection = YES;
+	}
+
 	switch(preferenceManager.autoCloseTabsFor)
 	{
 	case CloseTabActionFromActiveMode:
@@ -270,6 +275,8 @@
 		break;
 	}
 	}
+
+	skipBiometricProtection = NO;
 }
 
 //Used to switch mode based on the setting
@@ -278,7 +285,7 @@
 {
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled && preferenceManager.biometricProtectionSwitchModeAllowAutomaticActionsEnabled)
 	{
-		skipBiometricProtectionOnce = YES;
+		skipBiometricProtection = YES;
 	}
 
 	if(switchToMode == ModeSwitchActionNormalMode)
@@ -302,7 +309,7 @@
 		}
 	}
 
-	skipBiometricProtectionOnce = NO;
+	skipBiometricProtection = NO;
 }
 
 //Full screen scrolling
@@ -519,7 +526,7 @@
 
 %group iOS10Down
 
-- (void)togglePrivateBrowsingEnabled
+- (void)togglePrivateBrowsing
 {
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
 	{
@@ -544,21 +551,39 @@
 	}
 }
 
-- (void)togglePrivateBrowsing
+- (void)setPrivateBrowsingEnabled:(BOOL)enabled
 {
+	if([self respondsToSelector:@selector(togglePrivateBrowsing)])
+	{
+		%orig;
+		return;
+	}
+
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
 	{
-		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
+		if(!self.browsingModeSet)
 		{
 			%orig;
+			self.browsingModeSet = YES;
+			return;
+		}
 
-			if(preferenceManager.showTabCountEnabled)
+		BOOL previous = privateBrowsingEnabled(self);
+
+		if(previous != enabled)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 			{
-				[activeToolbarForBrowserController(self) updateTabCount];
-			}
-		});
+				%orig;
 
-		return;
+				if(preferenceManager.showTabCountEnabled)
+				{
+					[activeToolbarForBrowserController(self) updateTabCount];
+				}
+			});
+
+			return;
+		}
 	}
 
 	%orig;

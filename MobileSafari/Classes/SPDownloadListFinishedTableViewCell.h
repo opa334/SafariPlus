@@ -35,5 +35,5 @@
 - (void)updateButtons;
 - (void)setFilesize:(int64_t)filesize;
 - (void)restartButtonPressed;
-- (void)openDirectoryButtonPressed;
+- (void)locateButtonPressed;
 @end

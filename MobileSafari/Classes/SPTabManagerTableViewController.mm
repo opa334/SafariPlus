@@ -192,7 +192,6 @@
 {
 	[super viewWillAppear:animated];
 
-	//NSLog(@"viewWillAppear");
 	if(!_isFiltering)
 	{
 		[self.navigationController setToolbarHidden:NO animated:NO];
@@ -422,8 +421,6 @@
 
 - (void)selectAll
 {
-	//NSLog(@"selectAll");
-
 	_shouldUpdateOnSelectionChange = NO;
 
 	NSArray<TabDocument*>* documentsToSelect = [self activeTabs];
@@ -442,8 +439,6 @@
 
 - (void)deselectAll
 {
-	//NSLog(@"deselectAll");
-
 	_shouldUpdateOnSelectionChange = NO;
 
 	NSArray<TabDocument*>* documentsToDeselect = [self activeTabs];
@@ -462,7 +457,6 @@
 
 - (void)doneButtonPressed
 {
-	//NSLog(@"doneButtonPressed");
 	[self.navigationController dismissViewControllerAnimated:YES completion:^
 	{
 		[_tabController tabManagerDidClose];
@@ -471,8 +465,6 @@
 
 - (void)selectAllButtonPressed
 {
-	//NSLog(@"selectAllButtonPressed");
-
 	NSArray<NSIndexPath*>* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
 	NSInteger rowNumber = [self tableView:self.tableView numberOfRowsInSection:0];
 
@@ -736,21 +728,11 @@
 {
 	BOOL newLockState = !self.lockBarButtonIsUnlockButton;
 
-	for(TabDocument* tabDocument in _selectedTabs)
-	{
-		if(tabDocument.locked != newLockState)
-		{
-			tabDocument.locked = newLockState;
-		}
-	}
-
-	[self updateBottomToolbarButtonAvailability];
+	[_tabController setLocked:newLockState forTabDocuments:_selectedTabs];
 }
 
 - (void)updateSelectedTabs
 {
-	//NSLog(@"updateSelectedTabs");
-
 	NSArray<NSIndexPath*>* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
 
 	NSInteger rowNumber = [self tableView:self.tableView numberOfRowsInSection:0];
@@ -792,7 +774,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	//NSLog(@"numberOfSectionsInTableView");
 	return 1;
 }
 
@@ -803,8 +784,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	////NSLog(@"cellForRowAtIndexPath");
-
 	TabDocument* tabDocument = [self tabDocumentForIndexPath:indexPath];
 
 	SPTabManagerTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SPTabManagerTableViewCell"];
@@ -831,8 +810,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	//NSLog(@"didSelectRowAtIndexPath");
-
 	if(_shouldUpdateOnSelectionChange)
 	{
 		[self updateSelectedTabs];
@@ -841,8 +818,6 @@
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	//NSLog(@"didDeselectRowAtIndexPath");
-
 	if(_shouldUpdateOnSelectionChange)
 	{
 		[self updateSelectedTabs];

@@ -104,6 +104,7 @@ void reloadPrefs()
 	[_preferences registerBool:&_privateModeDownloadHistoryDisabled default:NO forKey:@"privateModeDownloadHistoryDisabled"];
 	[_preferences registerBool:&_pushNotificationsEnabled default:YES forKey:@"pushNotificationsEnabled"];
 	[_preferences registerBool:&_statusBarNotificationsEnabled default:YES forKey:@"statusBarNotificationsEnabled"];
+	[_preferences registerBool:&_applicationBadgeEnabled default:YES forKey:@"applicationBadgeEnabled"];
 
 	[_preferences registerBool:&_bothTabOpenActionsEnabled default:NO forKey:@"bothTabOpenActionsEnabled"];
 	[_preferences registerBool:&_openInOppositeModeOptionEnabled default:NO forKey:@"openInOppositeModeOptionEnabled"];
@@ -236,6 +237,7 @@ void reloadPrefs()
 	[_preferences registerObject:&_customDesktopUserAgent default:@"" forKey:@"customDesktopUserAgent"];
 
 	[_preferences registerBool:&_largeTitlesEnabled default:NO forKey:@"largeTitlesEnabled"];
+	[_preferences registerBool:&_sortDirectoriesAboveFiles default:NO forKey:@"sortDirectoriesAboveFiles"];
 	[_preferences registerBool:&_communicationErrorDisabled default:NO forKey:@"communicationErrorDisabled"];
 
 
@@ -294,6 +296,8 @@ void reloadPrefs()
 		_pushNotificationsEnabled = pushNotificationsEnabled ? [pushNotificationsEnabled boolValue] : YES;
 		NSNumber* statusBarNotificationsEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("statusBarNotificationsEnabled"), appID);
 		_statusBarNotificationsEnabled = statusBarNotificationsEnabled ? [statusBarNotificationsEnabled boolValue] : YES;
+		NSNumber* applicationBadgeEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("applicationBadgeEnabled"), appID);
+		_applicationBadgeEnabled = applicationBadgeEnabled ? [applicationBadgeEnabled boolValue] : YES;
 
 		_bothTabOpenActionsEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("bothTabOpenActionsEnabled"), appID) boolValue];
 		_openInOppositeModeOptionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("openInOppositeModeOptionEnabled"), appID) boolValue];
@@ -429,6 +433,7 @@ void reloadPrefs()
 		_customDesktopUserAgent = (__bridge NSString*)CFPreferencesCopyAppValue(CFSTR("customDesktopUserAgent"), appID);
 
 		_largeTitlesEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("largeTitlesEnabled"), appID) boolValue];
+		_sortDirectoriesAboveFiles = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("sortDirectoriesAboveFiles"), appID) boolValue];
 		_communicationErrorDisabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("communicationErrorDisabled"), appID) boolValue];
 	}
 	else
@@ -469,6 +474,7 @@ void reloadPrefs()
 		_privateModeDownloadHistoryDisabled = [[prefDict objectForKey:@"privateModeDownloadHistoryDisabled"] boolValue];
 		_pushNotificationsEnabled = [[prefDict objectForKey:@"pushNotificationsEnabled"] boolValue];
 		_statusBarNotificationsEnabled = [[prefDict objectForKey:@"statusBarNotificationsEnabled"] boolValue];
+		_applicationBadgeEnabled = [[prefDict objectForKey:@"applicationBadgeEnabled"] boolValue];
 
 		_bothTabOpenActionsEnabled = [[prefDict objectForKey:@"bothTabOpenActionsEnabled"] boolValue];
 		_openInOppositeModeOptionEnabled = [[prefDict objectForKey:@"openInOppositeModeOptionEnabled"] boolValue];
@@ -602,6 +608,7 @@ void reloadPrefs()
 		_customDesktopUserAgent = [prefDict objectForKey:@"customDesktopUserAgent"];
 
 		_largeTitlesEnabled = [[prefDict objectForKey:@"largeTitlesEnabled"] boolValue];
+		_sortDirectoriesAboveFiles = [[prefDict objectForKey:@"sortDirectoriesAboveFiles"] boolValue];
 		_communicationErrorDisabled = [[prefDict objectForKey:@"communicationErrorDisabled"] boolValue];
 	}
 
@@ -643,6 +650,7 @@ void reloadPrefs()
 - (BOOL)privateModeDownloadHistoryDisabled { return [[_preferences objectForKey:@"privateModeDownloadHistoryDisabled"] boolValue]; }
 - (BOOL)pushNotificationsEnabled { return [[_preferences objectForKey:@"pushNotificationsEnabled"] boolValue]; }
 - (BOOL)statusBarNotificationsEnabled { return [[_preferences objectForKey:@"statusBarNotificationsEnabled"] boolValue]; }
+- (BOOL)applicationBadgeEnabled { return [[_preferences objectForKey:@"applicationBadgeEnabled"] boolValue]; }
 
 - (BOOL)bothTabOpenActionsEnabled { return [[_preferences objectForKey:@"bothTabOpenActionsEnabled"] boolValue]; }
 - (BOOL)openInOppositeModeOptionEnabled { return [[_preferences objectForKey:@"openInOppositeModeOptionEnabled"] boolValue]; }
@@ -743,6 +751,7 @@ void reloadPrefs()
 - (NSString*)customDesktopUserAgent { return [_preferences objectForKey:@"customDesktopUserAgent"]; }
 
 - (BOOL)largeTitlesEnabled { return [[_preferences objectForKey:@"largeTitlesEnabled"] boolValue]; }
+- (BOOL)sortDirectoriesAboveFiles { return [[_preferences objectForKey:@"sortDirectoriesAboveFiles"] boolValue]; }
 - (BOOL)communicationErrorDisabled { return [[_preferences objectForKey:@"communicationErrorDisabled"] boolValue]; }
 
 #endif
@@ -772,9 +781,14 @@ void reloadPrefs()
 
 - (void)addURLToHTTPSExceptionsList:(NSURL*)URL
 {
-	if(!URL || !self.forceHTTPSExceptions)
+	if(!URL)
 	{
 		return;
+	}
+
+	if(!_forceHTTPSExceptions)
+	{
+		_forceHTTPSExceptions = [NSArray new];
 	}
 
 	NSMutableArray* forceHTTPSExceptionsM = [self.forceHTTPSExceptions mutableCopy];

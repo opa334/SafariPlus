@@ -58,7 +58,7 @@
 "UPLOAD_ANY_FILE" = "Upload Any File";
 
 "DOWNLOAD_MANAGER" = "Download Manager";
-"DOWNLOAD_MANAGER_FOOTER" = "A fully fledged download manager integrated right into Safari. Replaces the default download behaviour with an action sheet. Use the toolbar button to manage active and finished downloads and to view the downloaded files using the file browser. Downloads will continue in the background. If you kill Safari from the app switcher, downloads will pause and resume on the next start of Safari.";
+"DOWNLOAD_MANAGER_FOOTER" = "A fully fledged download manager integrated right into Safari. Replaces the default download behaviour with an action sheet. Use the toolbar button to manage active and finished downloads and to view the downloaded files using the file browser. Downloads will continue in the background. If you kill Safari from the app switcher, downloads will pause and resume on the next start of Safari. Downloading HLS (m3u8) streams into .movpkg is supported on iOS 10 and above, but the progress of these downloads won't persist if Safari is manually killed from the app switcher.";
 
 "CONTENT_OPTIONS" = "Content Options";
 
@@ -117,6 +117,9 @@
 
 "STATUS_BAR_NOTIFICATIONS" = "Status Bar Notifications";
 "STATUS_BAR_NOTIFICATIONS_FOOTER" = "Receive a status bar notification when a download starts or ends while the app is active.";
+
+"APPLICATION_BADGE" = "Application Badge";
+"APPLICATION_BADGE_FOOTER" = "Use the count of pending downloads as the badge of the Safari icon.";
 
 /* Usability */
 
@@ -316,6 +319,9 @@
 "LARGE_TITLES" = "Large Titles";
 "LARGE_TITLES_FOOTER" = "Large Titles in every view added by Safari Plus.";
 
+"SORT_DIRECTORIES_ABOVE_FILES" = "Sort Directories above Files";
+"SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Make the file browser sort directories above files, by default both are sorted alphabetically together.";
+
 "DISABLE_COMMUNICATION_ERROR" = "Disable Communication Error Alert";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disable the communication error alert that appears on app launch when rocketbootstrap is not available for some reason. Use on your own risk.";
 
@@ -360,6 +366,7 @@
 "DOWNLOADS" = "Downloads";
 "FILE_BROWSER" = "File Browser";
 "OPEN" = "Open";
+"SHOW_CONTENT" = "Show Content";
 "OPEN_IN" = "Open in...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Import to Music Library";
 "SAVE_TO_MEDIA_LIBRARY" = "Save to Media Library";
@@ -411,6 +418,7 @@
 "VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";
 "COPY_LINK" = "Copy Link";
 "SIZE_UNKNOWN" = "Unknown Size";
+"DURATION_UNKNOWN" = "Unknown Duration";
 "MIGRATION_TITLE" = "Migration Succeeded";
 "MIGRATION_MESSAGE" = "Gone are the days of being restricted to the sandbox container of Safari! Your downloads have been moved from %@ to %@. You can now download files to any directory you want!";
 "CELLULAR_DATA_WARNING" = "'Only Download on Wifi' is enabled inside settings and you're currently on cellular data. Downloads will not start until you either connect to a wifi network or disable the option inside settings and restart Safari.";

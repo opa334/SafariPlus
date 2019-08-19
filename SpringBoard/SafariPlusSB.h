@@ -19,11 +19,8 @@
 #endif
 #import <AppSupport/CPDistributedMessagingCenter.h>
 
-@class SSDownload, SSDownloadMetadata, SSDownloadQueue;
-
-@interface JBBulletinManager : NSObject
-+ (id)sharedInstance;
-- (id)showBulletinWithTitle:(NSString *)title message:(NSString *)message bundleID:(NSString *)bundleID;
+@interface CPNotification : NSObject
++ (void)showAlertWithTitle:(NSString*)title message:(NSString*)message userInfo:(NSDictionary*)userInfo badgeCount:(int)badgeCount soundName:(NSString*)soundName delay:(double)delay repeats:(BOOL)repeats bundleId:(NSString*)bundleId;
 @end
 
 @interface SBApplicationInfo : NSObject
@@ -42,35 +39,4 @@
 @interface SBApplicationController : NSObject
 + (instancetype)sharedInstance;
 - (NSArray<SBApplication*>*)allApplications;
-@end
-
-@interface SSDownload : NSObject
-@property (nonatomic,copy) SSDownloadMetadata* metadata;
-- (instancetype)initWithDownloadMetadata:(SSDownloadMetadata*)downloadMetadata;
-- (void)setDownloadHandler:(id)arg1 completionBlock:(/*^block*/ id)arg2;
-@end
-
-@interface SSDownloadMetadata : NSObject
-@property (retain) NSString* kind;
-@property (retain) NSURL* primaryAssetURL;
-@property (copy) NSString* artistName;
-@property (retain) NSURL* thumbnailImageURL;
-@property (retain) NSString* title;
-@property (copy) NSString* shortDescription;
-@property (copy) NSString* longDescription;
-@property (retain) NSString* genre;
-@property (retain) NSDate* releaseDate;
-@property (retain) NSNumber* releaseYear;
-@property (retain) NSString* copyright;
-- (void)setCollectionName:(NSString*)collectionName;
-- (void)setDurationInMilliseconds:(NSNumber*)durationInMilliseconds;
-- (void)setPurchaseDate:(NSDate*)purchaseDate;
-- (void)setViewStoreItemURL:(NSURL*)itemURL;
-@end
-
-@interface SSDownloadQueue : NSObject
-@property (readonly) NSSet* downloadKinds;
-+ (NSSet*)mediaDownloadKinds;
-- (instancetype)initWithDownloadKinds:(NSSet*)downloadKinds;
-- (BOOL)addDownload:(SSDownload*)download;
 @end

@@ -43,7 +43,7 @@ SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstan
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
 BOOL rocketBootstrapWorks = NO;
-BOOL skipBiometricProtectionOnce = NO;
+BOOL skipBiometricProtection = NO;
 
 #ifdef DEBUG_LOGGING
 
@@ -113,7 +113,6 @@ void _dlogDownload(SPDownload* download, NSString* message)
 	dlog(@"resumeData length: %llu", (unsigned long long)download.resumeData.length);
 	dlog(@"paused: %llu", (unsigned long long)download.taskIdentifier);
 	dlog(@"downloadTask: %@", download.downloadTask);
-	dlog(@"didFinish: %i", download.didFinish);
 	dlog(@"wasCancelled: %i", download.wasCancelled);
 	dlog(@"downloadManagerDelegate: %@", download.downloadManagerDelegate);
 	dlog(@"observerDelegates: %@", download.observerDelegates);
@@ -329,9 +328,10 @@ BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToo
 
 BOOL browserControllerIsShowingTabView(BrowserController* browserController)
 {
-	if([browserController.tabController respondsToSelector:@selector(tabThumbnailCollectionView)])
+	BrowserRootViewController* rootViewController = rootViewControllerForBrowserController(browserController);
+	if([rootViewController respondsToSelector:@selector(tabThumbnailCollectionView)])
 	{
-		NSInteger presentationState = browserController.tabController.tabThumbnailCollectionView.presentationState;
+		NSInteger presentationState = rootViewController.tabThumbnailCollectionView.presentationState;
 		//0: not showing tab view, 1: in animation, 2: inside tabView
 		return (presentationState == 1) || (presentationState == 2);
 	}
@@ -341,6 +341,7 @@ BOOL browserControllerIsShowingTabView(BrowserController* browserController)
 	}
 	else
 	{
+		NSLog(@"2");
 		return MSHookIvar<BOOL>(browserController, "_showingTabView");
 	}
 }
@@ -611,9 +612,8 @@ void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying> key)
 
 void requestAuthentication(NSString* reason, void (^successHandler)(void))
 {
-	if(skipBiometricProtectionOnce)
+	if(skipBiometricProtection)
 	{
-		skipBiometricProtectionOnce = NO;
 		successHandler();
 		return;
 	}

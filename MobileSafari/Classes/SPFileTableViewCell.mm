@@ -19,7 +19,7 @@
 #import "../Util.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
-#import "SPFile.h"
+#import "../../Shared/SPFile.h"
 #import "SPCellIconLabelView.h"
 #import "Extensions.h"
 
@@ -77,7 +77,7 @@
 	//Set label of cell to filename
 	_iconLabelView.label.attributedText = file.cellTitle;
 
-	if(file.isRegularFile)	//File icon with filesize as accessoryView
+	if([file displaysAsRegularFile])	//File icon with filesize as accessoryView
 	{
 		_iconLabelView.iconView.image = [fileManager iconForFile:file];
 		self.accessoryType = UITableViewCellAccessoryNone;
@@ -101,7 +101,7 @@
 		_iconLabelView.alpha = 1;
 	}
 
-	//Enable seperators between imageViews
+	//Enable separators between imageViews
 	[self setSeparatorInset:UIEdgeInsetsZero];
 }
 

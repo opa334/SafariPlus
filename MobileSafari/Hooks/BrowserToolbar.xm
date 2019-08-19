@@ -651,8 +651,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 %new
 - (void)updateTabCount
 {
-	NSLog(@"SafariPlus.dylib updateTabCount");
-
 	if(self.tabCountLabel)
 	{
 		void (^updateBlock)(void) = ^

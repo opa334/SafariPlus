@@ -382,26 +382,40 @@
 %new
 - (void)toggleLockedStateForTabDocument:(TabDocument*)tabDocument
 {
-	void (^toggle)(void) = ^
+	[self setLocked:!tabDocument.locked forTabDocuments:@[tabDocument]];
+}
+
+%new
+- (void)setLocked:(BOOL)locked forTabDocuments:(NSArray<TabDocument*>*)tabDocuments
+{
+	void (^setLockStates)(void) = ^
 	{
-		tabDocument.locked = !tabDocument.locked;
+		for(TabDocument* tabDocument in tabDocuments)
+		{
+			tabDocument.locked = locked;
+		}
+
+		if(preferenceManager.tabManagerEnabled && self.presentedTabManager)
+		{
+			[(SPTabManagerTableViewController*)[self.presentedTabManager viewControllers].firstObject updateBottomToolbarButtonAvailability];
+		}
 	};
 
 	if(preferenceManager.biometricProtectionEnabled && (preferenceManager.biometricProtectionLockTabEnabled || preferenceManager.biometricProtectionUnlockTabEnabled))
 	{
-		if(preferenceManager.biometricProtectionLockTabEnabled && !tabDocument.locked)
+		if(preferenceManager.biometricProtectionLockTabEnabled && locked)
 		{
-			requestAuthentication([localizationManager localizedSPStringForKey:@"LOCK_TAB"], toggle);
+			requestAuthentication([localizationManager localizedSPStringForKey:@"LOCK_TAB"], setLockStates);
 			return;
 		}
-		else if(preferenceManager.biometricProtectionUnlockTabEnabled && tabDocument.locked)
+		else if(preferenceManager.biometricProtectionUnlockTabEnabled && !locked)
 		{
-			requestAuthentication([localizationManager localizedSPStringForKey:@"UNLOCK_TAB"], toggle);
+			requestAuthentication([localizationManager localizedSPStringForKey:@"UNLOCK_TAB"], setLockStates);
 			return;
 		}
 	}
 
-	toggle();
+	setLockStates();
 }
 
 %group iOS9Down

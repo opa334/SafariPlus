@@ -23,7 +23,8 @@
 #import "SPFileTableViewCell.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
-#import "SPFile.h"
+#import "SPPreferenceManager.h"
+#import "../../Shared/SPFile.h"
 
 @implementation SPFileBrowserTableViewController
 
@@ -78,27 +79,36 @@
 {
 	[super viewDidAppear:animated];
 
-	[self fixFooterColors];
+	[self fixHeaderColors];
+}
+
+- (BOOL)fileIsDirectory:(SPFile*)file
+{
+	return !file.isRegularFile;
 }
 
 - (BOOL)loadContents
 {
 	BOOL firstLoad = (_filesAtCurrentURL == nil);
 
-	NSMutableArray<SPFile*>* newFiles = [NSMutableArray new];
-
 	//Fetch files from current URL into array
-	NSArray* fileURLs = [fileManager contentsOfDirectoryAtURL:_directoryURL
-			     includingPropertiesForKeys:nil options:0 error:nil];
-
-	for(NSURL* fileURL in fileURLs)
-	{
-		SPFile* file = [[SPFile alloc] initWithFileURL:fileURL];
-		[newFiles addObject:file];
-	}
+	NSMutableArray<SPFile*>* newFiles = [[fileManager filesAtURL:_directoryURL error:nil] mutableCopy];
 
 	[newFiles sortUsingComparator:^NSComparisonResult (SPFile* a, SPFile* b)
 	{
+		#ifndef PREFERENCES
+		if(preferenceManager.sortDirectoriesAboveFiles)
+		{
+			if([self fileIsDirectory:a] && ![self fileIsDirectory:b])
+			{
+				return NSOrderedAscending;
+			}
+			else if([self fileIsDirectory:b] && ![self fileIsDirectory:a])
+			{
+				return NSOrderedDescending;
+			}
+		}
+		#endif
 		return [a.cellTitle.string caseInsensitiveCompare:b.cellTitle.string];
 	}];
 

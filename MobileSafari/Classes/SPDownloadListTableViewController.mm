@@ -73,7 +73,7 @@
 		}
 	}
 
-	[self fixFooterColors];
+	[self fixHeaderColors];
 }
 
 - (void)applyChangesAfterReload

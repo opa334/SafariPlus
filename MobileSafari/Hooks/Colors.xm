@@ -887,6 +887,8 @@
 
 %end
 
+%group iOS12_1_4_down
+
 %hook BrowserRootViewController
 
 - (void)setPreferredStatusBarStyle:(UIStatusBarStyle)statusBarStyle
@@ -924,6 +926,49 @@
 
 %end
 
+%end
+
+%group iOS12_2Up
+
+%hook BrowserRootViewController
+
+- (NSUInteger)preferredStatusBarStyle
+{
+	if([preferenceManager topBarNormalStatusBarStyleEnabled] || [preferenceManager topBarPrivateStatusBarStyleEnabled])
+	{
+		BrowserController* browserController;
+
+		if([self respondsToSelector:@selector(browserController)])
+		{
+			browserController = self.browserController;
+		}
+		else
+		{
+			browserController = browserControllers().firstObject;
+		}
+
+		if(!browserControllerIsShowingTabView(browserController))
+		{
+			BOOL privateMode = privateBrowsingEnabled(browserController);
+
+			if(!privateMode && [preferenceManager topBarNormalStatusBarStyleEnabled])
+			{
+				return preferenceManager.topBarNormalStatusBarStyle;
+			}
+			else if(privateMode && [preferenceManager topBarPrivateStatusBarStyleEnabled])
+			{
+				return preferenceManager.topBarPrivateStatusBarStyle;
+			}
+		}
+	}
+
+	return %orig;
+}
+
+%end
+
+%end
+
 void initColors()
 {
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
@@ -951,6 +996,15 @@ void initColors()
 	else
 	{
 		%init(iOS10Down)
+	}
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
+	{
+		%init(iOS12_2Up);
+	}
+	else
+	{
+		%init(iOS12_1_4_down);
 	}
 
 	%init();

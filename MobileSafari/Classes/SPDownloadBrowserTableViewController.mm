@@ -26,7 +26,7 @@
 #import "SPLocalizationManager.h"
 #import "SPCommunicationManager.h"
 #import "SPFileManager.h"
-#import "SPFile.h"
+#import "../../Shared/SPFile.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVPlayerViewController.h>
@@ -82,6 +82,11 @@
 		return 0;
 		break;
 	}
+}
+
+- (BOOL)fileIsDirectory:(SPFile*)file
+{
+	return ![file displaysAsRegularFile];
 }
 
 - (BOOL)loadContents
@@ -264,7 +269,7 @@
 
 - (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
-	if(file.isRegularFile)
+	if([file displaysAsRegularFile])
 	{
 		//Only cache one hard link at most
 		[fileManager resetHardLinks];
@@ -273,7 +278,7 @@
 		UIAlertController *openAlert = [UIAlertController alertControllerWithTitle:file.name
 						message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-		if([file conformsTo:kUTTypeAudiovisualContent])
+		if([file conformsTo:kUTTypeAudiovisualContent] || [file isHLSStream])
 		{
 			//File is audio or video -> Add option to play file
 			[openAlert addAction:[self playActionForFile:file]];
@@ -282,6 +287,11 @@
 		if(file.isPreviewable)
 		{
 			[openAlert addAction:[self previewActionForFile:file]];
+		}
+
+		if(!file.isRegularFile)
+		{
+			[openAlert addAction:[self showContentActionForFile:file withIndexPath:indexPath]];
 		}
 
 		[openAlert addAction:[self openInActionForFile:file]];
@@ -348,7 +358,7 @@
 
 - (void)didLongPressFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
-	if(!file.isRegularFile)
+	if(![file displaysAsRegularFile])
 	{
 		if(file.isWritable || _filzaInstalled)
 		{
@@ -415,6 +425,15 @@
 	{
 		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 		[self startPlayerWithMedia:hardLinkedURL];
+	}];
+}
+
+- (UIAlertAction*)showContentActionForFile:(SPFile*)file withIndexPath:(NSIndexPath*)indexPath
+{
+	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"SHOW_CONTENT"]
+		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+	{
+		[super didSelectFile:file atIndexPath:indexPath];
 	}];
 }
 

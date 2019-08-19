@@ -62,7 +62,7 @@
 
 - (void)setUpContent
 {
-	//Enable seperators between imageViews
+	//Enable separators between imageViews
 	[self setSeparatorInset:UIEdgeInsetsZero];
 
 	//Make cell unselectable
@@ -98,8 +98,8 @@
 	[_buttonsView.topButton addTarget:self action:@selector(restartButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 	[_buttonsView.topButton setImage:[[UIImage imageNamed:@"RestartButton" inBundle:SPBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 
-	[_buttonsView.bottomButton addTarget:self action:@selector(openDirectoryButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-	[_buttonsView.bottomButton setImage:[[UIImage imageNamed:@"OpenDirectoryButton" inBundle:SPBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+	[_buttonsView.bottomButton addTarget:self action:@selector(locateButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+	[_buttonsView.bottomButton setImage:[[UIImage imageNamed:@"LocateButton" inBundle:SPBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
 
 - (void)setUpConstraints
@@ -158,7 +158,7 @@
 	[self.tableViewController restartDownload:_download forCell:self];
 }
 
-- (void)openDirectoryButtonPressed
+- (void)locateButtonPressed
 {
 	[(SPDownloadNavigationController*)self.tableViewController.navigationController showFileInBrowser:[_download.targetURL URLByAppendingPathComponent:_download.filename]];
 }

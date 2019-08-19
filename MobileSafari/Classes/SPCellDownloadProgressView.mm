@@ -27,11 +27,11 @@
 	_sizeProgressLabel.textAlignment = NSTextAlignmentRight;
 	_sizeProgressLabel.font = [_sizeProgressLabel.font fontWithSize:8];
 
-	_sizeSpeedSeperatorLabel = [[UILabel alloc] init];
-	_sizeSpeedSeperatorLabel.translatesAutoresizingMaskIntoConstraints = NO;
-	_sizeSpeedSeperatorLabel.textAlignment = NSTextAlignmentCenter;
-	_sizeSpeedSeperatorLabel.font = [_sizeSpeedSeperatorLabel.font fontWithSize:8];
-	_sizeSpeedSeperatorLabel.text = @"@";
+	_sizeSpeedSeparatorLabel = [[UILabel alloc] init];
+	_sizeSpeedSeparatorLabel.translatesAutoresizingMaskIntoConstraints = NO;
+	_sizeSpeedSeparatorLabel.textAlignment = NSTextAlignmentCenter;
+	_sizeSpeedSeparatorLabel.font = [_sizeSpeedSeparatorLabel.font fontWithSize:8];
+	_sizeSpeedSeparatorLabel.text = @"@";
 
 	_downloadSpeedLabel = [[UILabel alloc] init];
 	_downloadSpeedLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -47,33 +47,74 @@
 	_percentProgressLabel.font = [_percentProgressLabel.font fontWithSize:8];
 
 	[self addSubview:_sizeProgressLabel];
-	[self addSubview:_sizeSpeedSeperatorLabel];
+	[self addSubview:_sizeSpeedSeparatorLabel];
 	[self addSubview:_downloadSpeedLabel];
 	[self addSubview:_progressView];
 	[self addSubview:_percentProgressLabel];
 
 	[self setUpConstraints];
+	self.showsDownloadSpeed = YES;
 
 	return self;
 }
 
 - (void)setUpConstraints
 {
+	_downloadSpeedShownConstraints = @[
+		//Horizontal
+
+		//First row
+		[NSLayoutConstraint constraintWithItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+		 toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:8],
+		[NSLayoutConstraint constraintWithItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
+		 toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
+		 toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
+		 toItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeLeading multiplier:1 constant:-7.5],
+		[NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
+		 toItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeTrailing multiplier:1 constant:7.5],
+		[NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
+		 toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0],
+
+		//Vertical
+
+		//First row
+		[NSLayoutConstraint constraintWithItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+		 toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:8],
+		[NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+		 toItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeHeight multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		 toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		 toItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+		 toItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeHeight multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		 toItem:_sizeSpeedSeparatorLabel attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+	];
+
+	_downloadSpeedNotShownConstraints = @[
+		//Horizontal
+
+		//First row
+		[NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
+		 toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
+
+		//Vertical
+
+		//First row
+		[NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		 toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+		 toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:8],
+
+	];
+
+
 	[NSLayoutConstraint activateConstraints:@[
 		//Horizontal
-		//First row
-		 [NSLayoutConstraint constraintWithItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
-		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:8],
-		 [NSLayoutConstraint constraintWithItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
-		  toItem:self attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
-		  toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
-		  toItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeLeading multiplier:1 constant:-7.5],
-		 [NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
-		  toItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeTrailing multiplier:1 constant:7.5],
-		 [NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
-		  toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0],
+
 		//Second row
 		 [NSLayoutConstraint constraintWithItem:_progressView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
 		  toItem:self attribute:NSLayoutAttributeLeading multiplier:1 constant:0],
@@ -86,24 +127,12 @@
 		  toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0],
 
 		//Vertical
-		//First row
-		 [NSLayoutConstraint constraintWithItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
-		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:8],
-		 [NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
-		  toItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeHeight multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
-		  toItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeHeight multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
-		  toItem:self attribute:NSLayoutAttributeTop multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_sizeProgressLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
-		  toItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeTop multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_downloadSpeedLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
-		  toItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+
 		//Second row
 		 [NSLayoutConstraint constraintWithItem:_progressView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
 		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:3],
 		 [NSLayoutConstraint constraintWithItem:_progressView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
-		  toItem:_sizeSpeedSeperatorLabel attribute:NSLayoutAttributeBottom multiplier:1 constant:2.5],
+		  toItem:_sizeProgressLabel attribute:NSLayoutAttributeBottom multiplier:1 constant:2.5],
 		//Third row
 		 [NSLayoutConstraint constraintWithItem:_percentProgressLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
 		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:8],
@@ -117,10 +146,32 @@
 - (void)setColor:(UIColor*)color
 {
 	_sizeProgressLabel.textColor = color;
-	_sizeSpeedSeperatorLabel.textColor = color;
+	_sizeSpeedSeparatorLabel.textColor = color;
 	_downloadSpeedLabel.textColor = color;
 	_progressView.progressTintColor = color;
 	_percentProgressLabel.textColor = color;
+}
+
+- (void)setShowsDownloadSpeed:(BOOL)showsDownloadSpeed
+{
+	if(_showsDownloadSpeed != showsDownloadSpeed)
+	{
+		_showsDownloadSpeed = showsDownloadSpeed;
+
+		if(_showsDownloadSpeed)
+		{
+			[NSLayoutConstraint activateConstraints:_downloadSpeedShownConstraints];
+			[NSLayoutConstraint deactivateConstraints:_downloadSpeedNotShownConstraints];
+		}
+		else
+		{
+			[NSLayoutConstraint activateConstraints:_downloadSpeedNotShownConstraints];
+			[NSLayoutConstraint deactivateConstraints:_downloadSpeedShownConstraints];
+		}
+
+		_sizeSpeedSeparatorLabel.hidden = !_showsDownloadSpeed;
+		_downloadSpeedLabel.hidden = !_showsDownloadSpeed;
+	}
 }
 
 @end

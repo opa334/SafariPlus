@@ -20,6 +20,7 @@
 #import "../SafariPlus.h"
 #import "../Util.h"
 #import "../Classes/AVActivityButton.h"
+#import "../../Shared/NSFileManager+DirectorySize.h"
 #import "SPDirectoryPickerNavigationController.h"
 #import "SPDownload.h"
 #import "SPDownloadInfo.h"
@@ -35,6 +36,8 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <WebKit/WKWebView.h>
+#import <UserNotifications/UserNotifications.h>
+#import <AVFoundation/AVFoundation.h>
 
 @implementation SPDownloadManager
 
@@ -53,6 +56,11 @@
 - (instancetype)init
 {
 	self = [super init];
+
+	if(NSClassFromString(@"AVAssetDownloadURLSession"))
+	{
+		self.HLSSupported = YES;
+	}
 
 	_observerDelegates = [NSHashTable weakObjectsHashTable];
 
@@ -122,10 +130,7 @@
 
 		if([fileManager fileExistsAtURL:oldDownloadURL error:nil])
 		{
-			NSArray* fileURLs = [fileManager contentsOfDirectoryAtURL:oldDownloadURL
-					     includingPropertiesForKeys:nil
-					     options:0
-					     error:nil];
+			NSArray* fileURLs = [fileManager contentsOfDirectoryAtURL:oldDownloadURL includingPropertiesForKeys:nil options:0 error:nil];
 
 			NSError* error;
 
@@ -161,19 +166,40 @@
 	return self.downloadSession;
 }
 
+- (AVAssetDownloadURLSession*)sharedAVDownloadSession
+{
+	return self.avDownloadSession;
+}
+
 - (void)configureSession
 {
 	//Create background configuration for shared session
-	NSURLSessionConfiguration* config = [NSURLSessionConfiguration
-					     backgroundSessionConfigurationWithIdentifier:@"com.opa334.SafariPlus.sharedSession"];
+	NSURLSessionConfiguration* config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.opa334.SafariPlus.sharedSession"];
 
 	//Configure cellular access
 	config.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
 
 	//Create shared session with configuration
-	self.downloadSession = [NSURLSession sessionWithConfiguration:config
-				delegate:self delegateQueue:nil];
+	self.downloadSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
 
+	[self reconnectDownloads];
+
+	if(self.HLSSupported)
+	{
+		//Create background configuration for shared HLS session
+		NSURLSessionConfiguration* HLSConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.opa334.SafariPlus.sharedSession.HLS"];
+
+		//Configure cellular access
+		HLSConfig.allowsCellularAccess = !preferenceManager.onlyDownloadOnWifiEnabled;
+
+		self.avDownloadSession = [NSClassFromString(@"AVAssetDownloadURLSession") sessionWithConfiguration:HLSConfig assetDownloadDelegate:self delegateQueue:nil];
+
+		[self reconnectHLSDownloads];
+	}
+}
+
+- (void)reconnectDownloads
+{
 	self.errorCount = 0;	//Counts how many errors exists
 	self.processedErrorCount = 0;	//Counts how many errors are processed
 
@@ -185,7 +211,7 @@
 			//Reconnect sessions that are still running (for example after a respring)
 			if(task.state == NSURLSessionTaskStateRunning)
 			{
-				SPDownload* download = [self downloadWithTaskIdentifier:task.taskIdentifier];
+				SPDownload* download = [self downloadWithTask:task];
 
 				download.downloadTask = task;
 			}
@@ -198,10 +224,57 @@
 
 		if(self.errorCount == 0)
 		{
-			//If didCompleteWithError will not get called at all, we need to manually invoke resumeDownloadsFromDiskLoad
-			[self resumeDownloadsFromDiskLoad];
+			//If didCompleteWithError will not get called at all, we need to manually invoke didFinishReconnectingDownloads
+			[self didFinishReconnectingDownloads];
 		}
 	}];
+}
+
+- (void)reconnectHLSDownloads
+{
+	[self.avDownloadSession getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask*>* tasks)
+	{
+		for(AVAssetDownloadTask* task in tasks)
+		{
+			//Reconnect sessions that are still running (for example after a respring)
+			if(task.state == NSURLSessionTaskStateRunning)
+			{
+				SPDownload* download = [self downloadWithTask:task];
+
+				download.downloadTask = task;
+			}
+		}
+
+		[self didFinishReconnectingHLSDownloads];
+	}];
+}
+
+- (void)didFinishReconnectingDownloads
+{
+	dlog(@"didFinishReconnectingDownloads");
+	dlogDownloadManager();
+
+	self.isReconnectingDownloads = NO;
+
+	//Resume / Start all downloads
+	for(SPDownload* download in self.pendingDownloads)
+	{
+		if(!download.isHLSDownload)
+		{
+			[download startDownload];
+		}
+	}
+}
+
+- (void)didFinishReconnectingHLSDownloads
+{
+	for(SPDownload* download in self.pendingDownloads)
+	{
+		if(download.isHLSDownload)
+		{
+			[download startDownload];
+		}
+	}
 }
 
 - (void)clearTempFiles
@@ -214,16 +287,11 @@
 	//NOTE: Sometimes temp files are saved in /tmp and sometimes in caches
 
 	//Get files in tmp directory
-	NSArray* tmpFiles = [[NSFileManager defaultManager]
-			     contentsOfDirectoryAtURL:[NSURL fileURLWithPath:NSTemporaryDirectory()]
-			     includingPropertiesForKeys:nil
-			     options:0
-			     error:nil];
+	NSArray* tmpFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:NSTemporaryDirectory()] includingPropertiesForKeys:nil options:0 error:nil];
 
 	//Get files in caches directory
 	NSArray* cacheFiles = [[NSFileManager defaultManager]
-			       contentsOfDirectoryAtURL:[NSURL fileURLWithPath:[NSHomeDirectory()
-										stringByAppendingString:@"/Library/Caches/com.apple.nsurlsessiond/Downloads/com.apple.mobilesafari"]]
+			       contentsOfDirectoryAtURL:[NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.apple.nsurlsessiond/Downloads/com.apple.mobilesafari"]]
 			       includingPropertiesForKeys:nil
 			       options:0
 			       error:nil];
@@ -284,20 +352,6 @@
 	[self.navigationControllerDelegate reloadDownloadList];
 }
 
-- (void)resumeDownloadsFromDiskLoad
-{
-	dlog(@"resumeDownloadsFromDiskLoad");
-	dlogDownloadManager();
-
-	self.isReconnectingDownloads = NO;
-
-	//Resume / Start all downloads
-	for(SPDownload* download in self.pendingDownloads)
-	{
-		[download startDownload];
-	}
-}
-
 - (void)forceCancelDownload:(SPDownload*)download
 {
 	dlog(@"forceCancelDownload");
@@ -311,19 +365,18 @@
 	dlog(@"downloadFinished");
 	dlogDownloadManager();
 
-	if(!download.wasCancelled)
-	{
-		//Dispatch status bar / push notification
-		[self sendNotificationWithText:[NSString stringWithFormat:@"%@: %@",
-						[localizationManager localizedSPStringForKey:@"DOWNLOAD_SUCCEEDED"], download.filename]];
-	}
-
 	if(download.resumeData)
 	{
 		[self removeTemporaryFileForResumeData:download.resumeData];
 	}
 
 	[self moveDownloadFromPendingToHistory:download];
+
+	if(!download.wasCancelled)
+	{
+		//Dispatch status bar / push notification
+		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_SUCCEEDED"] message:download.filename];
+	}
 }
 
 - (void)downloadFailed:(SPDownload*)download withError:(NSError*)error
@@ -337,10 +390,9 @@
 	}
 	else	//Download is not recoverable, end it
 	{
-		[self sendNotificationWithText:[NSString stringWithFormat:@"%@: %@",
-						[localizationManager localizedSPStringForKey:@"DOWNLOAD_FAILED"], download.filename]];
-
 		[self moveDownloadFromPendingToHistory:download];
+
+		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_FAILED"] message:download.filename];
 	}
 }
 
@@ -355,6 +407,7 @@
 	[self saveDownloadsToDisk];
 	[self.navigationControllerDelegate reloadEverything];
 	[self runningDownloadsCountDidChange];
+	[self updateApplicationBadge];
 }
 
 - (void)removeDownloadFromHistory:(SPDownload*)download
@@ -433,8 +486,6 @@
 		//Set downloadManagerDelegate for all downloads
 		download.downloadManagerDelegate = self;
 	}
-
-	dlogDownloadManager();
 }
 
 - (void)saveDownloadsToDisk
@@ -442,8 +493,10 @@
 	[cacheManager saveDownloadCache:@{@"pendingDownloads" : [self.pendingDownloads copy], @"finishedDownloads" : [self.finishedDownloads copy]}];
 }
 
-- (void)sendNotificationWithText:(NSString*)text
+- (void)sendNotificationWithTitle:(NSString*)title message:(NSString*)message
 {
+	NSString* titleAndMessage = [NSString stringWithFormat:@"%@: %@", title, message];
+
 	if([[UIApplication sharedApplication] applicationState] == 0 &&
 	   preferenceManager.statusBarNotificationsEnabled && self.notificationWindow)
 	{
@@ -452,14 +505,39 @@
 		[self.notificationWindow dismissWithCompletion:^
 		{
 			//Dispatch status notification with given text
-			[self.notificationWindow dispatchNotification:[SPStatusBarNotification downloadStyleWithText:text]];
+			[self.notificationWindow dispatchNotification:[SPStatusBarNotification downloadStyleWithText:titleAndMessage]];
 		}];
 	}
 	else if([[UIApplication sharedApplication] applicationState] != 0 &&
 		preferenceManager.pushNotificationsEnabled)
 	{
-		//Application is inactive -> Use push notification if enabled
-		[communicationManager dispatchPushNotificationWithIdentifier:@"com.apple.mobilesafari" title:@"Safari" message:text];
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
+		{
+			UNMutableNotificationContent* content = [[UNMutableNotificationContent alloc] init];
+			content.title = title;
+			content.body = message;
+			content.sound = [UNNotificationSound defaultSound];
+
+			UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:1 repeats:NO];
+			UNNotificationRequest* request = [UNNotificationRequest requestWithIdentifier:[[NSUUID UUID] UUIDString] content:content trigger:trigger];
+
+			[[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:nil];
+		}
+		else
+		{
+			UILocalNotification* notification = [[UILocalNotification alloc] init];
+			notification.alertBody = titleAndMessage;
+			notification.applicationIconBadgeNumber = self.pendingDownloads.count;
+			[[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+		}
+	}
+}
+
+- (void)updateApplicationBadge
+{
+	if(preferenceManager.applicationBadgeEnabled)
+	{
+		[UIApplication sharedApplication].applicationIconBadgeNumber = self.pendingDownloads.count;
 	}
 }
 
@@ -495,17 +573,51 @@
 - (float)progressOfAllRunningDownloads
 {
 	int64_t totalFilesize = 0, totalBytesWritten = 0;
+	CGFloat totalExpectedDuration = 0, totalSecondsLoaded = 0;
+
+	BOOL normalDownloadExists = NO, HLSDownloadExists = NO;
 
 	for(SPDownload* download in [self.pendingDownloads copy])
 	{
-		if(!download.paused && download.filesize > 0)
+		if(!download.isHLSDownload)
 		{
-			totalFilesize += download.filesize;
-			totalBytesWritten += download.totalBytesWritten;
+			if(!download.paused && download.filesize > 0)
+			{
+				normalDownloadExists = YES;
+				totalFilesize += download.filesize;
+				totalBytesWritten += download.totalBytesWritten;
+			}
+		}
+		else
+		{
+			if(!download.paused && download.expectedDuration > 0)
+			{
+				HLSDownloadExists = YES;
+				totalExpectedDuration += download.expectedDuration;
+				totalSecondsLoaded += download.secondsLoaded;
+			}
 		}
 	}
 
-	return (float)totalBytesWritten / (float)totalFilesize;
+	float downloadProgress = (float)totalBytesWritten / (float)totalFilesize;
+	float downloadHLSProgress = (float)totalSecondsLoaded / (float)totalExpectedDuration;
+
+	if(normalDownloadExists && HLSDownloadExists)
+	{
+		return (downloadProgress + downloadHLSProgress) / (float)2;
+	}
+	else if(normalDownloadExists)
+	{
+		return downloadProgress;
+	}
+	else if(HLSDownloadExists)
+	{
+		return downloadHLSProgress;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 - (NSUInteger)runningDownloadsCount
@@ -574,14 +686,32 @@
 	}
 }
 
-- (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier
+- (SPDownload*)downloadWithTask:(__kindof NSURLSessionTask*)task
+{
+	BOOL isHLS = NO;
+
+	if(self.HLSSupported)
+	{
+		if([task isKindOfClass:NSClassFromString(@"AVAssetDownloadTask")])
+		{
+			isHLS = YES;
+		}
+	}
+
+	return [self downloadWithTaskIdentifier:task.taskIdentifier isHLS:isHLS];
+}
+
+- (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier isHLS:(BOOL)isHLS
 {
 	for(SPDownload* download in [self.pendingDownloads copy])
 	{
 		if(download.taskIdentifier == identifier)
 		{
-			//Download taskIdentifier matches -> return download
-			return download;
+			if(download.isHLSDownload == isHLS)
+			{
+				//Download taskIdentifier matches -> return download
+				return download;
+			}
 		}
 	}
 	return nil;
@@ -690,8 +820,8 @@
 		[self saveDownloadsToDisk];
 
 		//Send notification
-		[self sendNotificationWithText:[NSString stringWithFormat:@"%@: %@",
-						[localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"], downloadInfo.filename]];
+		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"] message:downloadInfo.filename];
+		[self updateApplicationBadge];
 
 		if(self.navigationControllerDelegate)
 		{
@@ -718,9 +848,7 @@
 	[fileManager moveItemAtURL:tmpURL toURL:[downloadInfo pathURL] error:nil];
 
 	//Send notification
-	[self sendNotificationWithText:[NSString
-					stringWithFormat:@"%@: %@", [localizationManager
-								     localizedSPStringForKey:@"SAVED_IMAGE"], downloadInfo.filename]];
+	[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"SAVED_IMAGE"] message:downloadInfo.filename];
 }
 
 - (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -786,7 +914,11 @@
 	{
 		NSString* title;
 
-		if(downloadInfo.filesize < 0)
+		if(downloadInfo.isHLSDownload)
+		{
+			title = downloadInfo.filename;
+		}
+		else if(downloadInfo.filesize < 0)
 		{
 			//Size unknown (Happens on Google Drive for example)
 			title = [NSString stringWithFormat:@"%@ (%@)", downloadInfo.filename,
@@ -960,16 +1092,19 @@
 
 	if(!self.requestFetchDownloadInfo)
 	{
-		NSURLSession* session = self.downloadSession;
+		NSURLSessionConfiguration* config = [NSURLSessionConfiguration defaultSessionConfiguration];
+		config.timeoutIntervalForResource = 5;
 
-		NSURLSessionDataTask* dataTask = [session dataTaskWithRequest:downloadInfo.request];
+		self.fetchSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+
+		NSURLSessionDataTask* dataTask = [self.fetchSession dataTaskWithRequest:downloadInfo.request];
 
 		self.requestFetchDownloadInfo = downloadInfo;
 
 		[dataTask resume];
 
 		//After 5 seconds we cancel the task and error out
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+		/*dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 		{
 			if(dataTask.state == NSURLSessionTaskStateRunning)
 			{
@@ -990,7 +1125,7 @@
 
 				[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
 			}
-		});
+		});*/
 	}
 }
 
@@ -1219,15 +1354,199 @@
 	dlog(@"URLSession:%@ downloadTask:%@ didFinishDownloadingToURL:%@", session, downloadTask, location);
 	dlogDownloadManager();
 
-	//Get finished download
-	SPDownload* download = [self downloadWithTaskIdentifier:downloadTask.taskIdentifier];
+	[self handleFinishedTask:downloadTask location:location];
+}
 
-	download.didFinish = YES;
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+	dlog(@"URLSession:%@ task:%@ didCompleteWithError:%@", session, task, error);
+	dlogDownloadManager();
+
+	if([task isKindOfClass:[NSURLSessionDataTask class]] && self.requestFetchDownloadInfo)
+	{
+		self.fetchSession = nil;
+
+		SPDownloadInfo* downloadInfo = self.requestFetchDownloadInfo;
+		self.requestFetchDownloadInfo = nil;
+
+		if(downloadInfo.sourceVideo)
+		{
+			[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+		}
+
+		UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+						 message:[NSString stringWithFormat:@"%@: %@", [localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"], error.description] preferredStyle:UIAlertControllerStyleAlert];
+
+		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
+
+		[errorAlert addAction:closeAction];
+
+		[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+
+		return;
+	}
+
+	//Get download
+	SPDownload* download = [self downloadWithTask:task];
+
+	if(!download)
+	{
+		return;
+	}
+
+	if(self.isReconnectingDownloads)
+	{
+		NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
+
+		//Connect resumeData with download
+		download.resumeData = resumeData;
+
+		//Count how often this method was called
+		self.processedErrorCount++;
+
+		if(self.processedErrorCount == self.errorCount)
+		{
+			//Function was called as often as expected -> resume all downloads
+			[self didFinishReconnectingDownloads];
+		}
+	}
+	else
+	{
+		if(download.wasCancelled)
+		{
+			[self downloadFinished:download];
+		}
+		if(error && error.code != -999)		//Download was not paused
+		{
+			//At this point we can be sure that some sort of connection error occured
+			[self downloadFailed:download withError:error];
+		}
+	}
+
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
+	didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten
+	totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
+{
+	//Get download that needs updating
+	SPDownload* targetDownload = [self downloadWithTask:downloadTask];
+
+	//Send data to download
+	[targetDownload updateProgressForTotalBytesWritten:totalBytesWritten totalFilesize:totalBytesExpectedToWrite];
+}
+
+//Get response for the request and present the download alert
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
+{
+	dlog(@"URLSession:%@ session:%@ didReceiveResponse:%@", session, dataTask, response);
+	dlogDownloadManager();
+
+	completionHandler(NSURLSessionResponseCancel);
+
+	self.fetchSession = nil;
+
+	SPDownloadInfo* downloadInfo = self.requestFetchDownloadInfo;
+	self.requestFetchDownloadInfo = nil;
+
+	NSInteger statusCode = ((NSHTTPURLResponse*)response).statusCode;
+
+	if(statusCode < 400)	//No error
+	{
+		downloadInfo.filesize = response.expectedContentLength;
+		downloadInfo.filename = response.suggestedFilename;
+
+		[downloadInfo updateHLSForSuggestedFilename:response.suggestedFilename];
+
+		[self presentDownloadAlertWithDownloadInfo:downloadInfo];
+	}
+	else	//Error
+	{
+		UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+						 message:[NSString stringWithFormat:@"%lli: %@", (long long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]] preferredStyle:UIAlertControllerStyleAlert];
+
+		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
+
+		[errorAlert addAction:closeAction];
+
+		[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+
+		if(downloadInfo.sourceVideo)
+		{
+			[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+		}
+	}
+}
+
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
+{
+	dlog(@"URLSessionDidFinishEventsForBackgroundURLSession:%@", session);
+	dlogDownloadManager();
+
+	if(self.applicationBackgroundSessionCompletionHandler)
+	{
+		void (^completionHandler)() = self.applicationBackgroundSessionCompletionHandler;
+		self.applicationBackgroundSessionCompletionHandler = nil;
+
+		dispatch_async(dispatch_get_main_queue(), completionHandler);
+	}
+}
+
+- (void)mediaImport:(NSString*)path didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo
+{
+	[fileManager resetHardLinks];
+}
+
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didLoadTimeRange:(CMTimeRange)timeRange totalTimeRangesLoaded:(NSArray<NSValue *> *)loadedTimeRanges timeRangeExpectedToLoad:(CMTimeRange)timeRangeExpectedToLoad
+{
+	CGFloat expectedDuration = CMTimeGetSeconds(timeRangeExpectedToLoad.duration);
+	CGFloat secondsLoaded = 0;
+
+	for(NSValue* value in loadedTimeRanges)
+	{
+		CMTimeRange timeRange = value.CMTimeRangeValue;
+		secondsLoaded += CMTimeGetSeconds(timeRange.duration);
+	}
+
+	//Get download that needs updating
+	SPDownload* targetDownload = [self downloadWithTask:assetDownloadTask];
+
+	[targetDownload updateProgressForSecondsLoaded:secondsLoaded expectedDuration:expectedDuration];
+}
+
+- (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location
+{
+	if(assetDownloadTask.error.code == -999)
+	{
+		return;
+	}
+
+	[self handleFinishedTask:assetDownloadTask location:location];
+}
+
+- (void)handleFinishedTask:(__kindof NSURLSessionTask*)task location:(NSURL *)location
+{
+	//Get finished download
+	SPDownload* download = [self downloadWithTask:task];
+
+	if(!download)
+	{
+		return;
+	}
+
+	[self downloadFinished:download];
 
 	//Get real file size and apply it to download
-	NSNumber* size;
-	[fileManager URLResourceValue:&size forKey:NSURLFileSizeKey forURL:location error:nil];
-	download.filesize = [size longLongValue];
+	if(download.isHLSDownload)
+	{
+		download.filesize = [fileManager sizeOfDirectoryAtURL:location];
+	}
+	else
+	{
+		NSNumber* size;
+		[fileManager URLResourceValue:&size forKey:NSURLFileSizeKey forURL:location error:nil];
+		download.filesize = [size longLongValue];
+	}
 
 	//Get downloadInfo from download
 	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithDownload:download];
@@ -1268,137 +1587,52 @@
 	}
 }
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task
-	didCompleteWithError:(NSError *)error
+//Not used, at least not for now
+/*- (void)mergeSegmentsAtURL:(NSURL*)segmentURL toFileAtURL:(NSURL*)fileURL
 {
-	dlog(@"URLSession:%@ task:%@ didCompleteWithError:%@", session, task, error);
-	dlogDownloadManager();
+	NSArray<NSURL*>* fragments = [fileManager contentsOfDirectoryAtURL:segmentURL includingPropertiesForKeys:nil options:nil error:nil];
 
-	if([task isKindOfClass:[NSURLSessionDataTask class]] && self.requestFetchDownloadInfo)
+	NSMutableArray<NSURL*>* fragmentsM = [fragments mutableCopy];
+
+	//filter out everything that is no fragment
+	for(NSURL* item in [fragments reverseObjectEnumerator])
 	{
-		SPDownloadInfo* downloadInfo = self.requestFetchDownloadInfo;
-		self.requestFetchDownloadInfo = nil;
-
-		if(downloadInfo.sourceVideo)
+		if(![[item pathExtension] isEqualToString:@"frag"])
 		{
-			[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+			[fragmentsM removeObject:item];
 		}
-
-		UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
-						 message:[NSString stringWithFormat:@"%@: %@", [localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"], error.description] preferredStyle:UIAlertControllerStyleAlert];
-
-		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
-
-		[errorAlert addAction:closeAction];
-
-		[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
 	}
 
-	//Get download
-	SPDownload* download = [self downloadWithTaskIdentifier:task.taskIdentifier];
+	//sort alphabetically
+	[fragmentsM sortUsingComparator:^NSComparisonResult (NSURL* a, NSURL* b)
+	{
+		return [a.lastPathComponent caseInsensitiveCompare:b.lastPathComponent];
+	}];
 
-	if(!download)
+	if(fragmentsM.count == 0)
 	{
 		return;
 	}
 
-	if(self.isReconnectingDownloads)
+	//merge everything
+	NSMutableData* data;
+
+	BOOL first = YES;
+
+	for(NSURL* fragment in fragmentsM)
 	{
-		NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
-
-		//Connect resumeData with download
-		download.resumeData = resumeData;
-
-		//Count how often this method was called
-		self.processedErrorCount++;
-
-		if(self.processedErrorCount == self.errorCount)
+		if(first)
 		{
-			//Function was called as often as expected -> resume all downloads
-			[self resumeDownloadsFromDiskLoad];
+			first = NO;
+			data = [NSMutableData dataWithContentsOfURL:fragment];
+			continue;
 		}
-	}
-	else
-	{
-		if(download.didFinish || !error)		//Download was finished or cancelled
-		{
-			[self downloadFinished:download];
-		}
-		else if(error.code != -999)		//Download was not paused
-		{
-			//At this point we can be sure that some sort of connection error occured
-			[self downloadFailed:download withError:error];
-		}
+
+		[data appendData:[NSData dataWithContentsOfURL:fragment]];
 	}
 
-}
-
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
-	didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten
-	totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
-{
-	//Get download that needs updating
-	SPDownload* targetDownload = [self downloadWithTaskIdentifier:downloadTask.taskIdentifier];
-
-	//Send data to download
-	[targetDownload updateProgress:totalBytesWritten totalFilesize:totalBytesExpectedToWrite];
-}
-
-//Get response for the request and present the download alert
-- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
-{
-	dlog(@"URLSession:%@ session:%@ didReceiveResponse:%@", session, dataTask, response);
-	dlogDownloadManager();
-
-	completionHandler(NSURLSessionResponseCancel);
-
-	SPDownloadInfo* downloadInfo = self.requestFetchDownloadInfo;
-	self.requestFetchDownloadInfo = nil;
-
-	NSInteger statusCode = ((NSHTTPURLResponse*)response).statusCode;
-
-	if(statusCode < 400)	//No error
-	{
-		downloadInfo.filesize = response.expectedContentLength;
-		downloadInfo.filename = response.suggestedFilename;
-
-		[self presentDownloadAlertWithDownloadInfo:downloadInfo];
-	}
-	else	//Error
-	{
-		UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
-						 message:[NSString stringWithFormat:@"%lli: %@", (long long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]] preferredStyle:UIAlertControllerStyleAlert];
-
-		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
-
-		[errorAlert addAction:closeAction];
-
-		[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
-
-		if(downloadInfo.sourceVideo)
-		{
-			[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
-		}
-	}
-}
-
-- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
-{
-	dlog(@"URLSessionDidFinishEventsForBackgroundURLSession:%@", session);
-	dlogDownloadManager();
-
-	if(self.applicationBackgroundSessionCompletionHandler)
-	{
-		void (^completionHandler)() = self.applicationBackgroundSessionCompletionHandler;
-		self.applicationBackgroundSessionCompletionHandler = nil;
-
-		dispatch_async(dispatch_get_main_queue(), completionHandler);
-	}
-}
-
-- (void)mediaImport:(NSString*)path didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo
-{
-	[fileManager resetHardLinks];
-}
+	NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[fileURL lastPathComponent]];
+	[data writeToURL:tmpURL atomically:NO];
+}*/
 
 @end

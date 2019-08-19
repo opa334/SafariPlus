@@ -37,6 +37,7 @@
 - (void)openScheme:(NSString *)scheme;
 - (UIAlertAction*)previewActionForFile:(SPFile*)file;
 - (UIAlertAction*)playActionForFile:(SPFile*)file;
+- (UIAlertAction*)showContentActionForFile:(SPFile*)file withIndexPath:(NSIndexPath*)indexPath;
 - (UIAlertAction*)openInActionForFile:(SPFile*)file;
 - (UIAlertAction*)importToMediaLibraryActionForImageWithURL:(NSURL*)URL;
 - (UIAlertAction*)importToMediaLibraryActionForVideoWithURL:(NSURL*)URL;

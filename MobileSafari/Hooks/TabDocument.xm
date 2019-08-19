@@ -366,6 +366,7 @@ static BOOL fakeOpenLinksValue = NO;
 		SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:navigationResponse._request];
 		downloadInfo.filesize = navigationResponse.response.expectedContentLength;
 		downloadInfo.filename = navigationResponse.response.suggestedFilename;
+		[downloadInfo updateHLSForSuggestedFilename:navigationResponse.response.suggestedFilename];
 		downloadInfo.presentationController = rootViewController;
 		downloadInfo.sourceDocument = self;
 
@@ -673,8 +674,7 @@ static BOOL fakeOpenLinksValue = NO;
 %group iOS10Up
 
 //Suppress mailTo alert
-- (void)dialogController:(_SFDialogController*)dialogController
-	willPresentDialog:(_SFDialog*)dialog
+- (void)dialogController:(_SFDialogController*)dialogController willPresentDialog:(_SFDialog*)dialog
 {
 	if(preferenceManager.suppressMailToDialog && [[castedSelf URL].scheme isEqualToString:@"mailto"])
 	{
@@ -688,17 +688,12 @@ static BOOL fakeOpenLinksValue = NO;
 				[dialogController _dismissDialog];
 			}
 		}
-		else if([dialog respondsToSelector:@selector(completeWithResponse:)])
+		else if([dialogController respondsToSelector:@selector(_dismissCurrentDialogWithResponse:)])
 		{
-			[dialog completeWithResponse:@{@"password" : @"", @"selectedActionIndex" : @0, @"text" : @""}];
-
-			if([dialogController respondsToSelector:@selector(_dismissDialogWithAdditionalAnimations:)])
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 			{
-				dispatch_async(dispatch_get_main_queue(), ^
-				{
-					[dialogController _dismissDialogWithAdditionalAnimations:nil];
-				});
-			}
+				[dialogController _dismissCurrentDialogWithResponse:@{@"password" : @"", @"selectedActionIndex" : @0, @"text" : @""}];
+			});
 		}
 	}
 	else

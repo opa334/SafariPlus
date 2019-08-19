@@ -16,6 +16,8 @@
 
 #import "../Protocols.h"
 
+@class AVURLAsset;
+
 @interface SPDownload : NSObject
 @property (nonatomic) SPDownloadInfo* orgInfo;
 @property (nonatomic) NSURLRequest* request;
@@ -30,12 +32,14 @@
 @property (nonatomic) int64_t totalBytesWritten;
 @property (nonatomic) int64_t bytesPerSecond;
 @property (nonatomic) BOOL startedFromPrivateBrowsingMode;
+@property (nonatomic) BOOL isHLSDownload;
+@property (nonatomic) CGFloat expectedDuration;
+@property (nonatomic) CGFloat secondsLoaded;
 
 @property (nonatomic) NSData* resumeData;
 @property (nonatomic) NSUInteger taskIdentifier;
-@property (nonatomic) NSURLSessionDownloadTask* downloadTask;
+@property (nonatomic) __kindof NSURLSessionTask* downloadTask;
 
-@property (nonatomic) BOOL didFinish;
 @property (nonatomic) BOOL wasCancelled;
 
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
@@ -48,10 +52,13 @@
 - (void)setPaused:(BOOL)paused;
 - (void)cancelDownload;
 - (void)setPaused:(BOOL)paused forced:(BOOL)forced;
+- (void)pauseStateChanged;
 
 - (void)setTimerEnabled:(BOOL)enabled;
 - (void)updateDownloadSpeed;
-- (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize;
+- (void)updateProgressForSecondsLoaded:(CGFloat)secondsLoaded expectedDuration:(CGFloat)expectedDuration;
+- (void)updateProgressForTotalBytesWritten:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize;
+- (void)updateProgress;
 
 - (int64_t)remainingBytes;
 

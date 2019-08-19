@@ -36,6 +36,28 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>footerText</key>
+				<string>SORT_DIRECTORIES_ABOVE_FILES_FOOTER</string>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<false/>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>key</key>
+				<string>sortDirectoriesAboveFiles</string>
+				<key>label</key>
+				<string>SORT_DIRECTORIES_ABOVE_FILES</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>footerText</key>
 				<string>DISABLE_COMMUNICATION_ERROR_FOOTER</string>
 			</dict>
 			<dict>

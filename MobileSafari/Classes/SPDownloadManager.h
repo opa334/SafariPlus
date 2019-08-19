@@ -16,14 +16,19 @@
 
 #import "../Protocols.h"
 
-@class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload;
+#import <AVFoundation/AVFoundation.h>
 
-@interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, DownloadManagerDelegate, SPDirectoryPickerDelegate>
+@class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload, AVAssetDownloadURLSession;
+
+@interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, DownloadManagerDelegate, SPDirectoryPickerDelegate, AVAssetDownloadDelegate>
+@property (nonatomic) BOOL HLSSupported;
 @property (nonatomic) BOOL isReconnectingDownloads;
 @property (nonatomic) NSMutableArray<SPDownload*>* pendingDownloads;
 @property (nonatomic) NSMutableArray<SPDownload*>* finishedDownloads;
 @property (nonatomic) SPStatusBarNotificationWindow* notificationWindow;
+@property (nonatomic) NSURLSession* fetchSession;
 @property (nonatomic) NSURLSession* downloadSession;
+@property (nonatomic) AVAssetDownloadURLSession* avDownloadSession;
 @property (nonatomic) NSInteger errorCount;
 @property (nonatomic) NSInteger processedErrorCount;
 @property (nonatomic) NSURL* defaultDownloadURL;
@@ -40,13 +45,19 @@
 - (BOOL)createDownloadDirectoryIfNeeded;
 - (void)migrateFromSandbox;
 
+- (NSURLSession*)sharedDownloadSession;
+- (AVAssetDownloadURLSession*)sharedAVDownloadSession;
+
 - (void)verifyDownloadStorageRevision;
 - (void)configureSession;
+- (void)reconnectDownloads;
+- (void)reconnectHLSDownloads;
+- (void)didFinishReconnectingDownloads;
+- (void)didFinishReconnectingHLSDownloads;
 - (void)clearTempFiles;
 - (void)clearTempFilesIgnorePendingDownloads:(BOOL)ignorePendingDownloads;
 - (void)cancelAllDownloads;
 - (void)clearDownloadHistory;
-- (void)resumeDownloadsFromDiskLoad;
 - (void)forceCancelDownload:(SPDownload*)download;
 
 - (void)downloadFinished:(SPDownload*)download;
@@ -59,7 +70,7 @@
 - (void)loadDownloadsFromDisk;
 - (void)saveDownloadsToDisk;
 
-- (void)sendNotificationWithText:(NSString*)text;
+- (void)sendNotificationWithTitle:(NSString*)title message:(NSString*)message;
 
 - (int64_t)freeDiscspace;
 - (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
@@ -73,7 +84,8 @@
 
 - (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
-- (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier;
+- (SPDownload*)downloadWithTask:(__kindof NSURLSessionTask*)task;
+- (SPDownload*)downloadWithTaskIdentifier:(NSUInteger)identifier isHLS:(BOOL)isHLS;
 - (NSMutableArray*)downloadsAtURL:(NSURL*)url;
 - (BOOL)downloadExistsAtURL:(NSURL*)url;
 
@@ -91,4 +103,7 @@
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentVideoURLNotFoundErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+
+- (void)handleFinishedTask:(__kindof NSURLSessionTask*)task location:(NSURL *)location;
+//- (void)mergeSegmentsAtURL:(NSURL*)segmentURL toFileAtURL:(NSURL*)fileURL;
 @end

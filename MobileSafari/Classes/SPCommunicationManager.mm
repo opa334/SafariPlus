@@ -64,20 +64,6 @@
 	return [[response objectForKey:@"message"] isEqualToString:@"hello"];
 }
 
-//Dispatch libbulletin notification via SpringBoard
-- (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message
-{
-	//Create userInfo to send to SpringBoard
-	NSDictionary* userInfo =
-		@{
-			@"bundleIdentifier" : bundleIdentifier,
-			@"title"            : title,
-			@"message"          : message
-	};
-
-	[_messagingCenter sendMessageName:@"com.opa334.SafariPlus.pushNotification" userInfo:userInfo];
-}
-
 //Executes file operation unsandboxed via SpringBoard
 - (NSDictionary*)executeFileOperationOnSpringBoard:(NSDictionary*)operation
 {
@@ -104,7 +90,7 @@
 	return YES;
 }
 
-- (void)dispatchPushNotificationWithIdentifier:(NSString*)bundleIdentifier title:(NSString*)title message:(NSString*)message
+- (void)dispatchPushNotificationWithTitle:(NSString*)title message:(NSString*)message badgeCount:(NSInteger)badgeCount
 {
 
 }

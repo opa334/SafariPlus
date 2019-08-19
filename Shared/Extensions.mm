@@ -92,6 +92,14 @@
 }
 @end
 
+@interface UITableViewHeaderFooterView (Private)
+- (void)_updateLabelBackgroundColor;
+@end
+
+@interface UITableView (Private)
+- (void)_setupSectionView:(id)arg1 isHeader:(BOOL)arg2 forSection:(NSInteger)arg3;
+@end
+
 @implementation UITableViewController (Fixes)
 
 //Update all header titles (Needed to prevent layout issues in some cases)
@@ -112,12 +120,16 @@
 	[UIView setAnimationsEnabled:YES];
 }
 
-- (void)fixFooterColors
+- (void)fixHeaderColors
 {
-	for(int i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
+	for(NSInteger i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
 	{
-		UITableViewHeaderFooterView* footerView = [self.tableView headerViewForSection:i];
-		footerView.backgroundView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
+		UITableViewHeaderFooterView* headerView = [self.tableView headerViewForSection:i];
+		if([self.tableView.backgroundColor isEqual:headerView.backgroundView.backgroundColor])
+		{
+			headerView.backgroundView.backgroundColor = nil;
+			[self.tableView _setupSectionView:headerView isHeader:YES forSection:i];
+		}
 	}
 }
 @end

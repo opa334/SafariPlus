@@ -20,7 +20,7 @@
 #import "SPFilePickerNavigationController.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
-#import "SPFile.h"
+#import "../../Shared/SPFile.h"
 
 @implementation SPFilePickerTableViewController
 

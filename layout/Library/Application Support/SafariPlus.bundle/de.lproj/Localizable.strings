@@ -58,7 +58,7 @@
 "UPLOAD_ANY_FILE" = "Jede Datei hochladen";
 
 "DOWNLOAD_MANAGER" = "Download-Manager";
-"DOWNLOAD_MANAGER_FOOTER" = "Ein Vollwertiger Download-Manager, direkt in Safari integriert. Ersetzt das standardmäßige Downloadverhalten durch ein Menü mit Downloadoptionen. Über den Toolbar-Button lassen sich aktive und fertige Downloads, sowie auch bereits heruntergeladene Dateien verwalten. Downloads werden im Hintergrund fortgeführt. Wenn Safari vom App Switcher geschlossen wird, werden alle Downloads pausiert und beim nächsten Start fortgeführt.";
+"DOWNLOAD_MANAGER_FOOTER" = "Ein Vollwertiger Download-Manager, direkt in Safari integriert. Ersetzt das standardmäßige Downloadverhalten durch ein Menü mit Downloadoptionen. Über den Toolbar-Button lassen sich aktive und fertige Downloads, sowie auch bereits heruntergeladene Dateien verwalten. Downloads werden im Hintergrund fortgeführt. Wenn Safari im App Switcher geschlossen wird, werden alle Downloads pausiert und beim nächsten Start fortgeführt. Das Herunterladen HLS (m3u8) Streams in eine .movpkg Datei wird auf iOS 10 und höher unterstützt, allerdings kann der Fortschritt dieser Downloads nicht wiederhergestellt werden, nachdem Safari manuell vom App Switcher geschlossen wurde.";
 
 "CONTENT_OPTIONS" = "Inhaltsoptionen";
 
@@ -117,6 +117,9 @@
 
 "STATUS_BAR_NOTIFICATIONS" = "Status-Mitteilungen";
 "STATUS_BAR_NOTIFICATIONS_FOOTER" = "Zeigt eine Mitteilung in der Statusleiste wenn ein Download startet oder endet während die App aktiv ist.";
+
+"APPLICATION_BADGE" = "Applikationskennzeichen";
+"APPLICATION_BADGE_FOOTER" = "Verwendet die Anzahl ausstehender Downloads als das Kennzeichen des Safari Icons.";
 
 /* Usability */
 
@@ -316,6 +319,9 @@
 "LARGE_TITLES" = "Große Titel";
 "LARGE_TITLES_FOOTER" = "Große Titel in jeder Ansicht, welche von Safari Plus hinzugefügt wird.";
 
+"SORT_DIRECTORIES_ABOVE_FILES" = "Ordner oberhalb von Dateien sortieren";
+"SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Sortiert Ordner im Dateibrowser oberhalb von Dateien, normalerweise werden beide zusammen alphabetisch sortiert.";
+
 "DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
 
@@ -360,6 +366,7 @@
 "DOWNLOADS" = "Downloads";
 "FILE_BROWSER" = "Dateibrowser";
 "OPEN" = "Öffnen";
+"SHOW_CONTENT" = "Inhalt anzeigen";
 "OPEN_IN" = "Öffnen in ...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Import in die Musikbibliothek";
 "SAVE_TO_MEDIA_LIBRARY" = "In die Mediathek speichern";
@@ -411,6 +418,7 @@
 "VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden, die aktuelle Seite wird wahrscheinlich nicht unterstützt!";
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
+"DURATION_UNKNOWN" = "Unbekannte Länge";
 "MIGRATION_TITLE" = "Migration abgeschlossen";
 "MIGRATION_MESSAGE" = "Deine Downloads wurden von %@ zu %@ verschoben. Du kannst nun in alle Order herunterladen, in die du willst! (Vorher war dies nur innerhalb des Sandbox-Containers von Safari möglich).";
 "CELLULAR_DATA_WARNING" = "'Nur über WLAN herunterladen' ist in den Einstellungen aktiviert und dein Gerät ist momentan über mobile Daten verbunden. Downloads werden nicht starten bis du dich entweder mit einem WLAN Netzwerk verbindest oder du die Einstellung deaktivierst und Safari neustartest.";
@@ -433,4 +441,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Im normalen Modus öffnen";
 "OPEN_IN_PRIVATE_MODE" = "Im privaten Modus öffnen";
-

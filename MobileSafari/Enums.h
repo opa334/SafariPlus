@@ -65,6 +65,7 @@ enum
 {
 	FileOperation_DirectoryContents,
 	FileOperation_DirectoryContents_URL,
+	FileOperation_DirectoryContents_SPFile,
 	FileOperation_CreateDirectory,
 	FileOperation_CreateDirectory_URL,
 	FileOperation_MoveItem,
@@ -83,7 +84,8 @@ enum
 	FileOperation_ResourceValue_URL,
 	FileOperation_IsWritable,
 	FileOperation_ResolveSymlinks,
-	FileOperation_ResolveSymlinks_URL
+	FileOperation_ResolveSymlinks_URL,
+	FileOperation_DirectorySize_URL
 };
 
 enum

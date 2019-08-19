@@ -50,6 +50,8 @@
 	_iconLabelView.label.text = download.filename;
 	_iconLabelView.iconView.image = [fileManager iconForDownload:download];
 
+	_downloadProgressView.showsDownloadSpeed = ![download isHLSDownload];
+
 	if(preferenceManager.privateModeDownloadHistoryDisabled)
 	{
 		if(download.startedFromPrivateBrowsingMode)
@@ -65,7 +67,7 @@
 
 - (void)setUpContent
 {
-	//Enable seperators between imageViews
+	//Enable separators between imageViews
 	[self setSeparatorInset:UIEdgeInsetsZero];
 
 	//Make cell unselectable
@@ -164,13 +166,31 @@
 
 - (void)filesizeDidChangeForDownload:(SPDownload*)download
 {
-	if(download.filesize <= 0)
+	if(!download.isHLSDownload)
 	{
-		_sizeLabel.text = @"?";
+		if(download.filesize <= 0)
+		{
+			_sizeLabel.text = @"?";
+		}
+		else
+		{
+			_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.filesize countStyle:NSByteCountFormatterCountStyleFile];
+		}
 	}
-	else
+}
+
+- (void)expectedDurationDidChangeForDownload:(SPDownload*)download
+{
+	if(download.isHLSDownload)
 	{
-		_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.filesize countStyle:NSByteCountFormatterCountStyleFile];
+		NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
+		formatter.unitsStyle = NSDateComponentsFormatterUnitsStylePositional;
+		formatter.includesApproximationPhrase = NO;
+		formatter.includesTimeRemainingPhrase = NO;
+		formatter.allowedUnits = NSCalendarUnitMinute | NSCalendarUnitSecond;
+		formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+
+		_sizeLabel.text = [formatter stringFromTimeInterval:download.expectedDuration];
 	}
 }
 
@@ -210,21 +230,46 @@
 
 - (void)progressDidChangeForDownload:(SPDownload*)download shouldAnimateChange:(BOOL)shouldAnimate
 {
-	CGFloat progress;
-	NSString* sizeString = [NSByteCountFormatter stringFromByteCount:download.totalBytesWritten
-				countStyle:NSByteCountFormatterCountStyleFile];
+	CGFloat progress = 0;
+	NSString* sizeString;
 	NSString* percentProgressString;
 
-	if(download.filesize <= 0)
+	if(download.isHLSDownload)
 	{
-		progress = 0;
-		percentProgressString = [localizationManager localizedSPStringForKey:@"SIZE_UNKNOWN"];
+		NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
+		formatter.unitsStyle = NSDateComponentsFormatterUnitsStylePositional;
+		formatter.includesApproximationPhrase = NO;
+		formatter.includesTimeRemainingPhrase = NO;
+		formatter.allowedUnits = NSCalendarUnitMinute | NSCalendarUnitSecond;
+		formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+
+		sizeString = [formatter stringFromTimeInterval:download.secondsLoaded];
+
+		if(download.expectedDuration > 0)
+		{
+			progress = download.secondsLoaded / download.expectedDuration;
+			percentProgressString = [NSString stringWithFormat:@"%.1f%%", progress * 100];
+		}
+		else
+		{
+			percentProgressString = [localizationManager localizedSPStringForKey:@"DURATION_UNKNOWN"];
+		}
 	}
 	else
 	{
-		//Calculate progress and create strings for everything
-		progress = (CGFloat)download.totalBytesWritten / (CGFloat)download.filesize;
-		percentProgressString = [NSString stringWithFormat:@"%.1f%%", progress * 100];
+		sizeString = [NSByteCountFormatter stringFromByteCount:download.totalBytesWritten
+			      countStyle:NSByteCountFormatterCountStyleFile];
+
+		if(download.filesize > 0)
+		{
+			//Calculate progress and create strings for everything
+			progress = (CGFloat)download.totalBytesWritten / (CGFloat)download.filesize;
+			percentProgressString = [NSString stringWithFormat:@"%.1f%%", progress * 100];
+		}
+		else
+		{
+			percentProgressString = [localizationManager localizedSPStringForKey:@"SIZE_UNKNOWN"];
+		}
 	}
 
 	dispatch_async(dispatch_get_main_queue(), ^

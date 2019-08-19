@@ -5,39 +5,6 @@
 
 #define cSelf ((SafariWebView*)self)
 
-//static BOOL fakeUserAgent = YES;
-
-/*%hook NSUserDefaults
-
-   - (id)objectForKey:(NSString*)key
-   {
-        if(fakeUserAgent && (preferenceManager.desktopButtonEnabled || preferenceManager.customUserAgentEnabled) && [key isEqualToString:@"UserAgent"])
-        {
-                NSLog(@"old code");
-                return @"FAKE";
-        }
-
-        return %orig;
-   }
-
-   %end
-
-   //Only used if SafariServices exists (iOS 9 and above)
-   NSString *(*orig_SFCustomUserAgentStringIfNeeded)();
-
-   NSString* custom_SFCustomUserAgentStringIfNeeded()
-   {
-        if(fakeUserAgent && (preferenceManager.desktopButtonEnabled || preferenceManager.customUserAgentEnabled))
-        {
-                NSLog(@"faked user agent");
-                return @"FAKE";
-        }
-
-        NSLog(@"???");
-
-        return orig_SFCustomUserAgentStringIfNeeded();
-   }*/
-
 %hook SafariWebView
 
 %new

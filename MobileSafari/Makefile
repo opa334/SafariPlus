@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = SafariPlus
-SafariPlus_CFLAGS = -fobjc-arc -I$(INCLUDES) -Wno-deprecated-declarations -Wno-unguarded-availability-new
+SafariPlus_CFLAGS = -fobjc-arc -I$(INCLUDES) -I../extern/GPAC4iOS/Classes/include -Wno-deprecated-declarations -Wno-unguarded-availability-new
 SafariPlus_FILES = Util.xm
 SafariPlus_FILES += $(wildcard Hooks/*.xm Classes/*.mm Classes/*.xm ../Shared/*.mm)
 

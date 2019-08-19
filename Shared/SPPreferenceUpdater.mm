@@ -45,7 +45,6 @@
 	BOOL mergeNeeded = [self needsMerge];
 
 	#ifndef PREFERENCES
-	NSLog(@"preferenceManager=%@", preferenceManager);
 	HBPreferences* preferences = [preferenceManager preferences];
   #else
 	NSUserDefaults* preferences = [[NSUserDefaults alloc] initWithSuiteName:preferenceDomainName];

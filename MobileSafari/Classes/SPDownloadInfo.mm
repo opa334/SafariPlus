@@ -19,6 +19,9 @@
 #import "SPDownload.h"
 #import "../Util.h"
 #import "SPFileManager.h"
+#import "SPDownloadManager.h"
+
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @implementation SPDownloadInfo
 
@@ -69,4 +72,31 @@
 		[fileManager removeItemAtURL:[self pathURL] error:nil];
 	}
 }
+
+- (void)updateHLSForSuggestedFilename:(NSString*)suggestedFilename
+{
+	if(!downloadManager.HLSSupported)
+	{
+		self.isHLSDownload = NO;
+		return;
+	}
+
+	CFStringRef suggestedFileExtension = (__bridge CFStringRef)[suggestedFilename pathExtension];
+	CFStringRef suggestedFileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, suggestedFileExtension, NULL);
+	if(UTTypeConformsTo(suggestedFileUTI, kUTTypePlaylist))
+	{
+		self.isHLSDownload = YES;
+	}
+	else
+	{
+		self.isHLSDownload = NO;
+	}
+
+	if(self.isHLSDownload)
+	{
+		self.filename = [[self.filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"movpkg"];
+		self.filesize = 0;
+	}
+}
+
 @end

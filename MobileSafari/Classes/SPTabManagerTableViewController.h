@@ -37,6 +37,7 @@
 - (instancetype)initWithTabController:(TabController*)tabController;
 - (void)setUpTopBar;
 - (void)setUpBottomToolbar;
+- (void)updateBottomToolbarButtonAvailability;
 - (NSArray<TabDocument*>*)activeTabs;
 - (UIViewController*)presentationController;
 - (TabDocument*)tabDocumentForIndexPath:(NSIndexPath*)indexPath;

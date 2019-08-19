@@ -342,7 +342,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface _SFDialogController : NSObject
 - (void)_dismissDialog;
-- (void)_dismissDialogWithAdditionalAnimations:(id)arg1;
+- (void)_dismissCurrentDialogWithResponse:(NSDictionary*)arg1;
 @end
 
 @interface _SFDimmingButton : UIButton
@@ -600,6 +600,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (readonly, nonatomic) BrowserToolbar* bottomToolbar;
 @property (readonly, nonatomic) NavigationBar* navigationBar;
 @property (nonatomic, getter=isShowingTabBar) BOOL showingTabBar;
+@property (nonatomic, weak) UIView<TabThumbnailCollectionView>* tabThumbnailCollectionView;
 @end
 
 @interface BrowserToolbar : _SFToolbar
@@ -807,6 +808,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)updateUserAgents;
 - (void)toggleLockedStateForItem:(id<TabCollectionItem>)item;
 - (void)toggleLockedStateForTabDocument:(TabDocument*)tabDocument;
+- (void)setLocked:(BOOL)locked forTabDocuments:(NSArray<TabDocument*>*)tabDocuments;
 - (void)tabManagerDidClose;
 - (void)tiltedTabViewTabManagerButtonPressed;
 @end

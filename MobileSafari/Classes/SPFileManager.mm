@@ -24,7 +24,8 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
-#import "SPFile.h"
+#import "../../Shared/SPFile.h"
+#import "../../Shared/NSFileManager+DirectorySize.h"
 #import "SPDownload.h"
 
 #import <QuickLook/QuickLook.h>
@@ -417,6 +418,25 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return [super linkItemAtURL:srcURL toURL:dstURL error:error];
 }
 
+- (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error
+{
+	if(rocketBootstrapWorks && _isSandboxed)
+	{
+		if(![self isURLReadable:URL])
+		{
+			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectoryContents_SPFile];
+
+			NSMutableDictionary* operation = [NSMutableDictionary new];
+			addToDict(operation, operationType, @"operationType");
+			addToDict(operation, URL, @"url");
+
+			return [execute(operation, error) objectForKey:@"return"];
+		}
+	}
+
+	return [SPFile filesAtURL:URL error:error];
+}
+
 - (BOOL)fileExistsAtPath:(NSString*)path
 {
 	if(rocketBootstrapWorks && _isSandboxed)
@@ -599,7 +619,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 	if(rocketBootstrapWorks && _isSandboxed)
 	{
-		if([self isURLReadable:url])
+		if(![self isURLReadable:url])
 		{
 			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResolveSymlinks_URL];
 
@@ -629,7 +649,31 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return resolvedURL;
 }
 
+- (NSUInteger)sizeOfDirectoryAtURL:(NSURL*)directoryURL
+{
+	if(rocketBootstrapWorks && _isSandboxed)
+	{
+		if(![self isURLReadable:directoryURL])
+		{
+			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectorySize_URL];
+
+			NSMutableDictionary* operation = [NSMutableDictionary new];
+			addToDict(operation, operationType, @"operationType");
+			addToDict(operation, directoryURL, @"url");
+
+			return [(NSNumber*)[execute(operation, nil) objectForKey:@"return"] unsignedIntegerValue];
+		}
+	}
+
+	return [super sizeOfDirectoryAtURL:directoryURL];
+}
+
 #else
+
+- (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error
+{
+	return [SPFile filesAtURL:URL error:error];
+}
 
 - (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error
 {
@@ -690,14 +734,28 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (UIImage*)iconForDownload:(SPDownload*)download
 {
-	LSDocumentProxy* documentProxy = [LSDocumentProxy documentProxyForName:download.filename type:nil MIMEType:nil];
+	NSString* filename = download.filename;
+	if([filename.pathExtension isEqualToString:@"movpkg"])
+	{
+		filename = @"a.mp4";
+	}
+	LSDocumentProxy* documentProxy = [LSDocumentProxy documentProxyForName:filename type:nil MIMEType:nil];
 
 	return [self fileIconForDocumentProxy:documentProxy];
 }
 
 - (UIImage*)iconForFile:(SPFile*)file
 {
-	LSDocumentProxy* documentProxy = [LSDocumentProxy documentProxyForName:nil type:(__bridge NSString*)file.fileUTI MIMEType:nil];
+	LSDocumentProxy* documentProxy;
+
+	if([file isHLSStream])
+	{
+		documentProxy = [LSDocumentProxy documentProxyForName:@"a.mp4" type:nil MIMEType:nil];
+	}
+	else
+	{
+		documentProxy = [LSDocumentProxy documentProxyForName:nil type:(__bridge NSString*)file.fileUTI MIMEType:nil];
+	}
 
 	return [self fileIconForDocumentProxy:documentProxy];
 }

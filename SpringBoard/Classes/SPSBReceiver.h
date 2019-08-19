@@ -24,7 +24,6 @@
 }
 
 - (NSDictionary*)testConnection:(NSString*)name withUserInfo:(NSDictionary*)userInfo;
-- (NSDictionary*)pushBulletin:(NSString*)name withUserInfo:(NSDictionary*)userInfo;
 - (NSDictionary*)handleFileOperation:(NSString*)name withUserInfo:(NSDictionary*)serializedUserInfo;
 //- (NSDictionary*)importToMusicLibrary:(NSString*)name withUserInfo:(NSDictionary*)serializedUserInfo;
 - (NSDictionary*)getApplicationDisplayNames:(NSString*)name withUserInfo:(NSDictionary*)userInfo;

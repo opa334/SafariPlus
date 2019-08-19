@@ -25,6 +25,8 @@
 #import "../Classes/SPCommunicationManager.h"
 #import "../Shared/SPPreferenceUpdater.h"
 
+#import <UserNotifications/UserNotifications.h>
+
 %hook Application
 
 %new
@@ -55,6 +57,23 @@
 	{
 		downloadManager = [SPDownloadManager sharedInstance];
 		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
+		{
+			UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+			UNAuthorizationOptions options = UNAuthorizationOptionAlert + UNAuthorizationOptionSound;
+			[center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error){}];
+		}
+		else
+		{
+			UIUserNotificationSettings* settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
+			[self registerUserNotificationSettings:settings];
+		}
+	}
+
+	if(!preferenceManager.applicationBadgeEnabled && self.applicationIconBadgeNumber > 0)
+	{
+		self.applicationIconBadgeNumber = 0;
 	}
 
 	if(preferenceManager.lockedTabsEnabled)

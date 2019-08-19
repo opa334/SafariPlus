@@ -52,7 +52,7 @@
 				<key>label</key>
 				<string>DOWNLOAD_MANAGER</string>
 				<key>nestedEntryCount</key>
-				<integer>32</integer>
+				<integer>34</integer>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -433,6 +433,28 @@
 				<string>statusBarNotificationsEnabled</string>
 				<key>label</key>
 				<string>STATUS_BAR_NOTIFICATIONS</string>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>footerText</key>
+				<string>APPLICATION_BADGE_FOOTER</string>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>key</key>
+				<string>applicationBadgeEnabled</string>
+				<key>label</key>
+				<string>APPLICATION_BADGE</string>
 			</dict>
 		</array>
 		<key>title</key>

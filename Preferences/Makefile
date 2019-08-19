@@ -2,7 +2,7 @@ include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = SafariPlusPrefs
 SafariPlusPrefs_CFLAGS = -fobjc-arc -I$(INCLUDES) -D PREFERENCES=1
-SafariPlusPrefs_FILES = ../MobileSafari/Classes/SPFileManager.mm ../MobileSafari/Classes/SPFileBrowserTableViewController.mm ../MobileSafari/Classes/SPFileBrowserNavigationController.mm ../MobileSafari/Classes/SPCellIconLabelView.mm ../MobileSafari/Classes/SPFileTableViewCell.mm ../MobileSafari/Classes/SPFile.mm ../MobileSafari/Classes/SPLocalizationManager.mm
+SafariPlusPrefs_FILES = ../MobileSafari/Classes/SPFileManager.mm ../MobileSafari/Classes/SPFileBrowserTableViewController.mm ../MobileSafari/Classes/SPFileBrowserNavigationController.mm ../MobileSafari/Classes/SPCellIconLabelView.mm ../MobileSafari/Classes/SPFileTableViewCell.mm ../MobileSafari/Classes/SPLocalizationManager.mm
 SafariPlusPrefs_FILES += $(wildcard *.mm ../Shared/*.mm)
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit

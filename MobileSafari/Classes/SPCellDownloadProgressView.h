@@ -15,11 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @interface SPCellDownloadProgressView : UIView
+{
+	NSArray<NSLayoutConstraint*>* _downloadSpeedShownConstraints;
+	NSArray<NSLayoutConstraint*>* _downloadSpeedNotShownConstraints;
+}
 @property (nonatomic) UILabel* sizeProgressLabel;
-@property (nonatomic) UILabel* sizeSpeedSeperatorLabel;
+@property (nonatomic) UILabel* sizeSpeedSeparatorLabel;
 @property (nonatomic) UILabel* downloadSpeedLabel;
 @property (nonatomic) UIProgressView* progressView;
 @property (nonatomic) UILabel* percentProgressLabel;
+@property (nonatomic) BOOL showsDownloadSpeed;
 
 - (void)setUpConstraints;
 - (void)setColor:(UIColor*)color;
