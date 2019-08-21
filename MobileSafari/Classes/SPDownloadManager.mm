@@ -57,7 +57,7 @@
 {
 	self = [super init];
 
-	if(NSClassFromString(@"AVAssetDownloadURLSession"))
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
 	{
 		self.HLSSupported = YES;
 	}

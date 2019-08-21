@@ -58,7 +58,7 @@
 "UPLOAD_ANY_FILE" = "Jede Datei hochladen";
 
 "DOWNLOAD_MANAGER" = "Download-Manager";
-"DOWNLOAD_MANAGER_FOOTER" = "Ein Vollwertiger Download-Manager, direkt in Safari integriert. Ersetzt das standardmäßige Downloadverhalten durch ein Menü mit Downloadoptionen. Über den Toolbar-Button lassen sich aktive und fertige Downloads, sowie auch bereits heruntergeladene Dateien verwalten. Downloads werden im Hintergrund fortgeführt. Wenn Safari im App Switcher geschlossen wird, werden alle Downloads pausiert und beim nächsten Start fortgeführt. Das Herunterladen HLS (m3u8) Streams in eine .movpkg Datei wird auf iOS 10 und höher unterstützt, allerdings kann der Fortschritt dieser Downloads nicht wiederhergestellt werden, nachdem Safari manuell vom App Switcher geschlossen wurde.";
+"DOWNLOAD_MANAGER_FOOTER" = "Ein Vollwertiger Download-Manager, direkt in Safari integriert. Ersetzt das standardmäßige Downloadverhalten durch ein Menü mit Downloadoptionen. Über den Toolbar-Button lassen sich aktive und fertige Downloads, sowie auch bereits heruntergeladene Dateien verwalten. Downloads werden im Hintergrund fortgeführt. Wenn Safari im App Switcher geschlossen wird, werden alle Downloads pausiert und beim nächsten Start fortgeführt. Das Herunterladen von HLS (m3u8) Streams in eine .movpkg Datei wird ab iOS 10 unterstützt, allerdings kann der Fortschritt dieser Downloads nicht wiederhergestellt werden wenn Safari manuell vom App Switcher geschlossen wurde.";
 
 "CONTENT_OPTIONS" = "Inhaltsoptionen";
 

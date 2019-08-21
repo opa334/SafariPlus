@@ -18,9 +18,10 @@
 #import "Extensions.h"
 #import "NSFileManager+DirectorySize.h"
 
+#import "../MobileSafari/Defines.h"
+
 #if !SPRINGBOARD
 #import "../MobileSafari/Util.h"
-#import "../MobileSafari/Defines.h"
 #import "../MobileSafari/Classes/SPFileManager.h"
 #else
 NSFileManager* fileManager = [NSFileManager defaultManager];
@@ -144,7 +145,7 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 
 - (BOOL)isHLSStream
 {
-	if(!NSClassFromString(@"AVAssetDownloadURLSession"))
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_0)
 	{
 		return NO;
 	}
