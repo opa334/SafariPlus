@@ -1,18 +1,22 @@
-// SafariPlus.h
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #ifdef SIMJECT
 #import "substrate.h"
@@ -194,10 +198,6 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 - (BOOL)saveBookmark:(id)arg1;
 @end
 
-/*@interface NSKeyedUnarchiver (Private)
- + (id)unarchivedObjectOfClass:(Class)cls fromData:(NSData*)data error:(NSError**)error;
-   @end*/
-
 /**** WebKit ****/
 
 @interface WKContentView : UIView
@@ -245,65 +245,6 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 
 @interface _WKWebsitePolicies : NSObject
 @end
-
-/**** WebCore ****/
-
-// *INDENT-OFF*
-/*
-namespace WTF
-{
-	class StringImpl
-	{
-	public:
-		unsigned m_refCount;
-    unsigned m_length;
-		union
-		{
-        const char* m_data8;
-        const char16_t* m_data16;
-        const char* m_data8Char;
-        const char16_t* m_data16Char;
-    };
-		mutable unsigned m_hashAndFlags;
-	};
-
-	class String
-	{
-	public:
-		StringImpl* m_impl;
-	};
-}
-
-#define m_currentSrc_off 159
-
-namespace WebCore
-{
-	class URL
-	{
-	public:
-		operator NSURL*() const;
-	};
-
-	class HTMLMediaElement
-	{
-	public:
-	};
-
-	class PlaybackSessionModel
-	{
-	public:
-		virtual void pause() = 0;
-	};
-
-	class PlaybackSessionModelMediaElement final : public PlaybackSessionModel// final
-	{
-	public:
-		//HTMLMediaElement* m_mediaElement; //This works because this is the first attribute, for everything else we have to add the offset to the object
-		virtual void pause();
-	};
-}
-*/
-// *INDENT-ON*
 
 /**** MediaRemote ****/
 extern "C"
