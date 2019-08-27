@@ -30,5 +30,6 @@
 - (NSString*)title;
 - (void)removeUnsupportedSpecifiers:(NSMutableArray*)specifiers;
 - (void)removeDisabledGroups:(NSMutableArray*)specifiers;
+- (void)openTwitterWithUsername:(NSString*)username;
 - (void)closeKeyboard;
 @end

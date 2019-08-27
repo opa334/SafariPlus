@@ -134,9 +134,9 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>detail</key>
-				<string>SPPCreditsListController</string>
+				<string>SPPCreditsLicensesListController</string>
 				<key>label</key>
-				<string>CREDITS</string>
+				<string>CREDITS_AND_LICENSES</string>
 			</dict>
 			<dict>
 				<key>action</key>

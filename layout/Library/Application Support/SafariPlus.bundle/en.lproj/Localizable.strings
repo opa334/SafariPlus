@@ -16,7 +16,7 @@
 "ABOUT_THIS_TWEAK" = "About this Tweak";
 "TWEAK_SPECIFIC_SETTINGS" = "Tweak Specific Settings";
 "SOURCE_CODE" = "Source Code";
-"CREDITS" = "Credits";
+"CREDITS_AND_LICENSES" = "Credits & Licenses";
 
 "ABOUT_ME" = "About me";
 "FOLLOW_ME_ON_TWITTER" = "Follow me on Twitter";
@@ -330,7 +330,10 @@
 
 /* Credits */
 
-"PICKER_INSPIRED" = "File picker inspired by";
+"LIBSUBSTITRATE_FOOTER" = "Parts of libSubstitrate are used to make fetching the video URL possible on Substitute based jailbreaks";
+"DEVELOPED_BY_POOMSMART" = "Developed by PoomSmart";
+
+"SAFARI_PLUS_LICENSE" = "Safari Plus License";
 
 /* In app */
 

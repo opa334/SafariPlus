@@ -42,7 +42,7 @@
 {
 	_download = download;
 
-	[self setFilesize:_download.filesize];
+	[self updateFilesizeForDownload:_download];
 
 	_iconLabelView.label.text = download.filename;
 	_iconLabelView.iconView.image = [fileManager iconForDownload:download];
@@ -141,15 +141,29 @@
 	_buttonsView.displaysBottomButton = (fileExists && !_download.wasCancelled);
 }
 
-- (void)setFilesize:(int64_t)filesize
+- (void)updateFilesizeForDownload:(SPDownload*)download
 {
-	if(filesize <= 0)
+	if(download.filesize <= 0)
 	{
-		_sizeLabel.text = @"?";
+		if(download.isHLSDownload && download.expectedDuration > 0) //Fall back to expected duration if possible
+		{
+			NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
+			formatter.unitsStyle = NSDateComponentsFormatterUnitsStylePositional;
+			formatter.includesApproximationPhrase = NO;
+			formatter.includesTimeRemainingPhrase = NO;
+			formatter.allowedUnits = NSCalendarUnitMinute | NSCalendarUnitSecond;
+			formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+
+			_sizeLabel.text = [formatter stringFromTimeInterval:download.expectedDuration];
+		}
+		else
+		{
+			_sizeLabel.text = @"?";
+		}
 	}
 	else
 	{
-		_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:filesize countStyle:NSByteCountFormatterCountStyleFile];
+		_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.filesize countStyle:NSByteCountFormatterCountStyleFile];
 	}
 }
 

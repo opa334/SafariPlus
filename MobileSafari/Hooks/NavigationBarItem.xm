@@ -4,11 +4,11 @@
 
 %hook NavigationBarItem
 
-- (void)setText:(id)arg1 textWhenExpanded:(id)arg2 startIndex:(NSUInteger)arg3
+- (void)setText:(NSString*)text textWhenExpanded:(NSString*)textWhenExpanded startIndex:(NSUInteger)startIndex
 {
 	if(preferenceManager.showFullSiteURLEnabled)
 	{
-		%orig(arg2, arg2, arg3);
+		%orig(textWhenExpanded, textWhenExpanded, startIndex);
 	}
 	else
 	{

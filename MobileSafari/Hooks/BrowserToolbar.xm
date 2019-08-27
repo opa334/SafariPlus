@@ -610,14 +610,21 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				{
 					BOOL tabBarTweakActive = NO;
 
-					if([browserControllerForBrowserToolbar(self) respondsToSelector:@selector(_shouldShowTabBar)])
+					if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
 					{
-						tabBarTweakActive = [browserControllerForBrowserToolbar(self) _shouldShowTabBar] && [browserControllers() count] <= 1;
+						tabBarTweakActive = [self respondsToSelector:@selector(addTabItemManual)];
 					}
 					else
 					{
-						[browserControllerForBrowserToolbar(self) updateUsesTabBar];
-						tabBarTweakActive = browserControllerForBrowserToolbar(self).tabController.usesTabBar;
+						if([browserControllerForBrowserToolbar(self) respondsToSelector:@selector(_shouldShowTabBar)])
+						{
+							tabBarTweakActive = [browserControllerForBrowserToolbar(self) _shouldShowTabBar] && [browserControllers() count] <= 1;
+						}
+						else
+						{
+							[browserControllerForBrowserToolbar(self) updateUsesTabBar];
+							tabBarTweakActive = browserControllerForBrowserToolbar(self).tabController.usesTabBar;
+						}
 					}
 
 					if(tabBarTweakActive)

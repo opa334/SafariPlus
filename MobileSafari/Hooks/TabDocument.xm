@@ -397,7 +397,7 @@ static BOOL fakeOpenLinksValue = NO;
 	BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
 	//URL long pressed
-	if(element.URL && ![element.URL.absoluteString isEqualToString:@""])
+	if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && ![element.URL.absoluteString hasPrefix:@"javascript:"])
 	{
 		//Get browsing status
 		BOOL privateBrowsing = privateBrowsingEnabled(browserController);
@@ -517,7 +517,7 @@ static BOOL fakeOpenLinksValue = NO;
 
 	if(preferenceManager.downloadManagerEnabled)
 	{
-		if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && preferenceManager.downloadSiteToActionEnabled)
+		if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && ![element.URL.absoluteString hasPrefix:@"javascript:"] && preferenceManager.downloadSiteToActionEnabled)
 		{
 			_WKElementAction* downloadSiteToAction;
 

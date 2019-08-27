@@ -16,5 +16,5 @@
 
 #import "SPPListController.h"
 
-@interface SPPCreditsListController : SPPListController
+@interface SPPCreditsLicensesListController : SPPListController
 @end

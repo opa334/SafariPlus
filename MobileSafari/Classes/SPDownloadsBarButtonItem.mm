@@ -98,7 +98,7 @@
 	_itemView.progressViewHidden = [dm runningDownloadsCount] == 0;
 }
 
--(void)setEnabled:(BOOL)arg1
+- (void)setEnabled:(BOOL)arg1
 {
 	[super setEnabled:arg1];
 	[_itemView downloadsButton].enabled = arg1;

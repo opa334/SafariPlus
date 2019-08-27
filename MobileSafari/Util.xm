@@ -341,7 +341,6 @@ BOOL browserControllerIsShowingTabView(BrowserController* browserController)
 	}
 	else
 	{
-		NSLog(@"2");
 		return MSHookIvar<BOOL>(browserController, "_showingTabView");
 	}
 }

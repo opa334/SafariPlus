@@ -313,9 +313,34 @@
 }
 
 //Full screen scrolling
+
+//iOS 9-10.2 (method doesn't exist on 8)
 - (BOOL)_isVerticallyConstrained
 {
-	return (preferenceManager.fullscreenScrollingEnabled) ? YES : %orig;
+	if(preferenceManager.fullscreenScrollingEnabled)
+	{
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_3)
+		{
+			return YES;
+		}
+	}
+
+	return %orig;
+}
+
+
+//iOS 8,10.3+ (causes status bar flickering on iOS <=10.2, on iOS 8 we use it anyways cause it's the only thing that works on there)
+- (BOOL)fullScreenInPortrait
+{
+	if(preferenceManager.fullscreenScrollingEnabled)
+	{
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0 || kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_3)
+		{
+			return YES;
+		}
+	}
+
+	return %orig;
 }
 
 //Fully disable private mode

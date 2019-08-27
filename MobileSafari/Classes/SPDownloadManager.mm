@@ -31,6 +31,7 @@
 #import "SPStatusBarNotification.h"
 #import "SPStatusBarNotificationWindow.h"
 #import "SPFileManager.h"
+#import "SPMediaFetcher.h"
 
 #import "Extensions.h"
 
@@ -1014,75 +1015,28 @@
 		[downloadInfo.sourceVideo.downloadButton setSpinning:YES];
 	}
 
-	NSString* fetchVideoURL = [NSString stringWithFormat:
-				   @"var videos = document.querySelectorAll('video');"
-				   @"var i = 0;"
-				   @"while(i < videos.length)"
-				   @"{"
-				   @"if(videos[i].webkitDisplayingFullscreen)"
-				   @"{"
-				   @"videos[i].currentSrc;"
-				   @"break;"
-				   @"}"
-				   @"i++;"
-				   @"}"];
-
-	NSArray<BrowserController*>* bcs = browserControllers();
-	__weak SPDownloadInfo* _downloadInfo = downloadInfo;
-	__block BOOL hasFoundVideoURL = NO;
-
-	//Check all active webViews (2 at most) for the video URL
-	for(BrowserController* bc in bcs)
+	[SPMediaFetcher getURLForCurrentlyPlayingMediaWithCompletionHandler:^(NSURL* URL)
 	{
-		[bc.tabController.activeTabDocument.webView evaluateJavaScript:fetchVideoURL completionHandler:^(id result, NSError *error)
+		if(URL)
 		{
-			if([result isKindOfClass:NSString.class])
+			downloadInfo.request = [NSURLRequest requestWithURL:URL];
+
+			if(browserControllers().count == 1)
 			{
-				hasFoundVideoURL = YES;
-				NSURL* videoURL = [NSURL URLWithString:result];
-				downloadInfo.request = [NSURLRequest requestWithURL:videoURL];
-				downloadInfo.sourceDocument = bc.tabController.activeTabDocument;
-
-				[self prepareDownloadFromRequestForDownloadInfo:downloadInfo];
+				downloadInfo.sourceDocument = browserControllers().firstObject.tabController.activeTabDocument;
 			}
-			else if(bc == bcs.lastObject && !hasFoundVideoURL)
+
+			[self prepareDownloadFromRequestForDownloadInfo:downloadInfo];
+		}
+		else
+		{
+			if(downloadInfo.sourceVideo)
 			{
-				[downloadInfo.sourceVideo setBackgroundPlaybackActiveWithCompletion:^
-				{
-					// *INDENT-OFF*
-					MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(CFDictionaryRef information)
-					{
-						NSDictionary* info = (__bridge NSDictionary*)(information);
-
-						//This whole method of retrieving the video url only works because it is set as the title by Safari / WebKit, hopefully that doesn't change in the future
-						//Plot Twist: It did change in iOS 12 :(
-						NSURL* videoURL = [NSURL URLWithString:[info objectForKey:(__bridge NSString*)(kMRMediaRemoteNowPlayingInfoTitle)]];
-
-						if(videoURL)
-						{
-							_downloadInfo.request = [NSURLRequest requestWithURL:videoURL];
-
-							if(bcs.count == 1)
-							{
-								_downloadInfo.sourceDocument = bc.tabController.activeTabDocument;
-							}
-
-							[self prepareDownloadFromRequestForDownloadInfo:_downloadInfo];
-						}
-						else
-						{
-							if(_downloadInfo.sourceVideo)
-							{
-								[_downloadInfo.sourceVideo.downloadButton setSpinning:NO];
-							}
-							[self presentVideoURLNotFoundErrorWithDownloadInfo:_downloadInfo];
-						}
-					});
-					// *INDENT-ON*
-				}];
+				[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
 			}
-		}];
-	}
+			[self presentVideoURLNotFoundErrorWithDownloadInfo:downloadInfo];
+		}
+	}];
 }
 
 - (void)prepareDownloadFromRequestForDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -1105,27 +1059,27 @@
 
 		//After 5 seconds we cancel the task and error out
 		/*dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
-		{
-			if(dataTask.state == NSURLSessionTaskStateRunning)
-			{
-				[dataTask cancel];
-				self.requestFetchDownloadInfo = nil;
+		   {
+		        if(dataTask.state == NSURLSessionTaskStateRunning)
+		        {
+		                [dataTask cancel];
+		                self.requestFetchDownloadInfo = nil;
 
-				if(downloadInfo.sourceVideo)
-				{
-					[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
-				}
+		                if(downloadInfo.sourceVideo)
+		                {
+		                        [downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+		                }
 
-				UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
-								 message:[localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"] preferredStyle:UIAlertControllerStyleAlert];
+		                UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+		                                                 message:[localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"] preferredStyle:UIAlertControllerStyleAlert];
 
-				UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
+		                UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
 
-				[errorAlert addAction:closeAction];
+		                [errorAlert addAction:closeAction];
 
-				[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
-			}
-		});*/
+		                [downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+		        }
+		   });*/
 	}
 }
 
@@ -1516,11 +1470,6 @@
 
 - (void)URLSession:(NSURLSession *)session assetDownloadTask:(AVAssetDownloadTask *)assetDownloadTask didFinishDownloadingToURL:(NSURL *)location
 {
-	if(assetDownloadTask.error.code == -999)
-	{
-		return;
-	}
-
 	[self handleFinishedTask:assetDownloadTask location:location];
 }
 
@@ -1531,6 +1480,12 @@
 
 	if(!download)
 	{
+		return;
+	}
+
+	if(download.wasCancelled)
+	{
+		[fileManager removeItemAtURL:location error:nil];
 		return;
 	}
 
@@ -1589,50 +1544,50 @@
 
 //Not used, at least not for now
 /*- (void)mergeSegmentsAtURL:(NSURL*)segmentURL toFileAtURL:(NSURL*)fileURL
-{
-	NSArray<NSURL*>* fragments = [fileManager contentsOfDirectoryAtURL:segmentURL includingPropertiesForKeys:nil options:nil error:nil];
+   {
+        NSArray<NSURL*>* fragments = [fileManager contentsOfDirectoryAtURL:segmentURL includingPropertiesForKeys:nil options:nil error:nil];
 
-	NSMutableArray<NSURL*>* fragmentsM = [fragments mutableCopy];
+        NSMutableArray<NSURL*>* fragmentsM = [fragments mutableCopy];
 
-	//filter out everything that is no fragment
-	for(NSURL* item in [fragments reverseObjectEnumerator])
-	{
-		if(![[item pathExtension] isEqualToString:@"frag"])
-		{
-			[fragmentsM removeObject:item];
-		}
-	}
+        //filter out everything that is no fragment
+        for(NSURL* item in [fragments reverseObjectEnumerator])
+        {
+                if(![[item pathExtension] isEqualToString:@"frag"])
+                {
+                        [fragmentsM removeObject:item];
+                }
+        }
 
-	//sort alphabetically
-	[fragmentsM sortUsingComparator:^NSComparisonResult (NSURL* a, NSURL* b)
-	{
-		return [a.lastPathComponent caseInsensitiveCompare:b.lastPathComponent];
-	}];
+        //sort alphabetically
+        [fragmentsM sortUsingComparator:^NSComparisonResult (NSURL* a, NSURL* b)
+        {
+                return [a.lastPathComponent caseInsensitiveCompare:b.lastPathComponent];
+        }];
 
-	if(fragmentsM.count == 0)
-	{
-		return;
-	}
+        if(fragmentsM.count == 0)
+        {
+                return;
+        }
 
-	//merge everything
-	NSMutableData* data;
+        //merge everything
+        NSMutableData* data;
 
-	BOOL first = YES;
+        BOOL first = YES;
 
-	for(NSURL* fragment in fragmentsM)
-	{
-		if(first)
-		{
-			first = NO;
-			data = [NSMutableData dataWithContentsOfURL:fragment];
-			continue;
-		}
+        for(NSURL* fragment in fragmentsM)
+        {
+                if(first)
+                {
+                        first = NO;
+                        data = [NSMutableData dataWithContentsOfURL:fragment];
+                        continue;
+                }
 
-		[data appendData:[NSData dataWithContentsOfURL:fragment]];
-	}
+                [data appendData:[NSData dataWithContentsOfURL:fragment]];
+        }
 
-	NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[fileURL lastPathComponent]];
-	[data writeToURL:tmpURL atomically:NO];
-}*/
+        NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[fileURL lastPathComponent]];
+        [data writeToURL:tmpURL atomically:NO];
+   }*/
 
 @end

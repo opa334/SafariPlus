@@ -59,7 +59,6 @@
 @protocol SourceVideoDelegate
 @required
 @property (nonatomic,retain) AVActivityButton* downloadButton;
-- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion;
 @end
 
 @protocol SPDirectoryPickerDelegate

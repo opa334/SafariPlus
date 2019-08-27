@@ -21,13 +21,87 @@
 #import "../Classes/SPPreferenceManager.h"
 
 @interface SPSearchEngineInfo : SearchEngineInfo
+@property (nonatomic,retain) NSString *beforeSearchTermString;
+@property (nonatomic,retain) NSString *afterSearchTermString;
+- (void)setUpSearchURLTemplateString;
+- (NSString*)sp_userVisibleQueryFromSearchURL:(NSString*)searchURL;
 @end
 
+static NSString* stringWithSchemeStripped(NSString* oldString)
+{
+	NSString* strippedString = oldString;
+
+	NSRange dividerRange = [strippedString rangeOfString:@"://"];
+	if(dividerRange.location != NSNotFound)
+	{
+		NSUInteger divide = NSMaxRange(dividerRange);
+		strippedString = [strippedString substringFromIndex:divide];
+	}
+
+	if([strippedString hasPrefix:@"www."])
+	{
+		strippedString = [strippedString substringFromIndex:4];
+	}
+
+	return strippedString;
+}
+
+#define spseiSelf ((SPSearchEngineInfo*)self)
+
 %subclass SPSearchEngineInfo : SearchEngineInfo
+
+%property (nonatomic,retain) NSString *beforeSearchTermString;
+%property (nonatomic,retain) NSString *afterSearchTermString;
+
+%new
+- (void)setUpSearchURLTemplateString
+{
+	NSString* searchEngineURL = stringWithSchemeStripped(preferenceManager.customSearchEngineURL);
+
+	NSRange searchTermRange = [searchEngineURL rangeOfString:@"{searchTerms}"];
+	if(searchTermRange.location != NSNotFound)
+	{
+		NSRange beforeSearchTermRange, afterSearchTermRange;
+
+		beforeSearchTermRange = NSMakeRange(0, searchTermRange.location);
+		self.beforeSearchTermString = [searchEngineURL substringWithRange:beforeSearchTermRange];
+
+		afterSearchTermRange = NSMakeRange(NSMaxRange(searchTermRange), searchEngineURL.length - NSMaxRange(searchTermRange));
+		self.afterSearchTermString = [searchEngineURL substringWithRange:afterSearchTermRange];
+	}
+}
 
 - (NSString*)displayName
 {
 	return self.shortName;
+}
+
+%new
+- (NSString*)sp_userVisibleQueryFromSearchURL:(NSString*)searchURL
+{
+	NSString* strippedSearchURL = stringWithSchemeStripped(searchURL);
+
+	if(self.beforeSearchTermString && self.afterSearchTermString)
+	{
+		if(([strippedSearchURL hasPrefix:self.beforeSearchTermString] || [self.beforeSearchTermString isEqualToString:@""]) && ([strippedSearchURL hasSuffix:self.afterSearchTermString] || [self.afterSearchTermString isEqualToString:@""]))
+		{
+			return [[[strippedSearchURL substringWithRange:NSMakeRange(self.beforeSearchTermString.length, strippedSearchURL.length - self.beforeSearchTermString.length - self.afterSearchTermString.length)] stringByReplacingOccurrencesOfString:@"+" withString:@" "] stringByRemovingPercentEncoding];
+		}
+	}
+
+	return nil;
+}
+
+//iOS >= 9
+- (NSString*)userVisibleQueryFromSearchURL:(NSURL*)searchURL
+{
+	return [self sp_userVisibleQueryFromSearchURL:searchURL.absoluteString];
+}
+
+//iOS 8
+- (NSString*)queryForSearchURL:(NSString*)searchURL
+{
+	return [self sp_userVisibleQueryFromSearchURL:searchURL];
 }
 
 %end
@@ -40,12 +114,20 @@
 {
 	%orig;
 
-	if(preferenceManager.customSearchEngineEnabled)
+	if(preferenceManager.customSearchEngineEnabled && [preferenceManager.customSearchEngineURL containsString:@"{searchTerms}"])
 	{
 		if(!self.customSearchEngine)
 		{
-			self.customSearchEngine = [%c(SearchEngineInfo) engineFromDictionary:@{@"SearchEngineID" : @1337, @"SearchURLTemplate" : preferenceManager.customSearchEngineURL, @"SuggestionsURLTemplate" : preferenceManager.customSearchEngineSuggestionsURL, @"ShortName" : preferenceManager.customSearchEngineName, @"ScriptingName" : preferenceManager.customSearchEngineName} withController:self];
+			NSString* customSearchEngineSuggestionsURL = @"";
+
+			if([preferenceManager.customSearchEngineSuggestionsURL containsString:@"{searchTerms}"])
+			{
+				customSearchEngineSuggestionsURL = preferenceManager.customSearchEngineSuggestionsURL;
+			}
+
+			self.customSearchEngine = [%c(SearchEngineInfo) engineFromDictionary:@{@"SearchEngineID" : @1337, @"SearchURLTemplate" : preferenceManager.customSearchEngineURL, @"SuggestionsURLTemplate" : customSearchEngineSuggestionsURL, @"ShortName" : preferenceManager.customSearchEngineName, @"ScriptingName" : preferenceManager.customSearchEngineName} withController:self];
 			object_setClass(self.customSearchEngine, [%c(SPSearchEngineInfo) class]);
+			[(SPSearchEngineInfo*)self.customSearchEngine setUpSearchURLTemplateString];
 		}
 
 		if([self.engines respondsToSelector:@selector(addObject:)])

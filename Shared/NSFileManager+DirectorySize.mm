@@ -20,7 +20,7 @@
 {
 	NSDirectoryEnumerator* enumerator = [[NSFileManager defaultManager] enumeratorAtURL:directoryURL
 					     includingPropertiesForKeys:@[NSURLIsRegularFileKey,NSURLFileAllocatedSizeKey,NSURLTotalFileAllocatedSizeKey]
-					     options:nil
+					     options:0
 					     errorHandler:nil];
 
 	NSUInteger size = 0;

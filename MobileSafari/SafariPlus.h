@@ -568,6 +568,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (BOOL)isPrivateBrowsingAvailable;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (BOOL)_shouldShowTabBar;
+- (void)updateButtonBarContentsAnimated:(BOOL)arg1;
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(void (^)(void))arg3;		//iOS11
 - (BOOL)isPrivateBrowsingEnabled;	//iOS11
 - (void)togglePrivateBrowsingEnabled;	//iOS11

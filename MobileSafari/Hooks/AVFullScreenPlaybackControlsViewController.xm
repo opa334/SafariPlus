@@ -122,23 +122,6 @@
 	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
 }
 
-%new
-- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
-{
-	WebAVPlayerController* playerController = (WebAVPlayerController*)self.playerController;
-
-	if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
-	{
-		[playerController play:nil];
-		[playerController pause:nil];
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
-	}
-	else
-	{
-		completion();
-	}
-}
-
 %end
 
 void initAVFullScreenPlaybackControlsViewController()

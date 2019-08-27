@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = SafariPlus
-SafariPlus_CFLAGS = -fobjc-arc -I$(INCLUDES) -I../extern/GPAC4iOS/Classes/include -Wno-deprecated-declarations -Wno-unguarded-availability-new
+SafariPlus_CFLAGS = -fobjc-arc -I$(INCLUDES) -I../extern/GPAC4iOS/Classes/include -Wno-deprecated-declarations -Wno-unguarded-availability-new -Wno-unused-variable
 SafariPlus_FILES = Util.xm
 SafariPlus_FILES += $(wildcard Hooks/*.xm Classes/*.mm Classes/*.xm ../Shared/*.mm)
 
@@ -32,6 +32,6 @@ dir_string := @"\"$(CURDIR)\""
 SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
-SafariPlus_PRIVATE_FRAMEWORKS = MediaRemote MobileIcons
+SafariPlus_PRIVATE_FRAMEWORKS = MobileIcons
 
 include $(THEOS_MAKE_PATH)/tweak.mk

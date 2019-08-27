@@ -118,7 +118,7 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 + (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error
 {
 	NSError* xdError;
-	NSArray<NSURL *> *URLs = [fileManager contentsOfDirectoryAtURL:URL includingPropertiesForKeys:@[NSURLIsRegularFileKey, NSURLFileSizeKey, NSURLIsWritableKey] options:nil error:&xdError];
+	NSArray<NSURL *> *URLs = [fileManager contentsOfDirectoryAtURL:URL includingPropertiesForKeys:@[NSURLIsRegularFileKey, NSURLFileSizeKey, NSURLIsWritableKey] options:0 error:&xdError];
 
 	if(!xdError)
 	{

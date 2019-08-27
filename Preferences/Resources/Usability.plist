@@ -319,8 +319,6 @@
 				<string>com.opa334.safariplusprefs</string>
 				<key>footerText</key>
 				<string>FULLSCREEN_SCROLLING_FOOTER</string>
-				<key>minCFVersion</key>
-				<real>1240.10</real>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -335,8 +333,6 @@
 				<string>fullscreenScrollingEnabled</string>
 				<key>label</key>
 				<string>FULLSCREEN_SCROLLING</string>
-				<key>minCFVersion</key>
-				<real>1240.10</real>
 			</dict>
 			<dict>
 				<key>cell</key>

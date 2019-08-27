@@ -141,6 +141,18 @@
 	}
 }
 
+- (void)openTwitterWithUsername:(NSString*)username
+{
+	if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]])
+	{
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"twitter://user?screen_name=%@", username]]];
+	}
+	else
+	{
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://twitter.com/%@", username]]];
+	}
+}
+
 - (void)closeKeyboard
 {
 	[self.view endEditing:YES];

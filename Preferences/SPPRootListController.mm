@@ -68,14 +68,7 @@ NSBundle* SSBundle;	//SafariServices
 
 - (void)openTwitter
 {
-	if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]])
-	{
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=opa334dev"]];
-	}
-	else
-	{
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/opa334dev"]];
-	}
+	[self openTwitterWithUsername:@"opa334dev"];
 }
 
 - (void)donationLink

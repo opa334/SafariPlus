@@ -790,7 +790,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 		UIGraphicsEndImageContext();
 
 		CGImageRef iconCG = LICreateIconForImage(clearImage.CGImage, 19, 0);
-		_genericFileIcon = [[UIImage alloc] initWithCGImage:iconCG scale:[UIScreen mainScreen].scale orientation:0];
+		_genericFileIcon = [[UIImage alloc] initWithCGImage:iconCG scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
 	});
 
 	return _genericFileIcon;

@@ -32,7 +32,7 @@ include $(THEOS)/makefiles/common.mk
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
-SUBPROJECTS += MobileSafari
+SUBPROJECTS += MobileSafari WebContent
 
 ifeq ($(NO_ROCKETBOOTSTRAP),0)
 		SUBPROJECTS += SpringBoard

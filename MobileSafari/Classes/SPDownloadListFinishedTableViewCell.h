@@ -33,7 +33,7 @@
 - (void)setUpContent;
 - (void)setUpConstraints;
 - (void)updateButtons;
-- (void)setFilesize:(int64_t)filesize;
+- (void)updateFilesizeForDownload:(SPDownload*)download;
 - (void)restartButtonPressed;
 - (void)locateButtonPressed;
 @end
