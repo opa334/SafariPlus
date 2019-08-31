@@ -113,7 +113,7 @@
 		[errorAlert addAction:closeAction];
 
 		//Create action to close the picker
-		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
+		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"EXIT_PICKER"]
 						    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 		{
 			//Close picker

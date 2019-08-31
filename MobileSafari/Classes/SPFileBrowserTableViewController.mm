@@ -88,7 +88,7 @@
 
 - (BOOL)fileIsDirectory:(SPFile*)file
 {
-	return !file.isRegularFile;
+	return ![file displaysAsRegularFile];
 }
 
 - (BOOL)loadContents

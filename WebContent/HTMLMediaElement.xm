@@ -30,10 +30,6 @@
 
 #import "../MobileSafari/Defines.h"
 
-#ifndef NO_CEPHEI
-#import <Cephei/HBPreferences.h>
-#endif
-
 #import "substitrate.h"
 
 NSMutableDictionary* URLCache;
@@ -128,7 +124,7 @@ void initHooks()
 {
 	const char* webCorePath = "/System/Library/PrivateFrameworks/WebCore.framework/WebCore";
 
-	HBLogDebug(@"initHooks");
+	HBLogDebug(@"About to init WebCore hooks!");
 
 	//iOS 12.2 and above (probably)
 	int hook1 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement12loadResourceERKN3WTF3URLERNS_11ContentTypeERKNS1_6StringE", WebCore_HTMLMediaElement_loadResource);
@@ -157,36 +153,64 @@ static BOOL isSafari()
 
 	BOOL isDirectory;
 
+	//Not that great of a way to detect Safari but couldn't find anything better either
 	if([[NSFileManager defaultManager] fileExistsAtPath:safariPath isDirectory:&isDirectory] && isDirectory)
 	{
+		HBLogDebug(@"Directory at %@ exists, we are Safari!", safariPath);
 		return YES;
 	}
+
+	HBLogDebug(@"Directory at %@ (%i) does not exist, we do not appear to be Safari!", safariPath, isDirectory);
 
 	return NO;
 }
 
+//Only init WebCore hooks when we are actually Safari and the related features are enabled
 static BOOL shouldEnable()
 {
-	#if !defined NO_CEPHEI
-	HBPreferences* preferences = [[HBPreferences alloc] initWithIdentifier:preferenceDomainName];
-	BOOL tweakEnabled = [preferences boolForKey:@"tweakEnabled" default:YES];
-	BOOL videoDownloadingEnabled = [preferences boolForKey:@"videoDownloadingEnabled" default:NO];
-	#else
+	#if defined SIMJECT
 	return YES;
-	#endif
+	#else
+
+	if(!isSafari())
+	{
+		HBLogDebug(@"not safari, bye");
+		return NO;
+	}
+
+	/*HBPreferences* preferences = [[HBPreferences alloc] initWithIdentifier:preferenceDomainName];
+
+	   HBLogDebug(@"preferences:%@", preferences);
+
+	   BOOL tweakEnabled = [preferences boolForKey:@"tweakEnabled" default:YES];
+	   BOOL downloadManagerEnabled = [preferences boolForKey:@"downloadManagerEnabled" default:NO];
+	   BOOL videoDownloadingEnabled = [preferences boolForKey:@"videoDownloadingEnabled" default:NO];*/
+
+	//Cephei was originally used but doesn't work inside the
+	//XPC helper for some people so we use NSDictionary instead
+
+	NSDictionary* preferences = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"];
+
+	NSNumber* tweakEnabledNum = [preferences objectForKey:@"tweakEnabled"];
+	NSNumber* downloadManagerEnabledNum = [preferences objectForKey:@"downloadManagerEnabled"];
+	NSNumber* videoDownloadingEnabledNum = [preferences objectForKey:@"videoDownloadingEnabled"];
+
+	BOOL tweakEnabled = tweakEnabledNum ? [tweakEnabledNum boolValue] : YES;
+	BOOL downloadManagerEnabled = [downloadManagerEnabledNum boolValue];
+	BOOL videoDownloadingEnabled = [videoDownloadingEnabledNum boolValue];
 
 	BOOL globalVideoDownloadingEnabled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/Application Support/SafariPlus.bundle/.enableGlobalVideoDownloading"];
 
-	if((videoDownloadingEnabled && isSafari()) || globalVideoDownloadingEnabled)
-	{
-		return YES;
-	}
+	HBLogDebug(@"tweakEnabled:%i downloadManagerEnabled:%i videoDownloadingEnabled:%i globalVideoDownloadingEnabled:%i", tweakEnabled, downloadManagerEnabled, videoDownloadingEnabled, globalVideoDownloadingEnabled);
 
-	return NO;
+	return (tweakEnabled && downloadManagerEnabled && videoDownloadingEnabled) || globalVideoDownloadingEnabled;
+	#endif
 }
 
 %ctor
 {
+	HBLogDebug(@"SafariPlusWS.dylib loaded");
+
 	if(shouldEnable())
 	{
 		URLCache = [NSMutableDictionary new];

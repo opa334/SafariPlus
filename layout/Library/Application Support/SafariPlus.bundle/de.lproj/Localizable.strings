@@ -16,7 +16,7 @@
 "ABOUT_THIS_TWEAK" = "Über diesen Tweak";
 "TWEAK_SPECIFIC_SETTINGS" = "Tweakspezifische Einstellungen";
 "SOURCE_CODE" = "Quellcode";
-"CREDITS" = "Credits";
+"CREDITS_AND_LICENSES" = "Credits und Lizenzen";
 
 "ABOUT_ME" = "Über mich";
 "FOLLOW_ME_ON_TWITTER" = "Folge mir auf Twitter";
@@ -63,7 +63,7 @@
 "CONTENT_OPTIONS" = "Inhaltsoptionen";
 
 "VIDEO_DOWNLOADING" = "Video Downloads";
-"VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Download Button zum Video-Player hinzu, funktioniert nicht auf allen Seiten.";
+"VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Download Button zum Video-Player hinzu.";
 
 "ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "Fügt Download-Aktionen beim langen Drücken auf Seitenelemente hinzu.";
 "DOWNLOAD_SITE_TO_ACTION" = "'Seite herunterladen nach ...' Aktion";
@@ -303,7 +303,7 @@
 "CUSTOM_START_SITE_FOOTER" = "Ersetzt die Favoritenanzeige, welche normalerweise in einem neu geöffneten Tab erscheint, durch eine benutzerdefinierten Seite, welche stattdessen geöffnet wird.";
 
 "CUSTOM_SEARCH_ENGINE" = "Benutzerdefinierte Suchmaschine";
-"CUSTOM_SEARCH_ENGINE_FOOTER" = "Ersetzt die Standardsuchmaschine, {searchTerms} ist ein Platzhalter für den eingegebenen Suchbegriff. Die URL für Suchvorschläge ist optional.";
+"CUSTOM_SEARCH_ENGINE_FOOTER" = "Ersetzt die Standardsuchmaschine, {searchTerms} ist der Platzhalter für den eingegebenen Suchbegriff. Die URL für Suchvorschläge ist optional.";
 "SEARCH_ENGINE_NAME" = "Name der Suchmaschine";
 "SEARCH_URL" = "URL für Suchen";
 "SEARCH_SUGGESTIONS_URL" = "URL für Suchvorschläge";
@@ -330,7 +330,10 @@
 
 /* Credits */
 
-"PICKER_INSPIRED" = "Dateiauswahl inspiriert von";
+"LIBSUBSTITRATE_FOOTER" = "Teile von libSubstitrate werden benutzt um das Herunterladen von Videos auch auf Substitute basierten Jailbreaks möglich zu machen";
+"DEVELOPED_BY_POOMSMART" = "Entwickelt von @PoomSmart";
+
+"SAFARI_PLUS_LICENSE" = "Safari Plus Lizenz (MIT)";
 
 /* In app */
 

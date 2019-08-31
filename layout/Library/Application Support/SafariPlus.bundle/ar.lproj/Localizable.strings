@@ -16,7 +16,7 @@
 "ABOUT_THIS_TWEAK" = "حول هذه الأداة";
 /*TWEAK_SPECIFIC_SETTINGS*/
 "SOURCE_CODE" = "شفرة المصدر";
-"CREDITS" = "الاعتمادات";
+/*CREDITS_AND_LICENSES*/
 
 "ABOUT_ME" = "عني";
 /*FOLLOW_ME_ON_TWITTER*/
@@ -117,6 +117,9 @@
 
 /*STATUS_BAR_NOTIFICATIONS*/
 /*STATUS_BAR_NOTIFICATIONS_FOOTER*/
+
+/*APPLICATION_BADGE*/
+/*APPLICATION_BADGE_FOOTER*/
 
 /* Usability */
 
@@ -316,6 +319,9 @@
 /*LARGE_TITLES*/
 /*LARGE_TITLES_FOOTER*/
 
+/*SORT_DIRECTORIES_ABOVE_FILES*/
+/*SORT_DIRECTORIES_ABOVE_FILES_FOOTER*/
+
 /*DISABLE_COMMUNICATION_ERROR*/
 /*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
@@ -324,7 +330,10 @@
 
 /* Credits */
 
-"PICKER_INSPIRED" = "تقنية انتقاء الملف مستوحاة بواسطة:";
+/*LIBSUBSTITRATE_FOOTER*/
+/*DEVELOPED_BY_POOMSMART*/
+
+/*SAFARI_PLUS_LICENSE*/
 
 /* In app */
 
@@ -360,6 +369,7 @@
 "DOWNLOADS" = "التنزيلات";
 "FILE_BROWSER" = "متصفح الملفات";
 "OPEN" = "فتح";
+/*SHOW_CONTENT*/
 "OPEN_IN" = "فتح في...";
 "IMPORT_TO_MUSIC_LIBRARY" = "استيراد إلى مكتبة الموسيقى";
 "SAVE_TO_MEDIA_LIBRARY" = "حفظ إلى مكتبة الوسائط";
@@ -411,6 +421,7 @@
 "VIDEO_URL_NOT_FOUND" = "لم يتم العثور على عنوان URL لهذا الفيديو، ربما يكون الموقع الحالي غير مدعوم!";
 "COPY_LINK" = "نسخ الرابط";
 "SIZE_UNKNOWN" = "حجم غير معروف";
+/*DURATION_UNKNOWN*/
 "MIGRATION_TITLE" = "تم الانتقال بنجاح";
 "MIGRATION_MESSAGE" = "لقد ولت تلك الأيام التي يتم فيها تقييد حاوية sandbox الخاصة بـ Safari! تنزيلاتك تم نقلها من %@ إلى %@. يمكنك الآن تنزيل الملفات إلى أي مسار تريده!";
 /*CELLULAR_DATA_WARNING*/

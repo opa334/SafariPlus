@@ -88,11 +88,6 @@
 	}
 }
 
-- (BOOL)fileIsDirectory:(SPFile*)file
-{
-	return ![file displaysAsRegularFile];
-}
-
 - (BOOL)loadContents
 {
 	BOOL firstLoad = (self.downloadsAtCurrentURL == nil);

@@ -63,7 +63,7 @@
 "CONTENT_OPTIONS" = "Content Options";
 
 "VIDEO_DOWNLOADING" = "Video Downloading";
-"VIDEO_DOWNLOADING_FOOTER" = "Add a download button to the full screen video player. Does not support all sites.";
+"VIDEO_DOWNLOADING_FOOTER" = "Add a download button to the full screen video player.";
 
 "ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "Add download actions when long pressing site elements.";
 "DOWNLOAD_SITE_TO_ACTION" = "'Download Site to...' Action";
@@ -333,7 +333,7 @@
 "LIBSUBSTITRATE_FOOTER" = "Parts of libSubstitrate are used to make fetching the video URL possible on Substitute based jailbreaks";
 "DEVELOPED_BY_POOMSMART" = "Developed by PoomSmart";
 
-"SAFARI_PLUS_LICENSE" = "Safari Plus License";
+"SAFARI_PLUS_LICENSE" = "Safari Plus License (MIT)";
 
 /* In app */
 

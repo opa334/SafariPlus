@@ -16,7 +16,7 @@
 /*ABOUT_THIS_TWEAK*/
 /*TWEAK_SPECIFIC_SETTINGS*/
 "SOURCE_CODE" = "Исходный код";
-"CREDITS" = "Благодарности";
+/*CREDITS_AND_LICENSES*/
 
 /*ABOUT_ME*/
 /*FOLLOW_ME_ON_TWITTER*/
@@ -117,6 +117,9 @@
 
 /*STATUS_BAR_NOTIFICATIONS*/
 /*STATUS_BAR_NOTIFICATIONS_FOOTER*/
+
+/*APPLICATION_BADGE*/
+/*APPLICATION_BADGE_FOOTER*/
 
 /* Usability */
 
@@ -316,6 +319,9 @@
 /*LARGE_TITLES*/
 /*LARGE_TITLES_FOOTER*/
 
+/*SORT_DIRECTORIES_ABOVE_FILES*/
+/*SORT_DIRECTORIES_ABOVE_FILES_FOOTER*/
+
 "DISABLE_COMMUNICATION_ERROR" = "Откл. Оповещ. Об Ошибке";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Отключает оповещение об ошибке, отображающееся при отсутствии доступа к rocketbootstrap. Используйте на свой страх и риск.";
 
@@ -324,7 +330,10 @@
 
 /* Credits */
 
-"PICKER_INSPIRED" = "Выбор файлов сделан на основе";
+/*LIBSUBSTITRATE_FOOTER*/
+/*DEVELOPED_BY_POOMSMART*/
+
+/*SAFARI_PLUS_LICENSE*/
 
 /* In app */
 
@@ -360,6 +369,7 @@
 "DOWNLOADS" = "Загрузки";
 "FILE_BROWSER" = "Файловый Менеджер";
 "OPEN" = "Открыть";
+/*SHOW_CONTENT*/
 "OPEN_IN" = "Открыть в...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Импортировать в Музыку";
 "SAVE_TO_MEDIA_LIBRARY" = "Сохранить в Галерею";
@@ -411,6 +421,7 @@
 "VIDEO_URL_NOT_FOUND" = "Ссылка с видео не найдена, т.к. данный сайт не поддерживается!";
 "COPY_LINK" = "Скопировать Ссылку";
 "SIZE_UNKNOWN" = "Размер не известен";
+/*DURATION_UNKNOWN*/
 "MIGRATION_TITLE" = "Перенос завершен";
 "MIGRATION_MESSAGE" = "Ура! Safari научился загружать файлы без каких-либо ограничений! Ваши загрузки были перемещены из %@ в %@. И теперь вы можете загружать файлы практически в любую директорию!";
 /*CELLULAR_DATA_WARNING*/
