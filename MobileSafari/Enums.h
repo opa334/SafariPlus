@@ -102,5 +102,6 @@ enum
 	BrowserToolbarSearchBarSpace,
 	BrowserToolbarDownloadsItem,
 	BrowserToolbarReloadItem,
-	BrowserToolbarClearDataItem
+	BrowserToolbarClearDataItem,
+	BrowserToolbarItemCount
 };

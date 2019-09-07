@@ -44,6 +44,7 @@ CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
 void (*_WebCore_HTMLMediaElement_loadResource)(WebCore::HTMLMediaElement*, const WTF::URL&, WebCore::ContentType&, const WTF::String&);
 void WebCore_HTMLMediaElement_loadResource(WebCore::HTMLMediaElement* self, const WTF::URL& initialURL, WebCore::ContentType& contentType, const WTF::String& keySystem)
 {
+	HBLogDebug(@"loadResource:%p", self);
 	_WebCore_HTMLMediaElement_loadResource(self, initialURL, contentType, keySystem);
 
 	NSString* URLString = initialURL;
@@ -74,7 +75,7 @@ void WebCore_HTMLMediaElement_destructor(WebCore::HTMLMediaElement* self)
 void (*_WebCore_HTMLMediaElement_enterFullscreen)(WebCore::HTMLMediaElement*, unsigned);
 void WebCore_HTMLMediaElement_enterFullscreen(WebCore::HTMLMediaElement* self, unsigned a1)
 {
-	HBLogDebug(@"HTMLMediaElement enterFullscreen");
+	HBLogDebug(@"HTMLMediaElement %p enterFullscreen", self);
 	currentFullscreenVideoURL = [URLCache objectForKey:[NSValue valueWithPointer:self]];
 
 	_WebCore_HTMLMediaElement_enterFullscreen(self, a1);
@@ -102,19 +103,50 @@ void currentVideoURLRequested(CFNotificationCenterRef center, void *observer, CF
 {
 	HBLogDebug(@"receivedRequest!");
 
-	HBLogDebug(@"currentFullscreenVideoURL:%@", currentFullscreenVideoURL);
+	NSString* videoURL = currentFullscreenVideoURL;
 
-	if(currentFullscreenVideoURL)
+	//Support fetching video URLs from HTML5 players
+	if(!videoURL && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
 	{
+		//IMPORTANT: IN ORDER FOR THIS CODE TO COMPILE AND NOT TO CRASH, SOME WEBKIT HEADERS WILL NEED TO BE MODIFIED
+
+		//Open <WEBKIT_ROOT>/usr/local/include/wtf/RefPtr.h
+		//Replace the destructor (line 69) with:
+		//ALWAYS_INLINE ~RefPtr() { m_ptr = nullptr; }
+		//Put another inline method one line below (line 70)
+		//ALWAYS_INLINE typename PtrTraits::StorageType ptr() { return m_ptr; }
+
+		//This is why C++ sucks ;-)
+
+		HBLogDebug(@"%i Finding element...", getpid());
+		auto element = WebCore::HTMLMediaElement::bestMediaElementForShowingPlaybackControlsManager(WebCore::MediaElementSession::PlaybackControlsPurpose::NowPlaying);
+
+		if(element)
+		{
+			WebCore::HTMLMediaElement* elementPtr = element.ptr();
+			HBLogDebug(@"%i Found element? %p", getpid(), elementPtr);
+
+			NSValue* key = [NSValue valueWithPointer:elementPtr];
+			videoURL = [URLCache objectForKey:key];
+		}
+	}
+
+	HBLogDebug(@"%i videoURL:%@", getpid(), videoURL);
+
+	if(videoURL)
+	{
+		NSDictionary* userInfoToSend = @{@"videoURL" : videoURL, @"pid" : @(getpid())};
+
 		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
 		{
-			NSDictionary* userInfoToSend = @{@"videoURL" : currentFullscreenVideoURL};
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.opa334.safariplus/CurrentVideoURLForRequest"), CFSTR("CurrentVideoURLForRequest"), (__bridge CFDictionaryRef)userInfoToSend, YES);
 		}
 		else
 		{
 			//On iOS 11 and below, posting notifications with a user info doesn't seem to work
-			[currentFullscreenVideoURL writeToFile:[NSTemporaryDirectory() stringByAppendingPathComponent:@"videoURL.txt"] atomically:NO encoding:NSUTF8StringEncoding error:nil];
+			NSString* userInfoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"videoURLUserInfo.plist"];
+			[[NSFileManager defaultManager] removeItemAtPath:userInfoPath error:nil];
+			[userInfoToSend writeToFile:userInfoPath atomically:NO];
 			CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.opa334.safariplus/CurrentVideoURLForRequest"), CFSTR("CurrentVideoURLForRequest"), NULL, YES);
 		}
 	}
@@ -209,7 +241,7 @@ static BOOL shouldEnable()
 
 %ctor
 {
-	HBLogDebug(@"SafariPlusWS.dylib loaded");
+	HBLogDebug(@"SafariPlusWS.dylib loaded into process with pid %i", getpid());
 
 	if(shouldEnable())
 	{

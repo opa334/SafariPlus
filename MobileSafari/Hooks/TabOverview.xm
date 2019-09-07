@@ -51,7 +51,7 @@
 			{
 				//desktopButton not created yet -> create and configure it
 				self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
 				[self.desktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
 				[self.desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 				self.desktopModeButton.selected = self.delegate.desktopButtonSelected;
@@ -193,6 +193,7 @@
 	{
 		if(!self.delegate)
 		{
+			HBLogDebug(@"prevented something?");
 			return;	//please don't break anything, please (fix for weird crash)
 		}
 	}

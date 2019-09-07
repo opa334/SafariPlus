@@ -737,6 +737,7 @@ extern void initTabThumbnailView();
 extern void initTiltedTabItemLayoutInfo();
 extern void initTiltedTabView();
 extern void initWKFileUploadPanel();
+extern void initWKFullScreenViewController();
 
 %ctor
 {
@@ -774,5 +775,6 @@ extern void initWKFileUploadPanel();
 		initTiltedTabItemLayoutInfo();
 		initTiltedTabView();
 		initWKFileUploadPanel();
+		initWKFullScreenViewController();
 	}
 }

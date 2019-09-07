@@ -28,7 +28,7 @@
 @property (nonatomic, readonly) int64_t size;
 @property (nonatomic, readonly) BOOL isHidden;
 @property (nonatomic, readonly) BOOL isWritable;
-@property (nonatomic, readonly) CFStringRef fileUTI;
+@property (nonatomic, readonly) NSString* fileUTI;
 @property (nonatomic, readonly) BOOL isPreviewable;
 
 + (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error;

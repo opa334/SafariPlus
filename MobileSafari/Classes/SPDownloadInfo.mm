@@ -77,6 +77,30 @@
 	}
 }
 
+- (int64_t)filesize
+{
+	if(self.isHLSDownload)
+	{
+		return 0;
+	}
+	else
+	{
+		return _filesize;
+	}
+}
+
+- (void)setFilename:(NSString*)filename
+{
+	if(self.isHLSDownload)
+	{
+		_filename = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"movpkg"];
+	}
+	else
+	{
+		_filename = filename;
+	}
+}
+
 - (void)updateHLSForSuggestedFilename:(NSString*)suggestedFilename
 {
 	if(!downloadManager.HLSSupported)
@@ -96,11 +120,27 @@
 		self.isHLSDownload = NO;
 	}
 
+	if(suggestedFileUTI) CFRelease(suggestedFileUTI);
+
 	if(self.isHLSDownload)
 	{
-		self.filename = [[self.filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"movpkg"];
 		self.filesize = 0;
 	}
+}
+
+- (NSString*)filenameForTitle
+{
+	if([self.filename pathExtension])
+	{
+		NSMutableCharacterSet* invalidCharacters = [NSMutableCharacterSet characterSetWithCharactersInString:@":/"];
+		[invalidCharacters formUnionWithCharacterSet:[NSCharacterSet newlineCharacterSet]];
+		[invalidCharacters formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
+		[invalidCharacters formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+
+		return [[[self.title componentsSeparatedByCharactersInSet:invalidCharacters] componentsJoinedByString:@""] stringByAppendingPathExtension:[self.filename pathExtension]];
+	}
+
+	return self.filename;
 }
 
 @end

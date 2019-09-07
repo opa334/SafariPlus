@@ -26,10 +26,11 @@
 #import <WebKit/WKNavigationResponse.h>
 #import <WebKit/WKWebView.h>
 #import <WebKit/WKNavigationDelegate.h>
+#import <WebKit/WKPreferences.h>
 
 #import "Protocols.h"
 
-@class _WKActivatedElementInfo, ApplicationShortcutController, AVPlayer, AVPlayerViewController, AVActivityButton, BrowserController, BrowserRootViewController, BrowserToolbar, DownloadDispatcher, NavigationBar, SafariWebView, SearchEngineInfo, SPTabManagerTableViewCell, TabBarStyle, TabBarItemLayoutInfo, TabBarItemView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
+@class _WKActivatedElementInfo, ApplicationShortcutController, AVPlayer, AVPlayerViewController, BrowserController, BrowserRootViewController, BrowserToolbar, DownloadDispatcher, NavigationBar, SafariWebView, SearchEngineInfo, SPTabManagerTableViewCell, TabBarStyle, TabBarItemLayoutInfo, TabBarItemView, TabController, TabDocument, TabOverview, TabOverviewItem, TabOverviewItemView, TabOverviewItemLayoutInfo, TiltedTabItem, TiltedTabView, TiltedTabItemLayoutInfo, TabThumbnailView, UnifiedField, WebBookmark;
 
 /**** General stuff ****/
 
@@ -153,6 +154,7 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @property (nonatomic) NSInteger systemItem;
 @property (assign,setter=_setAdditionalSelectionInsets:,nonatomic) UIEdgeInsets _additionalSelectionInsets;
 @property (setter=_setGestureRecognizers:,nonatomic,retain) NSArray* _gestureRecognizers;
+@property (setter=_sf_setLongPressEnabled:, nonatomic) BOOL _sf_longPressEnabled;
 - (BOOL)isSystemItem;
 @end
 
@@ -216,6 +218,7 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 
 @interface WKWebView (Private)
 @property (setter=_setApplicationNameForUserAgent:,copy) NSString* _applicationNameForUserAgent;
+@property (nonatomic,readonly) int _webProcessIdentifier;
 - (void)_requestActivatedElementAtPosition:(CGPoint)position completionBlock:(void (^)(_WKActivatedElementInfo *))block;
 - (void)_setCustomUserAgent:(NSString*)arg1;
 - (WKContentView*)_currentContentView;
@@ -229,6 +232,10 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 - (void)_showFilePicker;
 - (void)_cancel;
 - (void)_showMediaSourceSelectionSheet;	//iOS8
+@end
+
+@interface WKFullscreenStackView : UIStackView
+- (void)addArrangedSubview:(__kindof UIView*)subview applyingMaterialStyle:(NSInteger)materialStyle tintEffectStyle:(NSInteger)tintEffectStyle;
 @end
 
 @interface _WKActivatedElementInfo : NSObject
@@ -246,15 +253,18 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @interface _WKWebsitePolicies : NSObject
 @end
 
-/**** MediaRemote ****/
-extern "C"
-{
+@interface _WKExtrinsicButton : UIButton
+@property (assign,nonatomic) CGSize extrinsicContentSize;
+@end
 
-extern CFStringRef kMRMediaRemoteNowPlayingInfoTitle;
-typedef void (^MRMediaRemoteGetNowPlayingInfoCompletion)(CFDictionaryRef information);
-void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowPlayingInfoCompletion completion);
+@interface WKFullScreenViewController : UIViewController <SourceVideoDelegate>
+//new
+@property (nonatomic, retain) _WKExtrinsicButton* downloadButton;
+@end
 
-}
+@interface WKPreferences (Private)
+@property (assign,setter=_setFullScreenEnabled:,nonatomic) BOOL _fullScreenEnabled;
+@end
 
 /**** SafariServices ****/
 
@@ -381,7 +391,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 
 @interface AVFullScreenPlaybackControlsViewController : AVPlaybackControlsViewController <SourceVideoDelegate>
 //new
-@property (nonatomic, retain) AVActivityButton* downloadButton;
+@property (nonatomic, retain) AVButton* downloadButton;
 @property (nonatomic, retain) NSMutableArray* additionalLayoutConstraints;
 - (void)downloadButtonPressed;
 @end
@@ -413,6 +423,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @end
 
 @interface AVBackdropView : UIView
++ (void)applySecondaryGlyphTintToView:(UIView*)view;
 @property (nonatomic,readonly) AVStackView* contentView;//iOS 11.0 -> 11.2.6
 @property (nonatomic,readonly) UIStackView* stackView;	//iOS 11.3 and above
 @end
@@ -432,7 +443,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (assign,getter=isDoubleRowLayoutEnabled,nonatomic) bool doubleRowLayoutEnabled;
 @property (nonatomic,readonly) AVButton* doneButton;
 //new
-@property (nonatomic,retain) AVActivityButton* downloadButton;
+@property (nonatomic,retain) AVButton* downloadButton;
 - (void)downloadButtonPressed;
 - (void)setUpDownloadButton;
 @end
@@ -523,7 +534,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 @property (nonatomic,readonly) BrowserToolbar* activeToolbar;
 
 //new stuff below
-@property (nonatomic, assign) BOOL browsingModeSet;
+@property (nonatomic, assign) BOOL isSetUp;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
@@ -631,6 +642,7 @@ void MRMediaRemoteGetNowPlayingInfo(dispatch_queue_t queue, MRMediaRemoteGetNowP
 - (void)sp_applyCustomUserAgent;
 //new
 @property (nonatomic) NSInteger desktopModeState;
+- (void)updateFullscreenEnabledPreference;
 @end
 
 @interface SearchEngineController : NSObject

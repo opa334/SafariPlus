@@ -29,7 +29,7 @@
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
-#import "../Classes/AVActivityButton.h"
+#import "../Classes/UIButton+ActivityIndicator.h"
 
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVPlayer.h>
@@ -43,7 +43,7 @@
 
 %hook AVFullScreenPlaybackControlsViewController
 
-%property (nonatomic,retain) AVActivityButton *downloadButton;
+%property (nonatomic,retain) AVButton *downloadButton;
 %property (nonatomic,retain) NSMutableArray *additionalLayoutConstraints;
 
 - (void)loadView
@@ -58,9 +58,10 @@
 		//Check if video is online (and not a local file)
 		if(![currentPlayerAsset isKindOfClass:AVURLAsset.class])
 		{
-			self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
+			self.downloadButton = [%c(AVButton) buttonWithType:UIButtonTypeCustom];
+			[self.downloadButton setUpActivityIndicator];
 			self.downloadButton.translatesAutoresizingMaskIntoConstraints = NO;
-			UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+			UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
 			[self.downloadButton setImage:buttonImage forState:UIControlStateNormal];
 			[self.downloadButton setImage:[UIImage inverseColor:buttonImage] forState:UIControlStateHighlighted];
 			[self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];

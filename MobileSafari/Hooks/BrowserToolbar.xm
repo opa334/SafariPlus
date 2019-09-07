@@ -26,10 +26,114 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
+#import "substrate.h"
+
+static void updateToolbarConnectionWithBarButtonItem(__kindof UIBarButtonItem* item, BrowserToolbar* toolbar, NSInteger itemValue)
+{
+	id target;
+
+	if(NSClassFromString(@"SFBarRegistration"))
+	{
+		target = MSHookIvar<id>(toolbar, "_barRegistration");
+	}
+	else
+	{
+		target = toolbar;
+	}
+
+	NSArray* recognizers;
+
+	if([item respondsToSelector:@selector(gestureRecognizer)])
+	{
+		recognizers = @[((GestureRecognizingBarButtonItem*)item).gestureRecognizer];
+	}
+	else if([item respondsToSelector:@selector(_gestureRecognizers)])
+	{
+		recognizers = [item _gestureRecognizers];
+	}
+
+	for(UIGestureRecognizer* recognizer in recognizers)
+	{
+		if([recognizer isKindOfClass:[NSClassFromString(@"SFBarButtonItemLongPressGestureRecognizer") class]])
+		{
+			if([[recognizer class] respondsToSelector:@selector(gestureRecognizerWithLongPressTarget:action:)])
+			{
+				[recognizer setValue:target forKey:@"_longPressTarget"];
+			}
+			else
+			{
+				[recognizer setValue:item forKey:@"_barButtonItem"];
+				[recognizer setValue:target forKey:@"_target"];
+			}
+		}
+		else
+		{
+			NSMutableArray* targets = MSHookIvar<NSMutableArray*>(recognizer, "_targets");
+			for(id recognizerTarget in targets)
+			{
+				[recognizerTarget setValue:target forKey:@"_target"];
+			}
+		}
+	}
+
+	switch(itemValue)
+	{
+		case BrowserToolbarBackItem:
+		[target setValue:item forKey:@"_backItem"];
+		break;
+
+		case BrowserToolbarForwardItem:
+		[target setValue:item forKey:@"_forwardItem"];
+		break;
+
+		case BrowserToolbarBookmarksItem:
+		[target setValue:item forKey:@"_bookmarksItem"];
+		break;
+
+		case BrowserToolbarShareItem:
+		{
+			if(NSClassFromString(@"SFBarRegistration"))
+			{
+				[target setValue:item forKey:@"_shareItem"];
+			}
+			else
+			{
+				[target setValue:item forKey:@"_actionItem"];
+			}
+			break;
+		}
+
+		case BrowserToolbarAddTabItem:
+		[target setValue:item forKey:@"_addTabItem"];
+		break;
+
+		case BrowserToolbarTabExposeItem:
+		[target setValue:item forKey:@"_tabExposeItem"];
+		break;
+
+		case BrowserToolbarDownloadsItem:
+		toolbar._downloadsItem = item;
+		break;
+
+		case BrowserToolbarReloadItem:
+		toolbar._reloadItem = item;
+		break;
+
+		case BrowserToolbarClearDataItem:
+		toolbar._clearDataItem = item;
+		break;
+	}
+}
+
+/*
+static void applyBarButtonItemsToToolbar(NSArray<__kindof UIBarButtonItem*>* items, BrowserToolbar* toolbar)
+{
+
+}*/
 
 //Turns a system bar button item into a non-system one
 //Needed because system items act weird and can't be modified that easily
-static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment, BOOL setLongPress, BOOL setTouchDown)
+static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment /*, BOOL setLongPress, BOOL setTouchDown*/)
 {
 	UIImage* itemImage;
 	[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:oldItem.systemItem usingItemStyle:0];
@@ -38,27 +142,14 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 	UIBarButtonItem* newItem = [[(__kindof UIBarButtonItem*)[oldItem class] alloc] initWithImage:newImage style:UIBarButtonItemStylePlain target:oldItem.target action:oldItem.action];
 
-	if(setLongPress)
+	if([newItem respondsToSelector:@selector(setGestureRecognizer:)])
 	{
-		if([newItem respondsToSelector:@selector(setGestureRecognizer:)])
-		{
-			[((GestureRecognizingBarButtonItem*)newItem) setGestureRecognizer:((GestureRecognizingBarButtonItem*)oldItem).gestureRecognizer];
-		}
-		else if([newItem respondsToSelector:@selector(_sf_setLongPressTarget:action:)])
-		{
-			[newItem _sf_setLongPressTarget:oldItem.target action:@selector(_itemReceivedLongPress:)];
-		}
-		else if([newItem respondsToSelector:@selector(_sf_setTarget:touchDownAction:longPressAction:)])
-		{
-			if(setTouchDown)
-			{
-				[newItem _sf_setTarget:oldItem.target touchDownAction:@selector(_itemReceivedTouchDown:) longPressAction:@selector(_itemReceivedLongPress:)];
-			}
-			else if([newItem respondsToSelector:@selector(_sf_setTarget:longPressAction:)])
-			{
-				[newItem _sf_setTarget:oldItem.target longPressAction:@selector(_itemReceivedLongPress:)];
-			}
-		}
+		[((GestureRecognizingBarButtonItem*)newItem) setGestureRecognizer:((GestureRecognizingBarButtonItem*)oldItem).gestureRecognizer];
+	}
+	else if([newItem respondsToSelector:@selector(_setGestureRecognizers:)])
+	{
+		newItem._sf_longPressEnabled = oldItem._sf_longPressEnabled;
+		newItem._gestureRecognizers = oldItem._gestureRecognizers;
 	}
 
 	newItem.imageInsets = UIEdgeInsetsMake(oldItem.imageInsets.top, 0, oldItem.imageInsets.bottom, 0);
@@ -284,165 +375,113 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		target = self;
 	}
 
-	if([orderM containsObject:@(BrowserToolbarBackItem)])
+	for(NSNumber* itemNumber in orderM)
 	{
-		UIBarButtonItem* backItem = [allItems objectForKey:@(BrowserToolbarBackItem)];
+		NSInteger itemValue = [itemNumber integerValue];
+		UIBarButtonItem* item = [allItems objectForKey:itemNumber];
 
-		if([backItem isSystemItem])
+		switch(itemValue)
 		{
-			NSUInteger backItemIndex = [orderM indexOfObject:@(BrowserToolbarBackItem)];
-
-			NSInteger alignment = 0;
-
-			if(backItemIndex == 0)	//Align first button to the left
+			case BrowserToolbarBackItem:
+			case BrowserToolbarForwardItem:
+			case BrowserToolbarShareItem:
 			{
-				alignment = -1;
+				if([item isSystemItem])
+				{
+					NSUInteger itemIndex = [orderM indexOfObject:itemNumber];
+
+					NSInteger alignment = 0;
+
+					if(itemIndex == 0)	//Align first button to the left
+					{
+						alignment = -1;
+					}
+					else if(itemIndex == orderM.count - 1)	//Align last button to the right
+					{
+						alignment = 1;
+					}
+
+					UIBarButtonItem* newItem = unsystemifiedBarButtonItem(item, 25, alignment);
+					updateToolbarConnectionWithBarButtonItem(newItem, self, itemValue);
+
+					addToDict(allItems, newItem, itemNumber);
+				}
+
+				break;
 			}
-			else if(backItemIndex == orderM.count - 1)	//Align last button to the right
+			case BrowserToolbarBookmarksItem:
+			case BrowserToolbarTabExposeItem:
+			case BrowserToolbarAddTabItem:
 			{
-				alignment = 1;
+				if(item.image.size.width < 25)
+				{
+					item.image = [item.image imageWithWidth:25 alignment:0];
+				}
+				item.imageInsets = UIEdgeInsetsMake(item.imageInsets.top, 0, item.imageInsets.bottom, 0);
+				break;
 			}
-
-			UIBarButtonItem* newBackItem = unsystemifiedBarButtonItem(backItem, 25, alignment, YES, NO);
-
-			[allItems setObject:newBackItem forKey:@(BrowserToolbarBackItem)];
-
-			MSHookIvar<UIBarButtonItem*>(target, "_backItem") = newBackItem;
-		}
-	}
-
-	if([orderM containsObject:@(BrowserToolbarForwardItem)])
-	{
-		UIBarButtonItem* forwardItem = [allItems objectForKey:@(BrowserToolbarForwardItem)];
-
-		if([forwardItem isSystemItem])
-		{
-			NSUInteger forwardItemIndex = [orderM indexOfObject:@(BrowserToolbarForwardItem)];
-
-			NSInteger alignment = 0;
-
-			if(forwardItemIndex == 0)	//Align first button to the left
+			case BrowserToolbarDownloadsItem:
 			{
-				alignment = -1;
+				if(!self._downloadsItem)
+				{
+					if(preferenceManager.previewDownloadProgressEnabled)
+					{
+						self._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
+					}
+					else
+					{
+						self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
+					}
+				}
+
+				addToDict(allItems, self._downloadsItem, itemNumber);
+				break;
 			}
-			else if(forwardItemIndex == orderM.count - 1)	//Align last button to the right
+			case BrowserToolbarReloadItem:
 			{
-				alignment = 1;
+				UIImage* itemImage;
+				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
+
+				UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
+
+				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+				{
+					reloadButton.frame = CGRectMake(0,0,35,44);
+				}
+				else
+				{
+					reloadButton.frame = CGRectMake(0,0,25,25);
+				}
+
+				[reloadButton setImage:itemImage forState:UIControlStateNormal];
+				[reloadButton addTarget:navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) action:@selector(_reloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+
+				if([navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) respondsToSelector:@selector(_reloadButtonLongPressed:)])
+				{
+					UILongPressGestureRecognizer* longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) action:@selector(_reloadButtonLongPressed:)];
+					[reloadButton addGestureRecognizer:longPressGestureRecognizer];
+				}
+
+				self._reloadItem = [[UIBarButtonItem alloc] initWithCustomView:reloadButton];
+
+				addToDict(allItems, self._reloadItem, itemNumber);
+				break;
 			}
-
-			UIBarButtonItem* newForwardItem = unsystemifiedBarButtonItem(forwardItem, 25, alignment, YES, NO);
-
-			[allItems setObject:newForwardItem forKey:@(BrowserToolbarForwardItem)];
-
-			MSHookIvar<UIBarButtonItem*>(target, "_forwardItem") = newForwardItem;
-		}
-	}
-
-	if([orderM containsObject:@(BrowserToolbarShareItem)])
-	{
-		UIBarButtonItem* shareItem = [allItems objectForKey:@(BrowserToolbarShareItem)];
-
-		if([shareItem isSystemItem])
-		{
-			NSUInteger shareItemIndex = [orderM indexOfObject:@(BrowserToolbarShareItem)];
-
-			NSInteger alignment = 0;
-
-			if(shareItemIndex == 0)	//Align first button to the left
+			case BrowserToolbarClearDataItem:
 			{
-				alignment = -1;
-			}
-			else if(shareItemIndex == orderM.count - 1)	//Align last button to the right
-			{
-				alignment = 1;
-			}
+				UIImage* itemImage;
+				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemTrash usingItemStyle:0];
 
-			UIBarButtonItem* newShareItem = unsystemifiedBarButtonItem(shareItem, 25, alignment, YES, YES);
+				if(itemImage.size.width < 25)
+				{
+					itemImage = [itemImage imageWithWidth:25 alignment:0];
+				}
 
-			[allItems setObject:newShareItem forKey:@(BrowserToolbarShareItem)];
-
-			if(NSClassFromString(@"SFBarRegistration"))
-			{
-				MSHookIvar<UIBarButtonItem*>(target, "_shareItem") = newShareItem;
-			}
-			else
-			{
-				MSHookIvar<UIBarButtonItem*>(target, "_actionItem") = newShareItem;
-			}
-		}
-	}
-
-	if([orderM containsObject:@(BrowserToolbarBookmarksItem)])
-	{
-		UIBarButtonItem* bookmarksItem = [allItems objectForKey:@(BrowserToolbarBookmarksItem)];
-		bookmarksItem.imageInsets = UIEdgeInsetsMake(bookmarksItem.imageInsets.top, 0, bookmarksItem.imageInsets.bottom, 0);
-	}
-
-	if([orderM containsObject:@(BrowserToolbarTabExposeItem)])
-	{
-		UIBarButtonItem* tabExposeItem = [allItems objectForKey:@(BrowserToolbarTabExposeItem)];
-		tabExposeItem.image = [tabExposeItem.image imageWithWidth:25 alignment:0];
-		tabExposeItem.imageInsets = UIEdgeInsetsMake(tabExposeItem.imageInsets.top, 0, tabExposeItem.imageInsets.bottom, 0);
-	}
-
-	if([orderM containsObject:@(BrowserToolbarAddTabItem)])
-	{
-		UIBarButtonItem* addTabItem = [allItems objectForKey:@(BrowserToolbarAddTabItem)];
-		addTabItem.image = [addTabItem.image imageWithWidth:25 alignment:0];
-		addTabItem.imageInsets = UIEdgeInsetsMake(addTabItem.imageInsets.top, 0, addTabItem.imageInsets.bottom, 0);
-	}
-
-	if([orderM containsObject:@(BrowserToolbarDownloadsItem)])
-	{
-		if(!self._downloadsItem)
-		{
-			if(preferenceManager.previewDownloadProgressEnabled)
-			{
-				self._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
-			}
-			else
-			{
-				self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"DownloadsButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
+				self._clearDataItem = [[UIBarButtonItem alloc] initWithImage:itemImage style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(clearData)];
+				addToDict(allItems, self._clearDataItem, itemNumber);
+				break;
 			}
 		}
-
-		addToDict(allItems, self._downloadsItem, @(BrowserToolbarDownloadsItem));
-	}
-
-	if([orderM containsObject:@(BrowserToolbarReloadItem)])
-	{
-		UIImage* itemImage;
-		[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
-
-		UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
-
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
-		{
-			reloadButton.frame = CGRectMake(0,0,35,44);
-		}
-		else
-		{
-			reloadButton.frame = CGRectMake(0,0,25,25);
-		}
-
-		[reloadButton setImage:itemImage forState:UIControlStateNormal];
-		[reloadButton addTarget:navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) action:@selector(_reloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-
-		if([navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) respondsToSelector:@selector(_reloadButtonLongPressed:)])
-		{
-			UILongPressGestureRecognizer* longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) action:@selector(_reloadButtonLongPressed:)];
-			[reloadButton addGestureRecognizer:longPressGestureRecognizer];
-		}
-
-		self._reloadItem = [[UIBarButtonItem alloc] initWithCustomView:reloadButton];
-
-		addToDict(allItems, self._reloadItem, @(BrowserToolbarReloadItem));
-	}
-
-	if([orderM containsObject:@(BrowserToolbarClearDataItem)])
-	{
-		self._clearDataItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:browserControllerForBrowserToolbar(self) action:@selector(clearData)];
-		addToDict(allItems, self._clearDataItem, @(BrowserToolbarClearDataItem));
 	}
 
 	NSMutableArray* dynamicItems = [NSMutableArray new];

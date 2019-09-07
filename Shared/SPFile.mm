@@ -144,7 +144,7 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 
 - (BOOL)conformsTo:(CFStringRef)UTI
 {
-	return UTTypeConformsTo(_fileUTI, UTI);
+	return UTTypeConformsTo((__bridge CFStringRef)_fileUTI, UTI);
 }
 
 - (BOOL)isHLSStream
@@ -220,7 +220,7 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 - (void)updateUTI
 {
 	CFStringRef fileExtension = (__bridge CFStringRef)[_fileURL pathExtension];
-	_fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
+	_fileUTI = CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL));
 }
 
 #endif

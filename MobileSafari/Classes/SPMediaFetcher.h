@@ -20,6 +20,6 @@
 
 @interface SPMediaFetcher : NSObject
 
-+ (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL))completionHandler;
++ (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL, int pid))completionHandler;
 
 @end

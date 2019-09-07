@@ -52,7 +52,7 @@
 				<key>label</key>
 				<string>DOWNLOAD_MANAGER</string>
 				<key>nestedEntryCount</key>
-				<integer>34</integer>
+				<integer>35</integer>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -77,6 +77,22 @@
 				<string>videoDownloadingEnabled</string>
 				<key>label</key>
 				<string>VIDEO_DOWNLOADING</string>
+				<key>nestedEntryCount</key>
+				<integer>1</integer>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>key</key>
+				<string>videoDownloadingUseTabTitleAsFilenameEnabled</string>
+				<key>label</key>
+				<string>USE_TAB_TITLE_AS_FILENAME</string>
 			</dict>
 			<dict>
 				<key>cell</key>

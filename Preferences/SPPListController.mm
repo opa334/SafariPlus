@@ -65,6 +65,7 @@
 
 		if(minCFVersionNumber)
 		{
+			NSLog(@"%f < %f", kCFCoreFoundationVersionNumber, [minCFVersionNumber floatValue]);
 			if(kCFCoreFoundationVersionNumber < [minCFVersionNumber floatValue])
 			{
 				[specifiers removeObject:specifier];

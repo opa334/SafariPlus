@@ -53,7 +53,7 @@
 
 	NSMutableArray* allItems = [NSMutableArray new];
 
-	for(NSInteger i = BrowserToolbarBackItem; i <= BrowserToolbarClearDataItem; i++)
+	for(NSInteger i = BrowserToolbarBackItem; i < BrowserToolbarItemCount; i++)
 	{
 		if(![self searchBarIncluded] && i == BrowserToolbarSearchBarSpace)
 		{
@@ -262,10 +262,10 @@
 
 			case BrowserToolbarTabExposeItem:
 			{
-				itemImage = [UIImage imageNamed:@"TabButton.png" inBundle:MSBundle];
+				itemImage = [UIImage imageNamed:@"TabButton" inBundle:MSBundle];
 				if(!itemImage)
 				{
-					itemImage = [UIImage imageNamed:@"TabButton.png" inBundle:SSBundle];
+					itemImage = [UIImage imageNamed:@"TabButton" inBundle:SSBundle];
 				}
 				break;
 			}

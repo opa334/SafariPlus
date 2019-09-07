@@ -27,6 +27,7 @@
 @property (nonatomic) UIImage* image;
 @property (nonatomic) int64_t filesize;
 @property (nonatomic) NSString* filename;
+@property (nonatomic) NSString* title;
 @property (nonatomic) NSURL* targetURL;
 @property (nonatomic) BOOL customPath;
 @property (nonatomic) id<SourceVideoDelegate> sourceVideo;
@@ -44,4 +45,5 @@
 - (void)removeExistingFile;
 
 - (void)updateHLSForSuggestedFilename:(NSString*)suggestedFilename;
+- (NSString*)filenameForTitle;
 @end

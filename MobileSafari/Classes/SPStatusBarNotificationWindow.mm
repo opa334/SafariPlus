@@ -46,7 +46,7 @@
 
 	self.currentDeviceOrientation = [self interfaceOrientation];
 
-	self.windowLevel = UIWindowLevelAlert + 1;
+	self.windowLevel = 10000003; //video player on iOS 10 is on window level 10000002
 	self.clipsToBounds = YES;
 
 	//Init and add textView

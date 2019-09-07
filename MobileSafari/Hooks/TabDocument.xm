@@ -368,9 +368,9 @@ static BOOL fakeOpenLinksValue = NO;
 
 		//Create download info and configure it
 		SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:navigationResponse._request];
+		[downloadInfo updateHLSForSuggestedFilename:navigationResponse.response.suggestedFilename];
 		downloadInfo.filesize = navigationResponse.response.expectedContentLength;
 		downloadInfo.filename = navigationResponse.response.suggestedFilename;
-		[downloadInfo updateHLSForSuggestedFilename:navigationResponse.response.suggestedFilename];
 		downloadInfo.presentationController = rootViewController;
 		downloadInfo.sourceDocument = self;
 

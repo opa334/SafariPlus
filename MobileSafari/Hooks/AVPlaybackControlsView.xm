@@ -28,20 +28,22 @@
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPDownloadInfo.h"
-#import "../Classes/AVActivityButton.h"
+#import "../Classes/UIButton+ActivityIndicator.h"
+
 
 %hook AVPlaybackControlsView
 
-%property (nonatomic,retain) AVActivityButton *downloadButton;
+%property (nonatomic,retain) AVButton *downloadButton;
 
 %new
 - (void)setUpDownloadButton
 {
 	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled && !self.downloadButton)
 	{
-		self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
+		self.downloadButton = [%c(AVButton) buttonWithType:UIButtonTypeCustom];
+		[self.downloadButton setUpActivityIndicator];
 
-		[self.downloadButton setImage:[[UIImage imageNamed:@"VideoDownloadButton.png"
+		[self.downloadButton setImage:[[UIImage imageNamed:@"VideoDownloadButtonModern"
 						inBundle:SPBundle compatibleWithTraitCollection:nil]
 					       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
 		 forState:UIControlStateNormal];
@@ -50,9 +52,10 @@
 		 forControlEvents:UIControlEventTouchUpInside];
 
 		self.downloadButton.adjustsImageWhenHighlighted = NO;
+		self.downloadButton.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.downloadButton.widthAnchor constraintEqualToConstant:60].active = true;
 
-		self.downloadButton.tintColor = [UIColor colorWithWhite:1 alpha:0.55];
+		[%c(AVBackdropView) applySecondaryGlyphTintToView:self.downloadButton];
 	}
 }
 

@@ -22,6 +22,7 @@
 #import "../Defines.h"
 #import "SPFileManager.h"
 #import "SPMediaFetcher.h"
+#import "../SafariPlus.h"
 
 extern "C"
 {
@@ -29,7 +30,7 @@ CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
 }
 
 BOOL registered = NO;
-void (^g_completionHandler)(NSURL* URL);
+void (^g_completionHandler)(NSURL* URL, int pid);
 
 void currentVideoURLReceived(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
@@ -41,17 +42,20 @@ void currentVideoURLReceived(CFNotificationCenterRef center, void *observer, CFS
 
 	NSString* URLString;
 
+	NSDictionary* dictUserInfo;
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
 	{
-		NSDictionary* dictUserInfo = (__bridge NSDictionary*)userInfo;
-		URLString = [dictUserInfo objectForKey:@"videoURL"];
+		dictUserInfo = (__bridge NSDictionary*)userInfo;
 	}
 	else
 	{
-		NSString* videoURLPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"videoURL.txt"];
-		URLString = [NSString stringWithContentsOfFile:videoURLPath usedEncoding:nil error:nil];
-		[fileManager removeItemAtPath:videoURLPath error:nil];
+		NSString* userInfoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"videoURLUserInfo.plist"];
+		dictUserInfo = [NSDictionary dictionaryWithContentsOfFile:userInfoPath];
+		[fileManager removeItemAtPath:userInfoPath error:nil];
 	}
+
+	URLString = [dictUserInfo objectForKey:@"videoURL"];
 
 	NSURL* receivedURL = nil;
 
@@ -60,14 +64,16 @@ void currentVideoURLReceived(CFNotificationCenterRef center, void *observer, CFS
 		receivedURL = [NSURL URLWithString:URLString];
 	}
 
-	g_completionHandler(receivedURL);
+	NSNumber* pid = [dictUserInfo objectForKey:@"pid"];
+
+	g_completionHandler(receivedURL, pid.intValue);
 
 	g_completionHandler = nil;
 }
 
 @implementation SPMediaFetcher
 
-+ (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL))completionHandler
++ (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL, int pid))completionHandler
 {
 	if(!registered)
 	{
@@ -78,11 +84,11 @@ void currentVideoURLReceived(CFNotificationCenterRef center, void *observer, CFS
 	g_completionHandler = completionHandler;
 	CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.opa334.safariplus/RequestCurrentVideoURL"), CFSTR("RequestCurrentVideoURL"), nil, YES);
 
-	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
+	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
 	{
 		if(g_completionHandler)
 		{
-			g_completionHandler(nil);
+			g_completionHandler(nil, 0);
 		}
 	});
 }

@@ -384,6 +384,32 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>footerText</key>
+				<string>FORCE_NATIVE_PLAYER_FOOTER</string>
+				<key>minCFVersion</key>
+				<real>1556.00</real>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<false/>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>key</key>
+				<string>forceNativePlayerEnabled</string>
+				<key>label</key>
+				<string>FORCE_NATIVE_PLAYER</string>
+				<key>minCFVersion</key>
+				<real>1556.00</real>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>footerText</key>
 				<string>SUPPRESS_MAILTO_DIALOG_FOOTER</string>
 				<key>minCFVersion</key>
 				<real>1348.00</real>

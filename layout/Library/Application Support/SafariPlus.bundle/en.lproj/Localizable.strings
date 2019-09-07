@@ -64,6 +64,7 @@
 
 "VIDEO_DOWNLOADING" = "Video Downloading";
 "VIDEO_DOWNLOADING_FOOTER" = "Add a download button to the full screen video player.";
+"USE_TAB_TITLE_AS_FILENAME" = "Use Tab Title as Filename";
 
 "ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "Add download actions when long pressing site elements.";
 "DOWNLOAD_SITE_TO_ACTION" = "'Download Site to...' Action";
@@ -173,6 +174,9 @@
 
 "SHOW_FULL_SITE_URL" = "Show Full Site URL";
 "SHOW_FULL_SITE_URL_FOOTER" = "Always show the full site URL in the top bar.";
+
+"FORCE_NATIVE_PLAYER" = "Force Native Player";
+"FORCE_NATIVE_PLAYER_FOOTER" = "On iPads running iOS 12 and above, Safari has a HTML5 video player that let's the website provide some of the media controls (Not all sites use this!). On 12.0 - 12.1.4 there is a toggle for it inside Safari settings, on 12.2 and above it's on by default. This option forces Safari to use the native player on all sites except YouTube, due to it not supporting the native player.";
 
 "SUPPRESS_MAILTO_DIALOG" = "Suppress Mailto Dialog";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppress the dialog box that appears when a 'mailto:<email>' URL is accessed.";

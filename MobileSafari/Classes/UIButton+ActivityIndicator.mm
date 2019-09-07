@@ -18,24 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "AVActivityButton.h"
+#import "UIButton+ActivityIndicator.h"
 #import "../Defines.h"
 
-%subclass AVActivityButton: AVButton
+#import <objc/runtime.h>
 
-%property (nonatomic,retain) UIActivityIndicatorView *activityIndicatorView;
+@implementation UIButton (ActivityIndicator)
 
-+ (instancetype)buttonWithType:(UIButtonType)buttonType
-{
-	AVActivityButton* button = %orig;
-
-	[button setUpSpinner];
-
-	return button;
-}
-
-%new
-- (void)setUpSpinner
+- (void)setUpActivityIndicator
 {
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
 	{
@@ -56,13 +46,21 @@
 	[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[activityIndicatorView]-0-|" options:0 metrics:nil views:views]];
 }
 
-%new
+- (UIActivityIndicatorView*)activityIndicatorView
+{
+	return objc_getAssociatedObject(self, "activityIndicatorView");
+}
+
+- (void)setActivityIndicatorView:(UIActivityIndicatorView*)activityIndicatorView
+{
+	objc_setAssociatedObject(self, "activityIndicatorView", activityIndicatorView, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
 - (BOOL)spinning
 {
 	return [objc_getAssociatedObject(self, "spinning") boolValue];
 }
 
-%new
 - (void)setSpinning:(BOOL)spinning
 {
 	BOOL _spinning = [self spinning];
@@ -87,4 +85,4 @@
 	}
 }
 
-%end
+@end

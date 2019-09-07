@@ -59,7 +59,7 @@
 
 		[documentMenuController addOptionWithTitle:[localizationManager
 							    localizedSPStringForKey:@"LOCAL_FILES"]
-		 image:[UIImage imageNamed:@"UploadFileButton.png"
+		 image:[UIImage imageNamed:@"UploadFileButton"
 			inBundle:SPBundle compatibleWithTraitCollection:nil]
 		 order:UIDocumentMenuOrderFirst handler:
 		 ^

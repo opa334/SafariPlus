@@ -64,6 +64,7 @@
 
 "VIDEO_DOWNLOADING" = "Video Downloads";
 "VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Download Button zum Video-Player hinzu.";
+"USE_TAB_TITLE_AS_FILENAME" = "Tab Titel als Dateiname nutzen";
 
 "ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "Fügt Download-Aktionen beim langen Drücken auf Seitenelemente hinzu.";
 "DOWNLOAD_SITE_TO_ACTION" = "'Seite herunterladen nach ...' Aktion";
@@ -173,6 +174,9 @@
 
 "SHOW_FULL_SITE_URL" = "Gesamte URL anzeigen";
 "SHOW_FULL_SITE_URL_FOOTER" = "Immer die gesamte URL der Seite in der oberen Leiste anzeigen.";
+
+"FORCE_NATIVE_PLAYER" = "Nativen Player erzwingen";
+"FORCE_NATIVE_PLAYER_FOOTER" = "Auf iPads besitzt Safari ab iOS 12 einen neuen HTML5 Player, welcher einige Elemente von der Webseite bezieht (nicht auf jeder Seite!). Auf 12.0 - 12.1.4 kann dieser in den Einstellungen aktiviert werden, ab 12.2 ist er standardmäßig an. Diese Option erzwingt die Benutzung des nativen Players auf jeder Seite außer YouTube, da es den nativen Player nicht unterstützt.";
 
 "SUPPRESS_MAILTO_DIALOG" = "Mailto Dialog deaktivieren";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";

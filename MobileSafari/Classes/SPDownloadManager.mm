@@ -23,7 +23,7 @@
 #import "../Defines.h"
 #import "../SafariPlus.h"
 #import "../Util.h"
-#import "../Classes/AVActivityButton.h"
+#import "../Classes/UIButton+ActivityIndicator.h"
 #import "../../Shared/NSFileManager+DirectorySize.h"
 #import "SPDirectoryPickerNavigationController.h"
 #import "SPDownload.h"
@@ -1019,15 +1019,27 @@
 		[downloadInfo.sourceVideo.downloadButton setSpinning:YES];
 	}
 
-	[SPMediaFetcher getURLForCurrentlyPlayingMediaWithCompletionHandler:^(NSURL* URL)
+	[SPMediaFetcher getURLForCurrentlyPlayingMediaWithCompletionHandler:^(NSURL* URL, int pid)
 	{
 		if(URL)
 		{
 			downloadInfo.request = [NSURLRequest requestWithURL:URL];
 
-			if(browserControllers().count == 1)
+			TabDocument* tabDocumentForVideo;
+
+			for(BrowserController* bc in browserControllers())
 			{
-				downloadInfo.sourceDocument = browserControllers().firstObject.tabController.activeTabDocument;
+				if(bc.tabController.activeTabDocument.webView._webProcessIdentifier == pid)
+				{
+					tabDocumentForVideo = bc.tabController.activeTabDocument;
+				}
+			}
+
+			downloadInfo.sourceDocument = tabDocumentForVideo;
+
+			if(preferenceManager.videoDownloadingUseTabTitleAsFilenameEnabled)
+			{
+				downloadInfo.title = downloadInfo.sourceDocument.title;
 			}
 
 			[self prepareDownloadFromRequestForDownloadInfo:downloadInfo];
@@ -1411,10 +1423,15 @@
 
 	if(statusCode < 400)	//No error
 	{
+		[downloadInfo updateHLSForSuggestedFilename:response.suggestedFilename];
+
 		downloadInfo.filesize = response.expectedContentLength;
 		downloadInfo.filename = response.suggestedFilename;
 
-		[downloadInfo updateHLSForSuggestedFilename:response.suggestedFilename];
+		if(downloadInfo.title)
+		{
+			downloadInfo.filename = [downloadInfo filenameForTitle];
+		}
 
 		[self presentDownloadAlertWithDownloadInfo:downloadInfo];
 	}
@@ -1543,6 +1560,8 @@
 				[fileManager resetHardLinks];
 			}
 		}
+
+		if(uti) CFRelease(uti);
 	}
 }
 

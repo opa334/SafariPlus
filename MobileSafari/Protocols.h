@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-@class SPDownload, SPDownloadInfo, SPDownloadManager, SPFilePickerNavigationController, AVActivityButton, AVAssetDownloadURLSession;
+@class SPDownload, SPDownloadInfo, SPDownloadManager, SPFilePickerNavigationController, AVAssetDownloadURLSession;
 
 @protocol filePickerDelegate<NSObject>
 - (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs;
@@ -62,7 +62,7 @@
 
 @protocol SourceVideoDelegate
 @required
-@property (nonatomic,retain) AVActivityButton* downloadButton;
+@property (nonatomic,retain) __kindof UIButton* downloadButton;
 @end
 
 @protocol SPDirectoryPickerDelegate

@@ -92,6 +92,7 @@ void reloadPrefs()
 	[_preferences registerBool:&_uploadAnyFileOptionEnabled default:NO forKey:@"uploadAnyFileOptionEnabled"];
 	[_preferences registerBool:&_downloadManagerEnabled default:NO forKey:@"downloadManagerEnabled"];
 	[_preferences registerBool:&_videoDownloadingEnabled default:NO forKey:@"videoDownloadingEnabled"];
+	[_preferences registerBool:&_videoDownloadingUseTabTitleAsFilenameEnabled default:YES forKey:@"videoDownloadingUseTabTitleAsFilenameEnabled"];
 	[_preferences registerBool:&_downloadSiteToActionEnabled default:YES forKey:@"downloadSiteToActionEnabled"];
 	[_preferences registerBool:&_downloadImageToActionEnabled default:YES forKey:@"downloadImageToActionEnabled"];
 	[_preferences registerBool:&_customDefaultPathEnabled default:NO forKey:@"customDefaultPathEnabled"];
@@ -127,6 +128,7 @@ void reloadPrefs()
 	[_preferences registerBool:&_fullscreenScrollingEnabled default:NO forKey:@"fullscreenScrollingEnabled"];
 	[_preferences registerBool:&_lockBars default:NO forKey:@"lockBars"];
 	[_preferences registerBool:&_showFullSiteURLEnabled default:NO forKey:@"showFullSiteURLEnabled"];
+	[_preferences registerBool:&_forceNativePlayerEnabled default:NO forKey:@"forceNativePlayerEnabled"];
 	[_preferences registerBool:&_suppressMailToDialog default:NO forKey:@"suppressMailToDialog"];
 
 	[_preferences registerBool:&_forceModeOnStartEnabled default:NO forKey:@"forceModeOnStartEnabled"];
@@ -280,6 +282,8 @@ void reloadPrefs()
 		_uploadAnyFileOptionEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("uploadAnyFileOptionEnabled"), appID) boolValue];
 		_downloadManagerEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadManagerEnabled"), appID) boolValue];
 		_videoDownloadingEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("videoDownloadingEnabled"), appID) boolValue];
+		NSNumber* videoDownloadingUseTabTitleAsFilenameEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("videoDownloadingUseTabTitleAsFilenameEnabled"), appID);
+		_videoDownloadingUseTabTitleAsFilenameEnabled = videoDownloadingUseTabTitleAsFilenameEnabled ? [videoDownloadingUseTabTitleAsFilenameEnabled boolValue] : YES;
 		NSNumber* downloadSiteToActionEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadSiteToActionEnabled"), appID);
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
 		NSNumber* downloadImageToActionEnabled = (__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("downloadImageToActionEnabled"), appID);
@@ -323,6 +327,7 @@ void reloadPrefs()
 		_fullscreenScrollingEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("fullscreenScrollingEnabled"), appID) boolValue];
 		_lockBars = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("lockBars"), appID) boolValue];
 		_showFullSiteURLEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("showFullSiteURLEnabled"), appID) boolValue];
+		_forceNativePlayerEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceNativePlayerEnabled"), appID) boolValue];
 		_suppressMailToDialog = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("suppressMailToDialog"), appID) boolValue];
 
 		_forceModeOnStartEnabled = [(__bridge NSNumber*)CFPreferencesCopyAppValue(CFSTR("forceModeOnStartEnabled"), appID) boolValue];
@@ -460,6 +465,8 @@ void reloadPrefs()
 		_uploadAnyFileOptionEnabled = [[prefDict objectForKey:@"uploadAnyFileOptionEnabled"] boolValue];
 		_downloadManagerEnabled = [[prefDict objectForKey:@"downloadManagerEnabled"] boolValue];
 		_videoDownloadingEnabled = [[prefDict objectForKey:@"videoDownloadingEnabled"] boolValue];
+		NSNumber* videoDownloadingUseTabTitleAsFilenameEnabled = [prefDict objectForKey:@"videoDownloadingUseTabTitleAsFilenameEnabled"];
+		_videoDownloadingUseTabTitleAsFilenameEnabled = videoDownloadingUseTabTitleAsFilenameEnabled ? [videoDownloadingUseTabTitleAsFilenameEnabled boolValue] : YES;
 		NSNumber* downloadSiteToActionEnabled = [prefDict objectForKey:@"downloadSiteToActionEnabled"];
 		_downloadSiteToActionEnabled = downloadSiteToActionEnabled ? [downloadSiteToActionEnabled boolValue] : YES;
 		NSNumber* downloadImageToActionEnabled = [prefDict objectForKey:@"downloadImageToActionEnabled"];
@@ -500,6 +507,7 @@ void reloadPrefs()
 		_fullscreenScrollingEnabled = [[prefDict objectForKey:@"fullscreenScrollingEnabled"] boolValue];
 		_lockBars = [[prefDict objectForKey:@"lockBars"] boolValue];
 		_showFullSiteURLEnabled = [[prefDict objectForKey:@"showFullSiteURLEnabled"] boolValue];
+		_forceNativePlayerEnabled = [[prefDict objectForKey:@"forceNativePlayerEnabled"] boolValue];
 		_suppressMailToDialog = [[prefDict objectForKey:@"suppressMailToDialog"] boolValue];
 
 		_forceModeOnStartEnabled = [[prefDict objectForKey:@"forceModeOnStartEnabled"] boolValue];
@@ -675,6 +683,7 @@ void reloadPrefs()
 - (BOOL)fullscreenScrollingEnabled { return [[_preferences objectForKey:@"fullscreenScrollingEnabled"] boolValue]; }
 - (BOOL)lockBars { return [[_preferences objectForKey:@"lockBars"] boolValue]; }
 - (BOOL)showFullSiteURLEnabled { return [[_preferences objectForKey:@"showFullSiteURLEnabled"] boolValue]; }
+- (BOOL)forceNativePlayerEnabled { return [[_preferences objectForKey:@"forceNativePlayerEnabled"] boolValue]; }
 - (BOOL)suppressMailToDialog { return [[_preferences objectForKey:@"suppressMailToDialog"] boolValue]; }
 
 - (BOOL)forceModeOnStartEnabled { return [[_preferences objectForKey:@"forceModeOnStartEnabled"] boolValue]; }

@@ -49,6 +49,7 @@
 @property (nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;
 @property (nonatomic, readonly) BOOL downloadManagerEnabled;
 @property (nonatomic, readonly) BOOL videoDownloadingEnabled;
+@property (nonatomic, readonly) BOOL videoDownloadingUseTabTitleAsFilenameEnabled;
 @property (nonatomic, readonly) BOOL downloadSiteToActionEnabled;
 @property (nonatomic, readonly) BOOL downloadImageToActionEnabled;
 @property (nonatomic, readonly) BOOL customDefaultPathEnabled;
@@ -86,6 +87,7 @@
 @property (nonatomic, readonly) BOOL fullscreenScrollingEnabled;
 @property (nonatomic, readonly) BOOL lockBars;
 @property (nonatomic, readonly) BOOL showFullSiteURLEnabled;
+@property (nonatomic, readonly) BOOL forceNativePlayerEnabled;
 @property (nonatomic, readonly) BOOL suppressMailToDialog;
 
 @property (nonatomic, readonly) BOOL forceModeOnStartEnabled;

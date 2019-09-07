@@ -758,7 +758,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	}
 	else
 	{
-		documentProxy = [LSDocumentProxy documentProxyForName:nil type:(__bridge NSString*)file.fileUTI MIMEType:nil];
+		documentProxy = [LSDocumentProxy documentProxyForName:nil type:file.fileUTI MIMEType:nil];
 	}
 
 	return [self fileIconForDocumentProxy:documentProxy];
@@ -814,7 +814,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 		}
 		else
 		{
-			_genericDirectoryIcon = [UIImage imageNamed:@"Directory.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+			_genericDirectoryIcon = [UIImage imageNamed:@"Directory" inBundle:SPBundle compatibleWithTraitCollection:nil];
 		}
 	});
 

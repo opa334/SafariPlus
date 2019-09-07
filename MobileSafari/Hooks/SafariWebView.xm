@@ -23,9 +23,32 @@
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
 
+#import <WebKit/WKWebViewConfiguration.h>
+
 #define cSelf ((SafariWebView*)self)
 
 %hook SafariWebView
+
+%new
+- (void)updateFullscreenEnabledPreference
+{
+	if([cSelf.configuration.preferences respondsToSelector:@selector(_setFullScreenEnabled:)])
+	{
+		//Enable HTML5 player for YouTube, disable for any other site
+		cSelf.configuration.preferences._fullScreenEnabled = [cSelf.URL.host containsString:@"youtube.com"];
+		HBLogDebug(@"%@ _fullScreenEnabled:%i", cSelf.URL, cSelf.configuration.preferences._fullScreenEnabled);
+	}
+}
+
+- (void)_didCommitLoadForMainFrame
+{
+	%orig;
+
+	if(preferenceManager.forceNativePlayerEnabled && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+	{
+		[self updateFullscreenEnabledPreference];
+	}
+}
 
 %new
 - (void)setDesktopModeState:(NSInteger)desktopModeState
@@ -130,33 +153,7 @@
 	{
 		[cSelf reload];
 	}
-
-	//[[cSelf _currentContentView] _zoomOutWithOrigin:CGPointMake(0,0)];
 }
-
-/*- (void)_setCustomUserAgent:(NSString*)customUserAgent
-   {
-        if([customUserAgent isEqualToString:@"FAKE"] && (preferenceManager.desktopButtonEnabled || preferenceManager.customUserAgentEnabled))
-        {
-                [self sp_updateCustomUserAgent];
-        }
-        else
-        {
-                %orig;
-        }
-   }
-
-   - (void)setCustomUserAgent:(NSString*)customUserAgent
-   {
-        if([customUserAgent isEqualToString:@"FAKE"] && (preferenceManager.desktopButtonEnabled || preferenceManager.customUserAgentEnabled))
-        {
-                [self sp_updateCustomUserAgent];
-        }
-        else
-        {
-                %orig;
-        }
-   }*/
 
 %end
 

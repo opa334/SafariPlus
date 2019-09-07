@@ -35,7 +35,7 @@
 %property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
 %property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 
-%property (nonatomic, assign) BOOL browsingModeSet;
+%property (nonatomic, assign) BOOL isSetUp;
 
 //Present downloads view
 %new
@@ -482,6 +482,13 @@
 	return %orig;
 }
 
+- (void)setUpWithURL:(id)arg1 launchOptions:(id)arg2
+{
+	self.isSetUp = NO;
+	%orig;
+	self.isSetUp = YES;
+}
+
 %end
 
 %group iOS11_3to12_1_4
@@ -502,12 +509,21 @@
 
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(id)arg3
 {
+	void (^origBlock)() = ^
+	{
+		%orig;
+
+		if(preferenceManager.showTabCountEnabled)
+		{
+			[activeToolbarForBrowserController(self) updateTabCount];
+		};
+	};
+
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
 	{
-		if(!self.browsingModeSet)
+		if(!self.isSetUp)
 		{
-			%orig;
-			self.browsingModeSet = YES;
+			origBlock();
 			return;
 		}
 
@@ -517,24 +533,14 @@
 		{
 			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 			{
-				%orig;
-
-				if(preferenceManager.showTabCountEnabled)
-				{
-					[activeToolbarForBrowserController(self) updateTabCount];
-				}
+				origBlock();
 			});
 
 			return;
 		}
 	}
 
-	%orig;
-
-	if(preferenceManager.showTabCountEnabled)
-	{
-		[activeToolbarForBrowserController(self) updateTabCount];
-	}
+	origBlock();
 }
 
 %end
@@ -557,27 +563,27 @@
 
 - (void)togglePrivateBrowsing
 {
+	void (^origBlock)() = ^
+	{
+		%orig;
+
+		if(preferenceManager.showTabCountEnabled)
+		{
+			[activeToolbarForBrowserController(self) updateTabCount];
+		};
+	};
+
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
 	{
 		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 		{
-			%orig;
-
-			if(preferenceManager.showTabCountEnabled)
-			{
-				[activeToolbarForBrowserController(self) updateTabCount];
-			}
+			origBlock();
 		});
 
 		return;
 	}
 
-	%orig;
-
-	if(preferenceManager.showTabCountEnabled)
-	{
-		[activeToolbarForBrowserController(self) updateTabCount];
-	}
+	origBlock();
 }
 
 - (void)setPrivateBrowsingEnabled:(BOOL)enabled
@@ -588,12 +594,21 @@
 		return;
 	}
 
+	void (^origBlock)() = ^
+	{
+		%orig;
+
+		if(preferenceManager.showTabCountEnabled)
+		{
+			[activeToolbarForBrowserController(self) updateTabCount];
+		};
+	};
+
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
 	{
-		if(!self.browsingModeSet)
+		if(!self.isSetUp)
 		{
-			%orig;
-			self.browsingModeSet = YES;
+			origBlock();
 			return;
 		}
 
@@ -603,24 +618,14 @@
 		{
 			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 			{
-				%orig;
-
-				if(preferenceManager.showTabCountEnabled)
-				{
-					[activeToolbarForBrowserController(self) updateTabCount];
-				}
+				origBlock();
 			});
 
 			return;
 		}
 	}
 
-	%orig;
-
-	if(preferenceManager.showTabCountEnabled)
-	{
-		[activeToolbarForBrowserController(self) updateTabCount];
-	}
+	origBlock();
 }
 
 %end
