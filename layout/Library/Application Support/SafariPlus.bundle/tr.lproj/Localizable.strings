@@ -418,7 +418,7 @@
 /*PREVIEW*/
 "PLAY" = "Oynat";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "’Özel Varsayılan Yol' ayarladığınız yol geçersiz. Lütfen düzeltin.";
-"VIDEO_URL_NOT_FOUND" = "Video URL bulunamadı, mevcut site muhtemelen desteklenmiyor!";
+/*VIDEO_URL_NOT_FOUND*/
 "COPY_LINK" = "Link kopyala";
 "SIZE_UNKNOWN" = "Bilinmeyen boyutu";
 /*DURATION_UNKNOWN*/
@@ -444,4 +444,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Normal Mod aç";
 "OPEN_IN_PRIVATE_MODE" = "Özel Modda Aç";
-

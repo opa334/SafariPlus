@@ -418,7 +418,7 @@
 /*PREVIEW*/
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Le chemin que vous avez défini dans les paramètres sous ´Chemin par défaut personnalisé’ n'est pas valide. Veuillez le corriger.";
-"VIDEO_URL_NOT_FOUND" = "Aucune URL de vidéo trouvée, le site actuel n'est probablement pas pris en charge!";
+/*VIDEO_URL_NOT_FOUND*/
 "COPY_LINK" = "Copier le lien";
 "SIZE_UNKNOWN" = "Taille inconnue";
 /*DURATION_UNKNOWN*/
@@ -444,4 +444,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Ouvrir en mode normal";
 "OPEN_IN_PRIVATE_MODE" = "Ouvrir en mode privé";
-

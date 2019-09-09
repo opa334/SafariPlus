@@ -418,7 +418,7 @@
 /*PREVIEW*/
 "PLAY" = "Riproduci";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Il percorso che hai impostato nelle impostazioni sotto \"Percorso predefinito personalizzato\" non è valido. Si prega di correggerlo.";
-"VIDEO_URL_NOT_FOUND" = "Nessun URL video trovato, il sito attuale probabilmente non è supportato!";
+/*VIDEO_URL_NOT_FOUND*/
 "COPY_LINK" = "Copia link";
 "SIZE_UNKNOWN" = "Dimensione sconosciuta";
 /*DURATION_UNKNOWN*/
@@ -444,4 +444,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "Apri in modalità normale";
 "OPEN_IN_PRIVATE_MODE" = "Apri in modalità privata";
-

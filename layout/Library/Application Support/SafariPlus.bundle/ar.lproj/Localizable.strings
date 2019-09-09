@@ -418,7 +418,7 @@
 /*PREVIEW*/
 "PLAY" = "تشغيل";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "المسار الذي قمت بتعيينه في الإعدادات ضمن 'مسار افتراضي مخصص' غير صالح. يرجى تصحيح ذلك.";
-"VIDEO_URL_NOT_FOUND" = "لم يتم العثور على عنوان URL لهذا الفيديو، ربما يكون الموقع الحالي غير مدعوم!";
+/*VIDEO_URL_NOT_FOUND*/
 "COPY_LINK" = "نسخ الرابط";
 "SIZE_UNKNOWN" = "حجم غير معروف";
 /*DURATION_UNKNOWN*/
@@ -444,4 +444,3 @@
 
 "OPEN_IN_NORMAL_MODE" = "فتح في الوضع العادي";
 "OPEN_IN_PRIVATE_MODE" = "فتح في الوضع الخاص";
-

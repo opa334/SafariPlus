@@ -422,7 +422,7 @@
 "PREVIEW" = "Preview";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
-"VIDEO_URL_NOT_FOUND" = "No video URL found, current site is probably not supported!";
+"VIDEO_URL_NOT_FOUND" = "No video URL found! If the video is paused, unpause it and try again.";
 "COPY_LINK" = "Copy Link";
 "SIZE_UNKNOWN" = "Unknown Size";
 "DURATION_UNKNOWN" = "Unknown Duration";

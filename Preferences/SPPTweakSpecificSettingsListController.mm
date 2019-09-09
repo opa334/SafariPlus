@@ -24,14 +24,6 @@
 #import <Preferences/PSSpecifier.h>
 #import <LocalAuthentication/LocalAuthentication.h>
 
-@interface NPSDomainAccessor : NSObject
-- (NSArray*)copyKeyList;
-- (NSObject*)objectForKey:(NSString*)key;
-- (void)removeObjectForKey:(NSString*)key;
-- (id)initWithDomain:(NSString*)domain;
-- (id)synchronize;
-@end
-
 @implementation SPPTweakSpecificSettingsListController
 
 - (NSString*)plistName

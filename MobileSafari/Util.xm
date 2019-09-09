@@ -741,6 +741,7 @@ extern void initWKFullScreenViewController();
 
 %ctor
 {
+	HBLogDebug(@"started loading SafariPlus!");
   #ifdef DEBUG_LOGGING
 	initDebug();
   #endif
@@ -777,4 +778,6 @@ extern void initWKFullScreenViewController();
 		initWKFileUploadPanel();
 		initWKFullScreenViewController();
 	}
+
+	HBLogDebug(@"finished loading SafariPlus!");
 }

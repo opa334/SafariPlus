@@ -24,12 +24,14 @@
 {
   #ifndef NO_CEPHEI
 	HBPreferences* _preferences;
-  #elif !defined(SIMJECT)
-	NSDictionary* _preferences;
   #endif
+  NSDictionary* _defaults;
 }
 
 + (instancetype)sharedInstance;
+
+- (void)reloadPreferences;
+- (void)reloadPreferencesFromDictionary:(NSDictionary*)prefDict;
 
 @property (nonatomic, readonly) BOOL tweakEnabled;
 
@@ -198,9 +200,7 @@
 @property (nonatomic, readonly) BOOL sortDirectoriesAboveFiles;
 @property (nonatomic, readonly) BOOL communicationErrorDisabled;
 
-#ifdef NO_CEPHEI
-- (void)reloadPrefs;
-#else
+#ifndef NO_CEPHEI
 - (HBPreferences*)preferences;
 #endif
 

@@ -56,14 +56,18 @@ static void updateToolbarConnectionWithBarButtonItem(__kindof UIBarButtonItem* i
 	{
 		if([recognizer isKindOfClass:[NSClassFromString(@"SFBarButtonItemLongPressGestureRecognizer") class]])
 		{
-			if([[recognizer class] respondsToSelector:@selector(gestureRecognizerWithLongPressTarget:action:)])
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
 			{
-				[recognizer setValue:target forKey:@"_longPressTarget"];
+				[recognizer setValue:item forKey:@"_barButtonItem"];
+			}
+
+			if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+			{
+				[recognizer setValue:target forKey:@"_target"];
 			}
 			else
 			{
-				[recognizer setValue:item forKey:@"_barButtonItem"];
-				[recognizer setValue:target forKey:@"_target"];
+				[recognizer setValue:target forKey:@"_longPressTarget"];
 			}
 		}
 		else

@@ -422,7 +422,7 @@
 "PREVIEW" = "Vorschau";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
-"VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden, die aktuelle Seite wird wahrscheinlich nicht unterstützt!";
+"VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden! Wenn das Video derzeit pausiert ist, starte die Wiedergabe und versuche es erneut.";
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "DURATION_UNKNOWN" = "Unbekannte Länge";
