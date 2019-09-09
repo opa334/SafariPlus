@@ -563,21 +563,18 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	if(rocketBootstrapWorks && _isSandboxed)
 	{
-		if(![self isURLReadable:url])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResourceValue_URL];
+		NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResourceValue_URL];
 
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, key, @"key");
-			addToDict(operation, url, @"url");
+		NSMutableDictionary* operation = [NSMutableDictionary new];
+		addToDict(operation, operationType, @"operationType");
+		addToDict(operation, key, @"key");
+		addToDict(operation, url, @"url");
 
-			NSDictionary* response = execute(operation, error);
+		NSDictionary* response = execute(operation, error);
 
-			*value = [response objectForKey:@"value"];
+		*value = [response objectForKey:@"value"];
 
-			return [[response objectForKey:@"return"] boolValue];
-		}
+		return [[response objectForKey:@"return"] boolValue];
 	}
 
 	return [url getResourceValue:value forKey:key error:error];
