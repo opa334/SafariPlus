@@ -507,16 +507,13 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	if(rocketBootstrapWorks && _isSandboxed)
 	{
-		if(![self isPathReadable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_IsWritable];
+		NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_IsWritable];
 
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
+		NSMutableDictionary* operation = [NSMutableDictionary new];
+		addToDict(operation, operationType, @"operationType");
+		addToDict(operation, path, @"path");
 
-			return [[execute(operation, nil) objectForKey:@"return"] boolValue];
-		}
+		return [[execute(operation, nil) objectForKey:@"return"] boolValue];
 	}
 
 	return [super isWritableFileAtPath:path];
