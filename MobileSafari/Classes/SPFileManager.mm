@@ -32,6 +32,8 @@
 #import "../../Shared/NSFileManager+DirectorySize.h"
 #import "SPDownload.h"
 
+#import <unistd.h>
+
 #import <QuickLook/QuickLook.h>
 @interface QLThumbnail : NSObject
 - (id)initWithURL:(id)arg1;
@@ -94,11 +96,10 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	self = [super init];
 
-	NSError* sandboxError;
-	[super contentsOfDirectoryAtPath:@"/var/mobile" error:&sandboxError];
-	_isSandboxed = sandboxError.code == 257;
-
 	_hardLinkURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"hardLink"]];
+
+	_isSandboxed = access("/var/mobile", W_OK) != 0;
+	HBLogDebug(@"_isSandboxed:%i", _isSandboxed);
 
 	_displayNamesForPaths = [communicationManager applicationDisplayNamesForPaths];
 
@@ -150,13 +151,13 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 - (BOOL)_isReadable:(const char*)str
 {
 	int denied = sandbox_check(getpid(), "file-read-data", SANDBOX_FILTER_PATH | SANDBOX_CHECK_NO_REPORT, str);
-	return !(BOOL)denied;
+	return !denied;
 }
 
 - (BOOL)_isWritable:(const char*)str
 {
 	int denied = sandbox_check(getpid(), "file-write-data", SANDBOX_FILTER_PATH | SANDBOX_CHECK_NO_REPORT, str);
-	return !(BOOL)denied;
+	return !denied;
 }
 
 - (BOOL)isPathReadable:(NSString*)path
