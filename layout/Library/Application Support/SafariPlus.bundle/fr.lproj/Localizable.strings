@@ -24,7 +24,7 @@
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "Appliquer globalement le protocole HTTPS pour chaque URL non ajoutée aux exceptions.\nUn raccourci pour gérer les exceptions est accessible en appuyant longuement sur le bouton de rechargement.";
+"FORCE_HTTPS_FOOTER" = "Applique globalement le protocole HTTPS pour chaque URL non ajoutée aux exceptions.\nUn raccourci pour gérer les exceptions est accessible en appuyant longuement sur le bouton de rechargement.";
 "FORCE_HTTPS" = "Forcer le protocole HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "Exceptions ...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceptions";
@@ -54,7 +54,7 @@
 "UPLOADS" = "Envois";
 "DOWNLOADS" = "Téléchargements";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Ajoutez une option au menu de sélection de document qui permet de sélectionner n'importe quel fichier sur le périphérique. Plusieurs fichiers peuvent être sélectionnés en appuyant longuement sur un fichier.";
+"UPLOAD_ANY_FILE_FOOTER" = "Ajoute une option au menu de sélection de document qui permet de sélectionner n'importe quel fichier sur le périphérique. Plusieurs fichiers peuvent être sélectionnés en appuyant longuement sur un fichier.";
 "UPLOAD_ANY_FILE" = "Envoyer un fichier";
 
 "DOWNLOAD_MANAGER" = "Gestionnaire de téléchargement";
