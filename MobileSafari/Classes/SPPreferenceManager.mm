@@ -57,6 +57,13 @@ void reloadPreferences()
 	return _preferences;
 }
 
+- (void)fallbackToPlistDictionary
+{
+	NSDictionary* prefDict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"];
+
+	[self reloadPreferencesFromDictionary:prefDict];
+}
+
 #endif
 
 - (void)reloadPreferences
@@ -76,11 +83,20 @@ void reloadPreferences()
 	#endif
 	#else //NORMAL
 	[self reloadPreferencesFromDictionary:[_preferences dictionaryRepresentation]];
+
+	if(!_preferencesAreValid)
+	{
+		[self fallbackToPlistDictionary];
+	}
 	#endif
 }
 
 - (void)reloadPreferencesFromDictionary:(NSDictionary*)prefDict
 {
+	#ifndef NO_CEPHEI
+	_preferencesAreValid = prefDict != nil;
+	#endif
+
 	for(NSString* key in [prefDict allKeys])
 	{
 		id value = [prefDict objectForKey:key];

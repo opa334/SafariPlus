@@ -202,6 +202,8 @@
 
 #ifndef NO_CEPHEI
 - (HBPreferences*)preferences;
+@property (nonatomic, readonly) BOOL preferencesAreValid;
+- (void)fallbackToPlistDictionary;
 #endif
 
 @end
