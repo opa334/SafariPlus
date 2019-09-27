@@ -18,27 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "SPPListController.h"
 #import "SafariPlusPrefs.h"
 #import "SPPEditableListController.h"
 
-@interface SPPBottomToolbarReorderingListController : SPPEditableListController
-{
-	NSArray* _allItems;
-	NSMutableArray* _enabledItems;
-	NSMutableArray* _disabledItems;
-	NSMutableDictionary* _imageByItem;
-	PSSpecifier* _toolbarOrderSpecifier;
-}
-
-- (BOOL)searchBarIncluded;
-- (NSString*)specifierName;
-- (NSString*)nameForItem:(NSInteger)item;
-- (UIImage*)imageForItem:(NSInteger)item;
-- (NSArray*)defaultOrder;
-- (NSIndexPath*)disabledIndexPathForEnabledItemAtIndexPath:(NSIndexPath*)indexPath;
-- (NSString*)title;
-- (void)saveOrder;
-- (void)loadOrder;
-
+@interface SPPEditableListController : PSEditableListController
 @end

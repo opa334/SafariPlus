@@ -20,8 +20,9 @@
 
 #import "SPPListController.h"
 #import "SafariPlusPrefs.h"
+#import "SPPEditableListController.h"
 
-@interface SPPExceptionsController : PSEditableListController
+@interface SPPExceptionsController : SPPEditableListController
 {
 	PSSpecifier* _forceHTTPSExceptionsSpecifier;
 	NSMutableArray* _forceHTTPSExceptions;

@@ -127,7 +127,7 @@
 "URL_ACTIONS" = "Actions sur les URLs";
 
 "BOTH_LINK_OPENING_ACTIONS" = "Deux options pour l'ouverture de lien";
-"BOTH_LINK_OPENING_ACTIONS_FOOTER" = "Afficher l'action "Ouvrir dans un nouvel onglet" et l'action "Ouvrir en arrière-plan" lorsque vous appuyez longuement sur des liens. Ignore tout ce qui est défini dans les paramètres Safari.";
+"BOTH_LINK_OPENING_ACTIONS_FOOTER" = "Afficher l'action \"Ouvrir dans un nouvel onglet\" et l'action \"Ouvrir en arrière-plan\" lorsque vous appuyez longuement sur des liens. Ignore tout ce qui est défini dans les paramètres Safari.";
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Ajoute une option au menu qui apparaît lorsqu'un lien est enfoncé longtemps, pouvant être utilisé pour ouvrir le lien dans le mode de navigation opposé.\n(Navigation classique -> ouverture en navigation privée, \nNavigation privée -> ouverture en navigation classique) ";
 "OPEN_IN_OPPOSITE_MODE" = "Ouvrir dans le mode de navigation opposé";
@@ -410,7 +410,7 @@
 "FILES" = "Fichiers";
 "CHOOSE" = "Choisir";
 "MANUAL_DOWNLOAD" = "Téléchargement manuel";
-"URL_TO_DOWNLOADABLE_FILE" = "URL du fichier téléchargeable"; 
+"URL_TO_DOWNLOADABLE_FILE" = "URL du fichier téléchargeable";
 "START_DOWNLOAD" = "Démarrer le téléchargement";
 "UNABLE_TO_FETCH_FILE_INFORMATION" = "Impossible de récupérer les informations sur le fichier, le lien de téléchargement a peut-être expiré!";
 "CHOOSE_FILENAME" = "Entrez un nom de fichier";

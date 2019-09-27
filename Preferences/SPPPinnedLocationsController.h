@@ -20,8 +20,9 @@
 
 #import "SPPListController.h"
 #import "SafariPlusPrefs.h"
+#import "SPPEditableListController.h"
 
-@interface SPPPinnedLocationsController : PSEditableListController<PinnedLocationsDelegate>
+@interface SPPPinnedLocationsController : SPPEditableListController<PinnedLocationsDelegate>
 {
 	PSSpecifier* _pinnedLocationsSpecifier;
 	NSMutableArray<NSDictionary*>* _pinnedLocations;

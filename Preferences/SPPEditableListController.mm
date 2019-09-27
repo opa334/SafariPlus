@@ -18,27 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "SPPListController.h"
-#import "SafariPlusPrefs.h"
 #import "SPPEditableListController.h"
 
-@interface SPPBottomToolbarReorderingListController : SPPEditableListController
+#import <Preferences/PSSpecifier.h>
+
+#import "Simulator.h"
+
+@implementation SPPEditableListController
+
+#ifdef NO_CEPHEI
+
+- (void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier
 {
-	NSArray* _allItems;
-	NSMutableArray* _enabledItems;
-	NSMutableArray* _disabledItems;
-	NSMutableDictionary* _imageByItem;
-	PSSpecifier* _toolbarOrderSpecifier;
+	NSString* plistPath = rPath(prefPlistPath);
+	NSMutableDictionary* mutableDict = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
+	[mutableDict setObject:value forKey:[[specifier properties] objectForKey:@"key"]];
+	[mutableDict writeToFile:plistPath atomically:YES];
+	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.opa334.safariplusprefs/ReloadPrefs"), NULL, NULL, YES);
 }
 
-- (BOOL)searchBarIncluded;
-- (NSString*)specifierName;
-- (NSString*)nameForItem:(NSInteger)item;
-- (UIImage*)imageForItem:(NSInteger)item;
-- (NSArray*)defaultOrder;
-- (NSIndexPath*)disabledIndexPathForEnabledItemAtIndexPath:(NSIndexPath*)indexPath;
-- (NSString*)title;
-- (void)saveOrder;
-- (void)loadOrder;
+- (id)readPreferenceValue:(PSSpecifier*)specifier
+{
+	NSString* plistPath = rPath(prefPlistPath);
+	NSDictionary* dict = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+
+	id obj = [dict objectForKey:[[specifier properties] objectForKey:@"key"]];
+
+	if(!obj)
+	{
+		obj = [[specifier properties] objectForKey:@"default"];
+	}
+
+	return obj;
+}
+
+#endif
 
 @end

@@ -27,6 +27,8 @@
 
 %hook BrowserRootViewController
 
+#ifndef NO_CEPHEI
+
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
 {
 	if(preferenceManager.forceHTTPSEnabled)
@@ -76,6 +78,8 @@
 
 	%orig;
 }
+
+#endif
 
 %end
 

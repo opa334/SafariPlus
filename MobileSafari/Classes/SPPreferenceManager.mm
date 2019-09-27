@@ -59,7 +59,7 @@ void reloadPreferences()
 
 - (void)fallbackToPlistDictionary
 {
-	NSDictionary* prefDict = [NSDictionary dictionaryWithContentsOfFile:@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"];
+	NSDictionary* prefDict = [NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")];
 
 	[self reloadPreferencesFromDictionary:prefDict];
 }
