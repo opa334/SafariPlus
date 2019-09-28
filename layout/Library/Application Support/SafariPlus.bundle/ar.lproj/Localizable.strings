@@ -9,14 +9,18 @@
 "PRIVACY" = "الخصوصية";
 "UPLOADS_AND_DOWNLOADS" = "التحميلات والتنزيلات";
 "USABILITY" = "إمكانية الاستخدام";
-"BEHAVIOUR" = "السلوك";
+"ACTIONS" = "الإجراءات";
 "GESTURES" = "الإيماءات";
 "CUSTOMIZATION" = "التخصيص";
-"ABOUT_ME" = "عني";
-"TWITTER" = "تويتر";
-"DONATE" = "تبرع";
+
 "ABOUT_THIS_TWEAK" = "حول هذه الأداة";
+"TWEAK_SPECIFIC_SETTINGS" = "إعدادات محددة للأداة";
 "SOURCE_CODE" = "شفرة المصدر";
+"CREDITS_AND_LICENSES" = "الاعتمادات والتراخيص";
+
+"ABOUT_ME" = "حول المطور";
+"FOLLOW_ME_ON_TWITTER" = "تابعني على تويتر";
+"DONATE" = "تبرع";
 
 /* Privacy */
 
