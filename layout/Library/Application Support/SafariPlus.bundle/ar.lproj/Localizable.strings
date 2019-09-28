@@ -63,22 +63,38 @@
 "CONTENT_OPTIONS" = "خيارات المحتوى";
 
 "VIDEO_DOWNLOADING" = "تنزيل الفيديوهات";
-"VIDEO_DOWNLOADING_FOOTER" = "عند التفعيل، سيتم إضافة زر إلى مشغل الفيديوهات يمكن من خلاله تنزيل الفيديو الذي يجرِ تشغيله.\n\nملاحظة: قد لا تعمل هذه الميزة في بعض المواقع بسبب عدم إمكانية الحصول على عناوين URL الخاصة بالفيديوهات من هذه المواقع بسهولة، أيضًا بعض المواقع تستخدم ملفات m3u8 لتدفق محتواها، وبالتالي ستتمكن من حفظ هذه الملفات ولكن لن تستفيد شيء لأنك لن تصل إلى مرادك.";
+"VIDEO_DOWNLOADING_FOOTER" = "إضافة زر تنزيل إلى مشغل الفيديو بملء الشاشة.";
+"USE_TAB_TITLE_AS_FILENAME" = "استخدام عنوان التبويب كاسم الملف";
+
+"ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "إضافة إجراءات تنزيل عند الضغط مطولًا على عناصر الموقع.";
+"DOWNLOAD_SITE_TO_ACTION" = "إجراء 'تنزيل الموقع إلى...'";
+"DOWNLOAD_IMAGE_TO_ACTION" = "إجراء 'تنزيل الصورة إلى...'";
+
+"PATH_OPTIONS" = "خيارات المسار";
+
+"CUSTOM_DEFAULT_PATH" = "مسار افتراضي مخصص";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "اختر مسار مخصص بحيث يجب أن يتم فيه حفظ الملفات التي تم تنزيلها باستخدام إجراء 'تنزيل'.";
+
+"PINNED_LOCATIONS_ENABLED" = "Pinned Locations Enabled";
+"PINNED_LOCATIONS" = "Pinned Locations";
+"PINNED_LOCATIONS_FOOTER" = "Pick locations (name and path) that will appear when using the 'Download to' option.";
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "Add Pinned Location";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "Edit Pinned Location";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Choose a name and the path of the pinned location.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
+"BROWSE" = "Browse...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Choose Path";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n%@?";
+"ERROR_INVALID_NAME_OR_PATH" = "Invalid name or path";
 
 "DEFAULT_SECTION" = "القسم الافتراضي";
 "DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات نشطة، وعندما لا تكون هناك تنزيلات نشطة سيتم فتح القسم الآخر.";
 "DEFAULT_SECTION_AUTO_SWITCH" = "تبديل تلقائي";
 
-"LINK_DOWNLOAD_OPTIONS_FOOTER" = "إضافة خيارات تنزيل موقع / صورة إلى القائمة التي تظهر عند الضغط مطولًا على عناصر الموقع.";
-"DOWNLOAD_SITE_TO_OPTION" = "خيار 'تنزيل الموقع إلى...'";
-"DOWNLOAD_IMAGE_TO_OPTION" = "خيار 'تنزيل الصورة إلى...'";
-
 "INSTANT_DOWNLOAD" = "التنزيل الفوري";
 "INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الخيار المحدد بشكل افتراضي دائمًا.";
 "OPTION" = "Option";
-
-"CUSTOM_DEFAULT_PATH" = "مسار افتراضي مخصص";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "اختر مسارًا مخصصًا يتم تنزيل الملفات إليه عندما يكون هذا الخيار مفعلًا.\n\nملاحظة: يمكن تنزيل الملفات في مسارات قابلة للكتابة فقط، مما يعني أن أي مسار داخل  /var يمكن اختياره.";
 
 "PINNED_LOCATIONS_ENABLED" = "تفعيل المواقع المثبتة";
 "PINNED_LOCATIONS" = "المواقع المثبتة";
