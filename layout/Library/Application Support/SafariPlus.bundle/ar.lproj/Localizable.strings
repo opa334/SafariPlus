@@ -75,18 +75,23 @@
 "CUSTOM_DEFAULT_PATH" = "مسار افتراضي مخصص";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "اختر مسار مخصص بحيث يجب أن يتم فيه حفظ الملفات التي تم تنزيلها باستخدام إجراء 'تنزيل'.";
 
-"PINNED_LOCATIONS_ENABLED" = "Pinned Locations Enabled";
-"PINNED_LOCATIONS" = "Pinned Locations";
-"PINNED_LOCATIONS_FOOTER" = "Pick locations (name and path) that will appear when using the 'Download to' option.";
-"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "Add Pinned Location";
-"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "Edit Pinned Location";
-"PINNED_LOCATIONS_ALERT_MESSAGE" = "Choose a name and the path of the pinned location.";
-"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Name";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
-"BROWSE" = "Browse...";
-"CHOOSE_PATH_CONFIRMATION_TITLE" = "Choose Path";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Do you want to choose the path\n%@?";
-"ERROR_INVALID_NAME_OR_PATH" = "Invalid name or path";
+"PINNED_LOCATIONS_ENABLED" = "تفعيل المواقع المثبتة";
+"PINNED_LOCATIONS" = "المواقع المثبتة";
+"PINNED_LOCATIONS_FOOTER" = "حدد مواقع (اسم ومسار) تظهر عند استخدام خيار 'تنزيل إلى'.";
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "إضافة موقع مثبت";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "تعديل موقع مثبت";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "اختر اسم ومسار الموقع المثبت.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "الاسم";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "المسار";
+"BROWSE" = "تصفح...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "اختر مسار";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "هل تريد اختيار المسار\n%@؟";
+"ERROR_INVALID_NAME_OR_PATH" = "اسم أو مسار غير صالح";
+
+"INTERFACE" = "واجهة المستخدم";
+
+"PREVIEW_DOWNLOAD_PROGRESS" = "معاينة تقدم التنزيل";
+"PREVIEW_DOWNLOAD_PROGRESS_FOOTER" = "عرض شريط تقدم مع تقدم التنزيل الكلي أسفل زر التنزيل في شريط الأدوات. يظهر فقط أثناء تنزيل ملف واحد أو أكثر. مستوحاة من iOS 13.";
 
 "DEFAULT_SECTION" = "القسم الافتراضي";
 "DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات نشطة، وعندما لا تكون هناك تنزيلات نشطة سيتم فتح القسم الآخر.";
@@ -95,21 +100,6 @@
 "INSTANT_DOWNLOAD" = "التنزيل الفوري";
 "INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الخيار المحدد بشكل افتراضي دائمًا.";
 "OPTION" = "Option";
-
-"PINNED_LOCATIONS_ENABLED" = "تفعيل المواقع المثبتة";
-"PINNED_LOCATIONS" = "المواقع المثبتة";
-"PINNED_LOCATIONS_FOOTER" = "يتيح لك اختيار بعض المواقع التي ستظهر عند استخدام خيار 'تنزيل إلى...'.";
-"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "إضافة موقع مثبت";
-"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "تعديل موقع مثبت";
-"PINNED_LOCATIONS_ALERT_MESSAGE" = "اختر اسم ومسار الموقع المثبت.";
-
-"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "الاسم";
-"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "المسار";
-"BROWSE" = "تصفح...";
-"CHOOSE_PATH_CONFIRMATION_TITLE" = "اختر المسار";
-"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "هل تريد اختيار المسار\n%@؟";
-
-"ERROR_INVALID_NAME_OR_PATH" = "اسم أو مسار غير صالح";
 
 "ONLY_DOWNLOAD_ON_WIFI" = "التنزيل باستخدام WiFi فقط";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "عند تفعيل هذا الخيار لن تتمكن من تنزيل أي شيء إلا عندما تكون متصلًا بشبكة WiFi.";
