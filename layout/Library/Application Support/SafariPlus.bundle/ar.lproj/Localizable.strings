@@ -38,12 +38,16 @@
 "LOCKED_TABS" = "علامات تبويب مقفلة";
 "LOCKED_TABS_FOOTER" = "إضافة مفتاح تبديل قفل إلى أعلى يسار كل علامة تبويب في مبدل علامات التبويب. لا يمكن إغلاق علامة التبويب المقفلة طالما هي مقفلة، وستظل موجودة إلى أن تقوم بفتح قفلها.";
 
-"BIOMETRIC_PROTECTION" = "حماية البصمة";
+"BIOMETRIC_PROTECTION" = "الحماية";
 "BIOMETRIC_PROTECTION_FOOTER" = "حماية الإجراءات المحددة بالبصمة سواءً الإصبع أو الوجه.";
 "SWITCH_BROWSING_MODE" = "تبديل وضع التصفح";
+"ALLOW_AUTOMATIC_ACTIONS" = "السماح بالإجراءات التلقائية";
 "LOCK_TAB" = "قفل علامة التبويب";
 "UNLOCK_TAB" = "فتح قفل علامة التبويب";
 "ACCESS_LOCKED_TAB" = "الوصول إلى علامة التبويب المقفلة";
+"AUTHENTICATE" = "المصادقة";
+"AUTHENTICATION_ERROR" = "خطأ في المصادقة";
+"ACCESS_BIOMETRIC_PROTECTION" = "حماية السماح بالوصول";
 
 /* Uploads & Downloads */
 
