@@ -158,16 +158,25 @@
 "LONG_PRESS_DURATION_TITLE" = "مدة الضغط المطول";
 "LONG_PRESS_FOCUS_TITLE" = "التركيز على شريط URL عند الضغط المطول";
 
-"INTERFACE" = "Interface";
+"SUGGESTION_INSERT_BUTTON" = "زر إدراج الاقتراح";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "إضافة زر إلى كل اقتراح بحث يمكن من خلاله إدراج الاقتراح في شريط البحث. مستوحاة من iOS 12.2 وأعلى.";
+
+"INTERFACE" = "واجهة المستخدم";
 
 "SHOW_TAB_COUNT" = "إظهار عدد علامات التبويب";
 "SHOW_TAB_COUNT_FOOTER" = "إظهار عدد علامات التبويب المفتوحة في وضع التصفح الحالي على زر فتح مبدل علامات التبويب.";
 
-"FULLSCREEN_SCROLLING_FOOTER" = "إخفاء الشريط العلوي بالكامل عند التمرير لأسفل. \n\nملاحظة: لا تعمل هذه الميزة على iOS 8!";
+"FULLSCREEN_SCROLLING_FOOTER" = "إخفاء الشريط العلوي بالكامل عند التمرير لأسفل.";
 "FULLSCREEN_SCROLLING" = "ملء الشاشة عند التمرير";
 
 "LOCK_BARS" = "قفل الشرائط";
-"LOCK_BARS_FOOTER" = "قفل الشريط السفلي والشريط العلوي وإبقاؤهما في مكانهما، وبالتالي لن يختفيا عند تمرير الصفحة إلى أسفل.";
+"LOCK_BARS_FOOTER" = "قفل الشريطان العلوي والسفلي وإبقاؤهما في مكانهما، وبالتالي لن يختفيا عند تمرير الصفحة إلى أسفل.";
+
+"SHOW_FULL_SITE_URL" = "Show Full Site URL";
+"SHOW_FULL_SITE_URL_FOOTER" = "Always show the full site URL in the top bar.";
+
+"FORCE_NATIVE_PLAYER" = "Force Native Player";
+"FORCE_NATIVE_PLAYER_FOOTER" = "On iPads running iOS 12 and above, Safari has a HTML5 video player that let's the website provide some of the media controls (Not all sites use this!). On 12.0 - 12.1.4 there is a toggle for it inside Safari settings, on 12.2 and above it's on by default. This option forces Safari to use the native player on all sites except YouTube, due to it not supporting the native player.";
 
 /* BEHAVIOUR */
 
