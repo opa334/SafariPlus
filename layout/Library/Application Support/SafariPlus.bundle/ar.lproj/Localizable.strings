@@ -318,6 +318,20 @@
 "CUSTOM_DESKTOP_USER_AGENT" = "وكيل مستخدم سطح المكتب مخصص";
 "CUSTOM_DESKTOP_USER_AGENT_FOOTER" = "استبدال وكيل المستخدم الذي يستخدم عند تفعيل 'تبديل سطح المكتب' (متاح في إمكانية الاستخدام).";
 
+/* Tweak Specifc Settings */
+
+"LARGE_TITLES" = "عناوين كبيرة";
+"LARGE_TITLES_FOOTER" = "عناوين كبيرة في كل عرض مضافة بواسطة Safari Plus.";
+
+"SORT_DIRECTORIES_ABOVE_FILES" = "فرز الدلائل فوق الملفات";
+"SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "جعل متصفح الملفات يرتب الدلائل فوق الملفات، افتراضيًا يتم ترتيب كلاهما بشكل أبجدي معًا.";
+
+"DISABLE_COMMUNICATION_ERROR" = "تعطيل تنبيه خطأ الاتصال";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "تعطيل تنبيه خطأ الاتصال الذي يظهر عند تشغيل التطبيق عندما تكون حزمة Rocketbootstrap غير متاحة لسببٍ ما. استخدمها على مسؤوليتك الخاصة.";
+
+"RESET_ALL_PREFERENCES" = "إعادة تعيين جميع الإعدادات";
+"RESET_ALL_PREFERENCES_CONFIRMATION" = "هل أنت متأكد أنك تريد إعادة تعيين جميع الإعدادات؟";
+
 /* Credits */
 
 "CREDITS" = "الاعتمادات";
