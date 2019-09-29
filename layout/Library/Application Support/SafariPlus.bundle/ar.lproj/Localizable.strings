@@ -212,16 +212,13 @@
 
 "ACTION" = "الإجراء";
 
-"URL_BAR_GESTURES_LABEL" = "إيماءات شريط URL";
+"URL_BAR_GESTURES_LABEL" = "إيماءات شريط عنوان URL";
+"TOOLBAR_GESTURES" = "إيماءات شريط الأدوات";
 
-"SWIPE_LEFT_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL لليسار.";
 "SWIPE_LEFT_GESTURE" = "إيماءة التمرير لليسار";
-
-"SWIPE_RIGHT_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL لليمين.";
 "SWIPE_RIGHT_GESTURE" = "إيماءة التمرير لليمين";
-
-"SWIPE_DOWN_GESTURE_FOOTER" = "سيتم تنفيذ الإجراء المحدد عند تمرير شريط URL للأسفل.";
 "SWIPE_DOWN_GESTURE" = "إيماءة التمرير للأسفل";
+"SWIPE_UP_DOWN_GESTURE" = "إيماءة التمرير لأعلى/لأسفل";
 
 "CLOSE_ACTIVE_TAB" = "إغلاق علامة التبويب النشطة";
 "OPEN_NEW_TAB" = "فتح علامة تبويب جديدة";
@@ -232,9 +229,10 @@
 "TAB_FORWARD" = "نقل علامة التبويب إلى الأمام";
 "RELOAD_ACTIVE_TAB" = "إعادة تحميل علامة التبويب النشطة";
 "REQUEST_DESTKOP_SITE" = "طلب موقع سطح المكتب";
-"OPEN_FIND_ON_PAGE" = "فتح 'البحث على الصفحة'";
+"OPEN_FIND_ON_PAGE" = "فتح 'البحث في الصفحة'";
 
-"BACKGROUND" = "تكرار علامة التبويب في الخلفية";
+"ALLOW_GESTURES_IN_TAB_SWITCHER" = "السماح بالإيماءات في مبدل علامات التبويب";
+"RUN_ACTIONS_IN_BACKGROUND" = "تشغيل الإجراءات في الخلفية";
 
 /* Customization */
 
