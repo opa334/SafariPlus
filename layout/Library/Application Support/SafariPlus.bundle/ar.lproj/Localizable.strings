@@ -254,13 +254,12 @@
 
 "TINT_COLOR" = "لون الصبغة";
 "BACKGROUND_COLOR" = "لون الخلفية";
-
 "STATUS_BAR_COLOR" = "لون شريط الحالة";
 "TAB_BAR_TITLE_COLOR" = "لون عنوان شريط علامة التبويب";
 "INACTIVE_TITLE_OPACITY" = "شفافية العنوان الغير نشط";
 "TAB_BAR_CLOSE_BUTTON_COLOR" = "لون زر إغلاق شريط علامة التبويب";
 "TAB_BAR_BACKGROUND_COLOR" = "لون خلفية شريط علامة التبويب";
-"URL_FONT_COLOR" = "لون خط URL";
+"URL_FONT_COLOR" = "لون خط عنوان URL";
 "PROGRESS_BAR_COLOR" = "لون شريط التقدم";
 "RELOAD_BUTTON_COLOR" = "لون زر إعادة التحميل";
 "READER_BUTTON_COLOR" = "لون زر القارئ";
@@ -299,6 +298,25 @@
 "TABS" = "علامات التبويب";
 "ADD_TAB" = "إضافة علامة تبويب";
 "SEARCH_BAR_SPACE" = "فراغ شريط البحث";
+"RELOAD" = "إعادة النحميل";
+"CLEAR_HISTORY" = "مسح سجل التاريخ";
+
+"BROWSING" = "التصفح";
+
+"CUSTOM_START_SITE" = "تخصيص موقع بدء";
+"CUSTOM_START_SITE_FOOTER" = "Replace the favorites view that normally appears in a newly opened tab with a custom site that gets opened instead.";
+
+"CUSTOM_SEARCH_ENGINE" = "Custom Search Engine";
+"CUSTOM_SEARCH_ENGINE_FOOTER" = "Replace the default search engine, {searchTerms} is a placeholder for the enterred search term. The suggestions URL is optional.";
+"SEARCH_ENGINE_NAME" = "Search Engine Name";
+"SEARCH_URL" = "Search URL";
+"SEARCH_SUGGESTIONS_URL" = "Search Suggestions URL";
+
+"CUSTOM_USER_AGENT" = "Custom User Agent";
+"CUSTOM_USER_AGENT_FOOTER" = "Replace the default user agent.";
+
+"CUSTOM_DESKTOP_USER_AGENT" = "Custom Desktop User Agent";
+"CUSTOM_DESKTOP_USER_AGENT_FOOTER" = "Replace the user agent that's used when the 'Desktop Mode Switch' (available under usability) is enabled.";
 
 /* Credits */
 
