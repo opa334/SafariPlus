@@ -326,8 +326,8 @@
 "SORT_DIRECTORIES_ABOVE_FILES" = "فرز الدلائل فوق الملفات";
 "SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "جعل متصفح الملفات يرتب الدلائل فوق الملفات، افتراضيًا يتم ترتيب كلاهما بشكل أبجدي معًا.";
 
-"DISABLE_COMMUNICATION_ERROR" = "تعطيل تنبيه خطأ الاتصال";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "تعطيل تنبيه خطأ الاتصال الذي يظهر عند تشغيل التطبيق عندما تكون حزمة Rocketbootstrap غير متاحة لسببٍ ما. استخدمها على مسؤوليتك الخاصة.";
+"DISABLE_COMMUNICATION_ERROR" = "تعطيل تنبيه خطأ التواصل";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "تعطيل تنبيه خطأ التواصل الذي يظهر عند تشغيل التطبيق عندما تكون حزمة RocketBootstrap غير متاحة لسببٍ ما. استخدمها على مسؤوليتك الخاصة.";
 
 "RESET_ALL_PREFERENCES" = "إعادة تعيين جميع الإعدادات";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "هل أنت متأكد أنك تريد إعادة تعيين جميع الإعدادات؟";
@@ -347,7 +347,7 @@
 "CLOSE_NON_LOCKED_TAB_MATCHING" = "إغلاق علامة التبويب غير المقفلة والتي تطابق “%@“";
 "LOCAL_FILES" = "ملفات محلية";
 "WELCOME_TITLE" = "مرحبًا!";
-"WELCOME_MESSAGE" = "شكرًا لتثبيت Safari Plus! إذا كنت ترغب في البقاء على اطلاع دائم بآخر أخبار هذه الأداة، فتأكد من متابعتي على تويتر! هذه الرسالة لن تظهر مرة أخرى (أعدك)!";
+"WELCOME_MESSAGE" = "شكرًا لتثبيت Safari Plus! إذا كنت ترغب في البقاء على اطلاع دائم بآخر أخبار هذه الأداة، فتأكد من متابعتي على تويتر! هذه الرسالة لن تظهر مرة أخرى (أنا أعد بذلك)!";
 "OPEN_TWITTER" = "فتح تويتر";
 "COMMUNICATION_ERROR" = "خطأ في التواصل";
 "COMMUNICATION_ERROR_DESCRIPTION" = "غير قادر على التواصل مع واجهة النظام! بعض المميزات لن تعمل. يرجى التأكد من تثبيت RocketBootstrap بشكل صحيح وأن SafariPlusSB.dylip لم يتم تعطيله عبر iCleaner Pro.";
@@ -366,7 +366,6 @@
 /* Downloads */
 
 "DOWNLOAD" = "تنزيل";
-
 "DOWNLOAD_TO" = "تنزيل إلى";
 "DOWNLOAD_SITE_TO" = "تنزيل الموقع إلى...";
 "DOWNLOAD_IMAGE_TO" = "تنزيل الصورة إلى...";
@@ -374,6 +373,7 @@
 "DOWNLOADS" = "التنزيلات";
 "FILE_BROWSER" = "متصفح الملفات";
 "OPEN" = "فتح";
+"SHOW_CONTENT" = "عرض المحتوى";
 "OPEN_IN" = "فتح في...";
 "IMPORT_TO_MUSIC_LIBRARY" = "استيراد إلى مكتبة الموسيقى";
 "SAVE_TO_MEDIA_LIBRARY" = "حفظ إلى مكتبة الوسائط";
@@ -383,46 +383,49 @@
 "CLEAR_TEMPORARY_DATA" = "مسح البيانات المؤقتة";
 "CLEAR_EVERYTHING" = "مسح كل شيء";
 "CLEAR_EVERYTHING_WARNING" = "هل أنت متأكد أنك تريد إلغاء كل التنزيلات؟ مسح سجل التنزيل والبيانات المؤقتة؟";
-"CREATE_DIRECTORY" = "إنشاء مسار";
-"DIRECTORY_NAME" = "اسم المسار";
+"CREATE_DIRECTORY" = "إنشاء دليل";
+"DIRECTORY_NAME" = "اسم الدليل";
 "CREATE" = "إنشاء";
 "SHOW_IN_FILZA" = "عرض في Filza";
 "DELETE_FILE" = "حذف الملف";
-"DELETE_DIRECTORY" = "حذف المسار";
+"DELETE_DIRECTORY" = "حذف الدليل";
 "RENAME_FILE" = "إعادة تسمية الملف";
-"RENAME_DIRECTORY" = "إعادة تسمية المسار";
+"RENAME_DIRECTORY" = "إعادة تسمية الدليل";
 "WARNING" = "تحذير!";
 "DELETE_FILE_MESSAGE" = "هل أنت متأكد أنك تريد حذف ملف %@ بشكل نهائي؟ الاستعادة لاحقًا غير ممكنة!";
-"DELETE_DIRECTORY_MESSAGE" = "هل أنت متأكد أنك تريد حذف مسار %@ ومحتوياته؟ الاستعادة لاحقًا غير ممكنة!";
+"DELETE_DIRECTORY_MESSAGE" = "هل أنت متأكد أنك تريد حذف دليل %@ ومحتوياته؟ الاستعادة لاحقًا غير ممكنة!";
 "DELETE" = "حذف";
 "RENAME" = "إعادة تسمية";
-
 "DOWNLOAD_STARTED" = "بدأ تنزيل";
 "DOWNLOAD_SUCCESS" = "تم التنزيل بنجاح";
+"DOWNLOAD_FAILED" = "فشل التنزيل";
 "SAVED_IMAGE" = "تم حفظ الصورة";
 "ERROR" = "خطأ";
-
 "FILE_EXISTS_MESSAGE" = "يوجد ملف أو تنزيل معلق بالفعل في نفس هذا المسار!";
 "NOT_ENOUGH_SPACE_MESSAGE" = "لا توجد مساحة كافية!\nحرر بعض المساحة وحاول مجددًا!";
 "REPLACE_FILE" = "استبدال الملف";
 "CHANGE_PATH" = "تغيير مسار التنزيل";
 "PENDING_DOWNLOADS" = "التنزيلات المعلقة";
 "DOWNLOAD_HISTORY" = "سجل التنزيل";
-
 "FILES" = "الملفات";
 "CHOOSE" = "اختر";
+"MANUAL_DOWNLOAD" = "تنزيل يدوي";
+"URL_TO_DOWNLOADABLE_FILE" = "عنوان URL لتنزيل الملف";
 "START_DOWNLOAD" = "بدأ التنزيل";
+"UNABLE_TO_FETCH_FILE_INFORMATION" = "غير قادر على جلب معلومات الملف، صلاحية رابط التنزيل قد تكون انتهت!";
 "CHOOSE_FILENAME" = "اختر اسم الملف";
+"SELECT_PATH" = "حدد مسار";
 "FILENAME" = "اسم الملف";
-
 "CLOSE" = "إغلاق";
-"CANCEL_PICKER" = "إلغاء";
+"EXIT_PICKER" = "خروج";
 "PERMISSION_ERROR_MESSAGE" = "لا توجد أذونات كافية للكتابة على المسار المحدد. يرجى اختيار مسار آخر.\nملاحظة: عادة المسارات التي تكون داخل  /var تكون غير قابلة للكتابة! يمكنك أيضًا استخدام متصفح الملفات Filza لفحص وتغيير أذونات المسارات.";
+"PREVIEW" = "معاينة";
 "PLAY" = "تشغيل";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "المسار الذي قمت بتعيينه في الإعدادات ضمن 'مسار افتراضي مخصص' غير صالح. يرجى تصحيح ذلك.";
-"VIDEO_URL_NOT_FOUND" = "لم يتم العثور على عنوان URL لهذا الفيديو، ربما يكون الموقع الحالي غير مدعوم!";
+"VIDEO_URL_NOT_FOUND" = "لا يوجد عنوان URL للفيديو، إذا تم إيقاف الفيديو مؤقتًا، قم باستئنافه وأعد المحاولة.";
 "COPY_LINK" = "نسخ الرابط";
-"SIZE_UNKNOWN" = "حجم غير معروف";
+"SIZE_UNKNOWN" = "الحجم غير معروف";
+"DURATION_UNKNOWN" = "الوقت غير معروف";
 "MIGRATION_TITLE" = "تم الانتقال بنجاح";
 "MIGRATION_MESSAGE" = "لقد ولت تلك الأيام التي يتم فيها تقييد حاوية sandbox الخاصة بـ Safari! تنزيلاتك تم نقلها من %@ إلى %@. يمكنك الآن تنزيل الملفات إلى أي مسار تريده!";
 
