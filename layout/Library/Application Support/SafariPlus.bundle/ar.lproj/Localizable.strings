@@ -172,11 +172,11 @@
 "LOCK_BARS" = "قفل الشرائط";
 "LOCK_BARS_FOOTER" = "قفل الشريطان العلوي والسفلي وإبقاؤهما في مكانهما، وبالتالي لن يختفيا عند تمرير الصفحة إلى أسفل.";
 
-"SHOW_FULL_SITE_URL" = "Show Full Site URL";
-"SHOW_FULL_SITE_URL_FOOTER" = "Always show the full site URL in the top bar.";
+"SHOW_FULL_SITE_URL" = "إظهار عنوان URL الموقع بالكامل";
+"SHOW_FULL_SITE_URL_FOOTER" = "إظهار كامل عنوان URL الموقع في الشريط العلوي دائمًا.";
 
-"FORCE_NATIVE_PLAYER" = "Force Native Player";
-"FORCE_NATIVE_PLAYER_FOOTER" = "On iPads running iOS 12 and above, Safari has a HTML5 video player that let's the website provide some of the media controls (Not all sites use this!). On 12.0 - 12.1.4 there is a toggle for it inside Safari settings, on 12.2 and above it's on by default. This option forces Safari to use the native player on all sites except YouTube, due to it not supporting the native player.";
+"FORCE_NATIVE_PLAYER" = "إجبار المشغل الأصلي";
+"FORCE_NATIVE_PLAYER_FOOTER" = "على أجهزة الـ iPad التي تعمل بنظام iOS 12 وأعلى، يحتوي Safari على مشغل فيديو HTML5 والذي يتيح للموقع بعض التحكم في الوسائط (لا تستخدم جميع المواقع هذا!). على 12.0 إلى 12.4 هناك مفتاح تبديل داخل إعدادات Safari لهذا الشيء، أما على 12.2 وأعلى يصبح الأمر افتراضي غير قابل للتخصيص. يفرض هذا الخيار على Safari استعمال المشغل الأصلي على جميع المواقع ما عدا يوتيوب لأنه لا يدعم المشغل الأصلي.";
 
 /* BEHAVIOUR */
 
