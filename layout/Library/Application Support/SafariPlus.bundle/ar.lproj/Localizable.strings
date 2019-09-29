@@ -334,9 +334,10 @@
 
 /* Credits */
 
-"CREDITS" = "الاعتمادات";
+"LIBSUBSTITRATE_FOOTER" = "تم استخدام أجزاء من libSubstitrate لجعل عملية جلب عنوان URL الفيديو ممكنة على أنواع الجيلبريك التي تستخدم Substitute";
+"DEVELOPED_BY_POOMSMART" = "مطورة بواسطة PoomSmart";
 
-"PICKER_INSPIRED" = "تقنية انتقاء الملف مستوحاة بواسطة:";
+"SAFARI_PLUS_LICENSE" = "رخصة (MIT) لـ Safari Plus";
 
 /* In app */
 
