@@ -303,20 +303,20 @@
 
 "BROWSING" = "التصفح";
 
-"CUSTOM_START_SITE" = "تخصيص موقع بدء";
-"CUSTOM_START_SITE_FOOTER" = "Replace the favorites view that normally appears in a newly opened tab with a custom site that gets opened instead.";
+"CUSTOM_START_SITE" = "موقع بدء مخصص";
+"CUSTOM_START_SITE_FOOTER" = "استبدال صفحة المفضلة التي تظهر عند فتح علامة تبويب جديدة بموقع مخصص.";
 
-"CUSTOM_SEARCH_ENGINE" = "Custom Search Engine";
-"CUSTOM_SEARCH_ENGINE_FOOTER" = "Replace the default search engine, {searchTerms} is a placeholder for the enterred search term. The suggestions URL is optional.";
-"SEARCH_ENGINE_NAME" = "Search Engine Name";
-"SEARCH_URL" = "Search URL";
-"SEARCH_SUGGESTIONS_URL" = "Search Suggestions URL";
+"CUSTOM_SEARCH_ENGINE" = "محرك بحث مخصص";
+"CUSTOM_SEARCH_ENGINE_FOOTER" = "استبدال محرك البحث الافتراضي، الـ {searchTerms} هو مصطلح بديل لمصطلح البحث الذي تم إدخاله. عناوين URL المقترحة اختيارية.";
+"SEARCH_ENGINE_NAME" = "اسم محرك البحث";
+"SEARCH_URL" = "عنوان URL البحث";
+"SEARCH_SUGGESTIONS_URL" = "عنوان URL البحث المقترح";
 
-"CUSTOM_USER_AGENT" = "Custom User Agent";
-"CUSTOM_USER_AGENT_FOOTER" = "Replace the default user agent.";
+"CUSTOM_USER_AGENT" = "وكيل مستخدم مخصص";
+"CUSTOM_USER_AGENT_FOOTER" = "استبدال وكيل المستخدم الافتراضي.";
 
-"CUSTOM_DESKTOP_USER_AGENT" = "Custom Desktop User Agent";
-"CUSTOM_DESKTOP_USER_AGENT_FOOTER" = "Replace the user agent that's used when the 'Desktop Mode Switch' (available under usability) is enabled.";
+"CUSTOM_DESKTOP_USER_AGENT" = "وكيل مستخدم سطح المكتب مخصص";
+"CUSTOM_DESKTOP_USER_AGENT_FOOTER" = "استبدال وكيل المستخدم الذي يستخدم عند تفعيل 'تبديل سطح المكتب' (متاح في إمكانية الاستخدام).";
 
 /* Credits */
 
