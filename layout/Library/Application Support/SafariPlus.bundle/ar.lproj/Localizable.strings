@@ -181,7 +181,7 @@
 "SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "منع مربع الحوار الذي يظهر عندما يستطيع 'mailto:<email>' الوصول إلى عنوان URL.";
 
-/* BEHAVIOUR */
+/* Actions */
 
 "NORMAL_MODE" = "وضع التصفح العادي";
 "PRIVATE_MODE" = "وضع التصفح الخاص";
@@ -190,15 +190,13 @@
 "FOR" = "لـ...";
 
 "CHANGE_MODE_ON" = "تغيير وضع التصفح على...";
+"CHANGE_MODE_ON_FOOTER" = "التغيير إلى وضع التصفح المحدد عند وقوع الحدث ذو الصلة.";
 
-"LAUNCH_MODE_FOOTER" = "التغيير إلى وضع التصفح المحدد عند بدء Safari.";
 "LAUNCH_MODE_LABEL" = "بدء التطبيق";
-
-"RESUME_FOOTER" = "التغيير إلى وضع التصفح المحدد عند استئناف Safari.";
 "RESUME_LABEL" = "استئناف التطبيق";
+"EXTERNAL_URL_LABEL" = "فتح رابط خارجي";
 
-"EXTERNAL_URL_FOOTER" = "التغيير إلى وضع التصفح المحدد عند فتح رابط خارجي (من تطبيق آخر) مع Safari.";
-"EXTERNAL_URL_LABEL" = "فتح الرابط الخارجي";
+"AUTOMATIC_ACTIONS" = "الإجراءات التلقائية";
 
 "AUTO_CLOSE_TABS_FOOTER" = "إغلاق علامات التبويب لوضع التصفح عند حدوث حالة محددة.";
 "AUTO_CLOSE_TABS_LABEL" = "إغلاق تلقائي لعلامات التبويب";
@@ -209,10 +207,6 @@
 
 "ACTIVE_MODE" = "وضع التصفح النشط";
 "BOTH_MODES" = "كلا وضعي التصفح";
-
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "فتح الروابط التي يتم النقر عليها في علامات تبويب جديدة دائمًا.";
-"ALWAYS_OPEN_NEW_TAB" = "فتح الروابط في علامة تبويب جديدة دائمًا";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "فتح علامة تبويب جديدة في الخلفية";
 
 /* Gestures */
 
