@@ -439,10 +439,10 @@
 "CHOOSE_EXPORT_FORMAT" = "اختر صيغة التصدير";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "سيكون لكل علامة تبويب محددة سطر نص واحد. اختر الكيفية التي ينبغي أن يتم صياغة كل سطر بها.";
 "WITH_CLICKABLE_URL" = "مع عنوان URL القابل للنقر";
-"ADD_TABS_ALERT" = "إضافة علامات التبويب";
+"ADD_TABS_ALERT" = "إضافة علامات تبويب";
 "ADD_TABS_ALERT_MESSAGE" = "أدخل بعض عناوين URL في حقل النص. سيتم تجاهل أي شيء ليس عنوان URL!";
 "USE_CLIPBOARD" = "استخدام الحافظة";
-"ADD_BOOKMARKS" = "إضافة الإشارات المرجعية";
+"ADD_BOOKMARKS" = "إضافة إشارات مرجعية";
 
 /* Open in opposite mode */
 
