@@ -102,7 +102,7 @@
 "INSTANT_DOWNLOAD" = "التنزيل الفوري";
 "INSTANT_DOWNLOAD_FOOTER" = "منع تنبيه التنزيل واختيار الإجراء المحدد بشكل افتراضي.";
 
-"ONLY_DOWNLOAD_ON_WIFI" = "التنزيل باستخدام WiFi فقط";
+"ONLY_DOWNLOAD_ON_WIFI" = "التنزيل على الـ WiFi فقط";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "السماح بالتنزيل عندما يكون الجهاز متصلًا بشبكة WiFi فقط.";
 
 "AUTOSAVE_TO_MEDIA_LIBRARY" = "الحفظ التلقائي إلى مكتبة الوسائط";
