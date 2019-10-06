@@ -1,20 +1,24 @@
-// Protocols.h
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
-@class SPDownload, SPDownloadInfo, SPFilePickerNavigationController, AVActivityButton;
+@class SPDownload, SPDownloadInfo, SPDownloadManager, SPFilePickerNavigationController, AVAssetDownloadURLSession;
 
 @protocol filePickerDelegate<NSObject>
 - (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs;
@@ -23,38 +27,49 @@
 @protocol DownloadNavigationControllerDelegate
 @required
 - (void)reloadBrowser;
+- (void)reloadBrowserAnimated:(BOOL)animated;
 - (void)reloadDownloadList;
+- (void)reloadDownloadListAnimated:(BOOL)animated;
 - (void)reloadEverything;
+- (void)reloadEverythingAnimated:(BOOL)animated;
 @end
 
-@protocol DownloadCellDelegate
+@protocol DownloadObserverDelegate
 @required
-@property (nonatomic) BOOL paused;
-- (void)updateDownloadSpeed:(int64_t)bytesPerSecond;
-- (void)updateProgress:(int64_t)currentBytes totalBytes:(int64_t)totalBytes animated:(BOOL)animated;
-- (void)setFilesize:(int64_t)filesize;
+- (void)filesizeDidChangeForDownload:(SPDownload*)download;
+- (void)expectedDurationDidChangeForDownload:(SPDownload*)download;
+- (void)pauseStateDidChangeForDownload:(SPDownload*)download;
+- (void)downloadSpeedDidChangeForDownload:(SPDownload*)download;
+- (void)progressDidChangeForDownload:(SPDownload*)download shouldAnimateChange:(BOOL)shouldAnimate;
+@end
+
+@protocol DownloadsObserverDelegate
+- (void)totalProgressDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
+- (void)runningDownloadsCountDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
 @end
 
 @protocol DownloadManagerDelegate
 @required
 - (NSURLSession*)sharedDownloadSession;
+- (AVAssetDownloadURLSession*)sharedAVDownloadSession;
 - (void)forceCancelDownload:(SPDownload*)download;
 - (void)saveDownloadsToDisk;
 - (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
-@end
-
-@protocol CellDownloadDelegate
-@required
-- (void)setPaused:(BOOL)paused;
-- (void)cancelDownload;
-@optional
-- (void)setBrowserCellDelegate:(id<DownloadCellDelegate>)cellDelegate;
-- (void)setListCellDelegate:(id<DownloadCellDelegate>)listDelegate;
+- (void)totalProgressDidChange;
+- (void)runningDownloadsCountDidChange;
 @end
 
 @protocol SourceVideoDelegate
 @required
-@property (nonatomic,retain) AVActivityButton* downloadButton;
-- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion;
+@property (nonatomic,retain) __kindof UIButton* downloadButton;
+@end
+
+@protocol SPDirectoryPickerDelegate
+- (void)directoryPicker:(id)directoryPicker didSelectDirectoryAtURL:(NSURL*)selectedURL withFilename:(NSString*)filename;
+@end
+
+//iOS >=12.2
+@protocol TabCollectionItem <NSObject>
+@property (readonly, nonatomic) NSUUID *UUID;
 @end

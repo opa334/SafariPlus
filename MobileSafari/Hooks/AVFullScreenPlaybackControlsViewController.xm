@@ -1,18 +1,22 @@
-// AVFullScreenPlaybackControlsViewController.xm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 //Hooks for iOS 10 and below
 
@@ -25,7 +29,7 @@
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
-#import "../Classes/AVActivityButton.h"
+#import "../Classes/UIButton+ActivityIndicator.h"
 
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVPlayer.h>
@@ -39,14 +43,14 @@
 
 %hook AVFullScreenPlaybackControlsViewController
 
-%property (nonatomic,retain) AVActivityButton *downloadButton;
+%property (nonatomic,retain) AVButton *downloadButton;
 %property (nonatomic,retain) NSMutableArray *additionalLayoutConstraints;
 
 - (void)loadView
 {
 	%orig;
 
-	if(preferenceManager.enhancedDownloadsEnabled && preferenceManager.videoDownloadingEnabled)
+	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled)
 	{
 		//Get asset
 		AVAsset* currentPlayerAsset = self.playerViewController.player.currentItem.asset;
@@ -54,9 +58,10 @@
 		//Check if video is online (and not a local file)
 		if(![currentPlayerAsset isKindOfClass:AVURLAsset.class])
 		{
-			self.downloadButton = [%c(AVActivityButton) buttonWithType:UIButtonTypeCustom];
+			self.downloadButton = [%c(AVButton) buttonWithType:UIButtonTypeCustom];
+			[self.downloadButton setUpActivityIndicator];
 			self.downloadButton.translatesAutoresizingMaskIntoConstraints = NO;
-			UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+			UIImage* buttonImage = [UIImage imageNamed:@"VideoDownloadButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
 			[self.downloadButton setImage:buttonImage forState:UIControlStateNormal];
 			[self.downloadButton setImage:[UIImage inverseColor:buttonImage] forState:UIControlStateHighlighted];
 			[self.downloadButton addTarget:self action:@selector(downloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -117,26 +122,9 @@
 	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] init];
 	downloadInfo.sourceVideo = self;
 	downloadInfo.presentationController = self;
-	downloadInfo.sourceRect = self.downloadButton.frame;
+	downloadInfo.sourceRect = [[self.downloadButton superview] convertRect:self.downloadButton.frame toView:self.view];
 
 	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
-}
-
-%new
-- (void)setBackgroundPlaybackActiveWithCompletion:(void (^)(void))completion
-{
-	WebAVPlayerController* playerController = (WebAVPlayerController*)self.playerController;
-
-	if(!playerController.playing && isnan(playerController.timing.anchorTimeStamp))
-	{
-		[playerController play:nil];
-		[playerController pause:nil];
-		dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
-	}
-	else
-	{
-		completion();
-	}
 }
 
 %end

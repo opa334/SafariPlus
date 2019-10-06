@@ -1,30 +1,143 @@
-// BrowserToolbar.xm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "../SafariPlus.h"
 #import "Extensions.h"
 
 #import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPDownloadsBarButtonItem.h"
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
+#import "substrate.h"
+
+static void updateToolbarConnectionWithBarButtonItem(__kindof UIBarButtonItem* item, BrowserToolbar* toolbar, NSInteger itemValue)
+{
+	id target;
+
+	if(NSClassFromString(@"SFBarRegistration"))
+	{
+		target = MSHookIvar<id>(toolbar, "_barRegistration");
+	}
+	else
+	{
+		target = toolbar;
+	}
+
+	NSArray* recognizers;
+
+	if([item respondsToSelector:@selector(gestureRecognizer)])
+	{
+		recognizers = @[((GestureRecognizingBarButtonItem*)item).gestureRecognizer];
+	}
+	else if([item respondsToSelector:@selector(_gestureRecognizers)])
+	{
+		recognizers = [item _gestureRecognizers];
+	}
+
+	for(UIGestureRecognizer* recognizer in recognizers)
+	{
+		if([recognizer isKindOfClass:[NSClassFromString(@"SFBarButtonItemLongPressGestureRecognizer") class]])
+		{
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
+			{
+				[recognizer setValue:item forKey:@"_barButtonItem"];
+			}
+
+			if (kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+			{
+				[recognizer setValue:target forKey:@"_target"];
+			}
+			else
+			{
+				[recognizer setValue:target forKey:@"_longPressTarget"];
+			}
+		}
+		else
+		{
+			NSMutableArray* targets = MSHookIvar<NSMutableArray*>(recognizer, "_targets");
+			for(id recognizerTarget in targets)
+			{
+				[recognizerTarget setValue:target forKey:@"_target"];
+			}
+		}
+	}
+
+	switch(itemValue)
+	{
+		case BrowserToolbarBackItem:
+		[target setValue:item forKey:@"_backItem"];
+		break;
+
+		case BrowserToolbarForwardItem:
+		[target setValue:item forKey:@"_forwardItem"];
+		break;
+
+		case BrowserToolbarBookmarksItem:
+		[target setValue:item forKey:@"_bookmarksItem"];
+		break;
+
+		case BrowserToolbarShareItem:
+		{
+			if(NSClassFromString(@"SFBarRegistration"))
+			{
+				[target setValue:item forKey:@"_shareItem"];
+			}
+			else
+			{
+				[target setValue:item forKey:@"_actionItem"];
+			}
+			break;
+		}
+
+		case BrowserToolbarAddTabItem:
+		[target setValue:item forKey:@"_addTabItem"];
+		break;
+
+		case BrowserToolbarTabExposeItem:
+		[target setValue:item forKey:@"_tabExposeItem"];
+		break;
+
+		case BrowserToolbarDownloadsItem:
+		toolbar._downloadsItem = item;
+		break;
+
+		case BrowserToolbarReloadItem:
+		toolbar._reloadItem = item;
+		break;
+
+		case BrowserToolbarClearDataItem:
+		toolbar._clearDataItem = item;
+		break;
+	}
+}
+
+/*
+static void applyBarButtonItemsToToolbar(NSArray<__kindof UIBarButtonItem*>* items, BrowserToolbar* toolbar)
+{
+
+}*/
 
 //Turns a system bar button item into a non-system one
 //Needed because system items act weird and can't be modified that easily
-static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment, BOOL setLongPress, BOOL setTouchDown)
+static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment /*, BOOL setLongPress, BOOL setTouchDown*/)
 {
 	UIImage* itemImage;
 	[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:oldItem.systemItem usingItemStyle:0];
@@ -33,27 +146,14 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 	UIBarButtonItem* newItem = [[(__kindof UIBarButtonItem*)[oldItem class] alloc] initWithImage:newImage style:UIBarButtonItemStylePlain target:oldItem.target action:oldItem.action];
 
-	if(setLongPress)
+	if([newItem respondsToSelector:@selector(setGestureRecognizer:)])
 	{
-		if([newItem respondsToSelector:@selector(setGestureRecognizer:)])
-		{
-			[((GestureRecognizingBarButtonItem*)newItem) setGestureRecognizer:((GestureRecognizingBarButtonItem*)oldItem).gestureRecognizer];
-		}
-		else if([newItem respondsToSelector:@selector(_sf_setLongPressTarget:action:)])
-		{
-			[newItem _sf_setLongPressTarget:oldItem.target action:@selector(_itemReceivedLongPress:)];
-		}
-		else if([newItem respondsToSelector:@selector(_sf_setTarget:touchDownAction:longPressAction:)])
-		{
-			if(setTouchDown)
-			{
-				[newItem _sf_setTarget:oldItem.target touchDownAction:@selector(_itemReceivedTouchDown:) longPressAction:@selector(_itemReceivedLongPress:)];
-			}
-			else if([newItem respondsToSelector:@selector(_sf_setTarget:longPressAction:)])
-			{
-				[newItem _sf_setTarget:oldItem.target longPressAction:@selector(_itemReceivedLongPress:)];
-			}
-		}
+		[((GestureRecognizingBarButtonItem*)newItem) setGestureRecognizer:((GestureRecognizingBarButtonItem*)oldItem).gestureRecognizer];
+	}
+	else if([newItem respondsToSelector:@selector(_setGestureRecognizers:)])
+	{
+		newItem._sf_longPressEnabled = oldItem._sf_longPressEnabled;
+		newItem._gestureRecognizers = oldItem._gestureRecognizers;
 	}
 
 	newItem.imageInsets = UIEdgeInsetsMake(oldItem.imageInsets.top, 0, oldItem.imageInsets.bottom, 0);
@@ -69,14 +169,118 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 %hook BrowserToolbar
 
 %property (nonatomic,retain) UIBarButtonItem *_downloadsItem;
+%property (nonatomic,retain) UIBarButtonItem *_reloadItem;
+%property (nonatomic,retain) UIBarButtonItem *_clearDataItem;
 %property (nonatomic,retain) UILabel *tabCountLabel;
 %property (nonatomic,retain) UIImage *tabExposeImage;
+%property (nonatomic,retain) UIImage *tabExposeImageWithCount;
+
+- (instancetype)initWithPlacement:(NSInteger)placement
+{
+	self = %orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		self.tabCountLabel = [[UILabel alloc] init];
+		self.tabCountLabel.adjustsFontSizeToFitWidth = YES;
+		self.tabCountLabel.minimumFontSize = 0;
+		self.tabCountLabel.numberOfLines = 1;
+		self.tabCountLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+		self.tabCountLabel.textAlignment = NSTextAlignmentCenter;
+		self.tabCountLabel.frame = CGRectMake(2.25,6.5,14.75,17.25);
+		self.tabCountLabel.textColor = [UIColor blackColor];
+	}
+
+	if(preferenceManager.toolbarLeftSwipeGestureEnabled || preferenceManager.toolbarRightSwipeGestureEnabled || preferenceManager.toolbarUpDownSwipeGestureEnabled)
+	{
+		if(preferenceManager.toolbarLeftSwipeGestureEnabled)
+		{
+			UISwipeGestureRecognizer* swipeLeftRecognizer = [[UISwipeGestureRecognizer alloc]
+									 initWithTarget:self action:@selector(toolbarWasSwiped:)];
+
+			swipeLeftRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+
+			[self addGestureRecognizer:swipeLeftRecognizer];
+		}
+
+		if(preferenceManager.toolbarRightSwipeGestureEnabled)
+		{
+			UISwipeGestureRecognizer* swipeRightRecognizer = [[UISwipeGestureRecognizer alloc]
+									  initWithTarget:self action:@selector(toolbarWasSwiped:)];
+
+			swipeRightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+
+			[self addGestureRecognizer:swipeRightRecognizer];
+		}
+
+		if(preferenceManager.toolbarUpDownSwipeGestureEnabled)
+		{
+			UISwipeGestureRecognizer* swipeUpDownRecognizer = [[UISwipeGestureRecognizer alloc]
+									   initWithTarget:self action:@selector(toolbarWasSwiped:)];
+
+			if(placement)
+			{
+				swipeUpDownRecognizer.direction = UISwipeGestureRecognizerDirectionUp;
+			}
+			else
+			{
+				swipeUpDownRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+			}
+
+			[self addGestureRecognizer:swipeUpDownRecognizer];
+		}
+	}
+
+	return self;
+}
+
+%new
+- (void)toolbarWasSwiped:(UISwipeGestureRecognizer*)swipe
+{
+	if([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
+	{
+		//CC or NC was invoked
+		return;
+	}
+
+	BrowserController* browserController = browserControllerForBrowserToolbar(self);
+
+	if(browserControllerIsShowingTabView(browserController) && !preferenceManager.gesturesInTabSwitcherEnabled)
+	{
+		return;
+	}
+
+	switch(swipe.direction)
+	{
+	case UISwipeGestureRecognizerDirectionLeft:
+	{
+		//Toolbar swiped left -> handle swipe
+		[browserController handleGesture:preferenceManager.toolbarLeftSwipeAction];
+		break;
+	}
+
+	case UISwipeGestureRecognizerDirectionRight:
+	{
+		//Toolbar swiped right -> handle swipe
+		[browserController handleGesture:preferenceManager.toolbarRightSwipeAction];
+		break;
+	}
+
+	case UISwipeGestureRecognizerDirectionDown:
+	case UISwipeGestureRecognizerDirectionUp:
+	{
+		//Toolbar swiped up or down -> handle swipe
+		[browserController handleGesture:preferenceManager.toolbarUpDownSwipeAction];
+		break;
+	}
+	}
+}
 
 //Correctly enable / disable downloads button when needed
 - (void)setEnabled:(BOOL)arg1
 {
 	%orig;
-	if(preferenceManager.enhancedDownloadsEnabled)
+	if(preferenceManager.downloadManagerEnabled)
 	{
 		[self setDownloadsEnabled:arg1];
 	}
@@ -93,7 +297,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 {
 	NSMutableArray* orderM = [order mutableCopy];
 
-	if([orderM containsObject:@(BrowserToolbarDownloadsItem)] && !preferenceManager.enhancedDownloadsEnabled)
+	if([orderM containsObject:@(BrowserToolbarDownloadsItem)] && !preferenceManager.downloadManagerEnabled)
 	{
 		[orderM removeObject:@(BrowserToolbarDownloadsItem)];
 	}
@@ -152,14 +356,14 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 			if(NSClassFromString(@"GestureRecognizingBarButtonItem"))
 			{
-				addTabItem = [[%c(GestureRecognizingBarButtonItem) alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:UIBarButtonItemStylePlain target:self.browserDelegate action:@selector(addTabFromButtonBar)];
+				addTabItem = [[%c(GestureRecognizingBarButtonItem) alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(addTabFromButtonBar)];
 				UILongPressGestureRecognizer* recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
 				recognizer.allowableMovement = 3.0;
 				[((GestureRecognizingBarButtonItem*)addTabItem) setGestureRecognizer:recognizer];
 			}
 			else
 			{
-				addTabItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:UIBarButtonItemStylePlain target:self.browserDelegate action:@selector(addTabFromButtonBar)];
+				addTabItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(addTabFromButtonBar)];
 				[addTabItem _sf_setLongPressTarget:self action:@selector(_addTabLongPressRecognized:)];
 			}
 
@@ -168,132 +372,120 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		addToDict(allItems, MSHookIvar<UIBarButtonItem*>(self, "_addTabItem"), @(BrowserToolbarAddTabItem));
 		if(!MSHookIvar<UIBarButtonItem*>(self, "_tabExposeItem"))	//needed on iOS 9 and below
 		{
-			MSHookIvar<UIBarButtonItem*>(self, "_tabExposeItem") = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"TabButton"] style:UIBarButtonItemStylePlain target:self.browserDelegate action:@selector(showTabsFromButtonBar)];
+			MSHookIvar<UIBarButtonItem*>(self, "_tabExposeItem") = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"TabButton"] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(showTabsFromButtonBar)];
 		}
 		addToDict(allItems, MSHookIvar<UIBarButtonItem*>(self, "_tabExposeItem"), @(BrowserToolbarTabExposeItem));
 
 		target = self;
 	}
 
-	if([orderM containsObject:@(BrowserToolbarDownloadsItem)])
+	for(NSNumber* itemNumber in orderM)
 	{
-		if(!self._downloadsItem)
+		NSInteger itemValue = [itemNumber integerValue];
+		UIBarButtonItem* item = [allItems objectForKey:itemNumber];
+
+		switch(itemValue)
 		{
-			self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage
-										      imageNamed:@"DownloadsButton.png" inBundle:SPBundle
-										      compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain
-					       target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
+			case BrowserToolbarBackItem:
+			case BrowserToolbarForwardItem:
+			case BrowserToolbarShareItem:
+			{
+				if([item isSystemItem])
+				{
+					NSUInteger itemIndex = [orderM indexOfObject:itemNumber];
+
+					NSInteger alignment = 0;
+
+					if(itemIndex == 0)	//Align first button to the left
+					{
+						alignment = -1;
+					}
+					else if(itemIndex == orderM.count - 1)	//Align last button to the right
+					{
+						alignment = 1;
+					}
+
+					UIBarButtonItem* newItem = unsystemifiedBarButtonItem(item, 25, alignment);
+					updateToolbarConnectionWithBarButtonItem(newItem, self, itemValue);
+
+					addToDict(allItems, newItem, itemNumber);
+				}
+
+				break;
+			}
+			case BrowserToolbarBookmarksItem:
+			case BrowserToolbarTabExposeItem:
+			case BrowserToolbarAddTabItem:
+			{
+				if(item.image.size.width < 25)
+				{
+					item.image = [item.image imageWithWidth:25 alignment:0];
+				}
+				item.imageInsets = UIEdgeInsetsMake(item.imageInsets.top, 0, item.imageInsets.bottom, 0);
+				break;
+			}
+			case BrowserToolbarDownloadsItem:
+			{
+				if(!self._downloadsItem)
+				{
+					if(preferenceManager.previewDownloadProgressEnabled)
+					{
+						self._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
+					}
+					else
+					{
+						self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
+					}
+				}
+
+				addToDict(allItems, self._downloadsItem, itemNumber);
+				break;
+			}
+			case BrowserToolbarReloadItem:
+			{
+				UIImage* itemImage;
+				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
+
+				UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeSystem];
+
+				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+				{
+					reloadButton.frame = CGRectMake(0,0,35,44);
+				}
+				else
+				{
+					reloadButton.frame = CGRectMake(0,0,25,25);
+				}
+
+				[reloadButton setImage:itemImage forState:UIControlStateNormal];
+				[reloadButton addTarget:navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) action:@selector(_reloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+
+				if([navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) respondsToSelector:@selector(_reloadButtonLongPressed:)])
+				{
+					UILongPressGestureRecognizer* longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:navigationBarForBrowserController(browserControllerForBrowserToolbar(self)) action:@selector(_reloadButtonLongPressed:)];
+					[reloadButton addGestureRecognizer:longPressGestureRecognizer];
+				}
+
+				self._reloadItem = [[UIBarButtonItem alloc] initWithCustomView:reloadButton];
+
+				addToDict(allItems, self._reloadItem, itemNumber);
+				break;
+			}
+			case BrowserToolbarClearDataItem:
+			{
+				UIImage* itemImage;
+				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemTrash usingItemStyle:0];
+
+				if(itemImage.size.width < 25)
+				{
+					itemImage = [itemImage imageWithWidth:25 alignment:0];
+				}
+
+				self._clearDataItem = [[UIBarButtonItem alloc] initWithImage:itemImage style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(clearData)];
+				addToDict(allItems, self._clearDataItem, itemNumber);
+				break;
+			}
 		}
-
-		addToDict(allItems, self._downloadsItem, @(BrowserToolbarDownloadsItem));
-	}
-
-	if([orderM containsObject:@(BrowserToolbarBackItem)])
-	{
-		UIBarButtonItem* backItem = [allItems objectForKey:@(BrowserToolbarBackItem)];
-
-		if([backItem isSystemItem])
-		{
-			NSUInteger backItemIndex = [orderM indexOfObject:@(BrowserToolbarBackItem)];
-
-			NSInteger alignment = 0;
-
-			if(backItemIndex == 0)	//Align first button to the left
-			{
-				alignment = -1;
-			}
-			else if(backItemIndex == orderM.count - 1)	//Align last button to the right
-			{
-				alignment = 1;
-			}
-
-			UIBarButtonItem* newBackItem = unsystemifiedBarButtonItem(backItem, 25, alignment, YES, NO);
-
-			[allItems setObject:newBackItem forKey:@(BrowserToolbarBackItem)];
-
-			MSHookIvar<UIBarButtonItem*>(target, "_backItem") = newBackItem;
-		}
-	}
-
-	if([orderM containsObject:@(BrowserToolbarForwardItem)])
-	{
-		UIBarButtonItem* forwardItem = [allItems objectForKey:@(BrowserToolbarForwardItem)];
-
-		if([forwardItem isSystemItem])
-		{
-			NSUInteger forwardItemIndex = [orderM indexOfObject:@(BrowserToolbarForwardItem)];
-
-			NSInteger alignment = 0;
-
-			if(forwardItemIndex == 0)	//Align first button to the left
-			{
-				alignment = -1;
-			}
-			else if(forwardItemIndex == orderM.count - 1)	//Align last button to the right
-			{
-				alignment = 1;
-			}
-
-			UIBarButtonItem* newForwardItem = unsystemifiedBarButtonItem(forwardItem, 25, alignment, YES, NO);
-
-			[allItems setObject:newForwardItem forKey:@(BrowserToolbarForwardItem)];
-
-			MSHookIvar<UIBarButtonItem*>(target, "_forwardItem") = newForwardItem;
-		}
-	}
-
-	if([orderM containsObject:@(BrowserToolbarShareItem)])
-	{
-		UIBarButtonItem* shareItem = [allItems objectForKey:@(BrowserToolbarShareItem)];
-
-		if([shareItem isSystemItem])
-		{
-			NSUInteger shareItemIndex = [orderM indexOfObject:@(BrowserToolbarShareItem)];
-
-			NSInteger alignment = 0;
-
-			if(shareItemIndex == 0)	//Align first button to the left
-			{
-				alignment = -1;
-			}
-			else if(shareItemIndex == orderM.count - 1)	//Align last button to the right
-			{
-				alignment = 1;
-			}
-
-			UIBarButtonItem* newShareItem = unsystemifiedBarButtonItem(shareItem, 25, alignment, YES, YES);
-
-			[allItems setObject:newShareItem forKey:@(BrowserToolbarShareItem)];
-
-			if(NSClassFromString(@"SFBarRegistration"))
-			{
-				MSHookIvar<UIBarButtonItem*>(target, "_shareItem") = newShareItem;
-			}
-			else
-			{
-				MSHookIvar<UIBarButtonItem*>(target, "_actionItem") = newShareItem;
-			}
-		}
-	}
-
-	if([orderM containsObject:@(BrowserToolbarBookmarksItem)])
-	{
-		UIBarButtonItem* bookmarksItem = [allItems objectForKey:@(BrowserToolbarBookmarksItem)];
-		bookmarksItem.imageInsets = UIEdgeInsetsMake(bookmarksItem.imageInsets.top, 0, bookmarksItem.imageInsets.bottom, 0);
-	}
-
-	if([orderM containsObject:@(BrowserToolbarTabExposeItem)])
-	{
-		UIBarButtonItem* tabExposeItem = [allItems objectForKey:@(BrowserToolbarTabExposeItem)];
-		tabExposeItem.image = [tabExposeItem.image imageWithWidth:25 alignment:0];
-		tabExposeItem.imageInsets = UIEdgeInsetsMake(tabExposeItem.imageInsets.top, 0, tabExposeItem.imageInsets.bottom, 0);
-	}
-
-	if([orderM containsObject:@(BrowserToolbarAddTabItem)])
-	{
-		UIBarButtonItem* addTabItem = [allItems objectForKey:@(BrowserToolbarAddTabItem)];
-		addTabItem.image = [addTabItem.image imageWithWidth:25 alignment:0];
-		addTabItem.imageInsets = UIEdgeInsetsMake(addTabItem.imageInsets.top, 0, addTabItem.imageInsets.bottom, 0);
 	}
 
 	NSMutableArray* dynamicItems = [NSMutableArray new];
@@ -302,17 +494,11 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 	if(MSHookIvar<NSInteger>(self, "_placement"))	//Bottom Toolbar
 	{
-		BOOL first = YES;
-
 		for(NSNumber* num in orderM)
 		{
-			if(!first)
+			if(![num isEqual:orderM.firstObject])
 			{
 				[dynamicItems addObject:flexibleSpace];
-			}
-			else
-			{
-				first = NO;
 			}
 
 			UIBarButtonItem* item = [allItems objectForKey:num];
@@ -445,10 +631,9 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	return dynamicItems;
 }
 
-//Add downloads button to toolbar
 - (NSMutableArray *)defaultItems
 {
-	if(preferenceManager.bottomToolbarCustomOrderEnabled || preferenceManager.topToolbarCustomOrderEnabled || preferenceManager.enhancedDownloadsEnabled)
+	if(preferenceManager.bottomToolbarCustomOrderEnabled || preferenceManager.topToolbarCustomOrderEnabled || preferenceManager.downloadManagerEnabled)
 	{
 		NSMutableDictionary* defaultItemsForToolbarSize = MSHookIvar<NSMutableDictionary*>(self, "_defaultItemsForToolbarSize");
 
@@ -466,20 +651,27 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			{
 				defaultItems = [self dynamicItemsForOrder:preferenceManager.topToolbarCustomOrder];
 			}
-			else if(preferenceManager.enhancedDownloadsEnabled)
+			else if(preferenceManager.downloadManagerEnabled)
 			{
 				if(placement)	//Bottom Bar
 				{
 					BOOL tabBarTweakActive = NO;
 
-					if([self.browserDelegate respondsToSelector:@selector(_shouldShowTabBar)])
+					if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
 					{
-						tabBarTweakActive = [self.browserDelegate _shouldShowTabBar] && [browserControllers() count] <= 1;
+						tabBarTweakActive = [self respondsToSelector:@selector(addTabItemManual)];
 					}
 					else
 					{
-						[self.browserDelegate updateUsesTabBar];
-						tabBarTweakActive = self.browserDelegate.tabController.usesTabBar;
+						if([browserControllerForBrowserToolbar(self) respondsToSelector:@selector(_shouldShowTabBar)])
+						{
+							tabBarTweakActive = [browserControllerForBrowserToolbar(self) _shouldShowTabBar] && [browserControllers() count] <= 1;
+						}
+						else
+						{
+							[browserControllerForBrowserToolbar(self) updateUsesTabBar];
+							tabBarTweakActive = browserControllerForBrowserToolbar(self).tabController.usesTabBar;
+						}
 					}
 
 					if(tabBarTweakActive)
@@ -508,173 +700,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	}
 
 	return %orig;
-	/*if(preferenceManager.enhancedDownloadsEnabled)
-	   {
-	        NSMutableArray* orig = %orig;
-
-	        if(![orig containsObject:self._downloadsItem])
-	        {
-	                if(!self._downloadsItem)
-	                {
-	                        self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage
-	                                                                                      imageNamed:@"DownloadsButton.png" inBundle:SPBundle
-	                                                                                      compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain
-	                                               target:self.browserDelegate action:@selector(downloadsFromButtonBar)];
-	                }
-
-	                NSInteger placement = MSHookIvar<NSInteger>(self, "_placement");
-
-	                //Landscape on newer devices, portrait + landscape on iOS 8 iPads
-	                if(placement == 0 || (IS_PAD && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0))
-	                {
-	                        //iPads
-	                        if(IS_PAD)
-	                        {
-	                                ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 3;
-	                                ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 3;
-	                        }
-	                        else
-	                        {
-	                                //Plus iPhones
-	                                if([orig count] > 14)
-	                                {
-	                                        ((UIBarButtonItem*)orig[10]).width = ((UIBarButtonItem*)orig[10]).width / 10;
-	                                        ((UIBarButtonItem*)orig[12]).width = ((UIBarButtonItem*)orig[12]).width / 10;
-	                                        ((UIBarButtonItem*)orig.lastObject).width = 0;
-	                                }
-	                                //Non plus iPhones
-	                                else
-	                                {
-	                                        ((UIBarButtonItem*)orig[10]).width = 0;
-	                                        ((UIBarButtonItem*)orig[12]).width = 0;
-	                                }
-	                        }
-
-	                        [orig insertObject:orig[10] atIndex:8];
-	                        [orig insertObject:self._downloadsItem atIndex:8];
-	                }
-	                //Portrait mode on all iPhones, landscape on smaller iPhones + split view on smaller iPads
-	                else
-	                {
-	                        UIBarButtonItem* flexibleSpace = [[UIBarButtonItem alloc]
-	                                                          initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-	                                                          target:nil action:nil];
-
-	                        BrowserController* browserController = self.browserDelegate;
-
-	                        BOOL tabBarTweakActive = NO;
-
-	                        if([browserController respondsToSelector:@selector(_shouldShowTabBar)])
-	                        {
-	                                tabBarTweakActive = [browserController _shouldShowTabBar] && [browserControllers() count] <= 1;
-	                        }
-	                        else
-	                        {
-	                                //Unfortunately there isn't a better way to detect this reliably :/
-	                                [browserController updateUsesTabBar];
-
-	                                tabBarTweakActive = browserController.tabController.usesTabBar;
-	                        }
-
-	                        if(tabBarTweakActive)
-	                        {
-	                                orig = [@[orig[1], flexibleSpace, flexibleSpace,
-	                                          orig[4], flexibleSpace, orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
-	                                          flexibleSpace, orig[13]] mutableCopy];
-
-	                                if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_2)
-	                                {
-	                                        if([self respondsToSelector:@selector(addTabItemManual)])
-	                                        {
-	                                                [orig addObject:flexibleSpace];
-	                                                [orig addObject:self.addTabItemManual];
-	                                        }
-	                                }
-	                                else
-	                                {
-	                                        //Add FullSafari button to final array
-	                                        //Code from https://github.com/Bensge/FullSafari/blob/master/Tweak.xm
-	                                        GestureRecognizingBarButtonItem *addTabItem = [self valueForKey:@"_addTabItem"];
-
-	                                        if(!addTabItem || ![orig containsObject:addTabItem])
-	                                        {
-	                                                if(!addTabItem)
-	                                                {
-	                                                        addTabItem = [[%c(GestureRecognizingBarButtonItem) alloc] initWithImage:[UIImage imageNamed:@"AddTab"] style:0 target:self.browserDelegate action:@selector(addTabFromButtonBar)];
-	                                                        UILongPressGestureRecognizer *recognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(_addTabLongPressRecognized:)];
-	                                                        recognizer.allowableMovement = 3.0;
-	                                                        addTabItem.gestureRecognizer = recognizer;
-	                                                }
-	                                                [orig addObject:flexibleSpace];
-	                                                [orig addObject:addTabItem];
-	                                        }
-	                                }
-	                        }
-	                        else
-	                        {
-	                                UIBarButtonItem *fixedSpace = [[UIBarButtonItem alloc]
-	                                                               initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-	                                                               target:nil action:nil];
-
-	                                UIBarButtonItem *fixedSpaceHalf = [[UIBarButtonItem alloc]
-	                                                                   initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-	                                                                   target:nil action:nil];
-
-	                                UIBarButtonItem *fixedSpaceTwo = [[UIBarButtonItem alloc]
-	                                                                  initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace
-	                                                                  target:nil action:nil];
-
-	                                fixedSpace.width = 15;
-	                                fixedSpaceHalf.width = 7.5f;
-	                                fixedSpaceTwo.width = 6;
-
-	                                orig = [@[orig[1], fixedSpace, flexibleSpace,
-	                                          fixedSpaceHalf, orig[4], fixedSpaceHalf, flexibleSpace, fixedSpaceTwo,
-	                                          orig[7], flexibleSpace, orig[10], flexibleSpace, self._downloadsItem,
-	                                          flexibleSpace, orig[13]] mutableCopy];
-	                        }
-	                }
-
-	                NSMutableDictionary* defaultItemsForToolbarSize =
-	                        MSHookIvar<NSMutableDictionary*>(self, "_defaultItemsForToolbarSize");
-
-	                //Save items to dictionary
-	                defaultItemsForToolbarSize[@(self.toolbarSize)] = orig;
-
-	                return orig;
-	        }
-	   }
-
-	   return %orig;*/
-}
-
-- (instancetype)initWithPlacement:(NSInteger)placement
-{
-	BrowserToolbar* orig = %orig;
-
-	if(preferenceManager.showTabCountEnabled)
-	{
-		orig.tabCountLabel = [[UILabel alloc] init];
-		orig.tabCountLabel.adjustsFontSizeToFitWidth = YES;
-		orig.tabCountLabel.minimumFontSize = 0;
-		orig.tabCountLabel.numberOfLines = 1;
-		orig.tabCountLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-		orig.tabCountLabel.textAlignment = UITextAlignmentCenter;
-		orig.tabCountLabel.frame = CGRectMake(2.25,6.5,14.75,17.25);
-		orig.tabCountLabel.textColor = [UIColor blackColor];
-	}
-
-	return orig;
-}
-
-- (void)layoutSubviews
-{
-	%orig;
-
-	if(preferenceManager.showTabCountEnabled)
-	{
-		[self updateTabCount];
-	}
 }
 
 %new
@@ -684,12 +709,15 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	{
 		void (^updateBlock)(void) = ^
 		{
-			if(self.replacementToolbar || !self.tabCountLabel)
-			{
-				return;
-			}
-
 			UIBarButtonItem* tabExposeItem;
+
+			if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
+			{
+				if(self.replacementToolbar)
+				{
+					return;
+				}
+			}
 
 			if([self respondsToSelector:@selector(_tabExposeItemLayer)])
 			{
@@ -701,6 +729,11 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				tabExposeItem = [barRegistration UIBarButtonItemForItem:5];
 			}
 
+			if(!tabExposeItem)
+			{
+				return;
+			}
+
 			//Adding the label as a subview causes issues so we have to directly modify the image!
 
 			//Save the original image if we don't have it already
@@ -709,25 +742,48 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				self.tabExposeImage = [tabExposeItem image];
 			}
 
-			//Set current label count as text
-			self.tabCountLabel.text = [NSString stringWithFormat:@"%lli", (long long)[self.browserDelegate.tabController.currentTabDocuments count]];
+			TabController* tabController = browserControllerForBrowserToolbar(self).tabController;
 
-			//Convert label to image
-			UIGraphicsBeginImageContextWithOptions(self.tabExposeImage.size, NO, 0.0);
-			[self.tabCountLabel.layer renderInContext:UIGraphicsGetCurrentContext()];
-			UIImage* labelImg = UIGraphicsGetImageFromCurrentImageContext();
-			UIGraphicsEndImageContext();
+			NSUInteger newTabCount;
 
-			//Add labelImage to buttonImage
-			UIGraphicsBeginImageContextWithOptions(self.tabExposeImage.size, NO, 0.0);
-			CGRect rect = CGRectMake(0,0,self.tabExposeImage.size.width,self.tabExposeImage.size.height);
-			[self.tabExposeImage drawInRect:rect];
-			[labelImg drawInRect:CGRectMake(self.tabCountLabel.frame.origin.x,self.tabCountLabel.frame.origin.y,self.tabExposeImage.size.width,self.tabExposeImage.size.height)];
-			UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-			UIGraphicsEndImageContext();
+			if([tabController respondsToSelector:@selector(numberOfCurrentNonHiddenTabs)])
+			{
+				newTabCount = tabController.numberOfCurrentNonHiddenTabs;
+			}
+			else
+			{
+				newTabCount = [browserControllerForBrowserToolbar(self).tabController.currentTabDocuments count];
+			}
 
-			//Apply new image
-			[tabExposeItem setImage:newImage];
+			if(newTabCount == 0)
+			{
+				newTabCount = 1;
+			}
+
+			NSString* newText = [NSString stringWithFormat:@"%llu", (unsigned long long)newTabCount];
+
+			if(![self.tabCountLabel.text isEqualToString:newText])	//If label changed, update image
+			{
+				//Set current label count as text
+				self.tabCountLabel.text = newText;
+
+				//Convert label to image
+				UIGraphicsBeginImageContextWithOptions(self.tabExposeImage.size, NO, 0.0);
+				[self.tabCountLabel.layer renderInContext:UIGraphicsGetCurrentContext()];
+				UIImage* labelImg = UIGraphicsGetImageFromCurrentImageContext();
+				UIGraphicsEndImageContext();
+
+				//Add labelImage to buttonImage
+				UIGraphicsBeginImageContextWithOptions(self.tabExposeImage.size, NO, 0.0);
+				CGRect rect = CGRectMake(0,0,self.tabExposeImage.size.width,self.tabExposeImage.size.height);
+				[self.tabExposeImage drawInRect:rect];
+				[labelImg drawInRect:CGRectMake(self.tabCountLabel.frame.origin.x,self.tabCountLabel.frame.origin.y,self.tabExposeImage.size.width,self.tabExposeImage.size.height)];
+				self.tabExposeImageWithCount = UIGraphicsGetImageFromCurrentImageContext();
+				UIGraphicsEndImageContext();
+			}
+
+			//Apply image with count
+			[tabExposeItem setImage:self.tabExposeImageWithCount];
 		};
 
 		if([NSThread isMainThread])
@@ -739,6 +795,16 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			//Execute in main thread if we are not in one already
 			dispatch_async(dispatch_get_main_queue(), updateBlock);
 		}
+	}
+}
+
+- (void)layoutSubviews
+{
+	%orig;
+
+	if(self.tabCountLabel)
+	{
+		[self updateTabCount];
 	}
 }
 

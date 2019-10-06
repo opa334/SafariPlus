@@ -1,18 +1,22 @@
-// SPDownloadListTableViewCell.mm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "SPDownloadListFinishedTableViewCell.h"
 #import "Extensions.h"
@@ -20,7 +24,11 @@
 #import "SPDownloadListTableViewController.h"
 #import "SPDownloadNavigationController.h"
 #import "SPDownload.h"
+#import "SPFileManager.h"
 #import "../Util.h"
+
+#import "SPCellButtonsView.h"
+#import "SPCellIconLabelView.h"
 
 @implementation SPDownloadListFinishedTableViewCell
 
@@ -28,7 +36,7 @@
 {
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 
-	[self initContent];
+	[self setUpContent];
 	[self setUpConstraints];
 
 	return self;
@@ -38,152 +46,139 @@
 {
 	_download = download;
 
-	//Make cell unselectable
-	self.selectionStyle = UITableViewCellSelectionStyleNone;
+	[self updateFilesizeForDownload:_download];
 
-	[self setUpContent];
-}
+	_iconLabelView.label.text = download.filename;
+	_iconLabelView.iconView.image = [fileManager iconForDownload:download];
+	if(_download.wasCancelled)
+	{
+		_iconLabelView.label.textColor = [UIColor redColor];
+	}
+	else
+	{
+		_iconLabelView.label.textColor = [UIColor blackColor];
+	}
 
-- (void)initContent
-{
-	//Get contentView
-	UIView* contentView = self.contentView;
+	_targetLabel.text = _download.targetURL.path;
 
-	_iconView = [UIImageView autolayoutView];
-	[contentView addSubview:_iconView];
-
-	_filenameLabel = [UILabel autolayoutView];
-	[contentView addSubview:_filenameLabel];
-
-	_restartButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_restartButton.translatesAutoresizingMaskIntoConstraints = NO;
-	[contentView addSubview:_restartButton];
-
-	_openDirectoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	_openDirectoryButton.translatesAutoresizingMaskIntoConstraints = NO;
-	[contentView addSubview:_openDirectoryButton];
-
-	_targetLabel = [UILabel autolayoutView];
-	[contentView addSubview:_targetLabel];
-
-	//Enable seperators between imageViews
-	[self setSeparatorInset:UIEdgeInsetsZero];
+	[self updateButtons];
 }
 
 - (void)setUpContent
 {
-	//Create size label and set it to accessoryView
-	UILabel* sizeLabel = [[UILabel alloc] init];
+	//Enable separators between imageViews
+	[self setSeparatorInset:UIEdgeInsetsZero];
 
-	sizeLabel.textColor = [UIColor lightGrayColor];
-	sizeLabel.adjustsFontSizeToFitWidth = YES;
-	sizeLabel.textAlignment = NSTextAlignmentCenter;
-	sizeLabel.frame = CGRectMake(0,0, 45, 15);
-	self.accessoryView = sizeLabel;
+	//Make cell unselectable
+	self.selectionStyle = UITableViewCellSelectionStyleNone;
 
-	[self setFilesize:_download.filesize];
+	//Create size label for accessoryView
+	_sizeLabel = [[UILabel alloc] init];
 
-	//nil out default label and image just to be sure (Can't use them in constraints)
-	self.textLabel.text = nil;
-	self.imageView.image = nil;
+	_sizeLabel.textColor = [UIColor lightGrayColor];
+	_sizeLabel.adjustsFontSizeToFitWidth = YES;
+	_sizeLabel.textAlignment = NSTextAlignmentCenter;
+	_sizeLabel.frame = CGRectMake(0,0, 45, 15);
+	_sizeLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+	self.accessoryView = _sizeLabel;
 
-	//Set file icon
-	_iconView.image = [UIImage imageNamed:@"File.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+	//Init custom views
+	_iconLabelView = [[SPCellIconLabelView alloc] init];
+	_iconLabelView.translatesAutoresizingMaskIntoConstraints = NO;
 
-	//Set label text to file name
-	_filenameLabel.text = _download.filename;
-	_filenameLabel.font = self.textLabel.font;
-	_filenameLabel.textAlignment = NSTextAlignmentLeft;
-	if(_download.wasCancelled)
-	{
-		_filenameLabel.textColor = [UIColor redColor];
-	}
-	else
-	{
-		_filenameLabel.textColor = [UIColor blackColor];
-	}
+	_buttonsView = [[SPCellButtonsView alloc] init];
+	_buttonsView.translatesAutoresizingMaskIntoConstraints = NO;
 
-	//Configure restart button
-	_restartButton.adjustsImageWhenHighlighted = YES;
-	[_restartButton addTarget:self action:@selector(restartButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-	[_restartButton setImage:[UIImage imageNamed:@"RestartButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
-
-	//Create copy button and add it to contentView
-	_openDirectoryButton.adjustsImageWhenHighlighted = YES;
-	[_openDirectoryButton addTarget:self action:@selector(openDirectoryButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-	[_openDirectoryButton setImage:[UIImage imageNamed:@"OpenDirectoryButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
-
+	_targetLabel = [[UILabel alloc] init];
+	_targetLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	_targetLabel.font = [_targetLabel.font fontWithSize:10];
 	_targetLabel.textAlignment = NSTextAlignmentCenter;
-	_targetLabel.text = _download.targetURL.path;
-}
 
-- (void)setFilesize:(int64_t)filesize
-{
-	if(filesize <= 0)
-	{
-		((UILabel*)self.accessoryView).text = @"?";
-	}
-	else
-	{
-		((UILabel*)self.accessoryView).text = [NSByteCountFormatter stringFromByteCount:filesize countStyle:NSByteCountFormatterCountStyleFile];
-	}
-}
+	[self.contentView addSubview:_iconLabelView];
+	[self.contentView addSubview:_buttonsView];
+	[self.contentView addSubview:_targetLabel];
 
-- (NSDictionary*)viewsForConstraints
-{
-	return NSDictionaryOfVariableBindings(_iconView, _filenameLabel, _restartButton, _openDirectoryButton, _targetLabel);
+	//Set up buttons
+	[_buttonsView.topButton addTarget:self action:@selector(restartButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+	[_buttonsView.topButton setImage:[[UIImage imageNamed:@"RestartButton" inBundle:SPBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+
+	[_buttonsView.bottomButton addTarget:self action:@selector(locateButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+	[_buttonsView.bottomButton setImage:[[UIImage imageNamed:@"LocateButton" inBundle:SPBundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
 
 - (void)setUpConstraints
 {
-	//Get contentView
-	UIView* contentView = self.contentView;
-
-	//Create metrics and views for constraints
-	NSDictionary *metrics = @{@"rightSpace" : @43.5, @"smallSpace" : @7.5, @"buttonSize" : @25.0, @"iconSize" : @30.0, @"topSpace" : @6.0};
-	NSDictionary *views = [self viewsForConstraints];
-
-	//Add dynamic constraints so the cell looks good across all devices
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"|-[_iconView(iconSize)]-15-[_filenameLabel]-smallSpace-[_restartButton(buttonSize)]-10-|" options:0 metrics:metrics views:views]];
-
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"|-[_targetLabel]-smallSpace-[_openDirectoryButton(buttonSize)]-10-|" options:0 metrics:metrics views:views]];
-
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"V:|-topSpace-[_iconView(iconSize)]" options:0 metrics:metrics views:views]];
-
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"V:|-topSpace-[_filenameLabel(iconSize)]" options:0 metrics:metrics views:views]];
-
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"V:|-4-[_restartButton(buttonSize)]" options:0 metrics:metrics views:views]];
-
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"V:[_openDirectoryButton(buttonSize)]-4-|" options:0 metrics:metrics views:views]];
-
-	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
-				     @"V:[_targetLabel(19)]-3-|" options:0 metrics:metrics views:views]];
+	[NSLayoutConstraint activateConstraints:@[
+		//Horizontal
+		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0],
+		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
+		  toItem:_buttonsView attribute:NSLayoutAttributeLeading multiplier:1 constant:-7.5],
+		 [NSLayoutConstraint constraintWithItem:_buttonsView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:25],
+		 [NSLayoutConstraint constraintWithItem:_buttonsView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeTrailingMargin multiplier:1 constant:0],
+		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0],
+		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
+		  toItem:_buttonsView attribute:NSLayoutAttributeLeading multiplier:1 constant:-7.5],
+		//Vertical
+		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		  toItem:_iconLabelView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
+		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:18],
+		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
+		 [NSLayoutConstraint constraintWithItem:_buttonsView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:0],
+		 [NSLayoutConstraint constraintWithItem:_buttonsView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+		  toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
+	]];
 }
 
-- (void)layoutSubviews
+- (void)updateButtons
 {
-	[super layoutSubviews];
+	BOOL fileExists = [fileManager fileExistsAtURL:[_download.targetURL URLByAppendingPathComponent:_download.filename] error:nil];
 
-	//Round buttons
-	_restartButton.imageView.layer.cornerRadius = _restartButton.imageView.frame.size.height / 2.0;
-	_openDirectoryButton.imageView.layer.cornerRadius = _openDirectoryButton.imageView.frame.size.height / 2.0;
+	_buttonsView.displaysBottomButton = (fileExists && !_download.wasCancelled);
+}
+
+- (void)updateFilesizeForDownload:(SPDownload*)download
+{
+	if(download.filesize <= 0)
+	{
+		if(download.isHLSDownload && download.expectedDuration > 0) //Fall back to expected duration if possible
+		{
+			NSDateComponentsFormatter *formatter = [[NSDateComponentsFormatter alloc] init];
+			formatter.unitsStyle = NSDateComponentsFormatterUnitsStylePositional;
+			formatter.includesApproximationPhrase = NO;
+			formatter.includesTimeRemainingPhrase = NO;
+			formatter.allowedUnits = NSCalendarUnitMinute | NSCalendarUnitSecond;
+			formatter.zeroFormattingBehavior = NSDateComponentsFormatterZeroFormattingBehaviorPad;
+
+			_sizeLabel.text = [formatter stringFromTimeInterval:download.expectedDuration];
+		}
+		else
+		{
+			_sizeLabel.text = @"?";
+		}
+	}
+	else
+	{
+		_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:download.filesize countStyle:NSByteCountFormatterCountStyleFile];
+	}
 }
 
 - (void)restartButtonPressed
 {
-	[self.tableViewController restartDownload:_download];
+	[self.tableViewController restartDownload:_download forCell:self];
 }
 
-- (void)openDirectoryButtonPressed
+- (void)locateButtonPressed
 {
-	[(SPDownloadNavigationController*)self.tableViewController.navigationController openDirectoryInBrowser:_download.targetURL];
+	[(SPDownloadNavigationController*)self.tableViewController.navigationController showFileInBrowser:[_download.targetURL URLByAppendingPathComponent:_download.filename]];
 }
 
 @end

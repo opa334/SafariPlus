@@ -1,18 +1,22 @@
-// TiltedTabView.xm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "../SafariPlus.h"
 
@@ -33,14 +37,14 @@
 		{
 			if(item.contentView.lockButton == button)
 			{
-				[self.delegate tiltedTabView:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 		else
 		{
 			if(item.layoutInfo.contentView.lockButton == button)
 			{
-				[self.delegate tiltedTabView:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 	}
@@ -50,21 +54,46 @@
 {
 	if(preferenceManager.lockedTabsEnabled && preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionAccessLockedTabEnabled)
 	{
-		if(MSHookIvar<NSInteger>(self, "_currentTabPreviewState") != 2)
+		BOOL iForgotWhatThisWasForButItCrashesOnIOS8;
+
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
+		{
+			iForgotWhatThisWasForButItCrashesOnIOS8 = YES;
+		}
+		else
+		{
+			iForgotWhatThisWasForButItCrashesOnIOS8 = MSHookIvar<NSInteger>(self, "_currentTabPreviewState") != 2;
+		}
+
+		if(iForgotWhatThisWasForButItCrashesOnIOS8)
 		{
 			TiltedTabItem* tappedItem = [self _tiltedTabItemForLocation:[recognizer locationInView:MSHookIvar<UIView*>(self, "_scrollView")]];
 
 			if([self.delegate currentItemForTiltedTabView:self] != tappedItem)
 			{
-				TabDocument* tabDocument = [self.delegate _tabDocumentRepresentedByTiltedTabItem:tappedItem];
+				TabDocument* tabDocument = tabDocumentForItem(self.delegate, tappedItem);
 
 				if(tabDocument.locked)
 				{
 					requestAuthentication([localizationManager localizedSPStringForKey:@"ACCESS_LOCKED_TAB"], ^
 					{
 						tabDocument.accessAuthenticated = YES;
-						[self.delegate tiltedTabView:self didSelectItem:tappedItem];
-						[self setPresented:NO animated:YES];
+						if([self.delegate respondsToSelector:@selector(tabCollectionView:didSelectItem:)])
+						{
+							[self.delegate tabCollectionView:self didSelectItem:tappedItem];
+						}
+						else
+						{
+							[self.delegate tiltedTabView:self didSelectItem:tappedItem];
+						}
+						if([self respondsToSelector:@selector(dismissAnimated:)])
+						{
+							[self dismissAnimated:YES];
+						}
+						else
+						{
+							[self setPresented:NO animated:YES];
+						}
 					});
 
 					return;
@@ -94,7 +123,7 @@
 	for(TiltedTabItem* item in itemsInvolvedInAnimation)
 	{
 		[item.contentView.lockButton addTarget:self action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-		item.contentView.lockButton.selected = [self.delegate _tabDocumentRepresentedByTiltedTabItem:item].locked;
+		item.contentView.lockButton.selected = tabDocumentForItem(self.delegate, item).locked;
 	}
 }
 

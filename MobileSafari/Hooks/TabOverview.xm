@@ -1,23 +1,28 @@
-// TabOverview.xm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "../SafariPlus.h"
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
+#import "../Classes/SPTabManagerTableViewController.h"
 #import "../Util.h"
 #import "../Defines.h"
 
@@ -27,13 +32,15 @@
 %property (nonatomic,retain) UIButton *tabManagerButton;
 
 //Desktop mode button: Landscape
+
 - (void)layoutSubviews
 {
 	%orig;
+
 	if(preferenceManager.desktopButtonEnabled || preferenceManager.tabManagerEnabled)
 	{
 		UISearchBar* searchBar = MSHookIvar<UISearchBar*>(self, "_searchBar");
-		UIView* superview = [self.privateBrowsingButton superview];
+		UIView* superview = [self.addTabButton superview];
 
 		BOOL desktopButtonAdded = NO;
 		BOOL tabManagerButtonAdded = NO;
@@ -44,7 +51,7 @@
 			{
 				//desktopButton not created yet -> create and configure it
 				self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
 				[self.desktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
 				[self.desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 				self.desktopModeButton.selected = self.delegate.desktopButtonSelected;
@@ -80,19 +87,39 @@
 
 		//Update position
 
-		CGFloat gap = self.addTabButton.frame.origin.x - (self.privateBrowsingButton.frame.origin.x + self.privateBrowsingButton.frame.size.width);
+		CGRect rightFrame;	//Fix for iOS 8 when private browsing is disabled
+		CGRect righterFrame;
+		BOOL set = NO;
+
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)
+		{
+			if(![MSHookIvar<BrowserController*>(self.delegate, "_browserController") isPrivateBrowsingAvailable])
+			{
+				rightFrame = self.addTabButton.frame;
+				righterFrame = MSHookIvar<UIButton*>(self, "_doneButton").frame;
+				set = YES;
+			}
+		}
+
+		if(!set)
+		{
+			rightFrame = self.privateBrowsingButton.frame;
+			righterFrame = self.addTabButton.frame;
+		}
+
+		CGFloat gap = righterFrame.origin.x - (rightFrame.origin.x + rightFrame.size.width);
 
 		CGRect pos1 = CGRectMake(
-			self.privateBrowsingButton.frame.origin.x - (gap + self.privateBrowsingButton.frame.size.height),
-			self.privateBrowsingButton.frame.origin.y,
-			self.privateBrowsingButton.frame.size.height,
-			self.privateBrowsingButton.frame.size.height);
+			rightFrame.origin.x - (gap + rightFrame.size.height),
+			rightFrame.origin.y,
+			rightFrame.size.height,
+			rightFrame.size.height);
 
 		CGRect pos2 = CGRectMake(
-			self.privateBrowsingButton.frame.origin.x - ((gap + self.privateBrowsingButton.frame.size.height) * 2),
-			self.privateBrowsingButton.frame.origin.y,
-			self.privateBrowsingButton.frame.size.height,
-			self.privateBrowsingButton.frame.size.height);
+			rightFrame.origin.x - ((gap + rightFrame.size.height) * 2),
+			rightFrame.origin.y,
+			rightFrame.size.height,
+			rightFrame.size.height);
 
 		if(preferenceManager.desktopButtonEnabled && preferenceManager.tabManagerEnabled)
 		{
@@ -160,6 +187,20 @@
 	}
 }
 
+- (void)_updateScrollBoundsForKeyboardInfo:(id)arg1
+{
+	if(preferenceManager.tabManagerEnabled)
+	{
+		if(!self.delegate)
+		{
+			HBLogDebug(@"prevented something?");
+			return;	//please don't break anything, please (fix for weird crash)
+		}
+	}
+
+	%orig;
+}
+
 %new
 - (void)desktopModeButtonPressed
 {
@@ -174,6 +215,14 @@
 }
 
 %new
+- (void)tabManagerButtonPressed
+{
+	TabController* tabController = self.delegate;
+
+	[tabController tiltedTabViewTabManagerButtonPressed];
+}
+
+%new
 - (void)_lockButtonPressed:(UIButton*)button
 {
 	for(TabOverviewItem* item in self.items)
@@ -182,14 +231,14 @@
 		{
 			if(item.thumbnailView.lockButton == button)
 			{
-				[self.delegate tabOverview:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 		else
 		{
 			if(item.layoutInfo.itemView.lockButton == button)
 			{
-				[self.delegate tabOverview:self toggleLockedStateForItem:item];
+				[self.delegate toggleLockedStateForItem:item];
 			}
 		}
 	}
@@ -201,7 +250,7 @@
 	{
 		if([self.delegate currentItemForTabOverview:self] != item)
 		{
-			TabDocument* tabDocument = [self.delegate _tabDocumentRepresentedByTabOverviewItem:item];
+			TabDocument* tabDocument = tabDocumentForItem(self.delegate, item);
 
 			if(tabDocument.locked)
 			{
@@ -239,7 +288,7 @@
 		if([item.thumbnailView.lockButton actionsForTarget:self forControlEvent:UIControlEventTouchUpInside].count == 0)
 		{
 			[item.thumbnailView.lockButton addTarget:self action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-			item.thumbnailView.lockButton.selected = [self.delegate _tabDocumentRepresentedByTabOverviewItem:item].locked;
+			item.thumbnailView.lockButton.selected = tabDocumentForItem(self.delegate, item).locked;
 		}
 	}
 }

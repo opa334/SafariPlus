@@ -1,18 +1,22 @@
-// SPFileManager.mm
-// (c) 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "SPFileManager.h"
 
@@ -24,6 +28,21 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
+#import "../../Shared/SPFile.h"
+#import "../../Shared/NSFileManager+DirectorySize.h"
+#import "SPDownload.h"
+
+#import <unistd.h>
+
+#import <QuickLook/QuickLook.h>
+@interface QLThumbnail : NSObject
+- (id)initWithURL:(id)arg1;
+- (id)imageForUseMode:(NSUInteger)arg1 descriptor:(id)arg2 generateIfNeeded:(BOOL)arg3 contentRect:(CGRect*)arg4 error:(id*)arg5;
+@end
+
+@interface QLThumbnailGenerator : NSObject
++ (void)generateThumbnailOfMaximumSize:(CGSize)arg1 scale:(double)arg2 forURL:(id)arg3 completionHandler:(void (^)(id arg1))completion;
+@end
 
 #ifndef PREFERENCES
 
@@ -33,6 +52,13 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	NSDictionary* dict = [mutDict copy];
 
 	NSDictionary* response = [communicationManager executeFileOperationOnSpringBoard:dict];
+
+	NSException* exception = [response objectForKey:@"exception"];
+	if(exception)
+	{
+		//Redirect SpringBoard crashes to Safari
+		@throw(exception);
+	}
 
 	if(error)
 	{
@@ -70,11 +96,10 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	self = [super init];
 
-	NSError* sandboxError;
-	[super contentsOfDirectoryAtPath:@"/var/mobile" error:&sandboxError];
-	_isSandboxed = sandboxError.code == 257;
-
 	_hardLinkURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"hardLink"]];
+
+	_isSandboxed = access("/var/mobile", W_OK) != 0;
+	HBLogDebug(@"_isSandboxed:%i", _isSandboxed);
 
 	_displayNamesForPaths = [communicationManager applicationDisplayNamesForPaths];
 
@@ -112,11 +137,11 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	{
 		if(![self isURLReadable:URL] || ![self isURLWritable:URL] || forced)
 		{
-			NSURL* newURL = [_hardLinkURL URLByAppendingPathComponent:URL.lastPathComponent];
+			NSURL* hardLinkURL = [_hardLinkURL URLByAppendingPathComponent:URL.lastPathComponent];
 
-			[self linkItemAtURL:URL toURL:newURL error:nil];
+			[self linkItemAtURL:URL toURL:hardLinkURL error:nil];
 
-			return newURL;
+			return hardLinkURL;
 		}
 	}
 
@@ -126,13 +151,13 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 - (BOOL)_isReadable:(const char*)str
 {
 	int denied = sandbox_check(getpid(), "file-read-data", SANDBOX_FILTER_PATH | SANDBOX_CHECK_NO_REPORT, str);
-	return !(BOOL)denied;
+	return !denied;
 }
 
 - (BOOL)_isWritable:(const char*)str
 {
 	int denied = sandbox_check(getpid(), "file-write-data", SANDBOX_FILTER_PATH | SANDBOX_CHECK_NO_REPORT, str);
-	return !(BOOL)denied;
+	return !denied;
 }
 
 - (BOOL)isPathReadable:(NSString*)path
@@ -398,6 +423,25 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return [super linkItemAtURL:srcURL toURL:dstURL error:error];
 }
 
+- (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error
+{
+	if(rocketBootstrapWorks && _isSandboxed)
+	{
+		if(![self isURLReadable:URL])
+		{
+			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectoryContents_SPFile];
+
+			NSMutableDictionary* operation = [NSMutableDictionary new];
+			addToDict(operation, operationType, @"operationType");
+			addToDict(operation, URL, @"url");
+
+			return [execute(operation, error) objectForKey:@"return"];
+		}
+	}
+
+	return [SPFile filesAtURL:URL error:error];
+}
+
 - (BOOL)fileExistsAtPath:(NSString*)path
 {
 	if(rocketBootstrapWorks && _isSandboxed)
@@ -463,16 +507,13 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	if(rocketBootstrapWorks && _isSandboxed)
 	{
-		if(![self isPathReadable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_IsWritable];
+		NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_IsWritable];
 
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
+		NSMutableDictionary* operation = [NSMutableDictionary new];
+		addToDict(operation, operationType, @"operationType");
+		addToDict(operation, path, @"path");
 
-			return [[execute(operation, nil) objectForKey:@"return"] boolValue];
-		}
+		return [[execute(operation, nil) objectForKey:@"return"] boolValue];
 	}
 
 	return [super isWritableFileAtPath:path];
@@ -522,21 +563,18 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	if(rocketBootstrapWorks && _isSandboxed)
 	{
-		if(![self isURLReadable:url])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResourceValue_URL];
+		NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResourceValue_URL];
 
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, key, @"key");
-			addToDict(operation, url, @"url");
+		NSMutableDictionary* operation = [NSMutableDictionary new];
+		addToDict(operation, operationType, @"operationType");
+		addToDict(operation, key, @"key");
+		addToDict(operation, url, @"url");
 
-			NSDictionary* response = execute(operation, error);
+		NSDictionary* response = execute(operation, error);
 
-			*value = [response objectForKey:@"value"];
+		*value = [response objectForKey:@"value"];
 
-			return [[response objectForKey:@"return"] boolValue];
-		}
+		return [[response objectForKey:@"return"] boolValue];
 	}
 
 	return [url getResourceValue:value forKey:key error:error];
@@ -580,7 +618,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 	if(rocketBootstrapWorks && _isSandboxed)
 	{
-		if([self isURLReadable:url])
+		if(![self isURLReadable:url])
 		{
 			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResolveSymlinks_URL];
 
@@ -610,7 +648,31 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return resolvedURL;
 }
 
+- (NSUInteger)sizeOfDirectoryAtURL:(NSURL*)directoryURL
+{
+	if(rocketBootstrapWorks && _isSandboxed)
+	{
+		if(![self isURLReadable:directoryURL])
+		{
+			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectorySize_URL];
+
+			NSMutableDictionary* operation = [NSMutableDictionary new];
+			addToDict(operation, operationType, @"operationType");
+			addToDict(operation, directoryURL, @"url");
+
+			return [(NSNumber*)[execute(operation, nil) objectForKey:@"return"] unsignedIntegerValue];
+		}
+	}
+
+	return [super sizeOfDirectoryAtURL:directoryURL];
+}
+
 #else
+
+- (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error
+{
+	return [SPFile filesAtURL:URL error:error];
+}
 
 - (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error
 {
@@ -669,24 +731,89 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 #endif
 
-- (UIImage*)fileIcon
+- (UIImage*)iconForDownload:(SPDownload*)download
 {
-	if(!_fileIcon)
+	NSString* filename = download.filename;
+	if([filename.pathExtension isEqualToString:@"movpkg"])
 	{
-		_fileIcon = [UIImage imageNamed:@"File.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+		filename = @"a.mp4";
 	}
+	LSDocumentProxy* documentProxy = [LSDocumentProxy documentProxyForName:filename type:nil MIMEType:nil];
 
-	return _fileIcon;
+	return [self fileIconForDocumentProxy:documentProxy];
 }
 
-- (UIImage*)directoryIcon
+- (UIImage*)iconForFile:(SPFile*)file
 {
-	if(!_directoryIcon)
+	LSDocumentProxy* documentProxy;
+
+	if([file isHLSStream])
 	{
-		_directoryIcon = [UIImage imageNamed:@"Directory.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
+		documentProxy = [LSDocumentProxy documentProxyForName:@"a.mp4" type:nil MIMEType:nil];
+	}
+	else
+	{
+		documentProxy = [LSDocumentProxy documentProxyForName:nil type:file.fileUTI MIMEType:nil];
 	}
 
-	return _directoryIcon;
+	return [self fileIconForDocumentProxy:documentProxy];
+}
+
+- (UIImage*)fileIconForDocumentProxy:(LSDocumentProxy*)documentProxy
+{
+	//A little bit bigger but has an annoying mega icon on all files without an other icon
+	//UIImage* icon = [UIImage _iconForResourceProxy:documentProxy format:13 options:0];
+
+	UIImage* icon = [UIImage _iconForResourceProxy:documentProxy variant:19 variantsScale:[UIScreen mainScreen].scale];
+	//26 and 36 are also possible variants
+
+	if(!icon)
+	{
+		return [self genericFileIcon];
+	}
+
+	return icon;
+}
+
+- (UIImage*)genericFileIcon
+{
+	static dispatch_once_t fileOnceToken;
+
+	dispatch_once(&fileOnceToken, ^
+	{
+		CGSize size = CGSizeMake(1,1);
+		UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+		[[UIColor clearColor] setFill];
+		UIRectFill(CGRectMake(0, 0, size.width, size.height));
+		UIImage* clearImage = UIGraphicsGetImageFromCurrentImageContext();
+		UIGraphicsEndImageContext();
+
+		CGImageRef iconCG = LICreateIconForImage(clearImage.CGImage, 19, 0);
+		_genericFileIcon = [[UIImage alloc] initWithCGImage:iconCG scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+	});
+
+	return _genericFileIcon;
+}
+
+- (UIImage*)genericDirectoryIcon
+{
+	static dispatch_once_t directoryOnceToken;
+
+	dispatch_once(&directoryOnceToken, ^
+	{
+		NSBundle* bundle = [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/DocumentManager.framework"];
+
+		if(bundle)
+		{
+			_genericDirectoryIcon = [UIImage imageNamed:@"Folder-Light-29" inBundle:bundle];
+		}
+		else
+		{
+			_genericDirectoryIcon = [UIImage imageNamed:@"Directory" inBundle:SPBundle compatibleWithTraitCollection:nil];
+		}
+	});
+
+	return _genericDirectoryIcon;
 }
 
 @end

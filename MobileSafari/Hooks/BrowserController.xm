@@ -1,18 +1,22 @@
-// BrowserController.xm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "../SafariPlus.h"
 
@@ -22,6 +26,7 @@
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPDownloadNavigationController.h"
+#import "../Classes/SPTabManagerTableViewController.h"
 
 %hook BrowserController
 
@@ -30,19 +35,20 @@
 %property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeRightGestureRecognizer;
 %property (nonatomic, retain) UISwipeGestureRecognizer *URLBarSwipeDownGestureRecognizer;
 
-%property (nonatomic, assign) BOOL browsingModeSet;
+%property (nonatomic, assign) BOOL isSetUp;
 
 //Present downloads view
 %new
 - (void)downloadsFromButtonBar
 {
-	//Create SPDownloadNavigationController
-	SPDownloadNavigationController* downloadsController =
-		[[SPDownloadNavigationController alloc] init];
+	dispatch_async(dispatch_get_main_queue(), ^
+	{
+		//Create SPDownloadNavigationController
+		SPDownloadNavigationController* downloadsController = [[SPDownloadNavigationController alloc] init];
 
-	//Present SPDownloadNavigationController
-	[rootViewControllerForBrowserController(self) presentViewController:downloadsController
-	 animated:YES completion:nil];
+		//Present SPDownloadNavigationController
+		[rootViewControllerForBrowserController(self) presentViewController:downloadsController animated:YES completion:nil];
+	});
 }
 
 //URL Swipe actions
@@ -79,19 +85,27 @@
 		if([self respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
 		{
 			[self loadURLInNewTab:[self.tabController.activeTabDocument URL]
-			 inBackground:preferenceManager.gestureBackground animated:YES];
+			 inBackground:preferenceManager.gestureActionsInBackgroundEnabled animated:YES];
 		}
 		else
 		{
 			[self loadURLInNewWindow:[self.tabController.activeTabDocument URL]
-			 inBackground:preferenceManager.gestureBackground animated:YES];
+			 inBackground:preferenceManager.gestureActionsInBackgroundEnabled animated:YES];
 		}
 		break;
 	}
 
 	case GestureActionCloseAllTabs:
 	{
-		[self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
+		if([self.tabController respondsToSelector:@selector(closeAllOpenTabsAnimated:)])
+		{
+			[self.tabController closeAllOpenTabsAnimated:NO];
+		}
+		else
+		{
+			[self.tabController closeAllOpenTabsAnimated:NO exitTabView:YES];
+		}
+
 		shouldClean = YES;
 		break;
 	}
@@ -162,20 +176,27 @@
 
 	case GestureActionReloadActiveTab:
 	{
-		[self.tabController.activeTabDocument reload];
+		if(!self.tabController.activeTabDocument.isBlankDocument)
+		{
+			[self.tabController.activeTabDocument reload];
+		}
 		break;
 	}
 
 	case GestureActionRequestDesktopSite:
 	{
-		if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
+		if(!self.tabController.activeTabDocument.isBlankDocument)
 		{
-			[self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+			if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
+			{
+				[self.tabController.activeTabDocument.reloadOptionsController requestDesktopSite];
+			}
+			else
+			{
+				[self.tabController.activeTabDocument requestDesktopSite];
+			}
 		}
-		else
-		{
-			[self.tabController.activeTabDocument requestDesktopSite];
-		}
+
 		break;
 	}
 
@@ -204,8 +225,7 @@
 		//Remove private mode message
 		if([self.tabController.tiltedTabView respondsToSelector:@selector(setShowsPrivateBrowsingExplanationView:animated:)])
 		{
-			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO
-			 animated:NO];
+			[self.tabController.tiltedTabView setShowsPrivateBrowsingExplanationView:NO animated:NO];
 		}
 		else
 		{
@@ -220,87 +240,58 @@
 	//Clear history
 	[self clearHistoryMessageReceived];
 
-	//Clear autoFill stuff
-	[self clearAutoFillMessageReceived];
+	if([self respondsToSelector:@selector(clearAutoFillMessageReceived)])
+	{
+		//Clear autoFill stuff
+		[self clearAutoFillMessageReceived];
+	}
 }
 
 //Used to close tabs based on the setting
 %new
 - (void)autoCloseAction
 {
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled && preferenceManager.biometricProtectionSwitchModeAllowAutomaticActionsEnabled)
+	{
+		skipBiometricProtection = YES;
+	}
+
 	switch(preferenceManager.autoCloseTabsFor)
 	{
 	case CloseTabActionFromActiveMode:
 	{
-		//Close tabs from active surfing mode
-		[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
+		closeTabDocuments(self.tabController, self.tabController.currentTabDocuments, NO);
 		break;
 	}
 	case CloseTabActionFromNormalMode:
 	{
-		if(privateBrowsingEnabled(self))
-		{
-			//Surfing mode is private -> switch to normal mode
-			togglePrivateBrowsing(self);
-
-			//Close tabs from normal mode
-			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-
-			//Switch back to private mode
-			togglePrivateBrowsing(self);
-		}
-		else
-		{
-			//Surfing mode is normal -> close tabs
-			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-		}
+		closeTabDocuments(self.tabController, self.tabController.tabDocuments, NO);
 		break;
 	}
 	case CloseTabActionFromPrivateMode:
 	{
-		if(!privateBrowsingEnabled(self))
-		{
-			//Surfing mode is normal -> switch to private mode
-			togglePrivateBrowsing(self);
-
-			//Close tabs from private mode
-			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-
-			//Switch back to normal mode
-			togglePrivateBrowsing(self);
-		}
-		else
-		{
-			//Surfing mode is private -> close tabs
-			[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-		}
+		closeTabDocuments(self.tabController, self.tabController.privateTabDocuments, NO);
 		break;
 	}
 	case CloseTabActionFromBothModes:	//Both modes
 	{
-		//Close tabs from active surfing mode
-		[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-
-		//Switch mode
-		togglePrivateBrowsing(self);
-
-		//Close tabs from other surfing mode
-		[self.tabController closeAllOpenTabsAnimated:YES exitTabView:YES];
-
-		//Switch back
-		togglePrivateBrowsing(self);
+		closeTabDocuments(self.tabController, self.tabController.allTabDocuments, NO);
 		break;
 	}
-
-	default:
-		break;
 	}
+
+	skipBiometricProtection = NO;
 }
 
 //Used to switch mode based on the setting
 %new
 - (void)modeSwitchAction:(int)switchToMode
 {
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled && preferenceManager.biometricProtectionSwitchModeAllowAutomaticActionsEnabled)
+	{
+		skipBiometricProtection = YES;
+	}
+
 	if(switchToMode == ModeSwitchActionNormalMode)
 	{
 		//Switch to normal browsing mode
@@ -321,12 +312,39 @@
 			[self.tabController.tiltedTabView setShowsExplanationView:NO animated:NO];
 		}
 	}
+
+	skipBiometricProtection = NO;
 }
 
 //Full screen scrolling
+
+//iOS 9-10.2 (method doesn't exist on 8)
 - (BOOL)_isVerticallyConstrained
 {
-	return (preferenceManager.fullscreenScrollingEnabled) ? YES : %orig;
+	if(preferenceManager.fullscreenScrollingEnabled)
+	{
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_10_3)
+		{
+			return YES;
+		}
+	}
+
+	return %orig;
+}
+
+
+//iOS 8,10.3+ (causes status bar flickering on iOS <=10.2, on iOS 8 we use it anyways cause it's the only thing that works on there)
+- (BOOL)fullScreenInPortrait
+{
+	if(preferenceManager.fullscreenScrollingEnabled)
+	{
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0 || kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_3)
+		{
+			return YES;
+		}
+	}
+
+	return %orig;
 }
 
 //Fully disable private mode
@@ -341,15 +359,30 @@
 	return (preferenceManager.lockBars) ? NO : %orig;
 }
 
+- (void)tabControllerDocumentCountDidChange:(TabController*)tabController
+{
+	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		[activeToolbarForBrowserController(self) updateTabCount];
+	}
+
+	if(preferenceManager.tabManagerEnabled && tabController.presentedTabManager)
+	{
+		[(SPTabManagerTableViewController*) tabController.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
+	}
+}
+
 - (void)_initSubviews
 {
 	%orig;
 	if(preferenceManager.URLLeftSwipeGestureEnabled || preferenceManager.URLRightSwipeGestureEnabled
 	   || preferenceManager.URLDownSwipeGestureEnabled)
 	{
-		_SFNavigationBarURLButton* URLButton = MSHookIvar<_SFNavigationBarURLButton*>(self.navigationBar, "_URLOutline");
+		_SFNavigationBarURLButton* URLButton = MSHookIvar<_SFNavigationBarURLButton*>(navigationBarForBrowserController(self), "_URLOutline");
 
-		if(preferenceManager.URLLeftSwipeGestureEnabled)
+		if(preferenceManager.URLLeftSwipeGestureEnabled && !self.URLBarSwipeLeftGestureRecognizer)
 		{
 			//Create gesture recognizer
 			self.URLBarSwipeLeftGestureRecognizer = [[UISwipeGestureRecognizer alloc]
@@ -436,134 +469,6 @@
 	%orig;
 }
 
-//Modify tab expose alert for locked tabs (purely cosmetical)
-%new
-- (void)updateTabExposeAlertForLockedTabs
-{
-	UIAlertController* tabExposeAlertController = MSHookIvar<UIAlertController*>(self, "_tabExposeAlertController");
-
-	if(!tabExposeAlertController)
-	{
-		return;
-	}
-
-	NSUInteger nonLockedTabCount = 0;
-
-	NSMutableArray<UIAlertAction*>* actions = MSHookIvar<NSMutableArray<UIAlertAction*>*>(tabExposeAlertController, "_actions");
-
-	BOOL hasSearchTerm = NO;
-	BOOL reloadActions = NO;
-
-	if([self.tabController respondsToSelector:@selector(searchTerm)])
-	{
-		hasSearchTerm = (self.tabController.searchTerm.length > 0);
-	}
-
-	if(!hasSearchTerm)
-	{
-		for(TabDocument* document in self.tabController.currentTabDocuments)
-		{
-			if(!document.locked)
-			{
-				nonLockedTabCount++;
-			}
-		}
-
-		if(self.tabController.currentTabDocuments.count == nonLockedTabCount)
-		{
-			return;	//No tabs locked, nothing else to do
-		}
-
-		UIAlertAction* closeAllTabsAction;
-		UIAlertAction* closeTabAction;
-
-		if([self respondsToSelector:@selector(_closeAllTabsAction)] && ![self isShowingTabView])
-		{
-			if(self.tabController.currentTabDocuments.count > 1)
-			{
-				closeTabAction = [actions objectAtIndex:1];
-			}
-			else
-			{
-				closeTabAction = actions.firstObject;
-			}
-		}
-
-		if([self isShowingTabView] || self.tabController.currentTabDocuments.count > 1)
-		{
-			if([self respondsToSelector:@selector(_closeAllTabsAction)])
-			{
-				closeAllTabsAction = actions.firstObject;
-			}
-			else
-			{
-				closeAllTabsAction = [actions objectAtIndex:actions.count - 2];
-			}
-
-			//If there are no nonlocked tabs outside of the current active tab, we remove the option to close all tabs, otherwise we change the title
-			if(nonLockedTabCount > 1)
-			{
-				[closeAllTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedTabCount]];
-			}
-			else if(([self isShowingTabView] || self.tabController.activeTabDocument.locked || ![self respondsToSelector:@selector(_closeAllTabsAction)]) && nonLockedTabCount == 1)
-			{
-				[closeAllTabsAction setTitle:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"]];
-			}
-			else
-			{
-				[actions removeObject:closeAllTabsAction];
-				reloadActions = YES;
-			}
-		}
-
-		//If the active tab is locked, we remove the option to close it
-		if(self.tabController.activeTabDocument.locked && closeTabAction)
-		{
-			[actions removeObject:closeTabAction];
-			reloadActions = YES;
-		}
-	}
-	else if(hasSearchTerm)
-	{
-		UIAlertAction* closeMatchingTabsAction = actions.firstObject;
-
-		for(TabDocument* document in self.tabController.tabDocumentsMatchingSearchTerm)
-		{
-			if(!document.locked)
-			{
-				nonLockedTabCount++;
-			}
-		}
-
-		if(self.tabController.tabDocumentsMatchingSearchTerm.count == nonLockedTabCount)
-		{
-			return;	//No matching tabs locked, nothing else to do
-		}
-
-		if(nonLockedTabCount == 0)
-		{
-			[actions removeObject:closeMatchingTabsAction];
-			reloadActions = YES;
-		}
-		else if(nonLockedTabCount == 1)
-		{
-			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB_MATCHING"], self.tabController.searchTerm]];
-		}
-		else
-		{
-			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS_MATCHING"], nonLockedTabCount, self.tabController.searchTerm]];
-		}
-	}
-
-	//If any action has been removed, we need to manually remove and readd all actions so that the UI actually updates
-	if(reloadActions)
-	{
-		NSMutableArray* newActions = [actions copy];
-		[tabExposeAlertController _removeAllActions];
-		[tabExposeAlertController _setActions:newActions];
-	}
-}
-
 %group iOS9Up
 
 //Auto switch mode on external URL opened
@@ -577,9 +482,16 @@
 	return %orig;
 }
 
+- (void)setUpWithURL:(id)arg1 launchOptions:(id)arg2
+{
+	self.isSetUp = NO;
+	%orig;
+	self.isSetUp = YES;
+}
+
 %end
 
-%group iOS11Up
+%group iOS11_3to12_1_4
 
 - (void)_updateTabExposeAlertController
 {
@@ -587,18 +499,31 @@
 
 	if(preferenceManager.lockedTabsEnabled)
 	{
-		[self updateTabExposeAlertForLockedTabs];
+		updateTabExposeActionsForLockedTabs(self, MSHookIvar<UIAlertController*>(self, "_tabExposeAlertController"));
 	}
 }
 
+%end
+
+%group iOS11Up
+
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(id)arg3
 {
+	void (^origBlock)() = ^
+	{
+		%orig;
+
+		if(preferenceManager.showTabCountEnabled)
+		{
+			[activeToolbarForBrowserController(self) updateTabCount];
+		};
+	};
+
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
 	{
-		if(!self.browsingModeSet)
+		if(!self.isSetUp)
 		{
-			%orig;
-			self.browsingModeSet = YES;
+			origBlock();
 			return;
 		}
 
@@ -608,19 +533,19 @@
 		{
 			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 			{
-				%orig;
+				origBlock();
 			});
 
 			return;
 		}
 	}
 
-	%orig;
+	origBlock();
 }
 
 %end
 
-%group iOS10Down
+%group iOS10to11_2_6
 
 - (void)updateTabExposePopoverActions
 {
@@ -628,38 +553,79 @@
 
 	if(preferenceManager.lockedTabsEnabled)
 	{
-		[self updateTabExposeAlertForLockedTabs];
+		updateTabExposeActionsForLockedTabs(self, MSHookIvar<UIAlertController*>(self, "_tabExposeAlertController"));
 	}
 }
 
-- (void)togglePrivateBrowsingEnabled
-{
-	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
-	{
-		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
-		{
-			%orig;
-		});
+%end
 
-		return;
-	}
-
-	%orig;
-}
+%group iOS10Down
 
 - (void)togglePrivateBrowsing
 {
+	void (^origBlock)() = ^
+	{
+		%orig;
+
+		if(preferenceManager.showTabCountEnabled)
+		{
+			[activeToolbarForBrowserController(self) updateTabCount];
+		};
+	};
+
 	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
 	{
 		requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
 		{
-			%orig;
+			origBlock();
 		});
 
 		return;
 	}
 
-	%orig;
+	origBlock();
+}
+
+- (void)setPrivateBrowsingEnabled:(BOOL)enabled
+{
+	if([self respondsToSelector:@selector(togglePrivateBrowsing)])
+	{
+		%orig;
+		return;
+	}
+
+	void (^origBlock)() = ^
+	{
+		%orig;
+
+		if(preferenceManager.showTabCountEnabled)
+		{
+			[activeToolbarForBrowserController(self) updateTabCount];
+		};
+	};
+
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
+	{
+		if(!self.isSetUp)
+		{
+			origBlock();
+			return;
+		}
+
+		BOOL previous = privateBrowsingEnabled(self);
+
+		if(previous != enabled)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
+			{
+				origBlock();
+			});
+
+			return;
+		}
+	}
+
+	origBlock();
 }
 
 %end
@@ -695,7 +661,18 @@
 {
 	%orig;
 
-	if(self.topToolbar)
+	BrowserToolbar* toolbar;
+
+	if([self respondsToSelector:@selector(topToolbar)])
+	{
+		toolbar = self.topToolbar;
+	}
+	else if([self.rootViewController.navigationBar respondsToSelector:@selector(sp_toolbar)])
+	{
+		toolbar = self.rootViewController.navigationBar.sp_toolbar;
+	}
+
+	if(toolbar)
 	{
 		BOOL enabled;
 
@@ -708,7 +685,7 @@
 			enabled = MSHookIvar<BOOL>(self, "_shouldDisableToolbarForCatalogViewControllerPopover") == NO;
 		}
 
-		[self.topToolbar setDownloadsEnabled:enabled];
+		[toolbar setDownloadsEnabled:enabled];
 	}
 }
 
@@ -735,9 +712,19 @@ void initBrowserController()
 		}
 	}
 
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_3)
+	{
+		%init(iOS10to11_2_6);
+	}
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
 	{
 		%init(iOS11Up);
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
+		{
+			%init(iOS11_3to12_1_4);
+		}
 	}
 	else
 	{
