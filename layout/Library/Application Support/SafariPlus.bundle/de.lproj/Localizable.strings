@@ -1,6 +1,6 @@
 "YES" = "Ja";
 "NO" = "Nein";
-"SAVE" = "Speichern";
+"SAVE" = "Sichern";
 
 /* Root Page */
 
@@ -9,18 +9,22 @@
 "PRIVACY" = "Privatsphäre";
 "UPLOADS_AND_DOWNLOADS" = "Uploads & Downloads";
 "USABILITY" = "Benutzbarkeit";
-"BEHAVIOUR" = "Verhalten";
+"ACTIONS" = "Aktionen";
 "GESTURES" = "Gesten";
 "CUSTOMIZATION" = "Anpassungen";
-"ABOUT_ME" = "Über mich";
-"TWITTER" = "Twitter";
-"DONATE" = "Spenden";
+
 "ABOUT_THIS_TWEAK" = "Über diesen Tweak";
+"TWEAK_SPECIFIC_SETTINGS" = "Tweakspezifische Einstellungen";
 "SOURCE_CODE" = "Quellcode";
+"CREDITS_AND_LICENSES" = "Credits und Lizenzen";
+
+"ABOUT_ME" = "Über mich";
+"FOLLOW_ME_ON_TWITTER" = "Folge mir auf Twitter";
+"DONATE" = "Spenden";
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global.\n\nHINWEIS: Ausnahmen können hinzugefügt werden damit Seiten, die kein HTTPS unterstützen, trotzdem funktionieren.";
+"FORCE_HTTPS_FOOTER" = "Erzwingt das HTTPS Protokoll global für alle URLs, die nicht den Ausnahmen angegeben sind. Über das lange Drücken des Neuladen Buttons lassen sich Ausnahmen auch innerhalb von Safari verwalten.";
 "FORCE_HTTPS" = "HTTPS erzwingen";
 "FORCE_HTTPS_EXCEPTIONS" = "Ausnahmen...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Ausnahmen";
@@ -37,38 +41,39 @@
 "BIOMETRIC_PROTECTION" = "Biometrischer Schutz";
 "BIOMETRIC_PROTECTION_FOOTER" = "Schützt die ausgewählten Aktionen mit Touch ID oder Face ID.";
 "SWITCH_BROWSING_MODE" = "Surfmodus wechseln";
+"ALLOW_AUTOMATIC_ACTIONS" = "Automatische Aktionen zulassen";
 "LOCK_TAB" = "Tab verriegeln";
 "UNLOCK_TAB" = "Tab entriegeln";
 "ACCESS_LOCKED_TAB" = "Zugriff auf verriegelten Tab";
+"AUTHENTICATE" = "Authentifizieren";
+"AUTHENTICATION_ERROR" = "Fehler beim Authentifizieren";
+"ACCESS_BIOMETRIC_PROTECTION" = "Zugriff auf biometrischen Schutz";
 
 /* Uploads & Downloads */
 
 "UPLOADS" = "Uploads";
 "DOWNLOADS" = "Downloads";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der man jede Datei vom Gerät hochladen kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt und hochgeladen werden.";
+"UPLOAD_ANY_FILE_FOOTER" = "Fügt eine neue Option im Menü zum Hochladen von Dokumenten hinzu, mit der jede Datei vom Gerät hochladen werden kann. Durch langes Drücken auf eine Datei können auch mehrere Dateien ausgewählt werden.";
 "UPLOAD_ANY_FILE" = "Jede Datei hochladen";
 
-"ENHANCED_DOWNLOADS" = "Verbesserte Downloads";
-"ENHANCED_DOWNLOADS_FOOTER" = "Fügt einen Button zur unteren Leiste hinzu, welcher die Download Ansicht öffnet. In dieser lassen sich ausstehende und bereits fertiggestellte Downloads einsehen und verwalten. Über den Dateibrowser lassen sich die Dateien verwalten. Außerdem wird ein Download-Menü hinzugefügt, welches vor dem Herunterladen von Dateien erscheint. Dies erlaubt das Speichern der Dateien in ein lokales Verzeichnis (Standardmäßig /var/mobile/Downloads/). Downloads werden im Hintergrund fortgeführt und man erhält eine Benachrichtigung, wenn der Download einer Datei fertiggestellt wurde. Wenn Safari über den App Switcher geschlossen wird, werden alle ausstehenden Downloads 'eingefroren' und beim nächsten Start von Safari fortgeführt.";
+"DOWNLOAD_MANAGER" = "Download-Manager";
+"DOWNLOAD_MANAGER_FOOTER" = "Ein Vollwertiger Download-Manager, direkt in Safari integriert. Ersetzt das standardmäßige Downloadverhalten durch ein Menü mit Downloadoptionen. Über den Toolbar-Button lassen sich aktive und fertige Downloads, sowie auch bereits heruntergeladene Dateien verwalten. Downloads werden im Hintergrund fortgeführt. Wenn Safari im App Switcher geschlossen wird, werden alle Downloads pausiert und beim nächsten Start fortgeführt. Das Herunterladen von HLS (m3u8) Streams in eine .movpkg Datei wird ab iOS 10 unterstützt, allerdings kann der Fortschritt dieser Downloads nicht wiederhergestellt werden wenn Safari manuell vom App Switcher geschlossen wurde.";
+
+"CONTENT_OPTIONS" = "Inhaltsoptionen";
 
 "VIDEO_DOWNLOADING" = "Video Downloads";
-"VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Button zum Video-Player hinzu, mit dem man das Video herunterladen kann.\n\nHINWEIS: Könnte auf einigen Seiten nicht funktionieren, bei denen die Video URL nicht einfach abgefragt werden kann. Außerdem benutzen einige Seiten m3u8 Dateien, um ihre Inhalte zu streamen. Man kann diese Dateien herunterladen, allerdings enthalten sie kein Video.";
+"VIDEO_DOWNLOADING_FOOTER" = "Fügt einen Download Button zum Video-Player hinzu.";
+"USE_TAB_TITLE_AS_FILENAME" = "Tab Titel als Dateiname nutzen";
 
-"DEFAULT_SECTION" = "Standardsektion";
-"DEFAULT_SECTION_FOOTER" = "Wähle die standardmäßig beim Öffnen des Download-Menüs ausgewählte Sektion aus. Die 'Automatisches Wechseln' Option wählt die angegebene Sektion nur dann aus, wenn noch aktive Downloads existieren, andernfalls wird die jeweils andere Sektion ausgewählt.";
-"DEFAULT_SECTION_AUTO_SWITCH" = "Automatisches Wechseln";
+"ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "Fügt Download-Aktionen beim langen Drücken auf Seitenelemente hinzu.";
+"DOWNLOAD_SITE_TO_ACTION" = "'Seite herunterladen nach ...' Aktion";
+"DOWNLOAD_IMAGE_TO_ACTION" = "'Bild herunterladen nach ...' Aktion";
 
-"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Fügt Optionen zum Herunterladen einer Seite / eines Bildes zum Menü hinzu, welches beim langen gedrückt halten eines Seitenelements erscheint.";
-"DOWNLOAD_SITE_TO_OPTION" = "'Seite herunterladen nach ...' Option";
-"DOWNLOAD_IMAGE_TO_OPTION" = "'Bild herunterladen nach ...' Option";
-
-"INSTANT_DOWNLOAD" = "Direkter Download";
-"INSTANT_DOWNLOAD_FOOTER" = "Deaktiviert das Download-Menü und benutzt standardmäßig immer die ausgewählte Option.";
-"OPTION" = "Option";
+"PATH_OPTIONS" = "Pfadoptionen";
 
 "CUSTOM_DEFAULT_PATH" = "Benutzerdefinierter Standardpfad";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien bei der 'Herunterladen' Option gespeichert werden sollen.\n\nHINWEIS: Es werden Schreibrechte benötigt, um ein Verzeichnis herunterzuladen. In der Regel sollte alles innerhalb des /var Verzeichnisses funktionieren.";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Wähle einen Standardpfad aus, in dem die Dateien beim Benutzen der 'Herunterladen' Option gespeichert werden.";
 
 "PINNED_LOCATIONS_ENABLED" = "Angepinnte Orte aktivieren";
 "PINNED_LOCATIONS" = "Angepinnte Orte";
@@ -83,21 +88,46 @@
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Möchtest du den Pfad\n%@\nauswählen?";
 "ERROR_INVALID_NAME_OR_PATH" = "Ungültiger Name oder Pfad";
 
+"INTERFACE" = "Oberfläche";
+
+"PREVIEW_DOWNLOAD_PROGRESS" = "Download Fortschritt Vorschau";
+"PREVIEW_DOWNLOAD_PROGRESS_FOOTER" = "Zeigt eine Fortschrittsleiste mit dem Gesamtfortschritt der aktiven Downloads unter dem Downloads Button in der Toolbar. Wird nur angezeigt, während Downloads laufen. Inspiriert von iOS 13.";
+
+"DEFAULT_SECTION" = "Standardsektion";
+"DEFAULT_SECTION_FOOTER" = "Wähle die standardmäßig beim Öffnen des Download-Menüs ausgewählte Sektion aus. Die 'Automatisches Wechseln' Option wählt die angegebene Sektion nur dann aus, wenn noch aktive Downloads existieren, andernfalls wird die jeweils andere Sektion ausgewählt.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Automatisches Wechseln";
+
+"BEHAVIOUR" = "Verhalten";
+
+"INSTANT_DOWNLOAD" = "Direkter Download";
+"INSTANT_DOWNLOAD_FOOTER" = "Deaktiviert das Download-Menü und benutzt standardmäßig immer die ausgewählte Option.";
+
 "ONLY_DOWNLOAD_ON_WIFI" = "Nur über WLAN herunterladen";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Erlaubt das Herunterladen von Dateien nur, während das Gerät mit einem WLAN-Netzwerk verbunden ist.";
 
-"DISABLE_PUSH_NOTIFICATIONS" = "Push-Mitteilungen deaktivieren";
-"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Standardmäßig erhälst du eine Push-Mitteilung, wenn ein Download fertiggestellt wurde, diese Option deaktiviert das.";
+"AUTOSAVE_TO_MEDIA_LIBRARY" = "Automatisch in die Medienbibliothek speichern";
+"AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER" = "Automatisches Speichern von Bild-, Audio- und Videodateien, wenn diese fertig heruntergeladen werden.";
 
-"DISABLE_BAR_NOTIFICATIONS" = "Status-Mitteilungen deaktivieren";
-"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Standardmäßig erhälst du eine Mitteilung in der Statusleiste, wenn ein Download gestartet oder fertiggestellt wurde, diese Option deaktiviert das.";
+"DISABLE_HISTORY_FOR_PRIVATE_MODE" = "Verlauf für Privaten Modus deaktivieren";
+"DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER" = "Verhindert das Speichern von Downloads in den Downloadverlauf, wenn diese aus dem privaten Surfmodus heraus gestartet wurden.";
+
+"NOTIFICATIONS" = "Mitteilungen";
+
+"PUSH_NOTIFICATIONS" = "Push-Mitteilungen";
+"PUSH_NOTIFICATIONS_FOOTER" = "Zeigt eine Push-Mitteilung wenn ein Download startet oder endet während die App inaktiv ist.";
+
+"STATUS_BAR_NOTIFICATIONS" = "Status-Mitteilungen";
+"STATUS_BAR_NOTIFICATIONS_FOOTER" = "Zeigt eine Mitteilung in der Statusleiste wenn ein Download startet oder endet während die App aktiv ist.";
+
+"APPLICATION_BADGE" = "Applikationskennzeichen";
+"APPLICATION_BADGE_FOOTER" = "Verwendet die Anzahl ausstehender Downloads als das Kennzeichen des Safari Icons.";
 
 /* Usability */
 
 "URL_ACTIONS" = "URL Aktionen";
 
-"BOTH_TAB_OPEN_ACTIONS" = "Beide Tab Öffnen Aktionen";
-"BOTH_TAB_OPEN_ACTIONS_FOOTER" = "Standardmäßig kann in den Safari Einstellungen nur eine der 'In neuem Tab öffnen' und der 'Im Hintergrund öffnen' Aktionen ausgewählt werden. Diese Option ignoriert die Einstellung und aktiviert stattdessen beide Aktionen.";
+"BOTH_LINK_OPENING_ACTIONS" = "Beide 'Links öffnen' Aktionen";
+"BOTH_LINK_OPENING_ACTIONS_FOOTER" = "Zeigt sowohl die 'In neuem Tab öffnen', als auch die 'Im Hintergrund öffnen' Aktion an, wenn ein Link lange gedrückt wird. Ignoriert die 'Links öffnen' Option von Safari.";
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Fügt eine Aktion zum Öffnen des Links im jeweils anderen Surfmodus zum Menü hinzu, was beim langen gedrückt halten von Links erscheint.\n(Normaler Modus -> Option zum Öffnen im privaten Modus,\nPrivater Modus -> Option zum Öffnen im normalen Modus)";
 "OPEN_IN_OPPOSITE_MODE" = "Aktion zum Öffnen in anderem Modus";
@@ -108,13 +138,18 @@
 "DESKTOP_MODE_SWITCH" = "Desktop Modus Schalter";
 
 "TAB_MANAGER" = "Tab Manager";
-"TAB_MANAGER_FOOTER" = "Fügt einen Teilen Button dem Tab Switcher hinzu, welcher einen Tab Manager öffnet, in dem mehrere Tabs gleichzeitig geschlossen, exportiert und hinzugefügt werden können.";
+"TAB_MANAGER_FOOTER" = "Fügt einen Teilen Button in der Funktionsleiste der Tab Ansicht hinzu, welcher den Tab Manager öffnet. In diesem können einer oder mehrere Tabs gleichzeitig geschlossen, exportiert oder hinzugefügt werden.";
+"SCROLL_POSITION_FROM_TAB_SWITCHER" = "Scrollposition vom Tab-Switcher";
 
 "DISABLE_TAB_LIMIT" = "Tab Limit deaktivieren";
 "DISABLE_TAB_LIMIT_FOOTER" = "Deaktiviert das Tab Limit, welches abhängig von iOS Version und Gerät variiert. Apple wird wahrscheinlich Gründe für das Tab Limit haben, Benutzung auf eigene Gefahr.";
 
-"CUSTOM_START_SITE" = "Benutzerdefinierte Startseite";
-"CUSTOM_START_SITE_FOOTER" = "Ersetzt die Favoritenanzeige, welche normalerweise in einem neu geöffneten Tab erscheint, durch eine benutzerdefinierten Seite, welche stattdessen geöffnet wird.";
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Öffnet angeklickte Links immer in neuen Tabs.";
+"ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Neuen Tab im Hintergrund öffnen";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button.";
+"DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
 
 "SUGGESTIONS" = "Vorschläge";
 
@@ -131,13 +166,22 @@
 "SHOW_TAB_COUNT" = "Tab Anzahl anzeigen";
 "SHOW_TAB_COUNT_FOOTER" = "Zeigt die Anzahl an Tabs des aktuellen Surfmodus auf dem Button an, welcher den Tab-Switcher öffnet.";
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.\n\nHINWEIS: Nicht kompatibel mit iOS 8!";
+"FULLSCREEN_SCROLLING_FOOTER" = "Versteckt die gesamte obere Leiste beim Scrollen nach unten.";
 "FULLSCREEN_SCROLLING" = "Im Vollbild scrollen";
 
 "LOCK_BARS" = "Leisten sperren";
-"LOCK_BARS_FOOTER" = "Sperrt die obere und die untere Leiste, sodass diese nicht mehr verschwinden, wenn die Seite nach unten gescrollt wird.";
+"LOCK_BARS_FOOTER" = "Verhindert das Verschwinden der oberen und unteren Leiste beim Scrollen.";
 
-/* Behaviour */
+"SHOW_FULL_SITE_URL" = "Gesamte URL anzeigen";
+"SHOW_FULL_SITE_URL_FOOTER" = "Immer die gesamte URL der Seite in der oberen Leiste anzeigen.";
+
+"FORCE_NATIVE_PLAYER" = "Nativen Player erzwingen";
+"FORCE_NATIVE_PLAYER_FOOTER" = "Auf iPads besitzt Safari ab iOS 12 einen neuen HTML5 Player, welcher einige Elemente von der Webseite bezieht (nicht auf jeder Seite!). Auf 12.0 - 12.1.4 kann dieser in den Einstellungen aktiviert werden, ab 12.2 ist er standardmäßig an. Diese Option erzwingt die Benutzung des nativen Players auf jeder Seite außer YouTube, da es den nativen Player nicht unterstützt.";
+
+"SUPPRESS_MAILTO_DIALOG" = "Mailto Dialog deaktivieren";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
+
+/* Actions */
 
 "NORMAL_MODE" = "Normaler Surfmodus";
 "PRIVATE_MODE" = "Privater Surfmodus";
@@ -146,15 +190,13 @@
 "FOR" = "für...";
 
 "CHANGE_MODE_ON" = "Surfmodus wechseln bei";
+"CHANGE_MODE_ON_FOOTER" = "Zum jeweiligen Surfmodus wechseln, wenn das zugehörige Ereignis eintritt.";
 
-"LAUNCH_MODE_FOOTER" = "Wechselt zum angegebenen Surfmodus, wenn Safari gestartet wird.";
 "LAUNCH_MODE_LABEL" = "App-Start";
-
-"RESUME_FOOTER" = "Wechselt zum angegebenen Surfmodus, wenn Safari aus dem Hintergrund wieder geöffnet wird.";
 "RESUME_LABEL" = "App-Wiederaufnahme";
-
-"EXTERNAL_URL_FOOTER" = "Wechselt zum angegeben Surfmodus, wenn ein externer Link (aus einer anderen App) in Safari geöffnet wird.";
 "EXTERNAL_URL_LABEL" = "Externem Link";
+
+"AUTOMATIC_ACTIONS" = "Automatische Aktionen";
 
 "AUTO_CLOSE_TABS_FOOTER" = "Schließt die Tabs des angegebenen Surfmodus, wenn der angegebene Fall eintritt.";
 "AUTO_CLOSE_TABS_LABEL" = "Tabs automatisch schließen";
@@ -166,34 +208,17 @@
 "ACTIVE_MODE" = "Aktiver Surfmodus";
 "BOTH_MODES" = "Beide Surfmodi";
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Öffnet angeklickte Links immer in neuen Tabs.";
-"ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Neuen Tab im Hintergrund öffnen";
-
-"DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button. (Verstecktes Safari Feature)";
-"DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Mailto Dialog deaktivieren";
-
-"OTHER" = "Anderes";
-"DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
-
 /* Gestures */
 
 "ACTION" = "Aktion";
 
-"URL_BAR_GESTURES_LABEL" = "Gesten auf URL-Leiste";
+"URL_BAR_GESTURES" = "Gesten auf URL-Leiste";
+"TOOLBAR_GESTURES" = "Gesten auf Toolbar";
 
-"SWIPE_LEFT_GESTURE_FOOTER" = "Führt die angebene Aktion aus, wenn auf der URL-Leiste nach links gewischt wird.";
 "SWIPE_LEFT_GESTURE" = "Nach links wischen";
-
-"SWIPE_RIGHT_GESTURE_FOOTER" = "Führt die angebene Aktion aus, wenn auf der URL-Leiste nach rechts gewischt wird.";
 "SWIPE_RIGHT_GESTURE" = "Nach rechts wischen";
-
-"SWIPE_DOWN_GESTURE_FOOTER" = "Führt die angebene Aktion aus, wenn auf der URL-Leiste nach unten gewischt wird.";
 "SWIPE_DOWN_GESTURE" = "Nach unten wischen";
+"SWIPE_UP_DOWN_GESTURE" = "Nach oben / unten wischen";
 
 "CLOSE_ACTIVE_TAB" = "Aktiven Tab schließen";
 "OPEN_NEW_TAB" = "Neuer Tab";
@@ -206,7 +231,8 @@
 "REQUEST_DESTKOP_SITE" = "Desktop-Site anfordern";
 "OPEN_FIND_ON_PAGE" = "'Auf Seite suchen' öffnen";
 
-"BACKGROUND" = "Tab im Hintergrund duplizieren";
+"ALLOW_GESTURES_IN_TAB_SWITCHER" = "Gesten im Tab Switcher erlauben";
+"RUN_ACTIONS_IN_BACKGROUND" = "Aktionen im Hintergrund ausführen";
 
 /* Customization */
 
@@ -242,8 +268,8 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Hintergrundfarbe der Tab Titelleiste";
 "TOOLBAR_BACKGROUND_COLOR" = "Farbe der Funktionsleiste";
 
-"TAB_BAR_NOTE" = "HINWEIS: Die Tab Leiste ist nicht auf allen Geräten aktiviert.";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "HINWEIS: Einige Einstellungen werden erst nach einem App-Neustart angewandt.";
+"TAB_BAR_NOTE" = "Die Tab Leiste ist nicht auf allen Geräten aktiviert.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "Einige Einstellungen werden erst nach einem App-Neustart angewandt.";
 
 "WHITE" = "Weiß";
 "BLACK" = "Schwarz";
@@ -272,11 +298,46 @@
 "TABS" = "Tabs";
 "ADD_TAB" = "Tab hinzufügen";
 "SEARCH_BAR_SPACE" = "Platz für die Suchleiste";
+"RELOAD" = "Neu laden";
+"CLEAR_HISTORY" = "Verlauf leeren";
+
+"BROWSING" = "Browsing";
+
+"CUSTOM_START_SITE" = "Benutzerdefinierte Startseite";
+"CUSTOM_START_SITE_FOOTER" = "Ersetzt die Favoritenanzeige, welche normalerweise in einem neu geöffneten Tab erscheint, durch eine benutzerdefinierten Seite, welche stattdessen geöffnet wird.";
+
+"CUSTOM_SEARCH_ENGINE" = "Benutzerdefinierte Suchmaschine";
+"CUSTOM_SEARCH_ENGINE_FOOTER" = "Ersetzt die Standardsuchmaschine, {searchTerms} ist der Platzhalter für den eingegebenen Suchbegriff. Die URL für Suchvorschläge ist optional.";
+"SEARCH_ENGINE_NAME" = "Name der Suchmaschine";
+"SEARCH_URL" = "URL für Suchen";
+"SEARCH_SUGGESTIONS_URL" = "URL für Suchvorschläge";
+
+"CUSTOM_USER_AGENT" = "Benutzerdefinierter User-Agent";
+"CUSTOM_USER_AGENT_FOOTER" = "Ersetzt den Standard User-Agent.";
+
+"CUSTOM_DESKTOP_USER_AGENT" = "Benutzerdefinierter Desktop User-Agent";
+"CUSTOM_DESKTOP_USER_AGENT_FOOTER" = "Ersetzt den User Agent, welcher verwendet wird, wenn der 'Desktop Modus Schalter' (Verfügbar unter Benutzbarkeit) aktiviert ist.";
+
+/* Tweak Specifc Settings */
+
+"LARGE_TITLES" = "Große Titel";
+"LARGE_TITLES_FOOTER" = "Große Titel in jeder Ansicht, welche von Safari Plus hinzugefügt wird.";
+
+"SORT_DIRECTORIES_ABOVE_FILES" = "Ordner oberhalb von Dateien sortieren";
+"SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Sortiert Ordner im Dateibrowser oberhalb von Dateien, normalerweise werden beide zusammen alphabetisch sortiert.";
+
+"DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
+
+"RESET_ALL_PREFERENCES" = "Alle Einstellungen zurücksetzen";
+"RESET_ALL_PREFERENCES_CONFIRMATION" = "Bist du sicher, dass alle Einstellungen zurück gesetzt werden sollen?";
 
 /* Credits */
 
-"CREDITS" = "Credits";
-"PICKER_INSPIRED" = "Dateiauswahl inspiriert von";
+"LIBSUBSTITRATE_FOOTER" = "Teile von libSubstitrate werden benutzt um das Herunterladen von Videos auch auf Substitute basierten Jailbreaks möglich zu machen";
+"DEVELOPED_BY_POOMSMART" = "Entwickelt von @PoomSmart";
+
+"SAFARI_PLUS_LICENSE" = "Safari Plus Lizenz (MIT)";
 
 /* In app */
 
@@ -312,6 +373,7 @@
 "DOWNLOADS" = "Downloads";
 "FILE_BROWSER" = "Dateibrowser";
 "OPEN" = "Öffnen";
+"SHOW_CONTENT" = "Inhalt anzeigen";
 "OPEN_IN" = "Öffnen in ...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Import in die Musikbibliothek";
 "SAVE_TO_MEDIA_LIBRARY" = "In die Mediathek speichern";
@@ -335,7 +397,8 @@
 "DELETE" = "Löschen";
 "RENAME" = "Umbenennen";
 "DOWNLOAD_STARTED" = "Download gestartet";
-"DOWNLOAD_SUCCESS" = "Download abgeschlossen";
+"DOWNLOAD_SUCCEEDED" = "Download abgeschlossen";
+"DOWNLOAD_FAILED" = "Download fehlgeschlagen";
 "SAVED_IMAGE" = "Bild gespeichert";
 "ERROR" = "Fehler";
 "FILE_EXISTS_MESSAGE" = "Am Zielpfad existiert bereits eine Datei oder ein ausstehender Download mit dem aktuellen Namen!";
@@ -346,17 +409,23 @@
 "DOWNLOAD_HISTORY" = "Download Verlauf";
 "FILES" = "Dateien";
 "CHOOSE" = "Auswählen";
+"MANUAL_DOWNLOAD" = "Manueller Download";
+"URL_TO_DOWNLOADABLE_FILE" = "URL zu herunterladbarer Datei";
 "START_DOWNLOAD" = "Download starten";
+"UNABLE_TO_FETCH_FILE_INFORMATION" = "Abrufen der Dateiinformationen nicht möglich";
 "CHOOSE_FILENAME" = "Dateinamen auswählen";
+"SELECT_PATH" = "Pfad auswählen";
 "FILENAME" = "Dateiname";
 "CLOSE" = "Schließen";
-"CANCEL_PICKER" = "Auswahl abbrechen";
+"EXIT_PICKER" = "Auswahl abbrechen";
 "PERMISSION_ERROR_MESSAGE" = "Keine Schreibrechte für den ausgewählten Pfad. Bitte wähle einen anderen Pfad.\nHINWEIS: In der Regel sind nur Pfade innerhalb des /var Verzeichnisses beschreibbar. Falls sonstige Probleme auftreten, lassen sich die Berechtigungen eines Verzeichnisses via Filza einsehen und ändern.";
+"PREVIEW" = "Vorschau";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
-"VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden, die aktuelle Seite wird wahrscheinlich nicht unterstützt!";
+"VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden! Wenn das Video derzeit pausiert ist, starte die Wiedergabe und versuche es erneut.";
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
+"DURATION_UNKNOWN" = "Unbekannte Länge";
 "MIGRATION_TITLE" = "Migration abgeschlossen";
 "MIGRATION_MESSAGE" = "Deine Downloads wurden von %@ zu %@ verschoben. Du kannst nun in alle Order herunterladen, in die du willst! (Vorher war dies nur innerhalb des Sandbox-Containers von Safari möglich).";
 "CELLULAR_DATA_WARNING" = "'Nur über WLAN herunterladen' ist in den Einstellungen aktiviert und dein Gerät ist momentan über mobile Daten verbunden. Downloads werden nicht starten bis du dich entweder mit einem WLAN Netzwerk verbindest oder du die Einstellung deaktivierst und Safari neustartest.";
@@ -365,11 +434,15 @@
 
 "SELECT_ALL" = "Alles";
 "DESELECT_ALL" = "Auswahl aufheben";
+"CLOSE_TAB_WARNING_MESSAGE" = "Du bist dabei einen Tab zu schließen. Soll der Vorgang fortgeführt werden?";
+"CLOSE_TABS_WARNING_MESSAGE" = "Du bist dabei %zu Tabs zu schließen. Soll der Vorgang fortgeführt werden?";
 "CHOOSE_EXPORT_FORMAT" = "Export-Format auswählen";
 "CHOOSE_EXPORT_FORMAT_MESSAGE" = "Jeder ausgewählte Tab wird eine Zeile Text sein. Wähle das gewünschte Format für alle Zeilen.";
+"WITH_CLICKABLE_URL" = "Mit anklickbarer URL";
 "ADD_TABS_ALERT" = "Tabs hinzufügen";
 "ADD_TABS_ALERT_MESSAGE" = "Gebe URLs ins Text Feld ein. Alles was keine URL ist, wird ignoriert.";
 "USE_CLIPBOARD" = "Verwende Zwischenablage";
+"ADD_BOOKMARKS" = "Lesezeichen";
 
 /* Open in opposite mode */
 

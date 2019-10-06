@@ -1,25 +1,32 @@
-// SPDownload.mm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "SPDownload.h"
 
 #import "../Util.h"
+#import "../SafariPlus.h"
 #import "SPDownloadInfo.h"
 #import "SPPreferenceManager.h"
 #import "SPLocalizationManager.h"
+
+#import <AVFoundation/AVFoundation.h>
 
 @implementation SPDownload
 
@@ -31,8 +38,27 @@
 	_filesize = downloadInfo.filesize;
 	_filename = downloadInfo.filename;
 	_targetURL = downloadInfo.targetURL;
+	_isHLSDownload = downloadInfo.isHLSDownload;
+
+	if(downloadInfo.sourceDocument)
+	{
+		if([downloadInfo.sourceDocument respondsToSelector:@selector(isPrivateBrowsingEnabled)])
+		{
+			_startedFromPrivateBrowsingMode = [downloadInfo.sourceDocument isPrivateBrowsingEnabled];
+		}
+		else
+		{
+			_startedFromPrivateBrowsingMode = [downloadInfo.sourceDocument privateBrowsingEnabled];
+		}
+	}
+	else
+	{
+		_startedFromPrivateBrowsingMode = NO;
+	}
 
 	_orgInfo = downloadInfo;
+
+	_observerDelegates = [NSHashTable weakObjectsHashTable];
 
 	return self;
 }
@@ -49,8 +75,12 @@
 	_totalBytesWritten = [decoder decodeIntegerForKey:@"totalBytesWritten"];
 	_paused = [decoder decodeBoolForKey:@"paused"];
 	_resumeData = [decoder decodeObjectForKey:@"resumeData"];
-	_didFinish = [decoder decodeBoolForKey:@"didFinish"];
 	_wasCancelled = [decoder decodeBoolForKey:@"wasCancelled"];
+	_startedFromPrivateBrowsingMode = [decoder decodeBoolForKey:@"startedFromPrivateBrowsingMode"];
+	_isHLSDownload = [decoder decodeBoolForKey:@"isHLSDownload"];
+	_expectedDuration = [decoder decodeFloatForKey:@"expectedDuration"];
+
+	_observerDelegates = [NSHashTable weakObjectsHashTable];
 
 	return self;
 }
@@ -65,8 +95,10 @@
 	[coder encodeInteger:_totalBytesWritten forKey:@"totalBytesWritten"];
 	[coder encodeBool:_paused forKey:@"paused"];
 	[coder encodeObject:_resumeData forKey:@"resumeData"];
-	[coder encodeBool:_didFinish forKey:@"didFinish"];
 	[coder encodeBool:_wasCancelled forKey:@"wasCancelled"];
+	[coder encodeBool:_startedFromPrivateBrowsingMode forKey:@"startedFromPrivateBrowsingMode"];
+	[coder encodeBool:_isHLSDownload forKey:@"isHLSDownload"];
+	[coder encodeFloat:_expectedDuration forKey:@"expectedDuration"];
 }
 
 - (void)setDownloadTask:(NSURLSessionDownloadTask*)downloadTask
@@ -131,37 +163,42 @@
 	dlogDownload(self, [NSString stringWithFormat:@"setPaused:%i forced:%i", paused, forced]);
 	if((paused != _paused) || forced)
 	{
+		BOOL needsUpdate = YES;
+
 		if(paused)
 		{
 			//Download needs to be paused
-			[self.downloadTask cancelByProducingResumeData:^(NSData *resumeData)
+			if(self.downloadTask.state == NSURLSessionTaskStateRunning)
 			{
-				self.resumeData = resumeData;
-				_paused = YES;
+				if(self.isHLSDownload)
+				{
+					[self.downloadTask suspend];
+				}
+				else
+				{
+					needsUpdate = NO;	//Only code path that updates delayed (after the task is actually cancelled)
+					[self.downloadTask cancelByProducingResumeData:^(NSData *resumeData)
+					{
+						if(self.totalBytesWritten > 0)
+						{
+							//If no bytes have been written yet, the resumeData will be invalid and cause an error
+							//when the download is resumed, therefore we don't store and rather start from beginning
+							self.resumeData = resumeData;
+						}
 
-				//Update cell delegates
-				dispatch_async(dispatch_get_main_queue(), ^
-					       {
-						       _browserCellDelegate.paused = YES;
-						       _listCellDelegate.paused = YES;
-					       });
+						self.downloadTask = nil;
 
-				//Stop Timer
-				[self setTimerEnabled:NO];
-
-				self.downloadTask = nil;
-
-				//Update data on disk
-				[self.downloadManagerDelegate saveDownloadsToDisk];
-			}];
+						_paused = paused;
+						[self pauseStateChanged];
+					}];
+				}
+			}
 		}
 		else
 		{
-			_paused = NO;
-
 			if(!self.downloadTask)
 			{
-				if(self.resumeData)
+				if(self.resumeData && !self.isHLSDownload)
 				{
 					//Resume from resumeData
 					self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession] downloadTaskWithResumeData:self.resumeData];
@@ -170,27 +207,52 @@
 				else
 				{
 					//Begin downloading
-					self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession] downloadTaskWithRequest:self.request];
+					if(self.isHLSDownload)
+					{
+						if(self.downloadTask)
+						{
+							[self.downloadTask resume];
+						}
+						else
+						{
+							AVURLAsset* URLAsset = [AVURLAsset URLAssetWithURL:self.request.URL options:nil];
+							self.downloadTask = [[self.downloadManagerDelegate sharedAVDownloadSession] assetDownloadTaskWithURLAsset:URLAsset assetTitle:self.request.URL.lastPathComponent assetArtworkData:nil options:nil];
+						}
+					}
+					else
+					{
+						self.downloadTask = [[self.downloadManagerDelegate sharedDownloadSession] downloadTaskWithRequest:self.request];
+					}
 				}
 			}
 
-			//Update cell delegates
-			dispatch_async(dispatch_get_main_queue(), ^
-			{
-				_browserCellDelegate.paused = NO;
-				_listCellDelegate.paused = NO;
-			});
-
-			//Start Timer
-			[self setTimerEnabled:YES];
-
 			//Resume task
 			[self.downloadTask resume];
+		}
 
-			//Update data on disk
-			[self.downloadManagerDelegate saveDownloadsToDisk];
+		if(needsUpdate)
+		{
+			_paused = paused;
+			[self pauseStateChanged];
 		}
 	}
+}
+
+- (void)pauseStateChanged
+{
+	//Update cell delegates
+	[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+	{
+		[observerDelegate pauseStateDidChangeForDownload:self];
+	} onMainThread:YES];
+
+	[self.downloadManagerDelegate runningDownloadsCountDidChange];
+
+	//Start Timer
+	[self setTimerEnabled:!self.paused];
+
+	//Update data on disk
+	[self.downloadManagerDelegate saveDownloadsToDisk];
 }
 
 - (void)setFilesize:(int64_t)filesize
@@ -204,22 +266,37 @@
 		//Also update size of info
 		self.orgInfo.filesize = filesize;
 
-		dispatch_async(dispatch_get_main_queue(), ^
+		[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
 		{
-			[self.browserCellDelegate setFilesize:filesize];
-			[self.listCellDelegate setFilesize:filesize];
-		});
+			[observerDelegate filesizeDidChangeForDownload:self];
+		} onMainThread:YES];
+
+		[self.downloadManagerDelegate totalProgressDidChange];
+	}
+}
+
+- (void)setExpectedDuration:(CGFloat)expectedDuration
+{
+	if(expectedDuration != _expectedDuration)
+	{
+		_expectedDuration = expectedDuration;
+
+		[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+		{
+			[observerDelegate expectedDurationDidChangeForDownload:self];
+		} onMainThread:YES];
+
+		[self.downloadManagerDelegate totalProgressDidChange];
 	}
 }
 
 - (void)cancelDownload
 {
-	self.didFinish = YES;
 	self.wasCancelled = YES;
 
 	dlogDownload(self, @"cancelDownload");
 
-	if(self.downloadTask)
+	if(self.downloadTask && self.downloadTask.state == NSURLSessionTaskStateRunning)
 	{
 		//Cancel task
 		[self.downloadTask cancel];
@@ -272,11 +349,13 @@
 	self.lastSpeedRefreshTime = currentTime;
 
 	//Update value on cell(s)
-	[self.browserCellDelegate updateDownloadSpeed:self.bytesPerSecond];
-	[self.listCellDelegate updateDownloadSpeed:self.bytesPerSecond];
+	[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+	{
+		[observerDelegate downloadSpeedDidChangeForDownload:self];
+	} onMainThread:YES];
 }
 
-- (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize
+- (void)updateProgressForTotalBytesWritten:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize
 {
 	dlog(@"%@ / %llu - updateProgress", self.filename, (unsigned long long)self.taskIdentifier);
 	//Verify filesize
@@ -297,9 +376,29 @@
 	//Update totalBytesWritten
 	self.totalBytesWritten = totalBytesWritten;
 
-	//Update cell(s)
-	[self.browserCellDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
-	[self.listCellDelegate updateProgress:totalBytesWritten totalBytes:self.filesize animated:YES];
+	[self updateProgress];
+}
+
+- (void)updateProgressForSecondsLoaded:(CGFloat)secondsLoaded expectedDuration:(CGFloat)expectedDuration
+{
+	if(self.expectedDuration != expectedDuration)
+	{
+		self.expectedDuration = expectedDuration;
+	}
+
+	self.secondsLoaded = secondsLoaded;
+
+	[self updateProgress];
+}
+
+- (void)updateProgress
+{
+	[self.downloadManagerDelegate totalProgressDidChange];
+
+	[self runBlockOnObserverDelegates:^(id<DownloadObserverDelegate> observerDelegate)
+	{
+		[observerDelegate progressDidChangeForDownload:self shouldAnimateChange:YES];
+	} onMainThread:YES];
 }
 
 - (int64_t)remainingBytes
@@ -307,9 +406,65 @@
 	return self.filesize - self.totalBytesWritten;
 }
 
+- (void)runBlockOnObserverDelegates:(void (^)(id<DownloadObserverDelegate> receiverDelegate))block onMainThread:(BOOL)mainThread
+{
+	for(id<DownloadObserverDelegate> observerDelegate in _observerDelegates)
+	{
+		if(observerDelegate)
+		{
+			if(![NSThread isMainThread] && mainThread)
+			{
+				dispatch_async(dispatch_get_main_queue(), ^(void)
+				{
+					block(observerDelegate);
+				});
+			}
+			else
+			{
+				block(observerDelegate);
+			}
+		}
+	}
+}
+
+- (void)addObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate
+{
+	if(![_observerDelegates containsObject:observerDelegate])
+	{
+		[_observerDelegates addObject:observerDelegate];
+
+		//Welcome the new delegate by running updates
+
+		if(self.isHLSDownload)
+		{
+			[observerDelegate expectedDurationDidChangeForDownload:self];
+		}
+		else
+		{
+			[observerDelegate filesizeDidChangeForDownload:self];
+		}
+		[observerDelegate pauseStateDidChangeForDownload:self];
+		[observerDelegate downloadSpeedDidChangeForDownload:self];
+		[observerDelegate progressDidChangeForDownload:self shouldAnimateChange:NO];
+	}
+}
+
+- (void)removeObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate
+{
+	if([_observerDelegates containsObject:observerDelegate])
+	{
+		[_observerDelegates removeObject:observerDelegate];
+	}
+}
+
+- (NSUInteger)hash
+{
+	return [self description].hash;
+}
+
 - (NSString*)description
 {
-	return [NSString stringWithFormat:@"<SPDownload: filename = %@, targetURL = %@, filesize = %llu>", self.filename, self.targetURL, self.filesize];
+	return [NSString stringWithFormat:@"<SPDownload: filename = %@, targetURL = %@, filesize = %llu, request = %@ downloadTask = %@>", self.filename, self.targetURL, self.filesize, self.request, self.downloadTask];
 }
 
 @end

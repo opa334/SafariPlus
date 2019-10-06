@@ -1,24 +1,28 @@
-// SPDownload.h
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "../Protocols.h"
 
-@protocol CellDownloadDelegate;
+@class AVURLAsset;
 
-@interface SPDownload : NSObject <CellDownloadDelegate>
+@interface SPDownload : NSObject
 @property (nonatomic) SPDownloadInfo* orgInfo;
 @property (nonatomic) NSURLRequest* request;
 @property (nonatomic) UIImage* image;
@@ -31,17 +35,19 @@
 @property (nonatomic) int64_t startBytes;
 @property (nonatomic) int64_t totalBytesWritten;
 @property (nonatomic) int64_t bytesPerSecond;
+@property (nonatomic) BOOL startedFromPrivateBrowsingMode;
+@property (nonatomic) BOOL isHLSDownload;
+@property (nonatomic) CGFloat expectedDuration;
+@property (nonatomic) CGFloat secondsLoaded;
 
 @property (nonatomic) NSData* resumeData;
 @property (nonatomic) NSUInteger taskIdentifier;
-@property (nonatomic) NSURLSessionDownloadTask* downloadTask;
+@property (nonatomic) __kindof NSURLSessionTask* downloadTask;
 
-@property (nonatomic) BOOL didFinish;
 @property (nonatomic) BOOL wasCancelled;
 
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
-@property (nonatomic, weak) id<DownloadCellDelegate> browserCellDelegate;
-@property (nonatomic, weak) id<DownloadCellDelegate> listCellDelegate;
+@property (nonatomic) NSHashTable<id<DownloadObserverDelegate> >* observerDelegates;
 
 - (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
@@ -50,10 +56,17 @@
 - (void)setPaused:(BOOL)paused;
 - (void)cancelDownload;
 - (void)setPaused:(BOOL)paused forced:(BOOL)forced;
+- (void)pauseStateChanged;
 
 - (void)setTimerEnabled:(BOOL)enabled;
 - (void)updateDownloadSpeed;
-- (void)updateProgress:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize;
+- (void)updateProgressForSecondsLoaded:(CGFloat)secondsLoaded expectedDuration:(CGFloat)expectedDuration;
+- (void)updateProgressForTotalBytesWritten:(int64_t)totalBytesWritten totalFilesize:(int64_t)filesize;
+- (void)updateProgress;
 
 - (int64_t)remainingBytes;
+
+- (void)runBlockOnObserverDelegates:(void (^)(id<DownloadObserverDelegate> receiverDelegate))block onMainThread:(BOOL)mainThread;
+- (void)addObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate;
+- (void)removeObserverDelegate:(id<DownloadObserverDelegate>)observerDelegate;
 @end

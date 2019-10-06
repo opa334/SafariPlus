@@ -24,7 +24,7 @@
 
 /* Privacy */
 
-"FORCE_HTTPS_FOOTER" = "سيتم فرض بروتوكول HTTPS عالميًا على كل مواقع الويب.\n\ملاحظة: يمكنك إضافة مواقع ويب لا تدعم بروتوكول HTTPS إلى الاستثناءات أيضًا.";
+"FORCE_HTTPS_FOOTER" = "سيتم فرض بروتوكول HTTPS عالميًا على كل مواقع الويب.\nملاحظة: يمكنك إضافة مواقع ويب لا تدعم بروتوكول HTTPS إلى الاستثناءات أيضًا.";
 "FORCE_HTTPS" = "فرض بروتوكول HTTPS";
 "FORCE_HTTPS_EXCEPTIONS" = "الاستثناءات...";
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "الاستثناءات";
@@ -95,6 +95,7 @@
 
 "DEFAULT_SECTION" = "القسم الافتراضي";
 "DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات جارية، وعندما لا تكون هناك تنزيلات جارية سيتم فتح القسم الآخر.";
+
 "DEFAULT_SECTION_AUTO_SWITCH" = "تبديل تلقائي";
 
 "BEHAVIOUR" = "السلوك";
@@ -197,6 +198,8 @@
 "EXTERNAL_URL_LABEL" = "فتح رابط خارجي";
 
 "AUTOMATIC_ACTIONS" = "الإجراءات التلقائية";
+
+/*AUTOMATIC_ACTIONS*/
 
 "AUTO_CLOSE_TABS_FOOTER" = "إغلاق علامات التبويب لوضع التصفح عند حدوث حالة محددة.";
 "AUTO_CLOSE_TABS_LABEL" = "إغلاق تلقائي لعلامات التبويب";
@@ -350,7 +353,7 @@
 "WELCOME_MESSAGE" = "شكرًا لتثبيت Safari Plus! إذا كنت ترغب في البقاء على اطلاع دائم بآخر أخبار هذه الأداة، فتأكد من متابعتي على تويتر! هذه الرسالة لن تظهر مرة أخرى (أنا أعد بذلك)!";
 "OPEN_TWITTER" = "فتح تويتر";
 "COMMUNICATION_ERROR" = "خطأ في التواصل";
-"COMMUNICATION_ERROR_DESCRIPTION" = "غير قادر على التواصل مع واجهة النظام! بعض المميزات لن تعمل. يرجى التأكد من تثبيت RocketBootstrap بشكل صحيح وأن SafariPlusSB.dylip لم يتم تعطيله عبر iCleaner Pro.";
+"COMMUNICATION_ERROR_DESCRIPTION" = "غير قادر على التواصل مع واجهة النظام! بعض المميزات لن تعمل. يرجى التأكد من تثبيت RocketBootstrap بشكل صحيح وأن SafariPlusSB.dylib لم يتم تعطيله عبر iCleaner Pro.";
 
 /* Force HTTPS */
 

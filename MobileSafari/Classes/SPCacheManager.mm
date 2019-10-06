@@ -1,18 +1,22 @@
-// SPCacheManager.mm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "SPCacheManager.h"
 
@@ -148,15 +152,18 @@
 
 - (void)saveDownloadCache:(NSDictionary*)downloadCache
 {
-	NSURL* downloadCacheURL = [_cacheURL URLByAppendingPathComponent:@"downloads.plist"];
+	@synchronized(self)
+	{
+		NSURL* downloadCacheURL = [_cacheURL URLByAppendingPathComponent:@"downloads.plist"];
 
-	//Create archived data from pendingDownloads
-	NSData *data = [NSKeyedArchiver archivedDataWithRootObject:downloadCache];
+		//Create archived data from pendingDownloads
+		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:downloadCache];
 
-	//Write data to file
-	[data writeToURL:downloadCacheURL atomically:YES];
+		//Write data to file
+		[data writeToURL:downloadCacheURL atomically:YES];
 
-	[self updateExcludedFromBackup];
+		[self updateExcludedFromBackup];
+	}
 }
 
 //Clear the download cache by removing the plist file
@@ -224,7 +231,6 @@
 		[self loadDesktopButtonStates];
 	}
 
-
 	if(UUID)
 	{
 		return [[_desktopButtonStates objectForKey:UUID] boolValue];
@@ -246,13 +252,6 @@
 	if(!_tabStateAdditions)
 	{
 		_tabStateAdditions = [NSMutableDictionary new];
-	}
-	else
-	{
-		dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-		{
-			[self cleanUpTabStateAdditions];
-		});
 	}
 }
 
@@ -285,12 +284,16 @@
 
 - (void)setLocked:(BOOL)locked forTabWithUUID:(NSUUID*)UUID
 {
+	if(!_tabStateAdditions)
+	{
+		[self loadTabStateAdditions];
+	}
+
 	NSMutableSet* lockedTabs = [_tabStateAdditions objectForKey:@"lockedTabs"];
 
 	if(!lockedTabs)
 	{
 		lockedTabs = [NSMutableSet new];
-		[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
 	}
 
 	if(locked)
@@ -302,10 +305,8 @@
 		[lockedTabs removeObject:UUID];
 	}
 
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
-	{
-		[self saveTabStateAdditions];
-	});
+	[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
+	[self saveTabStateAdditions];
 }
 
 - (void)cleanUpTabStateAdditions
@@ -317,17 +318,19 @@
 
 	NSMutableSet* lockedTabs = [[_tabStateAdditions objectForKey:@"lockedTabs"] mutableCopy];
 
-	for(NSUUID* UUID in [lockedTabs copy])
+	if(lockedTabs)
 	{
-		if(![self tabExistsWithUUID:UUID])
+		for(NSUUID* UUID in [lockedTabs copy])
 		{
-			//NSLog(@"cleaned tab with UUID:%@", UUID);
-			[lockedTabs removeObject:UUID];
+			if(![self tabExistsWithUUID:UUID])
+			{
+				[lockedTabs removeObject:UUID];
+			}
 		}
-	}
 
-	[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
-	[self saveTabStateAdditions];
+		[_tabStateAdditions setObject:lockedTabs forKey:@"lockedTabs"];
+		[self saveTabStateAdditions];
+	}
 }
 
 - (BOOL)tabExistsWithUUID:(NSUUID*)UUID

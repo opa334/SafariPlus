@@ -1,22 +1,26 @@
 "YES" = "Sì";
 "NO" = "No";
-/*SAVE*/
+"SAVE" = "Salva";
 
 /* Root Page */
 
-/*ENABLED*/
-/*FEATURES*/
-/*PRIVACY*/
-/*UPLOADS_AND_DOWNLOADS*/
-/*USABILITY*/
-/*BEHAVIOUR*/
-/*GESTURES*/
-/*CUSTOMIZATION*/
-/*ABOUT_ME*/
-"TWITTER" = "Twitter";
-"DONATE" = "Dona";
-/*ABOUT_THIS_TWEAK*/
+"ENABLED" = "Attivato";
+"FEATURES" = "Caratteristiche";
+"PRIVACY" = "Privacy";
+"UPLOADS_AND_DOWNLOADS" = "Upload & Download";
+"USABILITY" = "Usabilità";
+/*ACTIONS*/
+"GESTURES" = "Gesture";
+"CUSTOMIZATION" = "Personalizzazione";
+
+"ABOUT_THIS_TWEAK" = "Informazioni su questo tweak";
+/*TWEAK_SPECIFIC_SETTINGS*/
 "SOURCE_CODE" = "Codice sorgente";
+/*CREDITS_AND_LICENSES*/
+
+"ABOUT_ME" = "Chi sono";
+/*FOLLOW_ME_ON_TWITTER*/
+"DONATE" = "Dona";
 
 /* Privacy */
 
@@ -26,46 +30,46 @@
 "FORCE_HTTPS_EXCEPTIONS_TITLE" = "Eccezioni";
 "EDIT" = "Modifica";
 "ADD" = "Inserisci";
-/*APPLY*/
+"APPLY" = "Applica";
 "ADD_EXCEPTION_ALERT_TITLE" = "Aggiungere eccezione";
 "ADD_EXCEPTION_ALERT_MESSAGE" = "Inserisci un dominio in cui il protocollo HTTPS non deve essere forzato.\nEsempio: \"google.com\"";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
-/*LOCKED_TABS*/
-/*LOCKED_TABS_FOOTER*/
+"LOCKED_TABS" = "Schede ancorate";
+"LOCKED_TABS_FOOTER" = "\nAncora una pagina nella barra superiore di ogni scheda nell'interruttore di schede. Mentre una scheda è ancorata, non può essere chiusa e resterà aperta finché non la disancori ancora.";
 
-/*BIOMETRIC_PROTECTION*/
-/*BIOMETRIC_PROTECTION_FOOTER*/
-/*SWITCH_BROWSING_MODE*/
-/*LOCK_TAB*/
-/*UNLOCK_TAB*/
-/*ACCESS_LOCKED_TAB*/
+"BIOMETRIC_PROTECTION" = "Protezione biometrica";
+"BIOMETRIC_PROTECTION_FOOTER" = "Protegge le azioni selezionate con il Touch ID o il Face ID.";
+"SWITCH_BROWSING_MODE" = "Cambia modalità di navigazione";
+/*ALLOW_AUTOMATIC_ACTIONS*/
+"LOCK_TAB" = "Ancora scheda";
+"UNLOCK_TAB" = "Disancora scheda";
+"ACCESS_LOCKED_TAB" = "Accedi alle schede ancorate";
+/*AUTHENTICATE*/
+/*AUTHENTICATION_ERROR*/
+/*ACCESS_BIOMETRIC_PROTECTION*/
 
 /* Uploads & Downloads */
 
-/*UPLOADS*/
+"UPLOADS" = "Caricamenti";
 "DOWNLOADS" = "Download";
 
 "UPLOAD_ANY_FILE_FOOTER" = "Aggiunge una nuova opzione al menu di caricamento del documento che ti consente di scegliere qualsiasi file dalla root del tuo dispositivo. Puoi anche selezionare e caricare più file premendo a lungo su un file.";
 "UPLOAD_ANY_FILE" = "Carica qualsiasi file";
 
-"ENHANCED_DOWNLOADS" = "Download ottimizzati";
-"ENHANCED_DOWNLOADS_FOOTER" = "Aggiunge un pulsante alla barra degli strumenti in basso che aprirà la vista download. Qui puoi vedere e gestire i download in sospeso e già finiti. Il file browser può essere utilizzato per accedere e gestire i file scaricati. Prima dell'avvio di un download, viene visualizzato un avviso che contiene opzioni per salvare il file in una directory locale (/var/mobile/Download per impostazione predefinita). I download continueranno in background e ti verrà notificato al termine del download. Quando Safari viene chiuso dallo switcher dell'app, tutti i download in sospeso verranno \"congelati\" e continueranno all'avvio successivo di Safari.";
+/*DOWNLOAD_MANAGER*/
+/*DOWNLOAD_MANAGER_FOOTER*/
+
+/*CONTENT_OPTIONS*/
 
 "VIDEO_DOWNLOADING" = "Scarica video";
 "VIDEO_DOWNLOADING_FOOTER" = "Aggiunge un pulsante al lettore video che può essere utilizzato per scaricare il video.\n\nNOTA: Potrebbe non funzionare su alcuni siti a causa dell'URL che non è facilmente recuperabile. Inoltre, alcuni siti utilizzano i file m3u8 per lo streaming dei loro contenuti, è possibile salvare questi file, ma non contengono alcun video.";
 
-"DEFAULT_SECTION" = "Sezione predefinita";
-"DEFAULT_SECTION_FOOTER" = "Scegli la sezione selezionata del menu di download quando viene aperto. L'opzione \"Auto Switch\" sceglierà la sezione selezionata solo se rimangono ancora dei download attivi, altrimenti verrà selezionata l'altra sezione.";
-"DEFAULT_SECTION_AUTO_SWITCH" = "Cambio automatico";
+/*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
+/*DOWNLOAD_SITE_TO_ACTION*/
+/*DOWNLOAD_IMAGE_TO_ACTION*/
 
-"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Aggiunge opzioni per scaricare un sito / un'immagine al menu che appare quando si preme a lungo gli elementi del sito.";
-"DOWNLOAD_SITE_TO_OPTION" = "Opzione \"Scarica sito su ...\"";
-"DOWNLOAD_IMAGE_TO_OPTION" = "Opzione 'Scarica immagine in ...'";
-
-"INSTANT_DOWNLOAD" = "Download istantaneo";
-"INSTANT_DOWNLOAD_FOOTER" = "Sopprime l'avviso di download e sceglie sempre l'opzione selezionata per impostazione predefinita.";
-"OPTION" = "Opzione";
+/*PATH_OPTIONS*/
 
 "CUSTOM_DEFAULT_PATH" = "Percorso predefinito personalizzato";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "Scegli un percorso personalizzato in cui scaricare i file quando è selezionata l'opzione di download.\n\nNota: è possibile scaricare file in percorsi scrivibili, quindi qualsiasi cosa all'interno della directory /var dovrebbe funzionare!";
@@ -73,8 +77,8 @@
 "PINNED_LOCATIONS_ENABLED" = "Posizioni fissate abilitate";
 "PINNED_LOCATIONS" = "Posizioni fissate";
 "PINNED_LOCATIONS_FOOTER" = "Consente di selezionare alcune posizioni che verranno visualizzate quando si utilizza l'opzione \"Scarica in\".";
-/*PINNED_LOCATIONS_ADD_ALERT_TITLE*/
-/*PINNED_LOCATIONS_EDIT_ALERT_TITLE*/
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "Aggiungi posizione fissata";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "Modifica posizione fissata";
 "PINNED_LOCATIONS_ALERT_MESSAGE" = "Scegli un nome e il percorso della posizione bloccata.";
 "PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Nome";
 "PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Posizione";
@@ -83,55 +87,97 @@
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Vuoi scegliere il percorso\n%@?";
 "ERROR_INVALID_NAME_OR_PATH" = "Nome o percorso non valido";
 
+"INTERFACE" = "Interfaccia";
+
+/*PREVIEW_DOWNLOAD_PROGRESS*/
+/*PREVIEW_DOWNLOAD_PROGRESS_FOOTER*/
+
+"DEFAULT_SECTION" = "Sezione predefinita";
+"DEFAULT_SECTION_FOOTER" = "Scegli la sezione selezionata del menu di download quando viene aperto. L'opzione \"Auto Switch\" sceglierà la sezione selezionata solo se rimangono ancora dei download attivi, altrimenti verrà selezionata l'altra sezione.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Cambio automatico";
+
+"BEHAVIOUR" = "Comportamento";
+
+"INSTANT_DOWNLOAD" = "Download istantaneo";
+"INSTANT_DOWNLOAD_FOOTER" = "Sopprime l'avviso di download e sceglie sempre l'opzione selezionata per impostazione predefinita.";
+
 "ONLY_DOWNLOAD_ON_WIFI" = "Scarica solo su Wifi";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Consentire il download solo mentre il dispositivo è connesso a una rete Wi-Fi.";
 
-"DISABLE_PUSH_NOTIFICATIONS" = "Disabilita notifiche push";
-"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Per impostazione predefinita, riceverai una notifica push al termine del download mentre l'app non è attiva. Questa opzione lo disabiliterà.";
+/*AUTOSAVE_TO_MEDIA_LIBRARY*/
+/*AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER*/
 
-"DISABLE_BAR_NOTIFICATIONS" = "Disabilita le notifiche della barra di stato";
-"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Per impostazione predefinita, riceverai una notifica sulla barra di stato quando un download inizia / termina mentre l'app è attiva. Questa opzione lo disabiliterà.";
+/*DISABLE_HISTORY_FOR_PRIVATE_MODE*/
+/*DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER*/
+
+/*NOTIFICATIONS*/
+
+/*PUSH_NOTIFICATIONS*/
+/*PUSH_NOTIFICATIONS_FOOTER*/
+
+/*STATUS_BAR_NOTIFICATIONS*/
+/*STATUS_BAR_NOTIFICATIONS_FOOTER*/
+
+/*APPLICATION_BADGE*/
+/*APPLICATION_BADGE_FOOTER*/
 
 /* Usability */
 
-/*URL_ACTIONS*/
+"URL_ACTIONS" = "Azioni URL";
 
-/*SECOND_OPEN_IN_NEW_TAB*/
-/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
+/*BOTH_LINK_OPENING_ACTIONS*/
+/*BOTH_LINK_OPENING_ACTIONS_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Aggiunge un'opzione al menu che appare quando un collegamento viene premuto a lungo, che può essere utilizzato per aprire il collegamento nella modalità di navigazione opposta.\n(Modalità normale -> Opzione per aprire in modalità privata,\nModalità privata -> Opzione per aprire in modalità normale)";
 "OPEN_IN_OPPOSITE_MODE" = "Apri in modalità opposta";
 
-/*TAB_MANAGEMENT*/
+"TAB_MANAGEMENT" = "Gestione schede";
 
-/*DESKTOP_MODE_SWITCH_FOOTER*/
-/*DESKTOP_MODE_SWITCH*/
+"DESKTOP_MODE_SWITCH_FOOTER" = "Aggiunge un interruttore al cambiatore di schede che può essere usato globalmente per cambiare tra la modalità mobile e desktop.";
+"DESKTOP_MODE_SWITCH" = "Interruttore modalità desktop";
 
-/*DISABLE_TAB_LIMIT*/
-/*DISABLE_TAB_LIMIT_FOOTER*/
+"TAB_MANAGER" = "Gestore schede";
+"TAB_MANAGER_FOOTER" = "Aggiunge un bottone di condivisione al cambiatore di schede che può essere usato per accedere al gestore schede che puoi eseguire le seguenti operazioni in blocco sulle schede: chiuderle, esportarle o e aggiungerle.";
+/*SCROLL_POSITION_FROM_TAB_SWITCHER*/
 
-/*CUSTOM_START_SITE*/
-/*CUSTOM_START_SITE_FOOTER*/
+"DISABLE_TAB_LIMIT" = "Disattiva limite schede";
+"DISABLE_TAB_LIMIT_FOOTER" = "Disattiva il limite imposto di schede che dipende dalla versione di iOS e dal dispositivo. C'è una ragione probabile per cui Apple ha deciso di inserire un limite di schede, usa a tuo rischio e pericolo.";
 
-/*SUGGESTIONS*/
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Apre sempre i link cliccati in nuove schede.";
+"ALWAYS_OPEN_NEW_TAB" = "Apri sempre i collegamenti in una nuova scheda";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Apri una nuova scheda in background";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Disabilita la modalità di navigazione privata e rimuove il pulsante 'Privato'. (Funzionalità di riserva nascosta)";
+"DISABLE_PRIVATE_MODE" = "Disattiva completamente la navigazione privata";
+
+"SUGGESTIONS" = "Suggerimenti";
 
 "LONG_PRESS_SUGGESTIONS" = "Suggerimenti per la pressione lunga";
 "LONG_PRESS_SUGGESTIONS_FOOTER" = "Tieni premuto a lungo sui suggerimenti di ricerca / URL per inserirli nella barra degli URL.";
 "LONG_PRESS_DURATION_TITLE" = "Lunga durata della pressione";
 "LONG_PRESS_FOCUS_TITLE" = "Metta a fuoco la barra dell'URL sulla pressione lunga";
 
-/*INTERFACE*/
+"SUGGESTION_INSERT_BUTTON" = "Bottone per inserire suggerimenti";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "Aggiunge un bottone alla destra di ogni suggerimento per inserirlo nella barra degli nidirizzi. Ispirato da come è implementato in iOS 12.2 e successivi.";
 
-/*SHOW_TAB_COUNT*/
-/*SHOW_TAB_COUNT_FOOTER*/
+"INTERFACE" = "Interfaccia";
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Nasconde la barra superiore completa quando si scorre verso il basso.\n\nNOTA: non funziona su iOS 8!";
+"SHOW_TAB_COUNT" = "Mostra contatore schede";
+"SHOW_TAB_COUNT_FOOTER" = "Mostra il contatore schede per l'attuale modalità di navigazione nel bottone che apre il cambiatore di schede.";
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Nasconde la barra superiore completa quando si scorre verso il basso.";
 "FULLSCREEN_SCROLLING" = "Scorrimento a schermo intero";
 
 "LOCK_BARS" = "Blocco barra";
 "LOCK_BARS_FOOTER" = "Blocca il fondo e la barra superiore in posizione, in modo che non vengano più nascosti quando si scorre la pagina verso il basso.";
 
-/* Behaviour */
+/*SHOW_FULL_SITE_URL*/
+/*SHOW_FULL_SITE_URL_FOOTER*/
+
+"SUPPRESS_MAILTO_DIALOG" = "Elimina finestra di dialogo Mailto";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Elimina la finestra di dialogo che appare su iOS 10 e versioni successive quando si accede a un URL \"mailto: <email>\".";
+
+/* Actions */
 
 "NORMAL_MODE" = "Modalità di navigazione normale";
 "PRIVATE_MODE" = "Modalità di navigazione privata";
@@ -140,15 +186,13 @@
 "FOR" = "per...";
 
 "CHANGE_MODE_ON" = "Cambia la modalità di navigazione su ...";
+/*CHANGE_MODE_ON_FOOTER*/
 
-"LAUNCH_MODE_FOOTER" = "Passa alla modalità di navigazione specificata all'avvio di Safari.";
 "LAUNCH_MODE_LABEL" = "Inizio applicazione";
-
-"RESUME_FOOTER" = "Passa alla modalità di navigazione specificata quando viene ripristinato Safari.";
 "RESUME_LABEL" = "Ripresa dell'app";
-
-"EXTERNAL_URL_FOOTER" = "Passa alla modalità di navigazione specificata quando un URL esterno (da un'altra app) viene aperto con Safari.";
 "EXTERNAL_URL_LABEL" = "Link esterno aperto";
+
+/*AUTOMATIC_ACTIONS*/
 
 "AUTO_CLOSE_TABS_FOOTER" = "Chiude le schede della modalità di navigazione specificata quando si verifica il caso specificato.";
 "AUTO_CLOSE_TABS_LABEL" = "Schede di chiusura automatica";
@@ -160,30 +204,17 @@
 "ACTIVE_MODE" = "Modalità di navigazione attiva";
 "BOTH_MODES" = "Entrambe le modalità di navigazione";
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Apre sempre i link cliccati in nuove schede.";
-"ALWAYS_OPEN_NEW_TAB" = "Apri sempre i collegamenti in una nuova scheda";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Apri una nuova scheda in background";
-
-"DISABLE_PRIVATE_MODE_FOOTER" = "Disabilita la modalità di navigazione privata e rimuove il pulsante 'Privato'. (Funzionalità di riserva nascosta)";
-"DISABLE_PRIVATE_MODE" = "Disattiva completamente la navigazione privata";
-
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Elimina la finestra di dialogo che appare su iOS 10 e versioni successive quando si accede a un URL \"mailto: <email>\".";
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Elimina finestra di dialogo Mailto";
-
 /* Gestures */
 
 "ACTION" = "Azione";
 
-"URL_BAR_GESTURES_LABEL" = "Gesti barra Url";
+/*URL_BAR_GESTURES*/
+/*TOOLBAR_GESTURES*/
 
-"SWIPE_LEFT_GESTURE_FOOTER" = "Esegue un'azione specificata quando la barra degli URL viene trascinata a sinistra.";
 "SWIPE_LEFT_GESTURE" = "Gesto di scorrimento verso sinistra";
-
-"SWIPE_RIGHT_GESTURE_FOOTER" = "Esegue un'azione specificata quando la barra degli URL viene spostata a destra.";
 "SWIPE_RIGHT_GESTURE" = "Gesto di scorrimento verso destra";
-
-"SWIPE_DOWN_GESTURE_FOOTER" = "Esegue l'azione specificata quando la barra degli URL viene trascinata verso il basso.";
 "SWIPE_DOWN_GESTURE" = "Gesto di scorrimento verso il basso";
+/*SWIPE_UP_DOWN_GESTURE*/
 
 "CLOSE_ACTIVE_TAB" = "Chiudi scheda attiva";
 "OPEN_NEW_TAB" = "Apri una nuova scheda";
@@ -196,18 +227,19 @@
 "REQUEST_DESTKOP_SITE" = "Richiedi sito desktop";
 "OPEN_FIND_ON_PAGE" = "Apri \"Trova nella pagina\"";
 
-"BACKGROUND" = "Scheda duplicata in background";
+/*ALLOW_GESTURES_IN_TAB_SWITCHER*/
+/*RUN_ACTIONS_IN_BACKGROUND*/
 
 /* Customization */
 
-/*APPEARANCE*/
+"APPEARANCE" = "Aspetto";
 
-/*COLORS*/
+"COLORS" = "Colori";
 
-/*SELECT_COLOR*/
+"SELECT_COLOR" = "Seleziona colori";
 
-/*NORMAL_MODE_COLORS*/
-/*PRIVATE_MODE_COLORS*/
+"NORMAL_MODE_COLORS" = "Colori modalità normale";
+"PRIVATE_MODE_COLORS" = "Colori modalità privata";
 
 "TOP_BAR" = "Barra superiore";
 "BOTTOM_BAR" = "Barra inferiore";
@@ -220,17 +252,17 @@
 "BACKGROUND_COLOR" = "Colore di sfondo";
 "STATUS_BAR_COLOR" = "Colore della barra di stato";
 "TAB_BAR_TITLE_COLOR" = "Colore titolo della barra";
-/*INACTIVE_TITLE_OPACITY*/
-/*TAB_BAR_CLOSE_BUTTON_COLOR*/
+"INACTIVE_TITLE_OPACITY" = "Opacità titolo inattivo";
+"TAB_BAR_CLOSE_BUTTON_COLOR" = "Colore bottone chiusura scheda";
 "TAB_BAR_BACKGROUND_COLOR" = "Colore di sfondo della barra delle schede";
 "URL_FONT_COLOR" = "Colore carattere URL";
 "PROGRESS_BAR_COLOR" = "Colore barra di avanzamento";
 "RELOAD_BUTTON_COLOR" = "Colore pulsante aggiorna";
-/*READER_BUTTON_COLOR*/
+"READER_BUTTON_COLOR" = "Colore bottone modalità lettura";
 "LOCK_ICON_COLOR" = "Blocca colore icona";
 "TAB_TITLE_TEXT_COLOR" = "Colore del testo del titolo della scheda";
 "TAB_TITLE_BACKGROUND_COLOR" = "Colore dello sfondo del titolo della scheda";
-/*TOOLBAR_BACKGROUND_COLOR*/
+"TOOLBAR_BACKGROUND_COLOR" = "Colore sfondo barra degli strumenti";
 
 "TAB_BAR_NOTE" = "NOTA: la barra delle schede non esiste in tutte le dimensioni / orientamenti dei dispositivi.";
 "COLOR_SETTINGS_BOTTOM_NOTICE" = "NOTA: alcune impostazioni richiedono il riavvio dell'app per essere applicate.";
@@ -238,42 +270,77 @@
 "WHITE" = "Bianco";
 "BLACK" = "Nero";
 
-/*BOTTOM_TOOLBAR*/
-/*TOP_TOOLBAR*/
+"BOTTOM_TOOLBAR" = "Barra degli strumenti inferiore";
+"TOP_TOOLBAR" = "Barra degli strumenti superiore";
 
-/*BOTTOM_TOOLBAR_FOOTER*/
-/*TOP_TOOLBAR_FOOTER*/
+"BOTTOM_TOOLBAR_FOOTER" = "La barra degli strumenti inferiore è usata negli iPhone in modalità orizzontale, alcuni iPhone più piccoli la usano anche in modalità verticale. Alcuni iPad più piccoli la usano anche in modalità Split-View";
+"TOP_TOOLBAR_FOOTER" = "La barra degli strumenti superiore è usata negli iPhone più grandi in modalità verticale. Sugli iPad, è usata in entrambe le modalità (orizzontale e verticale).";
 
-/*REORDER_BOTTOM_TOOLBAR*/
-/*REORDER_TOP_TOOLBAR*/
+"REORDER_BOTTOM_TOOLBAR" = "Riordina barra degli strumenti inferiore";
+"REORDER_TOP_TOOLBAR" = "Riordina barra degli strumenti superiore";
 
-/*CHOOSE_ORDER*/
+"CHOOSE_ORDER" = "Scegli ordine";
 
-/*BOTTOM_TOOLBAR_ORDER*/
-/*TOP_TOOLBAR_ORDER*/
+"BOTTOM_TOOLBAR_ORDER" = "Ordine barra degli strumenti inferiore";
+"TOP_TOOLBAR_ORDER" = "Ordine barra degli strumenti superiore";
 
-/*ENABLED_ITEMS*/
-/*DISABLED_ITEMS*/
+"ENABLED_ITEMS" = "Attiva bottoni";
+"DISABLED_ITEMS" = "Disattiva bottoni";
 
-/*BACK*/
-/*FORWARD*/
-/*SHARE*/
-/*BOOKMARKS*/
-/*TABS*/
-/*ADD_TAB*/
-/*SEARCH_BAR_SPACE*/
+"BACK" = "Indietro";
+"FORWARD" = "Avanti";
+"SHARE" = "Condividi";
+"BOOKMARKS" = "Segnalibri";
+"TABS" = "Schede";
+"ADD_TAB" = "Aggiungi scheda";
+"SEARCH_BAR_SPACE" = "Barra di ricerca";
+"RELOAD" = "Aggiorna";
+/*CLEAR_HISTORY*/
+
+/*BROWSING*/
+
+"CUSTOM_START_SITE" = "Sito iniziale personalizzato";
+"CUSTOM_START_SITE_FOOTER" = "Sostituisce la pagina dei preferiti che normalmente appare quando si apre una scheda nuova con un sito personalizzato che si apre al suo posto.";
+
+/*CUSTOM_SEARCH_ENGINE*/
+/*CUSTOM_SEARCH_ENGINE_FOOTER*/
+/*SEARCH_ENGINE_NAME*/
+/*SEARCH_URL*/
+/*SEARCH_SUGGESTIONS_URL*/
+
+/*CUSTOM_USER_AGENT*/
+/*CUSTOM_USER_AGENT_FOOTER*/
+
+/*CUSTOM_DESKTOP_USER_AGENT*/
+/*CUSTOM_DESKTOP_USER_AGENT_FOOTER*/
+
+/* Tweak Specifc Settings */
+
+/*LARGE_TITLES*/
+/*LARGE_TITLES_FOOTER*/
+
+/*SORT_DIRECTORIES_ABOVE_FILES*/
+/*SORT_DIRECTORIES_ABOVE_FILES_FOOTER*/
+
+"DISABLE_COMMUNICATION_ERROR" = "Disattiva avviso errore di comunicazione";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disattiva l'avviso di errore di comunicazione che appare aprendo l'app quando rocketbootstrap non è disponibile per qualche ragione. Usa a tuo rischio e pericolo.";
+
+/*RESET_ALL_PREFERENCES*/
+/*RESET_ALL_PREFERENCES_CONFIRMATION*/
 
 /* Credits */
 
-"CREDITS" = "Crediti";
-"PICKER_INSPIRED" = "Raccoglitore di file ispirato da";
+/*LIBSUBSTITRATE_FOOTER*/
+/*DEVELOPED_BY_POOMSMART*/
+
+/*SAFARI_PLUS_LICENSE*/
 
 /* In app */
 
-/*CLOSE_NON_LOCKED_TABS*/
-/*CLOSE_NON_LOCKED_TAB*/
-/*CLOSE_NON_LOCKED_TABS_MATCHING*/
-/*CLOSE_NON_LOCKED_TAB_MATCHING*/
+"CLOSE_NON_LOCKED_TABS" = "Chiudi %zu schede non ancorate";
+"CLOSE_NON_LOCKED_TAB" = "Chiudi scheda non ancorata";
+"CLOSE_NON_LOCKED_TABS_MATCHING" = "Chiudi %zu schede non ancorate che contengono “%@“";
+"CLOSE_NON_LOCKED_TAB_MATCHING" = "Chiudi scheda non ancorata che contiene “%@“";
 "LOCAL_FILES" = "File locali";
 "WELCOME_TITLE" = "Benvenuto!";
 "WELCOME_MESSAGE" = "Grazie per aver installato Safari Plus! Se desideri rimanere aggiornato sul futuro di questo tweak, assicurati di seguirmi su Twitter! Questo messaggio non verrà più mostrato (lo prometto)!";
@@ -283,8 +350,8 @@
 
 /* Force HTTPS */
 
-/*REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS*/
-/*ADD_TO_FORCE_HTTPS_EXCEPTIONS*/
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Rimuovi dalle eccezioni per la forzatura dell'HTTPS";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Aggiungi alle eccezioni per la forzatura dell'HTTPS";
 
 /* File picker */
 
@@ -302,13 +369,14 @@
 "DOWNLOADS" = "Download";
 "FILE_BROWSER" = "Gestore file";
 "OPEN" = "Apri";
+/*SHOW_CONTENT*/
 "OPEN_IN" = "Apri in ...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Importa nella libreria musicale";
 "SAVE_TO_MEDIA_LIBRARY" = "Salva nella libreria multimediale";
 "CLEAR" = "Pulisci";
 "CANCEL_ALL_DOWNLOADS" = "Annulla tutti i download";
 "CLEAR_DOWNLOAD_HISTORY" = "Cancella la cronologia dei download";
-/*CLEAR_TEMPORARY_DATA*/
+"CLEAR_TEMPORARY_DATA" = "Cancella dati temporanei";
 "CLEAR_EVERYTHING" = "Cancella tutto";
 "CLEAR_EVERYTHING_WARNING" = "Annullare tutti i download e cancellare la cronologia dei download e tutti i file temporanei?";
 "CREATE_DIRECTORY" = "Crea cartella";
@@ -325,7 +393,8 @@
 "DELETE" = "Elimina";
 "RENAME" = "Rinomina";
 "DOWNLOAD_STARTED" = "Download avviato";
-"DOWNLOAD_SUCCESS" = "Download riuscito";
+"DOWNLOAD_SUCCEEDED" = "Download riuscito";
+/*DOWNLOAD_FAILED*/
 "SAVED_IMAGE" = "Immagine salvata";
 "ERROR" = "Errore";
 "FILE_EXISTS_MESSAGE" = "Un file o un download in attesa esiste già nel percorso di destinazione!";
@@ -336,22 +405,42 @@
 "DOWNLOAD_HISTORY" = "Scarica la cronologia";
 "FILES" = "File";
 "CHOOSE" = "Scegli";
+"MANUAL_DOWNLOAD" = "Download manuale";
+"URL_TO_DOWNLOADABLE_FILE" = "URL a un file scaricabile";
 "START_DOWNLOAD" = "Inizia il download";
+"UNABLE_TO_FETCH_FILE_INFORMATION" = "Impossibile recuperare informazioni sul file";
 "CHOOSE_FILENAME" = "Scegli il nome del file";
+"SELECT_PATH" = "Seleziona percorso";
 "FILENAME" = "Nome del file";
 "CLOSE" = "Chiudi";
-"CANCEL_PICKER" = "Annulla";
+"EXIT_PICKER" = "Uscita raccoglitore";
 "PERMISSION_ERROR_MESSAGE" = "Autorizzazioni insufficienti per scrivere nel percorso selezionato. Si prega di selezionare un altro.\nNOTA: Normalmente solo i percorsi all'interno della directory /var sono scrivibili! Puoi anche usare Filza per ispezionare / modificare i permessi di una directory.";
+/*PREVIEW*/
 "PLAY" = "Riproduci";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Il percorso che hai impostato nelle impostazioni sotto \"Percorso predefinito personalizzato\" non è valido. Si prega di correggerlo.";
-"VIDEO_URL_NOT_FOUND" = "Nessun URL video trovato, il sito attuale probabilmente non è supportato!";
+/*VIDEO_URL_NOT_FOUND*/
 "COPY_LINK" = "Copia link";
 "SIZE_UNKNOWN" = "Dimensione sconosciuta";
+/*DURATION_UNKNOWN*/
 "MIGRATION_TITLE" = "Migrazione riuscita";
 "MIGRATION_MESSAGE" = "Sono finiti i giorni di limitazione al contenitore sandbox di Safari! I tuoi download sono stati spostati da %@ a %@ . Ora puoi scaricare i file in qualsiasi directory tu voglia!";
+"CELLULAR_DATA_WARNING" = "'Scarica solo con Wifi' è attivato dentro le impostazioni e attualmente stai usando i dati cellulare. I download non inizieranno finché non ti connetti a una rete wifi o disabiliti l'opzione dentro le impostazioni e riavvii Safari.";
+
+/* Tab Manager */
+
+"SELECT_ALL" = "Seleziona tutte";
+"DESELECT_ALL" = "Deseleziona tutte";
+"CLOSE_TAB_WARNING_MESSAGE" = "Vuoi davvero chiudere la scheda?";
+"CLOSE_TABS_WARNING_MESSAGE" = "Vuoi davvero chiudere %zu schede?";
+"CHOOSE_EXPORT_FORMAT" = "Scegli formato d'esporazione";
+"CHOOSE_EXPORT_FORMAT_MESSAGE" = "Ogni scheda selezionata sarà una riga di testo. Scegli come vuoi che ogni riga venga formattata.";
+/*WITH_CLICKABLE_URL*/
+"ADD_TABS_ALERT" = "Aggiungi scheda";
+"ADD_TABS_ALERT_MESSAGE" = "Inserisci qualche URL nel campo di testo. Tutto quello che non è un URL verrà ignorato!";
+"USE_CLIPBOARD" = "Usa appunti";
+/*ADD_BOOKMARKS*/
 
 /* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "Apri in modalità normale";
 "OPEN_IN_PRIVATE_MODE" = "Apri in modalità privata";
-

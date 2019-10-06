@@ -1,25 +1,29 @@
-// SPPRootListController.mm
-// (c) 2017 - 2019 opa334
+// Copyright (c) 2017-2019 Lars Fröder
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
 
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 #import "SPPRootListController.h"
 #import "SafariPlusPrefs.h"
 #import <dlfcn.h>
 #import "Simulator.h"
 
-#import "../Shared/SPPreferenceMerger.h"
+#import "../Shared/SPPreferenceUpdater.h"
 
 SPFileManager* fileManager;
 SPLocalizationManager* localizationManager;
@@ -40,7 +44,7 @@ NSBundle* SSBundle;	//SafariServices
 	SSBundle = [NSBundle bundleWithPath:rPath(@"/System/Library/Frameworks/SafariServices.framework/")];
 
 	#ifndef SIMJECT
-	[SPPreferenceMerger mergeIfNeeded];
+	[SPPreferenceUpdater update];
 	#endif
 
 	return self;
@@ -61,38 +65,6 @@ NSBundle* SSBundle;	//SafariServices
 	return @"Root";
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-	if(section == 0)
-	{
-		return self.headerView;
-	}
-
-	return nil;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-	if(!self.headerView)
-	{
-		UIImage* headerImage = [UIImage imageNamed:@"PrefHeader" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
-		self.headerView = [[UIImageView alloc] initWithImage:headerImage];
-
-		CGFloat aspectRatio = 3.312;
-		CGFloat width = self.parentViewController.view.frame.size.width;
-		CGFloat height = width / aspectRatio;
-
-		self.headerView.frame = CGRectMake(0,0,width,height);
-	}
-
-	if(section == 0)
-	{
-		return self.headerView.frame.size.height;
-	}
-
-	return 0;
-}
-
 - (void)sourceLink
 {
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];
@@ -100,14 +72,7 @@ NSBundle* SSBundle;	//SafariServices
 
 - (void)openTwitter
 {
-	if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]])
-	{
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"twitter://user?screen_name=opa334dev"]];
-	}
-	else
-	{
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://twitter.com/opa334dev"]];
-	}
+	[self openTwitterWithUsername:@"opa334dev"];
 }
 
 - (void)donationLink
