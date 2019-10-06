@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// TabDocument.xm
+// (c) 2018 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
 #import "Extensions.h"
@@ -27,7 +23,6 @@
 #import "../Classes/SPDownload.h"
 #import "../Classes/SPDownloadInfo.h"
 #import "../Classes/SPDownloadManager.h"
-#import "../Classes/SPTabManagerTableViewCell.h"
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
@@ -60,143 +55,73 @@ static BOOL fakeOpenLinksValue = NO;
 
 %end
 
+//Desktop mode user agent (set once)
+static NSString *desktopUserAgent;
+
 %hook TabDocument
 
+%property (nonatomic,assign) NSInteger desktopMode;
 //%property (nonatomic,assign) BOOL locked;
 %property (nonatomic,assign) BOOL accessAuthenticated;
 
 %new
-- (void)updateLockStateFromCache
-{
-	BOOL locked = [cacheManager isTabWithUUIDLocked:castedSelf.UUID];
-	NSNumber* lockedN = [NSNumber numberWithBool:locked];
-	objc_setAssociatedObject(self, @selector(locked), lockedN, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-%new
 - (BOOL)locked
 {
-	NSNumber* lockedN = objc_getAssociatedObject(self, @selector(locked));
-
-	if(!lockedN)
-	{
-		[self updateLockStateFromCache];
-		lockedN = objc_getAssociatedObject(self, @selector(locked));
-	}
-
-	return [lockedN boolValue];
-}
-
-%new
-- (void)writeLockStateToCache
-{
-	[cacheManager setLocked:castedSelf.locked forTabWithUUID:castedSelf.UUID];
+	return [cacheManager isTabWithUUIDLocked:castedSelf.UUID];
 }
 
 %new
 - (void)setLocked:(BOOL)locked
 {
-	NSNumber* lockedN = [NSNumber numberWithBool:locked];
-	objc_setAssociatedObject(self, @selector(locked), lockedN, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
-	[self writeLockStateToCache];
-
-	[self updateLockButtons];
-
-	if(preferenceManager.tabManagerEnabled && castedSelf.tabManagerViewCell)
-	{
-		[castedSelf.tabManagerViewCell updateContent];
-	}
+	[cacheManager setLocked:locked forTabWithUUID:castedSelf.UUID];
 }
 
 %new
-- (void)updateLockButtons
+- (BOOL)updateDesktopMode
 {
-	if(castedSelf.tiltedTabItem)
+	if(preferenceManager.desktopButtonEnabled)
 	{
-		TabThumbnailView* thumbnailView;
-
-		if([castedSelf.tiltedTabItem respondsToSelector:@selector(contentView)])
+		static dispatch_once_t onceToken = 0;
+		dispatch_once(&onceToken, ^	//Dynamically generate the appropriate desktop user agent for the current device
 		{
-			thumbnailView = castedSelf.tiltedTabItem.contentView;
-		}
-		else
+			NSArray<NSString*>* userAgentComponents = [castedSelf.webView._applicationNameForUserAgent componentsSeparatedByString:@" "];
+
+			//userAgentComponents[0] = Version/<iOS Version>
+			//userAgentComponents[1] = Mobile/<Build Number> (Not needed for desktop agent)
+			//userAgentComponents[2] = Safari/<Safari Version>
+
+			NSString* webKitVersion = [userAgentComponents[2] componentsSeparatedByString:@"/"].lastObject;	//Same as Safari Version
+
+			desktopUserAgent = [NSString stringWithFormat:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/%@ (KHTML, like Gecko) %@ %@", webKitVersion, userAgentComponents[0], userAgentComponents[2]];
+		});
+
+		if(!castedSelf.isHibernated)
 		{
-			thumbnailView = castedSelf.tiltedTabItem.layoutInfo.contentView;
+			BOOL desktopButtonSelected;
+
+			desktopButtonSelected = browserControllerForTabDocument(castedSelf).tabController.desktopButtonSelected;
+
+			NSInteger newDesktopMode = (NSInteger)desktopButtonSelected + 1;
+
+			if(castedSelf.desktopMode != newDesktopMode)
+			{
+				castedSelf.desktopMode = newDesktopMode;
+
+				if(desktopButtonSelected)
+				{
+					castedSelf.customUserAgent = desktopUserAgent;
+				}
+				else
+				{
+					castedSelf.customUserAgent = @"";
+				}
+
+				return YES;
+			}
 		}
-
-		thumbnailView.lockButton.selected = castedSelf.locked;
-
-		[castedSelf.tiltedTabItem.tiltedTabView _layoutItemsWithTransition:0];	//Update close button
 	}
 
-	if(castedSelf.tabOverviewItem)
-	{
-		TabThumbnailView* thumbnailView;
-
-		if([castedSelf.tabOverviewItem respondsToSelector:@selector(_thumbnailView)])
-		{
-			thumbnailView = castedSelf.tabOverviewItem.thumbnailView;
-		}
-		else
-		{
-			thumbnailView = castedSelf.tabOverviewItem.layoutInfo.itemView;
-		}
-
-		thumbnailView.lockButton.selected = castedSelf.locked;
-	}
-
-	if(castedSelf.tabBarItem)
-	{
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-		{
-			if([castedSelf.tabBarItem.layoutInfo respondsToSelector:@selector(rightView)])
-			{
-				castedSelf.tabBarItem.layoutInfo.rightView.lockButton.selected = castedSelf.locked;
-			}
-
-			if([castedSelf.tabBarItem.layoutInfo respondsToSelector:@selector(leftView)])
-			{
-				castedSelf.tabBarItem.layoutInfo.leftView.lockButton.selected = castedSelf.locked;
-			}
-
-			if([castedSelf.tabBarItem.layoutInfo respondsToSelector:@selector(trailingView)])
-			{
-				castedSelf.tabBarItem.layoutInfo.trailingView.lockButton.selected = castedSelf.locked;
-			}
-
-			if([castedSelf.tabBarItem.layoutInfo respondsToSelector:@selector(leadingView)])
-			{
-				castedSelf.tabBarItem.layoutInfo.leadingView.lockButton.selected = castedSelf.locked;
-			}
-
-			if([castedSelf.tabBarItem.layoutInfo respondsToSelector:@selector(tabBarItemView)])
-			{
-				castedSelf.tabBarItem.layoutInfo.tabBarItemView.lockButton.selected = castedSelf.locked;
-			}
-
-			BrowserController* browserController = browserControllerForTabDocument(castedSelf);
-			BOOL canClose;
-
-			if([browserController.tabController respondsToSelector:@selector(tabCollectionView:canCloseItem:)])
-			{
-				canClose = [browserController.tabController tabCollectionView:browserController.tabController.tabBar canCloseItem:castedSelf.tabBarItem];
-			}
-			else
-			{
-				canClose = [browserController.tabController tabBar:browserController.tabController.tabBar canCloseItem:castedSelf.tabBarItem];
-			}
-
-			[castedSelf.tabBarItem.layoutInfo setCanClose:canClose];	//Update close button
-		}
-		else
-		{
-			BrowserController* browserController = browserControllerForTabDocument(castedSelf);
-
-			MSHookIvar<TabBarItemView*>(castedSelf.tabBarItem, "_rightView").closeButton.hidden = ![browserController.tabController tabBar:browserController.tabController.tabBar canCloseItem:castedSelf.tabBarItem];
-			MSHookIvar<TabBarItemView*>(castedSelf.tabBarItem, "_leftView").closeButton.hidden = ![browserController.tabController tabBar:browserController.tabController.tabBar canCloseItem:castedSelf.tabBarItem];
-		}
-	}
+	return NO;
 }
 
 %new
@@ -214,7 +139,7 @@ static BOOL fakeOpenLinksValue = NO;
 		if(![newStripped isEqualToString:oldStripped])	//Link doesn't contain current URL
 		{
 			//Cancel site load
-			decisionHandler(WKNavigationActionPolicyCancel);
+			decisionHandler(WKNavigationResponsePolicyCancel);
 
 			//Correctly handle launching external applications if needed
 			if(NSClassFromString(@"LSAppLink"))
@@ -240,7 +165,7 @@ static BOOL fakeOpenLinksValue = NO;
 										     @"updateAppLinkOpenStrategy" : @YES
 						};
 
-						if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11 and above
+						if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11
 						{
 							[castedSelf _openAppLinkInApp:appLink fromOriginalRequest:navigationAction.request updateAppLinkStrategy:YES webBrowserState:browserState completionHandler:nil];
 						}
@@ -272,34 +197,43 @@ static BOOL fakeOpenLinksValue = NO;
 
 			if(inBackground)
 			{
-				BOOL showingTabBar;
-
-				if([controller respondsToSelector:@selector(isShowingTabBar)])
-				{
-					showingTabBar = controller.isShowingTabBar;
-				}
-				else
-				{
-					showingTabBar = rootViewControllerForBrowserController(controller).isShowingTabBar;
-				}
-
-				if(!showingTabBar)
+				if(!controller.isShowingTabBar)
 				{
 					if([castedSelf.webView respondsToSelector:@selector(_requestActivatedElementAtPosition:completionBlock:)])	//Sorry iOS < 11, you're not getting that fancy animation :(
 					{
 						[castedSelf.webView _requestActivatedElementAtPosition:navigationAction._clickLocationInRootViewCoordinates completionBlock:^(_WKActivatedElementInfo *element)
 						{
-							if([self respondsToSelector:@selector(_animateElement:toToolbarButton:)])
-							{
-								[self _animateElement:element toToolbarButton:0];
-							}
-							else if([self respondsToSelector:@selector(_animateElement:toBarItem:)])
-							{
-								[self _animateElement:element toBarItem:5];
-							}
+							[self _animateElement:element toToolbarButton:0];
 						}];
 					}
 				}
+			}
+
+			return NO;
+		}
+	}
+
+	return YES;
+}
+
+%new
+- (BOOL)handleDesktopModeForNavigationAction:(WKNavigationAction*)navigationAction
+	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
+{
+	if(navigationAction.targetFrame.mainFrame)
+	{
+		BOOL needsReload = [castedSelf updateDesktopMode];
+
+		if(needsReload)
+		{
+			decisionHandler(WKNavigationResponsePolicyCancel);
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+			{
+				[castedSelf _loadURLInternal:navigationAction.request.URL userDriven:NO];
+			}
+			else
+			{
+				[((TabDocument8*)self) _loadURLInternal:navigationAction.request.URL userDriven:NO];
 			}
 
 			return NO;
@@ -321,7 +255,7 @@ static BOOL fakeOpenLinksValue = NO;
 		{
 			if(![preferenceManager isURLOnHTTPSExceptionsList:request.URL])
 			{
-				decisionHandler(WKNavigationActionPolicyCancel);
+				decisionHandler(WKNavigationResponsePolicyCancel);
 
 				NSMutableURLRequest* requestM = [request mutableCopy];
 
@@ -368,7 +302,6 @@ static BOOL fakeOpenLinksValue = NO;
 
 		//Create download info and configure it
 		SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:navigationResponse._request];
-		[downloadInfo updateHLSForSuggestedFilename:navigationResponse.response.suggestedFilename];
 		downloadInfo.filesize = navigationResponse.response.expectedContentLength;
 		downloadInfo.filename = navigationResponse.response.suggestedFilename;
 		downloadInfo.presentationController = rootViewController;
@@ -377,7 +310,7 @@ static BOOL fakeOpenLinksValue = NO;
 		if(IS_PAD)
 		{
 			//Set iPad positions to download button
-			UIView* button = MSHookIvar<UIView*>(activeToolbarForBrowserController(controller)._downloadsItem, "_view");
+			UIView* button = MSHookIvar<UIView*>(controller.activeToolbar._downloadsItem, "_view");
 			downloadInfo.sourceRect = [[button superview] convertRect:button.frame toView:rootViewController.view];
 		}
 
@@ -401,7 +334,7 @@ static BOOL fakeOpenLinksValue = NO;
 	BrowserController* browserController = browserControllerForTabDocument(castedSelf);
 
 	//URL long pressed
-	if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && ![element.URL.absoluteString hasPrefix:@"javascript:"])
+	if(element.URL && ![element.URL.absoluteString isEqualToString:@""])
 	{
 		//Get browsing status
 		BOOL privateBrowsing = privateBrowsingEnabled(browserController);
@@ -458,6 +391,7 @@ static BOOL fakeOpenLinksValue = NO;
 				{
 					[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:YES];
 				}
+
 			}];
 
 			[actions insertObject:openInOppositeModeAction atIndex:2];
@@ -465,63 +399,48 @@ static BOOL fakeOpenLinksValue = NO;
 
 		if(preferenceManager.bothTabOpenActionsEnabled)
 		{
-			BOOL usesTabBar = NO;
-
-			if([browserController.tabController respondsToSelector:@selector(usesTabBar)])
+			//Only needed when there is no tabBar
+			if(!browserController.tabController.usesTabBar)
 			{
-				usesTabBar = browserController.tabController.usesTabBar;
+				_WKElementAction* openInNewTabAction;
+				_WKElementAction* openInBackgroundAction;
+
+				shouldFakeOpenLinksKey = YES;
+				fakeOpenLinksValue = NO;
+
+				if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
+				{
+					openInNewTabAction = [self _openInNewPageActionForElement:element];
+				}
+				else
+				{
+					openInNewTabAction = [self _openInNewPageActionForElement:element previewViewController:nil];
+				}
+
+				fakeOpenLinksValue = YES;
+
+				if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
+				{
+					openInBackgroundAction = [self _openInNewPageActionForElement:element];
+				}
+				else
+				{
+					openInBackgroundAction = [self _openInNewPageActionForElement:element previewViewController:nil];
+				}
+
+				shouldFakeOpenLinksKey = NO;
+				fakeOpenLinksValue = NO;
+
+				[actions removeObjectAtIndex:1];
+				[actions insertObject:openInBackgroundAction atIndex:1];
+				[actions insertObject:openInNewTabAction atIndex:1];
 			}
-			else
-			{
-				usesTabBar = browserController.usesTabBar;
-			}
-
-			_WKElementAction* openInNewTabAction;
-			_WKElementAction* openInBackgroundAction;
-
-			shouldFakeOpenLinksKey = YES;
-			fakeOpenLinksValue = NO;
-
-			if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
-			{
-				openInNewTabAction = [self _openInNewPageActionForElement:element];
-			}
-			else
-			{
-				openInNewTabAction = [self _openInNewPageActionForElement:element previewViewController:nil];
-			}
-
-			fakeOpenLinksValue = YES;
-
-			if([castedSelf respondsToSelector:@selector(_openInNewPageActionForElement:)])
-			{
-				openInBackgroundAction = [self _openInNewPageActionForElement:element];
-			}
-			else
-			{
-				openInBackgroundAction = [self _openInNewPageActionForElement:element previewViewController:nil];
-			}
-
-			//If a tabBar is used, the action returned by _openInNewPageActionForElement will always
-			//have the title 'Open in New Tab', even if it should be 'Open in Background'
-			//Therefore we need to manually set it to 'Open in Background'
-			if(usesTabBar)
-			{
-				MSHookIvar<NSString*>(openInBackgroundAction, "_title") = [localizationManager localizedMSStringForKey:@"Open Link in Background Tab"];
-			}
-
-			shouldFakeOpenLinksKey = NO;
-			fakeOpenLinksValue = NO;
-
-			[actions removeObjectAtIndex:1];
-			[actions insertObject:openInBackgroundAction atIndex:1];
-			[actions insertObject:openInNewTabAction atIndex:1];
 		}
 	}
 
-	if(preferenceManager.downloadManagerEnabled)
+	if(preferenceManager.enhancedDownloadsEnabled)
 	{
-		if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && ![element.URL.absoluteString hasPrefix:@"javascript:"] && preferenceManager.downloadSiteToActionEnabled)
+		if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && preferenceManager.downloadSiteToActionEnabled)
 		{
 			_WKElementAction* downloadSiteToAction;
 
@@ -539,7 +458,6 @@ static BOOL fakeOpenLinksValue = NO;
 				downloadInfo.filename = @"site.html";
 				downloadInfo.customPath = YES;
 				downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
-				downloadInfo.sourceDocument = self;
 
 				//Call downloadManager
 				[downloadManager configureDownloadWithInfo:downloadInfo];
@@ -582,7 +500,6 @@ static BOOL fakeOpenLinksValue = NO;
 				downloadInfo.filename = @"image.png";
 				downloadInfo.customPath = YES;
 				downloadInfo.presentationController = rootViewControllerForTabDocument(castedSelf);
-				downloadInfo.sourceDocument = self;
 
 				//Call SPDownloadManager with image
 				[downloadManager configureDownloadWithInfo:downloadInfo];
@@ -594,8 +511,6 @@ static BOOL fakeOpenLinksValue = NO;
 }
 
 //Force HTTPS + Always open in new tab option
-%group iOS12_1_4Down
-
 - (void)webView:(WKWebView *)webView
 	decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
 	decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
@@ -616,17 +531,23 @@ static BOOL fakeOpenLinksValue = NO;
 		}
 	}
 
+	if(preferenceManager.desktopButtonEnabled)
+	{
+		if(![self handleDesktopModeForNavigationAction:navigationAction decisionHandler:decisionHandler])
+		{
+			return;
+		}
+	}
+
 	%orig;
 }
-
-%end
 
 //Present download alert if clicked link is a downloadable file
 - (void)webView:(WKWebView *)webView
 	decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse
 	decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
-	if(preferenceManager.downloadManagerEnabled)
+	if(preferenceManager.enhancedDownloadsEnabled)
 	{
 		if(![self handleDownloadAlertForNavigationResponse:navigationResponse decisionHandler:decisionHandler])
 		{
@@ -637,68 +558,19 @@ static BOOL fakeOpenLinksValue = NO;
 	%orig;
 }
 
-%property (nonatomic, retain) SPTabManagerTableViewCell *tabManagerViewCell;
-%property (nonatomic, retain) UIImage *currentTabIcon;
-
-- (void)updateTabTitle
-{
-	if(preferenceManager.tabManagerEnabled && castedSelf.tabManagerViewCell)
-	{
-		[castedSelf.tabManagerViewCell updateContent];
-	}
-
-	%orig;
-}
-
-- (void)_setIcon:(UIImage*)icon isMonogram:(BOOL)arg2	//iOS 12 and up
-{
-	%orig;
-
-	if(preferenceManager.tabManagerEnabled)
-	{
-		castedSelf.currentTabIcon = icon;
-
-		if(castedSelf.tabManagerViewCell)
-		{
-			[castedSelf.tabManagerViewCell updateContent];
-		}
-	}
-}
-
-- (void)_createDocumentViewWithConfiguration:(WKWebViewConfiguration*)config
-{
-	%orig;
-
-	if(preferenceManager.desktopButtonEnabled || preferenceManager.customUserAgentEnabled)
-	{
-		[castedSelf.webView sp_updateCustomUserAgent];
-	}
-}
-
 %group iOS10Up
 
-//Suppress mailTo alert
-- (void)dialogController:(_SFDialogController*)dialogController willPresentDialog:(_SFDialog*)dialog
+//Supress mailTo alert
+- (void)dialogController:(_SFDialogController*)dialogController
+	willPresentDialog:(_SFDialog*)dialog
 {
 	if(preferenceManager.suppressMailToDialog && [[castedSelf URL].scheme isEqualToString:@"mailto"])
 	{
 		//Simulate press on yes button
-		if([dialog respondsToSelector:@selector(finishWithPrimaryAction:text:)])
-		{
-			[dialog finishWithPrimaryAction:YES text:dialog.defaultText];
+		[dialog finishWithPrimaryAction:YES text:dialog.defaultText];
 
-			if([dialogController respondsToSelector:@selector(_dismissDialog)])
-			{
-				[dialogController _dismissDialog];
-			}
-		}
-		else if([dialogController respondsToSelector:@selector(_dismissCurrentDialogWithResponse:)])
-		{
-			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
-			{
-				[dialogController _dismissCurrentDialogWithResponse:@{@"password" : @"", @"selectedActionIndex" : @0, @"text" : @""}];
-			});
-		}
+		//Dismiss dialog
+		[dialogController _dismissDialog];
 	}
 	else
 	{
@@ -708,65 +580,13 @@ static BOOL fakeOpenLinksValue = NO;
 
 %end
 
-%group iOS12_2Up
-
-- (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element orFallbackURL:(id)arg2 defaultActions:(id)arg3 previewViewController:(id)arg4
-{
-	if(!arg4 && (preferenceManager.downloadManagerEnabled ||
-		     preferenceManager.bothTabOpenActionsEnabled ||
-		     preferenceManager.openInOppositeModeOptionEnabled))
-	{
-		NSMutableArray* actions = %orig;
-
-		[self addAdditionalActionsForElement:element toActions:actions];
-
-		return actions;
-	}
-
-	return %orig;
-}
-
-- (void)_webView:(WKWebView *)webView
-	decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
-	userInfo:(NSDictionary*)userInfo
-	decisionHandler:(void (^)(WKNavigationActionPolicy, _WKWebsitePolicies*))decisionHandler
-{
-	if(preferenceManager.alwaysOpenNewTabEnabled)
-	{
-		if(![self handleAlwaysOpenInNewTabForNavigationAction:navigationAction decisionHandler:^(WKNavigationActionPolicy policy)
-		{
-			//Wrap around new decisionHandler that takes 2 args now
-			decisionHandler(policy, [[%c(_WKWebsitePolicies) alloc] init]);
-		}])
-		{
-			return;
-		}
-	}
-
-	if(preferenceManager.forceHTTPSEnabled)
-	{
-		if(![self handleForceHTTPSForNavigationAction:navigationAction decisionHandler:^(WKNavigationActionPolicy policy)
-		{
-			//Wrap around new decisionHandler that takes 2 args now
-			decisionHandler(policy, [[%c(_WKWebsitePolicies) alloc] init]);
-		}])
-		{
-			return;
-		}
-	}
-
-	%orig;
-}
-
-%end
-
-%group iOS9to12_1_4
+%group iOS9Up
 
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element
 	defaultActions:(NSArray*)arg2 previewViewController:(id)arg3
 {
-	if(!arg3 && (preferenceManager.downloadManagerEnabled ||
+	if(!arg3 && (preferenceManager.enhancedDownloadsEnabled ||
 		     preferenceManager.bothTabOpenActionsEnabled ||
 		     preferenceManager.openInOppositeModeOptionEnabled))
 	{
@@ -788,7 +608,7 @@ static BOOL fakeOpenLinksValue = NO;
 - (NSMutableArray*)actionsForElement:(_WKActivatedElementInfo*)element
 	defaultActions:(NSArray*)arg2
 {
-	if(preferenceManager.downloadManagerEnabled ||
+	if(preferenceManager.enhancedDownloadsEnabled ||
 	   preferenceManager.bothTabOpenActionsEnabled ||
 	   preferenceManager.openInOppositeModeOptionEnabled)
 	{
@@ -806,8 +626,15 @@ static BOOL fakeOpenLinksValue = NO;
 
 - (instancetype)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(NSUUID*)UUID privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6 createDocumentView:(id)arg7
 {
+
 	TabDocument* orig = %orig;
 
+	/*if(preferenceManager.lockedTabsEnabled)
+	   {
+	        orig.locked = [cacheManager isTabWithUUIDLocked:UUID];
+	   }*/
+
+	orig.desktopMode = 0;
 	orig.accessAuthenticated = NO;
 
 	return orig;
@@ -819,25 +646,15 @@ void initTabDocument()
 {
 	Class TabDocumentClass;
 
-	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 	{
 		TabDocumentClass = objc_getClass("TabDocument");
-		%init(iOS12_2Up, TabDocument=TabDocumentClass);
-	}
-	else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-	{
-		TabDocumentClass = objc_getClass("TabDocument");
-		%init(iOS9to12_1_4, TabDocument=TabDocumentClass);
+		%init(iOS9Up, TabDocument=TabDocumentClass);
 	}
 	else
 	{
 		TabDocumentClass = objc_getClass("TabDocumentWK2");
 		%init(iOS8, TabDocument=TabDocumentClass);
-	}
-
-	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
-	{
-		%init(iOS12_1_4Down, TabDocument=TabDocumentClass);
 	}
 
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)

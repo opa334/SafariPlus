@@ -9,18 +9,14 @@
 /*PRIVACY*/
 /*UPLOADS_AND_DOWNLOADS*/
 /*USABILITY*/
-/*ACTIONS*/
+/*BEHAVIOUR*/
 /*GESTURES*/
 /*CUSTOMIZATION*/
-
-/*ABOUT_THIS_TWEAK*/
-/*TWEAK_SPECIFIC_SETTINGS*/
-"SOURCE_CODE" = "Kaynak Kodu";
-/*CREDITS_AND_LICENSES*/
-
 /*ABOUT_ME*/
-/*FOLLOW_ME_ON_TWITTER*/
+"TWITTER" = "Twitter";
 "DONATE" = "Bağış";
+/*ABOUT_THIS_TWEAK*/
+"SOURCE_CODE" = "Kaynak Kodu";
 
 /* Privacy */
 
@@ -41,13 +37,9 @@
 /*BIOMETRIC_PROTECTION*/
 /*BIOMETRIC_PROTECTION_FOOTER*/
 /*SWITCH_BROWSING_MODE*/
-/*ALLOW_AUTOMATIC_ACTIONS*/
 /*LOCK_TAB*/
 /*UNLOCK_TAB*/
 /*ACCESS_LOCKED_TAB*/
-/*AUTHENTICATE*/
-/*AUTHENTICATION_ERROR*/
-/*ACCESS_BIOMETRIC_PROTECTION*/
 
 /* Uploads & Downloads */
 
@@ -57,19 +49,23 @@
 "UPLOAD_ANY_FILE_FOOTER" = "Cihazınızda bulunan herhangi bir dosyayı seçmenize izin veren belge yükleme menüsüne yeni bir seçenek ekler. Bir dosyaya uzun basma yoluyla da birden fazla dosya seçip yükleyebilirsiniz.";
 "UPLOAD_ANY_FILE" = "Herhangi bir dosya yükle";
 
-/*DOWNLOAD_MANAGER*/
-/*DOWNLOAD_MANAGER_FOOTER*/
-
-/*CONTENT_OPTIONS*/
+"ENHANCED_DOWNLOADS" = "Gelişmiş İndirme";
+"ENHANCED_DOWNLOADS_FOOTER" = "Bekleyen ve bitmiş indirme sayısını görebileceğiniz bir görünümü açan alt araç çubuğuna indirme düğmesi ekler. Dosyayı yerel bir dizine (varsayılan olarak / var / mobile / Downloads) kaydetmek için seçenekler içeren bir indirme başlamadan önce bir uyarı görünür. İndirmeler arka planda devam edecek ve indirme işlemi bittiğinde size bildirileceksiniz. Safari uygulama değiştiriciden kapatıldığında, devam eden tüm indirmeler ‘Bekletilir’, Safari tekrar açınca indirmeler devam eder.";
 
 "VIDEO_DOWNLOADING" = "Video İndirme";
 "VIDEO_DOWNLOADING_FOOTER" = "Video oynatıcısına, videoyu indirmek için kullanılabilecek bir düğme ekler.\n\nNOT: Bazı sitelerde, URL'nin kolayca alınamadığından dolayı çalışmayabilir. Ayrıca bazı siteler içerik akışı için m3u8 dosyalarını kullanır, bu dosyaları kaydedebilirsiniz, ancak herhangi bir video içermez.";
 
-/*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
-/*DOWNLOAD_SITE_TO_ACTION*/
-/*DOWNLOAD_IMAGE_TO_ACTION*/
+/*DEFAULT_SECTION*/
+/*DEFAULT_SECTION_FOOTER*/
+/*DEFAULT_SECTION_AUTO_SWITCH*/
 
-/*PATH_OPTIONS*/
+"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Link uzun basıldığında görüntülenen menüye site / resim indirmek için seçenekler ekler.";
+"DOWNLOAD_SITE_TO_OPTION" = "'Siteyi indir...' Seçenekler";
+"DOWNLOAD_IMAGE_TO_OPTION" = "'Görüntüyü indir...' Seçenekler";
+
+"INSTANT_DOWNLOAD" = "Anlık indirme";
+"INSTANT_DOWNLOAD_FOOTER" = "İndirme uyarısını kapatır ve varsayılan seçenek olarak seçer.";
+"OPTION" = "Seçenek";
 
 "CUSTOM_DEFAULT_PATH" = "Özel Varsayılan Yol";
 "CUSTOM_DEFAULT_PATH_FOOTER" = "İndirme seçeneği seçildiğinde dosyaların indirileceği özel bir konum seçin.\n\nNOT: Dosyaları yalnızca yazılabilir yollara indirmek mümkün, bu nedenle / var dizininin içindeki her şey çalışmalıdır!";
@@ -87,46 +83,21 @@
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Bu yolu seçmek istermisiniz?\n%@?";
 "ERROR_INVALID_NAME_OR_PATH" = "Geçersiz isim veya yol";
 
-/*INTERFACE*/
-
-/*PREVIEW_DOWNLOAD_PROGRESS*/
-/*PREVIEW_DOWNLOAD_PROGRESS_FOOTER*/
-
-/*DEFAULT_SECTION*/
-/*DEFAULT_SECTION_FOOTER*/
-/*DEFAULT_SECTION_AUTO_SWITCH*/
-
-/*BEHAVIOUR*/
-
-"INSTANT_DOWNLOAD" = "Anlık indirme";
-"INSTANT_DOWNLOAD_FOOTER" = "İndirme uyarısını kapatır ve varsayılan seçenek olarak seçer.";
-
 "ONLY_DOWNLOAD_ON_WIFI" = "Sadece Wifi'de İndir";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Sadece cihaz bir wifi ağına bağlıyken indirmeye izin ver.";
 
-/*AUTOSAVE_TO_MEDIA_LIBRARY*/
-/*AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER*/
+"DISABLE_PUSH_NOTIFICATIONS" = "Anlık Bildirimleri Devre Dışı Bırak";
+"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Varsayılan olarak indirme başladığında ve bittiğinde bildirim alırsınız. Bu bildirimi devre dışı bırakır.";
 
-/*DISABLE_HISTORY_FOR_PRIVATE_MODE*/
-/*DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER*/
-
-/*NOTIFICATIONS*/
-
-/*PUSH_NOTIFICATIONS*/
-/*PUSH_NOTIFICATIONS_FOOTER*/
-
-/*STATUS_BAR_NOTIFICATIONS*/
-/*STATUS_BAR_NOTIFICATIONS_FOOTER*/
-
-/*APPLICATION_BADGE*/
-/*APPLICATION_BADGE_FOOTER*/
+"DISABLE_BAR_NOTIFICATIONS" = "Durum Çubuğu Bildirimlerini Devre Dışı Bırak";
+"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "Varsayılan olarak indirme başladığında ve bittiğinde bildirim alırsınız. Bu bildirimleri Engeller.";
 
 /* Usability */
 
 /*URL_ACTIONS*/
 
-/*BOTH_LINK_OPENING_ACTIONS*/
-/*BOTH_LINK_OPENING_ACTIONS_FOOTER*/
+/*SECOND_OPEN_IN_NEW_TAB*/
+/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Bir bağlantıya uzun basıldığında görüntülenen menüye, ters göz atma modunda bağlantıyı açmak için kullanılabilecek bir seçenek ekler.\n(Normal mod -> Özel modda açmak için Seçenek,\nÖzel mod -> Seçenek normal modda aç)";
 "OPEN_IN_OPPOSITE_MODE" = "Karşı mod ayarlarlarında aç";
@@ -136,19 +107,11 @@
 /*DESKTOP_MODE_SWITCH_FOOTER*/
 /*DESKTOP_MODE_SWITCH*/
 
-/*TAB_MANAGER*/
-/*TAB_MANAGER_FOOTER*/
-/*SCROLL_POSITION_FROM_TAB_SWITCHER*/
-
 /*DISABLE_TAB_LIMIT*/
 /*DISABLE_TAB_LIMIT_FOOTER*/
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Tıklanan linkleri yeni sekmede açar.";
-"ALWAYS_OPEN_NEW_TAB" = "Her Zaman Bağlantıları Yeni Sekmede Aç";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Arka Planda Yeni Sekme Aç";
-
-"DISABLE_PRIVATE_MODE_FOOTER" = "Gizli tarama modunu devre dışı bırakır ve ‘Gizli’ düğmesini kaldırır. (Gizli stok özelliği)";
-"DISABLE_PRIVATE_MODE" = "Gizli tarama modunu ve gizli tarama butonunu devre dışı bırak.";
+/*CUSTOM_START_SITE*/
+/*CUSTOM_START_SITE_FOOTER*/
 
 /*SUGGESTIONS*/
 
@@ -157,27 +120,18 @@
 "LONG_PRESS_DURATION_TITLE" = "Uzun basma süresi";
 "LONG_PRESS_FOCUS_TITLE" = "Uzun Basışta URL Çubuğuna Odaklan";
 
-/*SUGGESTION_INSERT_BUTTON*/
-/*SUGGESTION_INSERT_BUTTON_FOOTER*/
-
 /*INTERFACE*/
 
 /*SHOW_TAB_COUNT*/
 /*SHOW_TAB_COUNT_FOOTER*/
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Aşağı kaydırırken tam üstteki çubuğu gizler.";
+"FULLSCREEN_SCROLLING_FOOTER" = "Aşağı kaydırırken tam üstteki çubuğu gizler.\n\nNOT: iOS 8'de çalışmıyor!";
 "FULLSCREEN_SCROLLING" = "Tam Ekran Kaydırma";
 
 "LOCK_BARS" = "Barları kilitle";
 "LOCK_BARS_FOOTER" = "Alt ve üstteki çubuğu yerinde kilitler, böylece sayfa aşağı kaydırıldığında artık gizlenmez.";
 
-/*SHOW_FULL_SITE_URL*/
-/*SHOW_FULL_SITE_URL_FOOTER*/
-
-"SUPPRESS_MAILTO_DIALOG" = "mail yönlendirmelerini engelle";
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Bir 'mailto: <email>' URL'sine erişildiğinde, iOS 10 ve üstünde görünen iletişim kutusunu engeller.";
-
-/* Actions */
+/* Behaviour */
 
 "NORMAL_MODE" = "Normal Tarama Modu";
 "PRIVATE_MODE" = "Özel Tarama Modu";
@@ -186,13 +140,15 @@
 "FOR" = "için…";
 
 "CHANGE_MODE_ON" = "Tarayıcı modunu değiştir...";
-/*CHANGE_MODE_ON_FOOTER*/
 
+"LAUNCH_MODE_FOOTER" = "Safari başlatıldığında belirtilen tarama modu.";
 "LAUNCH_MODE_LABEL" = "Uygulama başlıyor";
-"RESUME_LABEL" = "Uygulama Geçmişi";
-"EXTERNAL_URL_LABEL" = "Dış Bağlantı Açıldı";
 
-/*AUTOMATIC_ACTIONS*/
+"RESUME_FOOTER" = "Safari yeniden başlatılarak bir tarama yapabilirsiniz.";
+"RESUME_LABEL" = "Uygulama Geçmişi";
+
+"EXTERNAL_URL_FOOTER" = "Harici bir URL (başka bir uygulamadan) Safari ile açıldığında, belirtilen tarama modunda açılır.";
+"EXTERNAL_URL_LABEL" = "Dış Bağlantı Açıldı";
 
 "AUTO_CLOSE_TABS_FOOTER" = "Belirlenen mod aktifleştirildiğinde tarama modunun sekmeleri kapatılır.";
 "AUTO_CLOSE_TABS_LABEL" = "Otomatik Kapat Sekmeleri";
@@ -204,17 +160,30 @@
 "ACTIVE_MODE" = "Aktif Tarayı Modu";
 "BOTH_MODES" = "Her iki tarama modu";
 
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Tıklanan linkleri yeni sekmede açar.";
+"ALWAYS_OPEN_NEW_TAB" = "Her Zaman Bağlantıları Yeni Sekmede Aç";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Arka Planda Yeni Sekme Aç";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Gizli tarama modunu devre dışı bırakır ve ‘Gizli’ düğmesini kaldırır. (Gizli stok özelliği)";
+"DISABLE_PRIVATE_MODE" = "Gizli tarama modunu ve gizli tarama butonunu devre dışı bırak.";
+
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Bir 'mailto: <email>' URL'sine erişildiğinde, iOS 10 ve üstünde görünen iletişim kutusunu engeller.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) mail yönlendirmelerini engelle";
+
 /* Gestures */
 
 "ACTION" = "Aksiyon";
 
-"URL_BAR_GESTURES" = "Url Bar Hareketleri";
-/*TOOLBAR_GESTURES*/
+"URL_BAR_GESTURES_LABEL" = "Url Bar Hareketleri";
 
+"SWIPE_LEFT_GESTURE_FOOTER" = "URL çubuğu sola kaydırıldığında belirtilen işlemi gerçekleştirir.";
 "SWIPE_LEFT_GESTURE" = "Sol Kaydırma hareketi";
+
+"SWIPE_RIGHT_GESTURE_FOOTER" = "URL çubuğu sağa kaydırıldığında belirtilen işlemi gerçekleştirir.";
 "SWIPE_RIGHT_GESTURE" = "Sağa kaydırma hareketi ";
+
+"SWIPE_DOWN_GESTURE_FOOTER" = "URL çubuğu aşağı kaydırıldığında belirtilen eylemi gerçekleştirir.";
 "SWIPE_DOWN_GESTURE" = "Aşağı Kaydırma hareketi";
-/*SWIPE_UP_DOWN_GESTURE*/
 
 "CLOSE_ACTIVE_TAB" = "Aktif Sekmeyi Kapat";
 "OPEN_NEW_TAB" = "Yeni Sekmeyi Aç";
@@ -227,8 +196,7 @@
 "REQUEST_DESTKOP_SITE" = "Masaüstü sitesi iste";
 "OPEN_FIND_ON_PAGE" = "'Sayfada Aç''";
 
-/*ALLOW_GESTURES_IN_TAB_SWITCHER*/
-/*RUN_ACTIONS_IN_BACKGROUND*/
+"BACKGROUND" = "Arka planda Sekme Aç";
 
 /* Customization */
 
@@ -264,8 +232,8 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Sekme Başlığı Arkaplan Rengi";
 /*TOOLBAR_BACKGROUND_COLOR*/
 
-"TAB_BAR_NOTE" = "Sekme çubuğu, tüm cihaz boyutlarında / oryantasyonlarında mevcut değil.";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "Bazı ayarlar uygulanacak uygulamanın yeniden başlatılmasını gerektirecek.";
+"TAB_BAR_NOTE" = "NOT: Sekme çubuğu, tüm cihaz boyutlarında / oryantasyonlarında mevcut değil.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "NOT: Bazı ayarlar uygulanacak uygulamanın yeniden başlatılmasını gerektirecek.";
 
 "WHITE" = "Beyaz";
 "BLACK" = "Siyah";
@@ -294,46 +262,11 @@
 /*TABS*/
 /*ADD_TAB*/
 /*SEARCH_BAR_SPACE*/
-/*RELOAD*/
-/*CLEAR_HISTORY*/
-
-/*BROWSING*/
-
-/*CUSTOM_START_SITE*/
-/*CUSTOM_START_SITE_FOOTER*/
-
-/*CUSTOM_SEARCH_ENGINE*/
-/*CUSTOM_SEARCH_ENGINE_FOOTER*/
-/*SEARCH_ENGINE_NAME*/
-/*SEARCH_URL*/
-/*SEARCH_SUGGESTIONS_URL*/
-
-/*CUSTOM_USER_AGENT*/
-/*CUSTOM_USER_AGENT_FOOTER*/
-
-/*CUSTOM_DESKTOP_USER_AGENT*/
-/*CUSTOM_DESKTOP_USER_AGENT_FOOTER*/
-
-/* Tweak Specifc Settings */
-
-/*LARGE_TITLES*/
-/*LARGE_TITLES_FOOTER*/
-
-/*SORT_DIRECTORIES_ABOVE_FILES*/
-/*SORT_DIRECTORIES_ABOVE_FILES_FOOTER*/
-
-/*DISABLE_COMMUNICATION_ERROR*/
-/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
-
-/*RESET_ALL_PREFERENCES*/
-/*RESET_ALL_PREFERENCES_CONFIRMATION*/
 
 /* Credits */
 
-/*LIBSUBSTITRATE_FOOTER*/
-/*DEVELOPED_BY_POOMSMART*/
-
-/*SAFARI_PLUS_LICENSE*/
+"CREDITS" = "Kredi";
+"PICKER_INSPIRED" = "ilham Alındı";
 
 /* In app */
 
@@ -369,7 +302,6 @@
 "DOWNLOADS" = "İndirilenler";
 "FILE_BROWSER" = "Dosya tarayıcısı";
 "OPEN" = "Aç";
-/*SHOW_CONTENT*/
 "OPEN_IN" = "ile Aç…";
 "IMPORT_TO_MUSIC_LIBRARY" = "Müzik Kitaplığının İçine Aktar";
 /*SAVE_TO_MEDIA_LIBRARY*/
@@ -393,8 +325,7 @@
 "DELETE" = "Sil";
 "RENAME" = "Adını değiştir";
 "DOWNLOAD_STARTED" = "İndirme başladı";
-"DOWNLOAD_SUCCEEDED" = "İndirme başarılı";
-/*DOWNLOAD_FAILED*/
+"DOWNLOAD_SUCCESS" = "İndirme başarılı";
 "SAVED_IMAGE" = "Kaydedilmiş Resim";
 "ERROR" = "Hata";
 "FILE_EXISTS_MESSAGE" = "Hedef yolda bir dosya veya bekleyen indirme zaten var!";
@@ -405,42 +336,22 @@
 "DOWNLOAD_HISTORY" = "İndirme geçmişi";
 "FILES" = "Dosyalar";
 "CHOOSE" = "Seç";
-/*MANUAL_DOWNLOAD*/
-/*URL_TO_DOWNLOADABLE_FILE*/
 "START_DOWNLOAD" = "İndirmeye başla";
-/*UNABLE_TO_FETCH_FILE_INFORMATION*/
 "CHOOSE_FILENAME" = "Dosya Adı Seçin";
-/*SELECT_PATH*/
 "FILENAME" = "Dosya adı";
 "CLOSE" = "Kapat";
-/*EXIT_PICKER*/
+"CANCEL_PICKER" = "İndirmekten vazgeç";
 "PERMISSION_ERROR_MESSAGE" = "Seçilen yola yazmak için yeterli izin yok. Lütfen başka birini seçin.\nNNOT: Normalde sadece / var dizinindeki yollar yazılabilir! Bir dizinin izinlerini incelemek / değiştirmek için Filza'yı da kullanabilirsiniz.";
-/*PREVIEW*/
 "PLAY" = "Oynat";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "’Özel Varsayılan Yol' ayarladığınız yol geçersiz. Lütfen düzeltin.";
-/*VIDEO_URL_NOT_FOUND*/
+"VIDEO_URL_NOT_FOUND" = "Video URL bulunamadı, mevcut site muhtemelen desteklenmiyor!";
 "COPY_LINK" = "Link kopyala";
 "SIZE_UNKNOWN" = "Bilinmeyen boyutu";
-/*DURATION_UNKNOWN*/
 "MIGRATION_TITLE" = "işlem başarılı";
 "MIGRATION_MESSAGE" = "Artık dosyaları istediğiniz herhangi bir dizine indirebilirsiniz!";
-/*CELLULAR_DATA_WARNING*/
-
-/* Tab Manager */
-
-/*SELECT_ALL*/
-/*DESELECT_ALL*/
-/*CLOSE_TAB_WARNING_MESSAGE*/
-/*CLOSE_TABS_WARNING_MESSAGE*/
-/*CHOOSE_EXPORT_FORMAT*/
-/*CHOOSE_EXPORT_FORMAT_MESSAGE*/
-/*WITH_CLICKABLE_URL*/
-/*ADD_TABS_ALERT*/
-/*ADD_TABS_ALERT_MESSAGE*/
-/*USE_CLIPBOARD*/
-/*ADD_BOOKMARKS*/
 
 /* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "Normal Mod aç";
 "OPEN_IN_PRIVATE_MODE" = "Özel Modda Aç";
+

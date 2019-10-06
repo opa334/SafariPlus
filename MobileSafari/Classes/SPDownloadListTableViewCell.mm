@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// SPDownloadListTableViewCell.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPDownloadListTableViewCell.h"
 #import "Extensions.h"
@@ -26,45 +22,90 @@
 
 @implementation SPDownloadListTableViewCell
 
+- (void)initContent
+{
+	[super initContent];
+
+	_targetLabel = [UILabel autolayoutView];
+	[self.contentView addSubview:_targetLabel];
+}
+
 - (void)setUpContent
 {
 	[super setUpContent];
 
-	_targetLabel = [[UILabel alloc] init];
-	_targetLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	_targetLabel.font = [_targetLabel.font fontWithSize:10];
 	_targetLabel.textAlignment = NSTextAlignmentCenter;
-
-	[self.contentView addSubview:_targetLabel];
+	_targetLabel.text = self.download.targetURL.path;
 }
 
-- (void)applyDownload:(SPDownload*)download
+- (NSDictionary*)viewsForConstraints
 {
-	[super applyDownload:download];
+	NSMutableDictionary* superViews = [[super viewsForConstraints] mutableCopy];
 
-	_targetLabel.text = self.download.targetURL.path;
+	[superViews addEntriesFromDictionary:NSDictionaryOfVariableBindings(_targetLabel)];
+
+	return [superViews copy];
 }
 
 - (void)setUpConstraints
 {
-	[super setUpConstraints];
+	//Get contentView
+	UIView* contentView = self.contentView;
 
-	self.bottomConstraint.active = NO;
+	//Create metrics and views for constraints
+	NSDictionary *metrics = @{@"rightSpace" : @43.5, @"smallSpace" : @7.5, @"buttonSize" : @25.0, @"iconSize" : @30.0, @"topSpace" : @6.0};
+	NSDictionary *views = [self viewsForConstraints];
 
-	[NSLayoutConstraint activateConstraints:@[
-		//Horizontal
-		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
-		  toItem:self.contentView attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
-		  toItem:self.buttonsView attribute:NSLayoutAttributeTrailing multiplier:1 constant:-7.5],
-		//Vertical
-		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
-		  toItem:self.downloadProgressView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
-		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:18],
-		 [NSLayoutConstraint constraintWithItem:_targetLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
-		  toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
-	]];
+	//Add dynamic constraints so the cell looks good across all devices
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"|-[_sizeProgress(_downloadSpeed)]-smallSpace-[_sizeSpeedSeperator(8)]-smallSpace-[_downloadSpeed(_sizeProgress)]-rightSpace-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"|-[_progressView]-smallSpace-[_stopButton(buttonSize)]-10-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"|-[_percentProgress]-rightSpace-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"|-[_iconView(iconSize)]-15-[_filenameLabel]-smallSpace-[_pauseResumeButton(buttonSize)]-10-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"|-[_targetLabel]-smallSpace-[_stopButton(buttonSize)]-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"V:|-topSpace-[_iconView(iconSize)]" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"V:|-topSpace-[_filenameLabel(iconSize)]" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"V:|-8-[_pauseResumeButton(buttonSize)]" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"V:[_stopButton(buttonSize)]-8-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"V:[_sizeProgress(8)]-41-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"V:[_sizeSpeedSeperator(8)]-3-[_progressView(2.5)]-3-[_percentProgress(8)]-4-[_targetLabel(18)]-3-|" options:0 metrics:metrics views:views]];
+
+	[contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+				     @"V:[_downloadSpeed(8)]-41-|" options:0 metrics:metrics views:views]];
+}
+
+- (void)setUpDelegate
+{
+	self.download.listCellDelegate = self;
+}
+
+- (void)removeDelegate
+{
+	if([self isEqual:self.download.listCellDelegate])
+	{
+		self.download.listCellDelegate = nil;
+	}
 }
 
 @end

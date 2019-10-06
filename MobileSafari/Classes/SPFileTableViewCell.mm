@@ -1,111 +1,76 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// SPFileTableViewCell.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPFileTableViewCell.h"
 
 #import "../Util.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
-#import "../../Shared/SPFile.h"
-#import "SPCellIconLabelView.h"
-#import "Extensions.h"
+#import "SPFile.h"
 
 @implementation SPFileTableViewCell
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-
-	[self setUpContent];
-	[self setUpConstraints];
-
-	return self;
-}
-
-- (void)setUpContent
-{
-	_iconLabelView = [[SPCellIconLabelView alloc] init];
-	_iconLabelView.translatesAutoresizingMaskIntoConstraints = NO;
-
-	[self.contentView addSubview:_iconLabelView];
-
-	_sizeLabel = [[UILabel alloc] init];
-	_sizeLabel.textColor = [UIColor lightGrayColor];
-	_sizeLabel.font = [_sizeLabel.font fontWithSize:10];
-	_sizeLabel.textAlignment = NSTextAlignmentCenter;
-	_sizeLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-}
-
-- (void)setUpConstraints
-{
-	[NSLayoutConstraint activateConstraints:@[
-		//Horizontal
-		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual
-		  toItem:self.contentView attribute:NSLayoutAttributeLeadingMargin multiplier:1 constant:0],
-		//[_iconLabelView.leadingAnchor constraintEqualToAnchor:self.contentView.layoutMarginsGuide.leadingAnchor],
-
-		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual
-		  toItem:self.contentView attribute:NSLayoutAttributeTrailingMargin multiplier:1 constant:0],
-		//[_iconLabelView.trailingAnchor constraintEqualToAnchor:self.contentView.layoutMarginsGuide.trailingAnchor],
-
-		//Vertical
-		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
-		  toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:0],
-		//[_iconLabelView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor],
-
-		 [NSLayoutConstraint constraintWithItem:_iconLabelView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
-		  toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:0],
-		//[_iconLabelView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor],
-	]];
-}
 
 - (void)applyFile:(SPFile*)file
 {
 	//Set label of cell to filename
-	_iconLabelView.label.attributedText = file.cellTitle;
+	self.textLabel.attributedText = file.cellTitle;
 
-	if([file displaysAsRegularFile])	//File icon with filesize as accessoryView
+	if(file.isRegularFile)
 	{
-		_iconLabelView.iconView.image = [fileManager iconForFile:file];
+		//URL is file -> set imageView to file icon
+		self.imageView.image = [fileManager fileIcon];
+
+		//Remove possibly reused arrow on the right
 		self.accessoryType = UITableViewCellAccessoryNone;
-		self.accessoryView = _sizeLabel;
-		_sizeLabel.text = [NSByteCountFormatter stringFromByteCount:file.size countStyle:NSByteCountFormatterCountStyleFile];
-		_sizeLabel.frame = CGRectMake(0,0, _sizeLabel.intrinsicContentSize.width, 15);
+
+		//Create sizeLabel from filesize and set it to accessoryView
+		UILabel* sizeLabel = [[UILabel alloc] init];
+		sizeLabel.text = [NSByteCountFormatter stringFromByteCount:file.size countStyle:NSByteCountFormatterCountStyleFile];
+		sizeLabel.textColor = [UIColor lightGrayColor];
+		sizeLabel.font = [sizeLabel.font fontWithSize:10];
+		sizeLabel.textAlignment = NSTextAlignmentCenter;
+		sizeLabel.frame = CGRectMake(0,0, sizeLabel.intrinsicContentSize.width, 15);
+		self.accessoryView = sizeLabel;
 	}
-	else	//Directory icon with arrow as accessoryType
+	else
 	{
-		_iconLabelView.iconView.image = [fileManager genericDirectoryIcon];
+		//URL is directory -> set imageView to directory icon
+		self.imageView.image = [fileManager directoryIcon];
+
+		//Set accessoryType to disclosureIndicator (arrow to the right)
 		self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+		//Remove possibly existing accessoryView
 		self.accessoryView = nil;
 	}
 
 	if(file.isHidden)
 	{
-		_iconLabelView.alpha = 0.5;
+		//File is hidden -> modify alpha
+		self.imageView.alpha = 0.4;
+		self.textLabel.alpha = 0.4;
 	}
 	else
 	{
-		_iconLabelView.alpha = 1;
+		//File is not hidden -> Set alpha to normal values (after cell reuse)
+		self.imageView.alpha = 1;
+		self.textLabel.alpha = 1;
 	}
 
-	//Enable separators between imageViews
+	//Enable seperators between imageViews
 	[self setSeparatorInset:UIEdgeInsetsZero];
 }
 

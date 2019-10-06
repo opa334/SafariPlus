@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// Application.xm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
 
@@ -27,64 +23,8 @@
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPCommunicationManager.h"
-#import "../Shared/SPPreferenceUpdater.h"
-
-#import <UserNotifications/UserNotifications.h>
 
 %hook Application
-
-%new
-- (void)sp_preAppLaunch
-{
-	#ifndef SIMJECT
-	[SPPreferenceUpdater update];
-	#endif
-}
-
-%new
-- (void)sp_postAppLaunchWithOptions:(NSDictionary*)launchOptions
-{
-	//Auto switch mode on launch
-	if(preferenceManager.forceModeOnStartEnabled && !launchOptions[UIApplicationLaunchOptionsURLKey])
-	{
-		for(BrowserController* controller in browserControllers())
-		{
-			//Switch mode to specified mode
-			[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
-		}
-	}
-
-	[self handleTwitterAlert];
-	[self handleSBConnectionTest];
-
-	if(preferenceManager.downloadManagerEnabled)
-	{
-		downloadManager = [SPDownloadManager sharedInstance];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
-
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
-		{
-			UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-			UNAuthorizationOptions options = UNAuthorizationOptionAlert + UNAuthorizationOptionSound;
-			[center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error){}];
-		}
-		else
-		{
-			UIUserNotificationSettings* settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
-			[self registerUserNotificationSettings:settings];
-		}
-	}
-
-	if(!preferenceManager.applicationBadgeEnabled && self.applicationIconBadgeNumber > 0)
-	{
-		self.applicationIconBadgeNumber = 0;
-	}
-
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		[cacheManager cleanUpTabStateAdditions];
-	}
-}
 
 %new
 - (void)handleTwitterAlert
@@ -144,8 +84,6 @@
 %new
 - (void)handleSBConnectionTest
 {
-	rocketBootstrapWorks = [communicationManager testConnection];
-
 	if(!rocketBootstrapWorks && !preferenceManager.communicationErrorDisabled)
 	{
 		sendSimpleAlert([localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR"], [localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR_DESCRIPTION"]);
@@ -242,11 +180,25 @@
 
 - (BOOL)application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
 {
-	[self sp_preAppLaunch];
-
 	BOOL orig = %orig;
 
-	[self sp_postAppLaunchWithOptions:launchOptions];
+	//Auto switch mode on launch
+	if(preferenceManager.forceModeOnStartEnabled && !launchOptions[UIApplicationLaunchOptionsURLKey])
+	{
+		for(BrowserController* controller in browserControllers())
+		{
+			//Switch mode to specified mode
+			[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
+		}
+	}
+
+	if(preferenceManager.enhancedDownloadsEnabled)
+	{
+		downloadManager = [SPDownloadManager sharedInstance];
+	}
+
+	[self handleTwitterAlert];
+	[self handleSBConnectionTest];
 
 	return orig;
 }
@@ -266,13 +218,24 @@
 	%orig;
 }
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application
+- (void)applicationDidFinishLaunching:(id)arg1
 {
-	[self sp_preAppLaunch];
-
 	%orig;
 
-	[self sp_postAppLaunchWithOptions:nil];
+	//Auto switch mode on launch
+	if(preferenceManager.forceModeOnStartEnabled)
+	{
+		//Switch mode to specified mode
+		[browserControllers().firstObject modeSwitchAction:preferenceManager.forceModeOnStartFor];
+	}
+
+	if(preferenceManager.enhancedDownloadsEnabled)
+	{
+		downloadManager = [SPDownloadManager sharedInstance];
+	}
+
+	[self handleTwitterAlert];
+	[self handleSBConnectionTest];
 }
 
 %end

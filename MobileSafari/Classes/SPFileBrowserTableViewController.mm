@@ -1,34 +1,28 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// SPFileBrowserTableViewController.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPFileBrowserTableViewController.h"
 #import "Extensions.h"
 
-#import "../Defines.h"
 #import "../Util.h"
 #import "SPFileBrowserNavigationController.h"
 #import "SPFileTableViewCell.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
-#import "SPPreferenceManager.h"
-#import "../../Shared/SPFile.h"
+#import "SPFile.h"
 
 @implementation SPFileBrowserTableViewController
 
@@ -43,9 +37,6 @@
 		_directoryURL = [fileManager resolveSymlinkForURL:directoryURL];
 	}
 
-	self.tableView.estimatedSectionHeaderHeight = 0;
-	self.tableView.estimatedSectionFooterHeight = 0;
-
 	[self setUpRightBarButtonItems];
 
 	[self.tableView registerClass:[SPFileTableViewCell class] forCellReuseIdentifier:@"SPFileTableViewCell"];
@@ -55,7 +46,8 @@
 
 - (void)setUpRightBarButtonItems
 {
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:[localizationManager
+											 localizedSPStringForKey:@"DISMISS"] style:UIBarButtonItemStylePlain
 						  target:self action:@selector(dismiss)];
 }
 
@@ -83,54 +75,43 @@
 {
 	[super viewDidAppear:animated];
 
-	[self fixHeaderColors];
-}
-
-- (BOOL)fileIsDirectory:(SPFile*)file
-{
-	return ![file displaysAsRegularFile];
+	[self fixFooterColors];
 }
 
 - (BOOL)loadContents
 {
-	BOOL firstLoad = (_filesAtCurrentURL == nil);
+	NSMutableArray<SPFile*>* newFiles = [NSMutableArray new];
 
 	//Fetch files from current URL into array
-	NSMutableArray<SPFile*>* newFiles = [[fileManager filesAtURL:_directoryURL error:nil] mutableCopy];
+	NSArray* fileURLs = [fileManager contentsOfDirectoryAtURL:_directoryURL
+			     includingPropertiesForKeys:nil options:0 error:nil];
+
+	for(NSURL* fileURL in fileURLs)
+	{
+		SPFile* file = [[SPFile alloc] initWithFileURL:fileURL];
+		[newFiles addObject:file];
+	}
 
 	[newFiles sortUsingComparator:^NSComparisonResult (SPFile* a, SPFile* b)
 	{
-		#ifndef PREFERENCES
-		if(preferenceManager.sortDirectoriesAboveFiles)
-		{
-			if([self fileIsDirectory:a] && ![self fileIsDirectory:b])
-			{
-				return NSOrderedAscending;
-			}
-			else if([self fileIsDirectory:b] && ![self fileIsDirectory:a])
-			{
-				return NSOrderedDescending;
-			}
-		}
-		#endif
 		return [a.cellTitle.string caseInsensitiveCompare:b.cellTitle.string];
 	}];
 
-	_filesAtCurrentURL = [newFiles copy];
+	BOOL filesNeedUpdate = ![_filesAtCurrentURL isEqualToArray:newFiles];
 
-	if(firstLoad)
+	if(filesNeedUpdate)
 	{
-		_displayedFiles = [_filesAtCurrentURL copy];
+		_filesAtCurrentURL = [newFiles copy];
 	}
 
-	return ![_filesAtCurrentURL isEqualToArray:_displayedFiles];
+	return filesNeedUpdate;
 }
 
 - (void)refreshControlValueChanged
 {
 	if(!self.tableView.isDragging)
 	{
-		[self reloadAnimated:NO];
+		[self reload];
 	}
 }
 
@@ -138,129 +119,44 @@
 {
 	if([self.refreshControl isRefreshing])
 	{
-		[self reloadAnimated:NO];
+		[self reload];
 	}
-}
-
-- (NSMutableArray<NSIndexPath*>*)indexPathsToAdd
-{
-	NSMutableArray<NSIndexPath*>* addIndexPaths = [NSMutableArray new];
-
-	if(!_displayedFiles)
-	{
-		return addIndexPaths;
-	}
-
-	NSMutableSet<SPFile*>* newFilesSet = [NSMutableSet setWithArray:_filesAtCurrentURL];
-	NSMutableSet<SPFile*>* oldFilesSet = [NSMutableSet setWithArray:_displayedFiles];
-
-	[newFilesSet minusSet:oldFilesSet];
-
-	for(SPFile* file in newFilesSet)
-	{
-		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[_filesAtCurrentURL indexOfObject:file] inSection:[self fileSection]]];
-	}
-
-	return addIndexPaths;
-}
-
-- (NSMutableArray<NSIndexPath*>*)indexPathsToDelete
-{
-	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [NSMutableArray new];
-
-	if(!_displayedFiles)
-	{
-		return deleteIndexPaths;
-	}
-
-	NSMutableSet<SPFile*>* deletedFilesSet = [NSMutableSet setWithArray:_displayedFiles];
-	NSMutableSet<SPFile*>* currentFilesSet = [NSMutableSet setWithArray:_filesAtCurrentURL];
-
-	[deletedFilesSet minusSet:currentFilesSet];
-
-	for(SPFile* file in deletedFilesSet)
-	{
-		[deleteIndexPaths addObject:[NSIndexPath indexPathForRow:[_displayedFiles indexOfObject:file] inSection:[self fileSection]]];
-	}
-
-	return deleteIndexPaths;
-}
-
-//Reload file section while correctly animating changes
-- (void)applyChangesToTable
-{
-	NSMutableArray<NSIndexPath*>* addIndexPaths = [self indexPathsToAdd];
-	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [self indexPathsToDelete];
-
-	dispatch_sync(dispatch_get_main_queue(), ^
-	{
-		if(addIndexPaths.count > 0 || deleteIndexPaths.count > 0)
-		{
-			[self.tableView beginUpdates];
-			[self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-			[self.tableView insertRowsAtIndexPaths:addIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-			[self.tableView endUpdates];
-		}
-
-		[self applyChangesAfterReload];
-	});
-}
-
-- (void)applyChangesAfterReload
-{
-	_displayedFiles = [_filesAtCurrentURL copy];
-
-	[self updateSectionHeaders];
-
-	dispatch_async(dispatch_get_main_queue(), ^
-	{
-		if([self.refreshControl isRefreshing])
-		{
-			//Stop refresh animation if needed
-			[self.refreshControl endRefreshing];
-		}
-	});
 }
 
 - (void)reload
 {
-	[self reloadAnimated:YES];
-}
-
-- (void)reloadAnimated:(BOOL)animated
-{
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 	{
-		@synchronized(self)
-		{
-			BOOL needsReload = [self loadContents];
+		//Repopulate dataSources
+		BOOL needsReload = [self loadContents];
 
-			if(needsReload)
+		if(needsReload)
+		{
+			//Reload tableView with new dataSources
+			NSRange range = NSMakeRange(0, [self numberOfSectionsInTableView:self.tableView]);
+			NSIndexSet* sections = [NSIndexSet indexSetWithIndexesInRange:range];
+
+			dispatch_async(dispatch_get_main_queue(), ^
 			{
-				if(animated)
+				[self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationFade];
+
+				if([self.refreshControl isRefreshing])
 				{
-					[self applyChangesToTable];
+					//Stop refresh animation if needed
+					[self.refreshControl endRefreshing];
 				}
-				else
-				{
-					dispatch_sync(dispatch_get_main_queue(), ^
-					{
-						[self.tableView reloadData];
-						[self applyChangesAfterReload];
-					});
-				}
-			}
-			else
+			});
+		}
+		else
+		{
+			dispatch_async(dispatch_get_main_queue(), ^
 			{
-				dispatch_async(dispatch_get_main_queue(), ^
+				if([self.refreshControl isRefreshing])
 				{
-					if([self.refreshControl isRefreshing])
-					{
-						//Stop refresh animation if needed
-						[self.refreshControl endRefreshing];
-					}
-				});
-			}
+					//Stop refresh animation if needed
+					[self.refreshControl endRefreshing];
+				}
+			});
 		}
 	});
 }
@@ -313,30 +209,6 @@
 	return;
 }
 
-- (void)showFileNamed:(NSString*)filename
-{
-	NSInteger index = -1;
-	for(SPFile* file in _filesAtCurrentURL)
-	{
-		if([file.name isEqualToString:filename])
-		{
-			index = [_filesAtCurrentURL indexOfObject:file];
-		}
-	}
-
-	if(index == -1)
-	{
-		return;
-	}
-
-	dispatch_async(dispatch_get_main_queue(),^
-	{
-		NSIndexPath* indexPath = [NSIndexPath indexPathForRow:index inSection:[self fileSection]];
-		[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
-		[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-	});
-}
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	//One section (files)
@@ -347,16 +219,6 @@
 {
 	//Return amount of files at current path
 	return [_filesAtCurrentURL count];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	return UITableViewAutomaticDimension;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	return UITableViewAutomaticDimension;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

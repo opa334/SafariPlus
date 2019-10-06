@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// Colors.xm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
 #import "../Defines.h"
@@ -492,7 +488,7 @@
 		UILabel* titleLabel = MSHookIvar<UILabel*>(self, "_titleLabel");
 		UILabel* titleOverlayLabel = MSHookIvar<UILabel*>(self, "_titleOverlayLabel");
 
-		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
+		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && tabBar.barStyle == 0)
 		{
 			[titleLabel.layer setCompositingFilter:nil];
 
@@ -511,7 +507,7 @@
 				titleOverlayLabel.alpha = preferenceManager.topBarNormalTabBarInactiveTitleOpacity;
 			}
 		}
-		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
+		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
 		{
 			[titleLabel.layer setCompositingFilter:nil];
 
@@ -542,11 +538,11 @@
 		TabBar* tabBar = MSHookIvar<TabBar*>(self, "_tabBar");
 		UILabel* titleLabel = MSHookIvar<UILabel*>(self, "_titleLabel");
 
-		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
+		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && tabBar.barStyle == 0)
 		{
 			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
-		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
+		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && tabBar.barStyle == 1)
 		{
 			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
@@ -562,12 +558,12 @@
 		TabBar* tabBar = MSHookIvar<TabBar*>(self, "_tabBar");
 		UIColor* colorToSet;
 
-		if(preferenceManager.topBarNormalTabBarCloseButtonColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
+		if(preferenceManager.topBarNormalTabBarCloseButtonColorEnabled && tabBar.barStyle == 0)
 		{
 			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarCloseButtonColor];
 			//titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
-		else if(preferenceManager.topBarPrivateTabBarCloseButtonColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
+		else if(preferenceManager.topBarPrivateTabBarCloseButtonColorEnabled && tabBar.barStyle == 1)
 		{
 			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarCloseButtonColor];
 			//titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
@@ -674,34 +670,31 @@
 		_UIBackdropView* header = MSHookIvar<_UIBackdropView*>(self, "_header");
 		_UIBackdropViewSettings* settings = [_UIBackdropViewSettings settingsForPrivateStyle:2030];
 
-		if([header isKindOfClass:NSClassFromString(@"_UIBackdropView")])
+		BOOL privateBrowsing = privateBrowsingEnabled(MSHookIvar<BrowserController*>(self.delegate, "_browserController"));
+
+		UIColor* colorToSet;
+
+		if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherNormalToolbarBackgroundColor && !privateBrowsing)
 		{
-			BOOL privateBrowsing = privateBrowsingEnabled(MSHookIvar<BrowserController*>(self.delegate, "_browserController"));
-
-			UIColor* colorToSet;
-
-			if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherNormalToolbarBackgroundColor && !privateBrowsing)
-			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalToolbarBackgroundColor];
-			}
-			else if(preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherPrivateToolbarBackgroundColor && privateBrowsing)
-			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateToolbarBackgroundColor];
-			}
-
-			if(colorToSet)
-			{
-				settings.usesGrayscaleTintView = NO;
-				settings.usesColorTintView = YES;
-				settings.colorTint = [colorToSet colorWithAlphaComponent:1.0];
-				CGFloat alpha;
-				[colorToSet getRed:nil green:nil blue:nil alpha:&alpha];
-				settings.colorTintAlpha = alpha;
-				settings.grayscaleTintAlpha = 0;
-			}
-
-			[header transitionToSettings:settings];
+			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalToolbarBackgroundColor];
 		}
+		else if(preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherPrivateToolbarBackgroundColor && privateBrowsing)
+		{
+			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateToolbarBackgroundColor];
+		}
+
+		if(colorToSet)
+		{
+			settings.usesGrayscaleTintView = NO;
+			settings.usesColorTintView = YES;
+			settings.colorTint = [colorToSet colorWithAlphaComponent:1.0];
+			CGFloat alpha;
+			[colorToSet getRed:nil green:nil blue:nil alpha:&alpha];
+			settings.colorTintAlpha = alpha;
+			settings.grayscaleTintAlpha = 0;
+		}
+
+		[header transitionToSettings:settings];
 	}
 }
 
@@ -712,15 +705,24 @@
 %new
 - (void)updateCustomBackgroundColorForStyle:(NSUInteger)style
 {
-	BrowserController* browserController = browserControllerForBrowserToolbar(self);
+	BOOL showingTabView;
+
+	if([self.browserDelegate respondsToSelector:@selector(isShowingTabView)])
+	{
+		showingTabView = self.browserDelegate.showingTabView;
+	}
+	else
+	{
+		showingTabView = MSHookIvar<BOOL>(self.browserDelegate, "_showingTabView");
+	}
 
 	_UIBackdropView* backgroundView = MSHookIvar<_UIBackdropView*>(self, "_backgroundView");
 
-	BOOL privateBrowsing = privateBrowsingEnabled(browserController);
+	BOOL privateBrowsing = privateBrowsingEnabled(self.browserDelegate);
 
 	UIColor* colorToSet;
 
-	if(browserControllerIsShowingTabView(browserController))
+	if(showingTabView)
 	{
 		if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled)
 		{
@@ -891,8 +893,6 @@
 
 %end
 
-%group iOS12_1_4_down
-
 %hook BrowserRootViewController
 
 - (void)setPreferredStatusBarStyle:(UIStatusBarStyle)statusBarStyle
@@ -910,7 +910,18 @@
 			browserController = browserControllers().firstObject;
 		}
 
-		if(!browserControllerIsShowingTabView(browserController))
+		BOOL showingTabView;
+
+		if([browserController respondsToSelector:@selector(isShowingTabView)])
+		{
+			showingTabView = browserController.showingTabView;
+		}
+		else
+		{
+			showingTabView = MSHookIvar<BOOL>(browserController, "_showingTabView");
+		}
+
+		if(!showingTabView)
 		{
 			BOOL privateMode = (statusBarStyle == UIStatusBarStyleLightContent);
 
@@ -927,49 +938,6 @@
 
 	return %orig;
 }
-
-%end
-
-%end
-
-%group iOS12_2Up
-
-%hook BrowserRootViewController
-
-- (NSUInteger)preferredStatusBarStyle
-{
-	if([preferenceManager topBarNormalStatusBarStyleEnabled] || [preferenceManager topBarPrivateStatusBarStyleEnabled])
-	{
-		BrowserController* browserController;
-
-		if([self respondsToSelector:@selector(browserController)])
-		{
-			browserController = self.browserController;
-		}
-		else
-		{
-			browserController = browserControllers().firstObject;
-		}
-
-		if(!browserControllerIsShowingTabView(browserController))
-		{
-			BOOL privateMode = privateBrowsingEnabled(browserController);
-
-			if(!privateMode && [preferenceManager topBarNormalStatusBarStyleEnabled])
-			{
-				return preferenceManager.topBarNormalStatusBarStyle;
-			}
-			else if(privateMode && [preferenceManager topBarPrivateStatusBarStyleEnabled])
-			{
-				return preferenceManager.topBarPrivateStatusBarStyle;
-			}
-		}
-	}
-
-	return %orig;
-}
-
-%end
 
 %end
 
@@ -1000,15 +968,6 @@ void initColors()
 	else
 	{
 		%init(iOS10Down)
-	}
-
-	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
-	{
-		%init(iOS12_2Up);
-	}
-	else
-	{
-		%init(iOS12_1_4_down);
 	}
 
 	%init();

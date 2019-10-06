@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// Util.xm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SafariPlus.h"
 
@@ -27,8 +23,8 @@
 #import "Classes/SPLocalizationManager.h"
 #import "Classes/SPCommunicationManager.h"
 #import "Classes/SPCacheManager.h"
-#import "SPPreferenceUpdater.h"
 
+#import "../Shared/SPPreferenceMerger.h"
 #import <LocalAuthentication/LocalAuthentication.h>
 #import <arpa/inet.h>
 #import <ifaddrs.h>
@@ -40,14 +36,13 @@
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
-SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
-SPFileManager* fileManager = [SPFileManager sharedInstance];
+SPCommunicationManager* communicationManager;
+SPFileManager* fileManager;
 SPPreferenceManager* preferenceManager;
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
-BOOL rocketBootstrapWorks = NO;
-BOOL skipBiometricProtection = NO;
+BOOL rocketBootstrapWorks;
 
 #ifdef DEBUG_LOGGING
 
@@ -117,9 +112,11 @@ void _dlogDownload(SPDownload* download, NSString* message)
 	dlog(@"resumeData length: %llu", (unsigned long long)download.resumeData.length);
 	dlog(@"paused: %llu", (unsigned long long)download.taskIdentifier);
 	dlog(@"downloadTask: %@", download.downloadTask);
+	dlog(@"didFinish: %i", download.didFinish);
 	dlog(@"wasCancelled: %i", download.wasCancelled);
 	dlog(@"downloadManagerDelegate: %@", download.downloadManagerDelegate);
-	dlog(@"observerDelegates: %@", download.observerDelegates);
+	dlog(@"browserCellDelegate: %@", download.browserCellDelegate);
+	dlog(@"listCellDelegate: %@", download.listCellDelegate);
 	dlog(@"----------");
 }
 
@@ -154,8 +151,7 @@ void _dlogDownloadManager()
 	dlog(@"errorCount: %lli", downloadManager.errorCount);
 	dlog(@"processedErrorCount: %lli", downloadManager.processedErrorCount);
 	dlog(@"defaultDownloadURL: %@", downloadManager.defaultDownloadURL);
-	dlog(@"requestFetchDownloadInfo: %@", downloadManager.requestFetchDownloadInfo);
-	dlog(@"pickerDownloadInfo: %@", downloadManager.pickerDownloadInfo);
+	dlog(@"processedVideoDownloadInfo: %@", downloadManager.processedVideoDownloadInfo);
 	[downloadManager.downloadSession getAllTasksWithCompletionHandler:^(NSArray<__kindof NSURLSessionTask *> *tasks)
 	{
 		dlog(@"tasks: %@", tasks);
@@ -280,328 +276,11 @@ BrowserRootViewController* rootViewControllerForBrowserController(BrowserControl
 	return rootViewController;
 }
 
+
 //Get rootViewController from tabDocument
 BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document)
 {
 	return rootViewControllerForBrowserController(browserControllerForTabDocument(document));
-}
-
-NavigationBar* navigationBarForBrowserController(BrowserController* browserController)
-{
-	if([browserController respondsToSelector:@selector(navigationBar)])
-	{
-		return browserController.navigationBar;
-	}
-	else
-	{
-		return rootViewControllerForBrowserController(browserController).navigationBar;
-	}
-}
-
-BrowserToolbar* activeToolbarForBrowserController(BrowserController* browserController)
-{
-	if([browserController respondsToSelector:@selector(activeToolbar)])
-	{
-		return browserController.activeToolbar;
-	}
-	else
-	{
-		BrowserRootViewController* rootVC = rootViewControllerForBrowserController(browserController);
-		if(rootVC.toolbarPlacement == 1)
-		{
-			return rootVC.bottomToolbar;
-		}
-		else
-		{
-			return rootVC.navigationBar.sp_toolbar;
-		}
-	}
-}
-
-BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToolbar)
-{
-	if([browserToolbar respondsToSelector:@selector(browserDelegate)])
-	{
-		return browserToolbar.browserDelegate;
-	}
-	else
-	{
-		return MSHookIvar<_SFBarManager*>(MSHookIvar<SFBarRegistration*>(browserToolbar, "_barRegistration"), "_barManager").delegate;
-	}
-}
-
-BOOL browserControllerIsShowingTabView(BrowserController* browserController)
-{
-	BrowserRootViewController* rootViewController = rootViewControllerForBrowserController(browserController);
-	if([rootViewController respondsToSelector:@selector(tabThumbnailCollectionView)])
-	{
-		NSInteger presentationState = rootViewController.tabThumbnailCollectionView.presentationState;
-		//0: not showing tab view, 1: in animation, 2: inside tabView
-		return (presentationState == 1) || (presentationState == 2);
-	}
-	else if([browserController respondsToSelector:@selector(isShowingTabView)])
-	{
-		return [browserController isShowingTabView];
-	}
-	else
-	{
-		return MSHookIvar<BOOL>(browserController, "_showingTabView");
-	}
-}
-
-void closeTabDocuments(TabController* tabController, NSArray<TabDocument*>* tabDocuments, BOOL animated)
-{
-	if([tabDocuments count] <= 0)
-	{
-		return;
-	}
-
-	BrowserController* browserController = MSHookIvar<BrowserController*>(tabController, "_browserController");
-
-	if(tabController.tiltedTabView && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
-	{
-		NSMutableSet* tabDocumentsAboutToBeClosedInTiltedTabView = MSHookIvar<NSMutableSet*>(tabController, "_tabDocumentsAboutToBeClosedInTiltedTabView");
-		[tabDocumentsAboutToBeClosedInTiltedTabView addObjectsFromArray:[tabDocuments copy]];
-		[tabController _updateTiltedTabViewItemsAnimated:animated];
-	}
-
-	NSMutableArray* privateTabDocuments = [NSMutableArray new];
-	NSMutableArray* normalTabDocuments = [NSMutableArray new];
-
-	for(TabDocument* tabDocument in tabDocuments)
-	{
-		BOOL privateTab = NO;
-
-		if([tabDocument respondsToSelector:@selector(privateBrowsingEnabled)])
-		{
-			privateTab = [tabDocument privateBrowsingEnabled];
-		}
-		else
-		{
-			privateTab = [tabDocument isPrivateBrowsingEnabled];
-		}
-
-		if(privateTab)
-		{
-			[privateTabDocuments addObject:tabDocument];
-		}
-		else
-		{
-			[normalTabDocuments addObject:tabDocument];
-		}
-	}
-
-	NSArray* currentModeTabs;
-	NSArray* otherModeTabs;
-
-	if(privateBrowsingEnabled(browserController))
-	{
-		currentModeTabs = [privateTabDocuments copy];
-		otherModeTabs = [normalTabDocuments copy];
-	}
-	else
-	{
-		currentModeTabs = [normalTabDocuments copy];
-		otherModeTabs = [privateTabDocuments copy];
-	}
-
-	if(currentModeTabs.count >= 1)
-	{
-		if([tabController respondsToSelector:@selector(_closeTabDocuments:animated:temporarily:allowAddingToRecentlyClosedTabs:keepWebViewAlive:)])
-		{
-			[tabController _closeTabDocuments:currentModeTabs animated:animated temporarily:NO allowAddingToRecentlyClosedTabs:YES keepWebViewAlive:NO];
-		}
-		else
-		{
-			for(TabDocument* tabDocument in [currentModeTabs reverseObjectEnumerator])
-			{
-				[tabController closeTabDocument:tabDocument animated:animated];
-			}
-		}
-	}
-
-	if(otherModeTabs.count >= 1)
-	{
-		togglePrivateBrowsing(browserController);
-
-		if([tabController respondsToSelector:@selector(_closeTabDocuments:animated:temporarily:allowAddingToRecentlyClosedTabs:keepWebViewAlive:)])
-		{
-			[tabController _closeTabDocuments:otherModeTabs animated:animated temporarily:NO allowAddingToRecentlyClosedTabs:YES keepWebViewAlive:NO];
-		}
-		else
-		{
-			for(TabDocument* tabDocument in [otherModeTabs reverseObjectEnumerator])
-			{
-				[tabController closeTabDocument:tabDocument animated:animated];
-			}
-		}
-
-		togglePrivateBrowsing(browserController);
-	}
-}
-
-TabDocument* tabDocumentForItem(TabController* tabController, id<TabCollectionItem> item)
-{
-	if([tabController respondsToSelector:@selector(_tabDocumentRepresentedByTiltedTabItem:)])
-	{
-		if([item isKindOfClass:[%c(TabBarItem) class]])
-		{
-			return [tabController _tabDocumentRepresentedByTabBarItem:item];
-		}
-		else if ([item isKindOfClass:[%c(TiltedTabItem) class]])
-		{
-			return [tabController _tabDocumentRepresentedByTiltedTabItem:item];
-		}
-		else if ([item isKindOfClass:[%c(TabOverviewItem) class]])
-		{
-			return [tabController _tabDocumentRepresentedByTabOverviewItem:item];
-		}
-	}
-	else if([tabController respondsToSelector:@selector(tabDocumentWithUUID:)])
-	{
-		return [tabController tabDocumentWithUUID:[item UUID]];
-	}
-
-	return nil;
-}
-
-//Modify tab expose alert for locked tabs (purely cosmetical) return: did anything?
-BOOL updateTabExposeActionsForLockedTabs(BrowserController* browserController, UIAlertController* tabExposeAlertController)
-{
-	if(!tabExposeAlertController)
-	{
-		return NO;
-	}
-
-	NSUInteger nonLockedTabCount = 0;
-
-	NSMutableArray<UIAlertAction*>* actions = MSHookIvar<NSMutableArray<UIAlertAction*>*>(tabExposeAlertController, "_actions");
-
-	NSString* searchTerm = nil;
-	BOOL hasSearchTerm = NO;
-	BOOL reloadActions = NO;
-
-	if([browserController.tabController respondsToSelector:@selector(searchTerm)])
-	{
-		searchTerm = browserController.tabController.searchTerm;
-	}
-	else if([browserController.tabController respondsToSelector:@selector(tabThumbnailCollectionView)])
-	{
-		searchTerm = browserController.tabController.tabThumbnailCollectionView.searchTerm;
-	}
-
-	if(searchTerm)
-	{
-		hasSearchTerm = (searchTerm.length > 0);
-	}
-
-	if(!hasSearchTerm)
-	{
-		for(TabDocument* document in browserController.tabController.currentTabDocuments)
-		{
-			if(!document.locked)
-			{
-				nonLockedTabCount++;
-			}
-		}
-
-		if(browserController.tabController.currentTabDocuments.count == nonLockedTabCount)
-		{
-			return NO;	//No tabs locked, nothing else to do
-		}
-
-		UIAlertAction* closeAllTabsAction;
-		UIAlertAction* closeTabAction;
-
-		BOOL isShowingTabView = browserControllerIsShowingTabView(browserController);
-
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0 && !isShowingTabView)
-		{
-			if(browserController.tabController.currentTabDocuments.count > 1)
-			{
-				closeTabAction = [actions objectAtIndex:1];
-			}
-			else
-			{
-				closeTabAction = actions.firstObject;
-			}
-		}
-
-		if(isShowingTabView || browserController.tabController.currentTabDocuments.count > 1)
-		{
-			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
-			{
-				closeAllTabsAction = actions.firstObject;
-			}
-			else
-			{
-				closeAllTabsAction = [actions objectAtIndex:actions.count - 2];
-			}
-
-			//If there are no nonlocked tabs outside of the current active tab, we remove the option to close all tabs, otherwise we change the title
-			if(nonLockedTabCount > 1)
-			{
-				[closeAllTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedTabCount]];
-			}
-			else if((isShowingTabView || browserController.tabController.activeTabDocument.locked || kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0) && nonLockedTabCount == 1)
-			{
-				[closeAllTabsAction setTitle:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"]];
-			}
-			else
-			{
-				[actions removeObject:closeAllTabsAction];
-				reloadActions = YES;
-			}
-		}
-
-		//If the active tab is locked, we remove the option to close it
-		if(browserController.tabController.activeTabDocument.locked && closeTabAction)
-		{
-			[actions removeObject:closeTabAction];
-			reloadActions = YES;
-		}
-	}
-	else if(hasSearchTerm)
-	{
-		UIAlertAction* closeMatchingTabsAction = actions.firstObject;
-
-		for(TabDocument* document in browserController.tabController.tabDocumentsMatchingSearchTerm)
-		{
-			if(!document.locked)
-			{
-				nonLockedTabCount++;
-			}
-		}
-
-		if(browserController.tabController.tabDocumentsMatchingSearchTerm.count == nonLockedTabCount)
-		{
-			return NO;	//No matching tabs locked, nothing else to do
-		}
-
-		if(nonLockedTabCount == 0)
-		{
-			[actions removeObject:closeMatchingTabsAction];
-			reloadActions = YES;
-		}
-		else if(nonLockedTabCount == 1)
-		{
-			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB_MATCHING"], searchTerm]];
-		}
-		else
-		{
-			[closeMatchingTabsAction setTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS_MATCHING"], nonLockedTabCount, searchTerm]];
-		}
-	}
-
-	//If any action has been removed, we need to manually remove and readd all actions so that the UI actually updates
-	if(reloadActions)
-	{
-		NSArray* newActions = [actions copy];
-		[tabExposeAlertController _removeAllActions];
-		[tabExposeAlertController _setActions:newActions];
-	}
-
-	return YES;
 }
 
 //Only add object to dict if it's not nil (to combat crashes)
@@ -615,12 +294,6 @@ void addToDict(NSMutableDictionary* dict, NSObject* object, id<NSCopying> key)
 
 void requestAuthentication(NSString* reason, void (^successHandler)(void))
 {
-	if(skipBiometricProtection)
-	{
-		successHandler();
-		return;
-	}
-
 	BOOL mainThread = [NSThread isMainThread];
 	LAContext* myContext = [[LAContext alloc] init];
 	NSError* authError = nil;
@@ -640,18 +313,7 @@ void requestAuthentication(NSString* reason, void (^successHandler)(void))
 					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), successHandler);
 				}
 			}
-			else if(error.code != -2)
-			{
-				dispatch_async(dispatch_get_main_queue(), ^
-					       {
-						       sendSimpleAlert([localizationManager localizedSPStringForKey:@"AUTHENTICATION_ERROR"], [NSString stringWithFormat:@"%li: %@", (long)error.code, error.localizedDescription]);
-					       });
-			}
 		}];
-	}
-	else
-	{
-		sendSimpleAlert([localizationManager localizedSPStringForKey:@"AUTHENTICATION_ERROR"], [NSString stringWithFormat:@"%li: %@", (long)authError.code, authError.localizedDescription]);
 	}
 }
 
@@ -674,7 +336,7 @@ void sendSimpleAlert(NSString* title, NSString* message)
 NSDictionary* decodeResumeData12(NSData* resumeData)
 {
 	NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:resumeData error:nil];
-	[unarchiver setDecodingFailurePolicy:NSDecodingFailurePolicyRaiseException];
+	[unarchiver setDecodingFailurePolicy:NO];
 	id obj = [unarchiver decodeObjectOfClasses:[[NSSet alloc] initWithArray:@[[NSString class],[NSNumber class],[NSURL class],[NSURLRequest class],[NSArray class],[NSData class],[NSDictionary class]]] forKey:@"NSKeyedArchiveRootObjectKey"];
 
 	[unarchiver finishDecoding];
@@ -709,6 +371,71 @@ BOOL isUsingCellularData()
 	return NO;
 }
 
+
+
+/*NSURL* videoURLFromWebAVPlayerController(WebAVPlayerController* playerController)
+{
+	NSLog(@"playerController = %@",playerController);
+
+	WebCore::PlaybackSessionModelMediaElement* mediaElementModel = MSHookIvar<WebCore::PlaybackSessionModelMediaElement*>(playerController, "_delegate");
+
+	NSLog(@"mediaElementModel = %p", mediaElementModel);
+
+	NSLog(@"trying to pause!");
+
+	mediaElementModel->pause();
+
+	NSLog(@"paused??");
+
+	WebCore::HTMLMediaElement* mediaElement = mediaElementModel->m_mediaElement;
+
+	NSLog(@"mediaElement = %p", mediaElement);
+
+	const WebCore::URL* url = (const WebCore::URL*)(((intptr_t)mediaElement) + m_currentSrc_off);
+
+	NSLog(@"url = %p", url);
+
+	NSURL* videoURL = (__bridge NSURL*)url;
+
+	NSLog(@"videoURL=%@", videoURL);
+
+	/*bool valid = url.isValid();
+
+	   NSLog(@"valid = %i", valid);*/
+
+	/*const WTF::String& string = url.m_string;
+
+	   NSLog(@"string:%p", &string);
+
+	   WTF::StringImpl* stringImpl = string.m_impl;
+
+	   NSLog(@"stringImpl:%p", &stringImpl);
+
+	   const char* litString = stringImpl->m_data8Char;
+
+	   NSLog(@"pointer: %p", &litString);
+
+	   NSLog(@"length: %u", stringImpl->m_length);
+	   NSLog(@"hashAndFlags:%u", stringImpl->m_hashAndFlags);
+	   NSLog(@"is8Bit:%i", stringImpl->m_hashAndFlags & (1u << 2));
+
+	   NSLog(@"test:%c", stringImpl->m_data16Char[0]);*/
+
+	/*char* urlCString = NULL;
+
+	   strcpy(urlCString, litString);
+
+	   NSString* URLGANG = [NSString stringWithCString:urlCString encoding:NSUTF8StringEncoding];
+
+	   NSLog(@"URL String GANG %@", URLGANG);*/
+
+	//return nil;
+
+	/*CFURLRef videoURL = url.createCFURL();
+
+	   return (__bridge NSURL*)videoURL;*/
+//}
+
 /****** One constructor that inits all hooks ******/
 
 extern void initApplication();
@@ -721,30 +448,29 @@ extern void initBrowserToolbar();
 extern void initCatalogViewController();
 extern void initColors();
 extern void initFeatureManager();
-extern void initNavigationBar();
-extern void initNavigationBarItem();
-extern void initSafariWebView();
-extern void initSearchEngineController();
-extern void initSPTabManagerBookmarkPicker();
-extern void initTabItemLayoutInfo();
-extern void initTabBarItemView();
 extern void initTabController();
 extern void initTabDocument();
-extern void initTabExposeActionsController();
 extern void initTabOverview();
 extern void initTabOverviewItemLayoutInfo();
 extern void initTabThumbnailView();
 extern void initTiltedTabItemLayoutInfo();
 extern void initTiltedTabView();
 extern void initWKFileUploadPanel();
-extern void initWKFullScreenViewController();
 
 %ctor
 {
-	HBLogDebug(@"started loading SafariPlus!");
   #ifdef DEBUG_LOGGING
 	initDebug();
   #endif
+
+	communicationManager = [SPCommunicationManager sharedInstance];
+	rocketBootstrapWorks = [communicationManager testConnection];
+
+	fileManager = [SPFileManager sharedInstance];
+
+	#ifndef SIMJECT
+	[SPPreferenceMerger mergeIfNeeded];
+	#endif
 
 	preferenceManager = [SPPreferenceManager sharedInstance];
 
@@ -760,24 +486,13 @@ extern void initWKFullScreenViewController();
 		initCatalogViewController();
 		initColors();
 		initFeatureManager();
-		initNavigationBar();
-		initNavigationBarItem();
-		initSafariWebView();
-		initSearchEngineController();
-		initSPTabManagerBookmarkPicker();
-		initTabItemLayoutInfo();
-		initTabBarItemView();
 		initTabController();
 		initTabDocument();
-		initTabExposeActionsController();
 		initTabOverview();
 		initTabOverviewItemLayoutInfo();
 		initTabThumbnailView();
 		initTiltedTabItemLayoutInfo();
 		initTiltedTabView();
 		initWKFileUploadPanel();
-		initWKFullScreenViewController();
 	}
-
-	HBLogDebug(@"finished loading SafariPlus!");
 }

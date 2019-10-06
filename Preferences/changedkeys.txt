@@ -1,5 +1,0 @@
-disablePushNotificationsEnabled -> pushNotificationsEnabled
-disableBarNotificationsEnabled -> statusBarNotificationsEnabled
-progressUnderDownloadsButtonEnabled -> previewDownloadProgressEnabled
-gestureBackground -> gestureActionsInBackgroundEnabled
-enhancedDownloadsEnabled -> downloadManagerEnabled

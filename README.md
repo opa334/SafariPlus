@@ -29,7 +29,7 @@ Various enhancements to Safari
 - Change (almost) any color of the Safari interface
 
 ## Compatibilty
-Any iOS device between iOS 8.0 and 12.2 should be supported!
+Any iOS device between iOS 8.0 and 12.1.2 should be supported!
 
 ## Localization
 If you wish to help with localizing the tweak, take the english template from [here](https://github.com/opa334/SafariPlus/blob/master/layout/Library/Application%20Support/SafariPlus.bundle/en.lproj/Localizable.strings) and contact me somewhere with the localized file.

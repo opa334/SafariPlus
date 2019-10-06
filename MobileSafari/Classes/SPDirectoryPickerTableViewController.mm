@@ -1,27 +1,25 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// SPDirectoryPickerTableViewController.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPDirectoryPickerTableViewController.h"
 
 #import "../Util.h"
 #import "SPDirectoryPickerNavigationController.h"
+#import "SPDownloadInfo.h"
+#import "SPDownloadManager.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
 #import "SPFileManager.h"
@@ -44,23 +42,27 @@
 
 	if([isWritable boolValue])
 	{
+		//Get downloadInfo
+		SPDownloadInfo* downloadInfo = ((SPDirectoryPickerNavigationController*)
+						self.navigationController).downloadInfo;
+
 		//Path is writable -> create alert to pick file name
-		UIAlertController* nameAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"CHOOSE_FILENAME"]
+		UIAlertController * nameAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"CHOOSE_FILENAME"]
 						 message:nil
 						 preferredStyle:UIAlertControllerStyleAlert];
 
 		//Add textField to choose filename
 		[nameAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 		{
-			textField.text = ((SPDirectoryPickerNavigationController*)self.navigationController).placeholderFilename;
+			textField.text = downloadInfo.filename;
 			textField.placeholder = [localizationManager localizedSPStringForKey:@"FILENAME"];
 			textField.textColor = [UIColor blackColor];
 			textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 			textField.borderStyle = UITextBorderStyleNone;
 		}];
 
-		//Create action to select path
-		UIAlertAction* startDownloadAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"SELECT_PATH"]
+		//Create action to start downloading
+		UIAlertAction* startDownloadAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"START_DOWNLOAD"]
 						      style:UIAlertActionStyleDefault
 						      handler:^(UIAlertAction *addAction)
 		{
@@ -68,9 +70,13 @@
 			UITextField * nameField = nameAlert.textFields[0];
 			NSString* filename = nameField.text;
 
+			downloadInfo.filename = filename;
+
+			downloadInfo.targetURL = self.directoryURL;
+
 			[self dismiss];
 
-			[((SPDirectoryPickerNavigationController*)self.navigationController).pickerDelegate directoryPicker:self.navigationController didSelectDirectoryAtURL:self.directoryURL withFilename:filename];
+			[downloadManager pathSelectionResponseWithDownloadInfo:downloadInfo];
 		}];
 
 		//Add action
@@ -78,11 +84,11 @@
 
 		//Create action to close the picker
 		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:
-						    [localizationManager localizedSPStringForKey:@"EXIT_PICKER"]
+						    [localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
 						    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 		{
 			//Dismiss picker
-			[self cancel];
+			[self dismiss];
 		}];
 
 		//Add action
@@ -113,11 +119,11 @@
 		[errorAlert addAction:closeAction];
 
 		//Create action to close the picker
-		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"EXIT_PICKER"]
+		UIAlertAction* closePickerAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL_PICKER"]
 						    style:UIAlertActionStyleDefault handler:^(UIAlertAction *addAction)
 		{
 			//Close picker
-			[self cancel];
+			[self dismiss];
 		}];
 
 		//Add action
@@ -126,13 +132,6 @@
 		//Present alert
 		[self presentViewController:errorAlert animated:YES completion:nil];
 	}
-}
-
-- (void)cancel
-{
-	[((SPDirectoryPickerNavigationController*)self.navigationController).pickerDelegate directoryPicker:self.navigationController didSelectDirectoryAtURL:nil withFilename:nil];
-
-	[self dismiss];
 }
 
 @end

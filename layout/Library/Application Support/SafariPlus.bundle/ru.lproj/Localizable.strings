@@ -9,18 +9,14 @@
 /*PRIVACY*/
 /*UPLOADS_AND_DOWNLOADS*/
 /*USABILITY*/
-/*ACTIONS*/
+/*BEHAVIOUR*/
 /*GESTURES*/
 /*CUSTOMIZATION*/
-
-/*ABOUT_THIS_TWEAK*/
-/*TWEAK_SPECIFIC_SETTINGS*/
-"SOURCE_CODE" = "Исходный код";
-/*CREDITS_AND_LICENSES*/
-
 /*ABOUT_ME*/
-/*FOLLOW_ME_ON_TWITTER*/
+"TWITTER" = "Twitter";
 "DONATE" = "Пожертвовать";
+/*ABOUT_THIS_TWEAK*/
+"SOURCE_CODE" = "Исходный код";
 
 /* Privacy */
 
@@ -32,7 +28,7 @@
 "ADD" = "Сохранить";
 /*APPLY*/
 "ADD_EXCEPTION_ALERT_TITLE" = "Добавить исключение";
-"ADD_EXCEPTION_ALERT_MESSAGE" = "Введите домен, который не будет использовать протокол HTTPS.\nНапример: 'google.com'";
+"ADD_EXCEPTION_ALERT_MESSAGE" = "Введите домен, который не будет использовать протокол HTTPS.\nПример: 'google.com'";
 "ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
 
 /*LOCKED_TABS*/
@@ -41,38 +37,38 @@
 /*BIOMETRIC_PROTECTION*/
 /*BIOMETRIC_PROTECTION_FOOTER*/
 /*SWITCH_BROWSING_MODE*/
-/*ALLOW_AUTOMATIC_ACTIONS*/
 /*LOCK_TAB*/
 /*UNLOCK_TAB*/
 /*ACCESS_LOCKED_TAB*/
-/*AUTHENTICATE*/
-/*AUTHENTICATION_ERROR*/
-/*ACCESS_BIOMETRIC_PROTECTION*/
 
 /* Uploads & Downloads */
 
 /*UPLOADS*/
 "DOWNLOADS" = "Загрузки";
 
-"UPLOAD_ANY_FILE_FOOTER" = "Добавляет пункт в меню выгрузки, позволяющий выгружать из устройства любой файл рут фс. Так же вы можете выгружать сразу несколько файлов, с помощью меню, вызываемого длинным тапом по любому из файлов.";
+"UPLOAD_ANY_FILE_FOOTER" = "Добавляет пункт в меню выгрузки, позволяющий выгружать из устройства любой файл рут фс. Так же вы можете выгружать сразу несколько файлов, с помощью меню, вызываемого длинным тапом по файлу.";
 "UPLOAD_ANY_FILE" = "Выгрузка любых файлов";
 
-/*DOWNLOAD_MANAGER*/
-/*DOWNLOAD_MANAGER_FOOTER*/
+"ENHANCED_DOWNLOADS" = "Полноценный Загрузчик";
+"ENHANCED_DOWNLOADS_FOOTER" = "Добавляет кнопку \"загрузки\" в нижнюю панель инструментов, нажатие которой открывает менеджер загрузок. Здесь вы можете следить за процессом загрузки и управлять загружаемыми файлами. Вкладка \"файловый менеджер\", в свою очередь, позволяет управлять загруженными файлами. Перед началом загрузки, вам будет предложено выбрать место для сохранения (по умолчанию /var/mobile/Downloads). Загрузка файлов так же работает в фоновом режиме, по завершению загрузки вы получите уведомление. Если Safari закрыт в панеле переключения приложений, все загрузки будут 'приостановлены' и возобновлены только после следующего запуска Safari.";
 
-/*CONTENT_OPTIONS*/
+"VIDEO_DOWNLOADING" = "Загрузка Видео";
+"VIDEO_DOWNLOADING_FOOTER" = "Добавляет кнопку в стандартный плеер Safari, нажатие которой позволяет загружать видео.\n\nПримечание: Может не работать на некоторых сайтах, из-за невозможности извлечь URL адрес видео. Так же из-за того, что некоторые сайты используют m3u8 файлы для потоковой передачи, при этом вы сможете сохранить эти файлы, но они не будут содержат видео.";
 
-"VIDEO_DOWNLOADING" = "Загрузчик Видео";
-"VIDEO_DOWNLOADING_FOOTER" = "Добавляет кнопку «Загрузить» в стандартный видеоплеер Safari, нажатие которой позволяет загружать просматриваемое видео.\n\nПримечание: Может не работать на некоторых сайтах, из-за невозможности извлечь URL адрес видео. Так же из-за того, что некоторые сайты используют m3u8 файлы для потоковой передачи, при этом вы сможете сохранить эти файлы, но они не будут содержат видео.";
+"DEFAULT_SECTION" = "Вкладка по умолчанию";
+"DEFAULT_SECTION_FOOTER" = "Выберите какая вкладка будет открываться в меню загрузок по умолчанию. Опция 'Авто переключение' открывает выбранную вкладку только когда у вас ещё есть активные загрузки, иначе будет выбран другой раздел.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Авто переключение";
 
-/*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
-/*DOWNLOAD_SITE_TO_ACTION*/
-/*DOWNLOAD_IMAGE_TO_ACTION*/
+"LINK_DOWNLOAD_OPTIONS_FOOTER" = "Добавляет возможность сохранить страницу / изображение через меню, открываемое длинным тапом по элементу.";
+"DOWNLOAD_SITE_TO_OPTION" = "Сохранить страницу в...";
+"DOWNLOAD_IMAGE_TO_OPTION" = "Сохранить изображение в...";
 
-/*PATH_OPTIONS*/
+"INSTANT_DOWNLOAD" = "Мгновенная загрузка";
+"INSTANT_DOWNLOAD_FOOTER" = "Позволяет в зависимости от выбранной опции, сразу начать загрузку файла либо сразу перейти к выбору места загрузки, устанавливает действие по умолчанию.";
+"OPTION" = "Действие";
 
 "CUSTOM_DEFAULT_PATH" = "Директория по умолчанию";
-"CUSTOM_DEFAULT_PATH_FOOTER" = "Позволяет выбрать кастомную директорию для загрузки файлов.\n\nПримечание: Вы можете загружать файлы только в директории, поддерживающие запись, к примеру, любая папка из директории /var!";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Позволяет выбрать кастомную директорию для загрузки файлов по умолчанию.\n\nПримечание: Вы можете загружать файлы только в директории, поддерживающие запись, к примеру, любая папка из директории /var!";
 
 "PINNED_LOCATIONS_ENABLED" = "Разрешить закреплять папки";
 "PINNED_LOCATIONS" = "Закреплённые папки";
@@ -87,46 +83,21 @@
 "CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Вы действительно хотите выбрать эту папку\n%@?";
 "ERROR_INVALID_NAME_OR_PATH" = "Неверное имя или путь";
 
-/*INTERFACE*/
-
-/*PREVIEW_DOWNLOAD_PROGRESS*/
-/*PREVIEW_DOWNLOAD_PROGRESS_FOOTER*/
-
-"DEFAULT_SECTION" = "Вкладка по умолчанию";
-"DEFAULT_SECTION_FOOTER" = "Выберите какая вкладка будет открываться в меню загрузок по умолчанию. Опция 'Авто переключение' открывает выбранную вкладку только при наличии активных загрузок, иначе будет выбран другой раздел.";
-"DEFAULT_SECTION_AUTO_SWITCH" = "Авто переключение";
-
-/*BEHAVIOUR*/
-
-"INSTANT_DOWNLOAD" = "Мгновенная загрузка";
-"INSTANT_DOWNLOAD_FOOTER" = "Позволяет в зависимости от выбранной опции, сразу начать загрузку файла либо сразу перейти к выбору места загрузки, устанавливает действие по умолчанию.";
-
 "ONLY_DOWNLOAD_ON_WIFI" = "Загружать только через Wifi";
 "ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Позволяет отключить возможность скачки файлов через мобильную сеть.";
 
-/*AUTOSAVE_TO_MEDIA_LIBRARY*/
-/*AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER*/
+"DISABLE_PUSH_NOTIFICATIONS" = "Отключить пуш уведомления";
+"DISABLE_PUSH_NOTIFICATIONS_FOOTER" = "Отключает уведомление о завершении загрузки. ";
 
-/*DISABLE_HISTORY_FOR_PRIVATE_MODE*/
-/*DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER*/
-
-/*NOTIFICATIONS*/
-
-/*PUSH_NOTIFICATIONS*/
-/*PUSH_NOTIFICATIONS_FOOTER*/
-
-/*STATUS_BAR_NOTIFICATIONS*/
-/*STATUS_BAR_NOTIFICATIONS_FOOTER*/
-
-/*APPLICATION_BADGE*/
-/*APPLICATION_BADGE_FOOTER*/
+"DISABLE_BAR_NOTIFICATIONS" = "Откл. уведомл. в статус баре";
+"DISABLE_BAR_NOTIFICATIONS_FOOTER" = "По умолчанию в статус баре появляется сообщение о начале / конце загрузки. Эта настройка отключает подобные сообщения.";
 
 /* Usability */
 
 /*URL_ACTIONS*/
 
-/*BOTH_LINK_OPENING_ACTIONS*/
-/*BOTH_LINK_OPENING_ACTIONS_FOOTER*/
+/*SECOND_OPEN_IN_NEW_TAB*/
+/*SECOND_OPEN_IN_NEW_TAB_FOOTER*/
 
 "OPEN_IN_OPPOSITE_MODE_FOOTER" = "Добавляет пункт 'Открыть в приватном режиме' в меню, открываемом  длинным тапом по ссылке.\n(В нормальном режиме -> Открыть в приватном режиме,\nВ приватном режиме -> Открыть в нормальном режиме)";
 "OPEN_IN_OPPOSITE_MODE" = "Открыть в приватном реж.";
@@ -136,19 +107,11 @@
 /*DESKTOP_MODE_SWITCH_FOOTER*/
 /*DESKTOP_MODE_SWITCH*/
 
-/*TAB_MANAGER*/
-/*TAB_MANAGER_FOOTER*/
-/*SCROLL_POSITION_FROM_TAB_SWITCHER*/
-
 /*DISABLE_TAB_LIMIT*/
 /*DISABLE_TAB_LIMIT_FOOTER*/
 
-"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Позволяет всегда открывать ссылки в новых вкладках.";
-"ALWAYS_OPEN_NEW_TAB" = "Откр. ссылки в Вкладках";
-"OPEN_NEW_TAB_IN_BACKGROUND" = "Открыв. вкладки в Фоне";
-
-"DISABLE_PRIVATE_MODE_FOOTER" = "Отключает приватный режим и скрывает кнопку 'Частный доступ'. (Функция не доступна по умолчанию)";
-"DISABLE_PRIVATE_MODE" = "Откл. Приватный Режим";
+/*CUSTOM_START_SITE*/
+/*CUSTOM_START_SITE_FOOTER*/
 
 /*SUGGESTIONS*/
 
@@ -157,27 +120,18 @@
 "LONG_PRESS_DURATION_TITLE" = "Длительность тапа";
 "LONG_PRESS_FOCUS_TITLE" = "Сфокусироваться на строке поиска по длинному тапу";
 
-/*SUGGESTION_INSERT_BUTTON*/
-/*SUGGESTION_INSERT_BUTTON_FOOTER*/
-
 /*INTERFACE*/
 
 /*SHOW_TAB_COUNT*/
 /*SHOW_TAB_COUNT_FOOTER*/
 
-"FULLSCREEN_SCROLLING_FOOTER" = "Скрывает верхнюю панель при скролинге вниз.\n\nПримечание: Не работает на iOS 8!";
+"FULLSCREEN_SCROLLING_FOOTER" = "Скрывает верхнюю панель при скролинге вниз.\n\nNOTE: Не паботает на iOS 8!";
 "FULLSCREEN_SCROLLING" = "Полноэкранный Скроллинг";
 
 "LOCK_BARS" = "Закрепить Панели";
-"LOCK_BARS_FOOTER" = "Закрепляет верхнюю и нижнюю панели, так, чтобы они не скрывались при скроллинге вниз.";
+"LOCK_BARS_FOOTER" = "Закрепляет верхнюю и нижнюю панель, так, чтобы они не скрывались при скроллинге вниз.";
 
-/*SHOW_FULL_SITE_URL*/
-/*SHOW_FULL_SITE_URL_FOOTER*/
-
-"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Откл. Email Диалога";
-"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Отключает диалоговое окно, появляющееся на iOS 10 и выше при открытии окна отправки электронного письма.";
-
-/* Actions */
+/* Behaviour */
 
 "NORMAL_MODE" = "Обычный режим";
 "PRIVATE_MODE" = "Приватный режим";
@@ -186,13 +140,15 @@
 "FOR" = "для...";
 
 "CHANGE_MODE_ON" = "Изменить режим просмотра...";
-/*CHANGE_MODE_ON_FOOTER*/
 
+"LAUNCH_MODE_FOOTER" = "Меняет режим запуска Safari по умолчанию.";
 "LAUNCH_MODE_LABEL" = "Запускать Приложение";
-"RESUME_LABEL" = "Возвращаться к Прил.";
-"EXTERNAL_URL_LABEL" = "Открывать Внешн. Ссылки";
 
-/*AUTOMATIC_ACTIONS*/
+"RESUME_FOOTER" = "При возвращении к Safari, меняет режим просмотра на указанный.";
+"RESUME_LABEL" = "Возвращаться к Прил.";
+
+"EXTERNAL_URL_FOOTER" = "При переходе по ссылке (из другого прил.), меняет режим просмотра на указанный.";
+"EXTERNAL_URL_LABEL" = "Открывать Внешн. Ссылки";
 
 "AUTO_CLOSE_TABS_FOOTER" = "Закрывает вкладки, при определенном поведении, в указанном режиме.";
 "AUTO_CLOSE_TABS_LABEL" = "Автом-Закрытие вкладок";
@@ -204,17 +160,30 @@
 "ACTIVE_MODE" = "Активный Режим";
 "BOTH_MODES" = "Оба Режима";
 
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Позволяет всегда открывать ссылки в новых вкладках.";
+"ALWAYS_OPEN_NEW_TAB" = "Откр. ссылки в Вкладках";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Открыв. вкладки в Фоне";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Отключает приватный режим и скрывает кнопку 'Частный доступ'. (Функция не доступна по умолчанию)";
+"DISABLE_PRIVATE_MODE" = "Откл. Приватный Режим";
+
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Отключает диалоговое окно, появляющееся на iOS 10 и выше при открытии окна отправки email письма.";
+"SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Откл. Email Диалога";
+
 /* Gestures */
 
 "ACTION" = "Действие";
 
-"URL_BAR_GESTURES" = "Жесты URL Панели";
-/*TOOLBAR_GESTURES*/
+"URL_BAR_GESTURES_LABEL" = "Жесты URL Панели";
 
+"SWIPE_LEFT_GESTURE_FOOTER" = "Выполняет выбранное действие по свайпу влево.";
 "SWIPE_LEFT_GESTURE" = "Свайп Влево";
+
+"SWIPE_RIGHT_GESTURE_FOOTER" = "Выполняет выбранное действие по свайпу вправо.";
 "SWIPE_RIGHT_GESTURE" = "Свайп Вправо";
+
+"SWIPE_DOWN_GESTURE_FOOTER" = "Выполняет выбранное действие по свайпу вниз.";
 "SWIPE_DOWN_GESTURE" = "Свайп Вниз";
-/*SWIPE_UP_DOWN_GESTURE*/
 
 "CLOSE_ACTIVE_TAB" = "Закрыть Активн. Вкладку";
 "OPEN_NEW_TAB" = "Открыть Новую Вкладку";
@@ -227,8 +196,7 @@
 "REQUEST_DESTKOP_SITE" = "Открыть Полную Версию";
 "OPEN_FIND_ON_PAGE" = "Открыть 'Найти на Странице'";
 
-/*ALLOW_GESTURES_IN_TAB_SWITCHER*/
-/*RUN_ACTIONS_IN_BACKGROUND*/
+"BACKGROUND" = "Дублировать в Фоне ";
 
 /* Customization */
 
@@ -236,7 +204,7 @@
 
 /*COLORS*/
 
-"SELECT_COLOR" = "Выбрать Цвет";
+/*SELECT_COLOR*/
 
 /*NORMAL_MODE_COLORS*/
 /*PRIVATE_MODE_COLORS*/
@@ -250,9 +218,9 @@
 
 "TINT_COLOR" = "Элементы управления";
 "BACKGROUND_COLOR" = "Фон области";
-"STATUS_BAR_COLOR" = "Статус Бар";
+/*STATUS_BAR_COLOR*/
 "TAB_BAR_TITLE_COLOR" = "Заголовок вкладки";
-"INACTIVE_TITLE_OPACITY" = "Прозр. Заголовка Неактив. Вкладки";
+/*INACTIVE_TITLE_OPACITY*/
 /*TAB_BAR_CLOSE_BUTTON_COLOR*/
 "TAB_BAR_BACKGROUND_COLOR" = "Цвет Фона Вкладки";
 "URL_FONT_COLOR" = "Текст URL";
@@ -264,8 +232,8 @@
 "TAB_TITLE_BACKGROUND_COLOR" = "Фон заголовка вкладки";
 /*TOOLBAR_BACKGROUND_COLOR*/
 
-"TAB_BAR_NOTE" = "Панель вкладок есть не на всех устройствах / ориентациях, но её можно активировать используя твик Tabsa";
-"COLOR_SETTINGS_BOTTOM_NOTICE" = "Некоторые настройки требуют перезапуск приложения для корректной работы.";
+"TAB_BAR_NOTE" = "Примечание: Панель вкладок есть не на всех устройствах / ориентациях.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "Примечание: Некоторые настройки требуют перезапуск приложения для корректной работы.";
 
 "WHITE" = "Белый";
 "BLACK" = "Чёрный";
@@ -294,46 +262,11 @@
 /*TABS*/
 /*ADD_TAB*/
 /*SEARCH_BAR_SPACE*/
-/*RELOAD*/
-/*CLEAR_HISTORY*/
-
-/*BROWSING*/
-
-/*CUSTOM_START_SITE*/
-/*CUSTOM_START_SITE_FOOTER*/
-
-/*CUSTOM_SEARCH_ENGINE*/
-/*CUSTOM_SEARCH_ENGINE_FOOTER*/
-/*SEARCH_ENGINE_NAME*/
-/*SEARCH_URL*/
-/*SEARCH_SUGGESTIONS_URL*/
-
-/*CUSTOM_USER_AGENT*/
-/*CUSTOM_USER_AGENT_FOOTER*/
-
-/*CUSTOM_DESKTOP_USER_AGENT*/
-/*CUSTOM_DESKTOP_USER_AGENT_FOOTER*/
-
-/* Tweak Specifc Settings */
-
-/*LARGE_TITLES*/
-/*LARGE_TITLES_FOOTER*/
-
-/*SORT_DIRECTORIES_ABOVE_FILES*/
-/*SORT_DIRECTORIES_ABOVE_FILES_FOOTER*/
-
-"DISABLE_COMMUNICATION_ERROR" = "Откл. Оповещ. Об Ошибке";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Отключает оповещение об ошибке, отображающееся при отсутствии доступа к rocketbootstrap. Используйте на свой страх и риск.";
-
-/*RESET_ALL_PREFERENCES*/
-/*RESET_ALL_PREFERENCES_CONFIRMATION*/
 
 /* Credits */
 
-/*LIBSUBSTITRATE_FOOTER*/
-/*DEVELOPED_BY_POOMSMART*/
-
-/*SAFARI_PLUS_LICENSE*/
+"CREDITS" = "Благодарности";
+"PICKER_INSPIRED" = "Выбор файлов сделан на основе";
 
 /* In app */
 
@@ -346,7 +279,7 @@
 "WELCOME_MESSAGE" = "Благодарим за установку твика Safari Plus! Если вы хотите быть в курсе всех новостей об обновлениях твика, следите за моей страницей в Twitter! Это сообщение больше не будет показываться (обещаю)!";
 "OPEN_TWITTER" = "Открыть Twitter";
 "COMMUNICATION_ERROR" = "Ошибка Связи";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Потеряна связь с SpringBoard! Работа некоторых функций приостановлена. Пожалуйста убедитесь в том, что RocketBootstrap установлен правильно, а SafariPlusSB.dylib не отключен через iCleaner Pro. Путь загрузки по-умолчанию изменен на стандартный путь Safari. Для того чтобы это сообщение больше не показывалось: откройте настройки Safari Plus/ Другие Настройки/  и включите тумблер напротив «Откл. Оповещ. Об Ошибке»";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Невозможно получить доступ к SpringBoard! Некоторые функции не будут работать. Пожалуйста убедитесь в том, что RocketBootstrap установлен и SafariPlusSB.dylib не отключен с помощью iCleaner Pro.";
 
 /* Force HTTPS */
 
@@ -369,7 +302,6 @@
 "DOWNLOADS" = "Загрузки";
 "FILE_BROWSER" = "Файловый Менеджер";
 "OPEN" = "Открыть";
-/*SHOW_CONTENT*/
 "OPEN_IN" = "Открыть в...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Импортировать в Музыку";
 "SAVE_TO_MEDIA_LIBRARY" = "Сохранить в Галерею";
@@ -393,8 +325,7 @@
 "DELETE" = "Удалить";
 "RENAME" = "Ок";
 "DOWNLOAD_STARTED" = "Начало загрузки";
-"DOWNLOAD_SUCCEEDED" = "Загрузка завершена";
-/*DOWNLOAD_FAILED*/
+"DOWNLOAD_SUCCESS" = "Загрузка завершена";
 "SAVED_IMAGE" = "Изображение Сохранено";
 "ERROR" = "Ошибка";
 "FILE_EXISTS_MESSAGE" = "В этой директории такой файл уже существует или загружается!";
@@ -405,42 +336,22 @@
 "DOWNLOAD_HISTORY" = "История Загрузок";
 "FILES" = "Файлы";
 "CHOOSE" = "Ок";
-/*MANUAL_DOWNLOAD*/
-/*URL_TO_DOWNLOADABLE_FILE*/
 "START_DOWNLOAD" = "Начать загрузку";
-/*UNABLE_TO_FETCH_FILE_INFORMATION*/
 "CHOOSE_FILENAME" = "Введите имя";
-/*SELECT_PATH*/
 "FILENAME" = "Имя";
 "CLOSE" = "Выбрать другую папку";
-/*EXIT_PICKER*/
+"CANCEL_PICKER" = "Закрыть";
 "PERMISSION_ERROR_MESSAGE" = "У вас нет прав на запись в выбранную директорию. Пожалуйста выберите другой путь.\nПримечание: Как правило только папки в директории /var доступны для записи! Но вы можете использовать Filz'у для проверки / изменения разрешений директории.";
-/*PREVIEW*/
 "PLAY" = "Воспроизвести";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Путь, заданный в настройках, как 'Директория по умолчанию' не доступен. Пожалуйста измените путь.";
-/*VIDEO_URL_NOT_FOUND*/
+"VIDEO_URL_NOT_FOUND" = "Ссылка с видео не найдена, т.к. данный сайт не поддерживается!";
 "COPY_LINK" = "Скопировать Ссылку";
 "SIZE_UNKNOWN" = "Размер не известен";
-/*DURATION_UNKNOWN*/
 "MIGRATION_TITLE" = "Перенос завершен";
 "MIGRATION_MESSAGE" = "Ура! Safari научился загружать файлы без каких-либо ограничений! Ваши загрузки были перемещены из %@ в %@. И теперь вы можете загружать файлы практически в любую директорию!";
-/*CELLULAR_DATA_WARNING*/
-
-/* Tab Manager */
-
-/*SELECT_ALL*/
-/*DESELECT_ALL*/
-/*CLOSE_TAB_WARNING_MESSAGE*/
-/*CLOSE_TABS_WARNING_MESSAGE*/
-/*CHOOSE_EXPORT_FORMAT*/
-/*CHOOSE_EXPORT_FORMAT_MESSAGE*/
-/*WITH_CLICKABLE_URL*/
-/*ADD_TABS_ALERT*/
-/*ADD_TABS_ALERT_MESSAGE*/
-/*USE_CLIPBOARD*/
-/*ADD_BOOKMARKS*/
 
 /* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "Открыть в обычном режиме";
 "OPEN_IN_PRIVATE_MODE" = "Открыть в приватном режиме";
+

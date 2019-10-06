@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// SPTabManagerTableViewController.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPTabManagerTableViewController.h"
 
@@ -25,7 +21,6 @@
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
 #import "SPTabManagerTableViewCell.h"
-#import "SPTabManagerBookmarkPicker.h"
 #import "Extensions.h"
 #import "../Defines.h"
 
@@ -33,10 +28,14 @@
 
 - (instancetype)initWithTabController:(TabController*)tabController
 {
+	//NSLog(@"initWithTabController");
 	self = [super init];
 
 	_tabController = tabController;
 	_shouldUpdateOnSelectionChange = YES;
+
+	[self setUpTopBar];
+	[self setUpBottomToolbar];
 
 	self.tableView.allowsMultipleSelectionDuringEditing = YES;
 	self.tableView.editing = YES;
@@ -44,53 +43,11 @@
 	return self;
 }
 
-- (void)viewDidLoad
-{
-	[super viewDidLoad];
-
-	[self setUpTopBar];
-	[self setUpBottomToolbar];
-
-	[self.tableView registerClass:[SPTabManagerTableViewCell class] forCellReuseIdentifier:@"SPTabManagerTableViewCell"];
-
-	_selectedTabs = [NSArray new];
-	[self loadTabs];
-
-	if(preferenceManager.tabManagerScrollPositionFromTabSwitcherEnabled)
-	{
-		if(_tabController.tiltedTabView)
-		{
-			CGPoint contentOffset = ((UIScrollView*)[_tabController.tiltedTabView valueForKey:@"_scrollView"]).contentOffset;
-			CGRect bounds = _tabController.tiltedTabView.bounds;
-
-			TiltedTabItem* item = [_tabController.tiltedTabView _tiltedTabItemForLocation:CGPointMake(contentOffset.x + bounds.size.width / 2, contentOffset.y + bounds.size.height / 2)];
-			_initialVisibleTab = tabDocumentForItem(_tabController, item);
-		}
-		else if(_tabController.tabOverview)
-		{
-			TabOverviewItem* item = [_tabController.tabOverview valueForKey:@"_visiblyCenteredItem"];
-			_initialVisibleTab = tabDocumentForItem(_tabController, item);
-		}
-	}
-}
-
-- (void)viewDidLayoutSubviews
-{
-	[super viewDidLayoutSubviews];
-
-	if(_initialVisibleTab && preferenceManager.tabManagerScrollPositionFromTabSwitcherEnabled)
-	{
-		NSIndexPath* indexPath = [self indexPathForTabDocument:_initialVisibleTab];
-		if(indexPath)
-		{
-			[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
-		}
-		_initialVisibleTab = nil;
-	}
-}
-
 - (void)setUpTopBar
 {
+	//NSLog(@"setUpTopBar");
+
+	//TODO: set up top bar
 	//'Select All' / 'Deselect All' button in top right
 	//'Tab Manager' in middle
 	//'Done' button in top right
@@ -119,83 +76,32 @@
 
 - (void)setUpBottomToolbar
 {
-	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-
-	//Option to batch open new tabs
-	_addTabsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addTabsButtonPressed)];
-
-	//Option to export tabs (Text Form)
-	_exportBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(exportButtonPressed:)];
-
-	//Option to save tabs to bookmarks
-	_addToBookmarksBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(addToBookmarksButtonPressed:)];
+	//NSLog(@"setUpBottomToolbar");
 
 	//Option to batch-close tabs
-	_closeTabsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closeTabsButtonPressed)];
+	//Option to export tabs (Text Form)
+	//Option to save tabs to bookmarks
+	//MAYBE: Option to batch open new tabs
+	UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		_lockUnlockBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"LockButton_Slim_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil] landscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Closed_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(lockUnlockButtonPressed)];
-		self.toolbarItems = @[_addTabsBarButtonItem,flexibleSpace,_lockUnlockBarButtonItem,flexibleSpace,_exportBarButtonItem,flexibleSpace,_addToBookmarksBarButtonItem,flexibleSpace,_closeTabsBarButtonItem];
-	}
-	else
-	{
-		self.toolbarItems = @[_addTabsBarButtonItem,flexibleSpace,_exportBarButtonItem,flexibleSpace,_addToBookmarksBarButtonItem,flexibleSpace,_closeTabsBarButtonItem];
-	}
+	UIBarButtonItem* addTabsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addTabsButtonPressed)];
+	UIBarButtonItem* exportBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(exportButtonPressed:)];
+	//UIBarButtonItem* addToBookmarksBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:self action:@selector(addToBookmarksButtonPressed)];
+	UIBarButtonItem* closeTabsBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closeTabsButtonPressed)];
 
-	[self updateBottomToolbarButtonAvailability];
+	self.toolbarItems = @[addTabsBarButtonItem,flexibleSpace,exportBarButtonItem,flexibleSpace /*,addToBookmarksBarButtonItem,flexibleSpace*/,closeTabsBarButtonItem];
 }
 
-- (void)updateBottomToolbarButtonAvailability
+- (void)viewDidLoad
 {
-	BOOL tabsSelected = (_selectedTabs.count > 0);
-	BOOL nonLockedTabsSelected = ([self nonLockedSelectedTabs].count > 0);
-
-	_exportBarButtonItem.enabled = tabsSelected;
-	_addToBookmarksBarButtonItem.enabled = tabsSelected;
-	_closeTabsBarButtonItem.enabled = nonLockedTabsSelected;
-	if(_lockUnlockBarButtonItem)
-	{
-		_lockUnlockBarButtonItem.enabled = tabsSelected;
-
-		BOOL allSelectedTabsLocked = tabsSelected;
-
-		for(TabDocument* tabDocument in _selectedTabs)
-		{
-			if(!tabDocument.locked)
-			{
-				allSelectedTabsLocked = NO;
-				break;
-			}
-		}
-
-		self.lockBarButtonIsUnlockButton = allSelectedTabsLocked;
-	}
-}
-
-- (void)setLockBarButtonIsUnlockButton:(BOOL)lockBarButtonIsUnlockButton
-{
-	if(_lockBarButtonIsUnlockButton != lockBarButtonIsUnlockButton)
-	{
-		_lockBarButtonIsUnlockButton = lockBarButtonIsUnlockButton;
-
-		if(_lockBarButtonIsUnlockButton)
-		{
-			_lockUnlockBarButtonItem.image = [UIImage imageNamed:@"LockButton_Slim_Open" inBundle:SPBundle compatibleWithTraitCollection:nil];
-			[_lockUnlockBarButtonItem setLandscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Open_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil]];
-		}
-		else
-		{
-			_lockUnlockBarButtonItem.image = [UIImage imageNamed:@"LockButton_Slim_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil];
-			[_lockUnlockBarButtonItem setLandscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Closed_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil]];
-		}
-	}
+	//NSLog(@"viewDidLoad");
+	_selectedTabs = [NSArray new];
+	[self loadTabs];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-	[super viewWillAppear:animated];
-
+	//NSLog(@"viewWillAppear");
 	if(!_isFiltering)
 	{
 		[self.navigationController setToolbarHidden:NO animated:NO];
@@ -214,35 +120,6 @@
 	}
 }
 
-- (NSArray<TabDocument*>*)nonLockedSelectedTabs
-{
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		return [_selectedTabs filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id evaluatedObject, NSDictionary<NSString *,id>* bindings)
-		{
-			TabDocument* document = evaluatedObject;
-
-			return !document.locked;
-		}]];
-	}
-	else
-	{
-		return _selectedTabs;
-	}
-}
-
-- (UIViewController*)presentationController
-{
-	if(_searchController.isActive)
-	{
-		return _searchController;
-	}
-	else
-	{
-		return self.navigationController;
-	}
-}
-
 - (TabDocument*)tabDocumentForIndexPath:(NSIndexPath*)indexPath
 {
 	NSArray<TabDocument*>* activeTabs = [self activeTabs];
@@ -250,32 +127,19 @@
 	return activeTabs[indexPath.row];
 }
 
-- (NSIndexPath*)indexPathForTabDocument:(TabDocument*)tabDocument
+- (void)loadTabs
 {
-	NSArray<TabDocument*>* activeTabs = [self activeTabs];
-
-	if(![activeTabs containsObject:tabDocument])
-	{
-		return nil;
-	}
-
-	return [NSIndexPath indexPathForRow:[activeTabs indexOfObject:tabDocument] inSection:0];
-}
-
-- (BOOL)loadTabs
-{
-	BOOL firstLoad = (_allTabs == nil);
-
 	_allTabs = [_tabController.currentTabDocuments copy];
 
 	if(_isFiltering)
 	{
+		NSMutableArray* filteredM = [NSMutableArray new];
+
 		NSString* searchString = [_searchController.searchBar.text lowercaseString];
 
-		_filteredTabs = [_allTabs filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id evaluatedObject, NSDictionary<NSString *,id>* bindings)
+		//Probably not the best way, TODO: check if this can be improved
+		for(TabDocument* document in _allTabs)
 		{
-			TabDocument* document = evaluatedObject;
-
 			BOOL URLMatch = NO;
 			BOOL titleMatch = NO;
 
@@ -291,8 +155,13 @@
 				titleMatch = [title containsString:searchString];
 			}
 
-			return (URLMatch || titleMatch);
-		}]];
+			if(URLMatch || titleMatch)
+			{
+				[filteredM addObject:document];
+			}
+		}
+
+		_filteredTabs = [filteredM copy];
 	}
 	else
 	{
@@ -310,45 +179,22 @@
 	}
 
 	_selectedTabs = [selectedTabsM copy];
-
-	if(firstLoad)
-	{
-		_displayedTabs = [self activeTabs];
-	}
-
-	return ![[self activeTabs] isEqualToArray:_displayedTabs];
 }
 
 - (void)reloadAnimated:(BOOL)animated
 {
-	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+	[self loadTabs];
+
+	if(animated)
 	{
-		@synchronized(self)
-		{
-			BOOL needsReload = [self loadTabs];
-
-			if(needsReload)
-			{
-				if(animated)
-				{
-					[self applyChangesToTable];
-				}
-				else
-				{
-					dispatch_sync(dispatch_get_main_queue(), ^
-					{
-						[self.tableView reloadData];
-						[self applyChangesAfterReload];
-					});
-				}
-			}
-		}
-	});
-}
-
-- (void)applyChangesAfterReload
-{
-	_displayedTabs = [[self activeTabs] copy];
+		NSRange range = NSMakeRange(0, [self numberOfSectionsInTableView:self.tableView]);
+		NSIndexSet* sections = [NSIndexSet indexSetWithIndexesInRange:range];
+		[self.tableView reloadSections:sections withRowAnimation:UITableViewRowAnimationAutomatic];
+	}
+	else
+	{
+		[self.tableView reloadData];
+	}
 
 	for(TabDocument* selectedTab in _selectedTabs)
 	{
@@ -361,55 +207,11 @@
 			[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
 		}
 	}
-
-	[self updateBottomToolbarButtonAvailability];
-}
-
-- (void)applyChangesToTable
-{
-	if(!_displayedTabs)
-	{
-		return;
-	}
-
-	NSMutableSet<TabDocument*>* oldTabs = [NSMutableSet setWithArray:_displayedTabs];
-	NSMutableSet<TabDocument*>* currentTabs = [NSMutableSet setWithArray:[self activeTabs]];
-
-	NSMutableSet<TabDocument*>* newTabs = [currentTabs mutableCopy];
-	NSMutableSet<TabDocument*>* closedTabs = [oldTabs mutableCopy];
-
-	[newTabs minusSet:oldTabs];
-	[closedTabs minusSet:currentTabs];
-
-	NSMutableArray<NSIndexPath*>* addIndexPaths = [NSMutableArray new];
-	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [NSMutableArray new];
-
-	for(TabDocument* tabDocument in closedTabs)
-	{
-		[deleteIndexPaths addObject:[NSIndexPath indexPathForRow:[_displayedTabs indexOfObject:tabDocument] inSection:0]];
-	}
-
-	for(TabDocument* tabDocument in newTabs)
-	{
-		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[[self activeTabs] indexOfObject:tabDocument] inSection:0]];
-	}
-
-	dispatch_sync(dispatch_get_main_queue(), ^
-	{
-		if(addIndexPaths.count > 0 || deleteIndexPaths.count > 0)
-		{
-			[self.tableView beginUpdates];
-			[self.tableView deleteRowsAtIndexPaths:deleteIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-			[self.tableView insertRowsAtIndexPaths:addIndexPaths withRowAnimation:UITableViewRowAnimationFade];
-			[self.tableView endUpdates];
-		}
-
-		[self applyChangesAfterReload];
-	});
 }
 
 - (void)updateSelectAllButton
 {
+	//NSLog(@"updateSelectAllButton");
 	NSArray<NSIndexPath*>* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
 	NSInteger rowNumber = [self tableView:self.tableView numberOfRowsInSection:0];
 
@@ -425,6 +227,8 @@
 
 - (void)selectAll
 {
+	//NSLog(@"selectAll");
+
 	_shouldUpdateOnSelectionChange = NO;
 
 	NSArray<TabDocument*>* documentsToSelect = [self activeTabs];
@@ -439,10 +243,13 @@
 	_shouldUpdateOnSelectionChange = YES;
 
 	[self updateSelectedTabs];
+	[self updateSelectAllButton];
 }
 
 - (void)deselectAll
 {
+	//NSLog(@"deselectAll");
+
 	_shouldUpdateOnSelectionChange = NO;
 
 	NSArray<TabDocument*>* documentsToDeselect = [self activeTabs];
@@ -457,10 +264,12 @@
 	_shouldUpdateOnSelectionChange = YES;
 
 	[self updateSelectedTabs];
+	[self updateSelectAllButton];
 }
 
 - (void)doneButtonPressed
 {
+	//NSLog(@"doneButtonPressed");
 	[self.navigationController dismissViewControllerAnimated:YES completion:^
 	{
 		[_tabController tabManagerDidClose];
@@ -469,6 +278,8 @@
 
 - (void)selectAllButtonPressed
 {
+	//NSLog(@"selectAllButtonPressed");
+
 	NSArray<NSIndexPath*>* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
 	NSInteger rowNumber = [self tableView:self.tableView numberOfRowsInSection:0];
 
@@ -509,9 +320,25 @@
 
 	[addTabsController addAction:cancelAction];
 
-	[addTabsController setTextView:tabsTextView];
+	tabsTextView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+	UIViewController* contentController = [[UIViewController alloc] init];
 
-	[[self presentationController] presentViewController:addTabsController animated:YES completion:nil];
+	tabsTextView.frame = contentController.view.frame;
+	[contentController.view addSubview:tabsTextView];
+
+	[addTabsController setValue:contentController forKey:@"contentViewController"];
+
+	NSLayoutConstraint* heightConstraint = [NSLayoutConstraint constraintWithItem:addTabsController.view
+						attribute:NSLayoutAttributeHeight
+						relatedBy:NSLayoutRelationEqual
+						toItem:nil
+						attribute:NSLayoutAttributeNotAnAttribute
+						multiplier:1
+						constant:self.navigationController.view.frame.size.height * 0.5];
+
+	[addTabsController.view addConstraint:heightConstraint];
+
+	[self.navigationController presentViewController:addTabsController animated:YES completion:nil];
 }
 
 - (void)openAllURLsInsideString:(NSString*)string
@@ -549,83 +376,43 @@
 			[_tabController insertTabDocument:document afterTabDocument:_allTabs.lastObject inBackground:YES animated:NO];
 		}
 
-		[document unhibernate];
+		[self reloadAnimated:YES];
 	}
 }
 
-- (void)addToBookmarksButtonPressed:(UIBarButtonItem*)sender
+- (void)addToBookmarksButtonPressed	//TODO: Implement
 {
-	SPTabManagerBookmarkPicker* bookmarkPicker = [[NSClassFromString(@"SPTabManagerBookmarkPicker") alloc] initWithTabDocuments:_selectedTabs];
 
-	UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:bookmarkPicker];
-
-	if(IS_PAD)
-	{
-		navigationController.modalPresentationStyle = UIModalPresentationPopover;
-		navigationController.popoverPresentationController.sourceView = [self presentationController].view;
-		navigationController.popoverPresentationController.sourceRect = [[sender.view superview] convertRect:sender.view.frame toView:[self presentationController].view];
-	}
-
-	[[self presentationController] presentViewController:navigationController animated:YES completion:nil];
 }
 
 - (void)closeTabsButtonPressed
 {
-	NSArray<TabDocument*>* tabsToClose = [self nonLockedSelectedTabs];
-
-	if(tabsToClose.count <= 0)
+	if([_tabController respondsToSelector:@selector(closeTabsDocuments:)])
 	{
-		return;
-	}
-
-	NSString* message;
-
-	if(tabsToClose.count == 1)
-	{
-		message = [localizationManager localizedSPStringForKey:@"CLOSE_TAB_WARNING_MESSAGE"];
+		[_tabController closeTabsDocuments:_selectedTabs];
 	}
 	else
 	{
-		message = [NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_TABS_WARNING_MESSAGE"], tabsToClose.count];
+		for(TabDocument* tabDocument in _selectedTabs)
+		{
+			[_tabController closeTabDocument:tabDocument animated:NO];
+		}
 	}
-
-	UIAlertController* confirmationController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
-						     message:message
-						     preferredStyle:UIAlertControllerStyleAlert];
-
-	UIAlertAction* yesAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"YES"]
-				    style:UIAlertActionStyleDestructive
-				    handler:^(UIAlertAction* action)
-	{
-		closeTabDocuments(_tabController, tabsToClose, NO);
-	}];
-
-	UIAlertAction* noAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"NO"]
-				   style:UIAlertActionStyleDefault
-				   handler:nil];
-
-	[confirmationController addAction:noAction];
-	[confirmationController addAction:yesAction];
-
-	[[self presentationController] presentViewController:confirmationController animated:YES completion:nil];
 }
 
-- (void)exportButtonPressed:(UIBarButtonItem*)sender
+- (void)exportButtonPressed:(id)sender
 {
-	if(_selectedTabs.count <= 0)
+	if(_selectedTabs.count == 0)
 	{
 		return;
 	}
-
-	CGRect sourceRect = [[sender.view superview] convertRect:sender.view.frame toView:[self presentationController].view];
 
 	void (^presentActivityController)(id) = ^void (id exportString)
 	{
 		UIActivityViewController* activityController = [[UIActivityViewController alloc] initWithActivityItems:@[exportString] applicationActivities:nil];
-		activityController.popoverPresentationController.sourceView = [self presentationController].view;
-		activityController.popoverPresentationController.sourceRect = sourceRect;
+		activityController.popoverPresentationController.sourceView = self.navigationController.view;
 
-		[[self presentationController] presentViewController:activityController animated:YES completion:nil];
+		[self.navigationController presentViewController:activityController animated:YES completion:nil];
 	};
 
 	NSString* titleForExample = [_selectedTabs.firstObject title];
@@ -679,8 +466,7 @@
 		presentActivityController([tabsString copy]);
 	}];
 
-	//Title as fallback for when the attributed string doesn't work (on some iPads)
-	UIAlertAction* hyperlinkAction = [UIAlertAction actionWithTitle:[titleForExample stringByAppendingString:[NSString stringWithFormat:@" (%@)", [localizationManager localizedSPStringForKey:@"WITH_CLICKABLE_URL"]]]
+	UIAlertAction* hyperlinkAction = [UIAlertAction actionWithTitle:@""
 					  style:UIAlertActionStyleDefault
 					  handler:^(UIAlertAction* action)
 	{
@@ -708,10 +494,11 @@
 	[formatAlertController addAction:hyperlinkAction];
 	[formatAlertController addAction:cancelAction];
 
-	formatAlertController.popoverPresentationController.sourceView = [self presentationController].view;
-	formatAlertController.popoverPresentationController.sourceRect = sourceRect;
+	UIPopoverPresentationController* popPresenter = [formatAlertController popoverPresentationController];
+	popPresenter.sourceView = self.navigationController.view;
+	popPresenter.sourceRect = ((UIBarButtonItem*)sender).view.bounds;
 
-	[[self presentationController] presentViewController:formatAlertController animated:YES completion:nil];
+	[self.navigationController presentViewController:formatAlertController animated:YES completion:nil];
 
 	NSString* labelKey;
 
@@ -728,15 +515,10 @@
 	hyperlinkLabel.attributedText = hyperlinkExample;
 }
 
-- (void)lockUnlockButtonPressed
-{
-	BOOL newLockState = !self.lockBarButtonIsUnlockButton;
-
-	[_tabController setLocked:newLockState forTabDocuments:_selectedTabs];
-}
-
 - (void)updateSelectedTabs
 {
+	//NSLog(@"updateSelectedTabs");
+
 	NSArray<NSIndexPath*>* selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
 
 	NSInteger rowNumber = [self tableView:self.tableView numberOfRowsInSection:0];
@@ -771,23 +553,25 @@
 	}];
 
 	_selectedTabs = [newSelectedM copy];
-
-	[self updateBottomToolbarButtonAvailability];
-	[self updateSelectAllButton];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+	//NSLog(@"numberOfSectionsInTableView");
 	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+	//NSLog(@"numberOfRowsInSection");
+
 	return [[self activeTabs] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	////NSLog(@"cellForRowAtIndexPath");
+
 	TabDocument* tabDocument = [self tabDocumentForIndexPath:indexPath];
 
 	SPTabManagerTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SPTabManagerTableViewCell"];
@@ -802,35 +586,40 @@
 	return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	return UITableViewAutomaticDimension;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return UITableViewAutomaticDimension;
+	return 44;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	//NSLog(@"didSelectRowAtIndexPath");
+
 	if(_shouldUpdateOnSelectionChange)
 	{
 		[self updateSelectedTabs];
+		[self updateSelectAllButton];
 	}
 }
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	//NSLog(@"didDeselectRowAtIndexPath");
+
 	if(_shouldUpdateOnSelectionChange)
 	{
 		[self updateSelectedTabs];
+		[self updateSelectAllButton];
 	}
 }
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController
 {
+	//NSLog(@"updateSearchResultsForSearchController");
+
 	_isFiltering = searchController.searchBar.text.length > 0;
+
+	//[self.navigationController setToolbarHidden:_isFiltering animated:YES]; TODO: decide
 
 	[self reloadAnimated:NO];
 

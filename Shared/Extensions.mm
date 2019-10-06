@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// Extensions.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "Extensions.h"
 
@@ -96,49 +92,18 @@
 }
 @end
 
-@interface UITableViewHeaderFooterView (Private)
-- (void)_updateLabelBackgroundColor;
-@end
-
-@interface UITableView (Private)
-- (void)_setupSectionView:(id)arg1 isHeader:(BOOL)arg2 forSection:(NSInteger)arg3;
-@end
-
-@implementation UITableViewController (Fixes)
-
-//Update all header titles (Needed to prevent layout issues in some cases)
-- (void)updateSectionHeaders
+@implementation UITableViewController (FooterFix)
+- (void)fixFooterColors
 {
-	NSInteger sections = [self numberOfSectionsInTableView:self.tableView];
-
-	[UIView setAnimationsEnabled:NO];
-	[self.tableView beginUpdates];
-
-	for(NSInteger i = 0; i < sections; i++)
+	for(int i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
 	{
-		UITableViewHeaderFooterView* headerView = [self.tableView headerViewForSection:i];
-		headerView.textLabel.text = [self tableView:self.tableView titleForHeaderInSection:i];
-	}
-
-	[self.tableView endUpdates];
-	[UIView setAnimationsEnabled:YES];
-}
-
-- (void)fixHeaderColors
-{
-	for(NSInteger i = 0; i < [self numberOfSectionsInTableView:self.tableView]; i++)
-	{
-		UITableViewHeaderFooterView* headerView = [self.tableView headerViewForSection:i];
-		if([self.tableView.backgroundColor isEqual:headerView.backgroundView.backgroundColor])
-		{
-			headerView.backgroundView.backgroundColor = nil;
-			[self.tableView _setupSectionView:headerView isHeader:YES forSection:i];
-		}
+		UITableViewHeaderFooterView* footerView = [self.tableView headerViewForSection:i];
+		footerView.backgroundView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
 	}
 }
 @end
 
-@implementation UIImage (SizeChange)
+@implementation UIImage (WidthChange)
 //Roughly based around https://stackoverflow.com/questions/20021478/add-transparent-space-around-a-uiimage
 //alignment -1: left; 0: center; 1: right;
 - (UIImage*)imageWithWidth:(CGFloat)width alignment:(NSInteger)alignment
@@ -184,18 +149,6 @@
 
 	return newImage;
 }
-
-- (UIImage*)scaledImageWithHeight:(CGFloat)newHeight
-{
-	CGFloat aspectRatio = self.size.width / self.size.height;
-	CGFloat newWidth = newHeight * aspectRatio;
-
-	UIGraphicsBeginImageContextWithOptions(CGSizeMake(newWidth, newHeight), NO, 0.0);
-	[self drawInRect:CGRectMake(0,0,newWidth,newHeight)];
-	UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-	return newImage;
-}
 @end
 
 @implementation UIImage (Rotate)
@@ -216,33 +169,11 @@
 	CGContextRotateCTM(bitmap, radians);
 
 	CGContextScaleCTM(bitmap, 1.0, -1.0);
-	CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), self.CGImage);
+	CGContextDrawImage(bitmap, CGRectMake(-self.size.width / 2, -self.size.height / 2, self.size.width, self.size.height), self.CGImage );
 
 	UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 
 	return newImage;
-}
-@end
-
-@implementation UIAlertController (TextView)
-- (void)setTextView:(UITextView*)textView
-{
-	textView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-	UIViewController* contentController = [[UIViewController alloc] init];
-	textView.frame = contentController.view.frame;
-	[contentController.view addSubview:textView];
-
-	[self setValue:contentController forKey:@"contentViewController"];
-
-	NSLayoutConstraint* heightConstraint = [NSLayoutConstraint constraintWithItem:textView
-						attribute:NSLayoutAttributeHeight
-						relatedBy:NSLayoutRelationEqual
-						toItem:nil
-						attribute:NSLayoutAttributeNotAnAttribute
-						multiplier:1
-						constant:90];
-
-	[textView addConstraint:heightConstraint];
 }
 @end

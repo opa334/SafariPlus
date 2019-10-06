@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// SPDownloadBrowserTableViewController.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPDownloadBrowserTableViewController.h"
 
@@ -30,11 +26,12 @@
 #import "SPLocalizationManager.h"
 #import "SPCommunicationManager.h"
 #import "SPFileManager.h"
-#import "../../Shared/SPFile.h"
+#import "SPFile.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVPlayerViewController.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import <Photos/Photos.h>
 
 @implementation SPDownloadBrowserTableViewController
 
@@ -90,74 +87,19 @@
 
 - (BOOL)loadContents
 {
-	BOOL firstLoad = (self.downloadsAtCurrentURL == nil);
-
 	//Populate download array
 	NSMutableArray<SPDownload*>* newDownloads = [downloadManager downloadsAtURL:self.directoryURL];
 
-	self.downloadsAtCurrentURL = [newDownloads copy];
+	BOOL downloadsNeedUpdate = ![newDownloads isEqualToArray:self.downloadsAtCurrentURL];
 
-	if(firstLoad)
+	if(downloadsNeedUpdate)
 	{
-		self.displayedDownloads = [self.downloadsAtCurrentURL copy];
+		self.downloadsAtCurrentURL = newDownloads;
 	}
-
-	BOOL downloadsNeedUpdate = ![self.downloadsAtCurrentURL isEqualToArray:self.displayedDownloads];
 
 	BOOL filesNeedUpdate = [super loadContents];
 
 	return downloadsNeedUpdate || filesNeedUpdate;
-}
-
-- (NSMutableArray<NSIndexPath*>*)indexPathsToAdd
-{
-	NSMutableArray<NSIndexPath*>* addIndexPaths = [super indexPathsToAdd];
-
-	if(!self.displayedDownloads)
-	{
-		return addIndexPaths;
-	}
-
-	NSMutableSet<SPDownload*>* oldDownloadsSet = [NSMutableSet setWithArray:self.displayedDownloads];
-	NSMutableSet<SPDownload*>* newDownloadsSet = [NSMutableSet setWithArray:self.downloadsAtCurrentURL];
-
-	[newDownloadsSet minusSet:oldDownloadsSet];
-
-	for(SPDownload* download in newDownloadsSet)
-	{
-		[addIndexPaths addObject:[NSIndexPath indexPathForRow:[self.downloadsAtCurrentURL indexOfObject:download] inSection:0]];
-	}
-
-	return addIndexPaths;
-}
-
-- (NSMutableArray<NSIndexPath*>*)indexPathsToDelete
-{
-	NSMutableArray<NSIndexPath*>* deleteIndexPaths = [super indexPathsToDelete];
-
-	if(!self.displayedDownloads)
-	{
-		return deleteIndexPaths;
-	}
-
-	NSMutableSet<SPDownload*>* currentDownloadsSet = [NSMutableSet setWithArray:self.downloadsAtCurrentURL];
-	NSMutableSet<SPDownload*>* finishedDownloadsSet = [NSMutableSet setWithArray:self.displayedDownloads];
-
-	[finishedDownloadsSet minusSet:currentDownloadsSet];
-
-	for(SPDownload* download in finishedDownloadsSet)
-	{
-		[deleteIndexPaths addObject:[NSIndexPath indexPathForRow:[self.displayedDownloads indexOfObject:download] inSection:0]];
-	}
-
-	return deleteIndexPaths;
-}
-
-- (void)applyChangesAfterReload
-{
-	self.displayedDownloads = [self.downloadsAtCurrentURL copy];
-
-	[super applyChangesAfterReload];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -199,6 +141,23 @@
 	}
 
 	return [super tableView:tableView cellForRowAtIndexPath:indexPath];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	switch(indexPath.section)
+	{
+	case 0:
+		return 66.0;
+
+	default:
+		return UITableViewAutomaticDimension;
+	}
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -246,29 +205,9 @@
 	}
 }
 
-- (NSInteger)numberOfPreviewItemsInPreviewController:(QLPreviewController *)controller;
-{
-	return _previewFiles.count;
-}
-
-- (id<QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
-{
-	NSURL* fileURL = [_previewFiles objectAtIndex:index].fileURL;
-	return [fileManager accessibleHardLinkForFileAtURL:fileURL forced:NO];
-}
-
-- (void)previewControllerDidDismiss:(QLPreviewController *)controller
-{
-	_previewFiles = nil;
-	self.previewController = nil;
-
-	[self unselectRow];
-	[fileManager resetHardLinks];
-}
-
 - (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
-	if([file displaysAsRegularFile])
+	if(file.isRegularFile)
 	{
 		//Only cache one hard link at most
 		[fileManager resetHardLinks];
@@ -277,38 +216,38 @@
 		UIAlertController *openAlert = [UIAlertController alertControllerWithTitle:file.name
 						message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
-		if([file conformsTo:kUTTypeAudiovisualContent] || [file isHLSStream])
+		if([file conformsTo:kUTTypeAudiovisualContent])
 		{
 			//File is audio or video -> Add option to play file
 			[openAlert addAction:[self playActionForFile:file]];
 		}
 
-		if(file.isPreviewable)
-		{
-			[openAlert addAction:[self previewActionForFile:file]];
-		}
-
-		if(!file.isRegularFile)
-		{
-			[openAlert addAction:[self showContentActionForFile:file withIndexPath:indexPath]];
-		}
+		/*if([file conformsTo:kUTTypeAudio])
+		   {
+		   //File is audio -> Add option to import to library
+		   [openAlert addAction:[self importToMusicLibraryActionForFile:file]];
+		   }*/
 
 		[openAlert addAction:[self openInActionForFile:file]];
 
 		if([file conformsTo:kUTTypeAudiovisualContent] || [file conformsTo:kUTTypeImage])
 		{
+			NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
+
 			if([file conformsTo:kUTTypeAudiovisualContent])
 			{
-				NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 				if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(hardLinkedURL.path))
 				{
-					[openAlert addAction:[self importToMediaLibraryActionForVideoWithURL:file.fileURL]];
+					[openAlert addAction:[self importToMediaLibraryActionForVideoWithURL:hardLinkedURL]];
 				}
-				[fileManager resetHardLinks];
+				else
+				{
+					[fileManager removeItemAtURL:hardLinkedURL error:nil];
+				}
 			}
 			else
 			{
-				[openAlert addAction:[self importToMediaLibraryActionForImageWithURL:file.fileURL]];
+				[openAlert addAction:[self importToMediaLibraryActionForImageWithURL:hardLinkedURL]];
 			}
 		}
 
@@ -357,7 +296,7 @@
 
 - (void)didLongPressFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
-	if(![file displaysAsRegularFile])
+	if(!file.isRegularFile)
 	{
 		if(file.isWritable || _filzaInstalled)
 		{
@@ -397,26 +336,6 @@
 	}
 }
 
-- (UIAlertAction*)previewActionForFile:(SPFile*)file
-{
-	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"PREVIEW"]
-		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-	{
-		_previewFiles = [self.filesAtCurrentURL filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL (id evaluatedObject, NSDictionary<NSString *,id>* bindings)
-		{
-			SPFile* file = evaluatedObject;
-			return file.isPreviewable;
-		}]];
-
-		self.previewController = [[QLPreviewController alloc] init];
-		self.previewController.dataSource = self;
-		self.previewController.delegate = self;
-		self.previewController.currentPreviewItemIndex = [_previewFiles indexOfObject:file];
-
-		[self.navigationController presentViewController:self.previewController animated:YES completion:nil];
-	}];
-}
-
 - (UIAlertAction*)playActionForFile:(SPFile*)file
 {
 	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
@@ -424,15 +343,6 @@
 	{
 		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 		[self startPlayerWithMedia:hardLinkedURL];
-	}];
-}
-
-- (UIAlertAction*)showContentActionForFile:(SPFile*)file withIndexPath:(NSIndexPath*)indexPath
-{
-	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"SHOW_CONTENT"]
-		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
-	{
-		[super didSelectFile:file atIndexPath:indexPath];
 	}];
 }
 
@@ -465,8 +375,7 @@
 					       localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
-		UIImage* image = [UIImage imageWithContentsOfFile:hardLinkedURL.path];
+		UIImage* image = [UIImage imageWithContentsOfFile:URL.path];
 		UIImageWriteToSavedPhotosAlbum(image, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 		[self unselectRow];
 	}];
@@ -478,8 +387,7 @@
 					       localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
-		UISaveVideoAtPathToSavedPhotosAlbum(hardLinkedURL.path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
+		UISaveVideoAtPathToSavedPhotosAlbum(URL.path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 		[self unselectRow];
 	}];
 }
@@ -488,6 +396,16 @@
 {
 	[fileManager resetHardLinks];
 }
+
+/*- (UIAlertAction*)importToMusicLibraryActionForFile:(SPFile*)file
+   {
+   return [UIAlertAction actionWithTitle:[localizationManager
+    localizedSPStringForKey:@"IMPORT_TO_MUSIC_LIBRARY"]
+    style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+   {
+
+   }];
+   }*/
 
 - (UIAlertAction*)showInFilzaActionForFile:(SPFile*)file
 {
@@ -554,7 +472,8 @@
 		{
 			//Rename file
 			[fileManager moveItemAtURL:file.fileURL toURL:[[file.fileURL URLByDeletingLastPathComponent]
-								       URLByAppendingPathComponent:selectFilenameController.textFields[0].text] error:nil];
+								       URLByAppendingPathComponent:selectFilenameController.textFields[0].text]
+			 error:nil];
 
 			//Reload files
 			[self reload];

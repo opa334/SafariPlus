@@ -5,6 +5,7 @@ export DEBUG_LOGGING ?= 0
 export NO_CEPHEI ?= 0
 export NO_ROCKETBOOTSTRAP ?= 0
 export NO_LIBCSCOLORPICKER ?= 0
+export NO_LIBBULLETIN ?= 0
 
 ifeq ($(ROOTLESS),1)
 export NO_DEPENDENCIES = 1
@@ -13,6 +14,7 @@ endif
 ifeq ($(SIMJECT),1)
 export NO_CEPHEI = 1
 export NO_ROCKETBOOTSTRAP = 1
+export NO_LIBBULLETIN = 1
 export TARGET = simulator:clang:12.1:8.0
 export ARCHS = x86_64 i386
 else
@@ -24,6 +26,7 @@ ifeq ($(NO_DEPENDENCIES),1)
 export NO_CEPHEI = 1
 export NO_ROCKETBOOTSTRAP = 1
 export NO_LIBCSCOLORPICKER = 1
+export NO_LIBBULLETIN = 1
 endif
 
 export INCLUDES = $(THEOS_PROJECT_DIR)/Shared
@@ -32,7 +35,7 @@ include $(THEOS)/makefiles/common.mk
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 
-SUBPROJECTS += MobileSafari WebContent
+SUBPROJECTS += MobileSafari
 
 ifeq ($(NO_ROCKETBOOTSTRAP),0)
 		SUBPROJECTS += SpringBoard

@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// TabController.xm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
 
@@ -24,7 +20,6 @@
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPTabManagerTableViewController.h"
-#import "../Classes/SPNavigationController.h"
 #import "../Defines.h"
 #import "../Util.h"
 
@@ -111,7 +106,7 @@
 				//desktopButton not created yet -> create and configure it
 				self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
 
-				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton.png" inBundle:SPBundle compatibleWithTraitCollection:nil];
 
 				[self.tiltedTabViewDesktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
 
@@ -144,7 +139,7 @@
 
 		NSMutableArray* newM = [old mutableCopy];
 
-		if([old count] < 6)	//Fix for iOS 8 when private browsing is disabled
+		if([old count] < 6)
 		{
 			[newM insertObject:flexibleSpace atIndex:0];
 		}
@@ -205,8 +200,7 @@
 
 	BrowserRootViewController* vc = rootViewControllerForBrowserController(browserController);
 	SPTabManagerTableViewController* tabManagerTableViewController = [[SPTabManagerTableViewController alloc] initWithTabController:self];
-	SPNavigationController* navigationController = [[SPNavigationController alloc] initWithRootViewController:tabManagerTableViewController];
-	//navigationController.modalPresentationStyle = UIModalPresentationCurrentContext;
+	UINavigationController* navigationController = [[UINavigationController alloc] initWithRootViewController:tabManagerTableViewController];
 
 	self.presentedTabManager = navigationController;
 
@@ -219,78 +213,158 @@
 	self.presentedTabManager = nil;
 }
 
+- (void)_updateTiltedTabViewItemsAnimated:(BOOL)animated
+{
+	NSLog(@"_updateTiltedTabViewItemsAnimated");
+	%orig;
+
+	if(preferenceManager.tabManagerEnabled && self.presentedTabManager)
+	{
+		[(SPTabManagerTableViewController*)self.presentedTabManager.viewControllers.firstObject reloadAnimated:YES];
+	}
+}
+
 //Update user agent of all tabs
 %new
 - (void)updateUserAgents
 {
 	for(TabDocument* tabDocument in self.allTabDocuments)
 	{
-		if(tabDocument.webView)
-		{
-			[tabDocument.webView sp_updateCustomUserAgent];
+		BOOL needsReload = [tabDocument updateDesktopMode];
 
-			if(!tabDocument.isBlankDocument)
+		if(needsReload)
+		{
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
 			{
-				[tabDocument.webView sp_applyCustomUserAgent];
+				//Calling reload on webView does apply the user agent on iOS 11.3 and above, no idea why, this is the proper fix for it
+				[tabDocument.webView evaluateJavaScript:@"window.location.reload(true)" completionHandler:nil];
+			}
+			else
+			{
+				[tabDocument reload];
 			}
 		}
 	}
 }
 
-- (void)tabDocumentDidUpdateUUID:(TabDocument*)tabDocument previousUUID:(NSUUID*)UUID
+%new
+- (void)tiltedTabView:(TiltedTabView*)tiltedTabView toggleLockedStateForItem:(TiltedTabItem*)item
 {
-	%orig;
+	TabDocument* tabDocument = [self _tabDocumentRepresentedByTiltedTabItem:item];
 
-	if(tabDocument.locked)
+	void (^toggle)(void) = ^
 	{
-		[tabDocument writeLockStateToCache];
-	}
-	else
+		tabDocument.locked = !tabDocument.locked;
+
+		if([item respondsToSelector:@selector(contentView)])
+		{
+			item.contentView.lockButton.selected = tabDocument.locked;
+		}
+		else
+		{
+			item.layoutInfo.contentView.lockButton.selected = tabDocument.locked;
+		}
+
+		[tiltedTabView _layoutItemsWithTransition:0];	//Update close button
+	};
+
+	if(preferenceManager.biometricProtectionEnabled && (preferenceManager.biometricProtectionLockTabEnabled || preferenceManager.biometricProtectionUnlockTabEnabled))
 	{
-		[tabDocument updateLockStateFromCache];
-		[tabDocument updateLockButtons];
+		if(preferenceManager.biometricProtectionLockTabEnabled && !tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"LOCK_TAB"], toggle);
+			return;
+		}
+		else if(preferenceManager.biometricProtectionUnlockTabEnabled && tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"UNLOCK_TAB"], toggle);
+			return;
+		}
 	}
+
+	toggle();
 }
 
-- (void)tabDocumentDidUpdateUUID:(TabDocument*)tabDocument
+- (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
 {
-	%orig;
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		TabDocument* tabDocument = [self _tabDocumentRepresentedByTiltedTabItem:item];
 
-	if(tabDocument.locked)
-	{
-		[tabDocument writeLockStateToCache];
+		if(tabDocument.locked)
+		{
+			return NO;
+		}
 	}
-	else
-	{
-		[tabDocument updateLockStateFromCache];
-		[tabDocument updateLockButtons];
-	}
+
+	return %orig;
 }
 
-- (void)_restorePersistentDocumentState:(id)arg1 into:(id)arg2 withCurrentActiveDocument:(id)arg3 activeDocumentIsValid:(BOOL)arg4 restoredActiveDocumentIndex:(NSUInteger)arg5 shouldRestoreSessionData:(BOOL)arg6
+%new
+- (void)tabOverview:(TabOverview*)tabOverview toggleLockedStateForItem:(TabOverviewItem*)item
 {
-	%orig;
+	TabDocument* tabDocument = [self _tabDocumentRepresentedByTabOverviewItem:item];
 
-	if(preferenceManager.showTabCountEnabled)
+	void (^toggle)(void) = ^
 	{
-		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
-		[activeToolbarForBrowserController(browserController) updateTabCount];
+		tabDocument.locked = !tabDocument.locked;
+		if([item respondsToSelector:@selector(_thumbnailView)])
+		{
+			item.thumbnailView.lockButton.selected = tabDocument.locked;
+		}
+		else
+		{
+			item.layoutInfo.itemView.lockButton.selected = tabDocument.locked;
+		}
+	};
+
+	if(preferenceManager.biometricProtectionEnabled && (preferenceManager.biometricProtectionLockTabEnabled || preferenceManager.biometricProtectionUnlockTabEnabled))
+	{
+		if(preferenceManager.biometricProtectionLockTabEnabled && !tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"LOCK_TAB"], toggle);
+			return;
+		}
+		else if(preferenceManager.biometricProtectionUnlockTabEnabled && tabDocument.locked)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"UNLOCK_TAB"], toggle);
+			return;
+		}
 	}
+
+	toggle();
 }
 
-- (void)_restorePersistentDocumentState:(id)arg1 into:(id)arg2 withCurrentActiveDocument:(id)arg3 activeDocumentIsValid:(BOOL)arg4 restoredActiveDocumentIndex:(NSUInteger)arg5
+- (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
 {
-	%orig;
-
-	if(preferenceManager.showTabCountEnabled)
+	if(preferenceManager.lockedTabsEnabled)
 	{
-		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
-		[activeToolbarForBrowserController(browserController) updateTabCount];
+		TabDocument* tabDocument = [self _tabDocumentRepresentedByTabOverviewItem:item];
+
+		if(tabDocument.locked)
+		{
+			return NO;
+		}
 	}
+
+	return %orig;
 }
+/* //Somewhat broken, TODO: fix it
+   - (BOOL)tabBar:(TabBar*)tabBar canCloseItem:(TabBarItem*)item
+   {
+        if(preferenceManager.lockedTabsEnabled)
+        {
+                TabDocument* tabDocument = [self _tabDocumentRepresentedByTabBarItem:item];
 
-%group iOS12_1_4Down
+                if(tabDocument.locked)
+                {
+                        return NO;
+                }
+        }
 
+        return %orig;
+   }
+ */
 - (void)_updateTiltedTabViewItemsWithTransition:(NSInteger)transition
 {
 	if(preferenceManager.lockedTabsEnabled)
@@ -311,117 +385,6 @@
 	%orig;
 }
 
-- (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
-{
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		TabDocument* tabDocument = tabDocumentForItem(self, item);
-
-		if(tabDocument.locked)
-		{
-			return NO;
-		}
-	}
-
-	return %orig;
-}
-
-- (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
-{
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		TabDocument* tabDocument = tabDocumentForItem(self, item);
-
-		if(tabDocument.locked)
-		{
-			return NO;
-		}
-	}
-
-	return %orig;
-}
-
-- (BOOL)tabBar:(TabBar*)tabBar canCloseItem:(TabBarItem*)item
-{
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		TabDocument* tabDocument = tabDocumentForItem(self, item);
-
-		if(tabDocument.locked)
-		{
-			return NO;
-		}
-	}
-
-	return %orig;
-}
-
-%end
-
-%group iOS12_2Up
-
-- (BOOL)tabCollectionView:(id)collectionView canCloseItem:(id<TabCollectionItem>)item
-{
-	if(preferenceManager.lockedTabsEnabled)
-	{
-		TabDocument* tabDocument = tabDocumentForItem(self, item);
-
-		if(tabDocument.locked)
-		{
-			return NO;
-		}
-	}
-
-	return %orig;
-}
-
-%end
-
-%new
-- (void)toggleLockedStateForItem:(id<TabCollectionItem>)item
-{
-	[self toggleLockedStateForTabDocument:tabDocumentForItem(self, item)];
-}
-
-%new
-- (void)toggleLockedStateForTabDocument:(TabDocument*)tabDocument
-{
-	[self setLocked:!tabDocument.locked forTabDocuments:@[tabDocument]];
-}
-
-%new
-- (void)setLocked:(BOOL)locked forTabDocuments:(NSArray<TabDocument*>*)tabDocuments
-{
-	void (^setLockStates)(void) = ^
-	{
-		for(TabDocument* tabDocument in tabDocuments)
-		{
-			tabDocument.locked = locked;
-		}
-
-		if(preferenceManager.tabManagerEnabled && self.presentedTabManager)
-		{
-			[(SPTabManagerTableViewController*)[self.presentedTabManager viewControllers].firstObject updateBottomToolbarButtonAvailability];
-		}
-	};
-
-	if(preferenceManager.biometricProtectionEnabled && (preferenceManager.biometricProtectionLockTabEnabled || preferenceManager.biometricProtectionUnlockTabEnabled))
-	{
-		if(preferenceManager.biometricProtectionLockTabEnabled && locked)
-		{
-			requestAuthentication([localizationManager localizedSPStringForKey:@"LOCK_TAB"], setLockStates);
-			return;
-		}
-		else if(preferenceManager.biometricProtectionUnlockTabEnabled && !locked)
-		{
-			requestAuthentication([localizationManager localizedSPStringForKey:@"UNLOCK_TAB"], setLockStates);
-			return;
-		}
-	}
-
-	setLockStates();
-}
-
 %group iOS9Down
 
 - (NSUInteger)maximumTabDocumentCount
@@ -432,6 +395,17 @@
 	}
 
 	return %orig;
+}
+
+- (void)_tabCountDidChange
+{
+	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+		[browserController.activeToolbar updateTabCount];
+	}
 }
 
 %end
@@ -463,6 +437,17 @@
 	}
 
 	%orig;
+}
+
+- (void)updateTabCount
+{
+	%orig;
+
+	if(preferenceManager.showTabCountEnabled)
+	{
+		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
+		[browserController.activeToolbar updateTabCount];
+	}
 }
 
 %end
@@ -538,11 +523,6 @@
 
 - (void)setActiveTabDocument:(TabDocument*)document animated:(BOOL)arg2 deferActivation:(BOOL)arg3
 {
-	if(preferenceManager.forceNativePlayerEnabled && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
-	{
-		[document.webView updateFullscreenEnabledPreference];
-	}
-
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		if(self.activeTabDocument != document)
@@ -625,15 +605,6 @@ void initTabController()
 	else
 	{
 		%init(iOS9Up);
-	}
-
-	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
-	{
-		%init(iOS12_1_4Down);
-	}
-	else
-	{
-		%init(iOS12_2Up);
 	}
 
 	%init();

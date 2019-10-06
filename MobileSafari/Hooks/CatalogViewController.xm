@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// CatalogViewController.xm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "../SafariPlus.h"
 
@@ -124,37 +120,6 @@
 %end
 
 %group iOS12_1_4_down
-
-@interface SPSearchSuggestionInsertView : UIView
-@property (nonatomic) BOOL rtl;
-@end
-
-@implementation SPSearchSuggestionInsertView
-
-- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
-{
-	if(([UIApplication sharedApplication].userInterfaceLayoutDirection == UIUserInterfaceLayoutDirectionRightToLeft))
-	{
-		//Every press left from the x position of the button should trigger the action (RTL)
-		if(point.x < self.frame.size.width)
-		{
-			return YES;
-		}
-	}
-	else
-	{
-		//Every press right from the x position of the button should trigger the action
-		if(point.x >= 0)
-		{
-			return YES;
-		}
-	}
-
-	return [super pointInside:point withEvent:event];
-}
-
-@end
-
 %hook SearchSuggestionTableViewCell
 
 %property (nonatomic, retain) UIImageView *hiddenAccessoryView;
@@ -193,7 +158,7 @@
 
 		[arrowImageView setImage:arrowImage];
 
-		self.accessoryView = [[SPSearchSuggestionInsertView alloc] initWithFrame:CGRectMake(0,0,23,23)];
+		self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0,0,23,23)];
 		[self.accessoryView addSubview:arrowImageView];
 		[self setHidesAccessoryView:YES];
 	}
@@ -215,7 +180,7 @@
 	{
 		BOOL differentFromQuery = NO;
 
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 		{
 			differentFromQuery = ![MSHookIvar<WBSCompletionQuery*>(self,"_userQuery").queryString isEqualToString:self.string];
 		}

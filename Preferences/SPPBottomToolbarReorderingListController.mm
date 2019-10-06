@@ -1,22 +1,18 @@
-// Copyright (c) 2017-2019 Lars Fröder
+// SPPBottomToolbarReorderingListController.mm
+// (c) 2017 - 2019 opa334
 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #import "SPPBottomToolbarReorderingListController.h"
 #import "../MobileSafari/Enums.h"
@@ -53,7 +49,7 @@
 
 	NSMutableArray* allItems = [NSMutableArray new];
 
-	for(NSInteger i = BrowserToolbarBackItem; i < BrowserToolbarItemCount; i++)
+	for(NSInteger i = BrowserToolbarBackItem; i <= BrowserToolbarDownloadsItem; i++)
 	{
 		if(![self searchBarIncluded] && i == BrowserToolbarSearchBarSpace)
 		{
@@ -203,12 +199,6 @@
 	case BrowserToolbarDownloadsItem:
 		return [localizationManager localizedSPStringForKey:@"DOWNLOADS"];
 
-	case BrowserToolbarReloadItem:
-		return [localizationManager localizedSPStringForKey:@"RELOAD"];
-
-	case BrowserToolbarClearDataItem:
-		return [localizationManager localizedSPStringForKey:@"CLEAR_HISTORY"];
-
 	default:
 		return @"";
 	}
@@ -262,10 +252,10 @@
 
 			case BrowserToolbarTabExposeItem:
 			{
-				itemImage = [UIImage imageNamed:@"TabButton" inBundle:MSBundle];
+				itemImage = [UIImage imageNamed:@"TabButton.png" inBundle:MSBundle];
 				if(!itemImage)
 				{
-					itemImage = [UIImage imageNamed:@"TabButton" inBundle:SSBundle];
+					itemImage = [UIImage imageNamed:@"TabButton.png" inBundle:SSBundle];
 				}
 				break;
 			}
@@ -279,18 +269,6 @@
 			case BrowserToolbarDownloadsItem:
 			{
 				itemImage = [UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
-				break;
-			}
-
-			case BrowserToolbarReloadItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
-				break;
-			}
-
-			case BrowserToolbarClearDataItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemTrash usingItemStyle:0];
 				break;
 			}
 			}
@@ -333,6 +311,7 @@
 	UIImage* image = [self imageForItem:[itemNumber intValue]];
 
 	cell.imageView.image = image;
+	cell.imageView.adjustsImageSizeForAccessibilityContentSizeCategory = YES;
 	cell.separatorInset = UIEdgeInsetsMake(0,0,0,0);
 
 	return cell;
@@ -397,7 +376,7 @@
 		NSNumber* affectedItem = [_enabledItems objectAtIndex:indexPath.row];
 		[_enabledItems removeObjectAtIndex:indexPath.row];
 		[_disabledItems insertObject:affectedItem atIndex:disabledIndexPath.row];
-		PSSpecifier* specifier = [self specifierAtIndex:[self indexForIndexPath:indexPath]];
+		PSSpecifier* specifier = [self specifierAtIndexPath:indexPath];
 		[self removeSpecifierAtIndex:[self indexForIndexPath:indexPath] animated:YES];
 		[self insertSpecifier:specifier atIndex:[self indexForIndexPath:disabledIndexPath] animated:YES];
 	}
@@ -407,7 +386,7 @@
 		NSNumber* affectedItem = [_disabledItems objectAtIndex:indexPath.row];
 		[_disabledItems removeObjectAtIndex:indexPath.row];
 		[_enabledItems insertObject:affectedItem atIndex:enabledIndexPath.row];
-		PSSpecifier* specifier = [self specifierAtIndex:[self indexForIndexPath:indexPath]];
+		PSSpecifier* specifier = [self specifierAtIndexPath:indexPath];
 		[self removeSpecifierAtIndex:[self indexForIndexPath:indexPath] animated:YES];
 		[self insertSpecifier:specifier atIndex:[self indexForIndexPath:enabledIndexPath] animated:YES];
 	}
