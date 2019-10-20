@@ -45,6 +45,7 @@
 "LOCK_TAB" = "Verrouillage d'onglets";
 "UNLOCK_TAB" = "Déverrouillage d'onglets";
 "ACCESS_LOCKED_TAB" = "Accès aux onglets verrouillés";
+/*OPEN_DOWNLOADS*/
 "AUTHENTICATE" = "S'authentifier";
 "AUTHENTICATION_ERROR" = "Erreur d'authentification";
 "ACCESS_BIOMETRIC_PROTECTION" = "Accès aux paramètres de protection biométrique";
@@ -369,11 +370,17 @@
 "DOWNLOAD_TO" = "Enregistrer sous...";
 "DOWNLOAD_SITE_TO" = "Enregistrer le site sous ...";
 "DOWNLOAD_IMAGE_TO" = "Enregistrer l'image sous ...";
+/*DOWNLOAD_PLAYLIST_TO*/
 "DOWNLOAD_OVERVIEW" = "Aperçu du téléchargement";
 "DOWNLOADS" = "Téléchargements";
 "FILE_BROWSER" = "Explorateur de fichiers";
 "OPEN" = "Ouvrir";
 "SHOW_CONTENT" = "Montrer le contenu";
+/*MERGE_INTO_FILE*/
+/*MERGING*/
+/*MERGE*/
+/*TS_NOTICE_MESSAGE*/
+/*MERGE_FILE_EXISTS_ERROR*/
 "OPEN_IN" = "Ouvrir avec...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Importer dans la bibliothèque musicale";
 "SAVE_TO_MEDIA_LIBRARY" = "Enregistrer dans la galerie";
@@ -392,6 +399,7 @@
 "RENAME_FILE" = "Renommer le fichier";
 "RENAME_DIRECTORY" = "Renommer le dossier";
 "WARNING" = "Attention!";
+/*NOTICE*/
 "DELETE_FILE_MESSAGE" = "Êtes-vous sûr de vouloir supprimer définitivement le fichier %@ ? Il n'est pas possible de le récupérer plus tard!";
 "DELETE_DIRECTORY_MESSAGE" = "Êtes-vous sûr de vouloir supprimer définitivement le dossier %@ et son contenu? La récupération ultérieure n'est pas possible!";
 "DELETE" = "Supprimer";
@@ -448,3 +456,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Ouvrir en navigation classique";
 "OPEN_IN_PRIVATE_MODE" = "Ouvrir en navigation privée";
+

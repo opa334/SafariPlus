@@ -35,6 +35,7 @@
 @property (nonatomic) UIViewController* presentationController;
 @property (nonatomic) CGRect sourceRect;
 @property (nonatomic) BOOL isHLSDownload;
+@property (nonatomic) NSString* playlistExtension;
 
 - (SPDownloadInfo*)initWithRequest:(NSURLRequest*)request;
 - (SPDownloadInfo*)initWithImage:(UIImage*)image;

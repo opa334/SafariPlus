@@ -45,6 +45,7 @@
 "LOCK_TAB" = "Tab verriegeln";
 "UNLOCK_TAB" = "Tab entriegeln";
 "ACCESS_LOCKED_TAB" = "Zugriff auf verriegelten Tab";
+"OPEN_DOWNLOADS" = "Downloads öffnen";
 "AUTHENTICATE" = "Authentifizieren";
 "AUTHENTICATION_ERROR" = "Fehler beim Authentifizieren";
 "ACCESS_BIOMETRIC_PROTECTION" = "Zugriff auf biometrischen Schutz";
@@ -369,11 +370,17 @@
 "DOWNLOAD_TO" = "Herunterladen nach ...";
 "DOWNLOAD_SITE_TO" = "Seite herunterladen nach ...";
 "DOWNLOAD_IMAGE_TO" = "Bild herunterladen nach ...";
+"DOWNLOAD_PLAYLIST_TO" = "Playlist (%@) herunterladen nach ...";
 "DOWNLOAD_OVERVIEW" = "Download Übersicht";
 "DOWNLOADS" = "Downloads";
 "FILE_BROWSER" = "Dateibrowser";
 "OPEN" = "Öffnen";
 "SHOW_CONTENT" = "Inhalt anzeigen";
+"MERGE_INTO_FILE" = "In .%@ Datei zusammenführen";
+"MERGING" = "Zusammenführen...";
+"MERGE" = "Zusammenführen";
+"TS_NOTICE_MESSAGE" = "Du bist kurz davor eine movpkg Datei in eine .ts Datei zusammenzuführen. Bitte beachte, dass .ts Dateien unter iOS NICHT abgespielt werden können, daher ist der Hauptnutzen dieser Option die Datei anschließend auf einen PC oder Mac zu übertragen. Um die .ts Datei in .mp4 zu konvertieren kann ein externes Tool wie zum Beispiel FFMPEG verwendet werden.";
+"MERGE_FILE_EXISTS_ERROR" = "Die Datei \"%@\" existiert bereits. Lösche sie und versuche es danach erneut.";
 "OPEN_IN" = "Öffnen in ...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Import in die Musikbibliothek";
 "SAVE_TO_MEDIA_LIBRARY" = "In die Mediathek speichern";
@@ -392,6 +399,7 @@
 "RENAME_FILE" = "Datei umbenennen";
 "RENAME_DIRECTORY" = "Ordner umbenennen";
 "WARNING" = "Warnung!";
+"NOTICE" = "Hinweis";
 "DELETE_FILE_MESSAGE" = "Soll die Datei %@ wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
 "DELETE_DIRECTORY_MESSAGE" = "Soll der Ordner %@ und dessen Inhalt wirklich permanent gelöscht werden? Ein späteres Wiederherstellen ist nicht möglich!";
 "DELETE" = "Löschen";
@@ -448,3 +456,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Im normalen Modus öffnen";
 "OPEN_IN_PRIVATE_MODE" = "Im privaten Modus öffnen";
+

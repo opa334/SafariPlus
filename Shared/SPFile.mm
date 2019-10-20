@@ -44,10 +44,8 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 
 	_name = [_fileURL lastPathComponent];
 
-  #if !PREFERENCES && !SPRINGBOARD
 	[self updateCellTitle];
 	[self updateUTI];
-	#endif
 
 	NSNumber* isRegularFile;
 	#if !PREFERENCES && !SPRINGBOARD
@@ -100,10 +98,8 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 	_isWritable = [decoder decodeBoolForKey:@"isWritable"];
 	_isPreviewable = [decoder decodeBoolForKey:@"isPreviewable"];
 
-	#if !PREFERENCES && !SPRINGBOARD
 	[self updateCellTitle];
 	[self updateUTI];
-	#endif
 
 	return self;
 }
@@ -187,10 +183,9 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 	return [NSString stringWithFormat:@"<SPFile: filename = %@, fileURL = %@, size = %llu>", self.name, self.fileURL, self.size];
 }
 
-#if !PREFERENCES && !SPRINGBOARD
-
 - (void)updateCellTitle
 {
+	#if !PREFERENCES && !SPRINGBOARD
 	if([_name isUUID])
 	{
 		_applicationDisplayName = [fileManager applicationDisplayNameForURL:_fileURL];
@@ -213,8 +208,11 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 	}
 	else
 	{
+	#endif
 		_cellTitle = [[NSAttributedString alloc] initWithString:_name];
+	#if !PREFERENCES && !SPRINGBOARD
 	}
+	#endif
 }
 
 - (void)updateUTI
@@ -222,7 +220,5 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 	CFStringRef fileExtension = (__bridge CFStringRef)[_fileURL pathExtension];
 	_fileUTI = CFBridgingRelease(UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL));
 }
-
-#endif
 
 @end

@@ -148,6 +148,7 @@ void reloadPreferences()
 		//@"biometricProtectionLockTabEnabled" : @NO,
 		//@"biometricProtectionUnlockTabEnabled" : @NO,
 		//@"biometricProtectionAccessLockedTabEnabled" : @NO,
+		//@"biometricProtectionOpenDownloadsEnabled" : @NO,
 
 		//@"uploadAnyFileOptionEnabled" : @NO,
 		//@"downloadManagerEnabled" : @NO,

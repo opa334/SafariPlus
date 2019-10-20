@@ -892,6 +892,19 @@
 	}
 }
 
+// maybe useful: https://github.com/WebKit/webkit/blob/c9953af06bcf8707a0764a84a4a03a581dbe18a0/Source/WebKitLegacy/mac/Misc/WebDownload.mm#L97
+/*
+- (void)URLSession:(NSURLSession *)session 
+              task:(NSURLSessionTask *)task 
+didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge 
+ completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
+{
+	NSLog(@"didReceiveChallenge:%@", challenge);
+	NSLog(@"authenticationMethod:%@", challenge.protectionSpace.authenticationMethod);
+
+	//completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
+}
+*/
 - (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
 	if(downloadInfo.sourceVideo)
@@ -972,6 +985,26 @@
 		}];
 
 		[downloadAlert addAction:downloadToAction];
+
+		if(downloadInfo.isHLSDownload)
+		{
+			UIAlertAction *downloadM3UAction = [UIAlertAction
+						   actionWithTitle:[NSString stringWithFormat:[localizationManager
+								    localizedSPStringForKey:@"DOWNLOAD_PLAYLIST_TO"], downloadInfo.playlistExtension]
+						   style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+			{
+				//Undo HLS related changes to the download info
+				downloadInfo.isHLSDownload = NO;
+				downloadInfo.filename = [[downloadInfo.filename stringByDeletingPathExtension] stringByAppendingPathExtension:downloadInfo.playlistExtension];
+
+				//Start download with custom path
+				downloadInfo.customPath = YES;
+				[self configureDownloadWithInfo:downloadInfo];
+				[self closeDocumentIfObsoleteWithDownloadInfo:downloadInfo];
+			}];
+
+			[downloadAlert addAction:downloadM3UAction];
+		}
 
 		//Open option (not on videos)
 		if(!downloadInfo.sourceVideo)
@@ -1510,8 +1543,6 @@
 		return;
 	}
 
-	[self downloadFinished:download];
-
 	//Get real file size and apply it to download
 	if(download.isHLSDownload)
 	{
@@ -1532,6 +1563,8 @@
 
 	//Move downloaded file to picked location
 	[fileManager moveItemAtURL:location toURL:[downloadInfo pathURL] error:nil];
+
+	[self downloadFinished:download];
 
 	if(preferenceManager.autosaveToMediaLibraryEnabled)
 	{
@@ -1565,52 +1598,146 @@
 	}
 }
 
-//Not used, at least not for now
-/*- (void)mergeSegmentsAtURL:(NSURL*)segmentURL toFileAtURL:(NSURL*)fileURL
-   {
-        NSArray<NSURL*>* fragments = [fileManager contentsOfDirectoryAtURL:segmentURL includingPropertiesForKeys:nil options:nil error:nil];
+- (NSString*)fileTypeOfMovpkgAtURL:(NSURL*)movpkgURL
+{
+	NSArray<NSString*>* subItems = [fileManager contentsOfDirectoryAtPath:[movpkgURL path] error:nil];
 
-        NSMutableArray<NSURL*>* fragmentsM = [fragments mutableCopy];
+	for(NSString* itemName in subItems)
+	{
+		NSURL* folderURL = [movpkgURL URLByAppendingPathComponent:itemName];
 
-        //filter out everything that is no fragment
-        for(NSURL* item in [fragments reverseObjectEnumerator])
-        {
-                if(![[item pathExtension] isEqualToString:@"frag"])
-                {
-                        [fragmentsM removeObject:item];
-                }
-        }
+		if([itemName hasPrefix:@"0"] && [fileManager isDirectoryAtURL:folderURL error:nil])
+		{
+			NSURL* playlistURL;
 
-        //sort alphabetically
-        [fragmentsM sortUsingComparator:^NSComparisonResult (NSURL* a, NSURL* b)
-        {
-                return [a.lastPathComponent caseInsensitiveCompare:b.lastPathComponent];
-        }];
+			for(NSString* filename in [fileManager contentsOfDirectoryAtPath:[folderURL path] error:nil])
+			{
+				if([[filename stringByDeletingPathExtension] isEqualToString:itemName])
+				{
+					playlistURL = [folderURL URLByAppendingPathComponent:filename];
+					break;
+				}
+			}
 
-        if(fragmentsM.count == 0)
-        {
-                return;
-        }
+			if(playlistURL)
+			{
+				NSString* playlistString = [NSString stringWithContentsOfURL:playlistURL encoding:NSUTF8StringEncoding error:nil];
 
-        //merge everything
-        NSMutableData* data;
+				if([playlistString containsString:@"#EXT-X-MAP:URI="]) //This should be the best way to distinguish between fmp4 and ts
+				{
+					return @"mp4";
+				}
+			}
 
-        BOOL first = YES;
+			return @"ts";
+		}
+	}
 
-        for(NSURL* fragment in fragmentsM)
-        {
-                if(first)
-                {
-                        first = NO;
-                        data = [NSMutableData dataWithContentsOfURL:fragment];
-                        continue;
-                }
+	return @"";
+}
 
-                [data appendData:[NSData dataWithContentsOfURL:fragment]];
-        }
+- (void)mergeMovpkgAtURL:(NSURL*)movpkgURL toFileAtURL:(NSURL*)targetURL
+{
+	NSArray<NSString*>* subItems = [fileManager contentsOfDirectoryAtPath:[movpkgURL path] error:nil];
 
-        NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[fileURL lastPathComponent]];
-        [data writeToURL:tmpURL atomically:NO];
-   }*/
+	for(NSString* itemName in subItems)
+	{
+		NSURL* folderURL = [movpkgURL URLByAppendingPathComponent:itemName];
+
+		if([itemName hasPrefix:@"0"] && [fileManager isDirectoryAtURL:folderURL error:nil])
+		{
+			[self mergeSegmentsAtURL:folderURL toFileAtURL:targetURL];
+		}
+	}
+}
+
+- (void)mergeSegmentsAtURL:(NSURL*)segmentURL toFileAtURL:(NSURL*)targetURL
+{
+	NSArray<NSURL*>* fragments = [fileManager contentsOfDirectoryAtURL:segmentURL includingPropertiesForKeys:nil options:nil error:nil];
+
+	NSMutableArray<NSURL*>* fragmentsM = [fragments mutableCopy];
+
+	//filter out everything that is no fragment
+	for(NSURL* item in [fragments reverseObjectEnumerator])
+	{
+		if(!([[item pathExtension] isEqualToString:@"frag"] || [[item pathExtension] isEqualToString:@"initfrag"]))
+		{
+			[fragmentsM removeObject:item];
+		}
+	}
+
+	//sort alphabetically
+	[fragmentsM sortUsingComparator:^NSComparisonResult (NSURL* a, NSURL* b)
+	{
+		if([a.pathExtension isEqualToString:@"initfrag"])
+		{
+			return (NSComparisonResult)NSOrderedAscending;
+		}
+
+		if([b.pathExtension isEqualToString:@"initfrag"])
+		{
+			return (NSComparisonResult)NSOrderedDescending;
+		}
+
+		NSString* aIndexStringWithBrackets = [a.lastPathComponent componentsSeparatedByString:@"_"].firstObject;
+		NSString* bIndexStringWithBrackets = [b.lastPathComponent componentsSeparatedByString:@"_"].firstObject;
+
+		NSString* aIndexString;
+		NSString* bIndexString;
+
+		if(aIndexStringWithBrackets.length > 2)
+		{
+			aIndexString = [aIndexStringWithBrackets substringWithRange:NSMakeRange(1,aIndexStringWithBrackets.length-2)];
+		}
+
+		if(bIndexStringWithBrackets.length > 2)
+		{
+			bIndexString = [bIndexStringWithBrackets substringWithRange:NSMakeRange(1,bIndexStringWithBrackets.length-2)];
+		}
+
+		NSInteger aInt = [aIndexString integerValue];
+		NSInteger bInt = [bIndexString integerValue];
+
+		if(aInt > bInt)
+		{
+			return (NSComparisonResult)NSOrderedDescending;
+		}
+		else if(aInt == bInt)
+		{
+			return (NSComparisonResult)NSOrderedSame;
+		}
+		else
+		{
+			return (NSComparisonResult)NSOrderedAscending;
+		}
+	}];
+
+	if(fragmentsM.count == 0)
+	{
+		return;
+	}
+
+	//merge everything
+	NSMutableData* data;
+
+	BOOL first = YES;
+
+	for(NSURL* fragment in fragmentsM)
+	{
+		if(first)
+		{
+			first = NO;
+			data = [NSMutableData dataWithContentsOfURL:fragment];
+			continue;
+		}
+
+		[data appendData:[NSData dataWithContentsOfURL:fragment]];
+	}
+
+	NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[targetURL lastPathComponent]];
+	[data writeToURL:tmpURL atomically:YES];
+
+	[fileManager moveItemAtURL:tmpURL toURL:targetURL error:nil];
+}
 
 @end

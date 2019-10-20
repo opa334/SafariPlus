@@ -45,6 +45,7 @@
 "LOCK_TAB" = "Lock Tab";
 "UNLOCK_TAB" = "Unlock Tab";
 "ACCESS_LOCKED_TAB" = "Access Locked Tab";
+"OPEN_DOWNLOADS" = "Open Downloads";
 "AUTHENTICATE" = "Authenticate";
 "AUTHENTICATION_ERROR" = "Authentication Error";
 "ACCESS_BIOMETRIC_PROTECTION" = "Access Biometric Protection";
@@ -369,11 +370,17 @@
 "DOWNLOAD_TO" = "Download to...";
 "DOWNLOAD_SITE_TO" = "Download Site to...";
 "DOWNLOAD_IMAGE_TO" = "Download Image to...";
+"DOWNLOAD_PLAYLIST_TO" = "Download Playlist (%@) to...";
 "DOWNLOAD_OVERVIEW" = "Download Overview";
 "DOWNLOADS" = "Downloads";
 "FILE_BROWSER" = "File Browser";
 "OPEN" = "Open";
 "SHOW_CONTENT" = "Show Content";
+"MERGE_INTO_FILE" = "Merge into .%@ File";
+"MERGING" = "Merging...";
+"MERGE" = "Merge";
+"TS_NOTICE_MESSAGE" = "You are about to merge a movpkg into a .ts file. Please note that .ts files can NOT be played back on iOS so the main purpose of using this option would be if you want to transfer the file to another device such as a PC or Mac. If you want to convert the .ts file to .mp4 you need to use an external tool such as FFMPEG.";
+"MERGE_FILE_EXISTS_ERROR" = "The file \"%@\" already exists. Please delete it and try again.";
 "OPEN_IN" = "Open in...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Import to Music Library";
 "SAVE_TO_MEDIA_LIBRARY" = "Save to Media Library";
@@ -392,6 +399,7 @@
 "RENAME_FILE" = "Rename File";
 "RENAME_DIRECTORY" = "Rename Directory";
 "WARNING" = "Warning!";
+"NOTICE" = "Notice";
 "DELETE_FILE_MESSAGE" = "Are you sure you want to permanently delete the file %@? Recovering it later is not possible!";
 "DELETE_DIRECTORY_MESSAGE" = "Are you sure you want to permanently delete the directory %@ and it's contents? Recovering it later is not possible!";
 "DELETE" = "Delete";

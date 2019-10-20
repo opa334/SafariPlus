@@ -91,8 +91,9 @@
 
 - (void)setFilename:(NSString*)filename
 {
-	if(self.isHLSDownload)
+	if(self.isHLSDownload && ![filename.pathExtension isEqualToString:@"movpkg"])
 	{
+		_playlistExtension = filename.pathExtension;
 		_filename = [[filename stringByDeletingPathExtension] stringByAppendingPathExtension:@"movpkg"];
 	}
 	else

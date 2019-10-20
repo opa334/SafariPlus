@@ -109,5 +109,8 @@
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
 - (void)handleFinishedTask:(__kindof NSURLSessionTask*)task location:(NSURL *)location;
-//- (void)mergeSegmentsAtURL:(NSURL*)segmentURL toFileAtURL:(NSURL*)fileURL;
+
+- (NSString*)fileTypeOfMovpkgAtURL:(NSURL*)movpkgURL;
+- (void)mergeMovpkgAtURL:(NSURL*)movpkgURL toFileAtURL:(NSURL*)fileURL;
+- (void)mergeSegmentsAtURL:(NSURL*)segmentURL toFileAtURL:(NSURL*)fileURL;
 @end

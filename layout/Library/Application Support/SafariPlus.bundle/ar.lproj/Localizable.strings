@@ -45,6 +45,7 @@
 "LOCK_TAB" = "قفل علامة التبويب";
 "UNLOCK_TAB" = "فتح قفل علامة التبويب";
 "ACCESS_LOCKED_TAB" = "الوصول إلى علامة التبويب المقفلة";
+/*OPEN_DOWNLOADS*/
 "AUTHENTICATE" = "المصادقة";
 "AUTHENTICATION_ERROR" = "خطأ في المصادقة";
 "ACCESS_BIOMETRIC_PROTECTION" = "حماية السماح بالوصول";
@@ -95,7 +96,6 @@
 
 "DEFAULT_SECTION" = "القسم الافتراضي";
 "DEFAULT_SECTION_FOOTER" = "اختر قسمًا ليتم اعتباره كافتراضي بحيث يكون هو القسم الذي يظهر دائمًا عند فتح مركز التنزيل.\nعند تفعيل خيار 'تبديل تلقائي' سيتم فتح القسم الذي اخترته عندما تكون هناك تنزيلات جارية، وعندما لا تكون هناك تنزيلات جارية سيتم فتح القسم الآخر.";
-
 "DEFAULT_SECTION_AUTO_SWITCH" = "تبديل تلقائي";
 
 "BEHAVIOUR" = "السلوك";
@@ -199,8 +199,6 @@
 
 "AUTOMATIC_ACTIONS" = "الإجراءات التلقائية";
 
-/*AUTOMATIC_ACTIONS*/
-
 "AUTO_CLOSE_TABS_FOOTER" = "إغلاق علامات التبويب لوضع التصفح عند حدوث حالة محددة.";
 "AUTO_CLOSE_TABS_LABEL" = "إغلاق تلقائي لعلامات التبويب";
 "AUTO_DELETE_DATA_LABEL" = "مسح تلقائي لبيانات المتصفح";
@@ -215,7 +213,7 @@
 
 "ACTION" = "الإجراء";
 
-"URL_BAR_GESTURES_LABEL" = "إيماءات شريط عنوان URL";
+/*URL_BAR_GESTURES*/
 "TOOLBAR_GESTURES" = "إيماءات شريط الأدوات";
 
 "SWIPE_LEFT_GESTURE" = "إيماءة التمرير لليسار";
@@ -372,11 +370,17 @@
 "DOWNLOAD_TO" = "تنزيل إلى";
 "DOWNLOAD_SITE_TO" = "تنزيل الموقع إلى...";
 "DOWNLOAD_IMAGE_TO" = "تنزيل الصورة إلى...";
+/*DOWNLOAD_PLAYLIST_TO*/
 "DOWNLOAD_OVERVIEW" = "نظرة عامة على التنزيلات";
 "DOWNLOADS" = "التنزيلات";
 "FILE_BROWSER" = "متصفح الملفات";
 "OPEN" = "فتح";
 "SHOW_CONTENT" = "عرض المحتوى";
+/*MERGE_INTO_FILE*/
+/*MERGING*/
+/*MERGE*/
+/*TS_NOTICE_MESSAGE*/
+/*MERGE_FILE_EXISTS_ERROR*/
 "OPEN_IN" = "فتح في...";
 "IMPORT_TO_MUSIC_LIBRARY" = "استيراد إلى مكتبة الموسيقى";
 "SAVE_TO_MEDIA_LIBRARY" = "حفظ إلى مكتبة الوسائط";
@@ -395,12 +399,13 @@
 "RENAME_FILE" = "إعادة تسمية الملف";
 "RENAME_DIRECTORY" = "إعادة تسمية الدليل";
 "WARNING" = "تحذير!";
+/*NOTICE*/
 "DELETE_FILE_MESSAGE" = "هل أنت متأكد أنك تريد حذف ملف %@ بشكل نهائي؟ الاستعادة لاحقًا غير ممكنة!";
 "DELETE_DIRECTORY_MESSAGE" = "هل أنت متأكد أنك تريد حذف دليل %@ ومحتوياته؟ الاستعادة لاحقًا غير ممكنة!";
 "DELETE" = "حذف";
 "RENAME" = "إعادة تسمية";
 "DOWNLOAD_STARTED" = "بدأ تنزيل";
-"DOWNLOAD_SUCCESS" = "تم التنزيل بنجاح";
+/*DOWNLOAD_SUCCEEDED*/
 "DOWNLOAD_FAILED" = "فشل التنزيل";
 "SAVED_IMAGE" = "تم حفظ الصورة";
 "ERROR" = "خطأ";
@@ -451,3 +456,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "فتح في الوضع العادي";
 "OPEN_IN_PRIVATE_MODE" = "فتح في الوضع الخاص";
+

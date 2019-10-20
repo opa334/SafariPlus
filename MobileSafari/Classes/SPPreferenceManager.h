@@ -47,6 +47,7 @@
 @property (nonatomic, readonly) BOOL biometricProtectionLockTabEnabled;
 @property (nonatomic, readonly) BOOL biometricProtectionUnlockTabEnabled;
 @property (nonatomic, readonly) BOOL biometricProtectionAccessLockedTabEnabled;
+@property (nonatomic, readonly) BOOL biometricProtectionOpenDownloadsEnabled;
 
 @property (nonatomic, readonly) BOOL uploadAnyFileOptionEnabled;
 @property (nonatomic, readonly) BOOL downloadManagerEnabled;

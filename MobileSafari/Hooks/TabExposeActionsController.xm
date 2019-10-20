@@ -37,18 +37,19 @@
 
 	if(preferenceManager.lockedTabsEnabled)
 	{
-		BOOL changed = updateTabExposeActionsForLockedTabs(self.browserController, self.alertController);
-		if(!changed)
-		{
-			//Force a reload
-			NSUInteger actions = MSHookIvar<NSUInteger>(self, "_actions");
+		//Force reload actions before updating them
+		//This is dirty and could be done much better (by hooking _setActions:)
+		//but there's not much point as this approach has better backwards compatibility
+		
+		NSUInteger actions = MSHookIvar<NSUInteger>(self, "_actions");
 
-			if(actions == prevActions)
-			{
-				MSHookIvar<NSUInteger>(self, "_actions") = 0;
-				[self _setActions:actions];
-			}
+		if(actions == prevActions)
+		{
+			MSHookIvar<NSUInteger>(self, "_actions") = 0;
+			[self _setActions:actions];
 		}
+
+		updateTabExposeActionsForLockedTabs(self.browserController, self.alertController);
 	}
 }
 

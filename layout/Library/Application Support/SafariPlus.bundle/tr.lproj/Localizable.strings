@@ -45,6 +45,7 @@
 /*LOCK_TAB*/
 /*UNLOCK_TAB*/
 /*ACCESS_LOCKED_TAB*/
+/*OPEN_DOWNLOADS*/
 /*AUTHENTICATE*/
 /*AUTHENTICATION_ERROR*/
 /*ACCESS_BIOMETRIC_PROTECTION*/
@@ -64,6 +65,7 @@
 
 "VIDEO_DOWNLOADING" = "Video İndirme";
 "VIDEO_DOWNLOADING_FOOTER" = "Video oynatıcısına, videoyu indirmek için kullanılabilecek bir düğme ekler.\n\nNOT: Bazı sitelerde, URL'nin kolayca alınamadığından dolayı çalışmayabilir. Ayrıca bazı siteler içerik akışı için m3u8 dosyalarını kullanır, bu dosyaları kaydedebilirsiniz, ancak herhangi bir video içermez.";
+/*USE_TAB_TITLE_AS_FILENAME*/
 
 /*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
 /*DOWNLOAD_SITE_TO_ACTION*/
@@ -173,6 +175,9 @@
 
 /*SHOW_FULL_SITE_URL*/
 /*SHOW_FULL_SITE_URL_FOOTER*/
+
+/*FORCE_NATIVE_PLAYER*/
+/*FORCE_NATIVE_PLAYER_FOOTER*/
 
 "SUPPRESS_MAILTO_DIALOG" = "mail yönlendirmelerini engelle";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Bir 'mailto: <email>' URL'sine erişildiğinde, iOS 10 ve üstünde görünen iletişim kutusunu engeller.";
@@ -365,11 +370,17 @@
 "DOWNLOAD_TO" = "Şuraya indir…";
 "DOWNLOAD_SITE_TO" = "Siteyi indir...";
 "DOWNLOAD_IMAGE_TO" = "Görüntüyü indir...";
+/*DOWNLOAD_PLAYLIST_TO*/
 "DOWNLOAD_OVERVIEW" = "Tümüne göz at";
 "DOWNLOADS" = "İndirilenler";
 "FILE_BROWSER" = "Dosya tarayıcısı";
 "OPEN" = "Aç";
 /*SHOW_CONTENT*/
+/*MERGE_INTO_FILE*/
+/*MERGING*/
+/*MERGE*/
+/*TS_NOTICE_MESSAGE*/
+/*MERGE_FILE_EXISTS_ERROR*/
 "OPEN_IN" = "ile Aç…";
 "IMPORT_TO_MUSIC_LIBRARY" = "Müzik Kitaplığının İçine Aktar";
 /*SAVE_TO_MEDIA_LIBRARY*/
@@ -388,6 +399,7 @@
 "RENAME_FILE" = "Dosyayı yeniden adlandır";
 /*RENAME_DIRECTORY*/
 "WARNING" = "Uyarı!";
+/*NOTICE*/
 "DELETE_FILE_MESSAGE" = "Dosyayı kalıcı olarak silmek istediğinizden emin misiniz? %@? Daha sonra geri kazanmak mümkün değildir!";
 /*DELETE_DIRECTORY_MESSAGE*/
 "DELETE" = "Sil";
@@ -444,3 +456,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Normal Mod aç";
 "OPEN_IN_PRIVATE_MODE" = "Özel Modda Aç";
+

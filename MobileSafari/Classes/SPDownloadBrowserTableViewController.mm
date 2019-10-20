@@ -293,6 +293,16 @@
 			[openAlert addAction:[self showContentActionForFile:file withIndexPath:indexPath]];
 		}
 
+		if([file isHLSStream])
+		{
+			NSString* extension = [downloadManager fileTypeOfMovpkgAtURL:file.fileURL];
+			
+			if(![extension isEqualToString:@""])
+			{
+				[openAlert addAction:[self mergeActionForFile:file withTargetExtension:extension]];
+			}
+		}
+
 		[openAlert addAction:[self openInActionForFile:file]];
 
 		if([file conformsTo:kUTTypeAudiovisualContent] || [file conformsTo:kUTTypeImage])
@@ -433,6 +443,76 @@
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
 		[super didSelectFile:file atIndexPath:indexPath];
+	}];
+}
+
+- (UIAlertAction*)mergeActionForFile:(SPFile*)file withTargetExtension:(NSString*)targetExtension
+{
+	return [UIAlertAction actionWithTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MERGE_INTO_FILE"], targetExtension]
+		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+	{
+		NSURL* targetURL = [[[file fileURL] URLByDeletingPathExtension] URLByAppendingPathExtension:targetExtension];
+
+		void (^performMerge)(void) = ^
+		{
+			UIAlertController* mergingActivityController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"MERGING"] message:@"" preferredStyle:UIAlertControllerStyleAlert];
+			UIActivityIndicatorView* activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(10,5,50,50)];
+			activityIndicator.hidesWhenStopped = YES;
+			activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+			[activityIndicator startAnimating];
+			[mergingActivityController.view addSubview:activityIndicator];
+
+			[self.navigationController presentViewController:mergingActivityController animated:YES completion:nil];
+
+			dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+			{
+        	    [downloadManager mergeMovpkgAtURL:[file fileURL] toFileAtURL:targetURL];
+
+        	    dispatch_async(dispatch_get_main_queue(), ^
+				{
+					[mergingActivityController dismissViewControllerAnimated:YES completion:nil];
+					[self unselectRow];
+        	        [self reload];
+        	    });
+        	});
+		};
+
+		if(![fileManager fileExistsAtURL:targetURL error:nil])
+		{
+			if([targetExtension isEqualToString:@"ts"])
+			{
+				UIAlertController* mergingActivityController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"NOTICE"] message:[localizationManager localizedSPStringForKey:@"TS_NOTICE_MESSAGE"] preferredStyle:UIAlertControllerStyleAlert];
+
+				UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleCancel handler:nil];
+
+				UIAlertAction* mergeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"MERGE"] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+				{
+					performMerge();
+				}];
+
+				[mergingActivityController addAction:cancelAction];
+				[mergingActivityController addAction:mergeAction];
+
+				[self.navigationController presentViewController:mergingActivityController animated:YES completion:nil];
+			}
+			else
+			{
+				performMerge();
+			}
+		}
+		else
+		{
+			UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"] message:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MERGE_FILE_EXISTS_ERROR"], targetURL.lastPathComponent] preferredStyle:UIAlertControllerStyleAlert];
+
+			UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
+			{
+				[self unselectRow];
+			}];
+
+			[errorAlert addAction:closeAction];
+
+			[self.navigationController presentViewController:errorAlert animated:YES completion:nil];
+		}
 	}];
 }
 

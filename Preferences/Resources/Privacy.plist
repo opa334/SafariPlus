@@ -84,7 +84,7 @@
 				<key>label</key>
 				<string>BIOMETRIC_PROTECTION</string>
 				<key>nestedEntryCount</key>
-				<integer>5</integer>
+				<integer>6</integer>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -169,6 +169,22 @@
 				<string>biometricProtectionAccessLockedTabEnabled</string>
 				<key>label</key>
 				<string>ACCESS_LOCKED_TAB</string>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>enabled</key>
+				<false/>
+				<key>default</key>
+				<false/>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>key</key>
+				<string>biometricProtectionOpenDownloadsEnabled</string>
+				<key>label</key>
+				<string>OPEN_DOWNLOADS</string>
 			</dict>
 			<dict>
 				<key>PostNotification</key>

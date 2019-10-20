@@ -41,14 +41,23 @@
 %new
 - (void)downloadsFromButtonBar
 {
-	dispatch_async(dispatch_get_main_queue(), ^
+	void (^openDownloads)(void) = ^
 	{
 		//Create SPDownloadNavigationController
 		SPDownloadNavigationController* downloadsController = [[SPDownloadNavigationController alloc] init];
 
 		//Present SPDownloadNavigationController
 		[rootViewControllerForBrowserController(self) presentViewController:downloadsController animated:YES completion:nil];
-	});
+	}; 
+
+	if(preferenceManager.biometricProtectionOpenDownloadsEnabled)
+	{
+		requestAuthentication([localizationManager localizedSPStringForKey:@"OPEN_DOWNLOADS"], openDownloads);
+	}
+	else
+	{
+		openDownloads();
+	}
 }
 
 //URL Swipe actions

@@ -40,9 +40,7 @@
 - (BOOL)isHLSStream;
 - (BOOL)displaysAsRegularFile;
 
-#if !PREFERENCES && !SPRINGBOARD
 - (void)updateCellTitle;
 - (void)updateUTI;
-#endif
 
 @end

@@ -45,6 +45,7 @@
 /*LOCK_TAB*/
 /*UNLOCK_TAB*/
 /*ACCESS_LOCKED_TAB*/
+/*OPEN_DOWNLOADS*/
 /*AUTHENTICATE*/
 /*AUTHENTICATION_ERROR*/
 /*ACCESS_BIOMETRIC_PROTECTION*/
@@ -64,6 +65,7 @@
 
 "VIDEO_DOWNLOADING" = "Descargar Videos";
 "VIDEO_DOWNLOADING_FOOTER" = "Añade un botón al reproductor de video para descargarlo.\n\nNOTA: Puede que no funcione en algunos sitios ya que la URL no es rastreable fácilmente. Además algunos sitios usan archivos m3u8 para transmitir el contenido, puede guardar estos archivos, pero no contendrán ningún video.";
+/*USE_TAB_TITLE_AS_FILENAME*/
 
 /*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
 /*DOWNLOAD_SITE_TO_ACTION*/
@@ -173,6 +175,9 @@
 
 /*SHOW_FULL_SITE_URL*/
 /*SHOW_FULL_SITE_URL_FOOTER*/
+
+/*FORCE_NATIVE_PLAYER*/
+/*FORCE_NATIVE_PLAYER_FOOTER*/
 
 "SUPPRESS_MAILTO_DIALOG" = "Desactivar ventana de diálogo mailto";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Desactiva la ventana de diálogo que aparece al hacer click en una URL 'mailto:<email>' en iOS 10 y superior.";
@@ -365,11 +370,17 @@
 "DOWNLOAD_TO" = "Descargar en...";
 "DOWNLOAD_SITE_TO" = "Descargar sitio en...";
 "DOWNLOAD_IMAGE_TO" = "Descargar imagen en...";
+/*DOWNLOAD_PLAYLIST_TO*/
 "DOWNLOAD_OVERVIEW" = "Download Overview";
 "DOWNLOADS" = "Descargas";
 "FILE_BROWSER" = "Explorador de Archivos";
 "OPEN" = "Abrir";
 /*SHOW_CONTENT*/
+/*MERGE_INTO_FILE*/
+/*MERGING*/
+/*MERGE*/
+/*TS_NOTICE_MESSAGE*/
+/*MERGE_FILE_EXISTS_ERROR*/
 "OPEN_IN" = "Abrir en...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Importar a librería de música";
 "SAVE_TO_MEDIA_LIBRARY" = "Guardar en librería de medios";
@@ -388,6 +399,7 @@
 "RENAME_FILE" = "Renombrar archivo";
 "RENAME_DIRECTORY" = "Renombrar carpeta";
 "WARNING" = "Atención!";
+/*NOTICE*/
 "DELETE_FILE_MESSAGE" = "Estás seguro/a que deseas borrar permanentemente el archivo %@? Recuperarlo después NO es posible!";
 "DELETE_DIRECTORY_MESSAGE" = "Estás seguro/a que deseas borrar permanentemente la carpeta %@ y sus contenidos? Recuperarlo después NO es posible!";
 "DELETE" = "Borrar";
@@ -444,3 +456,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Abrir en modo normal";
 "OPEN_IN_PRIVATE_MODE" = "Abrir en modo privado";
+

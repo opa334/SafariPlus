@@ -45,6 +45,7 @@
 /*LOCK_TAB*/
 /*UNLOCK_TAB*/
 /*ACCESS_LOCKED_TAB*/
+/*OPEN_DOWNLOADS*/
 /*AUTHENTICATE*/
 /*AUTHENTICATION_ERROR*/
 /*ACCESS_BIOMETRIC_PROTECTION*/
@@ -64,6 +65,7 @@
 
 "VIDEO_DOWNLOADING" = "Загрузчик Видео";
 "VIDEO_DOWNLOADING_FOOTER" = "Добавляет кнопку «Загрузить» в стандартный видеоплеер Safari, нажатие которой позволяет загружать просматриваемое видео.\n\nПримечание: Может не работать на некоторых сайтах, из-за невозможности извлечь URL адрес видео. Так же из-за того, что некоторые сайты используют m3u8 файлы для потоковой передачи, при этом вы сможете сохранить эти файлы, но они не будут содержат видео.";
+/*USE_TAB_TITLE_AS_FILENAME*/
 
 /*ELEMENT_DOWNLOAD_ACTIONS_FOOTER*/
 /*DOWNLOAD_SITE_TO_ACTION*/
@@ -173,6 +175,9 @@
 
 /*SHOW_FULL_SITE_URL*/
 /*SHOW_FULL_SITE_URL_FOOTER*/
+
+/*FORCE_NATIVE_PLAYER*/
+/*FORCE_NATIVE_PLAYER_FOOTER*/
 
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Откл. Email Диалога";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Отключает диалоговое окно, появляющееся на iOS 10 и выше при открытии окна отправки электронного письма.";
@@ -365,11 +370,17 @@
 "DOWNLOAD_TO" = "Скачать в...";
 "DOWNLOAD_SITE_TO" = "Сохранить страницу в...";
 "DOWNLOAD_IMAGE_TO" = "Сохранить изображение в...";
+/*DOWNLOAD_PLAYLIST_TO*/
 "DOWNLOAD_OVERVIEW" = "Обзор";
 "DOWNLOADS" = "Загрузки";
 "FILE_BROWSER" = "Файловый Менеджер";
 "OPEN" = "Открыть";
 /*SHOW_CONTENT*/
+/*MERGE_INTO_FILE*/
+/*MERGING*/
+/*MERGE*/
+/*TS_NOTICE_MESSAGE*/
+/*MERGE_FILE_EXISTS_ERROR*/
 "OPEN_IN" = "Открыть в...";
 "IMPORT_TO_MUSIC_LIBRARY" = "Импортировать в Музыку";
 "SAVE_TO_MEDIA_LIBRARY" = "Сохранить в Галерею";
@@ -388,6 +399,7 @@
 "RENAME_FILE" = "Переименовать";
 "RENAME_DIRECTORY" = "Переименовать";
 "WARNING" = "Внимание!";
+/*NOTICE*/
 "DELETE_FILE_MESSAGE" = "Вы действительно хотите удалить файл %@? Восстановить его позже будет невозможно!";
 "DELETE_DIRECTORY_MESSAGE" = "Вы действительно хотите навсегда удалить папку %@ и её содержимое? Восстановить данные позже будет невозможно!";
 "DELETE" = "Удалить";
@@ -444,3 +456,4 @@
 
 "OPEN_IN_NORMAL_MODE" = "Открыть в обычном режиме";
 "OPEN_IN_PRIVATE_MODE" = "Открыть в приватном режиме";
+
