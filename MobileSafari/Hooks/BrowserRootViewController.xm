@@ -25,9 +25,9 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
 
-%hook BrowserRootViewController
-
 #ifndef NO_CEPHEI
+
+%hook BrowserRootViewController
 
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
 {
@@ -79,11 +79,13 @@
 	%orig;
 }
 
-#endif
-
 %end
+
+#endif
 
 void initBrowserRootViewController()
 {
+	#ifndef NO_CEPHEI
 	%init();
+	#endif
 }
