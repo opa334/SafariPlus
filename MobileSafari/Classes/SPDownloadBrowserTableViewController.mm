@@ -293,9 +293,16 @@
 			[openAlert addAction:[self showContentActionForFile:file withIndexPath:indexPath]];
 		}
 
+		NSURL* hardLinkedURL;
+
+		if([file conformsTo:kUTTypeAudiovisualContent] || [file isHLSStream])
+		{
+			hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
+		}
+
 		if([file isHLSStream])
 		{
-			NSString* extension = [downloadManager fileTypeOfMovpkgAtURL:file.fileURL];
+			NSString* extension = [downloadManager fileTypeOfMovpkgAtURL:hardLinkedURL];
 			
 			if(![extension isEqualToString:@""])
 			{
@@ -309,17 +316,20 @@
 		{
 			if([file conformsTo:kUTTypeAudiovisualContent])
 			{
-				NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
-				if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(hardLinkedURL.path))
+				if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(hardLinkedURL.path)) //This can take more than a second on larger files
 				{
 					[openAlert addAction:[self importToMediaLibraryActionForVideoWithURL:file.fileURL]];
 				}
-				[fileManager resetHardLinks];
 			}
 			else
 			{
 				[openAlert addAction:[self importToMediaLibraryActionForImageWithURL:file.fileURL]];
 			}
+		}
+
+		if(hardLinkedURL)
+		{
+			[fileManager resetHardLinks];
 		}
 
 		if(_filzaInstalled)
@@ -342,7 +352,6 @@
 					       style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
 		{
 			[self unselectRow];
-			[fileManager resetHardLinks];
 		}];
 
 		[openAlert addAction:cancelAction];
@@ -451,6 +460,7 @@
 	return [UIAlertAction actionWithTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MERGE_INTO_FILE"], targetExtension]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
+		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 		NSURL* targetURL = [[[file fileURL] URLByDeletingPathExtension] URLByAppendingPathExtension:targetExtension];
 
 		void (^performMerge)(void) = ^
@@ -466,10 +476,11 @@
 
 			dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 			{
-        	    [downloadManager mergeMovpkgAtURL:[file fileURL] toFileAtURL:targetURL];
+        	    [downloadManager mergeMovpkgAtURL:hardLinkedURL toFileAtURL:targetURL];
 
         	    dispatch_async(dispatch_get_main_queue(), ^
 				{
+					[fileManager resetHardLinks];
 					[mergingActivityController dismissViewControllerAnimated:YES completion:nil];
 					[self unselectRow];
         	        [self reload];
@@ -483,7 +494,10 @@
 			{
 				UIAlertController* mergingActivityController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"NOTICE"] message:[localizationManager localizedSPStringForKey:@"TS_NOTICE_MESSAGE"] preferredStyle:UIAlertControllerStyleAlert];
 
-				UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleCancel handler:nil];
+				UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"] style:UIAlertActionStyleCancel handler:^(UIAlertAction* action)
+				{
+					[self unselectRow];
+				}];
 
 				UIAlertAction* mergeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"MERGE"] style:UIAlertActionStyleDefault handler:^(UIAlertAction* action)
 				{
