@@ -36,7 +36,6 @@
 	{
 		//Enable HTML5 player for YouTube, disable for any other site
 		cSelf.configuration.preferences._fullScreenEnabled = [cSelf.URL.host containsString:@"youtube.com"];
-		HBLogDebug(@"%@ _fullScreenEnabled:%i", cSelf.URL, cSelf.configuration.preferences._fullScreenEnabled);
 	}
 }
 
@@ -146,7 +145,7 @@
 {
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3)
 	{
-		//Calling reload on webView does apply the user agent on iOS 11.3 and above, no idea why, this is the proper fix for it
+		//Calling reload on webView does not apply the user agent on iOS 11.3 and above, no idea why, this is the proper fix for it
 		[cSelf evaluateJavaScript:@"window.location.reload(true)" completionHandler:nil];
 	}
 	else

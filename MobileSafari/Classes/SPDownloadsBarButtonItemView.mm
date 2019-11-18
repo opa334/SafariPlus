@@ -21,6 +21,8 @@
 #import "SPDownloadsBarButtonItemView.h"
 #import "SPDownloadsBarButtonItem.h"
 #import "../Util.h"
+#import "../SafariPlus.h"
+#import "../Defines.h"
 
 @implementation SPDownloadsBarButtonItemView
 
@@ -40,8 +42,18 @@
 	_downloadsButton = [UIButton buttonWithType:UIButtonTypeSystem];
 	_downloadsButton.translatesAutoresizingMaskIntoConstraints = NO;
 
-	[_downloadsButton addTarget:_item.target action:_item.action forControlEvents:UIControlEventTouchUpInside];
-	[_downloadsButton setImage:[UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+	[_downloadsButton addTarget:self action:@selector(sendTouchUpInsideEvent) forControlEvents:UIControlEventTouchUpInside];
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		UIImageSymbolConfiguration* symbolConfiguration = [NSClassFromString(@"UIImageSymbolConfiguration") configurationWithTextStyle:UIFontTextStyleBody scale:UIImageSymbolScaleLarge];
+        symbolConfiguration = [symbolConfiguration configurationWithTraitCollection:[UITraitCollection traitCollectionWithPreferredContentSizeCategory:UIContentSizeCategoryMedium]];
+        [_downloadsButton setImage:[UIImage systemImageNamed:@"arrow.down.circle" withConfiguration:symbolConfiguration] forState:UIControlStateNormal];
+	}
+	else
+	{
+		[_downloadsButton setImage:[UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
+	}
 
 	[self addSubview:_progressView];
 	[self addSubview:_downloadsButton];
@@ -49,6 +61,11 @@
 	[self setUpConstraints];
 
 	return self;
+}
+
+- (void)sendTouchUpInsideEvent
+{
+	[[UIApplication sharedApplication] sendAction:_item.action to:_item.target from:_item forEvent:nil];
 }
 
 - (void)setUpConstraints

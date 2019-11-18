@@ -122,6 +122,10 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 - (UIImage*)_flatImageWithColor:(UIColor*)color;
 @end
 
+@interface _UINavigationBarPalette : UIView
+- (instancetype)initWithContentView:(__kindof UIView*)arg1;
+@end
+
 @interface _UINavigationControllerPalette : UIView
 - (BOOL)isAttached;
 @end
@@ -134,6 +138,10 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @interface UINavigationController (Private)
 - (id)paletteForEdge:(NSUInteger)arg1 size:(CGSize)arg2;
 - (void)attachPalette:(id)arg1 isPinned:(BOOL)arg2;
+@end
+
+@interface UINavigationItem (Private)
+@property (setter=_setBottomPalette:,nonatomic,retain) _UINavigationBarPalette* _bottomPalette;
 @end
 
 @interface UISegmentedControl (Private)
@@ -156,6 +164,8 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @property (setter=_setGestureRecognizers:,nonatomic,retain) NSArray* _gestureRecognizers;
 @property (setter=_sf_setLongPressEnabled:, nonatomic) BOOL _sf_longPressEnabled;
 - (BOOL)isSystemItem;
+- (void)_setWidth:(CGFloat)width;
+- (BOOL)isSpaceItem;
 @end
 
 @interface UIAlertAction (Private)
@@ -163,9 +173,52 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 - (void)setTitle:(NSString*)arg1;
 @end
 
+@interface UIToolbar (Private)
+- (void)_setItemDistribution:(NSInteger)arg1;
+@end
+
 @interface UIImage (Safari)
 + (UIImage*)ss_imageNamed:(NSString*)name;
 @end
+/*
+typedef enum UIImageSymbolWeight : NSInteger {
+	UIImageSymbolWeightUnspecified,
+	UIImageSymbolWeightUltraLight,
+	UIImageSymbolWeightThin,
+	UIImageSymbolWeightLight,
+	UIImageSymbolWeightRegular,
+	UIImageSymbolWeightMedium,
+	UIImageSymbolWeightSemibold,
+	UIImageSymbolWeightBold,
+	UIImageSymbolWeightHeavy,
+	UIImageSymbolWeightBlack
+} UIImageSymbolWeight;
+
+typedef enum UIImageSymbolScale : NSInteger {
+	UIImageSymbolScaleDefault,
+	UIImageSymbolScaleUnspecified,
+	UIImageSymbolScaleSmall,
+	UIImageSymbolScaleMedium,
+	UIImageSymbolScaleLarge
+} UIImageSymbolScale;
+
+@interface UIImageConfiguration : NSObject
+- (instancetype)configurationWithTraitCollection:(UITraitCollection *)traitCollection;
+@end
+
+@interface UIImageSymbolConfiguration : UIImageConfiguration
++ (instancetype)configurationWithTextStyle:(UIFontTextStyle)textStyle scale:(UIImageSymbolScale)scale;
+@end
+
+@interface UIImage (iOS13)
++ (UIImage *)systemImageNamed:(NSString *)name;
++ (UIImage *)systemImageNamed:(NSString *)name withConfiguration:(UIImageSymbolConfiguration*)configuration;
+@end
+
+@interface UIColor (iOS13)
++ (instancetype)labelColor;
++ (instancetype)secondaryLabelColor;
+@end*/
 
 @interface UIWindow (Safari)
 @property (nonatomic) CGRect _sf_bottomUnsafeAreaFrameForToolbar;
@@ -177,6 +230,7 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 
 @interface UIView (Private)
 - (void)removeAllGestureRecognizers;
+- (instancetype)initWithSize:(CGSize)arg1;
 @end
 
 @interface CALayer (Private)
@@ -222,6 +276,7 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 - (void)_requestActivatedElementAtPosition:(CGPoint)position completionBlock:(void (^)(_WKActivatedElementInfo *))block;
 - (void)_setCustomUserAgent:(NSString*)arg1;
 - (WKContentView*)_currentContentView;
+- (NSURL*)_unreachableURL;
 @end
 
 @interface WKFileUploadPanel <filePickerDelegate>
@@ -270,10 +325,15 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 
 @interface _SFBarManager : NSObject
 @property (nonatomic) BrowserController* delegate;
+- (void)_updateRegistration:(id)arg1;
 @end
 
 @interface SFBarRegistration : UIResponder
+- (id)initWithBar:(id)arg1 barManager:(id)arg2 layout:(NSInteger)arg3 persona:(NSUInteger)arg4;
 - (UIBarButtonItem*)UIBarButtonItemForItem:(NSInteger)arg1;
+- (UIBarButtonItem*)_newBarButtonItemForSFBarItem:(NSInteger)barItem;
+- (NSInteger)_barItemForUIBarButtonItem:(UIBarButtonItem*)item;
+- (BOOL)containsBarItem:(NSInteger)barItem;
 @end
 
 @interface SFCrossfadingLabel : UILabel
@@ -289,6 +349,16 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @property (nonatomic,copy,readonly) NSString* defaultText;
 - (void)finishWithPrimaryAction:(BOOL)arg1 text:(id)arg2;
 - (void)completeWithResponse:(NSDictionary*)arg1;
+@end
+
+@interface _SFSettingsAlertItem : NSObject
+@property(copy, nonatomic) NSString *title;
++ (id)buttonWithTitle:(NSString*)arg1 textStyle:(id)arg2 icon:(id)arg3 handler:(void (^)())arg4;
+@end
+
+@interface _SFSettingsAlertController : UIViewController
+- (void)addItem:(_SFSettingsAlertItem*)arg1;
+- (UIViewController*)_rootContentController; //seems to only exists on 13.2 and above
 @end
 
 @interface _SFDialogController : NSObject
@@ -321,7 +391,9 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @property (nonatomic, weak) BrowserController* delegate;
 @property (nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
 @property (nonatomic,readonly) CGRect URLOutlineFrameInNavigationBarSpace;
+- (void)_reloadButtonPressed;
 - (id)_backdropInputSettings;
+- (id)_toolbarForBarItem:(NSInteger)barItem; //iOS 13
 @end
 
 @interface _SFNavigationBarBackdrop : _UIBackdropView
@@ -354,6 +426,7 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @property (nonatomic) UIColor* tintColor;
 @property (nonatomic,readonly) NSInteger toolbarSize;
 @property (nonatomic,readonly) CGFloat URLFieldHorizontalMargin;
+@property (nonatomic,weak) SFBarRegistration* barRegistration;
 - (id)_backdropInputSettings;
 - (BOOL)_tintUsesDarkTheme;
 - (BOOL)hasDarkBackground;
@@ -387,6 +460,7 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @interface AVButton : UIButton
 @property (assign,nonatomic) CGSize extrinsicContentSize;
 @property (assign,getter=isIncluded,nonatomic) BOOL included;
++ (instancetype)buttonWithAccessibilityIdentifier:(NSString*)arg1;
 @end
 
 @interface AVFullScreenPlaybackControlsViewController : AVPlaybackControlsViewController <SourceVideoDelegate>
@@ -481,8 +555,13 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @property (nonatomic,readonly) NSArray* browserControllers;
 - (BOOL)isPrivateBrowsingEnabledInAnyWindow;
 //new stuff below
+@property (nonatomic) BOOL sp_isSetUp;
+@property (nonatomic) NSDictionary* sp_storedLaunchOptions;
 - (void)sp_preAppLaunch;
 - (void)sp_postAppLaunchWithOptions:(NSDictionary*)launchOptions;
+- (void)sp_setUpWithMainBrowserController:(BrowserController*)browserController;
+- (void)sp_applicationDidEnterBackground;
+- (void)sp_applicationWillEnterForeground;
 - (void)handleTwitterAlert;
 - (void)handleSBConnectionTest;
 - (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void (^)(void))completionHandler;
@@ -752,6 +831,8 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 - (void)tabCollectionView:(id)collectionView didSelectItem:(id<TabCollectionItem>)item;
 - (void)_insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 8-10
 - (void)insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 11 and above
+//- (void)openNewTabWithOptions:(NSInteger)arg1 completionHandler:(void (^)(bool))arg2; //iOS 13 | bit 2 = private mode, bit 3 = "alternate ordering"(?)
+- (TabDocument*)_insertNewBlankTabDocumentWithPrivateBrowsing:(BOOL)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3; //iOS 13
 //new stuff below
 @property (assign,nonatomic) BOOL desktopButtonSelected;
 @property (nonatomic,retain) UIButton* tiltedTabViewDesktopModeButton;
@@ -800,6 +881,7 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(NSInteger)arg2;
 - (void)_animateElement:(id)arg1 toBarItem:(NSInteger)arg2;
+- (void)animateElement:(id)arg1 toBarItem:(NSInteger)arg2; //iOS 13
 - (void)loadURL:(id)arg1 userDriven:(BOOL)arg2;
 - (void)stopLoading;
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;

@@ -30,7 +30,6 @@
 #import "../Classes/SPDownloadInfo.h"
 #import "../Classes/UIButton+ActivityIndicator.h"
 
-
 %hook AVPlaybackControlsView
 
 %property (nonatomic,retain) AVButton *downloadButton;
@@ -40,13 +39,29 @@
 {
 	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled && !self.downloadButton)
 	{
-		self.downloadButton = [%c(AVButton) buttonWithType:UIButtonTypeCustom];
+		if([%c(AVButton) respondsToSelector:@selector(buttonWithAccessibilityIdentifier:)])
+		{
+			self.downloadButton = [%c(AVButton) buttonWithAccessibilityIdentifier:@"Download"];
+		}
+		else
+		{
+			self.downloadButton = [%c(AVButton) buttonWithType:UIButtonTypeCustom];
+		}
 		[self.downloadButton setUpActivityIndicator];
 
-		[self.downloadButton setImage:[[UIImage imageNamed:@"VideoDownloadButtonModern"
-						inBundle:SPBundle compatibleWithTraitCollection:nil]
-					       imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-		 forState:UIControlStateNormal];
+		UIImage* downloadImage;
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+		{
+			downloadImage = [UIImage systemImageNamed:@"arrow.down.circle"];
+		}
+		else
+		{
+			downloadImage = [[UIImage imageNamed:@"VideoDownloadButtonModern" inBundle:SPBundle compatibleWithTraitCollection:nil]
+				imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+		}		
+
+		[self.downloadButton setImage:downloadImage forState:UIControlStateNormal];
 
 		[self.downloadButton addTarget:self action:@selector(downloadButtonPressed)
 		 forControlEvents:UIControlEventTouchUpInside];
@@ -55,7 +70,10 @@
 		self.downloadButton.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.downloadButton.widthAnchor constraintEqualToConstant:60].active = true;
 
-		[%c(AVBackdropView) applySecondaryGlyphTintToView:self.downloadButton];
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
+		{
+			[%c(AVBackdropView) applySecondaryGlyphTintToView:self.downloadButton];
+		}
 	}
 }
 
@@ -130,6 +148,15 @@
 	downloadInfo.sourceRect = [[self.downloadButton superview] convertRect:self.downloadButton.frame toView:downloadInfo.presentationController.view];
 
 	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
+}
+
+- (instancetype)initWithFrame:(CGRect)arg1 styleSheet:(id)arg2	//iOS 13 and above
+{
+	self = %orig;
+
+	[self setUpDownloadButton];
+
+	return self;
 }
 
 - (instancetype)initWithFrame:(CGRect)arg1 styleSheet:(id)arg2 captureView:(id)arg3	//iOS 12 and above

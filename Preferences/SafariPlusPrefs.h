@@ -37,3 +37,37 @@ extern NSBundle* SSBundle;
 - (void)setEditable:(BOOL)editable;
 - (BOOL)editable;
 @end
+/*
+typedef enum UIImageSymbolWeight : NSInteger {
+	UIImageSymbolWeightUnspecified,
+	UIImageSymbolWeightUltraLight,
+	UIImageSymbolWeightThin,
+	UIImageSymbolWeightLight,
+	UIImageSymbolWeightRegular,
+	UIImageSymbolWeightMedium,
+	UIImageSymbolWeightSemibold,
+	UIImageSymbolWeightBold,
+	UIImageSymbolWeightHeavy,
+	UIImageSymbolWeightBlack
+} UIImageSymbolWeight;
+
+typedef enum UIImageSymbolScale : NSInteger {
+	UIImageSymbolScaleDefault,
+	UIImageSymbolScaleUnspecified,
+	UIImageSymbolScaleSmall,
+	UIImageSymbolScaleMedium,
+	UIImageSymbolScaleLarge
+} UIImageSymbolScale;
+
+@interface UIImageConfiguration : NSObject
+- (instancetype)configurationWithTraitCollection:(UITraitCollection *)traitCollection;
+@end
+
+@interface UIImageSymbolConfiguration : UIImageConfiguration
++ (instancetype)configurationWithTextStyle:(UIFontTextStyle)textStyle scale:(UIImageSymbolScale)scale;
+@end
+
+@interface UIImage (iOS13)
++ (UIImage *)systemImageNamed:(NSString *)name;
++ (UIImage *)systemImageNamed:(NSString *)name withConfiguration:(UIImageSymbolConfiguration*)configuration;
+@end*/

@@ -21,6 +21,7 @@
 #import "SPDownloadsBarButtonItem.h"
 #import "SPDownloadsBarButtonItemView.h"
 #import "SPDownloadManager.h"
+#import "SPPreferenceManager.h"
 #import "SPTouchView.h"
 #import "../Defines.h"
 #import "../Util.h"
@@ -29,6 +30,11 @@
 
 - (instancetype)initWithTarget:(id)target action:(SEL)action
 {
+	return [self initWithTarget:target action:action placement:0];
+}
+
+- (instancetype)initWithTarget:(id)target action:(SEL)action placement:(NSInteger)placement
+{
 	self = [super init];
 
 	self.target = target;
@@ -36,8 +42,20 @@
 	self.style = UIBarButtonItemStylePlain;
 
 	CGFloat width, height;
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		if(placement == 1)
+		{
+			width = 60;
+		}
+		else
+		{
+			width = 25;
+		}
 
-	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+		height = 44;
+	}
+	else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
 	{
 		width = 35;
 		height = 44;

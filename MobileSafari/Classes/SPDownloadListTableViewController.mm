@@ -25,7 +25,9 @@
 #import "SPDownloadListFinishedTableViewCell.h"
 #import "SPDownload.h"
 #import "SPDownloadInfo.h"
+#import "SPDownloadNavigationController.h"
 #import "../Util.h"
+#import "../Defines.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPDownloadManager.h"
 #import "../Classes/SPCacheManager.h"
@@ -42,6 +44,15 @@
 	[self loadDownloads];
 
 	return self;
+}
+
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+	[super willMoveToParentViewController:parent];
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		[(SPDownloadNavigationController*)self.navigationController applyPaletteToViewController:self];
+	}
 }
 
 - (void)viewDidLoad

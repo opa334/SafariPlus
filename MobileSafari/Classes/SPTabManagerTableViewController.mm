@@ -135,7 +135,15 @@
 
 	if(preferenceManager.lockedTabsEnabled)
 	{
-		_lockUnlockBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"LockButton_Slim_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil] landscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Closed_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(lockUnlockButtonPressed)];
+		UIImage* lockImage;
+		if([UIImage respondsToSelector:@selector(systemImageNamed:)])
+		{
+			_lockUnlockBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"lock"] style:UIBarButtonItemStylePlain target:self action:@selector(lockUnlockButtonPressed)];
+		}
+		else
+		{
+			_lockUnlockBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"LockButton_Slim_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil] landscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Closed_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:self action:@selector(lockUnlockButtonPressed)];
+		}
 		self.toolbarItems = @[_addTabsBarButtonItem,flexibleSpace,_lockUnlockBarButtonItem,flexibleSpace,_exportBarButtonItem,flexibleSpace,_addToBookmarksBarButtonItem,flexibleSpace,_closeTabsBarButtonItem];
 	}
 	else
@@ -181,13 +189,27 @@
 
 		if(_lockBarButtonIsUnlockButton)
 		{
-			_lockUnlockBarButtonItem.image = [UIImage imageNamed:@"LockButton_Slim_Open" inBundle:SPBundle compatibleWithTraitCollection:nil];
-			[_lockUnlockBarButtonItem setLandscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Open_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil]];
+			if([UIImage respondsToSelector:@selector(systemImageNamed:)])
+			{
+				_lockUnlockBarButtonItem.image = [UIImage systemImageNamed:@"lock.open"];
+			}
+			else
+			{
+				_lockUnlockBarButtonItem.image = [UIImage imageNamed:@"LockButton_Slim_Open" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				[_lockUnlockBarButtonItem setLandscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Open_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil]];
+			}
 		}
 		else
 		{
-			_lockUnlockBarButtonItem.image = [UIImage imageNamed:@"LockButton_Slim_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil];
-			[_lockUnlockBarButtonItem setLandscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Closed_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil]];
+			if([UIImage respondsToSelector:@selector(systemImageNamed:)])
+			{
+				_lockUnlockBarButtonItem.image = [UIImage systemImageNamed:@"lock"];
+			}
+			else
+			{
+				_lockUnlockBarButtonItem.image = [UIImage imageNamed:@"LockButton_Slim_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				[_lockUnlockBarButtonItem setLandscapeImagePhone:[UIImage imageNamed:@"LockButton_Slim_Closed_Landscape" inBundle:SPBundle compatibleWithTraitCollection:nil]];
+			}
 		}
 	}
 }

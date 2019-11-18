@@ -60,6 +60,22 @@ static BOOL fakeOpenLinksValue = NO;
 
 %end
 
+%hook _WKElementAction
+
++ (UIImage *)imageForElementActionType:(NSInteger)actionType //icon for "Open in Opposite Mode" action on iOS 13
+{
+	if(actionType == 100)
+	{
+		return [UIImage systemImageNamed:@"arrow.uturn.right.square"];
+	}
+	else
+	{
+		return %orig;
+	}
+}
+
+%end
+
 %hook TabDocument
 
 //%property (nonatomic,assign) BOOL locked;
@@ -235,9 +251,9 @@ static BOOL fakeOpenLinksValue = NO;
 					if(appLink.openStrategy == 2)	//1: Open in browser, 2: Open in app (NO WARRANTY IMPLIED)
 					{
 						NSDictionary* browserState = @
-									     {
-										     @"browserReuseTab" : @1,
-										     @"updateAppLinkOpenStrategy" : @YES
+						{
+							@"browserReuseTab" : @1,
+							@"updateAppLinkOpenStrategy" : @YES
 						};
 
 						if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11 and above
@@ -296,6 +312,10 @@ static BOOL fakeOpenLinksValue = NO;
 							else if([self respondsToSelector:@selector(_animateElement:toBarItem:)])
 							{
 								[self _animateElement:element toBarItem:5];
+							}
+							else if([self respondsToSelector:@selector(animateElement:toBarItem:)])
+							{
+								[self animateElement:element toBarItem:5];
 							}
 						}];
 					}
@@ -377,7 +397,7 @@ static BOOL fakeOpenLinksValue = NO;
 		if(IS_PAD)
 		{
 			//Set iPad positions to download button
-			UIView* button = MSHookIvar<UIView*>(activeToolbarForBrowserController(controller)._downloadsItem, "_view");
+			UIView* button = MSHookIvar<UIView*>(activeToolbarOrToolbarForBarItemForBrowserController(controller, barButtonItemForSafariPlusOrderItem(BrowserToolbarDownloadsItem))._downloadsItem, "_view");
 			downloadInfo.sourceRect = [[button superview] convertRect:button.frame toView:rootViewController.view];
 		}
 
@@ -424,43 +444,60 @@ static BOOL fakeOpenLinksValue = NO;
 			_WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
 								      elementActionWithTitle:title actionHandler:^
 			{
-				TabDocument* tabDocument;
-
-				tabDocument = [[%c(TabDocument) alloc] initWithTitle:nil URL:element.URL UUID:[NSUUID UUID] privateBrowsingEnabled:!privateBrowsing hibernated:YES bookmark:nil browserController:browserController];
-
-				//iOS 11.2 and below somehow manage to open a private tab in normal mode if we don't manually switch
-				if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_3)
+				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 				{
-					BOOL animationsEnabled = [UIView areAnimationsEnabled];
-
-					[UIView setAnimationsEnabled:NO];
-
-					if([browserController respondsToSelector:@selector(dismissTransientUIAnimated:)])
-					{
-						[browserController dismissTransientUIAnimated:NO];
-					}
-
-					togglePrivateBrowsing(browserController);
-
-					if([browserController.tabController.activeTabDocument isBlankDocument])
-					{
-						[browserController setFavoritesState:0 animated:YES];	//Dismisses the bookmark favorites grid view
-						[browserController.tabController.activeTabDocument loadURL:element.URL userDriven:NO];
-					}
-					else
-					{
-						[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:NO];
-					}
-
-					[UIView setAnimationsEnabled:animationsEnabled];
+					TabDocument* newDocument = [browserController.tabController _insertNewBlankTabDocumentWithPrivateBrowsing:!privateBrowsing inBackground:NO animated:YES];
+					
+					[newDocument loadURL:element.URL userDriven:YES];
 				}
 				else
 				{
-					[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:YES];
+					TabDocument* tabDocument = [[%c(TabDocument) alloc] initWithTitle:nil URL:element.URL UUID:[NSUUID UUID] privateBrowsingEnabled:!privateBrowsing hibernated:YES bookmark:nil browserController:browserController];
+
+					//iOS 11.2 and below somehow manage to open a private tab in normal mode if we don't manually switch
+					if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_3)
+					{
+						BOOL animationsEnabled = [UIView areAnimationsEnabled];
+
+						[UIView setAnimationsEnabled:NO];
+
+						if([browserController respondsToSelector:@selector(dismissTransientUIAnimated:)])
+						{
+							[browserController dismissTransientUIAnimated:NO];
+						}
+
+						togglePrivateBrowsing(browserController);
+
+						if([browserController.tabController.activeTabDocument isBlankDocument])
+						{
+							[browserController setFavoritesState:0 animated:YES];	//Dismisses the bookmark favorites grid view
+							[browserController.tabController.activeTabDocument loadURL:element.URL userDriven:NO];
+						}
+						else
+						{
+							[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:NO];
+						}
+
+						[UIView setAnimationsEnabled:animationsEnabled];
+					}
+					else
+					{
+						[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:YES];			
+					}
 				}
+				
 			}];
 
-			[actions insertObject:openInOppositeModeAction atIndex:2];
+			[openInOppositeModeAction setValue:@100 forKey:@"_type"];
+
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+			{
+				[actions insertObject:openInOppositeModeAction atIndex:1];
+			}
+			else
+			{
+				[actions insertObject:openInOppositeModeAction atIndex:2];
+			}			
 		}
 
 		if(preferenceManager.bothTabOpenActionsEnabled)
@@ -513,13 +550,22 @@ static BOOL fakeOpenLinksValue = NO;
 			shouldFakeOpenLinksKey = NO;
 			fakeOpenLinksValue = NO;
 
-			[actions removeObjectAtIndex:1];
-			[actions insertObject:openInBackgroundAction atIndex:1];
-			[actions insertObject:openInNewTabAction atIndex:1];
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+			{
+				[actions removeObjectAtIndex:0];
+				[actions insertObject:openInBackgroundAction atIndex:0];
+				[actions insertObject:openInNewTabAction atIndex:0];
+			}
+			else
+			{
+				[actions removeObjectAtIndex:1];
+				[actions insertObject:openInBackgroundAction atIndex:1];
+				[actions insertObject:openInNewTabAction atIndex:1];
+			}
 		}
 	}
 
-	if(preferenceManager.downloadManagerEnabled)
+	if(preferenceManager.downloadManagerEnabled && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
 		if(element.URL && ![element.URL.absoluteString isEqualToString:@""] && ![element.URL.absoluteString hasPrefix:@"javascript:"] && preferenceManager.downloadSiteToActionEnabled)
 		{
@@ -708,11 +754,62 @@ static BOOL fakeOpenLinksValue = NO;
 
 %end
 
+%group iOS13Up
+
+- (void)webView:(id)arg1 decidePolicyForNavigationAction:(id)navigationAction preferences:(id)arg3 decisionHandler:(void (^)(WKNavigationActionPolicy, _WKWebsitePolicies*))decisionHandler
+{
+	if(preferenceManager.alwaysOpenNewTabEnabled)
+	{
+		if(![self handleAlwaysOpenInNewTabForNavigationAction:navigationAction decisionHandler:^(WKNavigationActionPolicy policy)
+		{
+			//Wrap around new decisionHandler that takes 2 args now
+			decisionHandler(policy, [[%c(_WKWebsitePolicies) alloc] init]);
+		}])
+		{
+			return;
+		}
+	}
+
+	if(preferenceManager.forceHTTPSEnabled)
+	{
+		if(![self handleForceHTTPSForNavigationAction:navigationAction decisionHandler:^(WKNavigationActionPolicy policy)
+		{
+			//Wrap around new decisionHandler that takes 2 args now
+			decisionHandler(policy, [[%c(_WKWebsitePolicies) alloc] init]);
+		}])
+		{
+			return;
+		}
+	}
+
+	%orig;
+}
+
+//If there's an error loading the site, the page format page normally doesn't show
+//As Force HTTPS can be the issue for the loading failure and there's a button
+//to add an exception inside the page format button, we want to force it to show in that case
+- (BOOL)canShowPageFormatMenu
+{
+	BOOL orig = %orig;
+
+	if(!orig && preferenceManager.forceHTTPSEnabled)
+	{
+		if(castedSelf.webView._unreachableURL)
+		{
+			return YES;
+		}
+	}
+
+	return orig;
+}
+
+%end
+
 %group iOS12_2Up
 
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element orFallbackURL:(id)arg2 defaultActions:(id)arg3 previewViewController:(id)arg4
 {
-	if(!arg4 && (preferenceManager.downloadManagerEnabled ||
+	if((!arg4 || kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0) && (preferenceManager.downloadManagerEnabled ||
 		     preferenceManager.bothTabOpenActionsEnabled ||
 		     preferenceManager.openInOppositeModeOptionEnabled))
 	{
@@ -818,6 +915,12 @@ static BOOL fakeOpenLinksValue = NO;
 void initTabDocument()
 {
 	Class TabDocumentClass;
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		TabDocumentClass = objc_getClass("TabDocument");
+		%init(iOS13Up, TabDocument=TabDocumentClass);
+	}
 
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
 	{

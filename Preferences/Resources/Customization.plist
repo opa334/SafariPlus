@@ -11,6 +11,8 @@
 				<string>com.opa334.safariplusprefs</string>
 				<key>label</key>
 				<string>APPEARANCE</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -21,6 +23,8 @@
 				<string>SPPColorsListController</string>
 				<key>label</key>
 				<string>COLORS</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>

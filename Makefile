@@ -16,7 +16,7 @@ export NO_ROCKETBOOTSTRAP = 1
 export TARGET = simulator:clang:12.1:8.0
 export ARCHS = x86_64 i386
 else
-export TARGET = iphone:clang:12.1.2:8.0
+export TARGET = iphone:clang:13.0:8.0
 export ARCHS = armv7 armv7s arm64 arm64e
 endif
 

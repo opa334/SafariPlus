@@ -224,75 +224,156 @@
 		{
 			UIImage* itemImage;
 
-			switch([itemNumber intValue])
+			if([UIImage respondsToSelector:@selector(systemImageNamed:)])
 			{
-			case BrowserToolbarBackItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:101 usingItemStyle:0];
-				break;
-			}
+				NSString* systemIconName;
 
-			case BrowserToolbarForwardItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:102 usingItemStyle:0];
-				break;
-			}
-
-			case BrowserToolbarBookmarksItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:11 usingItemStyle:0];
-				break;
-			}
-
-			case BrowserToolbarShareItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:9 usingItemStyle:0];
-				break;
-			}
-
-			case BrowserToolbarAddTabItem:
-			{
-				itemImage = [UIImage imageNamed:@"AddTab" inBundle:MSBundle];
-				if(!itemImage)
+				switch([itemNumber intValue])
 				{
-					itemImage = [UIImage imageNamed:@"AddTab" inBundle:SSBundle];
-				}
-				break;
-			}
-
-			case BrowserToolbarTabExposeItem:
-			{
-				itemImage = [UIImage imageNamed:@"TabButton" inBundle:MSBundle];
-				if(!itemImage)
+				case BrowserToolbarBackItem:
 				{
-					itemImage = [UIImage imageNamed:@"TabButton" inBundle:SSBundle];
+					systemIconName = @"chevron.left";
+					break;
 				}
-				break;
-			}
 
-			case BrowserToolbarSearchBarSpace:
-			{
-				itemImage = [UIImage imageNamed:@"SearchBarSpace" inBundle:SPBundle compatibleWithTraitCollection:nil];
-				break;
-			}
+				case BrowserToolbarForwardItem:
+				{
+					systemIconName = @"chevron.right";
+					break;
+				}
 
-			case BrowserToolbarDownloadsItem:
-			{
-				itemImage = [UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
-				break;
-			}
+				case BrowserToolbarBookmarksItem:
+				{
+					systemIconName = @"book";
+					break;
+				}
 
-			case BrowserToolbarReloadItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
-				break;
-			}
+				case BrowserToolbarShareItem:
+				{
+					systemIconName = @"square.and.arrow.up";
+					break;
+				}
 
-			case BrowserToolbarClearDataItem:
-			{
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemTrash usingItemStyle:0];
-				break;
+				case BrowserToolbarAddTabItem:
+				{
+					systemIconName = @"plus";
+					break;
+				}
+
+				case BrowserToolbarTabExposeItem:
+				{
+					systemIconName = @"square.on.square";
+					break;
+				}
+
+				case BrowserToolbarSearchBarSpace:
+				{
+					itemImage = [UIImage imageNamed:@"SearchBarSpace" inBundle:SPBundle compatibleWithTraitCollection:nil];
+					itemImage = [itemImage _flatImageWithColor:self.view.tintColor];
+					break;
+				}
+
+				case BrowserToolbarDownloadsItem:
+				{
+					systemIconName = @"arrow.down.circle";
+					break;
+				}
+
+				case BrowserToolbarReloadItem:
+				{
+					systemIconName = @"arrow.clockwise";
+					break;
+				}
+
+				case BrowserToolbarClearDataItem:
+				{
+					systemIconName = @"trash";
+					break;
+				}
+				}
+
+				UIImageSymbolConfiguration* symbolConfiguration = [NSClassFromString(@"UIImageSymbolConfiguration") configurationWithTextStyle:UIFontTextStyleBody scale:UIImageSymbolScaleLarge];
+        		symbolConfiguration = [symbolConfiguration configurationWithTraitCollection:[UITraitCollection traitCollectionWithPreferredContentSizeCategory:UIContentSizeCategoryMedium]];
+
+				if(!itemImage && systemIconName)
+				{
+					itemImage = [UIImage systemImageNamed:systemIconName withConfiguration:symbolConfiguration];
+				}
+
+				[_imageByItem setObject:itemImage forKey:itemNumber];
 			}
+			else
+			{
+				switch([itemNumber intValue])
+				{
+				case BrowserToolbarBackItem:
+				{
+					[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:101 usingItemStyle:0];
+					break;
+				}
+
+				case BrowserToolbarForwardItem:
+				{
+					[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:102 usingItemStyle:0];
+					break;
+				}
+
+				case BrowserToolbarBookmarksItem:
+				{
+					[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:11 usingItemStyle:0];
+					break;
+				}
+
+				case BrowserToolbarShareItem:
+				{
+					[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:9 usingItemStyle:0];
+					break;
+				}
+
+				case BrowserToolbarAddTabItem:
+				{
+					itemImage = [UIImage imageNamed:@"AddTab" inBundle:MSBundle];
+					if(!itemImage)
+					{
+						itemImage = [UIImage imageNamed:@"AddTab" inBundle:SSBundle];
+					}
+					break;
+				}
+
+				case BrowserToolbarTabExposeItem:
+				{
+					itemImage = [UIImage imageNamed:@"TabButton" inBundle:MSBundle];
+					if(!itemImage)
+					{
+						itemImage = [UIImage imageNamed:@"TabButton" inBundle:SSBundle];
+					}
+					break;
+				}
+
+				case BrowserToolbarSearchBarSpace:
+				{
+					itemImage = [UIImage imageNamed:@"SearchBarSpace" inBundle:SPBundle compatibleWithTraitCollection:nil];
+					break;
+				}
+
+				case BrowserToolbarDownloadsItem:
+				{
+					itemImage = [UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
+					break;
+				}
+
+				case BrowserToolbarReloadItem:
+				{
+					[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemRefresh usingItemStyle:0];
+					break;
+				}
+
+				case BrowserToolbarClearDataItem:
+				{
+					[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:UIBarButtonSystemItemTrash usingItemStyle:0];
+					break;
+				}
+				}
 			}
 
 			if(itemImage)

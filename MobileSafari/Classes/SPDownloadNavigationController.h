@@ -32,6 +32,7 @@
 	NSArray<SPDownloadListTableViewController*>* _listTableViewControllers;
 }
 - (void)setUpSegmentedControl;
+- (void)applyPaletteToViewController:(UIViewController*)viewController;
 - (void)setUpPalette;
 - (void)openDirectoryInBrowser:(NSURL*)directoryURL;
 - (void)showFileInBrowser:(NSURL*)fileURL;

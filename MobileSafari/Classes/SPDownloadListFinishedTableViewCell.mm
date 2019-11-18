@@ -26,6 +26,7 @@
 #import "SPDownload.h"
 #import "SPFileManager.h"
 #import "../Util.h"
+#import "../SafariPlus.h"
 
 #import "SPCellButtonsView.h"
 #import "SPCellIconLabelView.h"
@@ -56,7 +57,14 @@
 	}
 	else
 	{
-		_iconLabelView.label.textColor = [UIColor blackColor];
+		if([UIColor respondsToSelector:@selector(labelColor)])
+		{
+			_iconLabelView.label.textColor = [UIColor labelColor];
+		}
+		else
+		{
+			_iconLabelView.label.textColor = [UIColor blackColor];
+		}
 	}
 
 	_targetLabel.text = _download.targetURL.path;

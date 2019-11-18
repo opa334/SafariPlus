@@ -64,6 +64,17 @@
 	return localizedString;
 }
 
+- (NSString*)localizedWBSStringForKey:(NSString*)key
+{
+	if(!self.WBSBundle)
+	{
+		//Probably wrong path on iOS 10 and below but the method is only used on 13 anyways
+		self.WBSBundle = [NSBundle bundleWithPath:@"/System/Library/PrivateFrameworks/SafariCore.framework"];
+	}
+
+	return [self.WBSBundle localizedStringForKey:key value:@"localized string not found" table:nil];
+}
+
 - (void)parseSPLocalizationsForSpecifiers:(NSArray*)specifiers
 {
 	//Localize specifiers

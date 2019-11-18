@@ -33,7 +33,7 @@
 #import "SPDownload.h"
 
 #import <unistd.h>
-
+/*
 #import <QuickLook/QuickLook.h>
 @interface QLThumbnail : NSObject
 - (id)initWithURL:(id)arg1;
@@ -43,7 +43,7 @@
 @interface QLThumbnailGenerator : NSObject
 + (void)generateThumbnailOfMaximumSize:(CGSize)arg1 scale:(double)arg2 forURL:(id)arg3 completionHandler:(void (^)(id arg1))completion;
 @end
-
+*/
 #ifndef PREFERENCES
 
 //Wrapper around executeFileOperationOnSpringBoard that simplifies error handling
@@ -806,6 +806,11 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 		if(bundle)
 		{
 			_genericDirectoryIcon = [UIImage imageNamed:@"Folder-Light-29" inBundle:bundle];
+
+			if(!_genericDirectoryIcon)
+			{
+				_genericDirectoryIcon = [UIImage imageNamed:@"Folder29pt" inBundle:bundle]; //iOS 13
+			}
 		}
 		else
 		{

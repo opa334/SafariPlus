@@ -101,6 +101,8 @@
 				<string>com.opa334.safariplusprefs</string>
 				<key>footerText</key>
 				<string>ELEMENT_DOWNLOAD_ACTIONS_FOOTER</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -115,6 +117,8 @@
 				<string>downloadSiteToActionEnabled</string>
 				<key>label</key>
 				<string>DOWNLOAD_SITE_TO_ACTION</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -129,6 +133,8 @@
 				<string>downloadImageToActionEnabled</string>
 				<key>label</key>
 				<string>DOWNLOAD_IMAGE_TO_ACTION</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>

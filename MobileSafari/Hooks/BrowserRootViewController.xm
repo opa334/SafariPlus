@@ -25,16 +25,58 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
 
-#ifndef NO_CEPHEI
+#if !NO_CEPHEI || SIMJECT
 
 %hook BrowserRootViewController
 
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
 {
+	//Apple made it really hard to get a reference to the reload options alertcontroller ;)
 	if(preferenceManager.forceHTTPSEnabled)
 	{
-		//Apple made it really hard to get a reference to the reload options alertcontroller ;)
-		if([viewControllerToPresent.view.accessibilityIdentifier isEqualToString:@"ReloadOptionsAlert"])
+		if([NSStringFromClass(viewControllerToPresent.class) isEqualToString:@"_SFSettingsAlertController"])
+		{
+			_SFSettingsAlertController* settingsAlertController = (_SFSettingsAlertController*)viewControllerToPresent;
+
+			TabDocument* activeDocument = self.browserController.tabController.activeTabDocument;
+
+			NSURL* activeURL = [activeDocument URL];
+
+			NSMutableArray* items;
+
+			if([settingsAlertController respondsToSelector:@selector(_rootContentController)])
+			{
+				items = [[settingsAlertController _rootContentController] valueForKey:@"_items"];
+			}
+			else
+			{
+				items = [settingsAlertController valueForKey:@"_items"];
+			}			
+
+			if([preferenceManager isURLOnHTTPSExceptionsList:activeURL])
+			{
+				_SFSettingsAlertItem* removeFromExceptionsButton = [%c(_SFSettingsAlertItem) buttonWithTitle:[localizationManager localizedSPStringForKey:@"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS"] textStyle:UIFontTextStyleBody icon:[UIImage systemImageNamed:@"minus"] handler:^
+				{
+					[preferenceManager removeURLFromHTTPSExceptionsList:activeURL];
+					[activeDocument reload];
+					[settingsAlertController dismissViewControllerAnimated:YES completion:nil];
+				}];
+
+				[items insertObject:removeFromExceptionsButton atIndex:[items count] - 1];
+			}
+			else
+			{
+				_SFSettingsAlertItem* addToExceptionsButton = [%c(_SFSettingsAlertItem) buttonWithTitle:[localizationManager localizedSPStringForKey:@"ADD_TO_FORCE_HTTPS_EXCEPTIONS"] textStyle:UIFontTextStyleBody icon:[UIImage systemImageNamed:@"plus"] handler:^
+				{
+					[preferenceManager addURLToHTTPSExceptionsList:activeURL];
+					[activeDocument loadURL:[activeURL httpURL] userDriven:NO];
+					[settingsAlertController dismissViewControllerAnimated:YES completion:nil];
+				}];
+
+				[items insertObject:addToExceptionsButton atIndex:[items count] - 1];
+			}
+		}
+		else if([viewControllerToPresent.view.accessibilityIdentifier isEqualToString:@"ReloadOptionsAlert"])
 		{
 			UIAlertController* reloadOptionsAlertController = (UIAlertController*)viewControllerToPresent;
 
@@ -85,7 +127,7 @@
 
 void initBrowserRootViewController()
 {
-	#ifndef NO_CEPHEI
+	#if !NO_CEPHEI || SIMJECT
 	%init();
 	#endif
 }

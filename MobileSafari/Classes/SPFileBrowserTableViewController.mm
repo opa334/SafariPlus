@@ -96,7 +96,12 @@
 	BOOL firstLoad = (_filesAtCurrentURL == nil);
 
 	//Fetch files from current URL into array
-	NSMutableArray<SPFile*>* newFiles = [[fileManager filesAtURL:_directoryURL error:nil] mutableCopy];
+	NSError* fileLoadError;
+	NSMutableArray<SPFile*>* newFiles = [[fileManager filesAtURL:_directoryURL error:&fileLoadError] mutableCopy];
+	if(fileLoadError)
+	{
+		NSLog(@"Failed to load contents of %@, error:%@", _directoryURL.path, fileLoadError);
+	}
 
 	[newFiles sortUsingComparator:^NSComparisonResult (SPFile* a, SPFile* b)
 	{

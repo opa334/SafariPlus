@@ -57,7 +57,14 @@
 		_previousSelectedIndex = preferenceManager.defaultDownloadSection;
 	}
 
-	[self setUpPalette];
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		[self setUpPalette];
+	}
+	else
+	{
+		[self setUpSegmentedControl];
+	}
 
 	//Set delegate of SPDownloadManager for communication
 	downloadManager.navigationControllerDelegate = self;
@@ -81,6 +88,36 @@
 	[self segmentedControlValueDidChange:_segmentedControl];
 }
 
+//iOS 13 and up
+- (void)applyPaletteToViewController:(UIViewController*)viewController
+{
+	if(!_palette)
+	{
+		UIView* contentView = [[UIView alloc] initWithSize:CGSizeMake(self.view.bounds.size.width, _segmentedControl.bounds.size.height + 12.0)];
+		contentView.translatesAutoresizingMaskIntoConstraints = NO;
+		[contentView addSubview:_segmentedControl];
+
+		[NSLayoutConstraint activateConstraints:@[
+			[_segmentedControl.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor constant:8],
+			[contentView.trailingAnchor constraintEqualToAnchor:_segmentedControl.trailingAnchor constant:8],
+			[_segmentedControl.topAnchor constraintEqualToAnchor:contentView.topAnchor],
+			[contentView.bottomAnchor constraintEqualToAnchor:_segmentedControl.bottomAnchor constant:12],
+		]];
+
+		_palette = [[NSClassFromString(@"_UINavigationBarPalette") alloc] initWithContentView:contentView];
+
+		[NSLayoutConstraint activateConstraints:@[
+			[_palette.leadingAnchor constraintEqualToAnchor:contentView.leadingAnchor],
+			[_palette.trailingAnchor constraintEqualToAnchor:contentView.trailingAnchor],
+			[_palette.topAnchor constraintEqualToAnchor:contentView.topAnchor],
+			[_palette.bottomAnchor constraintEqualToAnchor:contentView.bottomAnchor],
+		]];
+	}
+
+	viewController.navigationItem._bottomPalette = (_UINavigationBarPalette*)_palette;
+}
+
+//iOS 12 and down
 - (void)setUpPalette
 {
 	[self setUpSegmentedControl];

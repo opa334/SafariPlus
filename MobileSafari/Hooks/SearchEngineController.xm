@@ -110,6 +110,8 @@ static NSString* stringWithSchemeStripped(NSString* oldString)
 
 %end
 
+#define seSelf ((SearchEngineController*)self)
+
 %hook SearchEngineController
 
 %property (nonatomic, retain) SearchEngineInfo* customSearchEngine;
@@ -120,7 +122,7 @@ static NSString* stringWithSchemeStripped(NSString* oldString)
 
 	if(preferenceManager.customSearchEngineEnabled && [preferenceManager.customSearchEngineURL containsString:@"{searchTerms}"])
 	{
-		if(!self.customSearchEngine)
+		if(!seSelf.customSearchEngine)
 		{
 			NSString* customSearchEngineSuggestionsURL = @"";
 
@@ -129,27 +131,33 @@ static NSString* stringWithSchemeStripped(NSString* oldString)
 				customSearchEngineSuggestionsURL = preferenceManager.customSearchEngineSuggestionsURL;
 			}
 
-			self.customSearchEngine = [%c(SearchEngineInfo) engineFromDictionary:@{@"SearchEngineID" : @1337, @"SearchURLTemplate" : preferenceManager.customSearchEngineURL, @"SuggestionsURLTemplate" : customSearchEngineSuggestionsURL, @"ShortName" : preferenceManager.customSearchEngineName, @"ScriptingName" : preferenceManager.customSearchEngineName} withController:self];
-			object_setClass(self.customSearchEngine, [%c(SPSearchEngineInfo) class]);
-			[(SPSearchEngineInfo*)self.customSearchEngine setUpSearchURLTemplateString];
+			Class SearchEngineInfoClass = NSClassFromString(@"SearchEngineInfo");
+			if(!SearchEngineInfoClass)
+			{
+				SearchEngineInfoClass = NSClassFromString(@"_SFSearchEngineInfo");
+			}
+
+			seSelf.customSearchEngine = [SearchEngineInfoClass engineFromDictionary:@{@"SearchEngineID" : @1337, @"SearchURLTemplate" : preferenceManager.customSearchEngineURL, @"SuggestionsURLTemplate" : customSearchEngineSuggestionsURL, @"ShortName" : preferenceManager.customSearchEngineName, @"ScriptingName" : preferenceManager.customSearchEngineName} withController:self];
+			object_setClass(seSelf.customSearchEngine, [%c(SPSearchEngineInfo) class]);
+			[(SPSearchEngineInfo*)seSelf.customSearchEngine setUpSearchURLTemplateString];
 		}
 
-		if([self.engines respondsToSelector:@selector(addObject:)])
+		if([seSelf.engines respondsToSelector:@selector(addObject:)])
 		{
-			[self.engines addObject:self.customSearchEngine];
+			[seSelf.engines addObject:seSelf.customSearchEngine];
 		}
 		else
 		{
-			MSHookIvar<NSArray*>(self, "_searchEngines") = [MSHookIvar<NSArray*>(self, "_searchEngines") arrayByAddingObject:self.customSearchEngine];
+			[self setValue:[[self valueForKey:@"_searchEngines"] arrayByAddingObject:seSelf.customSearchEngine] forKey:@"_searchEngines"];
 		}
 	}
 }
 
 - (SearchEngineInfo*)defaultSearchEngine
 {
-	if(preferenceManager.customSearchEngineEnabled && self.customSearchEngine)
+	if(preferenceManager.customSearchEngineEnabled && seSelf.customSearchEngine)
 	{
-		return self.customSearchEngine;
+		return seSelf.customSearchEngine;
 	}
 
 	return %orig;
@@ -159,5 +167,19 @@ static NSString* stringWithSchemeStripped(NSString* oldString)
 
 void initSearchEngineController()
 {
-	%init();
+	Class SearchEngineControllerClass = NSClassFromString(@"SearchEngineController");
+
+	if(!SearchEngineControllerClass)
+	{
+		SearchEngineControllerClass = NSClassFromString(@"_SFSearchEngineController");
+	}
+
+	Class SearchEngineInfoClass = NSClassFromString(@"SearchEngineInfo");
+
+	if(!SearchEngineInfoClass)
+	{
+		SearchEngineInfoClass = NSClassFromString(@"_SFSearchEngineInfo");
+	}
+
+	%init(SearchEngineController=SearchEngineControllerClass, SearchEngineInfo=SearchEngineInfoClass);
 }

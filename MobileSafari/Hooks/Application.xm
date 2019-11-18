@@ -33,6 +33,9 @@
 
 %hook Application
 
+%property (nonatomic,assign) BOOL sp_isSetUp;
+%property (nonatomic,retain) NSDictionary* sp_storedLaunchOptions;
+
 %new
 - (void)sp_preAppLaunch
 {
@@ -44,17 +47,8 @@
 %new
 - (void)sp_postAppLaunchWithOptions:(NSDictionary*)launchOptions
 {
-	//Auto switch mode on launch
-	if(preferenceManager.forceModeOnStartEnabled && !launchOptions[UIApplicationLaunchOptionsURLKey])
-	{
-		for(BrowserController* controller in browserControllers())
-		{
-			//Switch mode to specified mode
-			[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
-		}
-	}
+	self.sp_storedLaunchOptions = launchOptions;
 
-	[self handleTwitterAlert];
 	[self handleSBConnectionTest];
 
 	if(preferenceManager.downloadManagerEnabled)
@@ -80,9 +74,33 @@
 		self.applicationIconBadgeNumber = 0;
 	}
 
-	if(preferenceManager.lockedTabsEnabled)
+	[self sp_setUpWithMainBrowserController:browserControllers().firstObject];
+}
+
+%new
+- (void)sp_setUpWithMainBrowserController:(BrowserController*)mainBrowserController
+{
+	if(mainBrowserController && !self.sp_isSetUp)
 	{
-		[cacheManager cleanUpTabStateAdditions];
+		//Auto switch mode on launch
+		if(preferenceManager.forceModeOnStartEnabled && !self.sp_storedLaunchOptions[UIApplicationLaunchOptionsURLKey])
+		{
+			for(BrowserController* controller in browserControllers())
+			{
+				//Switch mode to specified mode
+				[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
+			}
+		}
+
+		if(preferenceManager.lockedTabsEnabled)
+		{
+			[cacheManager cleanUpTabStateAdditions];
+		}
+
+		[self handleTwitterAlert];
+
+		self.sp_isSetUp = YES;
+		self.sp_storedLaunchOptions = nil;
 	}
 }
 
@@ -136,7 +154,10 @@
 
 		[cacheManager firstStartDidSucceed];
 
-		[rootViewControllerForBrowserController(browserController) presentViewController:welcomeAlert animated:YES completion:nil];
+		dispatch_async(dispatch_get_main_queue(), ^
+		{
+			[rootViewControllerForBrowserController(browserController) presentViewController:welcomeAlert animated:YES completion:nil];
+		});
 	}
 }
 
@@ -158,10 +179,9 @@
 	downloadManager.applicationBackgroundSessionCompletionHandler = completionHandler;
 }
 
-//Auto switch mode on app resume
-- (void)applicationWillEnterForeground:(id)arg1
+%new
+- (void)sp_applicationWillEnterForeground
 {
-	%orig;
 	if(preferenceManager.forceModeOnResumeEnabled)
 	{
 		for(BrowserController* controller in browserControllers())
@@ -170,6 +190,19 @@
 			[controller modeSwitchAction:preferenceManager.forceModeOnResumeFor];
 		}
 	}
+}
+
+//Auto switch mode on app resume
+- (void)applicationWillEnterForeground:(id)arg1 //iOS 12 and down
+{
+	%orig;
+	[self sp_applicationWillEnterForeground];
+}
+
+- (void)_applicationWillEnterForeground:(id)arg1 //iOS 13 and up
+{
+	%orig;
+	[self sp_applicationWillEnterForeground];
 }
 
 //Auto close tabs when Safari gets closed
@@ -198,8 +231,8 @@
 	%orig;
 }
 
-//Auto close tabs when Safari gets minimized
-- (void)applicationDidEnterBackground:(id)arg1
+%new
+- (void)sp_applicationDidEnterBackground
 {
 	if(preferenceManager.autoCloseTabsEnabled &&
 	   preferenceManager.autoCloseTabsOn == 2 /*Safari minimized*/)
@@ -220,6 +253,19 @@
 			[controller clearData];
 		}
 	}
+}
+
+//Auto close tabs when Safari gets minimized
+- (void)applicationDidEnterBackground:(id)arg1 //iOS 12 and down
+{
+	[self sp_applicationDidEnterBackground];
+
+	%orig;
+}
+
+- (void)_applicationDidEnterBackground:(id)arg1 //iOS 13 and up
+{
+	[self sp_applicationDidEnterBackground];
 
 	%orig;
 }

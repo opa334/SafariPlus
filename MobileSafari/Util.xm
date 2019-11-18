@@ -298,22 +298,37 @@ NavigationBar* navigationBarForBrowserController(BrowserController* browserContr
 	}
 }
 
-BrowserToolbar* activeToolbarForBrowserController(BrowserController* browserController)
+BrowserToolbar* activeToolbarOrToolbarForBarItemForBrowserController(BrowserController* browserController, NSInteger barItem)
 {
-	if([browserController respondsToSelector:@selector(activeToolbar)])
-	{
-		return browserController.activeToolbar;
-	}
-	else
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
 		BrowserRootViewController* rootVC = rootViewControllerForBrowserController(browserController);
-		if(rootVC.toolbarPlacement == 1)
+		if([rootVC.bottomToolbar.barRegistration containsBarItem:barItem])
 		{
 			return rootVC.bottomToolbar;
 		}
 		else
 		{
-			return rootVC.navigationBar.sp_toolbar;
+			return [rootVC.navigationBar _toolbarForBarItem:barItem];
+		}
+	}
+	else
+	{
+		if([browserController respondsToSelector:@selector(activeToolbar)])
+		{
+			return browserController.activeToolbar;
+		}
+		else
+		{
+			BrowserRootViewController* rootVC = rootViewControllerForBrowserController(browserController);
+			if(rootVC.toolbarPlacement == 1)
+			{
+				return rootVC.bottomToolbar;
+			}
+			else
+			{
+				return rootVC.navigationBar.sp_toolbar;
+			}
 		}
 	}
 }
@@ -328,6 +343,32 @@ BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToo
 	{
 		return MSHookIvar<_SFBarManager*>(MSHookIvar<SFBarRegistration*>(browserToolbar, "_barRegistration"), "_barManager").delegate;
 	}
+}
+
+#define sp_extraButtonsOffset 10
+
+NSInteger safariPlusOrderItemForBarButtonItem(NSInteger barItem)
+{
+    if(barItem >= 10)
+    {
+        return barItem - sp_extraButtonsOffset;
+    }
+    else
+    {
+        return barItem;
+    }
+}
+
+NSInteger barButtonItemForSafariPlusOrderItem(NSInteger orderItem)
+{
+    if(orderItem < 6)
+    {
+        return orderItem;
+    }
+    else
+    {
+        return orderItem + sp_extraButtonsOffset;
+    }
 }
 
 BOOL browserControllerIsShowingTabView(BrowserController* browserController)
@@ -717,6 +758,7 @@ extern void initAVPlaybackControlsView();
 extern void initBookmarkFavoritesActionsView();
 extern void initBrowserController();
 extern void initBrowserRootViewController();
+extern void initBrowserSceneDelegateRouter();
 extern void initBrowserToolbar();
 extern void initCatalogViewController();
 extern void initColors();
@@ -725,6 +767,7 @@ extern void initNavigationBar();
 extern void initNavigationBarItem();
 extern void initSafariWebView();
 extern void initSearchEngineController();
+extern void initSFBarRegistration();
 extern void initSPTabManagerBookmarkPicker();
 extern void initTabItemLayoutInfo();
 extern void initTabBarItemView();
@@ -756,6 +799,7 @@ extern void initWKFullScreenViewController();
 		initBookmarkFavoritesActionsView();
 		initBrowserController();
 		initBrowserRootViewController();
+		initBrowserSceneDelegateRouter();
 		initBrowserToolbar();
 		initCatalogViewController();
 		initColors();
@@ -764,6 +808,7 @@ extern void initWKFullScreenViewController();
 		initNavigationBarItem();
 		initSafariWebView();
 		initSearchEngineController();
+		initSFBarRegistration();
 		initSPTabManagerBookmarkPicker();
 		initTabItemLayoutInfo();
 		initTabBarItemView();

@@ -44,9 +44,11 @@ extern BrowserController* browserControllerForTabDocument(TabDocument* document)
 extern BrowserRootViewController* rootViewControllerForBrowserController(BrowserController* controller);
 extern BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* document);
 extern NavigationBar* navigationBarForBrowserController(BrowserController* browserController);
-extern BrowserToolbar* activeToolbarForBrowserController(BrowserController* browserController);
+extern BrowserToolbar* activeToolbarOrToolbarForBarItemForBrowserController(BrowserController* browserController, NSInteger barItem);
 extern BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToolbar);
 extern TabDocument* tabDocumentForItem(TabController* tabController, id<TabCollectionItem> item);
+extern NSInteger safariPlusOrderItemForBarButtonItem(NSInteger barItem);
+extern NSInteger barButtonItemForSafariPlusOrderItem(NSInteger orderItem);
 extern BOOL browserControllerIsShowingTabView(BrowserController* browserController);
 extern BOOL updateTabExposeActionsForLockedTabs(BrowserController* browserController, UIAlertController* tabExposeAlertController);
 extern void closeTabDocuments(TabController* tabController, NSArray<TabDocument*>* tabDocuments, BOOL animated);

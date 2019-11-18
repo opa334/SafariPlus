@@ -27,6 +27,7 @@
 #import "../Classes/SPNavigationController.h"
 #import "../Defines.h"
 #import "../Util.h"
+#import "../Enums.h"
 
 %hook TabController
 
@@ -111,7 +112,16 @@
 				//desktopButton not created yet -> create and configure it
 				self.tiltedTabViewDesktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
 
-				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				UIImage* desktopButtonImage;
+
+				if([UIImage respondsToSelector:@selector(systemImageNamed:)])
+				{
+					desktopButtonImage = [UIImage systemImageNamed:@"desktopcomputer"];
+				}
+				else
+				{
+					desktopButtonImage = [UIImage imageNamed:@"DesktopButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				}
 
 				[self.tiltedTabViewDesktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
 
@@ -122,6 +132,11 @@
 				 forControlEvents:UIControlEventTouchUpInside];
 
 				[self.tiltedTabViewDesktopModeButton sizeToFit];
+
+				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+				{
+					self.tiltedTabViewDesktopModeButton.frame = CGRectMake(self.tiltedTabViewDesktopModeButton.frame.origin.x, self.tiltedTabViewDesktopModeButton.frame.origin.y, self.tiltedTabViewDesktopModeButton.frame.size.width, 46);
+				}
 
 				self.tiltedTabViewDesktopModeButton.selected = self.desktopButtonSelected;
 			}
@@ -274,7 +289,7 @@
 	if(preferenceManager.showTabCountEnabled)
 	{
 		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
-		[activeToolbarForBrowserController(browserController) updateTabCount];
+		[activeToolbarOrToolbarForBarItemForBrowserController(browserController, StockBarItemTabExpose) updateTabCount];
 	}
 }
 
@@ -285,7 +300,7 @@
 	if(preferenceManager.showTabCountEnabled)
 	{
 		BrowserController* browserController = MSHookIvar<BrowserController*>(self, "_browserController");
-		[activeToolbarForBrowserController(browserController) updateTabCount];
+		[activeToolbarOrToolbarForBarItemForBrowserController(browserController, StockBarItemTabExpose) updateTabCount];
 	}
 }
 

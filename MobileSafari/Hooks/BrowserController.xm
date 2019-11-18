@@ -50,7 +50,7 @@
 		[rootViewControllerForBrowserController(self) presentViewController:downloadsController animated:YES completion:nil];
 	}; 
 
-	if(preferenceManager.biometricProtectionOpenDownloadsEnabled)
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionOpenDownloadsEnabled)
 	{
 		requestAuthentication([localizationManager localizedSPStringForKey:@"OPEN_DOWNLOADS"], openDownloads);
 	}
@@ -362,7 +362,18 @@
 	return (preferenceManager.disablePrivateMode) ? NO : %orig;
 }
 
+//iOS >=13
+- (BOOL)dynamicBarAnimator:(id)arg1 canTransitionToState:(NSInteger)state byDraggingWithOffset:(CGFloat)arg3
+{
+	if(preferenceManager.lockBars && state == 0)
+	{
+		return NO;
+	}
 
+	return %orig;
+}
+
+//iOS <=12
 - (BOOL)dynamicBarAnimator:(id)arg1 canHideBarsByDraggingWithOffset:(CGFloat)arg2
 {
 	return (preferenceManager.lockBars) ? NO : %orig;
@@ -374,7 +385,7 @@
 
 	if(preferenceManager.showTabCountEnabled)
 	{
-		[activeToolbarForBrowserController(self) updateTabCount];
+		[activeToolbarOrToolbarForBarItemForBrowserController(self, StockBarItemTabExpose) updateTabCount];
 	}
 
 	if(preferenceManager.tabManagerEnabled && tabController.presentedTabManager)
@@ -386,8 +397,7 @@
 - (void)_initSubviews
 {
 	%orig;
-	if(preferenceManager.URLLeftSwipeGestureEnabled || preferenceManager.URLRightSwipeGestureEnabled
-	   || preferenceManager.URLDownSwipeGestureEnabled)
+	if(preferenceManager.URLLeftSwipeGestureEnabled || preferenceManager.URLRightSwipeGestureEnabled || preferenceManager.URLDownSwipeGestureEnabled)
 	{
 		_SFNavigationBarURLButton* URLButton = MSHookIvar<_SFNavigationBarURLButton*>(navigationBarForBrowserController(self), "_URLOutline");
 
@@ -514,7 +524,47 @@
 
 %end
 
-%group iOS11Up
+%group iOS13Up
+
+- (void)setPrivateBrowsingEnabled:(BOOL)arg1
+{
+	void (^origBlock)() = ^
+	{
+		%orig;
+
+		if(preferenceManager.showTabCountEnabled)
+		{
+			[activeToolbarOrToolbarForBarItemForBrowserController(self, StockBarItemTabExpose) updateTabCount];
+		};
+	};
+
+	if(preferenceManager.biometricProtectionEnabled && preferenceManager.biometricProtectionSwitchModeEnabled)
+	{
+		if(!self.isSetUp)
+		{
+			origBlock();
+			return;
+		}
+
+		BOOL previous = privateBrowsingEnabled(self);
+
+		if(previous != arg1)
+		{
+			requestAuthentication([localizationManager localizedSPStringForKey:@"SWITCH_BROWSING_MODE"],^
+			{
+				origBlock();
+			});
+
+			return;
+		}
+	}
+
+	origBlock();
+}
+
+%end
+
+%group iOS11to12_4_3
 
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(id)arg3
 {
@@ -524,7 +574,7 @@
 
 		if(preferenceManager.showTabCountEnabled)
 		{
-			[activeToolbarForBrowserController(self) updateTabCount];
+			[activeToolbarOrToolbarForBarItemForBrowserController(self, StockBarItemTabExpose) updateTabCount];
 		};
 	};
 
@@ -578,7 +628,7 @@
 
 		if(preferenceManager.showTabCountEnabled)
 		{
-			[activeToolbarForBrowserController(self) updateTabCount];
+			[activeToolbarOrToolbarForBarItemForBrowserController(self, StockBarItemTabExpose) updateTabCount];
 		};
 	};
 
@@ -609,7 +659,7 @@
 
 		if(preferenceManager.showTabCountEnabled)
 		{
-			[activeToolbarForBrowserController(self) updateTabCount];
+			[activeToolbarOrToolbarForBarItemForBrowserController(self, StockBarItemTabExpose) updateTabCount];
 		};
 	};
 
@@ -728,7 +778,14 @@ void initBrowserController()
 
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
 	{
-		%init(iOS11Up);
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
+		{
+			%init(iOS11to12_4_3);
+		}
+		else
+		{
+			%init(iOS13Up);
+		}		
 
 		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_3 && kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_2)
 		{

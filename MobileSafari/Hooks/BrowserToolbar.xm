@@ -28,6 +28,8 @@
 #import "../Enums.h"
 #import "substrate.h"
 
+#define tSelf ((BrowserToolbar*)self)
+
 static void updateToolbarConnectionWithBarButtonItem(__kindof UIBarButtonItem* item, BrowserToolbar* toolbar, NSInteger itemValue)
 {
 	id target;
@@ -129,15 +131,9 @@ static void updateToolbarConnectionWithBarButtonItem(__kindof UIBarButtonItem* i
 	}
 }
 
-/*
-static void applyBarButtonItemsToToolbar(NSArray<__kindof UIBarButtonItem*>* items, BrowserToolbar* toolbar)
-{
-
-}*/
-
 //Turns a system bar button item into a non-system one
 //Needed because system items act weird and can't be modified that easily
-static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment /*, BOOL setLongPress, BOOL setTouchDown*/)
+static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButtonItem* oldItem, CGFloat width, NSInteger alignment)
 {
 	UIImage* itemImage;
 	[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&itemImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:oldItem.systemItem usingItemStyle:0];
@@ -179,16 +175,112 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 {
 	self = %orig;
 
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		NSMutableArray* usedOrder;
+
+		if(placement == 1 && preferenceManager.bottomToolbarCustomOrderEnabled && preferenceManager.bottomToolbarCustomOrder)
+		{
+			usedOrder = [preferenceManager.bottomToolbarCustomOrder mutableCopy];
+		}
+
+		if(placement == 0 && preferenceManager.topToolbarCustomOrderEnabled && preferenceManager.topToolbarCustomOrder)
+		{
+			usedOrder = [preferenceManager.topToolbarCustomOrder mutableCopy];
+		}
+
+		NSNumber* downloadsItemNum = @(BrowserToolbarDownloadsItem);
+		if([usedOrder containsObject:downloadsItemNum] && !preferenceManager.downloadManagerEnabled)
+		{
+			[usedOrder removeObject:downloadsItemNum];
+		}
+
+		UIImageSymbolConfiguration* symbolConfiguration = [%c(UIImageSymbolConfiguration) configurationWithTextStyle:UIFontTextStyleBody scale:UIImageSymbolScaleLarge];
+        symbolConfiguration = [symbolConfiguration configurationWithTraitCollection:[UITraitCollection traitCollectionWithPreferredContentSizeCategory:UIContentSizeCategoryMedium]];
+
+
+		if(usedOrder)
+		{
+			if([usedOrder containsObject:downloadsItemNum])
+			{
+				if(preferenceManager.previewDownloadProgressEnabled)
+				{
+					tSelf._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:self action:@selector(_itemReceivedTap:) placement:placement];
+				}
+				else
+				{
+					tSelf._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"arrow.down.circle" withConfiguration:symbolConfiguration] style:UIBarButtonItemStylePlain target:nil action:@selector(_itemReceivedTap:)];
+
+					if(placement != 0)
+					{
+						[tSelf._downloadsItem _setWidth:60];
+					}
+				}
+			}
+
+			NSNumber* reloadItemNum = @(BrowserToolbarReloadItem);
+			if([usedOrder containsObject:reloadItemNum])
+			{
+				tSelf._reloadItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"arrow.clockwise" withConfiguration:symbolConfiguration] style:UIBarButtonItemStylePlain target:nil action:@selector(_itemReceivedTap:)];
+				if(placement != 0)
+				{
+					[tSelf._reloadItem _setWidth:60];
+				}
+			}
+
+			NSNumber* clearDataItemNum = @(BrowserToolbarClearDataItem);
+			if([usedOrder containsObject:clearDataItemNum])
+			{
+				tSelf._clearDataItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"trash" withConfiguration:symbolConfiguration] style:UIBarButtonItemStylePlain target:nil action:@selector(_itemReceivedTap:)];
+				if(placement != 0)
+				{
+					[tSelf._clearDataItem _setWidth:60];
+				}
+			}
+		}
+		else if(preferenceManager.downloadManagerEnabled)
+		{
+			if(preferenceManager.previewDownloadProgressEnabled)
+			{
+				tSelf._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:self action:@selector(_itemReceivedTap:) placement:placement];
+			}
+			else
+			{
+				tSelf._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage systemImageNamed:@"arrow.down.circle" withConfiguration:symbolConfiguration] style:UIBarButtonItemStylePlain target:nil action:@selector(_itemReceivedTap:)];
+
+				if(placement != 0)
+				{
+					[tSelf._downloadsItem _setWidth:60];
+				}
+			}
+		}
+	}
+
 	if(preferenceManager.showTabCountEnabled)
 	{
-		self.tabCountLabel = [[UILabel alloc] init];
-		self.tabCountLabel.adjustsFontSizeToFitWidth = YES;
-		self.tabCountLabel.minimumFontSize = 0;
-		self.tabCountLabel.numberOfLines = 1;
-		self.tabCountLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
-		self.tabCountLabel.textAlignment = NSTextAlignmentCenter;
-		self.tabCountLabel.frame = CGRectMake(2.25,6.5,14.75,17.25);
-		self.tabCountLabel.textColor = [UIColor blackColor];
+		tSelf.tabCountLabel = [[UILabel alloc] init];
+		tSelf.tabCountLabel.adjustsFontSizeToFitWidth = YES;
+		tSelf.tabCountLabel.minimumFontSize = 0;
+		tSelf.tabCountLabel.numberOfLines = 1;
+		tSelf.tabCountLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
+		tSelf.tabCountLabel.textAlignment = NSTextAlignmentCenter;
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+		{
+			//tSelf.tabCountLabel.frame = CGRectMake(8.25,7,14.5,14.5);
+			if([UIScreen mainScreen].scale >= 3)
+			{
+				tSelf.tabCountLabel.frame = CGRectMake(9,7.66,13,13);
+			}
+			else
+			{
+				tSelf.tabCountLabel.frame = CGRectMake(9,8,13,13);
+			}
+		}
+		else
+		{
+			tSelf.tabCountLabel.frame = CGRectMake(2.25,6.5,14.75,17.25);
+		}
+		tSelf.tabCountLabel.textColor = [UIColor blackColor];
 	}
 
 	if(preferenceManager.toolbarLeftSwipeGestureEnabled || preferenceManager.toolbarRightSwipeGestureEnabled || preferenceManager.toolbarUpDownSwipeGestureEnabled)
@@ -289,7 +381,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 %new
 - (void)setDownloadsEnabled:(BOOL)enabled
 {
-	[self._downloadsItem setEnabled:enabled];
+	[tSelf._downloadsItem setEnabled:enabled];
 }
 
 %new
@@ -426,19 +518,19 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			}
 			case BrowserToolbarDownloadsItem:
 			{
-				if(!self._downloadsItem)
+				if(!tSelf._downloadsItem)
 				{
 					if(preferenceManager.previewDownloadProgressEnabled)
 					{
-						self._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
+						tSelf._downloadsItem = [[SPDownloadsBarButtonItem alloc] initWithTarget:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
 					}
 					else
 					{
-						self._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
+						tSelf._downloadsItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"DownloadsButton" inBundle:SPBundle compatibleWithTraitCollection:nil] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(downloadsFromButtonBar)];
 					}
 				}
 
-				addToDict(allItems, self._downloadsItem, itemNumber);
+				addToDict(allItems, tSelf._downloadsItem, itemNumber);
 				break;
 			}
 			case BrowserToolbarReloadItem:
@@ -466,9 +558,9 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 					[reloadButton addGestureRecognizer:longPressGestureRecognizer];
 				}
 
-				self._reloadItem = [[UIBarButtonItem alloc] initWithCustomView:reloadButton];
+				tSelf._reloadItem = [[UIBarButtonItem alloc] initWithCustomView:reloadButton];
 
-				addToDict(allItems, self._reloadItem, itemNumber);
+				addToDict(allItems, tSelf._reloadItem, itemNumber);
 				break;
 			}
 			case BrowserToolbarClearDataItem:
@@ -481,8 +573,8 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 					itemImage = [itemImage imageWithWidth:25 alignment:0];
 				}
 
-				self._clearDataItem = [[UIBarButtonItem alloc] initWithImage:itemImage style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(clearData)];
-				addToDict(allItems, self._clearDataItem, itemNumber);
+				tSelf._clearDataItem = [[UIBarButtonItem alloc] initWithImage:itemImage style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(clearData)];
+				addToDict(allItems, tSelf._clearDataItem, itemNumber);
 				break;
 			}
 		}
@@ -522,7 +614,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 		toolbarMargin += 20;	//20 right space
 
-		CGFloat availableSpace = (self.URLFieldHorizontalMargin - toolbarMargin);
+		CGFloat availableSpace = (tSelf.URLFieldHorizontalMargin - toolbarMargin);
 
 		if(availableSpace > 150)
 		{
@@ -637,7 +729,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 	{
 		NSMutableDictionary* defaultItemsForToolbarSize = MSHookIvar<NSMutableDictionary*>(self, "_defaultItemsForToolbarSize");
 
-		NSMutableArray* defaultItems = defaultItemsForToolbarSize[@(self.toolbarSize)];
+		NSMutableArray* defaultItems = defaultItemsForToolbarSize[@(tSelf.toolbarSize)];
 
 		NSInteger placement = MSHookIvar<NSInteger>(self, "_placement");
 
@@ -693,7 +785,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 				defaultItems = %orig;
 			}
 
-			defaultItemsForToolbarSize[@(self.toolbarSize)] = defaultItems;
+			defaultItemsForToolbarSize[@(tSelf.toolbarSize)] = defaultItems;
 		}
 
 		return defaultItems;
@@ -705,7 +797,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 %new
 - (void)updateTabCount
 {
-	if(self.tabCountLabel)
+	if(tSelf.tabCountLabel)
 	{
 		void (^updateBlock)(void) = ^
 		{
@@ -713,7 +805,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 			if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
 			{
-				if(self.replacementToolbar)
+				if(tSelf.replacementToolbar)
 				{
 					return;
 				}
@@ -737,9 +829,9 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			//Adding the label as a subview causes issues so we have to directly modify the image!
 
 			//Save the original image if we don't have it already
-			if(!self.tabExposeImage)
+			if(!tSelf.tabExposeImage)
 			{
-				self.tabExposeImage = [tabExposeItem image];
+				tSelf.tabExposeImage = [tabExposeItem image];
 			}
 
 			TabController* tabController = browserControllerForBrowserToolbar(self).tabController;
@@ -762,28 +854,28 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 			NSString* newText = [NSString stringWithFormat:@"%llu", (unsigned long long)newTabCount];
 
-			if(![self.tabCountLabel.text isEqualToString:newText])	//If label changed, update image
+			if(![tSelf.tabCountLabel.text isEqualToString:newText])	//If label changed, update image
 			{
 				//Set current label count as text
-				self.tabCountLabel.text = newText;
+				tSelf.tabCountLabel.text = newText;
 
 				//Convert label to image
-				UIGraphicsBeginImageContextWithOptions(self.tabExposeImage.size, NO, 0.0);
-				[self.tabCountLabel.layer renderInContext:UIGraphicsGetCurrentContext()];
+				UIGraphicsBeginImageContextWithOptions(tSelf.tabExposeImage.size, NO, 0.0);
+				[tSelf.tabCountLabel.layer renderInContext:UIGraphicsGetCurrentContext()];
 				UIImage* labelImg = UIGraphicsGetImageFromCurrentImageContext();
 				UIGraphicsEndImageContext();
 
 				//Add labelImage to buttonImage
-				UIGraphicsBeginImageContextWithOptions(self.tabExposeImage.size, NO, 0.0);
-				CGRect rect = CGRectMake(0,0,self.tabExposeImage.size.width,self.tabExposeImage.size.height);
-				[self.tabExposeImage drawInRect:rect];
-				[labelImg drawInRect:CGRectMake(self.tabCountLabel.frame.origin.x,self.tabCountLabel.frame.origin.y,self.tabExposeImage.size.width,self.tabExposeImage.size.height)];
-				self.tabExposeImageWithCount = UIGraphicsGetImageFromCurrentImageContext();
+				UIGraphicsBeginImageContextWithOptions(tSelf.tabExposeImage.size, NO, 0.0);
+				CGRect rect = CGRectMake(0,0,tSelf.tabExposeImage.size.width,tSelf.tabExposeImage.size.height);
+				[tSelf.tabExposeImage drawInRect:rect];
+				[labelImg drawInRect:CGRectMake(tSelf.tabCountLabel.frame.origin.x,tSelf.tabCountLabel.frame.origin.y,tSelf.tabExposeImage.size.width,tSelf.tabExposeImage.size.height)];
+				tSelf.tabExposeImageWithCount = UIGraphicsGetImageFromCurrentImageContext();
 				UIGraphicsEndImageContext();
 			}
 
 			//Apply image with count
-			[tabExposeItem setImage:self.tabExposeImageWithCount];
+			[tabExposeItem setImage:tSelf.tabExposeImageWithCount];
 		};
 
 		if([NSThread isMainThread])
@@ -802,7 +894,7 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 {
 	%orig;
 
-	if(self.tabCountLabel)
+	if(tSelf.tabCountLabel)
 	{
 		[self updateTabCount];
 	}
@@ -812,5 +904,15 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 void initBrowserToolbar()
 {
-	%init();
+	Class ToolbarClass;
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		ToolbarClass = objc_getClass("_SFToolbar");
+	}
+	else
+	{
+		ToolbarClass = objc_getClass("BrowserToolbar");
+	}
+
+	%init(BrowserToolbar=ToolbarClass);
 }

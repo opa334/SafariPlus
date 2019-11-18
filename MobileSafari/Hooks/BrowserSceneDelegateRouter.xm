@@ -18,15 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "../Protocols.h"
+#import "../SafariPlus.h"
+#import "../Util.h"
 
-@class SPDownloadsBarButtonItemView, SPTouchView;
+%hook BrowserSceneDelegateRouter
 
-@interface SPDownloadsBarButtonItem : UIBarButtonItem <DownloadsObserverDelegate>
+- (void)scene:(id)arg1 willConnectToSession:(id)arg2 options:(id)arg3
 {
-	SPDownloadsBarButtonItemView* _itemView;
-	SPTouchView* _touchView;
+    %orig;
+
+    [(Application*)[%c(Application) sharedApplication] sp_setUpWithMainBrowserController:browserControllers().firstObject];
 }
-- (instancetype)initWithTarget:(id)target action:(SEL)action;
-- (instancetype)initWithTarget:(id)target action:(SEL)action placement:(NSInteger)placement;
-@end
+
+%end
+
+void initBrowserSceneDelegateRouter()
+{
+    %init();
+}

@@ -21,10 +21,12 @@
 @class SPLocalizationManager;
 
 @interface SPLocalizationManager : NSObject
+@property NSBundle* WBSBundle;
 
 + (instancetype)sharedInstance;
 - (NSString*)localizedSPStringForKey:(NSString*)key;
 - (NSString*)localizedMSStringForKey:(NSString*)key;
+- (NSString*)localizedWBSStringForKey:(NSString*)key;
 - (void)parseSPLocalizationsForSpecifiers:(NSArray*)specifiers;
 
 @end

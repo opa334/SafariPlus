@@ -51,7 +51,17 @@
 			{
 				//desktopButton not created yet -> create and configure it
 				self.desktopModeButton = [UIButton buttonWithType:UIButtonTypeSystem];
-				UIImage* desktopButtonImage = [UIImage imageNamed:@"DesktopButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				UIImage* desktopButtonImage;
+
+				if([UIImage respondsToSelector:@selector(systemImageNamed:)])
+				{
+					desktopButtonImage = [UIImage systemImageNamed:@"desktopcomputer"];
+				}
+				else
+				{
+					desktopButtonImage = [UIImage imageNamed:@"DesktopButton" inBundle:SPBundle compatibleWithTraitCollection:nil];
+				}
+
 				[self.desktopModeButton setImage:desktopButtonImage forState:UIControlStateNormal];
 				[self.desktopModeButton addTarget:self action:@selector(desktopModeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 				self.desktopModeButton.selected = self.delegate.desktopButtonSelected;
@@ -72,7 +82,16 @@
 			{
 				self.tabManagerButton = [UIButton buttonWithType:UIButtonTypeSystem];
 				UIImage* shareImage;
-				[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&shareImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:9 usingItemStyle:0];
+
+				if([UIImage respondsToSelector:@selector(systemImageNamed:)])
+				{
+					shareImage = [UIImage systemImageNamed:@"square.and.arrow.up"];
+				}
+				else
+				{
+					[UIBarButtonItem _getSystemItemStyle:nil title:nil image:&shareImage selectedImage:nil action:nil forBarStyle:0 landscape:NO alwaysBordered:NO usingSystemItem:9 usingItemStyle:0];
+				}
+				
 				[self.tabManagerButton setImage:shareImage forState:UIControlStateNormal];
 				[self.tabManagerButton addTarget:self action:@selector(tabManagerButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 				self.tabManagerButton.tintColor = [UIColor whiteColor];

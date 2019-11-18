@@ -19,7 +19,7 @@
 // SOFTWARE.
 
 #ifndef SIMJECT
-#import <RocketBootstrap/rocketbootstrap.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #endif
 #import <AppSupport/CPDistributedMessagingCenter.h>
 

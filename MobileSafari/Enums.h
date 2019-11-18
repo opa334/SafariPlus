@@ -93,6 +93,18 @@ enum
 
 enum
 {
+    StockBarItemBack,
+    StockBarItemForward,
+    StockBarItemBookmarks,
+    StockBarItemShare,
+    StockBarItemAddTab,
+	StockBarItemTabExpose,
+    StockBarItemOpenInSafari,
+    StockBarItemDownloads
+};
+
+enum
+{
 	BrowserToolbarBackItem,
 	BrowserToolbarForwardItem,
 	BrowserToolbarBookmarksItem,

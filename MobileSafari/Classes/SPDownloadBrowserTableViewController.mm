@@ -63,6 +63,15 @@
 	[self.tableView registerClass:[SPDownloadTableViewCell class] forCellReuseIdentifier:@"SPDownloadTableViewCell"];
 }
 
+- (void)willMoveToParentViewController:(UIViewController *)parent
+{
+	[super willMoveToParentViewController:parent];
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		[(SPDownloadNavigationController*)self.navigationController applyPaletteToViewController:self];
+	}
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
 	return 2;

@@ -63,6 +63,34 @@
 	return self;
 }
 
+- (void)setHidden:(BOOL)hidden
+{
+	[super setHidden:hidden];
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		if(!hidden)
+		{
+			//Stolen from FLEX: https://github.com/Flipboard/FLEX/blob/master/Classes/Manager/FLEXManager.m#L78
+			if(!self.windowScene || self.windowScene.activationState != UISceneActivationStateForegroundActive)
+			{
+				for(UIScene *scene in UIApplication.sharedApplication.connectedScenes)
+				{
+					if(scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]])
+					{
+						self.windowScene = (UIWindowScene*)scene;
+						break;
+					}
+           		}
+			}
+		}
+		else
+		{
+			self.windowScene = nil;
+		}
+	}
+}
+
 - (BOOL)_canAffectStatusBarAppearance
 {
 	return NO;
