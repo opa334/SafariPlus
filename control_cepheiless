@@ -2,7 +2,7 @@ Package: com.opa334.safariplussnakeoil
 Name: Safari Plus (Cepheiless)
 Depends: firmware (>=8.0), mobilesubstrate, com.creaturesurvive.libcscolorpicker, com.rpetrich.rocketbootstrap
 Conflicts: com.opa334.safariplus
-Version: 1.7.7-2
+Version: 1.7.8-2
 Architecture: iphoneos-arm
 Description: Various enhancements to Safari!
 Depiction: https://opa334.github.io/depic/SafariPlus/index.html
