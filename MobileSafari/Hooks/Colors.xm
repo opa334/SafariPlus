@@ -975,6 +975,11 @@
 
 void initColors()
 {
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		return;
+	}
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 	{
 		%init(iOS9Up)

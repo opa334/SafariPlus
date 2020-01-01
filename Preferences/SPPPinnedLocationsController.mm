@@ -122,7 +122,14 @@
 		textField.placeholder = [localizationManager
 					 localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER"];
 
-		textField.textColor = [UIColor blackColor];
+		if([UIColor respondsToSelector:@selector(labelColor)])
+		{
+			textField.textColor = [UIColor labelColor];
+		}
+		else
+		{
+			textField.textColor = [UIColor blackColor];
+		}
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 		textField.borderStyle = UITextBorderStyleNone;
 		textField.text = [location objectForKey:@"name"];
@@ -133,7 +140,14 @@
 		textField.placeholder = [localizationManager
 					 localizedSPStringForKey:@"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER"];
 
-		textField.textColor = [UIColor blackColor];
+		if([UIColor respondsToSelector:@selector(labelColor)])
+		{
+			textField.textColor = [UIColor labelColor];
+		}
+		else
+		{
+			textField.textColor = [UIColor blackColor];
+		}
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 		textField.borderStyle = UITextBorderStyleNone;
 		textField.text = [location objectForKey:@"path"];

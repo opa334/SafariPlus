@@ -18,19 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "SPPColorTopBarNormalListController.h"
+#import "SPPColorTopBarListController.h"
 #import "SafariPlusPrefs.h"
+#import "../MobileSafari/Defines.h"
 
-@implementation SPPColorTopBarNormalListController
+@implementation SPPColorTopBarListController
 
 - (NSString*)plistName
 {
-	return @"ColorsTopBarNormal";
+	return @"ColorsTopBar";
 }
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TOP_BAR"], [localizationManager localizedSPStringForKey:@"Normal"]];
+	NSString* modeIdentifier = [[self specifier] propertyForKey:@"modeIdentifier"];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TOP_BAR"], [localizationManager localizedSPStringForKey:[modeIdentifier uppercaseString]]];
 }
 
 - (NSArray*)statusBarColorTitles
@@ -48,6 +50,43 @@
 - (NSArray*)statusBarColorValues
 {
 	return @[@(UIStatusBarStyleDefault), @(UIStatusBarStyleLightContent)];
+}
+
+- (void)applyModificationsToSpecifiers:(NSMutableArray*)specifiers
+{
+	NSString* modeIdentifier = [[self specifier] propertyForKey:@"modeIdentifier"];
+	BOOL isNormal;
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		isNormal = [modeIdentifier hasSuffix:@"Light"];
+	}
+	else
+	{
+		isNormal = [modeIdentifier isEqualToString:@"Normal"];
+	}
+
+	for(PSSpecifier* specifier in specifiers)
+	{
+		NSString* key = [specifier propertyForKey:@"key"];
+		if([key hasSuffix:@"TabBarInactiveTitleOpacity"])
+		{
+			NSNumber* defaultValue;
+
+			if(isNormal)
+			{
+				defaultValue = @0.4;
+			}
+			else
+			{
+				defaultValue = @0.2;
+			}
+
+			[specifier setProperty:defaultValue forKey:@"default"];
+		}
+	}
+
+	[super applyModificationsToSpecifiers:specifiers];
 }
 
 @end

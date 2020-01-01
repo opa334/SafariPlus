@@ -115,6 +115,17 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 @property (nonatomic,copy,readonly) _UIButtonBarButtonVisualProviderIOS* visualProvider;
 @end
 
+@interface _UICustomBlurEffect : UIBlurEffect
+@property (nonatomic,retain) UIColor* colorTint;
+@property (assign,nonatomic) CGFloat colorTintAlpha;
+@end
+
+@interface UIDynamicSystemColor : UIColor {
+	NSDictionary* _colorsByThemeKey;
+}
+- (id)initWithName:(id)arg1 colorsByThemeKey:(id)arg2;
+@end
+
 @interface UIImage (Private)
 + (UIImage*)_iconForResourceProxy:(LSDocumentProxy*)arg1 variant:(int)arg2 variantsScale:(CGFloat)arg3;
 + (UIImage*)_iconForResourceProxy:(LSDocumentProxy*)arg1 format:(int)arg2 options:(NSUInteger)arg3;
@@ -323,6 +334,32 @@ typedef enum UIImageSymbolScale : NSInteger {
 
 /**** SafariServices ****/
 
+@interface _SFBarTheme : NSObject
+@property (nonatomic,readonly) BOOL backdropIsDark;                               //@synthesize backdropIsDark=_backdropIsDark - In the implementation block
+@property (nonatomic,readonly) NSUInteger tintStyle;                      //@synthesize tintStyle=_tintStyle - In the implementation block
+@property (nonatomic,readonly) UIColor* controlsTintColor;                       //@synthesize controlsTintColor=_controlsTintColor - In the implementation block
+@property (nonatomic,readonly) UIColor* preferredBarTintColor;                   //@synthesize preferredBarTintColor=_preferredBarTintColor - In the implementation block
+@property (nonatomic,readonly) NSInteger overrideUserInterfaceStyle;              //@synthesize overrideUserInterfaceStyle=_overrideUserInterfaceStyle - In the implementation block
+@property (nonatomic,readonly) UIBlurEffect* backdropEffect;                     //@synthesize backdropEffect=_backdropEffect - In the implementation block
+@property (nonatomic,readonly) NSArray * backdropAdjustmentEffects;               //@synthesize backdropAdjustmentEffects=_backdropAdjustmentEffects - In the implementation block
+@property (nonatomic,readonly) _SFBarTheme* fallbackTheme; 
++ (instancetype)themeWithBarTintStyle:(NSUInteger)arg1;
++ (instancetype)themeWithTheme:(id)arg1;
++ (instancetype)themeWithBarTintStyle:(NSUInteger)arg1 preferredBarTintColor:(id)arg2 controlsTintColor:(id)arg3;
+- (NSInteger)overrideUserInterfaceStyle;
+- (NSUInteger)tintStyle;
+- (_SFBarTheme *)fallbackTheme;
+- (UIColor *)controlsTintColor;
+- (BOOL)backdropIsDark;
+- (UIBlurEffect *)backdropEffect;
+- (NSArray *)backdropAdjustmentEffects;
+- (UIColor *)preferredBarTintColor;
+- (instancetype)initWithBarTintStyle:(NSUInteger)arg1 preferredBarTintColor:(id)arg2 controlsTintColor:(id)arg3;
+@end
+
+@interface _SFNavigationBarTheme : _SFBarTheme
+@end
+
 @interface _SFBarManager : NSObject
 @property (nonatomic) BrowserController* delegate;
 - (void)_updateRegistration:(id)arg1;
@@ -391,9 +428,11 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic, weak) BrowserController* delegate;
 @property (nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
 @property (nonatomic,readonly) CGRect URLOutlineFrameInNavigationBarSpace;
+@property (nonatomic,readonly) _SFNavigationBarTheme * effectiveTheme;
 - (void)_reloadButtonPressed;
 - (id)_backdropInputSettings;
 - (id)_toolbarForBarItem:(NSInteger)barItem; //iOS 13
+- (void)_didUpdateEffectiveTheme;
 @end
 
 @interface _SFNavigationBarBackdrop : _UIBackdropView
@@ -427,9 +466,11 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic,readonly) NSInteger toolbarSize;
 @property (nonatomic,readonly) CGFloat URLFieldHorizontalMargin;
 @property (nonatomic,weak) SFBarRegistration* barRegistration;
+@property (nonatomic,retain) _SFBarTheme * theme;
 - (id)_backdropInputSettings;
 - (BOOL)_tintUsesDarkTheme;
 - (BOOL)hasDarkBackground;
+- (void)_updateBackgroundViewEffects;
 @end
 
 
@@ -559,7 +600,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic) NSDictionary* sp_storedLaunchOptions;
 - (void)sp_preAppLaunch;
 - (void)sp_postAppLaunchWithOptions:(NSDictionary*)launchOptions;
-- (void)sp_setUpWithMainBrowserController:(BrowserController*)browserController;
+- (void)sp_setUpIfReady;
 - (void)sp_applicationDidEnterBackground;
 - (void)sp_applicationWillEnterForeground;
 - (void)handleTwitterAlert;
@@ -582,6 +623,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (readonly, nonatomic, getter=isFavoritesFieldFocused) BOOL favoritesFieldFocused;
 @property (readonly, nonatomic, getter=isShowingTabView) BOOL showingTabView;
 @property (readonly, nonatomic) BOOL usesTabBar;
+@property(nonatomic, getter=isPrivateBrowsingEnabled) BOOL privateBrowsingEnabled; //readonly prior to iOS 13
 - (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
@@ -601,7 +643,6 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (BOOL)_shouldShowTabBar;
 - (void)updateButtonBarContentsAnimated:(BOOL)arg1;
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(void (^)(void))arg3;		//iOS11
-- (BOOL)isPrivateBrowsingEnabled;	//iOS11
 - (void)togglePrivateBrowsingEnabled;	//iOS11
 - (void)showFindOnPage;	//iOS9
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;	//iOS9
@@ -753,6 +794,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @interface TabBar : UIView
 @property (readonly, nonatomic) TabBarStyle* barStyle;
 @property (nonatomic, weak) TabController* delegate;
+@property (nonatomic) NSUInteger tintStyle;
 @end
 
 @interface TabBarStyle : NSObject
@@ -877,6 +919,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
 - (void)reload;
 - (BOOL)privateBrowsingEnabled;
+- (BOOL)isPrivateBrowsingEnabled;
 - (WebBookmark*)readingListBookmark;
 - (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (void)_animateElement:(id)arg1 toToolbarButton:(NSInteger)arg2;
@@ -920,6 +963,10 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)_setActions:(NSUInteger)arg1;
 @end
 
+@interface TabIconAndTitleView : UIView
+@property(retain, nonatomic) UIColor *textColor;
+@end
+
 @interface TabOverview : UIView
 @property (readonly, nonatomic) UIButton* addTabButton;
 @property (nonatomic,readonly) UIButton* privateBrowsingButton;
@@ -931,6 +978,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic, retain) UIButton* desktopModeButton;
 @property (nonatomic,retain) UIButton* tabManagerButton;
 - (void)userAgentButtonLandscapePressed;
+- (void)updateHeaderStyle;
 @end
 
 @interface TabOverviewItem : NSObject <TabCollectionItem>

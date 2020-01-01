@@ -34,6 +34,7 @@
 
 - (NSString*)plistName;
 - (NSString*)title;
+- (void)applyModificationsToSpecifiers:(NSMutableArray*)specifiers;
 - (void)removeUnsupportedSpecifiers:(NSMutableArray*)specifiers;
 - (void)removeDisabledGroups:(NSMutableArray*)specifiers;
 - (void)openTwitterWithUsername:(NSString*)username;

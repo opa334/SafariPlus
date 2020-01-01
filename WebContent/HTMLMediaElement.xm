@@ -47,13 +47,16 @@ void WebCore_HTMLMediaElement_loadResource(WebCore::HTMLMediaElement* self, cons
 	HBLogDebug(@"loadResource:%p", self);
 	_WebCore_HTMLMediaElement_loadResource(self, initialURL, contentType, keySystem);
 
-	NSString* URLString = initialURL;
-
-	if(![URLString isEqualToString:@""])
+	@autoreleasepool
 	{
-		NSValue* key = [NSValue valueWithPointer:self];
-		HBLogDebug(@"%i added key:%@ URL:%@", (int)getpid(), key, URLString);
-		[URLCache setObject:URLString forKey:key];
+		NSString* URLString = initialURL;
+
+		if(![URLString isEqualToString:@""])
+		{
+			NSValue* key = [NSValue valueWithPointer:self];
+			HBLogDebug(@"%i added key:%@ URL:%@", (int)getpid(), key, URLString);
+			[URLCache setObject:URLString forKey:key];
+		}
 	}
 }
 
@@ -61,12 +64,15 @@ void WebCore_HTMLMediaElement_loadResource(WebCore::HTMLMediaElement* self, cons
 void (*_WebCore_HTMLMediaElement_destructor)(WebCore::HTMLMediaElement*);
 void WebCore_HTMLMediaElement_destructor(WebCore::HTMLMediaElement* self)
 {
-	NSValue* key = [NSValue valueWithPointer:self];
-
-	if([[URLCache allKeys] containsObject:key])
+	@autoreleasepool
 	{
-		HBLogDebug(@"%i removed key %@", (int)getpid(), key);
-		[URLCache removeObjectForKey:key];
+		NSValue* key = [NSValue valueWithPointer:self];
+
+		if([[URLCache allKeys] containsObject:key])
+		{
+			HBLogDebug(@"%i removed key %@", (int)getpid(), key);
+			[URLCache removeObjectForKey:key];
+		}
 	}
 
 	_WebCore_HTMLMediaElement_destructor(self);
@@ -75,8 +81,11 @@ void WebCore_HTMLMediaElement_destructor(WebCore::HTMLMediaElement* self)
 void (*_WebCore_HTMLMediaElement_enterFullscreen)(WebCore::HTMLMediaElement*, unsigned);
 void WebCore_HTMLMediaElement_enterFullscreen(WebCore::HTMLMediaElement* self, unsigned a1)
 {
-	HBLogDebug(@"HTMLMediaElement %p enterFullscreen", self);
-	currentFullscreenVideoURL = [URLCache objectForKey:[NSValue valueWithPointer:self]];
+	@autoreleasepool
+	{
+		HBLogDebug(@"HTMLMediaElement %p enterFullscreen", self);
+		currentFullscreenVideoURL = [URLCache objectForKey:[NSValue valueWithPointer:self]];
+	}
 
 	_WebCore_HTMLMediaElement_enterFullscreen(self, a1);
 }
@@ -84,8 +93,11 @@ void WebCore_HTMLMediaElement_enterFullscreen(WebCore::HTMLMediaElement* self, u
 void (*_WebCore_HTMLMediaElement_enterFullscreen_noArg)(WebCore::HTMLMediaElement*);
 void WebCore_HTMLMediaElement_enterFullscreen_noArg(WebCore::HTMLMediaElement* self)
 {
-	HBLogDebug(@"HTMLMediaElement enterFullscreen_noArg");
-	currentFullscreenVideoURL = [URLCache objectForKey:[NSValue valueWithPointer:self]];
+	@autoreleasepool
+	{
+		HBLogDebug(@"HTMLMediaElement enterFullscreen_noArg");
+		currentFullscreenVideoURL = [URLCache objectForKey:[NSValue valueWithPointer:self]];
+	}
 
 	_WebCore_HTMLMediaElement_enterFullscreen_noArg(self);
 }
@@ -93,20 +105,23 @@ void WebCore_HTMLMediaElement_enterFullscreen_noArg(WebCore::HTMLMediaElement* s
 void (*_WebCore_HTMLMediaElement_exitFullscreen)(WebCore::HTMLMediaElement*);
 void WebCore_HTMLMediaElement_exitFullscreen(WebCore::HTMLMediaElement* self)
 {
-	HBLogDebug(@"HTMLMediaElement exitFullscreen");
-	currentFullscreenVideoURL = nil;
+	@autoreleasepool
+	{
+		HBLogDebug(@"HTMLMediaElement exitFullscreen");
+		currentFullscreenVideoURL = nil;
+	}
 
 	_WebCore_HTMLMediaElement_exitFullscreen(self);
 }
 
 void currentVideoURLRequested(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
 {
-	HBLogDebug(@"receivedRequest!");
+	HBLogDebug(@"receivedRequest! currentFullscreenVideoURL:%@", currentFullscreenVideoURL);
 
 	NSString* videoURL = currentFullscreenVideoURL;
 
-	//Support fetching video URLs from HTML5 players
-	if(!videoURL && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+	//Support fetching video URLs from HTML5 players (used on iPads)
+	if(!videoURL && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0 && IS_PAD)
 	{
 		//IMPORTANT: IN ORDER FOR THIS CODE TO COMPILE AND NOT TO CRASH, SOME WEBKIT HEADERS WILL NEED TO BE MODIFIED
 
@@ -241,15 +256,18 @@ static BOOL shouldEnable()
 
 %ctor
 {
-	HBLogDebug(@"SafariPlusWS.dylib loaded into process with pid %i", getpid());
-
-	if(shouldEnable())
+	@autoreleasepool
 	{
-		URLCache = [NSMutableDictionary new];
+		HBLogDebug(@"SafariPlusWS.dylib loaded into process with pid %i", getpid());
 
-		initHooks();
+		if(shouldEnable())
+		{
+			URLCache = [NSMutableDictionary new];
 
-		CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, currentVideoURLRequested, CFSTR("com.opa334.safariplus/RequestCurrentVideoURL"), CFSTR("RequestCurrentVideoURL"), CFNotificationSuspensionBehaviorDeliverImmediately);
+			initHooks();
+
+			CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, currentVideoURLRequested, CFSTR("com.opa334.safariplus/RequestCurrentVideoURL"), CFSTR("RequestCurrentVideoURL"), CFNotificationSuspensionBehaviorDeliverImmediately);
+		}
 	}
 }
 

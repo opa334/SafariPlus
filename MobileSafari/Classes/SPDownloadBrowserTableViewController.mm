@@ -263,7 +263,7 @@
 - (id<QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
 {
 	NSURL* fileURL = [_previewFiles objectAtIndex:index].fileURL;
-	return [fileManager accessibleHardLinkForFileAtURL:fileURL forced:NO];
+	return [fileManager accessibleHardLinkForFileAtURL:fileURL forced:YES];
 }
 
 - (void)previewControllerDidDismiss:(QLPreviewController *)controller
@@ -589,6 +589,7 @@
 
 - (void)mediaImport:(NSString*)path didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo
 {
+	NSLog(@"didFinishSavingWithError: %@", error);
 	[fileManager resetHardLinks];
 }
 
@@ -635,7 +636,14 @@
 			{
 				textField.placeholder = [localizationManager localizedSPStringForKey:@"DIRECTORY_NAME"];
 			}
-			textField.textColor = [UIColor blackColor];
+			if([UIColor respondsToSelector:@selector(labelColor)])
+			{
+				textField.textColor = [UIColor labelColor];
+			}
+			else
+			{
+				textField.textColor = [UIColor blackColor];
+			}
 			textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 			textField.borderStyle = UITextBorderStyleNone;
 		}];
@@ -767,7 +775,14 @@
 		textField.placeholder = [localizationManager
 					 localizedSPStringForKey:@"DIRECTORY_NAME"];
 
-		textField.textColor = [UIColor blackColor];
+		if([UIColor respondsToSelector:@selector(labelColor)])
+		{
+			textField.textColor = [UIColor labelColor];
+		}
+		else
+		{
+			textField.textColor = [UIColor blackColor];
+		}
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 		textField.borderStyle = UITextBorderStyleNone;
 	}];

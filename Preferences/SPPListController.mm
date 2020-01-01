@@ -25,16 +25,24 @@
 
 @implementation SPPListController
 
-//Must be overwritten by subclass
 - (NSString*)title
 {
-	return nil;
+	if(NSString* label = [[self specifier] propertyForKey:@"label"])
+	{
+		return [localizationManager localizedSPStringForKey:label];
+	}
+	
+	return @"";
 }
 
-//Must be overwritten by subclass
 - (NSString*)plistName
 {
-	return nil;
+	if(NSString* plistName = [[self specifier] propertyForKey:@"plistName"])
+	{
+		return plistName;
+	}
+	
+	return @"";
 }
 
 - (NSMutableArray*)specifiers
@@ -46,16 +54,22 @@
 		if(plistName)
 		{
 			_specifiers = [self loadSpecifiersFromPlistName:[self plistName] target:self];
-			[localizationManager parseSPLocalizationsForSpecifiers:_specifiers];
-
-			[self removeUnsupportedSpecifiers:_specifiers];
-			_allSpecifiers = [_specifiers copy];
-			[self removeDisabledGroups:_specifiers];
+			
+			[self applyModificationsToSpecifiers:_specifiers];
 		}
 	}
 
 	[(UINavigationItem *)self.navigationItem setTitle:[self title]];
 	return _specifiers;
+}
+
+- (void)applyModificationsToSpecifiers:(NSMutableArray*)specifiers
+{
+	[localizationManager parseSPLocalizationsForSpecifiers:specifiers];
+
+	[self removeUnsupportedSpecifiers:specifiers];
+	_allSpecifiers = [specifiers copy];
+	[self removeDisabledGroups:specifiers];
 }
 
 - (void)removeUnsupportedSpecifiers:(NSMutableArray*)specifiers

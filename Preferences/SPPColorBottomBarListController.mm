@@ -18,19 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "SPPColorTabSwitcherPrivateListController.h"
+#import "SPPColorBottomBarListController.h"
 #import "SafariPlusPrefs.h"
 
-@implementation SPPColorTabSwitcherPrivateListController
+@implementation SPPColorBottomBarListController
 
 - (NSString*)plistName
 {
-	return @"ColorsTabSwitcherPrivate";
+	return @"ColorsBottomBar";
 }
 
 - (NSString*)title
 {
-	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TAB_SWITCHER"], [localizationManager localizedSPStringForKey:@"PRIVATE"]];
+	NSString* modeIdentifier = [[self specifier] propertyForKey:@"modeIdentifier"];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"BOTTOM_BAR"], [localizationManager localizedSPStringForKey:[modeIdentifier uppercaseString]]];
 }
 
 @end

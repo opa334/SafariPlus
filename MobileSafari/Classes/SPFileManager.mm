@@ -101,6 +101,16 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	_isSandboxed = access("/var/mobile", W_OK) != 0;
 	HBLogDebug(@"_isSandboxed:%i", _isSandboxed);
 
+	BOOL isCheckra1n = access("/var/checkra1n.dmg", F_OK) == 0;
+	HBLogDebug(@"isCheckra1n:%i", isCheckra1n);
+
+	if(isCheckra1n)
+	{
+		//Checkra1n seems to have incomplete sandbox patches
+		//So we just assume we're sandboxed if on checkra1n
+		_isSandboxed = YES;
+	}
+
 	_displayNamesForPaths = [communicationManager applicationDisplayNamesForPaths];
 
 	[self resetHardLinks];
@@ -133,6 +143,10 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced
 {
+	HBLogDebug(@"accessibleHardLinkForFileAtURL:%@", URL);
+	HBLogDebug(@"isURLReadable:%i", [self isURLReadable:URL]);
+	HBLogDebug(@"isURLWritable:%i", [self isURLWritable:URL]);
+
 	if((rocketBootstrapWorks && _isSandboxed) || forced)
 	{
 		if(![self isURLReadable:URL] || ![self isURLWritable:URL] || forced)

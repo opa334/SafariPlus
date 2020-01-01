@@ -14,7 +14,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>tabTitleBarNormalTextColorEnabled</string>
+				<string>tabTitleBar@MODE_IDENTIFIER@TextColorEnabled</string>
 				<key>label</key>
 				<string>TAB_TITLE_TEXT_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -34,7 +34,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>tabTitleBarNormalTextColor</string>
+				<string>tabTitleBar@MODE_IDENTIFIER@TextColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>
@@ -54,7 +54,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>tabTitleBarNormalBackgroundColorEnabled</string>
+				<string>tabTitleBar@MODE_IDENTIFIER@BackgroundColorEnabled</string>
 				<key>label</key>
 				<string>TAB_TITLE_BACKGROUND_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -74,7 +74,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>tabTitleBarNormalBackgroundColor</string>
+				<string>tabTitleBar@MODE_IDENTIFIER@BackgroundColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>
@@ -94,7 +94,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>tabSwitcherNormalToolbarBackgroundColorEnabled</string>
+				<string>tabSwitcher@MODE_IDENTIFIER@ToolbarBackgroundColorEnabled</string>
 				<key>label</key>
 				<string>TOOLBAR_BACKGROUND_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -116,7 +116,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>tabSwitcherNormalToolbarBackgroundColor</string>
+				<string>tabSwitcher@MODE_IDENTIFIER@ToolbarBackgroundColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 				<key>minCFVersion</key>

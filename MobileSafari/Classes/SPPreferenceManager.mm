@@ -283,6 +283,11 @@ void reloadPreferences()
 		 //@"tabSwitcherPrivateToolbarBackgroundColorEnabled" : @NO,
 		 //@"tabSwitcherPrivateToolbarBackgroundColor" : nil,
 
+		 @"topBarNormalLightTabBarInactiveTitleOpacity" : @0.4,
+		 @"topBarPrivateLightTabBarInactiveTitleOpacity" : @0.4,
+		 @"topBarNormalDarkTabBarInactiveTitleOpacity" : @0.2,
+		 @"topBarPrivateDarkTabBarInactiveTitleOpacity" : @0.2,
+
 		 //@"topToolbarCustomOrderEnabled" : @NO,
 		 @"topToolbarCustomOrder" : @[@(BrowserToolbarBackItem),@(BrowserToolbarForwardItem),@(BrowserToolbarBookmarksItem),@(BrowserToolbarSearchBarSpace),@(BrowserToolbarShareItem),@(BrowserToolbarAddTabItem),@(BrowserToolbarTabExposeItem)],
 		 //@"bottomToolbarCustomOrderEnabled" : @NO,

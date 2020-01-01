@@ -21,7 +21,7 @@
 #import <WebKit/WKWebView.h>
 #import "Protocols.h"
 
-@class BrowserController, BrowserRootViewController, BrowserToolbar, TabController, TabDocument, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView, NavigationBar, WebAVPlayerController;
+@class BrowserController, BrowserRootViewController, BrowserToolbar, TabController, TabDocument, TabThumbnailView, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView, NavigationBar, WebAVPlayerController;
 
 extern BOOL showAlert;
 extern SPFileManager* fileManager;
@@ -49,6 +49,7 @@ extern BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* bro
 extern TabDocument* tabDocumentForItem(TabController* tabController, id<TabCollectionItem> item);
 extern NSInteger safariPlusOrderItemForBarButtonItem(NSInteger barItem);
 extern NSInteger barButtonItemForSafariPlusOrderItem(NSInteger orderItem);
+extern TabDocument* tabDocumentForTabThumbnailView(TabThumbnailView* tabThumbnailView);
 extern BOOL browserControllerIsShowingTabView(BrowserController* browserController);
 extern BOOL updateTabExposeActionsForLockedTabs(BrowserController* browserController, UIAlertController* tabExposeAlertController);
 extern void closeTabDocuments(TabController* tabController, NSArray<TabDocument*>* tabDocuments, BOOL animated);

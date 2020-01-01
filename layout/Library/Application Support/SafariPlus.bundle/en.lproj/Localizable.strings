@@ -250,8 +250,16 @@
 "BOTTOM_BAR" = "Bottom Bar";
 "TAB_SWITCHER" = "Tab Switcher";
 
+"LIGHT_APPEARANCE" = "Light Appearance";
+"DARK_APPEARANCE" = "Dark Appearance";
+
 "NORMAL" = "Normal";
 "PRIVATE" = "Private";
+
+"NORMALLIGHT" = "Normal, Light";
+"NORMALDARK" = "Normal, Dark";
+"PRIVATELIGHT" = "Private, Light";
+"PRIVATEDARK" = "Private, Dark";
 
 "TINT_COLOR" = "Tint Color";
 "BACKGROUND_COLOR" = "Background Color";

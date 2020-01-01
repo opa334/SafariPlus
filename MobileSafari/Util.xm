@@ -197,7 +197,20 @@ void togglePrivateBrowsing(BrowserController* controller)
 
 void setPrivateBrowsing(BrowserController* controller, BOOL enabled, void (^completion)(void))
 {
-	if([controller respondsToSelector:@selector(_setPrivateBrowsingEnabled:showModalAuthentication:completion:)])
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		if(controller.privateBrowsingEnabled != enabled)
+		{
+			controller.privateBrowsingEnabled = enabled;
+		}
+		
+		if(completion)
+		{
+			//It takes about 0.1 seconds to switch between browsing modes
+			dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), completion);
+		}
+	}
+	else if([controller respondsToSelector:@selector(_setPrivateBrowsingEnabled:showModalAuthentication:completion:)])
 	{
 		[controller _setPrivateBrowsingEnabled:enabled showModalAuthentication:NO completion:completion];
 	}
@@ -349,26 +362,50 @@ BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToo
 
 NSInteger safariPlusOrderItemForBarButtonItem(NSInteger barItem)
 {
-    if(barItem >= 10)
-    {
-        return barItem - sp_extraButtonsOffset;
-    }
-    else
-    {
-        return barItem;
-    }
+	if(barItem >= 10)
+	{
+		return barItem - sp_extraButtonsOffset;
+	}
+	else
+	{
+		return barItem;
+	}
 }
 
 NSInteger barButtonItemForSafariPlusOrderItem(NSInteger orderItem)
 {
-    if(orderItem < 6)
-    {
-        return orderItem;
-    }
-    else
-    {
-        return orderItem + sp_extraButtonsOffset;
-    }
+	if(orderItem < 6)
+	{
+		return orderItem;
+	}
+	else
+	{
+		return orderItem + sp_extraButtonsOffset;
+	}
+}
+
+TabDocument* tabDocumentForTabThumbnailView(TabThumbnailView* tabThumbnailView)
+{
+	for(BrowserController* bc in browserControllers())
+	{
+		for(TabOverviewItem* item in bc.tabController.tabOverview.items)
+		{
+			if(item.layoutInfo.itemView == tabThumbnailView)
+			{
+				return tabDocumentForItem(bc.tabController, item);
+			}
+		}
+
+		for(TiltedTabItem* item in bc.tabController.tiltedTabView.items)
+		{
+			if(item.layoutInfo.contentView == tabThumbnailView)
+			{
+				return tabDocumentForItem(bc.tabController, item);
+			}
+		}
+	}
+
+	return nil;
 }
 
 BOOL browserControllerIsShowingTabView(BrowserController* browserController)
@@ -684,9 +721,9 @@ void requestAuthentication(NSString* reason, void (^successHandler)(void))
 			else if(error.code != -2)
 			{
 				dispatch_async(dispatch_get_main_queue(), ^
-					       {
-						       sendSimpleAlert([localizationManager localizedSPStringForKey:@"AUTHENTICATION_ERROR"], [NSString stringWithFormat:@"%li: %@", (long)error.code, error.localizedDescription]);
-					       });
+				{
+					sendSimpleAlert([localizationManager localizedSPStringForKey:@"AUTHENTICATION_ERROR"], [NSString stringWithFormat:@"%li: %@", (long)error.code, error.localizedDescription]);
+				});
 			}
 		}];
 	}
@@ -700,15 +737,18 @@ void requestAuthentication(NSString* reason, void (^successHandler)(void))
 void sendSimpleAlert(NSString* title, NSString* message)
 {
 	UIAlertController* alert = [UIAlertController alertControllerWithTitle:title
-				    message:message
-				    preferredStyle:UIAlertControllerStyleAlert];
+					message:message
+					preferredStyle:UIAlertControllerStyleAlert];
 
 	UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
-				      style:UIAlertActionStyleDefault handler:nil];
+					  style:UIAlertActionStyleDefault handler:nil];
 
 	[alert addAction:closeAction];
 
-	[rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:alert animated:YES completion:nil];
+	dispatch_async(dispatch_get_main_queue(), ^
+	{
+		[rootViewControllerForBrowserController(browserControllers().firstObject) presentViewController:alert animated:YES completion:nil];
+	});
 }
 
 //I literally had to reverse engineer CFNetwork / Foundation to figure out how to unarchive the resume data on iOS 12, no joke
@@ -748,81 +788,4 @@ BOOL isUsingCellularData()
 	}
 
 	return NO;
-}
-
-/****** One constructor that inits all hooks ******/
-
-extern void initApplication();
-extern void initAVFullScreenPlaybackControlsViewController();
-extern void initAVPlaybackControlsView();
-extern void initBookmarkFavoritesActionsView();
-extern void initBrowserController();
-extern void initBrowserRootViewController();
-extern void initBrowserSceneDelegateRouter();
-extern void initBrowserToolbar();
-extern void initCatalogViewController();
-extern void initColors();
-extern void initFeatureManager();
-extern void initNavigationBar();
-extern void initNavigationBarItem();
-extern void initSafariWebView();
-extern void initSearchEngineController();
-extern void initSFBarRegistration();
-extern void initSPTabManagerBookmarkPicker();
-extern void initTabItemLayoutInfo();
-extern void initTabBarItemView();
-extern void initTabController();
-extern void initTabDocument();
-extern void initTabExposeActionsController();
-extern void initTabOverview();
-extern void initTabOverviewItemLayoutInfo();
-extern void initTabThumbnailView();
-extern void initTiltedTabItemLayoutInfo();
-extern void initTiltedTabView();
-extern void initWKFileUploadPanel();
-extern void initWKFullScreenViewController();
-
-%ctor
-{
-	HBLogDebug(@"started loading SafariPlus!");
-  #ifdef DEBUG_LOGGING
-	initDebug();
-  #endif
-
-	preferenceManager = [SPPreferenceManager sharedInstance];
-
-	if(preferenceManager.tweakEnabled)	//Only initialise hooks if tweak is enabled
-	{
-		initApplication();
-		initAVFullScreenPlaybackControlsViewController();
-		initAVPlaybackControlsView();
-		initBookmarkFavoritesActionsView();
-		initBrowserController();
-		initBrowserRootViewController();
-		initBrowserSceneDelegateRouter();
-		initBrowserToolbar();
-		initCatalogViewController();
-		initColors();
-		initFeatureManager();
-		initNavigationBar();
-		initNavigationBarItem();
-		initSafariWebView();
-		initSearchEngineController();
-		initSFBarRegistration();
-		initSPTabManagerBookmarkPicker();
-		initTabItemLayoutInfo();
-		initTabBarItemView();
-		initTabController();
-		initTabDocument();
-		initTabExposeActionsController();
-		initTabOverview();
-		initTabOverviewItemLayoutInfo();
-		initTabThumbnailView();
-		initTiltedTabItemLayoutInfo();
-		initTiltedTabView();
-		initWKFileUploadPanel();
-		initWKFullScreenViewController();
-	}
-
-	HBLogDebug(@"finished loading SafariPlus!");
 }

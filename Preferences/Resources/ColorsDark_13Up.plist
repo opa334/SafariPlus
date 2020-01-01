@@ -22,7 +22,7 @@
 				<key>label</key>
 				<string>TOP_BAR</string>
 				<key>modeIdentifier</key>
-				<string>Normal</string>
+				<string>NormalDark</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -34,7 +34,7 @@
 				<key>label</key>
 				<string>BOTTOM_BAR</string>
 				<key>modeIdentifier</key>
-				<string>Normal</string>
+				<string>NormalDark</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -46,7 +46,7 @@
 				<key>label</key>
 				<string>TAB_SWITCHER</string>
 				<key>modeIdentifier</key>
-				<string>Normal</string>
+				<string>NormalDark</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -68,7 +68,7 @@
 				<key>label</key>
 				<string>TOP_BAR</string>
 				<key>modeIdentifier</key>
-				<string>Private</string>
+				<string>PrivateDark</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -80,7 +80,7 @@
 				<key>label</key>
 				<string>BOTTOM_BAR</string>
 				<key>modeIdentifier</key>
-				<string>Private</string>
+				<string>PrivateDark</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -92,7 +92,7 @@
 				<key>label</key>
 				<string>TAB_SWITCHER</string>
 				<key>modeIdentifier</key>
-				<string>Private</string>
+				<string>PrivateDark</string>
 			</dict>
 		</array>
 	</dict>

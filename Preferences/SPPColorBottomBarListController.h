@@ -18,36 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "SPPColorTopBarPrivateListController.h"
-#import "SafariPlusPrefs.h"
+#import "SPPColorListController.h"
 
-@implementation SPPColorTopBarPrivateListController
-
-- (NSString*)plistName
-{
-	return @"ColorsTopBarPrivate";
-}
-
-- (NSString*)title
-{
-	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TOP_BAR"], [localizationManager localizedSPStringForKey:@"PRIVATE"]];
-}
-
-- (NSArray*)statusBarColorTitles
-{
-	NSMutableArray* titles = [@[@"BLACK", @"WHITE"] mutableCopy];
-
-	for(int i = 0; i < titles.count; i++)
-	{
-		titles[i] = [localizationManager localizedSPStringForKey:titles[i]];
-	}
-
-	return titles;
-}
-
-- (NSArray*)statusBarColorValues
-{
-	return @[@(UIStatusBarStyleDefault), @(UIStatusBarStyleLightContent)];
-}
-
+@interface SPPColorBottomBarListController : SPPColorListController
 @end

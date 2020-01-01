@@ -54,7 +54,14 @@
 		{
 			textField.text = ((SPDirectoryPickerNavigationController*)self.navigationController).placeholderFilename;
 			textField.placeholder = [localizationManager localizedSPStringForKey:@"FILENAME"];
-			textField.textColor = [UIColor blackColor];
+			if([UIColor respondsToSelector:@selector(labelColor)])
+			{
+				textField.textColor = [UIColor labelColor];
+			}
+			else
+			{
+				textField.textColor = [UIColor blackColor];
+			}
 			textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 			textField.borderStyle = UITextBorderStyleNone;
 		}];

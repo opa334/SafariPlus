@@ -1178,7 +1178,14 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 			{
 				textField.placeholder = [localizationManager
 							 localizedSPStringForKey:@"FILENAME"];
-				textField.textColor = [UIColor blackColor];
+				if([UIColor respondsToSelector:@selector(labelColor)])
+				{
+					textField.textColor = [UIColor labelColor];
+				}
+				else
+				{
+					textField.textColor = [UIColor blackColor];
+				}
 				textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 				textField.borderStyle = UITextBorderStyleNone;
 				textField.text = downloadInfo.filename;
@@ -1384,7 +1391,10 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 		[errorAlert addAction:closeAction];
 
-		[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+		dispatch_async(dispatch_get_main_queue(), ^
+		{
+			[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+		});
 
 		return;
 	}
@@ -1454,7 +1464,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 	NSInteger statusCode = ((NSHTTPURLResponse*)response).statusCode;
 
-	if(statusCode < 400)	//No error
+	if(statusCode < 400) //No error
 	{
 		[downloadInfo updateHLSForSuggestedFilename:response.suggestedFilename];
 
@@ -1468,16 +1478,19 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 		[self presentDownloadAlertWithDownloadInfo:downloadInfo];
 	}
-	else	//Error
+	else //Error
 	{
 		UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
-						 message:[NSString stringWithFormat:@"%lli: %@", (long long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]] preferredStyle:UIAlertControllerStyleAlert];
+						message:[NSString stringWithFormat:@"%lli: %@", (long long)statusCode, [NSHTTPURLResponse localizedStringForStatusCode:statusCode]] preferredStyle:UIAlertControllerStyleAlert];
 
 		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
 
 		[errorAlert addAction:closeAction];
 
-		[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+		dispatch_async(dispatch_get_main_queue(), ^
+		{
+			[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+		});
 
 		if(downloadInfo.sourceVideo)
 		{

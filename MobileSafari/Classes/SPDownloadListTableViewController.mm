@@ -225,7 +225,14 @@
 		textField.placeholder = [localizationManager
 					 localizedSPStringForKey:@"URL_TO_DOWNLOADABLE_FILE"];
 
-		textField.textColor = [UIColor blackColor];
+		if([UIColor respondsToSelector:@selector(labelColor)])
+		{
+			textField.textColor = [UIColor labelColor];
+		}
+		else
+		{
+			textField.textColor = [UIColor blackColor];
+		}
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 		textField.borderStyle = UITextBorderStyleNone;
 	}];

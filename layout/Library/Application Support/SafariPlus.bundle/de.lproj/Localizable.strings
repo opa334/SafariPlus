@@ -253,6 +253,14 @@
 "NORMAL" = "Normal";
 "PRIVATE" = "Privat";
 
+"NORMALLIGHT" = "Normal, Hell";
+"NORMALDARK" = "Normal, Dunkel";
+"PRIVATELIGHT" = "Privat, Hell";
+"PRIVATEDARK" = "Privat, Dunkel";
+
+"LIGHT_APPEARANCE" = "Helles Erscheinungsbild";
+"DARK_APPEARANCE" = "Dunkles Erscheinungsbild";
+
 "TINT_COLOR" = "Akzentfarbe";
 "BACKGROUND_COLOR" = "Hintergrundfarbe";
 "STATUS_BAR_COLOR" = "Farbe der Statusleiste";

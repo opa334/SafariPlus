@@ -14,7 +14,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateTintColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@TintColorEnabled</string>
 				<key>label</key>
 				<string>TINT_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -34,7 +34,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateTintColor</string>
+				<string>topBar@MODE_IDENTIFIER@TintColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>
@@ -54,7 +54,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateBackgroundColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@BackgroundColorEnabled</string>
 				<key>label</key>
 				<string>BACKGROUND_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -74,7 +74,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateBackgroundColor</string>
+				<string>topBar@MODE_IDENTIFIER@BackgroundColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>
@@ -94,7 +94,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateStatusBarStyleEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@StatusBarStyleEnabled</string>
 				<key>label</key>
 				<string>STATUS_BAR_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -110,7 +110,7 @@
 				<key>detail</key>
 				<string>PSListItemsController</string>
 				<key>key</key>
-				<string>topBarPrivateStatusBarStyle</string>
+				<string>topBar@MODE_IDENTIFIER@StatusBarStyle</string>
 				<key>titlesDataSource</key>
 				<string>statusBarColorTitles</string>
 				<key>valuesDataSource</key>
@@ -121,6 +121,8 @@
 				<string>PSGroupCell</string>
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -132,11 +134,13 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateReaderButtonColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@ReaderButtonColorEnabled</string>
 				<key>label</key>
 				<string>READER_BUTTON_COLOR</string>
 				<key>nestedEntryCount</key>
 				<integer>1</integer>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -152,15 +156,19 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateReaderButtonColor</string>
+				<string>topBar@MODE_IDENTIFIER@ReaderButtonColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>
 				<string>PSGroupCell</string>
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -172,11 +180,13 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateLockIconColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@LockIconColorEnabled</string>
 				<key>label</key>
 				<string>LOCK_ICON_COLOR</string>
 				<key>nestedEntryCount</key>
 				<integer>1</integer>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -192,9 +202,11 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateLockIconColor</string>
+				<string>topBar@MODE_IDENTIFIER@LockIconColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -212,7 +224,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateURLFontColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@URLFontColorEnabled</string>
 				<key>label</key>
 				<string>URL_FONT_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -232,7 +244,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateURLFontColor</string>
+				<string>topBar@MODE_IDENTIFIER@URLFontColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>
@@ -241,6 +253,8 @@
 				<string>PSGroupCell</string>
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -252,11 +266,13 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateReloadButtonColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@ReloadButtonColorEnabled</string>
 				<key>label</key>
 				<string>RELOAD_BUTTON_COLOR</string>
 				<key>nestedEntryCount</key>
 				<integer>1</integer>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -272,9 +288,11 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateReloadButtonColor</string>
+				<string>topBar@MODE_IDENTIFIER@ReloadButtonColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
+				<key>maxCFVersion</key>
+				<real>1660.00</real>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -292,7 +310,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateProgressBarColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@ProgressBarColorEnabled</string>
 				<key>label</key>
 				<string>PROGRESS_BAR_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -312,7 +330,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateProgressBarColor</string>
+				<string>topBar@MODE_IDENTIFIER@ProgressBarColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>
@@ -332,7 +350,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateTabBarCloseButtonColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@TabBarCloseButtonColorEnabled</string>
 				<key>label</key>
 				<string>TAB_BAR_CLOSE_BUTTON_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -352,7 +370,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateTabBarCloseButtonColor</string>
+				<string>topBar@MODE_IDENTIFIER@TabBarCloseButtonColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>
@@ -374,7 +392,7 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
-				<string>topBarPrivateTabBarTitleColorEnabled</string>
+				<string>topBar@MODE_IDENTIFIER@TabBarTitleColorEnabled</string>
 				<key>label</key>
 				<string>TAB_BAR_TITLE_COLOR</string>
 				<key>nestedEntryCount</key>
@@ -391,14 +409,12 @@
 				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
 				<key>cell</key>
 				<string>PSSliderCell</string>
-				<key>default</key>
-				<string>0.2</string>
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>isSegmented</key>
 				<string>0</string>
 				<key>key</key>
-				<string>topBarPrivateTabBarInactiveTitleOpacity</string>
+				<string>topBar@MODE_IDENTIFIER@TabBarInactiveTitleOpacity</string>
 				<key>max</key>
 				<string>1</string>
 				<key>min</key>
@@ -420,7 +436,7 @@
 				<key>fallback</key>
 				<string>00000</string>
 				<key>key</key>
-				<string>topBarPrivateTabBarTitleColor</string>
+				<string>topBar@MODE_IDENTIFIER@TabBarTitleColor</string>
 				<key>label</key>
 				<string>SELECT_COLOR</string>
 			</dict>

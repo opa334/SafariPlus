@@ -98,7 +98,14 @@
 	[locationAlert addTextFieldWithConfigurationHandler:^(UITextField *textField)
 	{
 		textField.placeholder = [localizationManager localizedSPStringForKey:@"ADD_EXCEPTION_ALERT_PLACEHOLDER"];
-		textField.textColor = [UIColor blackColor];
+		if([UIColor respondsToSelector:@selector(labelColor)])
+		{
+			textField.textColor = [UIColor labelColor];
+		}
+		else
+		{
+			textField.textColor = [UIColor blackColor];
+		}
 		textField.keyboardType = UIKeyboardTypeURL;
 		textField.clearButtonMode = UITextFieldViewModeWhileEditing;
 		textField.borderStyle = UITextBorderStyleNone;

@@ -49,46 +49,24 @@
 {
 	self.sp_storedLaunchOptions = launchOptions;
 
-	[self handleSBConnectionTest];
-
-	if(preferenceManager.downloadManagerEnabled)
-	{
-		downloadManager = [SPDownloadManager sharedInstance];
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
-
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
-		{
-			UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-			UNAuthorizationOptions options = UNAuthorizationOptionAlert + UNAuthorizationOptionSound;
-			[center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error){}];
-		}
-		else
-		{
-			UIUserNotificationSettings* settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
-			[self registerUserNotificationSettings:settings];
-		}
-	}
-
-	if(!preferenceManager.applicationBadgeEnabled && self.applicationIconBadgeNumber > 0)
-	{
-		self.applicationIconBadgeNumber = 0;
-	}
-
-	[self sp_setUpWithMainBrowserController:browserControllers().firstObject];
+	[self sp_setUpIfReady];
 }
 
 %new
-- (void)sp_setUpWithMainBrowserController:(BrowserController*)mainBrowserController
+- (void)sp_setUpIfReady
 {
-	if(mainBrowserController && !self.sp_isSetUp)
+	if(browserControllers().firstObject && !self.sp_isSetUp)
 	{
-		//Auto switch mode on launch
-		if(preferenceManager.forceModeOnStartEnabled && !self.sp_storedLaunchOptions[UIApplicationLaunchOptionsURLKey])
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
 		{
-			for(BrowserController* controller in browserControllers())
+			//Auto switch mode on launch
+			if(preferenceManager.forceModeOnStartEnabled && !self.sp_storedLaunchOptions[UIApplicationLaunchOptionsURLKey])
 			{
-				//Switch mode to specified mode
-				[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
+				for(BrowserController* controller in browserControllers())
+				{
+					//Switch mode to specified mode
+					[controller modeSwitchAction:preferenceManager.forceModeOnStartFor];
+				}
 			}
 		}
 
@@ -99,8 +77,40 @@
 
 		[self handleTwitterAlert];
 
+		[self handleSBConnectionTest];
+
+		if(preferenceManager.downloadManagerEnabled)
+		{
+			downloadManager = [SPDownloadManager sharedInstance];
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"SPDownloadManagerDidInitNotification" object:nil];
+
+			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
+			{
+				UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+				UNAuthorizationOptions options = UNAuthorizationOptionAlert + UNAuthorizationOptionSound;
+				[center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error){}];
+			}
+			else
+			{
+				UIUserNotificationSettings* settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert) categories:nil];
+				[self registerUserNotificationSettings:settings];
+			}
+		}
+
+		if(!preferenceManager.applicationBadgeEnabled && self.applicationIconBadgeNumber > 0)
+		{
+			self.applicationIconBadgeNumber = 0;
+		}
+
 		self.sp_isSetUp = YES;
 		self.sp_storedLaunchOptions = nil;
+	}
+	else
+	{
+		[[NSNotificationCenter defaultCenter] addObserver:self
+			selector:@selector(sp_setUpIfReady) 
+			name:UISceneWillConnectNotification
+			object:nil];
 	}
 }
 

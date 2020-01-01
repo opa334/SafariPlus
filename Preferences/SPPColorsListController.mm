@@ -20,6 +20,7 @@
 
 #import "SPPColorsListController.h"
 #import "SafariPlusPrefs.h"
+#import "../MobileSafari/Defines.h"
 
 @implementation SPPColorsListController
 
@@ -27,7 +28,14 @@
 
 - (NSString*)plistName
 {
-	return @"Colors";
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		return @"Colors_13Up";
+	}
+	else
+	{
+		return @"Colors";
+	}
 }
 
 - (NSString*)title

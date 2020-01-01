@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "SPPListController.h"
+#import "SPPColorListController.h"
 
-@interface SPPColorBottomBarPrivateListController : SPPListController
+@interface SPPColorTabSwitcherListController : SPPColorListController
 @end

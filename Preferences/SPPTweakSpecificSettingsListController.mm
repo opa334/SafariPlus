@@ -81,9 +81,9 @@
 				if(success)
 				{
 					dispatch_async(dispatch_get_main_queue(), ^
-						       {
-							       resetBlock();
-						       });
+					{
+						resetBlock();
+					});
 				}
 				else if(error.code != -2)
 				{

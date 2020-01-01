@@ -69,9 +69,9 @@
 			if(success)
 			{
 				dispatch_async(dispatch_get_main_queue(), ^
-					       {
-						       [self unlockBiometricProtectionSpecifiers];
-					       });
+				{
+					[self unlockBiometricProtectionSpecifiers];
+				});
 			}
 			else if(error.code != -2)
 			{

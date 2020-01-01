@@ -18,7 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "SPPListController.h"
+#import "SPPColorTabSwitcherListController.h"
+#import "SafariPlusPrefs.h"
 
-@interface SPPColorTopBarNormalListController : SPPListController
+@implementation SPPColorTabSwitcherListController
+
+- (NSString*)plistName
+{
+	return @"ColorsTabSwitcher";
+}
+
+- (NSString*)title
+{
+	NSString* modeIdentifier = [[self specifier] propertyForKey:@"modeIdentifier"];
+	return [NSString stringWithFormat:@"%@ (%@)", [localizationManager localizedSPStringForKey:@"TAB_SWITCHER"], [localizationManager localizedSPStringForKey:[modeIdentifier uppercaseString]]];
+}
+
 @end

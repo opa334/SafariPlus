@@ -506,6 +506,14 @@
 	self.isSetUp = NO;
 	%orig;
 	self.isSetUp = YES;
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		if(preferenceManager.forceModeOnStartEnabled && preferenceManager.forceModeOnStartFor)
+		{
+			[self modeSwitchAction:preferenceManager.forceModeOnStartFor];
+		}
+	}	
 }
 
 %end
