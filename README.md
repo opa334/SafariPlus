@@ -98,7 +98,7 @@ There are also some variables you can set when running make:
 
 `NO_DEPENDENCIES=1` to compile Safari Plus with all of the above NO_* flags set 
 
-`DEBUG_LOGGING=1` to compile a version of Safari Plus that produces some very verbose debug logs related to the Download Manager feature inside that are stored inside <sandbox container>/Documents/Logs
+`DEBUG_LOGGING=1` to compile a version of Safari Plus that produces some very verbose debug logs related to the Download Manager feature that are stored inside <sandbox container>/Documents/Logs
 
 ## Localization
 If you wish to help with localizing the tweak, take the english template from [here](https://github.com/opa334/SafariPlus/blob/master/layout/Library/Application%20Support/SafariPlus.bundle/en.lproj/Localizable.strings) and contact me somewhere with the localized file.
