@@ -84,14 +84,20 @@ You will need the following libraries / frameworks in order to compile Safari Pl
 
 To compile the WebContent part of Safari Plus, WebKit headers from https://webkit.org/build-archives/ are needed. Put them in some directory and set the WEBKIT_ROOT variable inside the Makefile of WebContent to it. You will also need to remove WebKit and WebKitLegacy from that folder (otherwise the compiler will throw an error). To correctly compile it and avoid crashes at runtime, make sure to also follow the instructions [here](https://github.com/opa334/SafariPlus/blob/master/WebContent/HTMLMediaElement.xm#L126).
 
-There are also some variables you can set while running make such as:
+There are also some variables you can set when running make:
 
 `SIMJECT=1` to compile Safari Plus for the iOS simulator
+
 `ROOTLESS=1` to compile Safari Plus for rootless jailbreaks
+
 `NO_CEPHEI=1` to compile Safari Plus without the Cephei dependency (some features won't work)
+
 `NO_LIBCSCOLORPICKER=1` to compile Safari Plus without the libCSColorPicker dependecy (color settings will be disabled if this flag is set)
+
 `NO_ROCKETBOOTSTRAP=1` to compile Safari Plus without the rocketbootstrap dependency (file access will be restriced and some features won't work)
+
 `NO_DEPENDENCIES=1` to compile Safari Plus with all of the above NO_* flags set 
+
 `DEBUG_LOGGING=1` to compile a version of Safari Plus that produces some very verbose debug logs related to the Download Manager feature inside that are stored inside <sandbox container>/Documents/Logs
 
 ## Localization
