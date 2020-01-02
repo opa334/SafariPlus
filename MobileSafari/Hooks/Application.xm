@@ -55,6 +55,12 @@
 %new
 - (void)sp_setUpIfReady
 {
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^
+	{
+		self.sp_isSetUp = NO;
+	});
+
 	if(browserControllers().firstObject && !self.sp_isSetUp)
 	{
 		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)

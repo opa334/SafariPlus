@@ -284,7 +284,7 @@
 
 		//Create alertSheet for tapped file
 		UIAlertController *openAlert = [UIAlertController alertControllerWithTitle:file.name
-						message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+			message:nil preferredStyle:UIAlertControllerStyleActionSheet];
 
 		if([file conformsTo:kUTTypeAudiovisualContent] || [file isHLSStream])
 		{
@@ -358,7 +358,7 @@
 
 		//Add cancel option
 		UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
-					       style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
+			style:UIAlertActionStyleCancel handler:^(UIAlertAction * action)
 		{
 			[self unselectRow];
 		}];
@@ -542,7 +542,7 @@
 - (UIAlertAction*)openInActionForFile:(SPFile*)file
 {
 	return [UIAlertAction actionWithTitle:[localizationManager
-					       localizedSPStringForKey:@"OPEN_IN"]
+			localizedSPStringForKey:@"OPEN_IN"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
 		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:YES];
@@ -565,7 +565,7 @@
 - (UIAlertAction*)importToMediaLibraryActionForImageWithURL:(NSURL*)URL
 {
 	return [UIAlertAction actionWithTitle:[localizationManager
-					       localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
+			localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
 		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
@@ -578,7 +578,7 @@
 - (UIAlertAction*)importToMediaLibraryActionForVideoWithURL:(NSURL*)URL
 {
 	return [UIAlertAction actionWithTitle:[localizationManager
-					       localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
+			localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
 		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
@@ -702,14 +702,14 @@
 	{
 		//Create alert to confirm deletion of file
 		UIAlertController* confirmationController = [UIAlertController
-							     alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
-							     message:[NSString stringWithFormat:message, file.name]
-							     preferredStyle:UIAlertControllerStyleAlert];
+			alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WARNING"]
+			message:[NSString stringWithFormat:message, file.name]
+			preferredStyle:UIAlertControllerStyleAlert];
 
 		//Add cancel option
 		UIAlertAction *cancelAction = [UIAlertAction
-					       actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
-					       style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+			actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
+			style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 		{
 			[self unselectRow];
 		}];
@@ -718,8 +718,8 @@
 
 		//Add delete option
 		UIAlertAction *deleteAction = [UIAlertAction
-					       actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE"]
-					       style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
+			actionWithTitle:[localizationManager localizedSPStringForKey:@"DELETE"]
+			style:UIAlertActionStyleDestructive handler:^(UIAlertAction * action)
 		{
 			//Delete file
 			[fileManager removeItemAtURL:file.fileURL error:nil];
@@ -767,12 +767,12 @@
 - (void)addButtonPressed
 {
 	UIAlertController* createDirectoryAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"CREATE_DIRECTORY"]
-						   message:nil preferredStyle:UIAlertControllerStyleAlert];
+		message:nil preferredStyle:UIAlertControllerStyleAlert];
 
 	[createDirectoryAlert addTextFieldWithConfigurationHandler:^(UITextField* textField)
 	{
 		textField.placeholder = [localizationManager
-					 localizedSPStringForKey:@"DIRECTORY_NAME"];
+			localizedSPStringForKey:@"DIRECTORY_NAME"];
 
 		if([UIColor respondsToSelector:@selector(labelColor)])
 		{
@@ -787,7 +787,7 @@
 	}];
 
 	UIAlertAction* createAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CREATE"] style:UIAlertActionStyleDefault
-				       handler:^(UIAlertAction* action)
+		handler:^(UIAlertAction* action)
 	{
 		NSURL* selectedURL = [self.directoryURL URLByAppendingPathComponent:createDirectoryAlert.textFields.firstObject.text];
 
