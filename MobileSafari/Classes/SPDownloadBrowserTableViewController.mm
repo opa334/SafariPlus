@@ -263,7 +263,7 @@
 - (id<QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
 {
 	NSURL* fileURL = [_previewFiles objectAtIndex:index].fileURL;
-	return [fileManager accessibleHardLinkForFileAtURL:fileURL forced:YES];
+	return [fileManager accessibleHardLinkForFileAtURL:fileURL forced:NO];
 }
 
 - (void)previewControllerDidDismiss:(QLPreviewController *)controller
@@ -589,7 +589,6 @@
 
 - (void)mediaImport:(NSString*)path didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo
 {
-	NSLog(@"didFinishSavingWithError: %@", error);
 	[fileManager resetHardLinks];
 }
 
