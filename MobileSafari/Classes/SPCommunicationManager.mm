@@ -24,7 +24,7 @@
 #import "SPFileManager.h"
 
 #ifndef NO_ROCKETBOOTSTRAP
-#import <RocketBootstrap/rocketbootstrap.h>
+#import <rocketbootstrap/rocketbootstrap.h>
 #endif
 
 #include <sys/types.h>

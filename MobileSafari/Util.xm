@@ -176,7 +176,7 @@ BOOL privateBrowsingEnabled(BrowserController* controller)
 	}
 	else
 	{
-		privateBrowsingEnabled = controller.privateBrowsingEnabled;
+		privateBrowsingEnabled = [controller privateBrowsingEnabled];
 	}
 
 	return privateBrowsingEnabled;
@@ -199,9 +199,9 @@ void setPrivateBrowsing(BrowserController* controller, BOOL enabled, void (^comp
 {
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
-		if(controller.privateBrowsingEnabled != enabled)
+		if(privateBrowsingEnabled(controller) != enabled)
 		{
-			controller.privateBrowsingEnabled = enabled;
+			[controller setPrivateBrowsingEnabled:enabled];
 		}
 		
 		if(completion)

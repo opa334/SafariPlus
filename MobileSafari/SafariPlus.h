@@ -623,11 +623,12 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (readonly, nonatomic, getter=isFavoritesFieldFocused) BOOL favoritesFieldFocused;
 @property (readonly, nonatomic, getter=isShowingTabView) BOOL showingTabView;
 @property (readonly, nonatomic) BOOL usesTabBar;
-@property(nonatomic, getter=isPrivateBrowsingEnabled) BOOL privateBrowsingEnabled; //readonly prior to iOS 13
 - (void)_toggleTabViewKeyPressed;
 - (BOOL)isShowingTabView;
 - (void)togglePrivateBrowsing;
-- (BOOL)privateBrowsingEnabled;
+- (BOOL)privateBrowsingEnabled; //iOS 10.2 and down
+- (BOOL)isPrivateBrowsingEnabled; //iOS 10.3 and up
+- (void)setPrivateBrowsingEnabled:(BOOL)arg1; //iOS 13 and up
 - (void)updateTabOverviewFrame;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;

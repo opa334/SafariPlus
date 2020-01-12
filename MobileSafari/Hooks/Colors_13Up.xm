@@ -636,14 +636,14 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 %hook BrowserController
 
-- (void)setPrivateBrowsingEnabled:(BOOL)privateBrowsingEnabled
+- (void)setPrivateBrowsingEnabled:(BOOL)newPrivateBrowsingState
 {
 	if(preferenceManager.tabSwitcherNormalLightToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColorEnabled ||
 		preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColorEnabled)
 	{
-		BOOL prevEnabled = self.privateBrowsingEnabled;
+		BOOL prevEnabled = privateBrowsingEnabled(self);
 
-		if(privateBrowsingEnabled != prevEnabled)
+		if(newPrivateBrowsingState != prevEnabled)
 		{
 			%orig;
 			[self.tabController.tabOverview updateHeaderStyle];
