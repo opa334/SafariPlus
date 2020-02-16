@@ -306,6 +306,7 @@ void reloadPreferences()
 
 		 //@"largeTitlesEnabled" : @NO,
 		 //@"sortDirectoriesAboveFiles" : @NO,
+		 //@"pullUpToRefreshDisabled" : @NO,
 		 //@"communicationErrorDisabled" : @NO,
 	};
 

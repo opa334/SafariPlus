@@ -365,11 +365,17 @@ static BOOL fakeOpenLinksValue = NO;
 	//Get MIMEType
 	NSString* MIMEType = navigationResponse.response.MIMEType;
 
+	//Fix for profile add alert not appearing
+	if([MIMEType isEqualToString:@"application/x-apple-aspen-config"])
+	{
+		return YES;
+	}
+
 	//Check if MIMEType indicates that link can be downloaded
 	if(showAlert && (!navigationResponse.canShowMIMEType ||
-			 [MIMEType rangeOfString:@"video/"].location != NSNotFound ||
-			 [MIMEType rangeOfString:@"audio/"].location != NSNotFound ||
-			 [MIMEType isEqualToString:@"application/pdf"]))
+		[MIMEType containsString:@"video/"] ||
+		[MIMEType containsString:@"audio/"] ||
+		[MIMEType isEqualToString:@"application/pdf"]))
 	{
 		//Cancel loading
 		decisionHandler(WKNavigationResponsePolicyCancel);
@@ -442,7 +448,7 @@ static BOOL fakeOpenLinksValue = NO;
 			}
 
 			_WKElementAction* openInOppositeModeAction = [%c(_WKElementAction)
-								      elementActionWithTitle:title actionHandler:^
+				elementActionWithTitle:title actionHandler:^
 			{
 				if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 				{
@@ -485,7 +491,6 @@ static BOOL fakeOpenLinksValue = NO;
 						[browserController.tabController insertNewTabDocument:tabDocument openedFromTabDocument:castedSelf inBackground:NO animated:YES];			
 					}
 				}
-				
 			}];
 
 			[openInOppositeModeAction setValue:@100 forKey:@"_type"];

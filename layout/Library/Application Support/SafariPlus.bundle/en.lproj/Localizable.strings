@@ -335,6 +335,9 @@
 "SORT_DIRECTORIES_ABOVE_FILES" = "Sort Directories above Files";
 "SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Make the file browser sort directories above files, by default both are sorted alphabetically together.";
 
+"DISABLE_PULL_UP_TO_REFRESH" = "Disable Pull Up to Refresh";
+"DISABLE_PULL_UP_TO_REFRESH_FOOTER" = "Disable pulling up to refresh inside the file browser. On iOS 13 and above, this makes it possible to close the file browser by swiping down.";
+
 "DISABLE_COMMUNICATION_ERROR" = "Disable Communication Error Alert";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disable the communication error alert that appears on app launch when rocketbootstrap is not available for some reason. Use on your own risk.";
 

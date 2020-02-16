@@ -335,6 +335,9 @@
 "SORT_DIRECTORIES_ABOVE_FILES" = "Ordner oberhalb von Dateien sortieren";
 "SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Sortiert Ordner im Dateibrowser oberhalb von Dateien, normalerweise werden beide zusammen alphabetisch sortiert.";
 
+"DISABLE_PULL_UP_TO_REFRESH" = "Aktualisierung beim nach oben ziehen deaktivieren";
+"DISABLE_PULL_UP_TO_REFRESH_FOOTER" = "Deaktiviert die Aktualisierung des Dateibrowsers durch Ziehen nach oben. Auf iOS >=13 kann der Dateibrowser dann durchs Wischen nach unten geschlossen werden.";
+
 "DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
 

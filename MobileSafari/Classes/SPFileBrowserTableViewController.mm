@@ -63,9 +63,16 @@
 {
 	[super viewDidLoad];
 
-	//Add refreshControl (pull up to refresh)
-	self.refreshControl = [[UIRefreshControl alloc] init];
-	[self.refreshControl addTarget:self action:@selector(refreshControlValueChanged) forControlEvents:UIControlEventValueChanged];
+#ifndef PREFERENCES
+	if(!preferenceManager.pullUpToRefreshDisabled)
+	{
+#endif
+		//Add refreshControl (pull up to refresh)
+		self.refreshControl = [[UIRefreshControl alloc] init];
+		[self.refreshControl addTarget:self action:@selector(refreshControlValueChanged) forControlEvents:UIControlEventValueChanged];
+#ifndef PREFERENCES
+	}
+#endif
 
 	//Initialise long press recognizer for tableView
 	self.longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressTable:)];

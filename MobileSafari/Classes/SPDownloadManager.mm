@@ -1653,13 +1653,28 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 {
 	NSArray<NSString*>* subItems = [fileManager contentsOfDirectoryAtPath:[movpkgURL path] error:nil];
 
+	NSMutableArray* tracks = [NSMutableArray new];
+
 	for(NSString* itemName in subItems)
 	{
 		NSURL* folderURL = [movpkgURL URLByAppendingPathComponent:itemName];
 
-		if([itemName hasPrefix:@"0"] && [fileManager isDirectoryAtURL:folderURL error:nil])
+		if(![itemName isEqualToString:@"Data"] && [fileManager isDirectoryAtURL:folderURL error:nil])
 		{
-			[self mergeSegmentsAtURL:folderURL toFileAtURL:targetURL];
+			[tracks addObject:folderURL];
+		}
+	}
+
+	if(tracks.count == 1)
+	{
+		[self mergeSegmentsAtURL:tracks.firstObject toFileAtURL:targetURL];
+	}
+	else if(tracks.count > 1)
+	{
+		for(NSURL* trackURL in tracks)
+		{
+			NSString* trackIndex = [@"_track" stringByAppendingString:[trackURL.lastPathComponent componentsSeparatedByString:@"-"].firstObject];
+			[self mergeSegmentsAtURL:trackURL toFileAtURL:[targetURL.URLByDeletingLastPathComponent URLByAppendingPathComponent:[[[targetURL.lastPathComponent stringByDeletingPathExtension] stringByAppendingString:trackIndex] stringByAppendingPathExtension:targetURL.pathExtension]]];
 		}
 	}
 }
@@ -1730,25 +1745,22 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 		return;
 	}
 
-	//merge everything
-	NSMutableData* data;
+	NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[targetURL lastPathComponent]];
+	NSOutputStream* outputStream = [[NSOutputStream alloc] initWithURL:tmpURL append:YES];
+	[outputStream open];
 
 	BOOL first = YES;
 
 	for(NSURL* fragment in fragmentsM)
 	{
-		if(first)
+		@autoreleasepool
 		{
-			first = NO;
-			data = [NSMutableData dataWithContentsOfURL:fragment];
-			continue;
+			NSData* fragmentData = [NSData dataWithContentsOfURL:fragment];
+			[outputStream write:(uint8_t *)[fragmentData bytes] maxLength:[fragmentData length]];
 		}
-
-		[data appendData:[NSData dataWithContentsOfURL:fragment]];
 	}
 
-	NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[targetURL lastPathComponent]];
-	[data writeToURL:tmpURL atomically:YES];
+	[outputStream close];
 
 	[fileManager moveItemAtURL:tmpURL toURL:targetURL error:nil];
 }

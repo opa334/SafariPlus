@@ -307,6 +307,7 @@
 
 @property (nonatomic, readonly) BOOL largeTitlesEnabled;
 @property (nonatomic, readonly) BOOL sortDirectoriesAboveFiles;
+@property (nonatomic, readonly) BOOL pullUpToRefreshDisabled;
 @property (nonatomic, readonly) BOOL communicationErrorDisabled;
 
 #ifndef NO_CEPHEI
