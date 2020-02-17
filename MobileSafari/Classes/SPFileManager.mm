@@ -153,7 +153,17 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 		{
 			NSURL* hardLinkURL = [_hardLinkURL URLByAppendingPathComponent:URL.lastPathComponent];
 
-			[self linkItemAtURL:URL toURL:hardLinkURL error:nil];
+			NSError* linkError;
+			[self linkItemAtURL:URL toURL:hardLinkURL error:&linkError];
+			HBLogDebug(@"linkError:%@", linkError);
+			if(linkError.code == 513)
+			{
+				[self resetHardLinks];
+
+				NSError* copyError;
+				[self copyItemAtURL:URL toURL:hardLinkURL error:&copyError];
+				HBLogDebug(@"copyError:%@", copyError);
+			}
 
 			return hardLinkURL;
 		}
