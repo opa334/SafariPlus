@@ -250,8 +250,16 @@
 "BOTTOM_BAR" = "Нижняя Панель";
 "TAB_SWITCHER" = "Перекл. Вкладок";
 
+/*LIGHT_APPEARANCE*/
+/*DARK_APPEARANCE*/
+
 "NORMAL" = "Обычный реж.";
 "PRIVATE" = "Приватн. реж.";
+
+/*NORMALLIGHT*/
+/*NORMALDARK*/
+/*PRIVATELIGHT*/
+/*PRIVATEDARK*/
 
 "TINT_COLOR" = "Элементы управления";
 "BACKGROUND_COLOR" = "Фон области";
@@ -326,6 +334,9 @@
 
 /*SORT_DIRECTORIES_ABOVE_FILES*/
 /*SORT_DIRECTORIES_ABOVE_FILES_FOOTER*/
+
+/*DISABLE_PULL_UP_TO_REFRESH*/
+/*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
 
 "DISABLE_COMMUNICATION_ERROR" = "Откл. Оповещ. Об Ошибке";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Отключает оповещение об ошибке, отображающееся при отсутствии доступа к rocketbootstrap. Используйте на свой страх и риск.";

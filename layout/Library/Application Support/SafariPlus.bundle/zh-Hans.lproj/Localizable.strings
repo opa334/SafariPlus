@@ -1,0 +1,470 @@
+"YES" = "是";
+"NO" = "不";
+"SAVE" = "保存";
+
+/* Root Page */
+
+"ENABLED" = "启用";
+"FEATURES" = "常规设置";
+"PRIVACY" = "隐私";
+"UPLOADS_AND_DOWNLOADS" = "上传&下载";
+"USABILITY" = "易用性";
+"ACTIONS" = "动作";
+"GESTURES" = "手势";
+"CUSTOMIZATION" = "定制";
+
+"ABOUT_THIS_TWEAK" = "关于此插件";
+"TWEAK_SPECIFIC_SETTINGS" = "插件特别设置";
+"SOURCE_CODE" = "源代码";
+"CREDITS_AND_LICENSES" = "致谢&许可证";
+
+"ABOUT_ME" = "关于我";
+"FOLLOW_ME_ON_TWITTER" = "在 Twitter 上关注我";
+"DONATE" = "捐赠";
+
+/* Privacy */
+
+"FORCE_HTTPS_FOOTER" = "对未添加到异常的每个 URL 全局实施 HTTPS 协议。 长按重新加载按钮可访问用于管理异常的快捷方式";
+"FORCE_HTTPS" = "强制 https";
+"FORCE_HTTPS_EXCEPTIONS" = "例外...";
+"FORCE_HTTPS_EXCEPTIONS_TITLE" = "例外";
+"EDIT" = "编辑";
+"ADD" = "添加";
+"APPLY" = "应用";
+"ADD_EXCEPTION_ALERT_TITLE" = "添加例外";
+"ADD_EXCEPTION_ALERT_MESSAGE" = "输入不强制使用 HTTPS 协议的域名\n示例：\"google.com\"";
+"ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
+
+"LOCKED_TABS" = "已锁定标签页";
+"LOCKED_TABS_FOOTER" = "将一个锁定开关添加到选项卡切换器内每个选项卡的顶部栏中。 选项卡处于锁定状态时，它无法关闭，并且将保持打开状态，直到再次将其解锁";
+
+"BIOMETRIC_PROTECTION" = "生物认证保护";
+"BIOMETRIC_PROTECTION_FOOTER" = "使用 Touch ID 或 Face ID 保护所选的动作";
+"SWITCH_BROWSING_MODE" = "切换浏览模式";
+"ALLOW_AUTOMATIC_ACTIONS" = "允许自动运行动作";
+"LOCK_TAB" = "锁定标签页";
+"UNLOCK_TAB" = "解锁标签页";
+"ACCESS_LOCKED_TAB" = "访问锁定的标签页";
+"OPEN_DOWNLOADS" = "访问“下载”";
+"AUTHENTICATE" = "认证";
+"AUTHENTICATION_ERROR" = "认证失败";
+"ACCESS_BIOMETRIC_PROTECTION" = "访问生物识别保护";
+
+/* Uploads & Downloads */
+
+"UPLOADS" = "上传";
+"DOWNLOADS" = "下载";
+
+"UPLOAD_ANY_FILE_FOOTER" = "将操作添加到文档选择菜单，该操作允许上传设备上的任何文件。 长按一个文件可以选择多个文件";
+"UPLOAD_ANY_FILE" = "上传任意文件";
+
+"DOWNLOAD_MANAGER" = "下载管理";
+"DOWNLOAD_MANAGER_FOOTER" = "完全完善的下载管理器直接集成到 Safari 中。 用操作表替换默认的下载行为。 使用工具栏按钮来管理活动下载和完成下载，并使用文件浏览器查看下载的文件。 下载将在后台继续。 如果您从应用程序切换器中删除了 Safari，下载将暂停并在下次启动 Safari 时恢复。  iOS10 及更高版本支持将 HLS（m3u8）流下载到 .movpkg，但如果从应用程序切换器中手动删除 Safari，这些下载的进度将不会继续";
+
+"CONTENT_OPTIONS" = "内容选项";
+
+"VIDEO_DOWNLOADING" = "正在下载视频";
+"VIDEO_DOWNLOADING_FOOTER" = "在全屏视频播放器中添加下载按钮";
+"USE_TAB_TITLE_AS_FILENAME" = "使用标签页标题作为文件名";
+
+"ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "长按网站元素时添加下载操作";
+"DOWNLOAD_SITE_TO_ACTION" = "“下载站点到…” 动作";
+"DOWNLOAD_IMAGE_TO_ACTION" = "“下载图像到…” 动作";
+
+"PATH_OPTIONS" = "路径选项";
+
+"CUSTOM_DEFAULT_PATH" = "自定义默认路径";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "选择使用“下载”操作时应保存下载文件的自定义路径";
+
+"PINNED_LOCATIONS_ENABLED" = "启用固定位置";
+"PINNED_LOCATIONS" = "固定位置";
+"PINNED_LOCATIONS_FOOTER" = "选择使用“下载到”选项时将出现的位置（名称和路径）";
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "添加固定位置";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "编辑固定位置";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "选择名称和固定位置的路径";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "名字";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Path";
+"BROWSE" = "浏览…";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "选择路径";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "你确定要选择路径 %@ 吗？";
+"ERROR_INVALID_NAME_OR_PATH" = "名称或路径无效";
+
+"INTERFACE" = "接口";
+
+"PREVIEW_DOWNLOAD_PROGRESS" = "下载进度预览";
+"PREVIEW_DOWNLOAD_PROGRESS_FOOTER" = "在工具栏的“下载”按钮下方显示进度条，其中包含总下载进度。 仅在运行一个或多个下载时显示。 灵感来源于 iOS13";
+
+"DEFAULT_SECTION" = "默认部分";
+"DEFAULT_SECTION_FOOTER" = "打开后，选择下载菜单中的选定部分。 如果仍然有活动下载，“自动切换”选项将仅选择所选部分，否则将选择其他部分";
+"DEFAULT_SECTION_AUTO_SWITCH" = "自动切换";
+
+"BEHAVIOUR" = "行为";
+
+"INSTANT_DOWNLOAD" = "立即下载";
+"INSTANT_DOWNLOAD_FOOTER" = "禁止下载弹窗，并且默认情况下始终使用选定的操作";
+
+"ONLY_DOWNLOAD_ON_WIFI" = "仅使用 Wi-Fi 下载";
+"ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "仅在设备连接到 Wi-Fi 网络时才允许下载";
+
+"AUTOSAVE_TO_MEDIA_LIBRARY" = "自动保存到媒体库";
+"AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER" = "完成下载后，将图像，音频和视频文件自动保存到媒体库中";
+
+"DISABLE_HISTORY_FOR_PRIVATE_MODE" = "为无痕浏览模式关闭历史记录";
+"DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER" = "防止将在专用浏览模式下启动的下载保存到下载历史记录中";
+
+"NOTIFICATIONS" = "通知";
+
+"PUSH_NOTIFICATIONS" = "推送通知";
+"PUSH_NOTIFICATIONS_FOOTER" = "当应用程序处于非活动状态时，下载开始或结束时会收到推送通知";
+
+"STATUS_BAR_NOTIFICATIONS" = "状态栏通知";
+"STATUS_BAR_NOTIFICATIONS_FOOTER" = "当应用程序处于打开并且下载开始或结束时，会收到状态栏通知";
+
+"APPLICATION_BADGE" = "应用程序角标";
+"APPLICATION_BADGE_FOOTER" = "使用待处理下载计数作为 Safari 的图标";
+
+/* Usability */
+
+"URL_ACTIONS" = "链接动作";
+
+"BOTH_LINK_OPENING_ACTIONS" = "两种打开链接动作";
+"BOTH_LINK_OPENING_ACTIONS_FOOTER" = "长按链接时，同时显示“在新选项卡中打开”和“在后台打开”操作，忽略Safari设置中设置的任何内容";
+
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "长按链接时，添加操作以相反的浏览模式打开。\n常规浏览模式：可以在私人浏览模式下打开链接的选项\n私人浏览模式：可以在常规浏览模式下打开链接的选项";
+"OPEN_IN_OPPOSITE_MODE" = "在相反模式下打开";
+
+"TAB_MANAGEMENT" = "标签页管理器";
+
+"DESKTOP_MODE_SWITCH_FOOTER" = "在选项卡切换器的工具栏上添加一个开关，该开关可用于在移动和桌面模式之间进行全局切换";
+"DESKTOP_MODE_SWITCH" = "切换桌面模式";
+
+"TAB_MANAGER" = "标签管理器";
+"TAB_MANAGER_FOOTER" = "将一个共享按钮添加到选项卡切换器的工具栏，按下该按钮会打开一个选项卡管理器，可用于批量关闭，批量导出和批量添加选项卡";
+"SCROLL_POSITION_FROM_TAB_SWITCHER" = "从标签切换器滚动位置";
+
+"DISABLE_TAB_LIMIT" = "禁用标签页数量限制";
+"DISABLE_TAB_LIMIT_FOOTER" = "禁用强加的制表符限制，该限制因 iOS 版本和设备而异。 苹果公司决定强制使用制表符限制的原因可能是有原因的，后果自负。";
+
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "始终在新标签页中打开点击的链接";
+"ALWAYS_OPEN_NEW_TAB" = "一律在新标签页打开链接";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "在后台打开新标签页";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "禁用无痕浏览模式并删除“无痕浏览”开关";
+"DISABLE_PRIVATE_MODE" = "关闭无痕浏览模式";
+
+"SUGGESTIONS" = "建议";
+
+"LONG_PRESS_SUGGESTIONS" = "长按搜索插入建议";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "长按 搜索/ URL 建议以将其插入地址栏中";
+"LONG_PRESS_DURATION_TITLE" = "长按时间";
+"LONG_PRESS_FOCUS_TITLE" = "长按聚焦 URL 栏";
+
+"SUGGESTION_INSERT_BUTTON" = "建议插入按钮";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "在每个将其插入搜索栏的搜索建议中添加一个按钮。 受iOS 12.2及更高版本的启发";
+
+"INTERFACE" = "接口";
+
+"SHOW_TAB_COUNT" = "显示标签数字";
+"SHOW_TAB_COUNT_FOOTER" = "在打开标签切换器的按钮上显示当前浏览模式的标签数量";
+
+"FULLSCREEN_SCROLLING_FOOTER" = "向下滚动时，隐藏顶栏";
+"FULLSCREEN_SCROLLING" = "滚动全屏";
+
+"LOCK_BARS" = "锁定工具栏";
+"LOCK_BARS_FOOTER" = "防止滚动网页时顶部地址栏缩小和底部工具栏隐藏";
+
+"SHOW_FULL_SITE_URL" = "显示站点完整链接";
+"SHOW_FULL_SITE_URL_FOOTER" = "总是在地址栏显示完整的站点 URL";
+
+"FORCE_NATIVE_PLAYER" = "强制使用本机播放器";
+"FORCE_NATIVE_PLAYER_FOOTER" = "在运行 iOS12 及更高版本的 iPad 上，Safari 带有 HTML5 视频播放器，我们可以通过该网站提供一些媒体控件（并非所有网站都使用此控件！）。 在 12.0-12.1.4 上，在 Safari 设置中有一个切换开关，在 12.2 及更高版本上默认为打开状态。 由于不支持本机播放器，因此该选项强制 Safari 在除 YouTube 之外的所有网站上使用本机播放器";
+
+"SUPPRESS_MAILTO_DIALOG" = "禁止 Mailto 对话框";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "禁止访问“mailto:<email>” URL时出现的对话框";
+
+/* Actions */
+
+"NORMAL_MODE" = "常规浏览模式";
+"PRIVATE_MODE" = "无痕浏览模式";
+"TO" = "使用...";
+"ON" = "开启...";
+"FOR" = "for...";
+
+"CHANGE_MODE_ON" = "改变浏览模式...";
+"CHANGE_MODE_ON_FOOTER" = "发生相关事件时，请更改为指定的浏览模式";
+
+"LAUNCH_MODE_LABEL" = "启动 App 时";
+"RESUME_LABEL" = "应用简历";
+"EXTERNAL_URL_LABEL" = "外部链接标签";
+
+"AUTOMATIC_ACTIONS" = "自动运行动作";
+
+"AUTO_CLOSE_TABS_FOOTER" = "发生指定情况时，请关闭指定浏览模式的选项卡";
+"AUTO_CLOSE_TABS_LABEL" = "自动关闭标签";
+"AUTO_DELETE_DATA_LABEL" = "自动清理浏览数据";
+"AUTO_DELETE_DATA_FOOTER" = "发生指定情况时，清除浏览器数据（历史记录，自动填充）";
+"SAFARI_CLOSED" = "Safari 已关闭";
+"SAFARI_MINIMIZED" = "最小化 Safari";
+
+"ACTIVE_MODE" = "主动浏览模式";
+"BOTH_MODES" = "两种浏览模式";
+
+/* Gestures */
+
+"ACTION" = "动作";
+
+"URL_BAR_GESTURES" = "地址栏手势";
+"TOOLBAR_GESTURES" = "工具栏手势";
+
+"SWIPE_LEFT_GESTURE" = "左滑";
+"SWIPE_RIGHT_GESTURE" = "右滑";
+"SWIPE_DOWN_GESTURE" = "下滑";
+"SWIPE_UP_DOWN_GESTURE" = "上/下 滑动手势";
+
+"CLOSE_ACTIVE_TAB" = "关闭活动标签页";
+"OPEN_NEW_TAB" = "打开新标签页";
+"DUPLICATE_ACTIVE_TAB" = "复制活动标签页";
+"CLOSE_ALL_TABS" = "从浏览模式关闭所有选项卡";
+"SWITCH_MODE" = "切换浏览模式";
+"TAB_BACKWARD" = "向后切换标签";
+"TAB_FORWARD" = "切换标签前进";
+"RELOAD_ACTIVE_TAB" = "刷新活动标签元";
+"REQUEST_DESTKOP_SITE" = "请求桌面站点";
+"OPEN_FIND_ON_PAGE" = "打开“在页面上查找”";
+
+"ALLOW_GESTURES_IN_TAB_SWITCHER" = "允许在标签切换中使用手势";
+"RUN_ACTIONS_IN_BACKGROUND" = "在后台运行动作";
+
+/* Customization */
+
+"APPEARANCE" = "外观";
+
+"COLORS" = "颜色";
+
+"SELECT_COLOR" = "选择颜色";
+
+"NORMAL_MODE_COLORS" = "常规模式颜色";
+"PRIVATE_MODE_COLORS" = "无痕浏览模式颜色";
+
+"TOP_BAR" = "顶栏";
+"BOTTOM_BAR" = "按钮栏";
+"TAB_SWITCHER" = "标签切换器";
+
+"LIGHT_APPEARANCE" = "日间外观";
+"DARK_APPEARANCE" = "夜间外观";
+
+"NORMAL" = "常规";
+"PRIVATE" = "无痕浏览";
+
+"NORMALLIGHT" = "常规，日间";
+"NORMALDARK" = "常规，夜间";
+"PRIVATELIGHT" = "无痕浏览, 浅色";
+"PRIVATEDARK" = "无痕浏览, 深色";
+
+"TINT_COLOR" = "淡色";
+"BACKGROUND_COLOR" = "背景颜色";
+"STATUS_BAR_COLOR" = "状态栏颜色";
+"TAB_BAR_TITLE_COLOR" = "标签页栏文字颜色";
+"INACTIVE_TITLE_OPACITY" = "无效标题不透明度";
+"TAB_BAR_CLOSE_BUTTON_COLOR" = "标签栏关闭按钮颜色";
+"TAB_BAR_BACKGROUND_COLOR" = "标签栏背景色";
+"URL_FONT_COLOR" = "链接文字颜色";
+"PROGRESS_BAR_COLOR" = "进度条颜色";
+"RELOAD_BUTTON_COLOR" = "刷新按钮颜色";
+"READER_BUTTON_COLOR" = "阅读模式按钮颜色";
+"LOCK_ICON_COLOR" = "锁定图标颜色";
+"TAB_TITLE_TEXT_COLOR" = "标签页标题文本颜色";
+"TAB_TITLE_BACKGROUND_COLOR" = "标签页标题背景色";
+"TOOLBAR_BACKGROUND_COLOR" = "工具栏背景颜色";
+
+"TAB_BAR_NOTE" = "标签栏并非在所有设备 尺寸/方向 上都存在";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "某些设置需要重新启动应用程序";
+
+"WHITE" = "白色";
+"BLACK" = "黑色";
+
+"BOTTOM_TOOLBAR" = "工具栏按钮";
+"TOP_TOOLBAR" = "顶部工具栏";
+
+"BOTTOM_TOOLBAR_FOOTER" = "底部工具栏在人像模式下用于 iPhone，某些较小的 iPhone 在风景模式下也使用。 一些较小的iPad在Split-View中也使用它。";
+"TOP_TOOLBAR_FOOTER" = "顶部工具栏用于横向模式下的大型 iPhone。 在 iPad 上，纵向和横向都使用它";
+
+"REORDER_BOTTOM_TOOLBAR" = "重新排序工具栏按钮";
+"REORDER_TOP_TOOLBAR" = "重新排序工具栏按钮（横屏）";
+
+"CHOOSE_ORDER" = "选择顺序";
+
+"BOTTOM_TOOLBAR_ORDER" = "底部工具栏排序";
+"TOP_TOOLBAR_ORDER" = "顶部工具栏顺序";
+
+"ENABLED_ITEMS" = "启用项目";
+"DISABLED_ITEMS" = "禁用项目";
+
+"BACK" = "返回";
+"FORWARD" = "前进";
+"SHARE" = "共享";
+"BOOKMARKS" = "书签";
+"TABS" = "标签页";
+"ADD_TAB" = "添加标签";
+"SEARCH_BAR_SPACE" = "搜索栏";
+"RELOAD" = "刷新";
+"CLEAR_HISTORY" = "清除历史记录";
+
+"BROWSING" = "浏览中";
+
+"CUSTOM_START_SITE" = "自定义起始站点";
+"CUSTOM_START_SITE_FOOTER" = "将通常显示在新打开的选项卡中的收藏夹视图替换为已打开的自定义网站";
+
+"CUSTOM_SEARCH_ENGINE" = "自定义搜索引擎";
+"CUSTOM_SEARCH_ENGINE_FOOTER" = "替换默认的搜索引擎，{searchTerms} 是输入的搜索词的占位符。 建议网址是可选的";
+"SEARCH_ENGINE_NAME" = "搜索引擎名";
+"SEARCH_URL" = "搜索 URL";
+"SEARCH_SUGGESTIONS_URL" = "搜索建议网址";
+
+"CUSTOM_USER_AGENT" = "自定义 User-Agent";
+"CUSTOM_USER_AGENT_FOOTER" = "替换默认 User-Agent";
+
+"CUSTOM_DESKTOP_USER_AGENT" = "自定义桌面 User Agent";
+"CUSTOM_DESKTOP_USER_AGENT_FOOTER" = "替换启用“桌面模式开关”（在可用性下可用）时使用的用户代理";
+
+/* Tweak Specifc Settings */
+
+"LARGE_TITLES" = "大标题";
+"LARGE_TITLES_FOOTER" = "为每个视图开启大标题 by Safari Plus";
+
+"SORT_DIRECTORIES_ABOVE_FILES" = "在文件上方对目录进行排序";
+"SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "使文件浏览器对文件上方的目录进行排序，默认情况下两者都按字母顺序排序";
+
+/*DISABLE_PULL_UP_TO_REFRESH*/
+/*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
+
+"DISABLE_COMMUNICATION_ERROR" = "禁用通讯错误弹窗";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "当出于某种原因出现 rocketbootstrap 不可用时，禁用在应用启动时显示的通信错误警报。 使用风险自负";
+
+"RESET_ALL_PREFERENCES" = "还原所有设置";
+"RESET_ALL_PREFERENCES_CONFIRMATION" = "你确定要还原所有设置吗？";
+
+/* Credits */
+
+"LIBSUBSTITRATE_FOOTER" = "libSubstitrate 的一部分用于在基于 Substitute 的越狱中获取视频 URL";
+"DEVELOPED_BY_POOMSMART" = "由 PoomSmart 开发";
+
+"SAFARI_PLUS_LICENSE" = "Safari Plus 许可证 (MIT)";
+
+/* In app */
+
+"CLOSE_NON_LOCKED_TABS" = "关闭 %zu 非锁定选项卡";
+"CLOSE_NON_LOCKED_TAB" = "关闭未锁定标签页";
+"CLOSE_NON_LOCKED_TABS_MATCHING" = "关闭与“％@”匹配的 ％zu 非锁定选项卡";
+"CLOSE_NON_LOCKED_TAB_MATCHING" = "关闭非锁定标签页匹配的“％@”";
+"LOCAL_FILES" = "本地文件";
+"WELCOME_TITLE" = "欢迎！";
+"WELCOME_MESSAGE" = "感谢您安装 Safari Plus！请关注我的 Twitter 以获取后续更新，此消息只显示一次（我保证）！";
+"OPEN_TWITTER" = "打开 Twitter";
+"COMMUNICATION_ERROR" = "通信错误";
+"COMMUNICATION_ERROR_DESCRIPTION" = "无法与 SpringBoard 通信！ 某些功能不起作用。 请确保正确安装了 RocketBootstrap，并且未通过 iCleaner Pro 禁用 SafariPlusSB.dylib。 您的默认下载路径将更改为 Safari 的沙盒容器。 如果要禁用此消息，可以在“行为”->“禁用通信错误警报”下的“首选项”中进行禁用";
+
+/* Force HTTPS */
+
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "从强制 HTTPS 异常中删除";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "添加强制 HTTPS 例外";
+
+/* File picker */
+
+"DISMISS" = "关闭";
+"CANCEL" = "取消";
+"UPLOAD" = "上传";
+
+/* Downloads */
+
+"DOWNLOAD" = "下载";
+"DOWNLOAD_TO" = "下载到…";
+"DOWNLOAD_SITE_TO" = "下载站点到...";
+"DOWNLOAD_IMAGE_TO" = "下载图像到…";
+"DOWNLOAD_PLAYLIST_TO" = "下载流媒体 (%@) 到...";
+"DOWNLOAD_OVERVIEW" = "下载描述";
+"DOWNLOADS" = "下载";
+"FILE_BROWSER" = "浏览文件";
+"OPEN" = "打开";
+"SHOW_CONTENT" = "显示内容";
+"MERGE_INTO_FILE" = "合并到 .％@ 中";
+"MERGING" = "合并中...";
+"MERGE" = "合并";
+"TS_NOTICE_MESSAGE" = "您将要将 movpkg 合并到 .ts 文件中。 请注意，.ts 文件无法在 iOS 上播放，因此使用此选项的主要目的是将文件传输到其他设备（例如 PC 或 Mac）。 如果要将 .ts 文件转换为 .mp4，则需要使用外部工具，例如 FFMPEG";
+"MERGE_FILE_EXISTS_ERROR" = "文件“％@”已存在。 请删除它，然后重试";
+"OPEN_IN" = "使用 App 打开...";
+"IMPORT_TO_MUSIC_LIBRARY" = "导出到音乐库";
+"SAVE_TO_MEDIA_LIBRARY" = "保存到媒体库";
+"CLEAR" = "清除";
+"CANCEL_ALL_DOWNLOADS" = "取消所有下载";
+"CLEAR_DOWNLOAD_HISTORY" = "清除下载历史";
+"CLEAR_TEMPORARY_DATA" = "清除临时数据";
+"CLEAR_EVERYTHING" = "清除全部";
+"CLEAR_EVERYTHING_WARNING" = "这将清除所有下载历史和临时文件，你确定要取消所有下载吗？";
+"CREATE_DIRECTORY" = "创建目录";
+"DIRECTORY_NAME" = "目录名";
+"CREATE" = "创建";
+"SHOW_IN_FILZA" = "在 Filza 中显示";
+"DELETE_FILE" = "删除文件";
+"DELETE_DIRECTORY" = "删除目录";
+"RENAME_FILE" = "重命名文件";
+"RENAME_DIRECTORY" = "重命名目录";
+"WARNING" = "⚠️ 注意！";
+"NOTICE" = "提示";
+"DELETE_FILE_MESSAGE" = "确定要永久删除文件 %@ 吗？此操作无法撤销";
+"DELETE_DIRECTORY_MESSAGE" = "确定要永久删除目录 %@ &文件夹内容吗？此操作无法撤销";
+"DELETE" = "删除";
+"RENAME" = "重命名";
+"DOWNLOAD_STARTED" = "开始下载";
+"DOWNLOAD_SUCCEEDED" = "下载成功";
+"DOWNLOAD_FAILED" = "下载失败";
+"SAVED_IMAGE" = "保存的图像";
+"ERROR" = "❌ 错误";
+"FILE_EXISTS_MESSAGE" = "目标路径中已经存在文件或等待下载的文件！";
+"NOT_ENOUGH_SPACE_MESSAGE" = "剩余空间不足！\n释放一些空间，然后重试！";
+"REPLACE_FILE" = "替换文件";
+"CHANGE_PATH" = "更改下载路径";
+"PENDING_DOWNLOADS" = "等待下载";
+"DOWNLOAD_HISTORY" = "下载历史";
+"FILES" = "文件";
+"CHOOSE" = "选择";
+"MANUAL_DOWNLOAD" = "说明书下载";
+"URL_TO_DOWNLOADABLE_FILE" = "可下载文件的 URL";
+"START_DOWNLOAD" = "开始下载";
+"UNABLE_TO_FETCH_FILE_INFORMATION" = "无法获取文件信息，下载链接可能已过期！";
+"CHOOSE_FILENAME" = "选择文件名";
+"SELECT_PATH" = "选择路径";
+"FILENAME" = "文件名";
+"CLOSE" = "关闭";
+"EXIT_PICKER" = "退出 Picker";
+"PERMISSION_ERROR_MESSAGE" = "没有足够的权限写入所选路径。 请选择另一个。\n⚠️ 注意：通常，仅 /var 目录中的路径是可写的！ 您也可以使用 Filza 来检查/更改 目录的权限";
+"PREVIEW" = "预览";
+"PLAY" = "播放";
+"CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "您在“自定义默认路径”下的设置中的路径无效。 请更正";
+"VIDEO_URL_NOT_FOUND" = "未找到视频 URL！如果视频已暂停，请取消暂停，然后重试";
+"COPY_LINK" = "拷贝链接";
+"SIZE_UNKNOWN" = "未知大小";
+"DURATION_UNKNOWN" = "剩余时间未知";
+"MIGRATION_TITLE" = "迁移成功";
+"MIGRATION_MESSAGE" = "受 Safari 沙箱容器限制的日子已经一去不复返了！ 您的下载已从 ％@ 移至 ％@。 您现在可以将文件下载到所需的任何目录！";
+"CELLULAR_DATA_WARNING" = "设置中已启用\"仅使用 Wi-Fi 下载\"，当前正在使用蜂窝数据。下载不会开始，直到连接到 Wi-Fi 网络或禁用设置内的选项并重新启动 Safari";
+
+/* Tab Manager */
+
+"SELECT_ALL" = "全选";
+"DESELECT_ALL" = "全部取消选择";
+"CLOSE_TAB_WARNING_MESSAGE" = "您即将关闭一个标签页，是否要继续？";
+"CLOSE_TABS_WARNING_MESSAGE" = "您将要关闭 ％zu 个标签，是否继续？";
+"CHOOSE_EXPORT_FORMAT" = "选择导出格式";
+"CHOOSE_EXPORT_FORMAT_MESSAGE" = "每个选定的选项卡将是一行文本。 选择每行的格式";
+"WITH_CLICKABLE_URL" = "带有可点击的链接";
+"ADD_TABS_ALERT" = "添加标签页";
+"ADD_TABS_ALERT_MESSAGE" = "在文本字段中输入一些 URL。任何不是 URL 的东西将被忽略！";
+"USE_CLIPBOARD" = "使用剪切板";
+"ADD_BOOKMARKS" = "添加书签";
+
+/* Open in opposite mode */
+
+"OPEN_IN_NORMAL_MODE" = "在常规模式下打开";
+"OPEN_IN_PRIVATE_MODE" = "在无痕浏览模式中打开";
+

@@ -250,8 +250,16 @@
 "BOTTOM_BAR" = "Barre inférieure";
 "TAB_SWITCHER" = "Gestionnaire d'onglets";
 
+/*LIGHT_APPEARANCE*/
+/*DARK_APPEARANCE*/
+
 "NORMAL" = "Classique";
 "PRIVATE" = "Privée";
+
+/*NORMALLIGHT*/
+/*NORMALDARK*/
+/*PRIVATELIGHT*/
+/*PRIVATEDARK*/
 
 "TINT_COLOR" = "Couleur de teinte";
 "BACKGROUND_COLOR" = "Couleur de fond";
@@ -326,6 +334,9 @@
 
 "SORT_DIRECTORIES_ABOVE_FILES" = "Afficher les dossiers à part des fichiers";
 "SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Fait en sorte que l'explorateur de fichiers affiche les dossierss au-dessus des fichiers. Par défaut, les deux sont triés par ordre alphabétique.";
+
+/*DISABLE_PULL_UP_TO_REFRESH*/
+/*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
 
 "DISABLE_COMMUNICATION_ERROR" = "Désactiver les alertes lors d'une erreur";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Désactivez la communication d'alertes lors d'une erreur. Par défaut, celles-ci apparaîssent au lancement de l'application lorsque rocketbootstrap n'est pas disponible pour une raison quelconque. Utilisez cette option à vos risques et périls.";

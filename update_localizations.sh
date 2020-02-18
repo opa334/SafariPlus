@@ -5,3 +5,4 @@ localisort -t ./layout/Library/Application\ Support/SafariPlus.bundle/en.lproj/L
 localisort -t ./layout/Library/Application\ Support/SafariPlus.bundle/en.lproj/Localizable.strings -i ./layout/Library/Application\ Support/SafariPlus.bundle/it.lproj/Localizable.strings -r
 localisort -t ./layout/Library/Application\ Support/SafariPlus.bundle/en.lproj/Localizable.strings -i ./layout/Library/Application\ Support/SafariPlus.bundle/ru.lproj/Localizable.strings -r
 localisort -t ./layout/Library/Application\ Support/SafariPlus.bundle/en.lproj/Localizable.strings -i ./layout/Library/Application\ Support/SafariPlus.bundle/tr.lproj/Localizable.strings -r
+localisort -t ./layout/Library/Application\ Support/SafariPlus.bundle/en.lproj/Localizable.strings -i ./layout/Library/Application\ Support/SafariPlus.bundle/zh-Hans.lproj/Localizable.strings -r

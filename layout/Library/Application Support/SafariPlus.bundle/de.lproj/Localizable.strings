@@ -250,6 +250,9 @@
 "BOTTOM_BAR" = "Untere Leiste";
 "TAB_SWITCHER" = "Tab Ansicht";
 
+"LIGHT_APPEARANCE" = "Helles Erscheinungsbild";
+"DARK_APPEARANCE" = "Dunkles Erscheinungsbild";
+
 "NORMAL" = "Normal";
 "PRIVATE" = "Privat";
 
@@ -257,9 +260,6 @@
 "NORMALDARK" = "Normal, Dunkel";
 "PRIVATELIGHT" = "Privat, Hell";
 "PRIVATEDARK" = "Privat, Dunkel";
-
-"LIGHT_APPEARANCE" = "Helles Erscheinungsbild";
-"DARK_APPEARANCE" = "Dunkles Erscheinungsbild";
 
 "TINT_COLOR" = "Akzentfarbe";
 "BACKGROUND_COLOR" = "Hintergrundfarbe";

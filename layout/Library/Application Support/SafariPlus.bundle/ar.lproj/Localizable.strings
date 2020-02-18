@@ -250,8 +250,16 @@
 "BOTTOM_BAR" = "الشريط السفلي";
 "TAB_SWITCHER" = "شريط المبدل";
 
+/*LIGHT_APPEARANCE*/
+/*DARK_APPEARANCE*/
+
 "NORMAL" = "عادي";
 "PRIVATE" = "خاص";
+
+/*NORMALLIGHT*/
+/*NORMALDARK*/
+/*PRIVATELIGHT*/
+/*PRIVATEDARK*/
 
 "TINT_COLOR" = "لون الصبغة";
 "BACKGROUND_COLOR" = "لون الخلفية";
@@ -326,6 +334,9 @@
 
 "SORT_DIRECTORIES_ABOVE_FILES" = "فرز الدلائل فوق الملفات";
 "SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "جعل متصفح الملفات يرتب الدلائل فوق الملفات، افتراضيًا يتم ترتيب كلاهما بشكل أبجدي معًا.";
+
+/*DISABLE_PULL_UP_TO_REFRESH*/
+/*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
 
 "DISABLE_COMMUNICATION_ERROR" = "تعطيل تنبيه خطأ التواصل";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "تعطيل تنبيه خطأ التواصل الذي يظهر عند تشغيل التطبيق عندما تكون حزمة RocketBootstrap غير متاحة لسببٍ ما. استخدمها على مسؤوليتك الخاصة.";

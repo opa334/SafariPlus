@@ -250,8 +250,16 @@
 "BOTTOM_BAR" = "Barra inferiore";
 "TAB_SWITCHER" = "Tab switcher";
 
+/*LIGHT_APPEARANCE*/
+/*DARK_APPEARANCE*/
+
 "NORMAL" = "Normale";
 "PRIVATE" = "Privato";
+
+/*NORMALLIGHT*/
+/*NORMALDARK*/
+/*PRIVATELIGHT*/
+/*PRIVATEDARK*/
 
 "TINT_COLOR" = "Tinta colore";
 "BACKGROUND_COLOR" = "Colore di sfondo";
@@ -326,6 +334,9 @@
 
 "SORT_DIRECTORIES_ABOVE_FILES" = "Ordina e posiziona percorsi sopra i file";
 "SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Fa' in modo il browser dei file ordini e posizioni le cartelle sopra ai file, per impostazione predefinita entrambi sono ordinati alfabeticamente insieme.";
+
+/*DISABLE_PULL_UP_TO_REFRESH*/
+/*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
 
 "DISABLE_COMMUNICATION_ERROR" = "Disattiva avviso errore di comunicazione";
 "DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disattiva l'avviso di errore di comunicazione che appare aprendo l'app quando rocketbootstrap non è disponibile per qualche ragione. Usa a tuo rischio e pericolo.";
