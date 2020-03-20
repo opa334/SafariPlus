@@ -43,7 +43,7 @@
 {
 	%orig;
 
-	if(preferenceManager.forceNativePlayerEnabled && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+	if(preferenceManager.forceNativePlayerEnabled && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0 && IS_PAD)
 	{
 		[self updateFullscreenEnabledPreference];
 	}

@@ -346,7 +346,7 @@
 
 - (void)restartDownload:(SPDownload*)download forCell:(SPDownloadListFinishedTableViewCell*)cell
 {
-	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithRequest:download.request];
+	SPDownloadInfo* downloadInfo = [[SPDownloadInfo alloc] initWithDownload:download];
 	downloadInfo.presentationController = self.navigationController;
 	downloadInfo.sourceRect = [cell.buttonsView convertRect:cell.buttonsView.topButton.frame toView:self.navigationController.view];
 	[downloadManager prepareDownloadFromRequestForDownloadInfo:downloadInfo];

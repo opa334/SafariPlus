@@ -144,7 +144,7 @@
 	NSURL* downloadCacheURL = [_cacheURL URLByAppendingPathComponent:@"downloads.plist"];
 
 	//Get data from download storage file
-	NSData *data = [NSData dataWithContentsOfURL:downloadCacheURL];
+	NSData* data = [NSData dataWithContentsOfURL:downloadCacheURL];
 
 	//Return unarchived data if it exists
 	return [NSKeyedUnarchiver unarchiveObjectWithData:data];
@@ -157,7 +157,7 @@
 		NSURL* downloadCacheURL = [_cacheURL URLByAppendingPathComponent:@"downloads.plist"];
 
 		//Create archived data from pendingDownloads
-		NSData *data = [NSKeyedArchiver archivedDataWithRootObject:downloadCache];
+		NSData* data = [NSKeyedArchiver archivedDataWithRootObject:downloadCache];
 
 		//Write data to file
 		[data writeToURL:downloadCacheURL atomically:YES];

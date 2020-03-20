@@ -553,7 +553,7 @@
 
 - (void)setActiveTabDocument:(TabDocument*)document animated:(BOOL)arg2 deferActivation:(BOOL)arg3
 {
-	if(preferenceManager.forceNativePlayerEnabled && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+	if(preferenceManager.forceNativePlayerEnabled && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0 && IS_PAD)
 	{
 		[document.webView updateFullscreenEnabledPreference];
 	}

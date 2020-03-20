@@ -915,7 +915,8 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (NSURL*)URL;
 - (NSString*)title;
 - (NSString*)titleForNewBookmark;
-- (BOOL)isBlankDocument;
+- (BOOL)isBlankDocument; //iOS 8 - 13.3
+- (BOOL)isBlank; //iOS 13.4 and up
 - (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2;
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
 - (void)reload;

@@ -421,6 +421,7 @@
 "SAVED_IMAGE" = "Saved Image";
 "ERROR" = "Error";
 "FILE_EXISTS_MESSAGE" = "A file or a pending download already exists at the target path!";
+"TARGET_DIRECTORY_ERROR_MESSAGE" = "The target directory does not exist and could not be created, please choose a different path.";
 "NOT_ENOUGH_SPACE_MESSAGE" = "Not enough space left!\nFree up some space and try again!";
 "REPLACE_FILE" = "Replace File";
 "CHANGE_PATH" = "Change Download Path";

@@ -104,6 +104,7 @@
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)presentDirectoryNotExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentVideoURLNotFoundErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo;

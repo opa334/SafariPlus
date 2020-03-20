@@ -45,6 +45,10 @@
 - (BOOL)fileExists;
 - (void)removeExistingFile;
 
+- (NSURL*)targetDirectoryURL;
+- (BOOL)targetDirectoryExists;
+- (BOOL)tryToCreateTargetDirectoryIfNotExist;
+
 - (void)updateHLSForSuggestedFilename:(NSString*)suggestedFilename;
 - (NSString*)filenameForTitle;
 @end

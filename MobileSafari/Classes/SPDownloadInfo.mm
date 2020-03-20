@@ -77,6 +77,32 @@
 	}
 }
 
+- (NSURL*)targetDirectoryURL
+{
+	return [self pathURL].URLByDeletingLastPathComponent;
+}
+
+- (BOOL)targetDirectoryExists
+{
+	NSURL* targetDirectoryURL = [self targetDirectoryURL];
+
+	BOOL exists = [fileManager fileExistsAtURL:targetDirectoryURL error:nil];
+	BOOL isDirectory = [fileManager isDirectoryAtURL:targetDirectoryURL error:nil];
+
+	return exists && isDirectory;
+}
+
+- (BOOL)tryToCreateTargetDirectoryIfNotExist
+{
+	if(![self targetDirectoryExists])
+	{
+		BOOL created = [fileManager createDirectoryAtURL:[self targetDirectoryURL] withIntermediateDirectories:YES attributes:nil error:nil];
+		return created;
+	}
+
+	return YES;
+}
+
 - (int64_t)filesize
 {
 	if(self.isHLSDownload)

@@ -543,6 +543,18 @@ TabDocument* tabDocumentForItem(TabController* tabController, id<TabCollectionIt
 	return nil;
 }
 
+BOOL isTabDocumentBlank(TabDocument* tabDocument)
+{
+	if([tabDocument respondsToSelector:@selector(isBlankDocument)])
+	{
+		return [tabDocument isBlankDocument];
+	}
+	else
+	{
+		return [tabDocument isBlank];
+	}
+}
+
 //Modify tab expose alert for locked tabs (purely cosmetical) return: did anything?
 BOOL updateTabExposeActionsForLockedTabs(BrowserController* browserController, UIAlertController* tabExposeAlertController)
 {

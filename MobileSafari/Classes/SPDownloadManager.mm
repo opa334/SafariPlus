@@ -684,7 +684,7 @@
 {
 	if(downloadInfo)
 	{
-		if(![downloadInfo.sourceDocument URL] && !downloadInfo.sourceDocument.blankDocument)
+		if(![downloadInfo.sourceDocument URL] && !isTabDocumentBlank(downloadInfo.sourceDocument))
 		{
 			[downloadInfo.sourceDocument _closeTabDocumentAnimated:YES];
 		}
@@ -1282,6 +1282,36 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 	[self presentViewController:errorAlert withDownloadInfo:downloadInfo];
 }
 
+- (void)presentDirectoryNotExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
+{
+	//Create error alert
+	UIAlertController *errorAlert = [UIAlertController
+					 alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+					 message:[localizationManager localizedSPStringForKey:@"TARGET_DIRECTORY_ERROR_MESSAGE"]
+					 preferredStyle:UIAlertControllerStyleAlert];
+
+	//Change path action
+	UIAlertAction *changePathAction = [UIAlertAction
+					   actionWithTitle:[localizationManager localizedSPStringForKey:@"CHANGE_PATH"]
+					   style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
+	{
+		downloadInfo.customPath = YES;
+		[self configureDownloadWithInfo:downloadInfo];
+	}];
+
+	//Do nothing
+	UIAlertAction *cancelAction = [UIAlertAction
+				       actionWithTitle:[localizationManager localizedSPStringForKey:@"CANCEL"]
+				       style:UIAlertActionStyleCancel handler:nil];
+
+	//Add actions to alert
+	[errorAlert addAction:changePathAction];
+	[errorAlert addAction:cancelAction];
+
+	//Present alert
+	[self presentViewController:errorAlert withDownloadInfo:downloadInfo];
+}
+
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
 	//Create error alert
@@ -1340,7 +1370,11 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-	if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
+	if(![downloadInfo tryToCreateTargetDirectoryIfNotExist])
+	{
+
+	}
+	else if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
 	{
 		//File or download already exists -> present file exists alert
 		[self presentFileExistsAlertWithDownloadInfo:downloadInfo];
@@ -1469,11 +1503,19 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 		[downloadInfo updateHLSForSuggestedFilename:response.suggestedFilename];
 
 		downloadInfo.filesize = response.expectedContentLength;
-		downloadInfo.filename = response.suggestedFilename;
 
-		if(downloadInfo.title)
+		if(!downloadInfo.filename)
 		{
-			downloadInfo.filename = [downloadInfo filenameForTitle];
+			downloadInfo.filename = response.suggestedFilename;
+
+			if(downloadInfo.title)
+			{
+				downloadInfo.filename = [downloadInfo filenameForTitle];
+			}
+		}
+		else if([downloadInfo.filename.pathExtension isEqualToString:@"movpkg"] && !downloadInfo.playlistExtension)
+		{
+			downloadInfo.playlistExtension = response.suggestedFilename.pathExtension;
 		}
 
 		[self presentDownloadAlertWithDownloadInfo:downloadInfo];

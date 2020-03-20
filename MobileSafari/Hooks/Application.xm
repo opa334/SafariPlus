@@ -92,9 +92,9 @@
 
 			if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
 			{
-				UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+				UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
 				UNAuthorizationOptions options = UNAuthorizationOptionAlert + UNAuthorizationOptionSound;
-				[center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError * _Nullable error){}];
+				[center requestAuthorizationWithOptions:options completionHandler:^(BOOL granted, NSError* _Nullable error){}];
 			}
 			else
 			{
@@ -114,9 +114,9 @@
 	else
 	{
 		[[NSNotificationCenter defaultCenter] addObserver:self
-			selector:@selector(sp_setUpIfReady) 
-			name:UISceneWillConnectNotification
-			object:nil];
+							 selector:@selector(sp_setUpIfReady)
+							     name:UISceneWillConnectNotification
+							   object:nil];
 	}
 }
 
@@ -128,16 +128,16 @@
 		BrowserController* browserController = browserControllers().firstObject;
 
 		UIAlertController* welcomeAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"WELCOME_TITLE"]
-						   message:[localizationManager localizedSPStringForKey:@"WELCOME_MESSAGE"]
-						   preferredStyle:UIAlertControllerStyleAlert];
+										      message:[localizationManager localizedSPStringForKey:@"WELCOME_MESSAGE"]
+									       preferredStyle:UIAlertControllerStyleAlert];
 
 		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"]
-					      style:UIAlertActionStyleDefault
-					      handler:nil];
+								      style:UIAlertActionStyleDefault
+								    handler:nil];
 
 		UIAlertAction* openAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"OPEN_TWITTER"]
-					     style:UIAlertActionStyleDefault
-					     handler:^(UIAlertAction * action)
+								     style:UIAlertActionStyleDefault
+								   handler:^(UIAlertAction* action)
 		{
 			//Twitter is installed as an application
 			if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"twitter://"]])
@@ -190,7 +190,7 @@
 }
 
 %new
-- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+- (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void (^)())completionHandler
 {
 	downloadManager.applicationBackgroundSessionCompletionHandler = completionHandler;
 }
@@ -209,13 +209,13 @@
 }
 
 //Auto switch mode on app resume
-- (void)applicationWillEnterForeground:(id)arg1 //iOS 12 and down
+- (void)applicationWillEnterForeground:(id)arg1	//iOS 12 and down
 {
 	%orig;
 	[self sp_applicationWillEnterForeground];
 }
 
-- (void)_applicationWillEnterForeground:(id)arg1 //iOS 13 and up
+- (void)_applicationWillEnterForeground:(id)arg1//iOS 13 and up
 {
 	%orig;
 	[self sp_applicationWillEnterForeground];
@@ -272,14 +272,14 @@
 }
 
 //Auto close tabs when Safari gets minimized
-- (void)applicationDidEnterBackground:(id)arg1 //iOS 12 and down
+- (void)applicationDidEnterBackground:(id)arg1	//iOS 12 and down
 {
 	[self sp_applicationDidEnterBackground];
 
 	%orig;
 }
 
-- (void)_applicationDidEnterBackground:(id)arg1 //iOS 13 and up
+- (void)_applicationDidEnterBackground:(id)arg1	//iOS 13 and up
 {
 	[self sp_applicationDidEnterBackground];
 
@@ -328,7 +328,7 @@
 	%orig;
 }
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application
+- (void)applicationDidFinishLaunching:(UIApplication*)application
 {
 	[self sp_preAppLaunch];
 

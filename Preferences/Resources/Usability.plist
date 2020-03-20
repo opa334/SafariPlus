@@ -387,6 +387,8 @@
 				<string>FORCE_NATIVE_PLAYER_FOOTER</string>
 				<key>minCFVersion</key>
 				<real>1556.00</real>
+				<key>onlyShowOnIPad</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -403,6 +405,8 @@
 				<string>FORCE_NATIVE_PLAYER</string>
 				<key>minCFVersion</key>
 				<real>1556.00</real>
+				<key>onlyShowOnIPad</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>cell</key>

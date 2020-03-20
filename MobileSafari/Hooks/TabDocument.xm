@@ -229,46 +229,31 @@ static BOOL fakeOpenLinksValue = NO;
 
 		if(![newStripped isEqualToString:oldStripped])	//Link doesn't contain current URL
 		{
-			//Cancel site load
-			decisionHandler(WKNavigationActionPolicyCancel);
-
 			//Correctly handle launching external applications if needed
 			if(NSClassFromString(@"LSAppLink"))
 			{
 				if(navigationAction._shouldOpenAppLinks && navigationAction.targetFrame.isMainFrame)
 				{
-					__block LSAppLink *appLink;
+					__block LSAppLink* b_appLink;
 
 					dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-					[%c(LSAppLink) getAppLinkWithURL:navigationAction.request.URL completionHandler:^(LSAppLink* _appLink, NSError* error)
+					[%c(LSAppLink) getAppLinkWithURL:navigationAction.request.URL completionHandler:^(LSAppLink* appLink, NSError* error)
 					{
-						appLink = _appLink;
-
+						b_appLink = appLink;
 						dispatch_semaphore_signal(semaphore);
 					}];
 					dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
 
-					if(appLink.openStrategy == 2)	//1: Open in browser, 2: Open in app (NO WARRANTY IMPLIED)
+					if(b_appLink.openStrategy == 2)	//1: Open in browser, 2: Open in app (NO WARRANTY IMPLIED)
 					{
-						NSDictionary* browserState = @
-						{
-							@"browserReuseTab" : @1,
-							@"updateAppLinkOpenStrategy" : @YES
-						};
-
-						if([castedSelf respondsToSelector:@selector(_openAppLinkInApp:fromOriginalRequest:updateAppLinkStrategy:webBrowserState:completionHandler:)])	//Works on iOS 11 and above
-						{
-							[castedSelf _openAppLinkInApp:appLink fromOriginalRequest:navigationAction.request updateAppLinkStrategy:YES webBrowserState:browserState completionHandler:nil];
-						}
-						else	//Works on iOS 10 and 9
-						{
-							[appLink openInWebBrowser:NO setOpenStrategy:2 webBrowserState:browserState completionHandler:nil];
-						}
-
-						return NO;
+						//Just run orig to open the application
+						return YES;
 					}
 				}
 			}
+
+			//Cancel site load
+			decisionHandler(WKNavigationActionPolicyCancel);
 
 			BrowserController* controller = browserControllerForTabDocument(castedSelf);
 
@@ -277,13 +262,11 @@ static BOOL fakeOpenLinksValue = NO;
 			//Load URL in new tab
 			if([controller respondsToSelector:@selector(loadURLInNewTab:inBackground:animated:)])
 			{
-				[controller loadURLInNewTab:navigationAction.request.URL
-				 inBackground:inBackground animated:YES];
+				[controller loadURLInNewTab:navigationAction.request.URL inBackground:inBackground animated:YES];
 			}
 			else
 			{
-				[controller loadURLInNewWindow:navigationAction.request.URL
-				 inBackground:inBackground animated:YES];
+				[controller loadURLInNewWindow:navigationAction.request.URL inBackground:inBackground animated:YES];
 			}
 
 			if(inBackground)
@@ -474,7 +457,7 @@ static BOOL fakeOpenLinksValue = NO;
 
 						togglePrivateBrowsing(browserController);
 
-						if([browserController.tabController.activeTabDocument isBlankDocument])
+						if(isTabDocumentBlank(browserController.tabController.activeTabDocument))
 						{
 							[browserController setFavoritesState:0 animated:YES];	//Dismisses the bookmark favorites grid view
 							[browserController.tabController.activeTabDocument loadURL:element.URL userDriven:NO];

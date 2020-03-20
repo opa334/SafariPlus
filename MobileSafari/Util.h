@@ -47,6 +47,7 @@ extern NavigationBar* navigationBarForBrowserController(BrowserController* brows
 extern BrowserToolbar* activeToolbarOrToolbarForBarItemForBrowserController(BrowserController* browserController, NSInteger barItem);
 extern BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToolbar);
 extern TabDocument* tabDocumentForItem(TabController* tabController, id<TabCollectionItem> item);
+extern BOOL isTabDocumentBlank(TabDocument* tabDocument);
 extern NSInteger safariPlusOrderItemForBarButtonItem(NSInteger barItem);
 extern NSInteger barButtonItemForSafariPlusOrderItem(NSInteger orderItem);
 extern TabDocument* tabDocumentForTabThumbnailView(TabThumbnailView* tabThumbnailView);

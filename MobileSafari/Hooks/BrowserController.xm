@@ -185,7 +185,7 @@
 
 	case GestureActionReloadActiveTab:
 	{
-		if(!self.tabController.activeTabDocument.isBlankDocument)
+		if(!isTabDocumentBlank(self.tabController.activeTabDocument))
 		{
 			[self.tabController.activeTabDocument reload];
 		}
@@ -194,7 +194,7 @@
 
 	case GestureActionRequestDesktopSite:
 	{
-		if(!self.tabController.activeTabDocument.isBlankDocument)
+		if(!isTabDocumentBlank(self.tabController.activeTabDocument))
 		{
 			if([self.tabController.activeTabDocument respondsToSelector:@selector(reloadOptionsController)])
 			{

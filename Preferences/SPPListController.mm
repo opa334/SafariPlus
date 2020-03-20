@@ -78,6 +78,7 @@
 	{
 		NSNumber* minCFVersionNumber = [[specifier properties] objectForKey:@"minCFVersion"];
 		NSNumber* maxCFVersionNumber = [[specifier properties] objectForKey:@"maxCFVersion"];
+		NSNumber* onlyShowOnIPad = [[specifier properties] objectForKey:@"onlyShowOnIPad"];
 
 		if(minCFVersionNumber)
 		{
@@ -91,6 +92,15 @@
 		if(maxCFVersionNumber)
 		{
 			if(kCFCoreFoundationVersionNumber > [maxCFVersionNumber floatValue])
+			{
+				[specifiers removeObject:specifier];
+				continue;
+			}
+		}
+
+		if([onlyShowOnIPad boolValue])
+		{
+			if(!IS_PAD)
 			{
 				[specifiers removeObject:specifier];
 				continue;
