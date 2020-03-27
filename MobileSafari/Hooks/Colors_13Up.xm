@@ -475,8 +475,20 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 			UILabel* titleLabel = [self valueForKey:@"_titleLabel"];
 			titleLabel.textColor = [textColorToSet colorWithAlphaComponent:1.0];
 
-			TabBar* tabBar = [self valueForKey:@"_tabBar"];
-			[tabBar.barStyle setValue:textColorToSet forKey:@"_itemTitleColor"];
+			if([self respondsToSelector:@selector(barStyle)])
+			{
+				TabBar* tabBar = [self valueForKey:@"_tabBar"];
+				[tabBar.barStyle setValue:textColorToSet forKey:@"_itemTitleColor"];
+			}
+			else
+			{
+				self.closeButton.tintColor = textColorToSet;
+
+				if([self respondsToSelector:@selector(lockButton)])
+				{
+					self.lockButton.tintColor = textColorToSet;
+				}
+			}			
 
 			UIVisualEffectView* effectView = [self valueForKey:@"_contentEffectsView"];
 			effectView.effect = nil;

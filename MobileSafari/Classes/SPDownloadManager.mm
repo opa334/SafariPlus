@@ -1372,7 +1372,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 {
 	if(![downloadInfo tryToCreateTargetDirectoryIfNotExist])
 	{
-
+		[self presentDirectoryNotExistsAlertWithDownloadInfo:downloadInfo];
 	}
 	else if([downloadInfo fileExists] || [self downloadExistsAtURL:[downloadInfo pathURL]])
 	{

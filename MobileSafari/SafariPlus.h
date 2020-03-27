@@ -793,7 +793,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @end
 
 @interface TabBar : UIView
-@property (readonly, nonatomic) TabBarStyle* barStyle;
+@property (readonly, nonatomic) TabBarStyle* barStyle; //iOS 9 - 13.3
 @property (nonatomic, weak) TabController* delegate;
 @property (nonatomic) NSUInteger tintStyle;
 @end

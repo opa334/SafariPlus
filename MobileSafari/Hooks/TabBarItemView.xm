@@ -146,7 +146,10 @@
 
 	TabBar* tabBar = MSHookIvar<TabBar*>(self, "_tabBar");
 
-	self.lockButton.tintColor = tabBar.barStyle.itemTitleColor;
+	if([self respondsToSelector:@selector(barStyle)])
+	{
+		self.lockButton.tintColor = tabBar.barStyle.itemTitleColor;
+	}
 
 	UIImage* imageClosed = [UIImage imageNamed:@"LockButton_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil];
 	UIImage* imageOpen = [UIImage imageNamed:@"LockButton_Open" inBundle:SPBundle compatibleWithTraitCollection:nil];

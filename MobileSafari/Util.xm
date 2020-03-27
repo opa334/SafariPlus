@@ -390,7 +390,7 @@ TabDocument* tabDocumentForTabThumbnailView(TabThumbnailView* tabThumbnailView)
 	{
 		for(TabOverviewItem* item in bc.tabController.tabOverview.items)
 		{
-			if(item.layoutInfo.itemView == tabThumbnailView)
+			if([item.layoutInfo valueForKey:@"_itemView"] == tabThumbnailView)
 			{
 				return tabDocumentForItem(bc.tabController, item);
 			}
@@ -398,7 +398,7 @@ TabDocument* tabDocumentForTabThumbnailView(TabThumbnailView* tabThumbnailView)
 
 		for(TiltedTabItem* item in bc.tabController.tiltedTabView.items)
 		{
-			if(item.layoutInfo.contentView == tabThumbnailView)
+			if([item.layoutInfo valueForKey:@"_contentView"] == tabThumbnailView)
 			{
 				return tabDocumentForItem(bc.tabController, item);
 			}

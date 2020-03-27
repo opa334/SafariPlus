@@ -244,7 +244,7 @@
 		{
 			[tabDocument.webView sp_updateCustomUserAgent];
 
-			if(!tabDocument.isBlankDocument)
+			if(!isTabDocumentBlank(tabDocument))
 			{
 				[tabDocument.webView sp_applyCustomUserAgent];
 			}

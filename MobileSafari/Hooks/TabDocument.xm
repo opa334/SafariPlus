@@ -43,10 +43,19 @@ BOOL showAlert = YES;
 static BOOL shouldFakeOpenLinksKey = NO;
 static BOOL fakeOpenLinksValue = NO;
 
+@interface NSUserDefaults (xd)
+- (void)xd;
+@end
+
 %hook NSUserDefaults
 
 - (BOOL)boolForKey:(NSString*)key
 {
+	if([key isEqualToString:@"OpenLinksInBackground"])
+	{
+		NSLog(@"%@", [NSThread callStackSymbols]);
+	}
+
 	if(shouldFakeOpenLinksKey)
 	{
 		if([key isEqualToString:@"OpenLinksInBackground"])
@@ -59,6 +68,105 @@ static BOOL fakeOpenLinksValue = NO;
 }
 
 %end
+
+/*
+-[_SFLinkPreviewHelper menuElementsForSuggestedActions:]
+-[_SFLinkPreviewHelper openInNewTabActionForURL:preActionHandler:]
+_SFNavigationIntent: + (NSInteger)defaultTabOrder
+*/
+
+@interface _SFLinkPreviewHelper : NSObject
+- (UIAction*)openInNewTabActionForURL:(NSURL*)arg1 preActionHandler:(void (^)(id))blockNamearg2;
+- (NSURL*)url;
+@end
+
+typedef void (^UIActionHandler)(__kindof UIAction *action);
+@interface UIAction (Private)
+@property (nonatomic) UIActionHandler handler;
+@end
+
+%hook _SFLinkPreviewHelper
+
+- (NSArray<UIAction*>*)menuElementsForSuggestedActions:(id)arg1
+{
+	NSArray<UIAction*>* menuElements = %orig;
+	NSMutableArray<UIAction*>* menuElementsM = [menuElements mutableCopy];
+
+	TabDocument* tabDocument = [self valueForKey:@"_handler"];
+	BrowserController* browserController = browserControllerForTabDocument(tabDocument);
+	BOOL privateBrowsing = privateBrowsingEnabled(browserController);
+
+	if(preferenceManager.openInOppositeModeOptionEnabled && ([browserController isPrivateBrowsingAvailable] || privateBrowsing))
+	{
+		//Variable for title
+		NSString* title;
+
+		//Set title based on browsing mode
+		if(privateBrowsing)
+		{
+			title = [localizationManager localizedSPStringForKey:@"OPEN_IN_NORMAL_MODE"];
+		}
+		else
+		{
+			title = [localizationManager localizedSPStringForKey:@"OPEN_IN_PRIVATE_MODE"];
+		}
+
+		UIAction* openInOppositeModeAction = [UIAction actionWithTitle:title
+			image:[UIImage systemImageNamed:@"arrow.uturn.right.square"]
+			identifier:nil
+			handler:^(__kindof UIAction* action)
+		{
+			TabDocument* newDocument = [browserController.tabController _insertNewBlankTabDocumentWithPrivateBrowsing:!privateBrowsing inBackground:NO animated:YES];	
+			[newDocument loadURL:[self url] userDriven:YES];
+		}];
+
+		[menuElementsM insertObject:openInOppositeModeAction atIndex:2];
+	}
+
+	if(preferenceManager.bothTabOpenActionsEnabled)
+	{
+		shouldFakeOpenLinksKey = YES;
+		fakeOpenLinksValue = NO;
+		UIAction* openInNewTabAction = [self openInNewTabActionForURL:[self url] preActionHandler:nil];
+
+		UIActionHandler prevNewTabHandler = openInNewTabAction.handler;
+		openInNewTabAction.handler = ^(__kindof UIAction* action)
+		{
+			shouldFakeOpenLinksKey = YES;
+			fakeOpenLinksValue = NO;
+
+			prevNewTabHandler(action);
+
+			shouldFakeOpenLinksKey = NO;
+		};
+
+		fakeOpenLinksValue = YES;
+		UIAction* openInBackgroundAction = [self openInNewTabActionForURL:[self url] preActionHandler:nil];
+
+		UIActionHandler prevBackgroundHandler = openInBackgroundAction.handler;
+		openInBackgroundAction.handler = ^(__kindof UIAction* action)
+		{
+			shouldFakeOpenLinksKey = YES;
+			fakeOpenLinksValue = YES;
+
+			prevBackgroundHandler(action);
+
+			shouldFakeOpenLinksKey = NO;
+		};
+
+		shouldFakeOpenLinksKey = NO;
+
+		[menuElementsM removeObjectAtIndex:1];
+		[menuElementsM insertObject:openInBackgroundAction atIndex:1];
+		[menuElementsM insertObject:openInNewTabAction atIndex:1];
+	}
+
+	return [menuElementsM copy];
+}
+
+%end
+
+%group iOS13to13_3_1
 
 %hook _WKElementAction
 
@@ -73,6 +181,8 @@ static BOOL fakeOpenLinksValue = NO;
 		return %orig;
 	}
 }
+
+%end
 
 %end
 
@@ -793,7 +903,7 @@ static BOOL fakeOpenLinksValue = NO;
 
 %end
 
-%group iOS12_2Up
+%group iOS12_2_to_13_3_1
 
 - (NSMutableArray*)_actionsForElement:(_WKActivatedElementInfo*)element orFallbackURL:(id)arg2 defaultActions:(id)arg3 previewViewController:(id)arg4
 {
@@ -810,6 +920,10 @@ static BOOL fakeOpenLinksValue = NO;
 
 	return %orig;
 }
+
+%end
+
+%group iOS12_2Up
 
 - (void)_webView:(WKWebView *)webView
 	decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
@@ -908,12 +1022,22 @@ void initTabDocument()
 	{
 		TabDocumentClass = objc_getClass("TabDocument");
 		%init(iOS13Up, TabDocument=TabDocumentClass);
+		
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_4)
+		{
+			%init(iOS13to13_3_1);
+		}
 	}
 
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
 	{
 		TabDocumentClass = objc_getClass("TabDocument");
 		%init(iOS12_2Up, TabDocument=TabDocumentClass);
+
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_4)
+		{
+			%init(iOS12_2_to_13_3_1, TabDocument=TabDocumentClass);
+		}
 	}
 	else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 	{
