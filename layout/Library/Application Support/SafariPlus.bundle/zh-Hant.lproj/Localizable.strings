@@ -109,7 +109,7 @@
 "AUTOSAVE_TO_MEDIA_LIBRARY" = "自動儲存到媒體庫";
 "AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER" = "完成下載後，將相片，音頻和影片文件自動儲存到媒體庫中。";
 
-"DISABLE_HISTORY_FOR_PRIVATE_MODE" = "為無痕瀏覽模式關閉歷史記錄";
+"DISABLE_HISTORY_FOR_PRIVATE_MODE" = "為私密瀏覽模式關閉歷史記錄";
 "DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER" = "防止將在專用瀏覽模式下啟動的下載儲存到下載歷史記錄中。";
 
 "NOTIFICATIONS" = "通知";
@@ -130,7 +130,7 @@
 "BOTH_LINK_OPENING_ACTIONS" = "兩種打開連結動作";
 "BOTH_LINK_OPENING_ACTIONS_FOOTER" = "長按連結時，同時顯示「在新分頁中打開」和「在後台打開」操作，忽略Safari設置中設置的任何內容。";
 
-"OPEN_IN_OPPOSITE_MODE_FOOTER" = "長按連結時，新增操作以相反的瀏覽模式打開。\n常規瀏覽模式：可以在無痕瀏覽模式下打開連結的選項\n無痕瀏覽模式：可以在常規瀏覽模式下打開連結的選項";
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "長按連結時，新增操作以相反的瀏覽模式打開。\n常規瀏覽模式：可以在私密瀏覽模式下打開連結的選項\n私密瀏覽模式：可以在常規瀏覽模式下打開連結的選項";
 "OPEN_IN_OPPOSITE_MODE" = "在相反模式下打開";
 
 "TAB_MANAGEMENT" = "分頁管理器";
@@ -149,8 +149,8 @@
 "ALWAYS_OPEN_NEW_TAB" = "一律在新分頁打開連結";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "在後台打開新分頁";
 
-"DISABLE_PRIVATE_MODE_FOOTER" = "禁用無痕瀏覽模式並刪除「無痕瀏覽」開關。";
-"DISABLE_PRIVATE_MODE" = "關閉無痕瀏覽模式";
+"DISABLE_PRIVATE_MODE_FOOTER" = "禁用私密瀏覽模式並刪除「私密瀏覽」開關。";
+"DISABLE_PRIVATE_MODE" = "關閉私密瀏覽模式";
 
 "SUGGESTIONS" = "建議";
 
@@ -185,7 +185,7 @@
 /* Actions */
 
 "NORMAL_MODE" = "常規瀏覽模式";
-"PRIVATE_MODE" = "無痕瀏覽模式";
+"PRIVATE_MODE" = "私密瀏覽模式";
 "TO" = "使用...";
 "ON" = "當...";
 "FOR" = "為...";
@@ -244,7 +244,7 @@
 "SELECT_COLOR" = "選擇顏色";
 
 "NORMAL_MODE_COLORS" = "常規模式顏色";
-"PRIVATE_MODE_COLORS" = "無痕瀏覽模式顏色";
+"PRIVATE_MODE_COLORS" = "私密瀏覽模式顏色";
 
 "TOP_BAR" = "頂欄";
 "BOTTOM_BAR" = "按鈕欄";
@@ -254,12 +254,12 @@
 "DARK_APPEARANCE" = "夜間外觀";
 
 "NORMAL" = "常規";
-"PRIVATE" = "無痕瀏覽";
+"PRIVATE" = "私密瀏覽";
 
 "NORMALLIGHT" = "常規，日間";
 "NORMALDARK" = "常規，夜間";
-"PRIVATELIGHT" = "無痕瀏覽, 淺色";
-"PRIVATEDARK" = "無痕瀏覽, 深色";
+"PRIVATELIGHT" = "私密瀏覽, 淺色";
+"PRIVATEDARK" = "私密瀏覽, 深色";
 
 "TINT_COLOR" = "淡色";
 "BACKGROUND_COLOR" = "背景顏色";
@@ -466,5 +466,5 @@
 /* Open in opposite mode */
 
 "OPEN_IN_NORMAL_MODE" = "在常規模式下打開";
-"OPEN_IN_PRIVATE_MODE" = "在無痕瀏覽模式中打開";
+"OPEN_IN_PRIVATE_MODE" = "在私密瀏覽模式中打開";
 
