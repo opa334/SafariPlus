@@ -262,6 +262,8 @@ NSArray<BrowserController*>* browserControllers()
 //Get browserController from tabDocument
 BrowserController* browserControllerForTabDocument(TabDocument* document)
 {
+	if(!document) return nil;
+
 	BrowserController* browserController;
 
 	if([document respondsToSelector:@selector(browserController)])
@@ -279,6 +281,8 @@ BrowserController* browserControllerForTabDocument(TabDocument* document)
 //Get rootViewController from browserController
 BrowserRootViewController* rootViewControllerForBrowserController(BrowserController* controller)
 {
+	if(!controller) return nil;
+
 	BrowserRootViewController* rootViewController;
 
 	if([controller respondsToSelector:@selector(rootViewController)])
@@ -301,6 +305,8 @@ BrowserRootViewController* rootViewControllerForTabDocument(TabDocument* documen
 
 NavigationBar* navigationBarForBrowserController(BrowserController* browserController)
 {
+	if(!browserController) return nil;
+
 	if([browserController respondsToSelector:@selector(navigationBar)])
 	{
 		return browserController.navigationBar;
@@ -313,6 +319,8 @@ NavigationBar* navigationBarForBrowserController(BrowserController* browserContr
 
 BrowserToolbar* activeToolbarOrToolbarForBarItemForBrowserController(BrowserController* browserController, NSInteger barItem)
 {
+	if(!browserController) return nil;
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
 		BrowserRootViewController* rootVC = rootViewControllerForBrowserController(browserController);
@@ -348,6 +356,8 @@ BrowserToolbar* activeToolbarOrToolbarForBarItemForBrowserController(BrowserCont
 
 BrowserController* browserControllerForBrowserToolbar(BrowserToolbar* browserToolbar)
 {
+	if(!browserToolbar) return nil;
+
 	if([browserToolbar respondsToSelector:@selector(browserDelegate)])
 	{
 		return browserToolbar.browserDelegate;
@@ -410,6 +420,8 @@ TabDocument* tabDocumentForTabThumbnailView(TabThumbnailView* tabThumbnailView)
 
 BOOL browserControllerIsShowingTabView(BrowserController* browserController)
 {
+	if(!browserController) return NO;
+
 	BrowserRootViewController* rootViewController = rootViewControllerForBrowserController(browserController);
 	if([rootViewController respondsToSelector:@selector(tabThumbnailCollectionView)])
 	{
@@ -429,10 +441,7 @@ BOOL browserControllerIsShowingTabView(BrowserController* browserController)
 
 void closeTabDocuments(TabController* tabController, NSArray<TabDocument*>* tabDocuments, BOOL animated)
 {
-	if([tabDocuments count] <= 0)
-	{
-		return;
-	}
+	if(!tabController || !tabDocuments || [tabDocuments count] <= 0) return;
 
 	BrowserController* browserController = MSHookIvar<BrowserController*>(tabController, "_browserController");
 
@@ -558,10 +567,7 @@ BOOL isTabDocumentBlank(TabDocument* tabDocument)
 //Modify tab expose alert for locked tabs (purely cosmetical) return: did anything?
 BOOL updateTabExposeActionsForLockedTabs(BrowserController* browserController, UIAlertController* tabExposeAlertController)
 {
-	if(!tabExposeAlertController)
-	{
-		return NO;
-	}
+	if(!tabExposeAlertController || !browserController) return NO;
 
 	NSUInteger nonLockedTabCount = 0;
 

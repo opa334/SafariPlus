@@ -13,7 +13,7 @@ endif
 ifeq ($(SIMJECT),1)
 export NO_CEPHEI = 1
 export NO_ROCKETBOOTSTRAP = 1
-export TARGET = simulator:clang:12.1:8.0
+export TARGET = simulator:clang:13.7:8.0
 export ARCHS = x86_64 i386
 else
 export TARGET = iphone:clang:13.0:8.0

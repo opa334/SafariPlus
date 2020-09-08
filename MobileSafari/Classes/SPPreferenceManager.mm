@@ -70,14 +70,14 @@ void reloadPreferences()
 {
 	#if defined NO_CEPHEI
 	#if defined SIMJECT //SIMJECT
-	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+	/*if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 	{
 		[self reloadPreferencesFromDictionary:[[[NSUserDefaults alloc] initWithSuiteName:preferenceDomainName] dictionaryRepresentation]];
 	}
 	else
-	{
+	{*/
 		[self reloadPreferencesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")]];
-	}
+	//}
 	#else //NO CEPHEI EDITION
 	[self reloadPreferencesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")]];
 	#endif
