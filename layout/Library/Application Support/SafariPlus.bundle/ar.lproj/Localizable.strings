@@ -421,6 +421,7 @@
 "SAVED_IMAGE" = "تم حفظ الصورة";
 "ERROR" = "خطأ";
 "FILE_EXISTS_MESSAGE" = "يوجد ملف أو تنزيل معلق بالفعل في نفس هذا المسار!";
+/*TARGET_DIRECTORY_ERROR_MESSAGE*/
 "NOT_ENOUGH_SPACE_MESSAGE" = "لا توجد مساحة كافية!\nحرر بعض المساحة وحاول مجددًا!";
 "REPLACE_FILE" = "استبدال الملف";
 "CHANGE_PATH" = "تغيير مسار التنزيل";

@@ -421,6 +421,7 @@
 "SAVED_IMAGE" = "已儲存的相片";
 "ERROR" = "錯誤";
 "FILE_EXISTS_MESSAGE" = "目標路徑中已經存在文件或等待下載的文件！";
+/*TARGET_DIRECTORY_ERROR_MESSAGE*/
 "NOT_ENOUGH_SPACE_MESSAGE" = "剩餘空間不足！\n釋放一些空間，然後重試！";
 "REPLACE_FILE" = "替換文件";
 "CHANGE_PATH" = "更改下載路徑";

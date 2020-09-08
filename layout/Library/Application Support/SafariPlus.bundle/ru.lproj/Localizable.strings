@@ -421,6 +421,7 @@
 "SAVED_IMAGE" = "Изображение Сохранено";
 "ERROR" = "Ошибка";
 "FILE_EXISTS_MESSAGE" = "В этой директории такой файл уже существует или загружается!";
+/*TARGET_DIRECTORY_ERROR_MESSAGE*/
 "NOT_ENOUGH_SPACE_MESSAGE" = "Не достаточно памяти!\nОсвободите место и попробуйте снова!";
 "REPLACE_FILE" = "Заменить";
 "CHANGE_PATH" = "Изменить место загрузки";

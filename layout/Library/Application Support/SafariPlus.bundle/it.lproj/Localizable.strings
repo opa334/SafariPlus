@@ -421,6 +421,7 @@
 "SAVED_IMAGE" = "Immagine salvata";
 "ERROR" = "Errore";
 "FILE_EXISTS_MESSAGE" = "Un file o un download in attesa esiste già nel percorso di destinazione!";
+/*TARGET_DIRECTORY_ERROR_MESSAGE*/
 "NOT_ENOUGH_SPACE_MESSAGE" = "Non è rimasto abbastanza spazio!\nLibera spazio e riprova!";
 "REPLACE_FILE" = "sostituiscifile";
 "CHANGE_PATH" = "Cambia percorso di download";

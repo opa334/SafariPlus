@@ -1,0 +1,471 @@
+"YES" = "Sim";
+"NO" = "Não";
+"SAVE" = "Salve";
+
+/* Root Page */
+
+"ENABLED" = "Ativado";
+"FEATURES" = "Recursos";
+"PRIVACY" = "Privacidade";
+"UPLOADS_AND_DOWNLOADS" = "Uploads & Downloads";
+"USABILITY" = "Usabilidade";
+"ACTIONS" = "Ações";
+"GESTURES" = "Gestos";
+"CUSTOMIZATION" = "Costumização";
+
+"ABOUT_THIS_TWEAK" = "Sobre este Tweak";
+"TWEAK_SPECIFIC_SETTINGS" = "Ajustar configurações específicas";
+"SOURCE_CODE" = "Código fonte";
+"CREDITS_AND_LICENSES" = "Créditos & licenças";
+
+"ABOUT_ME" = "Sobre mim";
+"FOLLOW_ME_ON_TWITTER" = "Me siga no twitter";
+"DONATE" = "Doar";
+
+/* Privacy */
+
+"FORCE_HTTPS_FOOTER" = "Imponha globalmente o protocolo HTTPS para cada URL não adicionado a exceções. Para acessar um atalho para gerenciar exceções, pressione e segure o botão recarregar.";
+"FORCE_HTTPS" = "Forçar HTTPS";
+"FORCE_HTTPS_EXCEPTIONS" = "Exceções...";
+"FORCE_HTTPS_EXCEPTIONS_TITLE" = "Exceções";
+"EDIT" = "Editar";
+"ADD" = "Adicionar";
+"APPLY" = "Aplicar";
+"ADD_EXCEPTION_ALERT_TITLE" = "Adicione exceção";
+"ADD_EXCEPTION_ALERT_MESSAGE" = "Digite um domínio em que o protocolo HTTPS não deva ser forçado.\nExemplo: 'google.com'";
+"ADD_EXCEPTION_ALERT_PLACEHOLDER" = "URL";
+
+"LOCKED_TABS" = "Guias bloqueadas";
+"LOCKED_TABS_FOOTER" = "Adicione uma chave de bloqueio à barra superior de cada guia dentro do alternador de guias. Enquanto uma guia estiver bloqueada, ela não poderá ser fechada e permanecerá aberta até que seja desbloqueada novamente.";
+
+"BIOMETRIC_PROTECTION" = "Proteção biométrica";
+"BIOMETRIC_PROTECTION_FOOTER" = "Proteja as ações selecionadas com o Touch ID ou o Face ID.";
+"SWITCH_BROWSING_MODE" = "Alternar modo de navegação";
+"ALLOW_AUTOMATIC_ACTIONS" = "Permitir ações automáticas";
+"LOCK_TAB" = "Guia Bloquear";
+"UNLOCK_TAB" = "Guia Desbloquear";
+"ACCESS_LOCKED_TAB" = "Guia Acesso Bloqueado";
+"OPEN_DOWNLOADS" = "Downloads abertos";
+"AUTHENTICATE" = "Autenticar";
+"AUTHENTICATION_ERROR" = "Erro de autenticação";
+"ACCESS_BIOMETRIC_PROTECTION" = "Acesso à proteção biométrica";
+
+/* Uploads & Downloads */
+
+"UPLOADS" = "Uploads";
+"DOWNLOADS" = "Downloads";
+
+"UPLOAD_ANY_FILE_FOOTER" = "Adicione uma ação ao menu de seleção de documento que permita o upload de qualquer arquivo no dispositivo. Vários arquivos podem ser selecionados pressionando longamente um arquivo.";
+"UPLOAD_ANY_FILE" = "Carregar qualquer arquivo";
+
+"DOWNLOAD_MANAGER" = "Gerenciador de download";
+"DOWNLOAD_MANAGER_FOOTER" = "Um gerenciador de downloads completo integrado diretamente no Safari. Substitui o comportamento de download padrão por uma folha de ação. Use o botão da barra de ferramentas para gerenciar downloads ativos e concluídos e exibir os arquivos baixados usando o navegador de arquivos. Os downloads continuarão em segundo plano. Se você matar o Safari a partir do alternador de aplicativos, os downloads serão pausados ​​e retomados no próximo início do Safari. O download de fluxos HLS (m3u8) no .movpkg é suportado no iOS 10 e superior, mas o progresso desses downloads não persistirá se o Safari for eliminado manualmente pelo alternador de aplicativos.";
+
+"CONTENT_OPTIONS" = "Opções de Conteúdo";
+
+"VIDEO_DOWNLOADING" = "Vídeo downloadindo";
+"VIDEO_DOWNLOADING_FOOTER" = "Adicione um botão de download ao player de vídeo em tela cheia.";
+"USE_TAB_TITLE_AS_FILENAME" = "Usar título da guia como nome do arquivo";
+
+"ELEMENT_DOWNLOAD_ACTIONS_FOOTER" = "Adicione ações de download ao pressionar os elementos do site.";
+"DOWNLOAD_SITE_TO_ACTION" = "'Download do site para...' Açao";
+"DOWNLOAD_IMAGE_TO_ACTION" = "'Download da imagem para...' Açao";
+
+"PATH_OPTIONS" = "Opções de caminho";
+
+"CUSTOM_DEFAULT_PATH" = "Caminho padrão personalizado";
+"CUSTOM_DEFAULT_PATH_FOOTER" = "Escolha um caminho personalizado para onde os arquivos baixados devem ser salvos quando a ação 'Download' for usada.";
+
+"PINNED_LOCATIONS_ENABLED" = "Locais fixos ativados";
+"PINNED_LOCATIONS" = "Locais fixados.";
+"PINNED_LOCATIONS_FOOTER" = "Escolha os locais (nome e caminho) que aparecerão ao usar a opção 'Baixar para'.";
+"PINNED_LOCATIONS_ADD_ALERT_TITLE" = "Adicionar local fixo";
+"PINNED_LOCATIONS_EDIT_ALERT_TITLE" = "Editar local fixado";
+"PINNED_LOCATIONS_ALERT_MESSAGE" = "Escolha um nome e o caminho do local fixado.";
+"PINNED_LOCATIONS_ALERT_NAME_PLACEHOLDER" = "Nome";
+"PINNED_LOCATIONS_ALERT_PATH_PLACEHOLDER" = "Caminho";
+"BROWSE" = "Squeaky toy...";
+"CHOOSE_PATH_CONFIRMATION_TITLE" = "Escolha o caminho";
+"CHOOSE_PATH_CONFIRMATION_MESSAGE" = "Você quer escolher o caminho\n%@?";
+"ERROR_INVALID_NAME_OR_PATH" = "Nome ou caminho inválido";
+
+"INTERFACE" = "Interface";
+
+"PREVIEW_DOWNLOAD_PROGRESS" = "Visualizar download Progresso";
+"PREVIEW_DOWNLOAD_PROGRESS_FOOTER" = "Mostre uma barra de progresso com o progresso total do download abaixo do botão de downloads na barra de ferramentas. É exibido apenas enquanto um ou mais downloads estão em execução. Inspirado no iOS 13.";
+
+"DEFAULT_SECTION" = "Seção padrão";
+"DEFAULT_SECTION_FOOTER" = "Escolha a seção selecionada do menu de downloads quando ele for aberto. A opção 'Auto Switch' só escolherá a seção selecionada se ainda houver downloads ativos restantes, caso contrário, a outra seção será selecionada.";
+"DEFAULT_SECTION_AUTO_SWITCH" = "Interruptor automático";
+
+"BEHAVIOUR" = "Comportamento";
+
+"INSTANT_DOWNLOAD" = "Download instantâneo";
+"INSTANT_DOWNLOAD_FOOTER" = "Suprima o alerta de download e sempre use a ação selecionada por padrão.";
+
+"ONLY_DOWNLOAD_ON_WIFI" = "Faça o download apenas em Wifi";
+"ONLY_DOWNLOAD_ON_WIFI_FOOTER" = "Permitir apenas o download enquanto o dispositivo estiver conectado a uma rede wifi.";
+
+"AUTOSAVE_TO_MEDIA_LIBRARY" = "Salvar automaticamente na biblioteca de mídia";
+"AUTOSAVE_TO_MEDIA_LIBRARY_FOOTER" = "Salve automaticamente arquivos de imagem, áudio e vídeo na biblioteca de mídia quando terminar o download.";
+
+"DISABLE_HISTORY_FOR_PRIVATE_MODE" = "Desativar histórico para o modo privado";
+"DISABLE_HISTORY_FOR_PRIVATE_MODE_FOOTER" = "Impedir que os downloads iniciados no modo de navegação privada sejam salvos no histórico de downloads.";
+
+"NOTIFICATIONS" = "Notificações";
+
+"PUSH_NOTIFICATIONS" = "Notificações via push";
+"PUSH_NOTIFICATIONS_FOOTER" = "Receba uma notificação por push quando um download iniciar ou terminar enquanto o aplicativo estiver inativo.";
+
+"STATUS_BAR_NOTIFICATIONS" = "Notificações da barra de status";
+"STATUS_BAR_NOTIFICATIONS_FOOTER" = "Receba uma notificação da barra de status quando um download iniciar ou terminar enquanto o aplicativo estiver ativo.";
+
+"APPLICATION_BADGE" = "Crachá do aplicativo";
+"APPLICATION_BADGE_FOOTER" = "Use a contagem de downloads pendentes como o emblema do ícone do Safari.";
+
+/* Usability */
+
+"URL_ACTIONS" = "Ações de URL";
+
+"BOTH_LINK_OPENING_ACTIONS" = "Ambas as ações de abertura de link";
+"BOTH_LINK_OPENING_ACTIONS_FOOTER" = "Mostre a ação 'Abrir em nova guia' e 'Abrir em segundo plano' ao pressionar os links por muito tempo. Ignora o que estiver definido nas configurações do Safari.";
+
+"OPEN_IN_OPPOSITE_MODE_FOOTER" = "Adicione uma ação para abrir no modo de navegação oposto ao pressionar os links por muito tempo.\n(Modo de navegação normal: Opção para abrir o link no modo de navegação privada,\nModo de navegação privada: opção para abrir o link no modo de navegação normal)";
+"OPEN_IN_OPPOSITE_MODE" = "'Ação 'Abrir no modo oposto'";
+
+"TAB_MANAGEMENT" = "Gerenciamento de guias";
+
+"DESKTOP_MODE_SWITCH_FOOTER" = "Adicione uma opção à barra de ferramentas do alternador de guias, que pode ser usada para alternar globalmente entre o modo móvel e o desktop.";
+"DESKTOP_MODE_SWITCH" = "Interruptor de modo de mesa";
+
+"TAB_MANAGER" = "Gerenciador de guias";
+"TAB_MANAGER_FOOTER" = "Adicione um botão de compartilhamento à barra de ferramentas do alternador de guias que, quando pressionado, abre um gerenciador de guias que pode ser usado para fechar em lote, exportar e exportar lotes e adicionar lotes.";
+"SCROLL_POSITION_FROM_TAB_SWITCHER" = "Posição de rolagem do alternador de guias";
+
+"DISABLE_TAB_LIMIT" = "Desativar limite da guia";
+"DISABLE_TAB_LIMIT_FOOTER" = "Desative o limite de guias imposto que varia de acordo com a versão e o dispositivo iOS. Provavelmente, existe uma razão pela qual a Apple decidiu impor um limite de guias, use por seu próprio risco.";
+
+"ALWAYS_OPEN_NEW_TAB_FOOTER" = "Sempre abra os links tocados em uma nova guia.";
+"ALWAYS_OPEN_NEW_TAB" = "Sempre abrir links em uma nova guia";
+"OPEN_NEW_TAB_IN_BACKGROUND" = "Abrir nova guia no plano de fundo";
+
+"DISABLE_PRIVATE_MODE_FOOTER" = "Desative o modo de navegação privada e remova a opção 'Privado'.";
+"DISABLE_PRIVATE_MODE" = "Desativar navegação privada";
+
+"SUGGESTIONS" = "Sugestões";
+
+"LONG_PRESS_SUGGESTIONS" = "Inserir sugestões na pressão longa";
+"LONG_PRESS_SUGGESTIONS_FOOTER" = "Pressione e segure as sugestões de pesquisa / URL para inseri-las na barra de URL.";
+"LONG_PRESS_DURATION_TITLE" = "Longa duração da imprensa";
+"LONG_PRESS_FOCUS_TITLE" = "Barra de URL do foco na pressão longa";
+
+"SUGGESTION_INSERT_BUTTON" = "Botão Inserir sugestão";
+"SUGGESTION_INSERT_BUTTON_FOOTER" = "Adicione um botão a cada sugestão de pesquisa que o insira na barra de pesquisa. Inspirado no iOS 12.2 e superior.";
+
+"INTERFACE" = "Interface";
+
+"SHOW_TAB_COUNT" = "Mostrar contagem de guias";
+"SHOW_TAB_COUNT_FOOTER" = "Mostre a contagem de guias para o modo atual de atualização no botão que abre o alternador de guias.";
+
+"FULLSCREEN_SCROLLING_FOOTER" = "Oculte a barra superior completa ao rolar para baixo.";
+"FULLSCREEN_SCROLLING" = "Rolagem em tela cheia";
+
+"LOCK_BARS" = "Barras de bloqueio";
+"LOCK_BARS_FOOTER" = "Evite que as barras superior e inferior desapareçam ao rolar.";
+
+"SHOW_FULL_SITE_URL" = "Mostrar URL do site completo";
+"SHOW_FULL_SITE_URL_FOOTER" = "Sempre mostre o URL completo do site na barra superior.";
+
+"FORCE_NATIVE_PLAYER" = "Forçar jogador nativo";
+"FORCE_NATIVE_PLAYER_FOOTER" = "Nos iPads com iOS 12 e superior, o Safari possui um player de vídeo HTML5 que permite que o site forneça alguns dos controles de mídia (nem todos os sites usam isso!). Nas versões 12.0 - 12.1.4, há uma alternância nas configurações do Safari, nas versões 12.2 e superior, por padrão. Essa opção força o Safari a usar o player nativo em todos os sites, exceto o YouTube, por não oferecer suporte ao player nativo.";
+
+"SUPPRESS_MAILTO_DIALOG" = "Suprimir caixa de diálogo Mailto";
+"SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suprima a caixa de diálogo que aparece quando um URL 'mailto: <email>' é acessado.";
+
+/* Actions */
+
+"NORMAL_MODE" = "Modo de Navegação Normal";
+"PRIVATE_MODE" = "Modo de Navegação Privada";
+"TO" = "para...";
+"ON" = "on...";
+"FOR" = "para...";
+
+"CHANGE_MODE_ON" = "Alterar o modo de navegação em...";
+"CHANGE_MODE_ON_FOOTER" = "Mude para o modo de navegação especificado quando o evento relacionado ocorrer.";
+
+"LAUNCH_MODE_LABEL" = "Início da aplicação";
+"RESUME_LABEL" = "Resumo do aplicativo";
+"EXTERNAL_URL_LABEL" = "Link externo aberto";
+
+"AUTOMATIC_ACTIONS" = "Ações automáticas";
+
+"AUTO_CLOSE_TABS_FOOTER" = "Feche as guias do modo de navegação especificado quando o caso especificado ocorrer.";
+"AUTO_CLOSE_TABS_LABEL" = "Guias de fechamento automático";
+"AUTO_DELETE_DATA_LABEL" = "Limpar automaticamente os dados do navegador";
+"AUTO_DELETE_DATA_FOOTER" = "Limpe os dados do navegador (histórico, preenchimento automático) quando ocorrer o caso especificado.";
+"SAFARI_CLOSED" = "Safari fechado";
+"SAFARI_MINIMIZED" = "Safari minimizado";
+
+"ACTIVE_MODE" = "Modo de Navegação Ativo";
+"BOTH_MODES" = "Ambos os modos de navegação";
+
+/* Gestures */
+
+"ACTION" = "Açao";
+
+"URL_BAR_GESTURES" = "Gestos da barra de URL";
+"TOOLBAR_GESTURES" = "Gestos da barra de ferramentas";
+
+"SWIPE_LEFT_GESTURE" = "Deslize o dedo para a esquerda";
+"SWIPE_RIGHT_GESTURE" = "Deslize o gesto para a direita";
+"SWIPE_DOWN_GESTURE" = "Deslize para baixo o gesto";
+"SWIPE_UP_DOWN_GESTURE" = "Deslize para cima / para baixo gesto";
+
+"CLOSE_ACTIVE_TAB" = "Fechar a guia ativa";
+"OPEN_NEW_TAB" = "Abrir nova guia";
+"DUPLICATE_ACTIVE_TAB" = "Guia Ativo duplicado";
+"CLOSE_ALL_TABS" = "Fechar todas as guias no modo de navegação";
+"SWITCH_MODE" = "Alternar modo de navegação";
+"TAB_BACKWARD" = "Alternar guia para trás";
+"TAB_FORWARD" = "Alternar guia para a frente";
+"RELOAD_ACTIVE_TAB" = "Recarregar guia ativa";
+"REQUEST_DESTKOP_SITE" = "Solicitar site da área de trabalho";
+"OPEN_FIND_ON_PAGE" = "Abra 'Localizar na página'";
+
+"ALLOW_GESTURES_IN_TAB_SWITCHER" = "Permitir gestos no alternador de guias";
+"RUN_ACTIONS_IN_BACKGROUND" = "Executar ações em segundo plano";
+
+/* Customization */
+
+"APPEARANCE" = "Aparência";
+
+"COLORS" = "Cores";
+
+"SELECT_COLOR" = "Selecione a cor";
+
+"NORMAL_MODE_COLORS" = "Cores do modo normal";
+"PRIVATE_MODE_COLORS" = "Cores do modo privado";
+
+"TOP_BAR" = "Barra superior";
+"BOTTOM_BAR" = "Barra inferior";
+"TAB_SWITCHER" = "Comutador de guias";
+
+"LIGHT_APPEARANCE" = "Aparência clara";
+"DARK_APPEARANCE" = "Aparência Sombria";
+
+"NORMAL" = "Normal";
+"PRIVATE" = "Privado";
+
+"NORMALLIGHT" = "Normal, Leve";
+"NORMALDARK" = "Normal, Escuro";
+"PRIVATELIGHT" = "Privado, Leve";
+"PRIVATEDARK" = "Privado, Escuro";
+
+"TINT_COLOR" = "Cor da tonalidade";
+"BACKGROUND_COLOR" = "Cor de fundo";
+"STATUS_BAR_COLOR" = "Cor da barra de status";
+"TAB_BAR_TITLE_COLOR" = "Cor do título da barra da guia";
+"INACTIVE_TITLE_OPACITY" = "Opacidade inativa do título";
+"TAB_BAR_CLOSE_BUTTON_COLOR" = "Cor da tecla Fechar da barra de guias";
+"TAB_BAR_BACKGROUND_COLOR" = "Cor do plano de fundo da barra de guias";
+"URL_FONT_COLOR" = "Cor da fonte do URL";
+"PROGRESS_BAR_COLOR" = "Cor da barra de progresso";
+"RELOAD_BUTTON_COLOR" = "Cor do botão Recarregar";
+"READER_BUTTON_COLOR" = "Cor do botão do leitor";
+"LOCK_ICON_COLOR" = "Cor do ícone de cadeado";
+"TAB_TITLE_TEXT_COLOR" = "Cor do texto do título da guia";
+"TAB_TITLE_BACKGROUND_COLOR" = "Cor do plano de fundo do título da guia";
+"TOOLBAR_BACKGROUND_COLOR" = "Cor do plano de fundo da barra de ferramentas";
+
+"TAB_BAR_NOTE" = "A barra de guias não existe em todos os tamanhos / orientações de dispositivos.";
+"COLOR_SETTINGS_BOTTOM_NOTICE" = "Algumas configurações exigirão a reinicialização do aplicativo.";
+
+"WHITE" = "Branco";
+"BLACK" = "Preto";
+
+"BOTTOM_TOOLBAR" = "Barra de ferramentas inferior";
+"TOP_TOOLBAR" = "Barra de ferramentas superior";
+
+"BOTTOM_TOOLBAR_FOOTER" = "A barra de ferramentas inferior é usada em iPhones no modo retrato, alguns iPhones menores também a usam no modo paisagem. Alguns iPads menores também o usam dentro do Split-View.";
+"TOP_TOOLBAR_FOOTER" = "A barra de ferramentas superior é usada em iPhones maiores no modo paisagem. Nos iPads, é usado nos modos Retrato e Paisagem.";
+
+"REORDER_BOTTOM_TOOLBAR" = "Reordenar a barra de ferramentas inferior";
+"REORDER_TOP_TOOLBAR" = "Reordenar a barra de ferramentas superior";
+
+"CHOOSE_ORDER" = "Escolha Ordem";
+
+"BOTTOM_TOOLBAR_ORDER" = "Ordem da barra de ferramentas inferior";
+"TOP_TOOLBAR_ORDER" = "Ordem da barra de ferramentas superior";
+
+"ENABLED_ITEMS" = "Itens ativados";
+"DISABLED_ITEMS" = "Itens desativados";
+
+"BACK" = "Costas";
+"FORWARD" = "Encaminhar";
+"SHARE" = "Compartilhar";
+"BOOKMARKS" = "Favoritos";
+"TABS" = "Guias";
+"ADD_TAB" = "Adicionar guia";
+"SEARCH_BAR_SPACE" = "Espaço da barra de pesquisa";
+"RELOAD" = "Recarregar";
+"CLEAR_HISTORY" = "Limpar histórico";
+
+"BROWSING" = "Navegando";
+
+"CUSTOM_START_SITE" = "Site inicial personalizado";
+"CUSTOM_START_SITE_FOOTER" = "Substitua a exibição de favoritos que normalmente aparece em uma guia recém-aberta por um site personalizado que é aberto.";
+
+"CUSTOM_SEARCH_ENGINE" = "Mecanismo de pesquisa personalizado";
+"CUSTOM_SEARCH_ENGINE_FOOTER" = "Substitua o mecanismo de pesquisa padrão, {searchTerms} é um espaço reservado para o termo de pesquisa inserido. O URL das sugestões é opcional.";
+"SEARCH_ENGINE_NAME" = "Nome do mecanismo de pesquisa";
+"SEARCH_URL" = "URL de pesquisa";
+"SEARCH_SUGGESTIONS_URL" = "URL de sugestões de pesquisa";
+
+"CUSTOM_USER_AGENT" = "Agente de usuário personalizado";
+"CUSTOM_USER_AGENT_FOOTER" = "Substitua o agente do usuário padrão.";
+
+"CUSTOM_DESKTOP_USER_AGENT" = "Agente de usuário de desktop personalizado";
+"CUSTOM_DESKTOP_USER_AGENT_FOOTER" = "Substitua o agente do usuário usado quando o 'Interruptor de modo de mesa' (disponível em usabilidade) está ativado.";
+
+/* Tweak Specifc Settings */
+
+"LARGE_TITLES" = "Títulos Grandes";
+"LARGE_TITLES_FOOTER" = "Títulos grandes em todas as visualizações adicionadas pelo Safari Plus.";
+
+"SORT_DIRECTORIES_ABOVE_FILES" = "Classificar diretórios acima dos arquivos";
+"SORT_DIRECTORIES_ABOVE_FILES_FOOTER" = "Faça o navegador de arquivos classificar os diretórios acima dos arquivos; por padrão, ambos são classificados em ordem alfabética.";
+
+"DISABLE_PULL_UP_TO_REFRESH" = "Desativar Pull Up para atualizar";
+"DISABLE_PULL_UP_TO_REFRESH_FOOTER" = "Desative puxar para cima para atualizar dentro do navegador de arquivos. No iOS 13 e superior, isso permite fechar o navegador de arquivos deslizando para baixo.";
+
+"DISABLE_COMMUNICATION_ERROR" = "Desativar alerta de erro de comunicação";
+"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Desative o alerta de erro de comunicação que aparece na inicialização do aplicativo quando o rocketbootstrap não estiver disponível por algum motivo. Use por sua conta e risco.";
+
+"RESET_ALL_PREFERENCES" = "Redefinir todas as preferências";
+"RESET_ALL_PREFERENCES_CONFIRMATION" = "Tem certeza de que deseja redefinir todas as preferências?";
+
+/* Credits */
+
+"LIBSUBSTITRATE_FOOTER" = "Partes do libSubstitrate são usadas para tornar possível a busca do URL do vídeo em jailbreaks baseados em substitutos";
+"DEVELOPED_BY_POOMSMART" = "Desenvolvido por PoomSmart";
+
+"SAFARI_PLUS_LICENSE" = "Licença Safari Plus (MIT)";
+
+/* In app */
+
+"CLOSE_NON_LOCKED_TABS" = "Fechado %zu Guias não-bloqueadas";
+"CLOSE_NON_LOCKED_TAB" = "Fechar a guia não-bloqueada";
+"CLOSE_NON_LOCKED_TABS_MATCHING" = "Fechar %zu Correspondência de guias não-bloqueadas “%@“";
+"CLOSE_NON_LOCKED_TAB_MATCHING" = "Fechar correspondência de guias não-bloqueadas “%@“";
+"LOCAL_FILES" = "Ficheiros locais";
+"WELCOME_TITLE" = "Bem-vindo!";
+"WELCOME_MESSAGE" = "Obrigado por instalar o Safari Plus! Se você deseja se manter atualizado sobre o futuro desse ajuste, siga-me no Twitter! Esta mensagem não será exibida novamente (Eu prometo)!";
+"OPEN_TWITTER" = "Abra o Twitter";
+"COMMUNICATION_ERROR" = "Erro de comunicação";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Não foi possível se comunicar com o SpringBoard! Alguns recursos não funcionarão. Verifique se o RocketBootstrap está instalado corretamente e se o SafariPlusSB.dylib não foi desativado pelo iCleaner Pro. Seu caminho de download padrão será alterado para o contêiner de sandbox do Safari. Se você quiser desativar esta mensagem, poderá fazê-lo em Preferências em Comportamento -> Desativar Alerta de Erro de Comunicação.";
+
+/* Force HTTPS */
+
+"REMOVE_FROM_FORCE_HTTPS_EXCEPTIONS" = "Remover de forçar exceções HTTPS";
+"ADD_TO_FORCE_HTTPS_EXCEPTIONS" = "Adicionar a forçar exceções HTTPS";
+
+/* File picker */
+
+"DISMISS" = "Dispensar";
+"CANCEL" = "Cancelar";
+"UPLOAD" = "Envio";
+
+/* Downloads */
+
+"DOWNLOAD" = "Download";
+"DOWNLOAD_TO" = "Download para...";
+"DOWNLOAD_SITE_TO" = "Download do site para...";
+"DOWNLOAD_IMAGE_TO" = "Download da imagem para...";
+"DOWNLOAD_PLAYLIST_TO" = "Baixar lista de reprodução (%@) para...";
+"DOWNLOAD_OVERVIEW" = "Visão geral do download";
+"DOWNLOADS" = "Downloads";
+"FILE_BROWSER" = "Navegador de arquivos";
+"OPEN" = "Abrir";
+"SHOW_CONTENT" = "Mostrar conteúdo";
+"MERGE_INTO_FILE" = "Mesclar em .%@ Arquivo";
+"MERGING" = "Mesclando...";
+"MERGE" = "Mesclar";
+"TS_NOTICE_MESSAGE" = "Você está prestes a mesclar um movpkg em um arquivo .ts. Observe que os arquivos .ts NÃO podem ser reproduzidos no iOS, portanto, o principal objetivo do uso dessa opção seria se você deseja transferir o arquivo para outro dispositivo, como um PC ou Mac. Se você deseja converter o arquivo .ts em .mp4, use uma ferramenta externa, como o FFMPEG.";
+"MERGE_FILE_EXISTS_ERROR" = "O arquivo \"%@\" já existe. Exclua-o e tente novamente.";
+"OPEN_IN" = "Aberto em...";
+"IMPORT_TO_MUSIC_LIBRARY" = "Importar para Biblioteca de Música";
+"SAVE_TO_MEDIA_LIBRARY" = "Salvar na biblioteca de mídia";
+"CLEAR" = "Limpar";
+"CANCEL_ALL_DOWNLOADS" = "Cancelar todos os downloads";
+"CLEAR_DOWNLOAD_HISTORY" = "Limpar histórico de downloads";
+"CLEAR_TEMPORARY_DATA" = "Limpar dados temporários";
+"CLEAR_EVERYTHING" = "Limpar tudo";
+"CLEAR_EVERYTHING_WARNING" = "Tem certeza de que deseja cancelar todos os downloads, limpar o histórico de downloads e todos os dados temporários?";
+"CREATE_DIRECTORY" = "Criar diretório";
+"DIRECTORY_NAME" = "Nome do Diretório";
+"CREATE" = "Criar";
+"SHOW_IN_FILZA" = "Mostrar em Filza";
+"DELETE_FILE" = "Excluir arquivo";
+"DELETE_DIRECTORY" = "Excluir diretório";
+"RENAME_FILE" = "Renomear arquivo";
+"RENAME_DIRECTORY" = "Renomear diretório";
+"WARNING" = "Aviso!";
+"NOTICE" = "Aviso prévio";
+"DELETE_FILE_MESSAGE" = "Tem certeza de que deseja excluir permanentemente o arquivo %@? Recuperá-lo mais tarde não é possível!";
+"DELETE_DIRECTORY_MESSAGE" = "Tem certeza de que deseja excluir permanentemente o diretório %@ é conteúdo? Recuperá-lo mais tarde não é possível!";
+"DELETE" = "Excluir";
+"RENAME" = "Renomear";
+"DOWNLOAD_STARTED" = "Download iniciado";
+"DOWNLOAD_SUCCEEDED" = "Download bem-sucedido";
+"DOWNLOAD_FAILED" = "Falha no Download";
+"SAVED_IMAGE" = "Imagem salva";
+"ERROR" = "Erro";
+"FILE_EXISTS_MESSAGE" = "Já existe um arquivo ou um download pendente no caminho de destino!";
+"TARGET_DIRECTORY_ERROR_MESSAGE" = "O diretório de destino não existe e não pôde ser criado. Escolha um caminho diferente.";
+"NOT_ENOUGH_SPACE_MESSAGE" = "Não há espaço suficiente!\nLibere espaço e tente novamente!";
+"REPLACE_FILE" = "Substituir arquivo";
+"CHANGE_PATH" = "Alterar caminho de download";
+"PENDING_DOWNLOADS" = "Downloads pendentes";
+"DOWNLOAD_HISTORY" = "Histórico de downloads";
+"FILES" = "Arquivos";
+"CHOOSE" = "Escolher";
+"MANUAL_DOWNLOAD" = "Download manual";
+"URL_TO_DOWNLOADABLE_FILE" = "URL para arquivo para download";
+"START_DOWNLOAD" = "Iniciar Download";
+"UNABLE_TO_FETCH_FILE_INFORMATION" = "Não foi possível buscar as informações do arquivo, o link para download pode ter expirado!";
+"CHOOSE_FILENAME" = "Escolha o nome do arquivo";
+"SELECT_PATH" = "Selecionar caminho";
+"FILENAME" = "Nome do arquivo";
+"CLOSE" = "Fechar";
+"EXIT_PICKER" = "Seletor de saída";
+"PERMISSION_ERROR_MESSAGE" = "Permissões insuficientes para gravar no caminho selecionado. Por favor, selecione outro.\nNOTA: Normalmente, apenas caminhos dentro do /O diretório var é gravável! Você também pode usar o Filza para inspecionar / altere as permissões de um diretório.";
+"PREVIEW" = "Pré-visualização";
+"PLAY" = "Jogar";
+"CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "O caminho que você definiu nas configurações em 'Caminho padrão personalizado' é inválido. Por favor corrija isso.";
+"VIDEO_URL_NOT_FOUND" = "Nenhum URL de vídeo encontrado! Se o vídeo estiver em pausa, retome-o e tente novamente.";
+"COPY_LINK" = "Link de cópia";
+"SIZE_UNKNOWN" = "Tamanho desconhecido";
+"DURATION_UNKNOWN" = "Duração desconhecida";
+"MIGRATION_TITLE" = "Migração bem-sucedida";
+"MIGRATION_MESSAGE" = "Longe vão os dias de ser restrito ao contêiner de sandbox do Safari! Seus downloads foram movidos de %@ para %@. Agora você pode baixar arquivos para qualquer diretório que desejar!";
+"CELLULAR_DATA_WARNING" = "'O recurso 'Somente fazer o download em Wi-Fi' está ativado nas configurações e você está atualmente com dados de celular. Os downloads não serão iniciados até que você se conecte a uma rede wifi ou desative a opção dentro das configurações e reinicie o Safari.";
+
+/* Tab Manager */
+
+"SELECT_ALL" = "Selecionar tudo";
+"DESELECT_ALL" = "Desmarcar todos";
+"CLOSE_TAB_WARNING_MESSAGE" = "Você está prestes a fechar uma guia, deseja continuar?";
+"CLOSE_TABS_WARNING_MESSAGE" = "Você está prestes a fechar %zu guias, você deseja continuar?";
+"CHOOSE_EXPORT_FORMAT" = "Escolha Exportar formato";
+"CHOOSE_EXPORT_FORMAT_MESSAGE" = "Cada guia selecionada será uma linha de texto. Escolha como cada linha deve ser formatada.";
+"WITH_CLICKABLE_URL" = "Com URL clicável";
+"ADD_TABS_ALERT" = "Adicionar separadores";
+"ADD_TABS_ALERT_MESSAGE" = "Digite alguns URLs no campo de texto. Qualquer coisa que não seja uma URL será ignorada!";
+"USE_CLIPBOARD" = "Usar área de transferência";
+"ADD_BOOKMARKS" = "Adicionar Favoritos";
+
+/* Open in opposite mode */
+
+"OPEN_IN_NORMAL_MODE" = "Abrir no modo normal";
+"OPEN_IN_PRIVATE_MODE" = "Abrir no modo privado";
+

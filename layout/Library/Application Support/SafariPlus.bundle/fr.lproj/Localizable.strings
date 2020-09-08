@@ -421,6 +421,7 @@
 "SAVED_IMAGE" = "Image enregistrée";
 "ERROR" = "Erreur";
 "FILE_EXISTS_MESSAGE" = "Un fichier ou un téléchargement en attente existe déjà sur le chemin cible!";
+/*TARGET_DIRECTORY_ERROR_MESSAGE*/
 "NOT_ENOUGH_SPACE_MESSAGE" = "Pas assez d'espace disponible! \n Libérez de l'espace et réessayez!";
 "REPLACE_FILE" = "Remplacer le fichier";
 "CHANGE_PATH" = "Modifier le chemin de téléchargement";

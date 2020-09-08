@@ -421,6 +421,7 @@
 "SAVED_IMAGE" = "Kaydedilmiş Resim";
 "ERROR" = "Hata";
 "FILE_EXISTS_MESSAGE" = "Hedef yolda bir dosya veya bekleyen indirme zaten var!";
+/*TARGET_DIRECTORY_ERROR_MESSAGE*/
 "NOT_ENOUGH_SPACE_MESSAGE" = "Yeterli alan kalmadı!\nNBoş yer açın ve tekrar deneyin!";
 "REPLACE_FILE" = "Dosyayı değiştir";
 "CHANGE_PATH" = "İndirme Yolunu Değiştir";
