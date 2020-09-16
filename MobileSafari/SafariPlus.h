@@ -513,7 +513,10 @@ typedef enum UIImageSymbolScale : NSInteger {
 
 //iOS 11
 
-@interface AVPlayerViewController : UIViewController
+#import <AVKit/AVPlayerViewController.h>
+
+//@interface AVPlayerViewController : UIViewController
+@interface AVPlayerViewController ()
 @property (nonatomic,readonly) UIViewController* fullScreenViewController;
 @end
 
