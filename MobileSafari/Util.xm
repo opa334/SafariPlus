@@ -182,6 +182,24 @@ BOOL privateBrowsingEnabled(BrowserController* controller)
 	return privateBrowsingEnabled;
 }
 
+BOOL privateBrowsingEnabledForTabDocument(TabDocument* tabDocument)
+{
+	if([tabDocument respondsToSelector:@selector(isPrivateBrowsingEnabled)])
+	{
+		return [tabDocument isPrivateBrowsingEnabled];
+	}
+	else if([tabDocument respondsToSelector:@selector(privateBrowsingEnabled)])
+	{
+		return [tabDocument privateBrowsingEnabled];
+	}
+	else if([tabDocument respondsToSelector:@selector(configuration)])
+	{
+		return [tabDocument.configuration isPrivateBrowsingEnabled];
+	}
+
+	return NO;
+}
+
 //Toggle private mode
 void togglePrivateBrowsing(BrowserController* controller)
 {
@@ -328,9 +346,29 @@ BrowserToolbar* activeToolbarOrToolbarForBarItemForBrowserController(BrowserCont
 		{
 			return rootVC.bottomToolbar;
 		}
-		else
+		else 
 		{
-			return [rootVC.navigationBar _toolbarForBarItem:barItem];
+			if([rootVC.navigationBar respondsToSelector:@selector(_toolbarForBarItem:)])
+			{
+				return [rootVC.navigationBar _toolbarForBarItem:barItem];
+			}
+			else //iOS 14
+			{
+				_SFToolbar* leadingToolbar = [rootVC.navigationBar valueForKey:@"_leadingToolbar"];
+				_SFToolbar* trailingToolbar = [rootVC.navigationBar valueForKey:@"_trailingToolbar"];
+
+				if([leadingToolbar.barRegistration containsBarItem:barItem])
+				{
+					return (BrowserToolbar*)leadingToolbar;
+				}
+
+				if([trailingToolbar.barRegistration containsBarItem:barItem])
+				{
+					return (BrowserToolbar*)trailingToolbar;
+				}
+
+				return nil;
+			}
 		}
 	}
 	else
@@ -457,16 +495,7 @@ void closeTabDocuments(TabController* tabController, NSArray<TabDocument*>* tabD
 
 	for(TabDocument* tabDocument in tabDocuments)
 	{
-		BOOL privateTab = NO;
-
-		if([tabDocument respondsToSelector:@selector(privateBrowsingEnabled)])
-		{
-			privateTab = [tabDocument privateBrowsingEnabled];
-		}
-		else
-		{
-			privateTab = [tabDocument isPrivateBrowsingEnabled];
-		}
+		BOOL privateTab = privateBrowsingEnabledForTabDocument(tabDocument);
 
 		if(privateTab)
 		{

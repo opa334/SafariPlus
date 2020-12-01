@@ -47,6 +47,7 @@
 	if(file.isRegularFile)
 	{
 		//tapped entry is file -> call delegate to upload file
+		NSLog(@"((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate = %@", ((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate);
 		[((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate filePicker:(SPFilePickerNavigationController*)self.navigationController didSelectFiles:@[file.fileURL]];
 	}
 
@@ -117,8 +118,7 @@
 	}
 
 	//Call delegate to upload files
-	[((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate filePicker:(SPFilePickerNavigationController*)self.navigationController
-	 didSelectFiles:selectedURLs];
+	[((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate filePicker:(SPFilePickerNavigationController*)self.navigationController didSelectFiles:selectedURLs];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

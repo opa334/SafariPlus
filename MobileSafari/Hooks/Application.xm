@@ -28,6 +28,7 @@
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPCommunicationManager.h"
 #import "../Shared/SPPreferenceUpdater.h"
+#import <libundirect.h>
 
 #import <UserNotifications/UserNotifications.h>
 
@@ -84,6 +85,31 @@
 		[self handleTwitterAlert];
 
 		[self handleSBConnectionTest];
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+		{
+			NSArray* failedSelectors = libundirect_failedSelectors();
+			if(failedSelectors)
+			{
+				NSMutableString* selectorsString = [NSMutableString string];
+				for(NSString* failedSelector in failedSelectors)
+				{
+					[selectorsString appendString:failedSelector];
+					if(failedSelector != failedSelectors.lastObject)
+					{
+						[selectorsString appendString:@"\n"];
+					}
+				}
+
+				#ifdef __arm64e__
+				NSString* arch = @"arm64e";
+				#else
+				NSString* arch = @"arm64";
+				#endif
+
+				sendSimpleAlert([localizationManager localizedSPStringForKey:@"UNDIRECTOR_WARNING"], [NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"UNDIRECTOR_WARNING_MESSAGE"], [[UIDevice currentDevice] systemVersion], arch, selectorsString]);
+			}
+		}
 
 		if(preferenceManager.downloadManagerEnabled)
 		{
@@ -215,7 +241,7 @@
 	[self sp_applicationWillEnterForeground];
 }
 
-- (void)_applicationWillEnterForeground:(id)arg1//iOS 13 and up
+- (void)_applicationWillEnterForeground:(id)arg1 //iOS 13 and up
 {
 	%orig;
 	[self sp_applicationWillEnterForeground];

@@ -25,7 +25,7 @@
 %group iOS12Up
 %hook FeatureManager
 
-//iOS 12 specific hooks to disable private browsing
+//iOS 12+ specific hooks to disable private browsing
 
 - (void)determineIfPrivateBrowsingIsAvailableWithCompletionHandler:(void (^)(BOOL))handler
 {

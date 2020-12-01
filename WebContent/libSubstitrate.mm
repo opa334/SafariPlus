@@ -7,12 +7,13 @@ int (*substitute_hook_functions)(const struct substitute_function_hook *hooks, s
 
 static bool didSubstituteSearch = false;
 
+
 static void readDylib()
 {
 	if (!didSubstituteSearch)
 	{
 		MSImageRef ref = MSGetImageByName("/usr/lib/libsubstitute.dylib");
-		if (ref)
+		if(ref)
 		{
 			substitute_hook_functions = (int (*)(const struct substitute_function_hook *, size_t, struct substitute_function_hook_record **, int))make_sym_callable(MSFindSymbol(ref, "_substitute_hook_functions"));
 		}
@@ -28,7 +29,7 @@ int PSHookFunction(void *func, void *replace, void **result)
 	}
 	
 	readDylib();
-	if (substitute_hook_functions)
+	if(substitute_hook_functions)
 	{
 		struct substitute_function_hook hook = { func, replace, result };
 		int ret = substitute_hook_functions(&hook, 1, NULL, 1);
@@ -50,7 +51,9 @@ int PSHookFunction2(MSImageRef ref, const char *symbol, void *replace) {
 }
 
 int PSHookFunction3(const char *image, const char *symbol, void *replace, void **result) {
-	return PSHookFunction(MSFindSymbol(MSGetImageByName(image), symbol), replace, result);
+	MSImageRef imageRef = MSGetImageByName(image);
+	void* symbolPtr = MSFindSymbol(imageRef, symbol);
+	return PSHookFunction(symbolPtr, replace, result);
 }
 
 int PSHookFunction4(const char *image, const char *symbol, void *replace) {

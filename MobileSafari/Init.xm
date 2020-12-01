@@ -20,8 +20,11 @@
 
 #import "Util.h"
 #import "Classes/SPPreferenceManager.h"
+#import "Defines.h"
 
 // One constructor that inits all hooks
+
+extern void initUndirection();
 
 extern void initApplication();
 extern void initAVFullScreenPlaybackControlsViewController();
@@ -40,6 +43,7 @@ extern void initSafariWebView();
 extern void initSearchEngineController();
 extern void initSFBarRegistration();
 extern void initSPTabManagerBookmarkPicker();
+extern void initSPMediaFetcher();
 extern void initTabItemLayoutInfo();
 extern void initTabBarItemView();
 extern void initTabController();
@@ -58,6 +62,16 @@ extern void initWKFullScreenViewController();
 	@autoreleasepool
 	{
 		HBLogDebug(@"started loading SafariPlus!");
+
+		//objc_direct only applies to 14 and newer, which don't support 32 bit
+		#ifdef __LP64__
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+		{
+			HBLogDebug(@"ios 14+ detected, loading undirector");
+			initUndirection();
+		}
+		#endif
+
 		#ifdef DEBUG_LOGGING
 		initDebug();
 		#endif
@@ -83,6 +97,7 @@ extern void initWKFullScreenViewController();
 			initSearchEngineController();
 			initSFBarRegistration();
 			initSPTabManagerBookmarkPicker();
+			initSPMediaFetcher();
 			initTabItemLayoutInfo();
 			initTabBarItemView();
 			initTabController();

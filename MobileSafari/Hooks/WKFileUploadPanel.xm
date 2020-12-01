@@ -46,7 +46,43 @@
 	}
 }
 
-%group iOS9Up
+%group iOS14Up
+
+- (UIContextMenuConfiguration *)contextMenuInteraction:(UIContextMenuInteraction *)interaction configurationForMenuAtLocation:(CGPoint)location
+{
+	UIContextMenuConfiguration* config = %orig;
+
+	if(preferenceManager.uploadAnyFileOptionEnabled)
+	{
+		UIContextMenuActionProvider orgProvider = config.actionProvider;
+
+		config.actionProvider = ^UIMenu*(NSArray<UIMenuElement *> *suggestedActions)
+		{
+			UIMenu* orgMenu = orgProvider(suggestedActions);
+
+			NSMutableArray* children = [orgMenu.children mutableCopy];
+
+			UIAction* localFilesAction = [UIAction actionWithTitle:[localizationManager localizedSPStringForKey:@"LOCAL_FILES"]
+				image:[UIImage systemImageNamed:@"doc"]
+				identifier:@"com.opa334.safariplus.localfiles"
+				handler:^(UIAction* action)
+				{
+					MSHookIvar<BOOL>(self, "_isPresentingSubMenu") = YES;
+					[self _showFilePicker];
+				}];
+
+			[children insertObject:localFilesAction atIndex:children.count - 1];
+
+			return [orgMenu menuByReplacingChildren:children];
+		};
+	}
+
+	return config;
+}
+
+%end
+
+%group iOS13Down
 
 //Add button to document menu
 - (void)_showDocumentPickerMenu
@@ -69,6 +105,10 @@
 	}
 }
 
+%end
+
+%group iOS9Up
+
 //Dismiss file picker and start upload or cancel
 %new
 - (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs
@@ -89,6 +129,8 @@
 	{
 		[hardLinkedURLs addObject:[fileManager accessibleHardLinkForFileAtURL:URL forced:NO]];
 	}
+
+	NSLog(@"hardLinkedURLs = %@", hardLinkedURLs);
 
 	[self _chooseFiles:[hardLinkedURLs copy]
 	 displayString:[((NSURL*)hardLinkedURLs.firstObject).lastPathComponent
@@ -181,6 +223,15 @@ void initWKFileUploadPanel()
 	else
 	{
 		%init(iOS8);
+	}
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+	{
+		%init(iOS14Up);
+	}
+	else
+	{
+		%init(iOS13Down);
 	}
 
 	%init();

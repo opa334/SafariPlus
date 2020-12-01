@@ -21,6 +21,7 @@
 #import "../SafariPlus.h"
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPLocalizationManager.h"
 #import "../Defines.h"
 
 %hook TabExposeActionsController
@@ -50,6 +51,146 @@
 		}
 
 		updateTabExposeActionsForLockedTabs(self.browserController, self.alertController);
+	}
+}
+
+%end
+
+%hook UIMenu
+
++ (UIMenu*)_sf_tabMenu
+{
+	UIMenu* orig = %orig;
+	NSLog(@"_sf_tabMenu:%@", orig);
+	NSLog(@"_sf_tabMenu.children:%@", orig.children);
+	return orig;
+}
+
+%end
+
+%hook BrowserController
+
+- (BOOL)canPerformAction:(SEL)arg1 withSender:(id)arg2
+{
+	BOOL orig = %orig;
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		NSString* selString = NSStringFromSelector(arg1);
+		if([selString isEqualToString:@"closeActiveTab:"])
+		{
+			if(self.tabController.activeTabDocument.locked)
+			{
+				return NO;
+			}
+		}
+		else if([selString isEqualToString:@"closeAllTabs:"])
+		{
+			BOOL allLocked = YES;
+			for(TabDocument* document in self.tabController.currentTabDocuments)
+			{
+				if(!document.locked)
+				{
+					allLocked = NO;
+					break;
+				}
+			}
+			if(allLocked)
+			{
+				return NO;
+			}
+		}
+		else if([selString isEqualToString:@"closeAllTabsMatchingSearch:"])
+		{
+			BOOL allLocked = YES;
+			for(TabDocument* document in self.tabController.tabDocumentsMatchingSearchTerm)
+			{
+				if(!document.locked)
+				{
+					allLocked = NO;
+				}
+			}
+			if(allLocked)
+			{
+				return NO;
+			}
+		}
+	}
+
+	return orig;
+}
+
+- (void)validateCommand:(UICommand*)command
+{
+	%orig;
+
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		NSString* newTitle = nil;
+		NSString* selString = NSStringFromSelector(command.action);
+		if([selString isEqualToString:@"closeAllTabs:"])
+		{
+			BOOL anythingLocked = NO;
+			NSInteger nonLockedCount = 0;
+			for(TabDocument* document in self.tabController.currentTabDocuments)
+			{
+				if(!document.locked)
+				{
+					nonLockedCount++;
+				}
+				else
+				{
+					anythingLocked = YES;
+				}
+			}
+
+			NSLog(@"nonLockedCount = %lli", (long long)nonLockedCount);
+
+			if(nonLockedCount > 0 && anythingLocked)
+			{
+				if(nonLockedCount > 1)
+				{
+					newTitle = [NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS"], nonLockedCount];
+				}
+				else
+				{
+					newTitle = [localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB"];
+				}
+			}
+		}
+		else if([selString isEqualToString:@"closeAllTabsMatchingSearch:"])
+		{
+			BOOL anythingLocked = NO;
+			NSString* searchTerm = self.tabController.tabThumbnailCollectionView.searchTerm;
+			NSInteger nonLockedCount = 0;
+			for(TabDocument* document in self.tabController.tabDocumentsMatchingSearchTerm)
+			{
+				if(!document.locked)
+				{
+					nonLockedCount++;
+				}
+				else
+				{
+					anythingLocked = YES;
+				}
+			}
+
+			if(nonLockedCount > 0 && anythingLocked)
+			{
+				if(nonLockedCount > 1)
+				{
+					newTitle = [NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TABS_MATCHING"], nonLockedCount, searchTerm];
+				}
+				else
+				{
+					newTitle = [NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"CLOSE_NON_LOCKED_TAB_MATCHING"], searchTerm];
+				}
+			}
+		}
+
+		if(newTitle)
+		{
+			command.title = newTitle;
+		}
 	}
 }
 

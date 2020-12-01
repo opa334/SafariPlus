@@ -28,6 +28,8 @@
 #import "../Enums.h"
 #import "substrate.h"
 
+//ONLY USED FOR < 13
+
 #define tSelf ((BrowserToolbar*)self)
 
 static void updateToolbarConnectionWithBarButtonItem(__kindof UIBarButtonItem* item, BrowserToolbar* toolbar, NSInteger itemValue)
@@ -264,12 +266,16 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		tSelf.tabCountLabel.numberOfLines = 1;
 		tSelf.tabCountLabel.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
 		tSelf.tabCountLabel.textAlignment = NSTextAlignmentCenter;
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+		{
+			tSelf.tabCountLabel.frame = CGRectMake(8.5,7 + (1.0/3.0),13,13);
+		}
+		else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 		{
 			//tSelf.tabCountLabel.frame = CGRectMake(8.25,7,14.5,14.5);
 			if([UIScreen mainScreen].scale >= 3)
 			{
-				tSelf.tabCountLabel.frame = CGRectMake(9,7.66,13,13);
+				tSelf.tabCountLabel.frame = CGRectMake(9,7 + (2.0/3.0),13,13);
 			}
 			else
 			{

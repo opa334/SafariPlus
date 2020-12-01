@@ -8,6 +8,28 @@ struct substitute_function_hook {
 };
 struct substitute_function_hook_record;
 
+enum LIBHOOKER_ERR {
+    LIBHOOKER_OK = 0,
+    LIBHOOKER_ERR_SELECTOR_NOT_FOUND = 1,
+    LIBHOOKER_ERR_SHORT_FUNC = 2,
+    LIBHOOKER_ERR_BAD_INSN_AT_START = 3,
+    LIBHOOKER_ERR_VM = 4,
+    LIBHOOKER_ERR_NO_SYMBOL = 5
+};
+
+enum LHOptions {
+    LHOptionsNone = 0,
+    LHOptionsSetJumpReg = 1
+};
+
+struct LHFunctionHook {
+    void *function;
+    void *replacement;
+    void *oldptr;
+    enum LHOptions options;
+    int jmp_reg;
+};
+
 #import <dlfcn.h>
 #import <substrate.h>
 

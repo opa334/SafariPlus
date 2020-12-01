@@ -23,6 +23,7 @@
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Defines.h"
+#import <libundirect.h>
 
 %hook TiltedTabItemLayoutInfo
 
@@ -55,6 +56,8 @@
 
 void initTiltedTabItemLayoutInfo()
 {
+	%config(generator=MobileSubstrate_libundirect)
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
 	{
 		%init(iOS10Up);

@@ -363,6 +363,8 @@
 "OPEN_TWITTER" = "Öffne Twitter";
 "COMMUNICATION_ERROR" = "Kommunikationsfehler";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde. Dein Downloadspfad wird auf den Sandbox Container von Safari geändert. Eine Option diese Meldung zu deaktivieren befindet sich unter Verhalten->Kommunikationsfehler Meldung deaktivieren.";
+"UNDIRECTOR_WARNING" = "Undirector Warnung";
+"UNDIRECTOR_WARNING_MESSAGE" = "Einige Features von Safari Plus könnten nicht funktionieren oder zu Abstürzen führen da der Patchfinder die iOS Version (%@, %@) anscheinend nicht unterstützt. Das rebinding der folgenden Selectors ist fehlgeschlagen:\n\n%@";
 
 /* Force HTTPS */
 

@@ -363,6 +363,8 @@
 "OPEN_TWITTER" = "Open Twitter";
 "COMMUNICATION_ERROR" = "Communication Error";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro. Your default download path will be changed to the sandbox container of Safari. If you want to disable this message, you can do so inside Preferences under Behaviour -> Disable Communication Error Alert.";
+"UNDIRECTOR_WARNING" = "Undirector Warning";
+"UNDIRECTOR_WARNING_MESSAGE" = "Some features of Safari Plus may not work or cause crashes, the patchfinder likely does not support your iOS version (%@, %@). Unable to rebind the following selectors:\n\n%@";
 
 /* Force HTTPS */
 
@@ -415,9 +417,9 @@
 "DELETE_DIRECTORY_MESSAGE" = "Are you sure you want to permanently delete the directory %@ and it's contents? Recovering it later is not possible!";
 "DELETE" = "Delete";
 "RENAME" = "Rename";
-"DOWNLOAD_STARTED" = "Download started";
-"DOWNLOAD_SUCCEEDED" = "Download succeeded";
-"DOWNLOAD_FAILED" = "Download failed";
+"DOWNLOAD_STARTED" = "Download Started";
+"DOWNLOAD_SUCCEEDED" = "Download Succeeded";
+"DOWNLOAD_FAILED" = "Download Failed";
 "SAVED_IMAGE" = "Saved Image";
 "ERROR" = "Error";
 "FILE_EXISTS_MESSAGE" = "A file or a pending download already exists at the target path!";

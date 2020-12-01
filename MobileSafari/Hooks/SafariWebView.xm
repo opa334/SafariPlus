@@ -22,6 +22,7 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
+#import "../Classes/SPMediaFetcher.h"
 
 #import <WebKit/WKWebViewConfiguration.h>
 
@@ -48,6 +49,22 @@
 		[self updateFullscreenEnabledPreference];
 	}
 }
+
+%group MediaFetcherSupport
+
+- (void)_killWebContentProcess
+{
+	[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:[cSelf _webProcessIdentifier]];
+	%orig;
+}
+
+- (void)_killWebContentProcessAndResetState
+{
+	[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:[cSelf _webProcessIdentifier]];
+	%orig;
+}
+
+%end
 
 %new
 - (void)setDesktopModeState:(NSInteger)desktopModeState
@@ -166,4 +183,9 @@ void initSafariWebView()
 	}
 
 	%init(SafariWebView=SafariWebViewClass);
+
+	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled)
+	{
+		%init(MediaFetcherSupport,SafariWebView=SafariWebViewClass);
+	}
 }

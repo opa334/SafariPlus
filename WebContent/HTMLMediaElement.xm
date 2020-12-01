@@ -18,6 +18,59 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#import <xpc/xpc.h>
+#import <dlfcn.h>
+
+NSFileHandle* logFileHandle;
+
+#ifdef DEBUG
+
+void _initLogging()
+{
+	NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [formatter setDateFormat:@"MM_dd_yyyy_hh_mm_ss"];
+    NSString* timestamp = [formatter stringFromDate:[NSDate date]];
+	NSString* filename = [NSString stringWithFormat:@"SafariPlusWC_%@.log", timestamp];
+	NSString* logFilePath = [@"/tmp/" stringByAppendingPathComponent:filename];
+
+	[[NSFileManager defaultManager] createFileAtPath:logFilePath contents:nil attributes:nil];
+	logFileHandle = [NSFileHandle fileHandleForWritingAtPath:logFilePath];
+
+	if(logFileHandle)
+	{
+		[logFileHandle seekToEndOfFile];
+	}
+}
+
+void logToFile(NSString* fString, ...)
+{
+	static dispatch_once_t onceToken;
+
+    dispatch_once (&onceToken, ^{
+        _initLogging();
+    });
+
+	va_list va;
+	va_start(va, fString);
+	NSString* msg = [[NSString alloc] initWithFormat:fString arguments:va];
+	va_end(va);
+
+	NSDateFormatter* formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US"];
+    [formatter setDateFormat:@"hh:mm:ss"];
+    NSString* timestamp = [formatter stringFromDate:[NSDate date]];
+
+	NSString* prefix = [NSString stringWithFormat:@"[%@] ", timestamp];
+
+	[logFileHandle writeData:[[prefix stringByAppendingString:[msg stringByAppendingString:@"\n"]] dataUsingEncoding:NSUTF8StringEncoding]];
+	NSLog(@"%@", msg);
+}
+
+#else
+#define logToFile(...)
+#endif
+
 #define ENABLE_VIDEO 1
 
 #define PAL_EXPORT
@@ -35,16 +88,11 @@
 NSMutableDictionary* URLCache;
 NSString* currentFullscreenVideoURL;
 
-extern "C"
-{
-CFNotificationCenterRef CFNotificationCenterGetDistributedCenter(void);
-}
-
 //This gets called called with initialURL being the URL of the media, only way to get it without C++ fuckery
 void (*_WebCore_HTMLMediaElement_loadResource)(WebCore::HTMLMediaElement*, const WTF::URL&, WebCore::ContentType&, const WTF::String&);
 void WebCore_HTMLMediaElement_loadResource(WebCore::HTMLMediaElement* self, const WTF::URL& initialURL, WebCore::ContentType& contentType, const WTF::String& keySystem)
 {
-	HBLogDebug(@"loadResource:%p", self);
+	logToFile(@"loadResource:%p", self);
 	_WebCore_HTMLMediaElement_loadResource(self, initialURL, contentType, keySystem);
 
 	@autoreleasepool
@@ -54,7 +102,7 @@ void WebCore_HTMLMediaElement_loadResource(WebCore::HTMLMediaElement* self, cons
 		if(![URLString isEqualToString:@""])
 		{
 			NSValue* key = [NSValue valueWithPointer:self];
-			HBLogDebug(@"%i added key:%@ URL:%@", (int)getpid(), key, URLString);
+			logToFile(@"%i added key:%@ URL:%@", (int)getpid(), key, URLString);
 			[URLCache setObject:URLString forKey:key];
 		}
 	}
@@ -70,7 +118,7 @@ void WebCore_HTMLMediaElement_destructor(WebCore::HTMLMediaElement* self)
 
 		if([[URLCache allKeys] containsObject:key])
 		{
-			HBLogDebug(@"%i removed key %@", (int)getpid(), key);
+			logToFile(@"%i removed key %@", (int)getpid(), key);
 			[URLCache removeObjectForKey:key];
 		}
 	}
@@ -83,7 +131,7 @@ void WebCore_HTMLMediaElement_enterFullscreen(WebCore::HTMLMediaElement* self, u
 {
 	@autoreleasepool
 	{
-		HBLogDebug(@"HTMLMediaElement %p enterFullscreen", self);
+		logToFile(@"HTMLMediaElement %p enterFullscreen", self);
 		currentFullscreenVideoURL = [URLCache objectForKey:[NSValue valueWithPointer:self]];
 	}
 
@@ -95,7 +143,7 @@ void WebCore_HTMLMediaElement_enterFullscreen_noArg(WebCore::HTMLMediaElement* s
 {
 	@autoreleasepool
 	{
-		HBLogDebug(@"HTMLMediaElement enterFullscreen_noArg");
+		logToFile(@"HTMLMediaElement enterFullscreen_noArg");
 		currentFullscreenVideoURL = [URLCache objectForKey:[NSValue valueWithPointer:self]];
 	}
 
@@ -107,17 +155,15 @@ void WebCore_HTMLMediaElement_exitFullscreen(WebCore::HTMLMediaElement* self)
 {
 	@autoreleasepool
 	{
-		HBLogDebug(@"HTMLMediaElement exitFullscreen");
+		logToFile(@"HTMLMediaElement exitFullscreen");
 		currentFullscreenVideoURL = nil;
 	}
 
 	_WebCore_HTMLMediaElement_exitFullscreen(self);
 }
 
-void currentVideoURLRequested(CFNotificationCenterRef center, void *observer, CFStringRef name, const void *object, CFDictionaryRef userInfo)
+NSString* getCurrentPlayingVideoURLStringIfExists()
 {
-	HBLogDebug(@"receivedRequest! currentFullscreenVideoURL:%@", currentFullscreenVideoURL);
-
 	NSString* videoURL = currentFullscreenVideoURL;
 
 	//Support fetching video URLs from HTML5 players (used on iPads)
@@ -133,45 +179,77 @@ void currentVideoURLRequested(CFNotificationCenterRef center, void *observer, CF
 
 		//This is why C++ sucks ;-)
 
-		HBLogDebug(@"%i Finding element...", getpid());
+		logToFile(@"%i Finding element...", getpid());
 		auto element = WebCore::HTMLMediaElement::bestMediaElementForShowingPlaybackControlsManager(WebCore::MediaElementSession::PlaybackControlsPurpose::NowPlaying);
 
 		if(element)
 		{
 			WebCore::HTMLMediaElement* elementPtr = element.ptr();
-			HBLogDebug(@"%i Found element? %p", getpid(), elementPtr);
+			logToFile(@"%i Found element? %p", getpid(), elementPtr);
 
 			NSValue* key = [NSValue valueWithPointer:elementPtr];
 			videoURL = [URLCache objectForKey:key];
 		}
 	}
 
-	HBLogDebug(@"%i videoURL:%@", getpid(), videoURL);
+	return videoURL;
+}
 
-	if(videoURL)
+void (*__xpc_connection_set_event_handler)(xpc_connection_t connection, xpc_handler_t handler);
+void _xpc_connection_set_event_handler(xpc_connection_t connection, xpc_handler_t handler)
+{
+	logToFile(@"xpc_connection_set_event_handler(%s, <handler>)", xpc_copy_description(connection));
+
+	const char * description = xpc_copy_description(connection);
+
+	if(description)
 	{
-		NSDictionary* userInfoToSend = @{@"videoURL" : videoURL, @"pid" : @(getpid())};
+		if(strstr(description, "com.apple.WebKit.WebContent.peer") != NULL)
+		{
+			NSLog(@"setting new handler...");
+			xpc_handler_t newHandler = ^(xpc_object_t message)
+			{
+				if(message)
+				{
+					xpc_type_t messageType = xpc_get_type(message);
+					if(messageType == XPC_TYPE_DICTIONARY)
+					{
+						if(xpc_dictionary_get_bool(message, "safari-plus-fetch-video-url"))
+						{
+							NSLog(@"XPC received: %s", xpc_copy_description(message));
+							xpc_object_t reply = xpc_dictionary_create_reply(message);
 
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
-		{
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.opa334.safariplus/CurrentVideoURLForRequest"), CFSTR("CurrentVideoURLForRequest"), (__bridge CFDictionaryRef)userInfoToSend, YES);
-		}
-		else
-		{
-			//On iOS 11 and below, posting notifications with a user info doesn't seem to work
-			NSString* userInfoPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"videoURLUserInfo.plist"];
-			[[NSFileManager defaultManager] removeItemAtPath:userInfoPath error:nil];
-			[userInfoToSend writeToFile:userInfoPath atomically:NO];
-			CFNotificationCenterPostNotification(CFNotificationCenterGetDistributedCenter(), CFSTR("com.opa334.safariplus/CurrentVideoURLForRequest"), CFSTR("CurrentVideoURLForRequest"), NULL, YES);
+							NSString* videoURLString = getCurrentPlayingVideoURLStringIfExists();
+							xpc_dictionary_set_bool(reply, "found-video-url", videoURLString != nil);
+							if(videoURLString)
+							{
+								xpc_dictionary_set_string(reply, "video-url", [videoURLString UTF8String]);
+							}
+
+							xpc_connection_send_message(connection, reply);
+							
+							return;
+						}
+					}
+				}
+
+				return handler(message);
+			};
+
+			__xpc_connection_set_event_handler(connection, newHandler);
+			return;
 		}
 	}
+
+	__xpc_connection_set_event_handler(connection, handler);
 }
+
 
 void initHooks()
 {
 	const char* webCorePath = "/System/Library/PrivateFrameworks/WebCore.framework/WebCore";
 
-	HBLogDebug(@"About to init WebCore hooks!");
+	logToFile(@"About to init WebCore hooks!");
 
 	//iOS 12.2 and above (probably)
 	int hook1 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement12loadResourceERKN3WTF3URLERNS_11ContentTypeERKNS1_6StringE", WebCore_HTMLMediaElement_loadResource);
@@ -180,18 +258,20 @@ void initHooks()
 		//iOS 8 - 12.1.4
 		hook1 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement12loadResourceERKNS_3URLERNS_11ContentTypeERKN3WTF6StringE", WebCore_HTMLMediaElement_loadResource);
 	}
+	logToFile(@"hook1:%i", hook1);
 	int hook2 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElementD0Ev", WebCore_HTMLMediaElement_destructor);
+	logToFile(@"hook2:%i", hook2);
 	int hook3 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement15enterFullscreenEj", WebCore_HTMLMediaElement_enterFullscreen);
 	if(hook3 == 1000)
 	{
 		hook3 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement15enterFullscreenEv", WebCore_HTMLMediaElement_enterFullscreen_noArg);
 	}
-	int hook4 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement14exitFullscreenEv", WebCore_HTMLMediaElement_exitFullscreen);
 
-	HBLogDebug(@"hook1:%i", hook1);
-	HBLogDebug(@"hook2:%i", hook2);
-	HBLogDebug(@"hook3:%i", hook3);
-	HBLogDebug(@"hook4:%i", hook4);
+	logToFile(@"hook3:%i", hook3);
+	int hook4 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement14exitFullscreenEv", WebCore_HTMLMediaElement_exitFullscreen);
+	logToFile(@"hook4:%i", hook4);
+
+	PSHookFunction((void*)xpc_connection_set_event_handler, (void*)_xpc_connection_set_event_handler, (void**)&__xpc_connection_set_event_handler);
 }
 
 static BOOL isSafari()
@@ -203,11 +283,11 @@ static BOOL isSafari()
 	//Not that great of a way to detect Safari but couldn't find anything better either
 	if([[NSFileManager defaultManager] fileExistsAtPath:safariPath isDirectory:&isDirectory] && isDirectory)
 	{
-		HBLogDebug(@"Directory at %@ exists, we are Safari!", safariPath);
+		logToFile(@"Directory at %@ exists, we are Safari!", safariPath);
 		return YES;
 	}
 
-	HBLogDebug(@"Directory at %@ (%i) does not exist, we do not appear to be Safari!", safariPath, isDirectory);
+	logToFile(@"Directory at %@ (%i) does not exist, we do not appear to be Safari!", safariPath, isDirectory);
 
 	return NO;
 }
@@ -216,18 +296,22 @@ static BOOL isSafari()
 static BOOL shouldEnable()
 {
 	#if defined SIMJECT
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+	{
+		return NO;
+	}
 	return YES;
 	#else
 
 	if(!isSafari())
 	{
-		HBLogDebug(@"not safari, bye");
+		logToFile(@"not safari, bye");
 		return NO;
 	}
 
 	/*HBPreferences* preferences = [[HBPreferences alloc] initWithIdentifier:preferenceDomainName];
 
-	   HBLogDebug(@"preferences:%@", preferences);
+	   logToFile(@"preferences:%@", preferences);
 
 	   BOOL tweakEnabled = [preferences boolForKey:@"tweakEnabled" default:YES];
 	   BOOL downloadManagerEnabled = [preferences boolForKey:@"downloadManagerEnabled" default:NO];
@@ -248,7 +332,7 @@ static BOOL shouldEnable()
 
 	BOOL globalVideoDownloadingEnabled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/Application Support/SafariPlus.bundle/.enableGlobalVideoDownloading"];
 
-	HBLogDebug(@"tweakEnabled:%i downloadManagerEnabled:%i videoDownloadingEnabled:%i globalVideoDownloadingEnabled:%i", tweakEnabled, downloadManagerEnabled, videoDownloadingEnabled, globalVideoDownloadingEnabled);
+	logToFile(@"tweakEnabled:%i downloadManagerEnabled:%i videoDownloadingEnabled:%i globalVideoDownloadingEnabled:%i", tweakEnabled, downloadManagerEnabled, videoDownloadingEnabled, globalVideoDownloadingEnabled);
 
 	return (tweakEnabled && downloadManagerEnabled && videoDownloadingEnabled) || globalVideoDownloadingEnabled;
 	#endif
@@ -258,15 +342,12 @@ static BOOL shouldEnable()
 {
 	@autoreleasepool
 	{
-		HBLogDebug(@"SafariPlusWS.dylib loaded into process with pid %i", getpid());
+		logToFile(@"SafariPlusWC.dylib loaded into process with pid %i", getpid());
 
 		if(shouldEnable())
 		{
 			URLCache = [NSMutableDictionary new];
-
 			initHooks();
-
-			CFNotificationCenterAddObserver(CFNotificationCenterGetDistributedCenter(), NULL, currentVideoURLRequested, CFSTR("com.opa334.safariplus/RequestCurrentVideoURL"), CFSTR("RequestCurrentVideoURL"), CFNotificationSuspensionBehaviorDeliverImmediately);
 		}
 	}
 }

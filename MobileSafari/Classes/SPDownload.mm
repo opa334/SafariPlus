@@ -42,14 +42,7 @@
 
 	if(downloadInfo.sourceDocument)
 	{
-		if([downloadInfo.sourceDocument respondsToSelector:@selector(isPrivateBrowsingEnabled)])
-		{
-			_startedFromPrivateBrowsingMode = [downloadInfo.sourceDocument isPrivateBrowsingEnabled];
-		}
-		else
-		{
-			_startedFromPrivateBrowsingMode = [downloadInfo.sourceDocument privateBrowsingEnabled];
-		}
+		_startedFromPrivateBrowsingMode = privateBrowsingEnabledForTabDocument(downloadInfo.sourceDocument);
 	}
 	else
 	{

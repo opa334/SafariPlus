@@ -20,6 +20,8 @@
 
 #import "../SafariPlus.h"
 
+#import <libundirect.h>
+
 #import "../Defines.h"
 #import "../Enums.h"
 #import "../Util.h"
@@ -82,7 +84,7 @@
 		{
 			[self.tabController newTab];
 		}
-		else	//iOS 8
+		else	//iOS 8 and 13 up?
 		{
 			[self newTabKeyPressed];
 		}
@@ -341,9 +343,20 @@
 	return %orig;
 }
 
+%group iOS11Down
 
-//iOS 8,10.3+ (causes status bar flickering on iOS <=10.2, on iOS 8 we use it anyways cause it's the only thing that works on there)
-- (BOOL)fullScreenInPortrait
+//Fully disable private mode
+- (BOOL)isPrivateBrowsingAvailable //iOS <=11.4.1
+{
+	return (preferenceManager.disablePrivateMode) ? NO : %orig;
+}
+
+%end
+
+%group iOS13Down
+
+//iOS 8,10.3-13.7 (causes status bar flickering on iOS <=10.2, on iOS 8 we use it anyways cause it's the only thing that works on there)
+- (BOOL)fullScreenInPortrait //DIRECT IN IOS 14 (ivar still exists)
 {
 	if(preferenceManager.fullscreenScrollingEnabled)
 	{
@@ -356,11 +369,74 @@
 	return %orig;
 }
 
-//Fully disable private mode
+- (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2
+{
+	if(preferenceManager.customStartSiteEnabled && preferenceManager.customStartSite)
+	{
+		TabDocument* activeTabDocument = self.tabController.activeTabDocument;
+
+		if(arg1 == 4)
+		{
+			%orig(0,arg2);
+			[activeTabDocument loadURL:[NSURL URLWithString:preferenceManager.customStartSite] userDriven:NO];
+			return;
+		}
+	}
+
+	%orig;
+}
+
+%end
+
+//iOS 14
+
+%group iOS14Up
+
+- (void)handleNavigationIntent:(_SFNavigationIntent*)intent completion:(id)arg2
+{
+	if(intent.type == 7 && preferenceManager.forceModeOnExternalLinkEnabled)
+	{
+		[self modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
+	}
+
+	return %orig;
+}
+
+- (void)_updateDisableBarHiding
+{
+	%orig;
+
+	if(preferenceManager.fullscreenScrollingEnabled)
+	{
+		[self setValue:@YES forKey:@"_fullScreenInPortrait"];
+	}
+}
+
+- (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2 catalogVC:(id)arg3
+{
+	if(preferenceManager.customStartSiteEnabled && preferenceManager.customStartSite)
+	{
+		TabDocument* activeTabDocument = self.tabController.activeTabDocument;
+
+		if(arg1 == 4)
+		{
+			%orig(0,arg2,arg3);
+			[activeTabDocument loadURL:[NSURL URLWithString:preferenceManager.customStartSite] userDriven:NO];
+			return;
+		}
+	}
+
+	%orig;
+}
+
+%new
 - (BOOL)isPrivateBrowsingAvailable
 {
-	return (preferenceManager.disablePrivateMode) ? NO : %orig;
+	return [[%c(FeatureManager) sharedFeatureManager] isPrivateBrowsingAvailable];
 }
+
+%end
+
 
 //iOS >=13
 - (BOOL)dynamicBarAnimator:(id)arg1 canTransitionToState:(NSInteger)state byDraggingWithOffset:(CGFloat)arg3
@@ -379,7 +455,7 @@
 	return (preferenceManager.lockBars) ? NO : %orig;
 }
 
-- (void)tabControllerDocumentCountDidChange:(TabController*)tabController
+- (void)tabControllerDocumentCountDidChange:(TabController*)tabController //DIRECT IN IOS 14
 {
 	%orig;
 
@@ -471,24 +547,7 @@
 	}
 }
 
-- (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2
-{
-	if(preferenceManager.customStartSiteEnabled && preferenceManager.customStartSite)
-	{
-		TabDocument* activeTabDocument = self.tabController.activeTabDocument;
-
-		if(arg1 == 4)
-		{
-			%orig(0,arg2);
-			[activeTabDocument loadURL:[NSURL URLWithString:preferenceManager.customStartSite] userDriven:NO];
-			return;
-		}
-	}
-
-	%orig;
-}
-
-%group iOS9Up
+%group iOS9_to_12_4_9
 
 //Auto switch mode on external URL opened
 - (NSURL*)handleExternalURL:(NSURL*)URL
@@ -500,6 +559,10 @@
 
 	return %orig;
 }
+
+%end
+
+%group iOS9Up
 
 - (void)setUpWithURL:(id)arg1 launchOptions:(id)arg2
 {
@@ -533,6 +596,16 @@
 %end
 
 %group iOS13Up
+
+- (void)handleNavigationIntent:(_SFNavigationIntent*)intent
+{
+	if(intent.type == 6 && preferenceManager.forceModeOnExternalLinkEnabled)
+	{
+		[self modeSwitchAction:preferenceManager.forceModeOnExternalLinkFor];
+	}
+
+	return %orig;
+}
 
 - (void)setPrivateBrowsingEnabled:(BOOL)arg1
 {
@@ -743,7 +816,7 @@
 	{
 		BOOL enabled;
 
-		if(self.favoritesFieldFocused)
+		if(self.favoritesFieldFocused) //TODO: Find alternative on iOS 14, no longer exists
 		{
 			enabled = NO;
 		}
@@ -762,8 +835,15 @@
 
 void initBrowserController()
 {
+	%config(generator=MobileSubstrate_libundirect)
+
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 	{
+		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
+		{
+			%init(iOS9_to_12_4_9);
+		}
+
 		%init(iOS9Up);
 	}
 
@@ -803,6 +883,20 @@ void initBrowserController()
 	else
 	{
 		%init(iOS10Down)
+	}
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+	{
+		%init(iOS14Up);
+	}
+	else
+	{
+		%init(iOS13Down);
+	}
+
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_12_0)
+	{
+		%init(iOS11Down);
 	}
 
 	%init();

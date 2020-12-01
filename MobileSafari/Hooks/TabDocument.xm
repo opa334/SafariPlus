@@ -32,6 +32,8 @@
 #import "../Util.h"
 #import "../Enums.h"
 
+#import <libundirect.h>
+
 #import <WebKit/WKFrameInfo.h>
 #import <WebKit/WKNavigationAction.h>
 #import <WebKit/WKNavigationDelegate.h>
@@ -51,10 +53,10 @@ static BOOL fakeOpenLinksValue = NO;
 
 - (BOOL)boolForKey:(NSString*)key
 {
-	if([key isEqualToString:@"OpenLinksInBackground"])
+	/*if([key isEqualToString:@"OpenLinksInBackground"])
 	{
 		NSLog(@"%@", [NSThread callStackSymbols]);
-	}
+	}*/
 
 	if(shouldFakeOpenLinksKey)
 	{
@@ -270,6 +272,11 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 		}
 
 		thumbnailView.lockButton.selected = castedSelf.locked;
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+		{
+			[castedSelf.tabOverviewItem.tabOverview setNeedsLayout];
+		}
 	}
 
 	if(castedSelf.tabBarItem)
@@ -883,24 +890,6 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 	%orig;
 }
 
-//If there's an error loading the site, the page format page normally doesn't show
-//As Force HTTPS can be the issue for the loading failure and there's a button
-//to add an exception inside the page format button, we want to force it to show in that case
-- (BOOL)canShowPageFormatMenu
-{
-	BOOL orig = %orig;
-
-	if(!orig && preferenceManager.forceHTTPSEnabled)
-	{
-		if(castedSelf.webView._unreachableURL)
-		{
-			return YES;
-		}
-	}
-
-	return orig;
-}
-
 %end
 
 %group iOS12_2_to_13_3_1
@@ -1003,6 +992,15 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 
 %end
 
+- (id)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(id)arg3 privateBrowsingEnabled:(_Bool)arg4 controlledByAutomation:(_Bool)arg5 bookmark:(id)arg6 browserController:(id)arg7 createDocumentView:(id/*block*/)arg8
+{
+	TabDocument* orig = %orig;
+
+	orig.accessAuthenticated = NO;
+
+	return orig;
+}
+
 - (instancetype)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(NSUUID*)UUID privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6 createDocumentView:(id)arg7
 {
 	TabDocument* orig = %orig;
@@ -1012,15 +1010,55 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 	return orig;
 }
 
+/*- (instancetype)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(NSUUID*)UUID privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6
+{
+	NSLog(@"initWithTitle");
+	TabDocument* orig = %orig;
+
+	orig.accessAuthenticated = NO;
+
+	return orig;
+}*/
+
+%end
+
+%hook NSError
+
+// Invoked by -[TabDocument canShowPageFormatMenu]
+// If there's an error loading the site, the page format button normally doesn't show
+// As Force HTTPS can be the issue for the loading failure and there's a button
+// to add an exception inside the format page, we want to force it to show in that case
+- (BOOL)_sf_recoverableByPageFormatMenu
+{
+	BOOL orig = %orig;
+
+	if(preferenceManager.forceHTTPSEnabled)
+	{
+		return YES;
+	}
+	
+	return orig;
+}
+
 %end
 
 void initTabDocument()
 {
+	%config(generator=MobileSubstrate_libundirect)
+
 	Class TabDocumentClass;
+
+	if(kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_8_0)
+	{
+		TabDocumentClass = objc_getClass("TabDocument");
+	}
+	else
+	{
+		TabDocumentClass = objc_getClass("TabDocumentWK2");
+	}
 
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
-		TabDocumentClass = objc_getClass("TabDocument");
 		%init(iOS13Up, TabDocument=TabDocumentClass);
 		
 		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_4)
@@ -1031,7 +1069,6 @@ void initTabDocument()
 
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
 	{
-		TabDocumentClass = objc_getClass("TabDocument");
 		%init(iOS12_2Up, TabDocument=TabDocumentClass);
 
 		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_4)
@@ -1041,12 +1078,10 @@ void initTabDocument()
 	}
 	else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 	{
-		TabDocumentClass = objc_getClass("TabDocument");
 		%init(iOS9to12_1_4, TabDocument=TabDocumentClass);
 	}
 	else
 	{
-		TabDocumentClass = objc_getClass("TabDocumentWK2");
 		%init(iOS8, TabDocument=TabDocumentClass);
 	}
 

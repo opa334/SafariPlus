@@ -18,8 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-@interface SPMediaFetcher : NSObject
+#import <xpc/xpc.h>
 
-+ (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL, int pid))completionHandler;
+@interface SPMediaFetcher : NSObject
+{
+	NSMutableDictionary* _connectionsByPid;
+}
+
++ (instancetype)sharedFetcher;
+
+- (void)cache_setConnection:(xpc_connection_t)connection forPid:(pid_t)pid;
+- (void)cache_invalidateConnectionForPid:(pid_t)pid;
+- (xpc_connection_t)cache_getConnectionForPid:(pid_t)pid;
+
+- (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL, int pid))completionHandler;
 
 @end

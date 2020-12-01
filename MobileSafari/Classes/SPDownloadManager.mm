@@ -1052,7 +1052,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 		[downloadInfo.sourceVideo.downloadButton setSpinning:YES];
 	}
 
-	[SPMediaFetcher getURLForCurrentlyPlayingMediaWithCompletionHandler:^(NSURL* URL, int pid)
+	[[SPMediaFetcher sharedFetcher] getURLForCurrentlyPlayingMediaWithCompletionHandler:^(NSURL* URL, int pid)
 	{
 		if(URL)
 		{

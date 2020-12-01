@@ -38,7 +38,19 @@
 }
 %end
 
-%group iOS13Up
+%group iOS14Up
+- (void)_updateAvailabilityButtonVisibilityForType:(long long)arg1 animated:(BOOL)arg2 showAvailabilityText:(BOOL)arg3 adjustURLLabels:(BOOL)arg4
+{
+	%orig;
+	BrowserToolbar* toolbar = activeToolbarOrToolbarForBarItemForBrowserController(self.delegate, barButtonItemForSafariPlusOrderItem(BrowserToolbarReloadItem));
+	if(toolbar._reloadItem)
+	{
+		toolbar._reloadItem.enabled = !MSHookIvar<UIButton*>(self, "_reloadButton").hidden;
+	}
+}
+%end
+
+%group iOS13_to_13_7
 - (void)_updateAccessoryButtonsVisibility
 {
 	%orig;
@@ -92,9 +104,13 @@ void initNavigationBar()
 {
 	%init();
 
-	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
 	{
-		%init(iOS13Up);
+		%init(iOS14Up);
+	}
+	else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		%init(iOS13_to_13_7);
 	}
 	else if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)
 	{

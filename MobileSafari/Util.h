@@ -36,6 +36,7 @@ extern BOOL rocketBootstrapWorks;
 extern BOOL skipBiometricProtection;
 
 extern BOOL privateBrowsingEnabled(BrowserController* controller);
+extern BOOL privateBrowsingEnabledForTabDocument(TabDocument* tabDocument);
 extern void togglePrivateBrowsing(BrowserController* controller);
 extern void setPrivateBrowsing(BrowserController* controller, BOOL enabled, void (^completion)(void));
 extern NSArray<BrowserController*>* browserControllers();

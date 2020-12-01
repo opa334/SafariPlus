@@ -81,6 +81,10 @@ CGImageRef LICreateIconForImage(CGImageRef image, int variant, int precomposed);
 + (NSUserDefaults*)_sf_safariDefaults;
 @end
 
+@interface UIContextMenuConfiguration (Private)
+@property (nonatomic,copy) UIContextMenuActionProvider actionProvider;
+@end
+
 @interface _UIBackdropViewSettings : NSObject
 @property (nonatomic,retain) UIColor* colorTint;
 @property (nonatomic,retain) UIColor* legibleColor;
@@ -297,6 +301,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)_chooseFiles:(id)arg1 displayString:(id)arg2 iconImage:(id)arg3;
 - (void)_showFilePicker;
 - (void)_cancel;
+@property (assign,nonatomic) id delegate;
 - (void)_showMediaSourceSelectionSheet;	//iOS8
 @end
 
@@ -358,6 +363,10 @@ typedef enum UIImageSymbolScale : NSInteger {
 @end
 
 @interface _SFNavigationBarTheme : _SFBarTheme
+@end
+
+@interface _SFBrowserConfiguration : NSObject
+- (BOOL)isPrivateBrowsingEnabled;
 @end
 
 @interface _SFBarManager : NSObject
@@ -431,7 +440,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic,readonly) _SFNavigationBarTheme * effectiveTheme;
 - (void)_reloadButtonPressed;
 - (id)_backdropInputSettings;
-- (id)_toolbarForBarItem:(NSInteger)barItem; //iOS 13
+- (id)_toolbarForBarItem:(NSInteger)barItem; //iOS 13-13.7
 - (void)_didUpdateEffectiveTheme;
 @end
 
@@ -439,11 +448,15 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (assign,nonatomic) NavigationBar* navigationBar;
 @end
 
-@interface _SFNavigationBarURLButton : UIButton								//iOS 9 + 10
+@interface _SFNavigationBarURLButton : UIButton	//iOS 9 + 10
 //new stuff below
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
+@end
+
+@interface _SFNavigationIntent : NSObject
+@property (nonatomic,readonly) NSUInteger type;
 @end
 
 @interface SFNavigationBarReaderButton : UIButton	//_SFNavigationBarReaderButton on iOS 10 and below, but doesn't matter
@@ -498,9 +511,15 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)setPlaying:(BOOL)arg1;
 @end
 
+@interface AVLayoutItemAttributes : NSObject
+@property (assign,nonatomic) NSUInteger displayPriority;
+@end
+
 @interface AVButton : UIButton
 @property (assign,nonatomic) CGSize extrinsicContentSize;
 @property (assign,getter=isIncluded,nonatomic) BOOL included;
+@property (assign,getter=isCollapsed,nonatomic) BOOL collapsed;
+@property (nonatomic,readonly) AVLayoutItemAttributes * layoutAttributes;
 + (instancetype)buttonWithAccessibilityIdentifier:(NSString*)arg1;
 @end
 
@@ -540,6 +559,12 @@ typedef enum UIImageSymbolScale : NSInteger {
 @interface AVStackView : UIStackView
 @end
 
+@interface AVLayoutView : UIView
+@property (nonatomic,copy,readonly) NSArray* arrangedSubviews;
+- (void)_insertArrangedSubview:(id)arg1 atIndex:(NSUInteger)arg2;
+- (void)setArrangedSubviews:(NSArray *)arg1;
+@end
+
 @interface AVBackdropView : UIView
 + (void)applySecondaryGlyphTintToView:(UIView*)view;
 @property (nonatomic,readonly) AVStackView* contentView;//iOS 11.0 -> 11.2.6
@@ -560,10 +585,13 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic,readonly) AVBackdropView* screenModeControls;
 @property (assign,getter=isDoubleRowLayoutEnabled,nonatomic) bool doubleRowLayoutEnabled;
 @property (nonatomic,readonly) AVButton* doneButton;
+@property (nonatomic,readonly) NSArray * defaultDisplayModeControls;
 //new
 @property (nonatomic,retain) AVButton* downloadButton;
-- (void)downloadButtonPressed;
-- (void)setUpDownloadButton;
+- (void)sp_downloadButtonPressed;
+- (void)sp_setUpDownloadButton;
+- (void)sp_playbackControlsAdditionalUpdatesWithoutAnimation:(BOOL)withoutAnimation;
+- (AVPlaybackControlsController*)sp_getPlaybackControlsController;
 @end
 
 /**** Safari ****/
@@ -615,6 +643,11 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (assign,nonatomic) BrowserController* browserController;
 @end
 
+@interface FeatureManager : NSObject
++ (instancetype)sharedFeatureManager;
+- (BOOL)isPrivateBrowsingAvailable;
+@end
+
 @interface BrowserController : UIResponder <BrowserToolbarDelegate>
 @property (nonatomic,readonly) TabController* tabController;
 @property (nonatomic,readonly) BrowserToolbar* bottomToolbar;
@@ -635,6 +668,8 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)updateTabOverviewFrame;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2;
 - (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
+- (id)loadURLInNewTab:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3 fromExternalApplication:(BOOL)arg4;
+- (id)loadURLInNewTab:(id)arg1 title:(id)arg2 UUID:(id)arg3 inBackground:(BOOL)arg4 animated:(BOOL)arg5 fromExternalApplication:(BOOL)arg6 restoringCloudTab:(BOOL)arg7;
 - (void)insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;
 - (void)dismissTransientUIAnimated:(BOOL)arg1;
 - (void)clearHistoryMessageReceived;
@@ -643,15 +678,15 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)updateUsesTabBar;
 - (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2;
 - (BOOL)isPrivateBrowsingAvailable;
-- (void)dismissTransientUIAnimated:(BOOL)arg1;
-- (BOOL)_shouldShowTabBar;
 - (void)updateButtonBarContentsAnimated:(BOOL)arg1;
+- (void)closeTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)_setPrivateBrowsingEnabled:(BOOL)arg1 showModalAuthentication:(BOOL)arg2 completion:(void (^)(void))arg3;		//iOS11
-- (void)togglePrivateBrowsingEnabled;	//iOS11
+- (void)togglePrivateBrowsingEnabled;	//iOS11+
 - (void)showFindOnPage;	//iOS9
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2;	//iOS9
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;	//iOS9
-- (void)newTabKeyPressed;	//iOS8
+- (void)newTabKeyPressed;
+- (void)_pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded:(BOOL)arg1 alternativeOrdering:(BOOL)arg2;
 
 //iOS 12.1.4 and below
 @property (readonly, nonatomic) NavigationBar* navigationBar;
@@ -735,6 +770,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 
 @interface LoadingController : NSObject
 - (void)reload;
+- (id)URL;
 @end
 
 @interface NavigationBar : _SFNavigationBar
@@ -852,11 +888,11 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (readonly, nonatomic) NSUInteger numberOfCurrentNonHiddenTabs;//iOS 12 and above
 - (id)tabDocumentWithUUID:(NSUUID*)arg1;//iOS 11 and above
 - (void)setActiveTabDocument:(id)arg1 animated:(BOOL)arg2;
+- (void)setActiveTabDocument:(id)arg1 animated:(BOOL)arg2 deferActivation:(BOOL)arg3;
 - (void)closeTabDocument:(id)arg1 animated:(BOOL)arg2;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1 exitTabView:(BOOL)arg2;
 - (void)closeAllOpenTabsAnimated:(BOOL)arg1;
 - (BOOL)isPrivateBrowsingEnabled;
-- (void)closeTab;
 - (void)newTab;
 - (TabDocument*)_tabDocumentRepresentedByTiltedTabItem:(TiltedTabItem*)arg1;
 - (TabDocument*)_tabDocumentRepresentedByTabOverviewItem:(TabOverviewItem*)arg1;
@@ -879,6 +915,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)insertTabDocument:(TabDocument*)arg1 afterTabDocument:(TabDocument*)arg2 inBackground:(BOOL)arg3 animated:(BOOL)arg4;	//iOS 11 and above
 //- (void)openNewTabWithOptions:(NSInteger)arg1 completionHandler:(void (^)(bool))arg2; //iOS 13 | bit 2 = private mode, bit 3 = "alternate ordering"(?)
 - (TabDocument*)_insertNewBlankTabDocumentWithPrivateBrowsing:(BOOL)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3; //iOS 13
+- (TabDocument*)_insertNewBlankTabDocumentWithOptions:(long long)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;
 //new stuff below
 @property (assign,nonatomic) BOOL desktopButtonSelected;
 @property (nonatomic,retain) UIButton* tiltedTabViewDesktopModeButton;
@@ -913,16 +950,19 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (copy, nonatomic) NSUUID *UUID;
 @property (nonatomic) CGPoint scrollPoint;
 @property (nonatomic,readonly) BOOL privateBrowsingEnabled;
+@property(readonly, nonatomic) _SFBrowserConfiguration *configuration;
 + (id)tabDocumentForWKWebView:(id)arg1;
 - (id)initWithTitle:(NSString*)arg1 URL:(NSURL*)arg2 UUID:(NSUUID*)arg3 privateBrowsingEnabled:(BOOL)arg4 hibernated:(BOOL)arg5 bookmark:(id)arg6 browserController:(BrowserController*)arg7;
 - (NSURL*)URL;
 - (NSString*)title;
 - (NSString*)titleForNewBookmark;
+- (id)_titleIncludeLoading:(BOOL)arg1 allowURLStringFallback:(BOOL)arg2 allowUntitled:(BOOL)arg3;
 - (BOOL)isBlankDocument; //iOS 8 - 13.3
 - (BOOL)isBlank; //iOS 13.4 and up
 - (id)_loadURLInternal:(NSURL*)arg1 userDriven:(BOOL)arg2;
 - (void)_loadStartedDuringSimulatedClickForURL:(id)arg1;
 - (void)reload;
+- (void)_reloadFromOrigin:(BOOL)origin;
 - (BOOL)privateBrowsingEnabled;
 - (BOOL)isPrivateBrowsingEnabled;
 - (WebBookmark*)readingListBookmark;
@@ -933,7 +973,6 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)loadURL:(id)arg1 userDriven:(BOOL)arg2;
 - (void)stopLoading;
 - (void)webView:(WKWebView*)arg1 decidePolicyForNavigationResponse:(WKNavigationResponse*)arg2 decisionHandler:(void (^)(void))arg3;
-- (void)_closeTabDocumentAnimated:(BOOL)arg1;
 - (BOOL)isHibernated;
 - (void)_openAppLinkInApp:(id)arg1 fromOriginalRequest:(id)arg2 updateAppLinkStrategy:(BOOL)arg3 webBrowserState:(id)arg4 completionHandler:(id)arg5;
 - (void)userTappedReloadButton;

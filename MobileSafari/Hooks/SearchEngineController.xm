@@ -153,6 +153,17 @@ static NSString* stringWithSchemeStripped(NSString* oldString)
 	}
 }
 
+//iOS 14
+- (SearchEngineInfo*)defaultSearchEngineIfPopulated
+{
+	if(preferenceManager.customSearchEngineEnabled && seSelf.customSearchEngine)
+	{
+		return seSelf.customSearchEngine;
+	}
+
+	return %orig;
+}
+
 - (SearchEngineInfo*)defaultSearchEngine
 {
 	if(preferenceManager.customSearchEngineEnabled && seSelf.customSearchEngine)

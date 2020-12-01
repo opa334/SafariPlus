@@ -28,6 +28,7 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
+#import <libundirect.h>
 
 %hook TabController
 
@@ -95,6 +96,9 @@
 		self.tiltedTabViewDesktopModeButton.selected = self.desktopButtonSelected;
 	}
 }
+
+// TODO: fix above hook on iOS 13 and above
+// tabCollectionViewDidPresent:
 
 //Desktop mode button: Portrait
 - (NSArray *)tiltedTabViewToolbarItems
@@ -453,6 +457,9 @@
 
 %group iOS10Up
 
+//TODO: no longer exists in iOS 12.2
+//now - (void)closeAllOpenTabsAnimated:(_Bool)arg1 temporarily:(_Bool)arg2;
+
 - (void)closeAllOpenTabsAnimated:(BOOL)animated exitTabView:(BOOL)exitTabView temporarily:(BOOL)temporarily
 {
 	if(preferenceManager.lockedTabsEnabled)
@@ -615,6 +622,8 @@
 
 void initTabController()
 {
+	%config(generator=MobileSubstrate_libundirect);
+
 	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
 	{
 		%init(iOS10Down);

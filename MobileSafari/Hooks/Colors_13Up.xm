@@ -760,6 +760,11 @@ void initColors_13Up()
 		return;
 	}
 
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+	{
+		return;
+	}
+
 	void* safariServicesHandle = dlopen("/System/Library/Frameworks/SafariServices.framework/SafariServices", RTLD_NOW);
 	_SFIsPrivateTintStyle = (BOOL (*)(NSUInteger))dlsym(safariServicesHandle, "_SFIsPrivateTintStyle");
 
