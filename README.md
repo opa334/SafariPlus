@@ -70,7 +70,7 @@ Various enhancements to Safari
 - Custom User Agent - Change the user agent for both mobile and desktop mode
 
 ## Compatibilty
-Any iOS device between iOS 8.0 and 13.3 should be supported!
+Any iOS device between iOS 8.0 and 14.3 should be supported!
 
 ## Compiling
 
