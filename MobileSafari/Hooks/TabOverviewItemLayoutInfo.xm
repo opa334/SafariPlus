@@ -23,7 +23,7 @@
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Defines.h"
-#import <libundirect.h>
+#import "../libundirect_dynamic.h"
 
 %hook TabOverviewItemLayoutInfo
 

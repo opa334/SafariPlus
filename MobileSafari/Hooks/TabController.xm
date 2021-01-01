@@ -28,7 +28,7 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
-#import <libundirect.h>
+#import "../libundirect_dynamic.h"
 
 %hook TabController
 

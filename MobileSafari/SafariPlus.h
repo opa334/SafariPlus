@@ -1042,6 +1042,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @end
 
 @interface TabThumbnailView : UIView
+@property (nonatomic) NSUInteger tintStyle;
 @property (nonatomic,readonly) UIButton* closeButton;
 @property (nonatomic) BOOL usesDarkTheme;
 @property (copy, nonatomic) UIColor *titleColor;

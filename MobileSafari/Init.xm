@@ -63,14 +63,7 @@ extern void initWKFullScreenViewController();
 	{
 		HBLogDebug(@"started loading SafariPlus!");
 
-		//objc_direct only applies to 14 and newer, which don't support 32 bit
-		#ifdef __LP64__
-		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
-		{
-			HBLogDebug(@"ios 14+ detected, loading undirector");
-			initUndirection();
-		}
-		#endif
+		initUndirection();
 
 		#ifdef DEBUG_LOGGING
 		initDebug();

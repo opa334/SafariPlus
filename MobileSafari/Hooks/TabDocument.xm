@@ -32,7 +32,7 @@
 #import "../Util.h"
 #import "../Enums.h"
 
-#import <libundirect.h>
+#import "../libundirect_dynamic.h"
 
 #import <WebKit/WKFrameInfo.h>
 #import <WebKit/WKNavigationAction.h>
@@ -467,6 +467,11 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 
 	//Fix for profile add alert not appearing
 	if([MIMEType isEqualToString:@"application/x-apple-aspen-config"])
+	{
+		return YES;
+	}
+
+	if([navigationResponse.response.URL.scheme isEqualToString:@"blob"])
 	{
 		return YES;
 	}

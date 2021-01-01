@@ -20,7 +20,7 @@
 
 #import "../SafariPlus.h"
 
-#import <libundirect.h>
+#import "../libundirect_dynamic.h"
 
 #import "../Defines.h"
 #import "../Enums.h"

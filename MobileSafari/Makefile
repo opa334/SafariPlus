@@ -5,7 +5,6 @@ SafariPlus_CFLAGS = -fobjc-arc -I$(INCLUDES) -Wno-deprecated-declarations -Wno-u
 SafariPlus_FILES = Util.xm Init.xm Undirector.xmi
 SafariPlus_FILES += $(wildcard Hooks/*.xm Classes/*.mm Classes/*.xm ../Shared/*.mm)
 SafariPlus_EXTRA_FRAMEWORKS += CydiaSubstrate
-SafariPlus_LIBRARIES = undirect
 
 ifeq ($(NO_CEPHEI),0)
 SafariPlus_EXTRA_FRAMEWORKS += Cephei

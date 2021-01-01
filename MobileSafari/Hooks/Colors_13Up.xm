@@ -34,8 +34,20 @@
 
 @end
 #endif
+#import "../libundirect_dynamic.h"
 
 #import <dlfcn.h>
+
+@interface SPCustomBlurEffect : UIBlurEffect
+@property(nonatomic) _UIBackdropViewSettings* customSettings;
+@end
+
+@implementation SPCustomBlurEffect
+- (_UIBackdropViewSettings*)effectSettings
+{
+	return self.customSettings;
+}
+@end
 
 BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
@@ -201,14 +213,16 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(colorToSet)
 		{
-			_UIBackdropViewSettings* settings = [[%c(_UIBackdropViewSettingsColored) alloc] init];
-			settings.colorTint = [colorToSet colorWithAlphaComponent:1.0];
+			UIColor* colorTint = [colorToSet colorWithAlphaComponent:1.0];
 			CGFloat alpha;
 			[colorToSet getRed:nil green:nil blue:nil alpha:&alpha];
+
+			_UIBackdropViewSettings* settings = [[%c(_UIBackdropViewSettingsColored) alloc] init];
+			settings.colorTint = colorTint;
 			settings.colorTintAlpha = alpha;
 
-			_UICustomBlurEffect* effect = [[%c(_UICustomBlurEffect) alloc] init];
-			[effect setValue:settings forKey:@"_blurEffect"];
+			SPCustomBlurEffect* effect = [[%c(SPCustomBlurEffect) alloc] init];
+			effect.customSettings = settings;
 
 			backdrop.contentView.backgroundColor = [UIColor clearColor];
 
@@ -223,16 +237,9 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 - (void)setTheme:(_SFBarTheme*)theme
 {
-	_SFBarTheme* prevTheme;
 	_SFBarTheme* themeToUse = theme;
 
-	if(preferenceManager.bottomBarNormalLightBackgroundColorEnabled || preferenceManager.bottomBarNormalDarkBackgroundColorEnabled ||
-		preferenceManager.bottomBarPrivateLightBackgroundColorEnabled || preferenceManager.bottomBarPrivateDarkBackgroundColorEnabled ||
-		preferenceManager.tabSwitcherNormalLightToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColorEnabled ||
-		preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColorEnabled)
-	{
-		prevTheme = self.theme;
-	}
+	BOOL needsManualReload = (theme == self.theme) || [theme isEqual:self.theme];
 
 	if(preferenceManager.bottomBarNormalLightTintColorEnabled || preferenceManager.bottomBarNormalDarkTintColorEnabled ||
 		preferenceManager.bottomBarPrivateLightTintColorEnabled || preferenceManager.bottomBarPrivateDarkTintColorEnabled)
@@ -267,14 +274,24 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 		}
 	}
 
-	if(prevTheme && [prevTheme isEqual:themeToUse])
-	{
-		//If the themes are equal this method isn't called
-		//we want it to be called tho
-		[self _updateBackgroundViewEffects];
-	}
-
 	%orig(themeToUse);
+
+	if(needsManualReload)
+	{
+		if(preferenceManager.bottomBarNormalLightBackgroundColorEnabled || preferenceManager.bottomBarNormalDarkBackgroundColorEnabled ||
+		preferenceManager.bottomBarPrivateLightBackgroundColorEnabled || preferenceManager.bottomBarPrivateDarkBackgroundColorEnabled ||
+		preferenceManager.tabSwitcherNormalLightToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColorEnabled ||
+		preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColorEnabled || preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColorEnabled)
+		{
+			[self _updateBackgroundViewEffects];
+		}
+
+		if(preferenceManager.bottomBarNormalLightTintColorEnabled || preferenceManager.bottomBarNormalDarkTintColorEnabled ||
+			preferenceManager.bottomBarPrivateLightTintColorEnabled || preferenceManager.bottomBarPrivateDarkTintColorEnabled)
+		{
+			[self setTintColor:[themeToUse valueForKey:@"_controlsTintColor"]];
+		}
+	}
 }
 
 - (void)_updateBackgroundViewEffects
@@ -342,8 +359,8 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 			[colorToSet getRed:nil green:nil blue:nil alpha:&alpha];
 			settings.colorTintAlpha = alpha;
 
-			_UICustomBlurEffect* effect = [[%c(_UICustomBlurEffect) alloc] init];
-			[effect setValue:settings forKey:@"_blurEffect"];
+			SPCustomBlurEffect* effect = [[%c(SPCustomBlurEffect) alloc] init];
+			effect.customSettings = settings;
 
 			backgroundView.contentView.backgroundColor = [UIColor clearColor];
 
@@ -607,8 +624,8 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 		[colorToSet getRed:nil green:nil blue:nil alpha:&alpha];
 		settings.colorTintAlpha = alpha;
 
-		_UICustomBlurEffect* effect = [[%c(_UICustomBlurEffect) alloc] init];
-		[effect setValue:settings forKey:@"_blurEffect"];
+		SPCustomBlurEffect* effect = [[%c(SPCustomBlurEffect) alloc] init];
+		effect.customSettings = settings;
 
 		header.effect = effect;
 	}
@@ -681,7 +698,7 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 		preferenceManager.tabTitleBarPrivateLightTextColorEnabled || preferenceManager.tabTitleBarPrivateDarkTextColorEnabled)
 	{
 		TabDocument* td = tabDocumentForTabThumbnailView(self);
-		TabController* tc = td.browserController.tabController;
+		TabController* tc = browserControllerForTabDocument(td).tabController;
 		BOOL isPrivateMode = [tc.privateTabDocuments containsObject:td];
 		BOOL isDarkMode = self.usesDarkTheme;
 
@@ -720,7 +737,7 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 		preferenceManager.tabTitleBarPrivateLightBackgroundColorEnabled || preferenceManager.tabTitleBarPrivateDarkBackgroundColorEnabled)
 	{
 		TabDocument* td = tabDocumentForTabThumbnailView(self);
-		TabController* tc = td.browserController.tabController;
+		TabController* tc = browserControllerForTabDocument(td).tabController;
 		BOOL isPrivateMode = [tc.privateTabDocuments containsObject:td];
 		BOOL isDarkMode = self.usesDarkTheme;
 
@@ -755,12 +772,9 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 void initColors_13Up()
 {
-	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
-	{
-		return;
-	}
+	%config(generator=MobileSubstrate_libundirect)
 
-	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
+	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
 		return;
 	}
