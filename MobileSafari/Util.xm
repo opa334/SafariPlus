@@ -798,7 +798,7 @@ void sendSimpleAlert(NSString* title, NSString* message)
 	});
 }
 
-//I literally had to reverse engineer CFNetwork / Foundation to figure out how to unarchive the resume data on iOS 12, no joke
+//I literally had to reverse engineer CFNetwork / Foundation to figure out how to unarchive the resume data on iOS 12, not a joke
 NSDictionary* decodeResumeData12(NSData* resumeData)
 {
 	NSKeyedUnarchiver* unarchiver = [[NSKeyedUnarchiver alloc] initForReadingFromData:resumeData error:nil];
@@ -824,15 +824,22 @@ BOOL isUsingCellularData()
 	zeroAddress.sin_len = sizeof(zeroAddress);
 	zeroAddress.sin_family = AF_INET;
 
+	BOOL cellularData = NO;
+
 	SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (sockaddr*)&zeroAddress);
-	SCNetworkReachabilityFlags flags;
-
-	SCNetworkReachabilityGetFlags(reachability, &flags);
-
-	if((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
+	if(reachability)
 	{
-		return YES;
+		SCNetworkReachabilityFlags flags;
+
+		SCNetworkReachabilityGetFlags(reachability, &flags);
+
+		if((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN)
+		{
+			cellularData = YES;
+		}
+
+		CFRelease(reachability);
 	}
 
-	return NO;
+	return cellularData;
 }

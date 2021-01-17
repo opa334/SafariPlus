@@ -19,6 +19,10 @@
 // SOFTWARE.
 
 #import "../SafariPlus.h"
+
+#import "../libundirect_dynamic.h"
+#import <libundirect_hookoverwrite.h>
+
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
@@ -34,7 +38,6 @@
 
 @end
 #endif
-#import "../libundirect_dynamic.h"
 
 #import <dlfcn.h>
 
@@ -772,8 +775,6 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 void initColors_13Up()
 {
-	%config(generator=MobileSubstrate_libundirect)
-
 	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
 		return;

@@ -20,6 +20,9 @@
 
 #import "../SafariPlus.h"
 
+#import "../libundirect_dynamic.h"
+#import <libundirect_hookoverwrite.h>
+
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPLocalizationManager.h"
@@ -28,7 +31,6 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
-#import "../libundirect_dynamic.h"
 
 %hook TabController
 
@@ -622,8 +624,6 @@
 
 void initTabController()
 {
-	%config(generator=MobileSubstrate_libundirect);
-
 	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_11_0)
 	{
 		%init(iOS10Down);

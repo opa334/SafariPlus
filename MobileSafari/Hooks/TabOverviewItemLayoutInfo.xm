@@ -20,10 +20,12 @@
 
 #import "../SafariPlus.h"
 
+#import "../libundirect_dynamic.h"
+#import <libundirect_hookoverwrite.h>
+
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
 #import "../Defines.h"
-#import "../libundirect_dynamic.h"
 
 %hook TabOverviewItemLayoutInfo
 
@@ -61,8 +63,6 @@
 
 void initTabOverviewItemLayoutInfo()
 {
-	%config(generator=MobileSubstrate_libundirect)
-
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_10_0)
 	{
 		%init(iOS10Up);

@@ -271,7 +271,7 @@ void initHooks()
 	int hook4 = _PSHookFunctionCompat(webCorePath, "__ZN7WebCore16HTMLMediaElement14exitFullscreenEv", WebCore_HTMLMediaElement_exitFullscreen);
 	logToFile(@"hook4:%i", hook4);
 
-	PSHookFunction((void*)xpc_connection_set_event_handler, (void*)_xpc_connection_set_event_handler, (void**)&__xpc_connection_set_event_handler);
+	PSHookFunction((void*)&xpc_connection_set_event_handler, (void*)_xpc_connection_set_event_handler, (void**)&__xpc_connection_set_event_handler);
 }
 
 static BOOL isSafari()

@@ -33,6 +33,7 @@
 #import "../Enums.h"
 
 #import "../libundirect_dynamic.h"
+#import <libundirect_hookoverwrite.h>
 
 #import <WebKit/WKFrameInfo.h>
 #import <WebKit/WKNavigationAction.h>
@@ -1049,8 +1050,6 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 
 void initTabDocument()
 {
-	%config(generator=MobileSubstrate_libundirect)
-
 	Class TabDocumentClass;
 
 	if(kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_8_0)
