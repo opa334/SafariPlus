@@ -6,6 +6,8 @@ export NO_CEPHEI ?= 0
 export NO_ROCKETBOOTSTRAP ?= 0
 export NO_LIBCSCOLORPICKER ?= 0
 
+export PREFIX = $(THEOS)/toolchain/Xcode11.xctoolchain/usr/bin/
+
 ifeq ($(ROOTLESS),1)
 export NO_DEPENDENCIES = 1
 endif
