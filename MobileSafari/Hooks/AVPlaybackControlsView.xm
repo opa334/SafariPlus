@@ -78,7 +78,14 @@
 			self.downloadButton.layoutAttributes.displayPriority = 2;
 		}
 
-		[self setValue:[self.defaultDisplayModeControls arrayByAddingObject:self.downloadButton] forKey:@"_defaultDisplayModeControls"];
+		if([self respondsToSelector:@selector(defaultDisplayModeControls)])
+		{
+			[self setValue:[self.defaultDisplayModeControls arrayByAddingObject:self.downloadButton] forKey:@"_defaultDisplayModeControls"];
+		}
+		else // ios 11
+		{
+			[self.screenModeControls.stackView addArrangedSubview:self.downloadButton];
+		}
 	}
 }
 
