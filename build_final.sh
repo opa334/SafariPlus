@@ -1,7 +1,8 @@
-make package FINALPACKAGE=1
-mv control control_normal
-mv control_cepheiless control
 make clean
+cp -f control_normal control
+make package FINALPACKAGE=1
+make clean
+cp -f control_cepheiless control
 make package FINALPACKAGE=1 NO_CEPHEI=1
-mv control control_cepheiless
-mv control_normal control
+cp -f control_normal control
+make clean
