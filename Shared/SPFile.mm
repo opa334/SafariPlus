@@ -132,6 +132,26 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 
 		return [filesM copy];
 	}
+	else 
+	{
+		// On arm64e iOS 14 unc0ver the contents of "/" does not load because of an issue with /Developer (at least on one of my devices), hacky workaround for that because contentsOfDirectoryAtPath is not affected
+		if(tmpError.code == 256 && [URL.path isEqualToString:@"/"])
+		{
+			NSError* tmpError2;
+			NSArray<NSString*>* rootFiles = [fileManager contentsOfDirectoryAtPath:URL.path error:&tmpError2];
+
+			if(rootFiles && !tmpError2)
+			{
+				NSMutableArray* filesM = [NSMutableArray new];
+				for(NSString* rootFile in rootFiles)
+				{
+					SPFile* file = [[SPFile alloc] initWithFileURL:[NSURL fileURLWithPath:[@"/" stringByAppendingPathComponent:rootFile]]];
+					[filesM addObject:file];
+				}
+				return [filesM copy];
+			}
+		}
+	}
 
 	if(error)
 	{

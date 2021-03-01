@@ -156,7 +156,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 			NSError* linkError;
 			[self linkItemAtURL:URL toURL:hardLinkURL error:&linkError];
 			HBLogDebug(@"linkError:%@", linkError);
-			if(linkError.code == 513)
+			if(linkError.code == 513 || linkError.code == 512)
 			{
 				[self resetHardLinks];
 

@@ -46,10 +46,6 @@ BOOL showAlert = YES;
 static BOOL shouldFakeOpenLinksKey = NO;
 static BOOL fakeOpenLinksValue = NO;
 
-@interface NSUserDefaults (xd)
-- (void)xd;
-@end
-
 %hook NSUserDefaults
 
 - (BOOL)boolForKey:(NSString*)key
@@ -998,7 +994,7 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 
 %end
 
-- (id)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(id)arg3 privateBrowsingEnabled:(_Bool)arg4 controlledByAutomation:(_Bool)arg5 bookmark:(id)arg6 browserController:(id)arg7 createDocumentView:(id/*block*/)arg8
+- (instancetype)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(id)arg3 privateBrowsingEnabled:(BOOL)arg4 controlledByAutomation:(BOOL)arg5 bookmark:(id)arg6 browserController:(id)arg7 createDocumentView:(id)arg8
 {
 	TabDocument* orig = %orig;
 
