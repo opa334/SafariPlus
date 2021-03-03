@@ -115,8 +115,11 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 			identifier:nil
 			handler:^(__kindof UIAction* action)
 		{
+			NSLog(@"a");
 			TabDocument* newDocument = [browserController.tabController _insertNewBlankTabDocumentWithPrivateBrowsing:!privateBrowsing inBackground:NO animated:YES];	
+			NSLog(@"b");
 			[newDocument loadURL:[self url] userDriven:YES];
+			NSLog(@"c");
 		}];
 
 		[menuElementsM insertObject:openInOppositeModeAction atIndex:2];

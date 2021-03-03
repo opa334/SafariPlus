@@ -386,12 +386,12 @@ void initUndirection()
     libundirect_rebind(setActiveTabDocument_animated_deferActivation, class_tabController, @selector(setActiveTabDocument:animated:deferActivation:), "v@:@BB");
 
     // TabController - (TabDocument*)_insertNewBlankTabDocumentWithOptions:(long long)arg2 inBackground:(bool)arg3 animated:(bool)arg4;
-    // memory of function (13): (...) (28)[FDC30191 FC0304AA]
-    // memory of function (14): (...) (28)[FDC30191 A01800B4]
+    // memory of function (13): (...) DC30191 FC0304AA
+    // memory of function (14): (...) FDC30191 A01800B4 [F30304AA F40303AA F60302AA]
     // 14.2: sub_1000dbdb8, arm64e: sub_1000E67BC
-    // memory of function (arm64e, 14): 7F2303D5 (...) [FDC30191 20]1900B4 F30304AA F40303AA F60302AA F50300AA 48044092 1C0C00B0
+    // memory of function (arm64e, 14): 7F2303D5 (...) FDC30191 201900B4 [F30304AA F40303AA F60302AA] F50300AA 48044092 1C0C00B0
     // Criteria: Calls canCreateNewAutomationTabs
-    void* _insertNewBlankTabDocumentWithOptions = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0xC3, 0x01, 0x91, ifArm64eElse(0x20, 0xA0)}, 5, ifArm64eElse(0x7F, 0xFF));
+    void* _insertNewBlankTabDocumentWithOptions = libundirect_find(@"MobileSafari", (unsigned char[]){0xF3, 0x03, 0x04, 0xAA, 0xF4, 0x03, 0x03, 0xAA, 0xF6, 0x03, 0x02, 0xAA}, 12, ifArm64eElse(0x7F, 0xFF));
     libundirect_rebind(_insertNewBlankTabDocumentWithOptions, class_tabController, @selector(_insertNewBlankTabDocumentWithOptions:inBackground:animated:), "@@:qBB");
 
     // -[TabController tabDocumentsMatchingSearchTerm]
