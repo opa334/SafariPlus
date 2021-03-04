@@ -158,7 +158,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 			HBLogDebug(@"linkError:%@", linkError);
 			if(linkError.code == 513 || linkError.code == 512)
 			{
-				//[self resetHardLinks];
+				[self removeItemAtURL:hardLinkURL error:nil];
 				NSError* copyError;
 				[self copyItemAtURL:URL toURL:hardLinkURL error:&copyError];
 				HBLogDebug(@"copyError:%@", copyError);
