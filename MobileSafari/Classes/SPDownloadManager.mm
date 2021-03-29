@@ -292,7 +292,7 @@
 	//NOTE: Sometimes temp files are saved in /tmp and sometimes in caches
 
 	//Get files in tmp directory
-	NSArray* tmpFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:[NSURL fileURLWithPath:NSTemporaryDirectory()] includingPropertiesForKeys:nil options:0 error:nil];
+	NSArray* tmpFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtURL:getSafariTmpURL() includingPropertiesForKeys:nil options:0 error:nil];
 
 	//Get files in caches directory
 	NSArray* cacheFiles = [[NSFileManager defaultManager]
@@ -353,8 +353,8 @@
 	//Save changes
 	[self saveDownloadsToDisk];
 
-	//Reload download list
-	[self.navigationControllerDelegate reloadDownloadList];
+	//Notify observers
+	[self downloadHistoryDidChange];
 }
 
 - (void)forceCancelDownload:(SPDownload*)download
@@ -380,7 +380,7 @@
 	if(!download.wasCancelled)
 	{
 		//Dispatch status bar / push notification
-		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_SUCCEEDED"] message:download.filename];
+		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_SUCCEEDED"] message:download.filename window:download.orgInfo.presentationController.view.window];
 	}
 }
 
@@ -397,7 +397,7 @@
 	{
 		[self moveDownloadFromPendingToHistory:download];
 
-		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_FAILED"] message:download.filename];
+		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_FAILED"] message:download.filename window:download.orgInfo.presentationController.view.window];
 	}
 }
 
@@ -410,7 +410,7 @@
 
 	[self.pendingDownloads removeObject:download];
 	[self saveDownloadsToDisk];
-	[self.navigationControllerDelegate reloadEverything];
+	[self totalDownloadsCountDidChange];
 	[self runningDownloadsCountDidChange];
 	[self updateApplicationBadge];
 }
@@ -424,7 +424,7 @@
 
 	[self saveDownloadsToDisk];
 
-	[self.navigationControllerDelegate reloadDownloadList];
+	[self downloadHistoryDidChange];
 }
 
 //Retrieves temp path from resumeData
@@ -444,7 +444,7 @@
 
 	if(filename)
 	{
-		return [NSTemporaryDirectory() stringByAppendingString:filename];
+		return [getSafariTmpPath() stringByAppendingString:filename];
 	}
 	else
 	{
@@ -498,7 +498,7 @@
 	[cacheManager saveDownloadCache:@{@"pendingDownloads" : [self.pendingDownloads copy], @"finishedDownloads" : [self.finishedDownloads copy]}];
 }
 
-- (void)sendNotificationWithTitle:(NSString*)title message:(NSString*)message
+- (void)sendNotificationWithTitle:(NSString*)title message:(NSString*)message window:(UIWindow*)window
 {
 	NSString* titleAndMessage = [NSString stringWithFormat:@"%@: %@", title, message];
 
@@ -510,7 +510,11 @@
 		[self.notificationWindow dismissWithCompletion:^
 		{
 			//Dispatch status notification with given text
-			[self.notificationWindow dispatchNotification:[SPStatusBarNotification downloadStyleWithText:titleAndMessage]];
+
+			SPStatusBarNotification* barNotification = [SPStatusBarNotification downloadStyleWithText:titleAndMessage];
+			barNotification.windowToPresentOn = window;
+
+			[self.notificationWindow dispatchNotification:barNotification];
 		}];
 	}
 	else if([[UIApplication sharedApplication] applicationState] != 0 &&
@@ -640,7 +644,7 @@
 	return runningDownloadsCount;
 }
 
-- (void)addObserverDelegate:(id<DownloadsObserverDelegate>)observerDelegate
+- (void)addObserverDelegate:(NSObject<DownloadsObserverDelegate>*)observerDelegate
 {
 	if(![self.observerDelegates containsObject:observerDelegate])
 	{
@@ -648,7 +652,7 @@
 	}
 }
 
-- (void)removeObserverDelegate:(id<DownloadsObserverDelegate>)observerDelegate
+- (void)removeObserverDelegate:(NSObject<DownloadsObserverDelegate>*)observerDelegate
 {
 	if([self.observerDelegates containsObject:observerDelegate])
 	{
@@ -658,22 +662,56 @@
 
 - (void)totalProgressDidChange
 {
-	for(id<DownloadsObserverDelegate> observerDelegate in self.observerDelegates)
+	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
 	{
 		dispatch_async(dispatch_get_main_queue(), ^
 		{
-			[observerDelegate totalProgressDidChangeForDownloadManager:self];
+			if([observerDelegate respondsToSelector:@selector(totalProgressDidChangeForDownloadManager:)])
+			{
+				[observerDelegate totalProgressDidChangeForDownloadManager:self];
+			}
 		});
 	}
 }
 
 - (void)runningDownloadsCountDidChange
 {
-	for(id<DownloadsObserverDelegate> observerDelegate in self.observerDelegates)
+	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
 	{
 		dispatch_async(dispatch_get_main_queue(), ^
 		{
-			[observerDelegate runningDownloadsCountDidChangeForDownloadManager:self];
+			if([observerDelegate respondsToSelector:@selector(runningDownloadsCountDidChangeForDownloadManager:)])
+			{
+				[observerDelegate runningDownloadsCountDidChangeForDownloadManager:self];
+			}
+		});
+	}
+}
+
+- (void)totalDownloadsCountDidChange
+{
+	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
+	{
+		dispatch_async(dispatch_get_main_queue(), ^
+		{
+			if([observerDelegate respondsToSelector:@selector(totalDownloadsCountDidChangeForDownloadManager:)])
+			{
+				[observerDelegate totalDownloadsCountDidChangeForDownloadManager:self];
+			}
+		});
+	}
+}
+
+- (void)downloadHistoryDidChange
+{
+	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
+	{
+		dispatch_async(dispatch_get_main_queue(), ^
+		{
+			if([observerDelegate respondsToSelector:@selector(downloadHistoryDidChangeForDownloadManager:)])
+			{
+				[observerDelegate downloadHistoryDidChangeForDownloadManager:self];
+			}
 		});
 	}
 }
@@ -825,13 +863,10 @@
 		[self saveDownloadsToDisk];
 
 		//Send notification
-		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"] message:downloadInfo.filename];
+		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"] message:downloadInfo.filename window:downloadInfo.presentationController.view.window];
 		[self updateApplicationBadge];
 
-		if(self.navigationControllerDelegate)
-		{
-			[self.navigationControllerDelegate reloadEverything];
-		}
+		[self totalDownloadsCountDidChange];
 	}
 
 	dlogDownloadManager();
@@ -848,12 +883,12 @@
 	}
 
 	//Write image to file
-	NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:downloadInfo.filename];
+	NSURL* tmpURL = [getSafariTmpURL() URLByAppendingPathComponent:downloadInfo.filename];
 	[UIImagePNGRepresentation(downloadInfo.image) writeToURL:tmpURL atomically:YES];
 	[fileManager moveItemAtURL:tmpURL toURL:[downloadInfo pathURL] error:nil];
 
 	//Send notification
-	[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"SAVED_IMAGE"] message:downloadInfo.filename];
+	[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"SAVED_IMAGE"] message:downloadInfo.filename window:downloadInfo.presentationController.view.window];
 }
 
 - (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo
@@ -1083,7 +1118,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 			{
 				[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
 			}
-			[self presentVideoURLNotFoundErrorWithDownloadInfo:downloadInfo];
+			[self presentWebContentErrorWithDownloadInfo:downloadInfo];
 		}
 	}];
 }
@@ -1331,17 +1366,16 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 	[self presentViewController:errorAlert withDownloadInfo:downloadInfo];
 }
 
-- (void)presentVideoURLNotFoundErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo
+- (void)presentWebContentErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
 	UIAlertController *errorAlert = [UIAlertController
-					 alertControllerWithTitle:[localizationManager
-								   localizedSPStringForKey:@"ERROR"] message:[localizationManager
-													      localizedSPStringForKey:@"VIDEO_URL_NOT_FOUND"]
-					 preferredStyle:UIAlertControllerStyleAlert];
+		alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+		message:[localizationManager localizedSPStringForKey:@"WEBCONTENT_COMMUNICATION_FAILED"]
+		preferredStyle:UIAlertControllerStyleAlert];
 
 	UIAlertAction *closeAction = [UIAlertAction actionWithTitle:[localizationManager
-								     localizedSPStringForKey:@"CLOSE"]
-				      style:UIAlertActionStyleCancel handler:nil];
+		localizedSPStringForKey:@"CLOSE"]
+		style:UIAlertActionStyleCancel handler:nil];
 
 	[errorAlert addAction:closeAction];
 
@@ -1419,7 +1453,8 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 		}
 
 		UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
-						 message:[NSString stringWithFormat:@"%@: %@", [localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"], error.description] preferredStyle:UIAlertControllerStyleAlert];
+			message:[NSString stringWithFormat:@"%@: %@", [localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"], error.description]
+			preferredStyle:UIAlertControllerStyleAlert];
 
 		UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
 
@@ -1787,7 +1822,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 		return;
 	}
 
-	NSURL* tmpURL = [[NSURL fileURLWithPath:NSTemporaryDirectory()] URLByAppendingPathComponent:[targetURL lastPathComponent]];
+	NSURL* tmpURL = [getSafariTmpURL() URLByAppendingPathComponent:[targetURL lastPathComponent]];
 	NSOutputStream* outputStream = [[NSOutputStream alloc] initWithURL:tmpURL append:YES];
 	[outputStream open];
 

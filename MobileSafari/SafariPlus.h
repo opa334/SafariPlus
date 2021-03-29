@@ -438,10 +438,12 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic, getter=isUsingLightControls) BOOL usingLightControls;
 @property (nonatomic,readonly) CGRect URLOutlineFrameInNavigationBarSpace;
 @property (nonatomic,readonly) _SFNavigationBarTheme * effectiveTheme;
+@property (nonatomic,retain) _SFBarTheme * theme;
 - (void)_reloadButtonPressed;
 - (id)_backdropInputSettings;
 - (id)_toolbarForBarItem:(NSInteger)barItem; //iOS 13-13.7
 - (void)_didUpdateEffectiveTheme;
+- (void)_updateEffectiveTheme;
 @end
 
 @interface _SFNavigationBarBackdrop : _UIBackdropView

@@ -92,5 +92,11 @@
 #define kCFCoreFoundationVersionNumber_iOS_14_0 1751.108
 #endif
 
+#ifdef __arm64e__
+#define ifArm64eElse(a,b) (a)
+#else
+#define ifArm64eElse(a,b) (b)
+#endif
+
 //Used for debugging
 #define DEBUG_CRASH NSMutableArray* arr = (NSMutableArray*)[[NSArray alloc] init]; [arr addObject:@"crash"];

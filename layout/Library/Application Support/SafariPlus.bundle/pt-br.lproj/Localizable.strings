@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "Sempre abrir links em uma nova guia";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "Abrir nova guia no plano de fundo";
 
+/*DISABLE_TAB_SWIPING_FOOTER*/
+/*DISABLE_TAB_SWIPING*/
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "Desative o modo de navegação privada e remova a opção 'Privado'.";
 "DISABLE_PRIVATE_MODE" = "Desativar navegação privada";
 
@@ -363,6 +366,8 @@
 "OPEN_TWITTER" = "Abra o Twitter";
 "COMMUNICATION_ERROR" = "Erro de comunicação";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Não foi possível se comunicar com o SpringBoard! Alguns recursos não funcionarão. Verifique se o RocketBootstrap está instalado corretamente e se o SafariPlusSB.dylib não foi desativado pelo iCleaner Pro. Seu caminho de download padrão será alterado para o contêiner de sandbox do Safari. Se você quiser desativar esta mensagem, poderá fazê-lo em Preferências em Comportamento -> Desativar Alerta de Erro de Comunicação.";
+/*UNDIRECTOR_WARNING*/
+/*UNDIRECTOR_WARNING_MESSAGE*/
 
 /* Force HTTPS */
 

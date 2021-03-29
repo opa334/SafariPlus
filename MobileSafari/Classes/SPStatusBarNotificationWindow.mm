@@ -54,13 +54,30 @@
 	[self addSubview:_textView];
 
 	//Register for orientation changes
-	[[NSNotificationCenter defaultCenter]
-	 addObserver:self
-	 selector:@selector(orientationDidChange)
-	 name:UIApplicationDidChangeStatusBarOrientationNotification
-	 object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationDidChange) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
 
 	return self;
+}
+
+- (UIWindowScene*)sceneToUse
+{
+	if(_currentWindowToPresentOn)
+	{
+		return _currentWindowToPresentOn.windowScene;
+	}
+	else
+	{
+		//Stolen from FLEX: https://github.com/Flipboard/FLEX/blob/master/Classes/Manager/FLEXManager.m#L78
+		for(UIScene *scene in UIApplication.sharedApplication.connectedScenes)
+		{
+			if(scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]])
+			{
+				return (UIWindowScene*)scene;
+			}
+		}
+	}
+	
+	return nil;
 }
 
 - (void)setHidden:(BOOL)hidden
@@ -71,17 +88,9 @@
 	{
 		if(!hidden)
 		{
-			//Stolen from FLEX: https://github.com/Flipboard/FLEX/blob/master/Classes/Manager/FLEXManager.m#L78
 			if(!self.windowScene || self.windowScene.activationState != UISceneActivationStateForegroundActive)
 			{
-				for(UIScene *scene in UIApplication.sharedApplication.connectedScenes)
-				{
-					if(scene.activationState == UISceneActivationStateForegroundActive && [scene isKindOfClass:[UIWindowScene class]])
-					{
-						self.windowScene = (UIWindowScene*)scene;
-						break;
-					}
-           		}
+				self.windowScene = [self sceneToUse];
 			}
 		}
 		else
@@ -109,7 +118,20 @@
 		}
 	}
 
-	CGSize screenSize = [UIScreen mainScreen].bounds.size;
+	CGSize screenSize;
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+	{
+		UIWindowScene* scene = [self sceneToUse];
+		if(!scene)
+		{
+			return;
+		}
+		screenSize = scene.coordinateSpace.bounds.size;
+	}
+	else
+	{
+		screenSize = [UIScreen mainScreen].bounds.size;
+	}
 
 	CGFloat c = self.transform.c;
 
@@ -180,7 +202,7 @@
 
 	_currentDeviceOrientation = newOrientation;
 
-	//Fuck apple for handling everything different on iPads???
+	// iPads handle everything different???
 	if(prevOrientation && !IS_PAD_OVER_8)
 	{
 		int degrees = [UIView _degreesToRotateFromInterfaceOrientation:prevOrientation toInterfaceOrientation:newOrientation];
@@ -203,6 +225,9 @@
 
 		dispatch_async(dispatch_get_main_queue(), ^
 		{
+			_currentWindowToPresentOn = notification.windowToPresentOn;
+			[self updateFramesForTransform];
+
 			self.hidden = NO;
 			self.backgroundColor = notification.backgroundColor;
 
@@ -212,8 +237,7 @@
 			{
 				_isPresented = YES;
 				[self updateFramesForTransform];
-			}
-			 completion:^(BOOL finished)
+			} completion:^(BOOL finished)
 			{
 				_isBeingPresented = NO;
 
@@ -255,6 +279,8 @@
 		_isBeingDismissed = YES;
 		dispatch_async(dispatch_get_main_queue(),^
 		{
+			[self updateFramesForTransform];
+
 			[UIView animateWithDuration:.3 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
 			{
 				_isPresented = NO;

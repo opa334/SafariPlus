@@ -35,6 +35,9 @@ extern NSBundle* MSBundle;
 extern BOOL rocketBootstrapWorks;
 extern BOOL skipBiometricProtection;
 
+extern NSString* getSafariTmpPath();
+extern NSURL* getSafariTmpURL();
+
 extern BOOL privateBrowsingEnabled(BrowserController* controller);
 extern BOOL privateBrowsingEnabledForTabDocument(TabDocument* tabDocument);
 extern void togglePrivateBrowsing(BrowserController* controller);

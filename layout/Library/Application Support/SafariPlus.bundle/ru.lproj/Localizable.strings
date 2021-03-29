@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "Откр. ссылки в Вкладках";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "Открыв. вкладки в Фоне";
 
+/*DISABLE_TAB_SWIPING_FOOTER*/
+/*DISABLE_TAB_SWIPING*/
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "Отключает приватный режим и скрывает кнопку 'Частный доступ'. (Функция не доступна по умолчанию)";
 "DISABLE_PRIVATE_MODE" = "Откл. Приватный Режим";
 
@@ -363,6 +366,8 @@
 "OPEN_TWITTER" = "Открыть Twitter";
 "COMMUNICATION_ERROR" = "Ошибка Связи";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Потеряна связь с SpringBoard! Работа некоторых функций приостановлена. Пожалуйста убедитесь в том, что RocketBootstrap установлен правильно, а SafariPlusSB.dylib не отключен через iCleaner Pro. Путь загрузки по-умолчанию изменен на стандартный путь Safari. Для того чтобы это сообщение больше не показывалось: откройте настройки Safari Plus/ Другие Настройки/  и включите тумблер напротив «Откл. Оповещ. Об Ошибке»";
+/*UNDIRECTOR_WARNING*/
+/*UNDIRECTOR_WARNING_MESSAGE*/
 
 /* Force HTTPS */
 

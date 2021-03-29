@@ -1,7 +1,7 @@
 //Simplified version of https://github.com/PoomSmart/libSubstitrate/blob/master/libSubstitrate.mm
 
 #import "substitrate.h"
-#import "pac.h"
+#import "../pac.h"
 
 int (*substitute_hook_functions)(const struct substitute_function_hook *hooks, size_t nhooks, struct substitute_function_hook_record **recordp, int options) = NULL;
 

@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "一律在新标签页打开链接";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "在后台打开新标签页";
 
+/*DISABLE_TAB_SWIPING_FOOTER*/
+/*DISABLE_TAB_SWIPING*/
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "禁用无痕浏览模式并删除“无痕浏览”开关";
 "DISABLE_PRIVATE_MODE" = "关闭无痕浏览模式";
 
@@ -363,6 +366,8 @@
 "OPEN_TWITTER" = "打开 Twitter";
 "COMMUNICATION_ERROR" = "通信错误";
 "COMMUNICATION_ERROR_DESCRIPTION" = "无法与 SpringBoard 通信！ 某些功能不起作用。 请确保正确安装了 RocketBootstrap，并且未通过 iCleaner Pro 禁用 SafariPlusSB.dylib。 您的默认下载路径将更改为 Safari 的沙盒容器。 如果要禁用此消息，可以在“行为”->“禁用通信错误警报”下的“首选项”中进行禁用";
+/*UNDIRECTOR_WARNING*/
+/*UNDIRECTOR_WARNING_MESSAGE*/
 
 /* Force HTTPS */
 

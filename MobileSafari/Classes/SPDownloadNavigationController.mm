@@ -66,10 +66,15 @@
 		[self setUpSegmentedControl];
 	}
 
-	//Set delegate of SPDownloadManager for communication
-	downloadManager.navigationControllerDelegate = self;
+	//Register as observer
+	[downloadManager addObserverDelegate:self];
 
 	return self;
+}
+
+- (void)dealloc
+{
+	[downloadManager removeObserverDelegate:self];
 }
 
 - (void)setUpTableViewControllers
@@ -229,6 +234,16 @@
 - (void)reloadDownloadListAnimated:(BOOL)animated
 {
 	[[self listTableViewControllers].firstObject reloadAnimated:animated];
+}
+
+- (void)totalDownloadsCountDidChangeForDownloadManager:(SPDownloadManager*)downloadManager
+{
+	[self reloadEverything];
+}
+
+- (void)downloadHistoryDidChangeForDownloadManager:(SPDownloadManager*)downloadManager
+{
+	[self reloadDownloadList];
 }
 
 - (Class)tableControllerClass

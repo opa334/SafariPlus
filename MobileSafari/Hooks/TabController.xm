@@ -20,8 +20,8 @@
 
 #import "../SafariPlus.h"
 
-#import "../libundirect_dynamic.h"
-#import <libundirect_hookoverwrite.h>
+#import <libundirect/libundirect_dynamic.h>
+#import <libundirect/libundirect_hookoverwrite.h>
 
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPCacheManager.h"
@@ -31,6 +31,10 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
+
+#import <execinfo.h>
+#import <objc/runtime.h>
+#import "../pac.h"
 
 %hook TabController
 
@@ -310,6 +314,73 @@
 	}
 }
 
+
+void* getInteractiveTabCloseChangedWithTranslationPointer()
+{
+	static void* interactiveTabCloseChangedWithTranslation;
+	if(!interactiveTabCloseChangedWithTranslation)
+	{
+		IMP i = class_getMethodImplementation(objc_getClass("TiltedTabView"), @selector(interactiveTabCloseChangedWithTranslation:));
+		interactiveTabCloseChangedWithTranslation = make_sym_readable((void*)i);
+		//NSLog(@"interactiveTabCloseChangedWithTranslation = %p", interactiveTabCloseChangedWithTranslation);
+	}
+	return interactiveTabCloseChangedWithTranslation;
+}
+
+void* getInteractiveTabCloseEndedWithTranslationPointer()
+{
+	static void* interactiveTabCloseEndedWithTranslation;
+	if(!interactiveTabCloseEndedWithTranslation)
+	{
+		IMP i = class_getMethodImplementation(objc_getClass("TiltedTabView"), @selector(interactiveTabCloseEndedWithTranslation:velocity:wasCanceled:));
+		interactiveTabCloseEndedWithTranslation = make_sym_readable((void*)i);
+		//NSLog(@"interactiveTabCloseEndedWithTranslation = %p", interactiveTabCloseEndedWithTranslation);
+	}
+	return interactiveTabCloseEndedWithTranslation;
+}
+
+void* getTabClosePointer()
+{
+	static void* tabClose;
+	if(!tabClose)
+	{
+		IMP i = class_getMethodImplementation(objc_getClass("TabOverview"), @selector(_tabClose:));
+		tabClose = make_sym_readable((void*)i);
+		//NSLog(@"_tabClose = %p", _tabClose);
+	}
+	return tabClose;
+}
+
+BOOL isCallRelatedToTabSwipes()
+{
+	void* callstack[3];
+	int frames = backtrace(callstack, 3);
+	if(frames >= 2)
+	{
+		long changedOffset = (intptr_t)callstack[2] - (intptr_t)getInteractiveTabCloseChangedWithTranslationPointer();
+		//NSLog(@"changedOffset = %ld", changedOffset);
+		if(changedOffset > 0 && changedOffset < 256)
+		{
+			return YES;
+		}
+
+		long endedOffset = (intptr_t)callstack[2] - (intptr_t)getInteractiveTabCloseEndedWithTranslationPointer();
+		//NSLog(@"endedOffset = %ld", endedOffset);
+		if(endedOffset > 0 && endedOffset < 256)
+		{
+			return YES;
+		}
+
+		long tabCloseOffset = (intptr_t)callstack[2] - (intptr_t)getTabClosePointer();
+		//NSLog(@"tabCloseOffset = %ld", tabCloseOffset);
+		if(tabCloseOffset > 0 && tabCloseOffset < 4000)
+		{
+			return YES;
+		}
+	}
+	return NO;
+}
+
 %group iOS12_1_4Down
 
 - (void)_updateTiltedTabViewItemsWithTransition:(NSInteger)transition
@@ -334,6 +405,14 @@
 
 - (BOOL)tiltedTabView:(TiltedTabView*)tiltedTabView canCloseItem:(TiltedTabItem*)item
 {
+	if(preferenceManager.disableTabSwiping && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+	{
+		if(isCallRelatedToTabSwipes())
+		{
+			return NO;
+		}
+	}
+
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		TabDocument* tabDocument = tabDocumentForItem(self, item);
@@ -349,6 +428,14 @@
 
 - (BOOL)tabOverview:(TabOverview*)tabOverview canCloseItem:(TabOverviewItem*)item
 {
+	if(preferenceManager.disableTabSwiping && kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_0)
+	{
+		if(isCallRelatedToTabSwipes())
+		{
+			return NO;
+		}
+	}
+
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		TabDocument* tabDocument = tabDocumentForItem(self, item);
@@ -383,6 +470,14 @@
 
 - (BOOL)tabCollectionView:(id)collectionView canCloseItem:(id<TabCollectionItem>)item
 {
+	if(preferenceManager.disableTabSwiping)
+	{
+		if(isCallRelatedToTabSwipes())
+		{
+			return NO;
+		}
+	}
+
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		TabDocument* tabDocument = tabDocumentForItem(self, item);

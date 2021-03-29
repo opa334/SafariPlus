@@ -165,6 +165,32 @@ void _dlogDownloadManager()
 
 #endif
 
+NSString* getSafariTmpPath()
+{
+	return [getSafariTmpURL() path];
+}
+
+NSURL* getSafariTmpURL()
+{
+	static NSURL* tmpURL = nil;
+	if(!tmpURL)
+	{
+		NSString* homeDirectory = NSHomeDirectory();
+		if(!homeDirectory)
+		{
+			return nil;
+		}
+		tmpURL = [NSURL fileURLWithPath:[homeDirectory stringByAppendingPathComponent:@"tmp"].stringByStandardizingPath isDirectory:YES];
+
+		//shouldn't ever happen
+		if(![tmpURL checkResourceIsReachableAndReturnError:nil])
+		{
+			[[NSFileManager defaultManager] createDirectoryAtURL:tmpURL withIntermediateDirectories:NO attributes:nil error:nil];
+		}
+	}
+	return tmpURL;
+}
+
 //Return current browsing status
 BOOL privateBrowsingEnabled(BrowserController* controller)
 {

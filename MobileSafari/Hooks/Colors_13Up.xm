@@ -20,8 +20,8 @@
 
 #import "../SafariPlus.h"
 
-#import "../libundirect_dynamic.h"
-#import <libundirect_hookoverwrite.h>
+#import <libundirect/libundirect_dynamic.h>
+#import <libundirect/libundirect_hookoverwrite.h>
 
 #import "../Defines.h"
 #import "../Util.h"
@@ -71,22 +71,75 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 @property (nonatomic,copy) NSArray * backgroundEffects;
 @end
 
+%hook _SFBarTheme
+
+// stock bug: when theme has private tint, _preferredControlsTintColor is not correctly copied
+// this hook fixes that
++ (instancetype)themeWithTheme:(__kindof _SFBarTheme*)theme
+{
+	__kindof _SFBarTheme* themeCopy = %orig;
+
+	if(preferenceManager.topBarNormalLightTintColorEnabled || preferenceManager.topBarNormalDarkTintColorEnabled ||
+		preferenceManager.topBarPrivateLightTintColorEnabled || preferenceManager.topBarPrivateDarkTintColorEnabled ||
+		preferenceManager.bottomBarNormalLightTintColorEnabled || preferenceManager.bottomBarNormalDarkTintColorEnabled ||
+		preferenceManager.bottomBarPrivateLightTintColorEnabled || preferenceManager.bottomBarPrivateDarkTintColorEnabled)
+	{
+		UIColor* origPreferredControlsTintColor = [theme valueForKey:@"_preferredControlsTintColor"];
+		UIColor* copyPreferredControlsTintColor = [themeCopy valueForKey:@"_preferredControlsTintColor"];
+
+		if(![origPreferredControlsTintColor isEqual:copyPreferredControlsTintColor])
+		{
+			[themeCopy setValue:origPreferredControlsTintColor forKey:@"_preferredControlsTintColor"];
+		}
+
+		UIColor* origControlsTintColor = [theme valueForKey:@"_controlsTintColor"];
+		UIColor* copyControlsTintColor = [themeCopy valueForKey:@"_controlsTintColor"];
+
+		if(![origControlsTintColor isEqual:copyControlsTintColor])
+		{
+			[themeCopy setValue:origControlsTintColor forKey:@"_controlsTintColor"];
+		}
+	}
+
+	return themeCopy;
+}
+
+%end
+
 %hook _SFNavigationBar
+
+// setTheme:
+// gets dark mode state from userInterfaceStyle
+// if passed theme is nil, creates new theme via +[_SFBarTheme themeWithBarTintStyle:]
+// if not equal to theme ivar, it sets the ivar to new theme and calls _updateEffectiveTheme
+
+// _updateEffectiveTheme:
+// creates _SFNavigationBarTheme from ivar theme
+// checks if the theme should be overwritten for security warning, in that case fallbackTheme is used
+// if not, it checks if effectiveTheme ivar and newly created theme are not equal
+// in that case, it stores the newly created theme in effectiveTheme ivar and calls _didUpdateEffectiveTheme
+
+// setHasToolbar:
+// gets current theme from effectiveTheme ivar
+// applies it to the toolbar it creates
 
 - (void)setTheme:(_SFBarTheme*)theme
 {
 	if(preferenceManager.topBarNormalLightTintColorEnabled || preferenceManager.topBarNormalDarkTintColorEnabled ||
 		preferenceManager.topBarPrivateLightTintColorEnabled || preferenceManager.topBarPrivateDarkTintColorEnabled)
 	{
-		if([self.effectiveTheme isEqual:theme])
-		{
-			%orig;
-			return;
-		}
-
 		BOOL isPrivateMode = _SFIsPrivateTintStyle(theme.tintStyle);
 		BOOL isDarkMode = UITraitCollection.currentTraitCollection.userInterfaceStyle == UIUserInterfaceStyleDark;
-		_SFBarTheme* themeCopy = [%c(_SFBarTheme) themeWithTheme:theme];
+		_SFBarTheme* themeToApply;
+		if(theme)
+		{
+			themeToApply = [%c(_SFBarTheme) themeWithTheme:theme];
+		}
+		else
+		{
+			//fall back to default theme
+			themeToApply = [%c(_SFBarTheme) themeWithBarTintStyle:isDarkMode];
+		}
 
 		UIColor* tintColorToSet;
 
@@ -109,13 +162,14 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(tintColorToSet)
 		{
-			[themeCopy setValue:tintColorToSet forKey:@"_preferredControlsTintColor"];
+			[themeToApply setValue:tintColorToSet forKey:@"_preferredControlsTintColor"];
+			[themeToApply setValue:tintColorToSet forKey:@"_controlsTintColor"];
 		}
 
-		%orig(themeCopy);
+		%orig(themeToApply);
 		return;
 	}
-	
+
 	%orig;
 }
 
@@ -240,14 +294,13 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 - (void)setTheme:(_SFBarTheme*)theme
 {
-	_SFBarTheme* themeToUse = theme;
-
 	BOOL needsManualReload = (theme == self.theme) || [theme isEqual:self.theme];
+	_SFBarTheme* themeToApply = theme;
 
 	if(preferenceManager.bottomBarNormalLightTintColorEnabled || preferenceManager.bottomBarNormalDarkTintColorEnabled ||
 		preferenceManager.bottomBarPrivateLightTintColorEnabled || preferenceManager.bottomBarPrivateDarkTintColorEnabled)
 	{
-		themeToUse = [%c(_SFBarTheme) themeWithTheme:theme];
+		themeToApply = [%c(_SFBarTheme) themeWithTheme:theme];
 
 		UIColor* tintColorToSet;
 
@@ -273,11 +326,9 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(tintColorToSet)
 		{
-			[themeToUse setValue:tintColorToSet forKey:@"_controlsTintColor"];
+			[themeToApply setValue:tintColorToSet forKey:@"_controlsTintColor"];
 		}
 	}
-
-	%orig(themeToUse);
 
 	if(needsManualReload)
 	{
@@ -288,13 +339,9 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 		{
 			[self _updateBackgroundViewEffects];
 		}
-
-		if(preferenceManager.bottomBarNormalLightTintColorEnabled || preferenceManager.bottomBarNormalDarkTintColorEnabled ||
-			preferenceManager.bottomBarPrivateLightTintColorEnabled || preferenceManager.bottomBarPrivateDarkTintColorEnabled)
-		{
-			[self setTintColor:[themeToUse valueForKey:@"_controlsTintColor"]];
-		}
 	}
+
+	%orig(themeToApply);
 }
 
 - (void)_updateBackgroundViewEffects

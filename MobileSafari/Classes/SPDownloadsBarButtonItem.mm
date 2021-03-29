@@ -75,22 +75,36 @@
 	self.customView = _touchView;
 
 	[NSLayoutConstraint activateConstraints:@[
-		 [NSLayoutConstraint constraintWithItem:self.customView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
-		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:width],
-		 [NSLayoutConstraint constraintWithItem:self.customView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
-		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:height],
+		[NSLayoutConstraint constraintWithItem:self.customView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+			toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:width],
+		[NSLayoutConstraint constraintWithItem:self.customView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+			toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:height],
 	]];
 
 	[NSLayoutConstraint activateConstraints:@[
-		 [NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
-		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:25],
-		 [NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
-		  toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:25],
-		 [NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
-		  toItem:self.customView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
-		 [NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual
-		  toItem:self.customView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0],
+		[NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual
+			toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:25],
+		[NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual
+			toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:25],
+		[NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual
+			toItem:self.customView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0],
 	]];
+
+	//iOS 13+ iPad top bar
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0 && IS_PAD && placement == 0)
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+				toItem:self.customView attribute:NSLayoutAttributeTop multiplier:1 constant:1.5]
+		]];
+	}
+	else
+	{
+		[NSLayoutConstraint activateConstraints:@[
+			[NSLayoutConstraint constraintWithItem:_itemView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual
+				toItem:self.customView attribute:NSLayoutAttributeCenterY multiplier:1 constant:0]
+		]];
+	}
 
 	[_itemView setNeedsLayout];
 

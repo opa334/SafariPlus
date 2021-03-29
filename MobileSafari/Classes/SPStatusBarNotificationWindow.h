@@ -38,6 +38,7 @@
 	NSTimer* _timer;
 	void (^_savedBlock)(void);
 	SPStatusBarNotification* _savedNotification;
+	UIWindow* _currentWindowToPresentOn;
 }
 
 @property (nonatomic) UIInterfaceOrientation currentDeviceOrientation;

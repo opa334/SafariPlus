@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "Always Open Links in New Tab";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "Open New Tab in Background";
 
+"DISABLE_TAB_SWIPING_FOOTER" = "Prevents tabs from being closed when they're swiped to the left.";
+"DISABLE_TAB_SWIPING" = "Disable Tab Swiping";
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "Disable private browsing mode and remove the 'Private' switch.";
 "DISABLE_PRIVATE_MODE" = "Disable Private Browsing";
 
@@ -444,7 +447,7 @@
 "PREVIEW" = "Preview";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
-"VIDEO_URL_NOT_FOUND" = "No video URL found! If the video is paused, unpause it and try again.";
+"WEBCONTENT_COMMUNICATION_FAILED" = "Communication with the WebContent process failed. This is needed to retrieve the video URL. If you are using libhooker on iOS <= 13.7, make sure that 'Allow tweaks in webpages' is enabled inside libhooker configurator. If you are using libhooker on iOS >= 14.0, video downloading simply won't work due to libhooker failing to hook symbols inside WebContent on iOS 14 and up.";
 "COPY_LINK" = "Copy Link";
 "SIZE_UNKNOWN" = "Unknown Size";
 "DURATION_UNKNOWN" = "Unknown Duration";

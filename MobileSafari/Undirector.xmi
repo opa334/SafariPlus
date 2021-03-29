@@ -1,22 +1,14 @@
 extern "C"
 {
     #import "substrate.h"
-    //#import "../libundirect_dynamic.h"
 }
 
-#import "libundirect_dynamic.h"
+#import <libundirect/libundirect_dynamic.h>
 
-void (*libundirect_MSHookMessageEx)(Class _class, SEL message, IMP hook, IMP *old);
-void (*libundirect_rebind)(void* directPtr, Class _class, SEL selector, const char* format);
-void* (*libundirect_find)(NSString* imageName, unsigned char* bytesToSearch, size_t byteCount, unsigned char startByte);
-NSArray* (*libundirect_failedSelectors)();
-
-#import <dlfcn.h>
 #ifdef __LP64__
 
-#import <mach-o/dyld.h>
-#import <objc/runtime.h>
 #import "Defines.h"
+#import <mach-o/dyld.h>
 
 #import "SafariPlus.h"
 
@@ -201,44 +193,18 @@ LIBUNDIRECT_CLASS_ADD_GETTER(TabOverviewItemLayoutInfo, id, _tabOverviewItem, ta
 
 #endif
 
-void initDynamic_fallback()
-{
-    libundirect_MSHookMessageEx = MSHookMessageEx;
-}
-
-void initDynamic()
-{
-    void* libundirect_handle = dlopen("/usr/lib/libundirect.dylib", RTLD_NOW);
-
-    libundirect_MSHookMessageEx = (void (*)(__unsafe_unretained Class, SEL, IMP, IMP *))dlsym(libundirect_handle, "libundirect_MSHookMessageEx");
-    libundirect_rebind = (void (*)(void *, __unsafe_unretained Class, SEL, const char *))dlsym(libundirect_handle, "libundirect_rebind");
-    libundirect_find = (void *(*)(NSString *__strong, unsigned char *, size_t, unsigned char))dlsym(libundirect_handle, "libundirect_find");
-    libundirect_failedSelectors = (NSArray *(*)())dlsym(libundirect_handle, "libundirect_failedSelectors");
-}
-
-
-#ifdef __arm64e__
-#define ifArm64eElse(a,b) (a)
-#else
-#define ifArm64eElse(a,b) (b)
-#endif
-
 void initUndirection()
 {
     //objc_direct only applies to 14 and newer, which don't support 32 bit
 
-    #ifndef __LP64__
-    initDynamic_fallback();
+#ifndef __LP64__
     return;
-    #else
+#else
 
     if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_14_0)
     {
-        initDynamic_fallback();
         return;
     }
-
-    initDynamic();
 
     %init(undirector_reimplementations);
 
@@ -251,6 +217,7 @@ void initUndirection()
     Class class_tabOverview = NSClassFromString(@"TabOverview");
     Class class_tabOverviewItemLayoutInfo = NSClassFromString(@"TabOverviewItemLayoutInfo");
     Class class_tiltedTabItemLayoutInfo = NSClassFromString(@"TiltedTabItemLayoutInfo");
+    Class class_tiltedTabView = NSClassFromString(@"TiltedTabView");
     Class class__SFNavigationBar = NSClassFromString(@"_SFNavigationBar");
 
     // -[BrowserController loadURLInNewTab:title:UUID:inBackground:animated:fromExternalApplication:restoringCloudTab:]
@@ -486,6 +453,35 @@ void initUndirection()
 #endif
     libundirect_rebind(tearDownThumbnailView, class_tiltedTabItemLayoutInfo, @selector(tearDownThumbnailView), "v@:");
 
+    // -[TiltedTabView _tabCloseRecognized:] direct calls:
+    // -[TiltedTabView interactiveTabCloseEndedWithTranslation:velocity:wasCanceled:] first call
+    // -[TiltedTabView interactiveTabCloseChangedWithTranslation:] second call
+    // -[TiltedTabView interactiveTabCloseBeganWithLocation:] third call
+
+    // -[TiltedTabView interactiveTabCloseChangedWithTranslation:]
+    // 14.3 arm64: sub_1000BBF90
+    // 14.3 arm64e: sub_1000C4CF8
+    // memory of function arm64: [E00800B4 E923BC6D] (...)
+    // memory of function arm64e: (20/80)0900B4 (F7)(...) [F30300AA 0840611E]
+#if __arm64e__
+    void* interactiveTabCloseChangedWithTranslation = (void*)(((intptr_t)libundirect_find(@"MobileSafari", (unsigned char[]){0xF3, 0x03, 0x00, 0xAA, 0x08, 0x40, 0x61, 0x1E}, 8, 0x7F)) - 4);
+#else
+    void* interactiveTabCloseChangedWithTranslation = libundirect_find(@"MobileSafari", (unsigned char[]){0xE0, 0x08, 0x00, 0xB4, 0xE9, 0x23, 0xBC, 0x6D}, 8, 0);
+#endif
+    libundirect_rebind(interactiveTabCloseChangedWithTranslation, class_tiltedTabView, @selector(interactiveTabCloseChangedWithTranslation:), "v@:{CGPoint=dd}");
+
+    // -[TiltedTabView interactiveTabCloseEndedWithTranslation:velocity:wasCanceled:]
+    // 14.3 arm64: sub_1000BC0B0
+    // 14.3 arm64e: sub_1000C4E2C
+    // memory of function arm64: [600E00B4 E923BB6D] (...)
+    // memory of function arm64e: (000F/A00E)00B4 (7F)(...) [FD030191 F50302AA 481CA24E]
+#if __arm64e__
+    void* interactiveTabCloseEndedWithTranslation_velocity_wasCanceled = (void*)(((intptr_t)libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x03, 0x01, 0x91, 0xF5, 0x03, 0x02, 0xAA, 0x48, 0x1C, 0xA2, 0x4E}, 12, 0x7F)) - 4);
+#else
+    void* interactiveTabCloseEndedWithTranslation_velocity_wasCanceled = libundirect_find(@"MobileSafari", (unsigned char[]){0x60, 0x0E, 0x00, 0xB4, 0xE9, 0x23, 0xBB, 0x6D}, 8, 0);
+#endif
+    libundirect_rebind(interactiveTabCloseEndedWithTranslation_velocity_wasCanceled, class_tiltedTabView, @selector(interactiveTabCloseEndedWithTranslation:velocity:wasCanceled:), "v@:{CGPoint=dd}{CGPoint=dd}B");
+
     // - (void)openNewTabWithOptions:(long long)arg2 completionHandler:(void *)arg3
     // 14.0: sub_1000dc484, 14.2: sub_1000DC3D8, arm64e: sub_1000E6E58
     // criteria: references string "Preventing new private tab because Private Browsing is not available"
@@ -577,20 +573,8 @@ void initUndirection()
 #endif
     libundirect_rebind(animateElement_toBarItem, class_tabDocument, @selector(animateElement:toBarItem:), "@@:@q");
 
-    // _SFNavigationBar _didUpdateEffectiveTheme
-    // memory of function (14.2): FA67BBA9 F85F01A9 F65702A9 F44F03A9 FD7B04A9 [FD030191 C01300B4]
-    // memory of function (arm64e): 7F2303D5 (...) [FD030191 401400B4]
-    // memory of function (arm64e, 14.1): 7F2303D5 (...) [FD030191 E01300B4]
-#if __arm64e__
-    void* _didUpdateEffectiveTheme = libundirect_find(@"SafariServices", (unsigned char[]){0xFD, 0x03, 0x01, 0x91, 0x40, 0x14, 0x00, 0xB4}, 8, 0x7F);
-    if(!_didUpdateEffectiveTheme)
-    {
-        _didUpdateEffectiveTheme = libundirect_find(@"SafariServices", (unsigned char[]){0xFD, 0x03, 0x01, 0x91, 0xE0, 0x13, 0x00, 0xB4}, 8, 0x7F);
-    }
-#else
-    void* _didUpdateEffectiveTheme = libundirect_find(@"SafariServices", (unsigned char[]){0xFD, 0x03, 0x01, 0x91, 0xC0, 0x13, 0x00, 0xB4}, 8, 0xFA);
-#endif
-    libundirect_rebind(_didUpdateEffectiveTheme, class__SFNavigationBar, @selector(_didUpdateEffectiveTheme), "v@:");
+    // -[_SFNavigationBar _didUpdateEffectiveTheme]
+    libundirect_dsc_rebind(@"SafariServices", class__SFNavigationBar, @selector(_didUpdateEffectiveTheme), "v@:");
 
     /*void* test = libundirect_find(@"MobileSafari", (unsigned char[]){0xBB, 0x00, 0x00, 0x00, 0x00, 0x0A, 0xA0, 0x00, 0x00, 0x00, 0x00, 0xA0}, 12, 0);
     libundirect_rebind(test, class_browserController, @selector(test:), "v@:@");
@@ -599,5 +583,5 @@ void initUndirection()
     void* test3 = libundirect_find(@"MobileSafari", (unsigned char[]){0xBB, 0x00, 0x00, 0x00, 0x00, 0x0A, 0xA0, 0x00, 0x00, 0x00, 0x00, 0xA0}, 12, 0);
     libundirect_rebind(test3, class_browserController, @selector(test3:), "v@:@");*/
 
-    #endif
+#endif
 }

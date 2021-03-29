@@ -81,6 +81,7 @@
 @property (nonatomic, readonly) NSString* customStartSite;
 @property (nonatomic, readonly) BOOL alwaysOpenNewTabEnabled;
 @property (nonatomic, readonly) BOOL alwaysOpenNewTabInBackgroundEnabled;
+@property (nonatomic, readonly) BOOL disableTabSwiping;
 @property (nonatomic, readonly) BOOL disablePrivateMode;
 @property (nonatomic, readonly) BOOL longPressSuggestionsEnabled;
 @property (nonatomic, readonly) CGFloat longPressSuggestionsDuration;

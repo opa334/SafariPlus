@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "Links immer in neuem Tab öffnen";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "Neuen Tab im Hintergrund öffnen";
 
+"DISABLE_TAB_SWIPING_FOOTER" = "Verhindert das Schließen von Tabs beim Wischen nach Links.";
+"DISABLE_TAB_SWIPING" = "Tab Wischen deaktivieren";
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "Deaktiviert den privaten Surfmodus und entfernt den 'Privat' Button.";
 "DISABLE_PRIVATE_MODE" = "Privates Surfen deaktiveren";
 
@@ -444,7 +447,7 @@
 "PREVIEW" = "Vorschau";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
-"VIDEO_URL_NOT_FOUND" = "Keine Video URL gefunden! Wenn das Video derzeit pausiert ist, starte die Wiedergabe und versuche es erneut.";
+"WEBCONTENT_COMMUNICATION_FAILED" = "Die Kommunikation mit dem WebContent Prozess ist fehlgeschlagen. Diese ist zum Abrufen der Video URL erforderlich. Wenn libhooker auf iOS <= 13.7 benutzt wird, stelle sicher dass die 'Allow tweaks in webpages' Option im libhooker Configurator aktiviert ist. Wenn libhooker auf iOS >= 14.0 benutzt wird, wird das Downloaden von Videos nicht funktionieren, da libhooker unter iOS 14 wegen einem Bug nicht in der Lage ist, Symbole innerhalb des WebContent Prozesses zu hooken.";
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "DURATION_UNKNOWN" = "Unbekannte Länge";

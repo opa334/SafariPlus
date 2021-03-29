@@ -20,8 +20,8 @@
 
 #import "../SafariPlus.h"
 
-#import "../libundirect_dynamic.h"
-#import <libundirect_hookoverwrite.h>
+#import <libundirect/libundirect_dynamic.h>
+#import <libundirect/libundirect_hookoverwrite.h>
 
 #import "../Defines.h"
 #import "../Enums.h"

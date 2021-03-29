@@ -27,6 +27,7 @@
 @property (nonatomic) UIColor* backgroundColor;
 @property (nonatomic) UIColor* textColor;
 @property (nonatomic) NSTimeInterval dismissAfter;
+@property (nonatomic) UIWindow* windowToPresentOn;
 
 + (SPStatusBarNotification*)defaultStyleWithText:(NSString*)text;
 + (SPStatusBarNotification*)downloadStyleWithText:(NSString*)text;

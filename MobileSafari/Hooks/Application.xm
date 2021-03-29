@@ -28,7 +28,7 @@
 #import "../Classes/SPCacheManager.h"
 #import "../Classes/SPCommunicationManager.h"
 #import "../Shared/SPPreferenceUpdater.h"
-#import "../libundirect_dynamic.h"
+#import <libundirect/libundirect_dynamic.h>
 
 #import <UserNotifications/UserNotifications.h>
 

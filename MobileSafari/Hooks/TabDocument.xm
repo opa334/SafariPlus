@@ -32,8 +32,8 @@
 #import "../Util.h"
 #import "../Enums.h"
 
-#import "../libundirect_dynamic.h"
-#import <libundirect_hookoverwrite.h>
+#import <libundirect/libundirect_dynamic.h>
+#import <libundirect/libundirect_hookoverwrite.h>
 
 #import <WebKit/WKFrameInfo.h>
 #import <WebKit/WKNavigationAction.h>

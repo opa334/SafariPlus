@@ -23,7 +23,7 @@
 
 @class _UINavigationControllerPalette, SPDownloadBrowserTableViewController, SPDownloadListTableViewController;
 
-@interface SPDownloadNavigationController : SPFileBrowserNavigationController <DownloadNavigationControllerDelegate>
+@interface SPDownloadNavigationController : SPFileBrowserNavigationController <DownloadsObserverDelegate>
 {
 	UISegmentedControl* _segmentedControl;
 	NSInteger _previousSelectedIndex;

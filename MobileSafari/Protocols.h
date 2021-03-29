@@ -24,16 +24,6 @@
 - (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs;
 @end
 
-@protocol DownloadNavigationControllerDelegate
-@required
-- (void)reloadBrowser;
-- (void)reloadBrowserAnimated:(BOOL)animated;
-- (void)reloadDownloadList;
-- (void)reloadDownloadListAnimated:(BOOL)animated;
-- (void)reloadEverything;
-- (void)reloadEverythingAnimated:(BOOL)animated;
-@end
-
 @protocol DownloadObserverDelegate
 @required
 - (void)filesizeDidChangeForDownload:(SPDownload*)download;
@@ -44,8 +34,11 @@
 @end
 
 @protocol DownloadsObserverDelegate
+@optional
 - (void)totalProgressDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
 - (void)runningDownloadsCountDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
+- (void)totalDownloadsCountDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
+- (void)downloadHistoryDidChangeForDownloadManager:(SPDownloadManager*)downloadManager;
 @end
 
 @protocol DownloadManagerDelegate

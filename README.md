@@ -28,6 +28,8 @@ Various enhancements to Safari
 
 - Always Open Links in New Tab (+ Option to always open in background)
 
+- Disable tab swiping (Only available on iOS 12 and up)
+
 - Fully Disable Private Browsing
 
 - Insert Suggestion on Long Press - Insert a search suggestion into the URL bar by long pressing it
@@ -70,7 +72,7 @@ Various enhancements to Safari
 - Custom User Agent - Change the user agent for both mobile and desktop mode
 
 ## Compatibilty
-Any iOS device between iOS 8.0 and 14.3 should be supported!
+Any iOS device between iOS 8.0 and 14.4 should be supported!
 
 ## Compiling
 

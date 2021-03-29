@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "Her Zaman Bağlantıları Yeni Sekmede Aç";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "Arka Planda Yeni Sekme Aç";
 
+/*DISABLE_TAB_SWIPING_FOOTER*/
+/*DISABLE_TAB_SWIPING*/
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "Gizli tarama modunu devre dışı bırakır ve ‘Gizli’ düğmesini kaldırır. (Gizli stok özelliği)";
 "DISABLE_PRIVATE_MODE" = "Gizli tarama modunu ve gizli tarama butonunu devre dışı bırak.";
 
@@ -363,6 +366,8 @@
 "OPEN_TWITTER" = "Twitter'ı aç";
 /*COMMUNICATION_ERROR*/
 /*COMMUNICATION_ERROR_DESCRIPTION*/
+/*UNDIRECTOR_WARNING*/
+/*UNDIRECTOR_WARNING_MESSAGE*/
 
 /* Force HTTPS */
 

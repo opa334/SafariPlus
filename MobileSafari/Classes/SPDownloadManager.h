@@ -40,8 +40,7 @@
 @property (nonatomic) SPDownloadInfo* pickerDownloadInfo;
 @property (copy) void (^applicationBackgroundSessionCompletionHandler)();
 
-@property (nonatomic, weak) id<DownloadNavigationControllerDelegate> navigationControllerDelegate;
-@property (nonatomic) NSHashTable<id<DownloadsObserverDelegate> >* observerDelegates;
+@property (nonatomic) NSHashTable<NSObject<DownloadsObserverDelegate>*>* observerDelegates;
 
 + (instancetype)sharedInstance;
 
@@ -74,7 +73,7 @@
 - (void)loadDownloadsFromDisk;
 - (void)saveDownloadsToDisk;
 
-- (void)sendNotificationWithTitle:(NSString*)title message:(NSString*)message;
+- (void)sendNotificationWithTitle:(NSString*)title message:(NSString*)message window:(UIWindow*)window;
 
 - (int64_t)freeDiscspace;
 - (BOOL)enoughDiscspaceForDownloadInfo:(SPDownloadInfo*)downloadInfo;
@@ -106,7 +105,7 @@
 - (void)presentFileExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentDirectoryNotExistsAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentNotEnoughSpaceAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
-- (void)presentVideoURLNotFoundErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)presentWebContentErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)pathSelectionResponseWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 
 - (void)handleFinishedTask:(__kindof NSURLSessionTask*)task location:(NSURL *)location;

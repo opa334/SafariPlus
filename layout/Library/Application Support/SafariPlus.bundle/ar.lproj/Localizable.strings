@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "فتح الروابط في علامة تبويب جديدة دائمًا";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "فتح علامة التبويب الجديدة في الخلفية";
 
+/*DISABLE_TAB_SWIPING_FOOTER*/
+/*DISABLE_TAB_SWIPING*/
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "تعطيل وضع التصفح الخاص وإزالة تبديل 'خاص'.";
 "DISABLE_PRIVATE_MODE" = "تعطيل التصفح الخاص";
 
@@ -363,6 +366,8 @@
 "OPEN_TWITTER" = "فتح تويتر";
 "COMMUNICATION_ERROR" = "خطأ في التواصل";
 "COMMUNICATION_ERROR_DESCRIPTION" = "غير قادر على التواصل مع واجهة النظام! بعض المميزات لن تعمل. يرجى التأكد من تثبيت RocketBootstrap بشكل صحيح وأن SafariPlusSB.dylib لم يتم تعطيله عبر iCleaner Pro.";
+/*UNDIRECTOR_WARNING*/
+/*UNDIRECTOR_WARNING_MESSAGE*/
 
 /* Force HTTPS */
 

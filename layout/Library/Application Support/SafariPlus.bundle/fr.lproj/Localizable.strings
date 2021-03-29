@@ -149,6 +149,9 @@
 "ALWAYS_OPEN_NEW_TAB" = "Toujours ouvrir les liens dans une nouvel onglet";
 "OPEN_NEW_TAB_IN_BACKGROUND" = "Rester sur l'onglet actif";
 
+/*DISABLE_TAB_SWIPING_FOOTER*/
+/*DISABLE_TAB_SWIPING*/
+
 "DISABLE_PRIVATE_MODE_FOOTER" = "Désactive le mode de navigation privé et supprime le bouton 'Privé'. (Fonction stock masquée)";
 "DISABLE_PRIVATE_MODE" = "Désactiver la navigation privée";
 
@@ -363,6 +366,8 @@
 "OPEN_TWITTER" = "Ouvrir Twitter";
 "COMMUNICATION_ERROR" = "Erreur de communication";
 "COMMUNICATION_ERROR_DESCRIPTION" = "Impossible de communiquer avec SpringBoard! Quelques fonctionnalités ne fonctionneront pas. Veuillez vous assurer que RocketBootstrap est correctement installé et que SafariPlusSB.dylib n'est pas désactivé via iCleaner Pro.";
+/*UNDIRECTOR_WARNING*/
+/*UNDIRECTOR_WARNING_MESSAGE*/
 
 /* Force HTTPS */
 

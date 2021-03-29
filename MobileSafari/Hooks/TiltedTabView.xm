@@ -26,6 +26,9 @@
 #import "../Defines.h"
 #import "../Util.h"
 
+#import <libundirect/libundirect_dynamic.h>
+#import <libundirect/libundirect_hookoverwrite.h>
+
 %hook TiltedTabView
 
 %new

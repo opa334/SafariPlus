@@ -96,7 +96,7 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	self = [super init];
 
-	_hardLinkURL = [NSURL fileURLWithPath:[NSTemporaryDirectory() stringByAppendingPathComponent:@"hardLink"]];
+	_hardLinkURL = [getSafariTmpURL() URLByAppendingPathComponent:@"hardLink"];
 
 	_isSandboxed = access("/var/mobile", W_OK) != 0;
 	HBLogDebug(@"_isSandboxed:%i", _isSandboxed);
