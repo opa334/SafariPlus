@@ -799,17 +799,17 @@
 {
 	dlogDownloadInfo(downloadInfo, @"configureDownloadWithInfo");
 
+	//Check if downloadInfo needs a custom path
 	if(downloadInfo.customPath)
 	{
-		//Check if downloadInfo needs a custom path
+		//Pinned Locations enabled -> present them
 		if(preferenceManager.pinnedLocationsEnabled)
 		{
-			//Pinned Locations enabled -> present them
 			[self presentPinnedLocationsWithDownloadInfo:downloadInfo];
 		}
+		//Pinned Locations not enabled -> present directory picker
 		else
 		{
-			//Pinned Locations not enabled -> present directory picker
 			[self presentDirectoryPickerWithDownloadInfo:downloadInfo];
 		}
 	}
@@ -1169,15 +1169,19 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
-	SPDirectoryPickerNavigationController* directoryPicker =
-		[[SPDirectoryPickerNavigationController alloc] initWithStartURL:self.defaultDownloadURL];
+	dispatch_async(dispatch_get_main_queue(), ^
+	{
+		//initWithStartURL calls setViewControllers which needs to be called on main thread
+		SPDirectoryPickerNavigationController* directoryPicker =
+			[[SPDirectoryPickerNavigationController alloc] initWithStartURL:self.defaultDownloadURL];
 
-	directoryPicker.pickerDelegate = self;
-	directoryPicker.placeholderFilename = downloadInfo.filename;
+		directoryPicker.pickerDelegate = self;
+		directoryPicker.placeholderFilename = downloadInfo.filename;
 
-	self.pickerDownloadInfo = downloadInfo;
+		self.pickerDownloadInfo = downloadInfo;
 
-	[self presentViewController:directoryPicker withDownloadInfo:downloadInfo];
+		[self presentViewController:directoryPicker withDownloadInfo:downloadInfo];
+	});
 }
 
 - (void)presentPinnedLocationsWithDownloadInfo:(SPDownloadInfo*)downloadInfo

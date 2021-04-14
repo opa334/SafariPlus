@@ -85,7 +85,10 @@
 
 				[authenticationAlert addAction:closeAction];
 
-				[self presentViewController:authenticationAlert animated:YES completion:nil];
+				dispatch_async(dispatch_get_main_queue(), ^
+				{
+					[self presentViewController:authenticationAlert animated:YES completion:nil];
+				});
 			}
 		}];
 	}
