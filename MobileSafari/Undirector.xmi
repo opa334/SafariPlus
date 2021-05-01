@@ -245,7 +245,15 @@ void initUndirection()
 #else
     // memory of function: F85FBCA9 F65701A9 F44F02A9 FD7B03A9 FDC30091 (20)[000600B4 F30300AA 381100F0]
     // 14.2: sub_100038970
+    // 14.5: sub_100037fbc [000600B4 F30300AA 181100F0]
+
+    // adrp       x24, #0x10025a000 = 181100F0
+    // adrp       x24, #0x10025f000 = 381100F0
     void* _updateDisableBarHiding = libundirect_find(@"MobileSafari", (unsigned char[]){0x00, 0x06, 0x00, 0xB4, 0xF3, 0x03, 0x00, 0xAA, 0x38, 0x11, 0x00, 0xF0}, 12, 0xF8);
+    if(!_updateDisableBarHiding)
+    {
+        _updateDisableBarHiding = libundirect_find(@"MobileSafari", (unsigned char[]){0x00, 0x06, 0x00, 0xB4, 0xF3, 0x03, 0x00, 0xAA, 0x18, 0x11, 0x00, 0xF0}, 12, 0xF8);
+    }
 #endif
     libundirect_rebind(_updateDisableBarHiding, class_browserController, @selector(_updateDisableBarHiding), "v@:");
 
@@ -271,28 +279,38 @@ void initUndirection()
     libundirect_rebind(setFavoritesState_animated, class_browserController, @selector(setFavoritesState:animated:catalogVC:), "v@:qB@");
 
     // BrowserController - (void)setUpWithURL:(id)arg1 launchOptions:(id)arg2
-    // memory of function: FF8302D1 FC6F04A9 FA6705A9 F85F06A9 F65707A9 F44F08A9 FD7B09A9 (28)[FD430291 F30303AA F70300AA]
+    // memory of function: FF8302D1 FC6F04A9 FA6705A9 F85F06A9 F65707A9 F44F08A9 FD7B09A9 (28)FD43[0291 F30303AA F70300AA]
+    //                     FFC302D1 FC6F05A9 FA6706A9 F85F07A9 F65708A9 F44F09A9 FD7B0AA9 FD830291 F30303AA F70300AA E00302AA 8DDF0494 E00F00F9 E00313AA 8ADF0494 E00B00F9 F72800B4 C81000F0 003D47F9 881000B0 14F942F9 E10314AA
     // criteria: references _keyboardWillShow selector
     // 14.2: sub_100040320
-    void* setUpWithURL = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x02, 0x91, 0xF3, 0x03, 0x03, 0xAA, 0xF7, 0x03, 0x00, 0xAA}, 12, ifArm64eElse(0x7F, 0xFF));
+    // 14.5: sub_10003f960
+    void* setUpWithURL = libundirect_find(@"MobileSafari", (unsigned char[]){0x02, 0x91, 0xF3, 0x03, 0x03, 0xAA, 0xF7, 0x03, 0x00, 0xAA}, 10, ifArm64eElse(0x7F, 0xFF));
     libundirect_rebind(setUpWithURL, class_browserController, @selector(setUpWithURL:launchOptions:), "v@:@@");
 
     // BrowserController - (void)_updateButtonsAnimatingTabBar:(BOOL)arg1
     // memory of function: FF8301D1 F65703A9 F44F04A9 FD7B05A9 (16)[FD430191 000500B4]
+    // 14.5:                                                       [FD430191 400500B4]
     // arm64e memory: 7F2303D5 FF8301D1 F65703A9 F44F04A9 FD7B05A9 [FD430191 C00500B4]
     // criteria: calls performCoalescedUpdates
-    // iOS 14.2: sub_100037994, arm64e: sub_100037FC0
+    // 14.2: sub_100037994, arm64e: sub_100037FC0
+    // 14.5: sub_100037054
     void* _updateButtonsAnimatingTabBar = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x01, 0x91, ifArm64eElse(0xC0, 0x00), 0x05, 0x00, 0xB4}, 8, ifArm64eElse(0x7F, 0xFF));
+    if(!_updateButtonsAnimatingTabBar)
+    {
+        _updateButtonsAnimatingTabBar = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x01, 0x91, ifArm64eElse(0xC0, 0x40), 0x05, 0x00, 0xB4}, 8, ifArm64eElse(0x7F, 0xFF));
+    }
     libundirect_rebind(_updateButtonsAnimatingTabBar, class_browserController, @selector(_updateButtonsAnimatingTabBar:), "v@:B");
 
     // BrowserController -(void)clearHistoryMessageReceived
     // 14.1 arm64e: sub_100044C58
     // 14.2: sub_10004468c, arm64e: sub_100045968
     // 14.3: sub_100043ea0
+    // 14.5: sub_100043ee0
     // criteria: calls clearAllBrowsingData
-    // memory of function: F44FBEA9 FD7B01A9 [FD430091 800100B4 C81000F0]
+    // memory of function: F44FBEA9 FD7B01A9 [FD430091 800100B4 C81000]F0
     // memory of function (arm64e): 7F2303D5 F44FBEA9 FD7B01A9 [FD430091 000200B4 681100B0] 
     // memory of function (arm64e, iOS 14.1): [FD430091 A00100B4 281100D0]
+    
 #if __arm64e__
     void* clearHistoryMessageReceived = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x00, 0x91, 0xA0, 0x01, 0x00, 0xB4, 0x28, 0x11, 0x00, 0xD0}, 12, 0x7F);
     if(!clearHistoryMessageReceived)
@@ -300,7 +318,7 @@ void initUndirection()
         clearHistoryMessageReceived = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x00, 0x91, 0x00, 0x02, 0x00, 0xB4, 0x68, 0x11, 0x00, 0xB0}, 12, 0x7F);
     }
 #else
-    void* clearHistoryMessageReceived = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x00, 0x91, 0x80, 0x01, 0x00, 0xB4, 0xC8, 0x10, 0x00, 0xF0}, 12, 0xF4);
+    void* clearHistoryMessageReceived = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x00, 0x91, 0x80, 0x01, 0x00, 0xB4, 0xC8, 0x10, 0x00}, 11, 0xF4);
     if(!clearHistoryMessageReceived)
     {
         //14.3 memory: F44FBEA9 FD7B01A9 [FD430091 800100B4 E8100090] 006544F9 BDD30494
@@ -389,15 +407,17 @@ void initUndirection()
     libundirect_rebind(_setIcon_isMonogram, class_tabDocument, @selector(_setIcon:isMonogram:), "v@:@B");
 
     // -[TabDocument _createDocumentViewWithConfiguration:]
-    // memory of function: FF0302D1 FC6F02A9 FA6703A9 F85F04A9 F65705A9 F44F06A9 FD7B07A9 FDC30191 F40300AA E00302AA 6FED0194 FC0300AA [744500B4 80AA41F9]
+    // memory of function: FF0302D1 (...) [FC0300AA 744500B4] 80(AA/AE)41F9
     // 14.2: sub_1000fdc3c
+    // 14.5: sub_1000ff15c
     // criteria: Calls traitEnvironment
-    void* _createDocumentViewWithConfiguration = libundirect_find(@"MobileSafari", (unsigned char[]){0x74, 0x45, 0x00, 0xB4, 0x80, 0xAA, 0x41, 0xF9}, 8, ifArm64eElse(0x7F, 0xFF));
+    void* _createDocumentViewWithConfiguration = libundirect_find(@"MobileSafari", (unsigned char[]){0xFC, 0x03, 0x00, 0xAA, 0x74, 0x45, 0x00, 0xB4}, 8, ifArm64eElse(0x7F, 0xFF));
     libundirect_rebind(_createDocumentViewWithConfiguration, class_tabDocument, @selector(_createDocumentViewWithConfiguration:), "v@:@");
 
     // -[TabDocument _initWithTitle:URL:UUID:privateBrowsingEnabled:controlledByAutomation:bookmark:browserController:createDocumentView:]
     // memory of function: FF4302D1 FC6F03A9 FA6704A9 F85F05A9 F65706A9 F44F07A9 FD7B08A9 [FD030291 F30307AA]
     // 14.2: sub_1000f2a14
+    // 14.5: sub_1000f0620
     // criteria: Called from _initWithBrowserController:(int)arg2 configuration:(int)arg3
     void* _initWithTitle_7args = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x03, 0x02, 0x91, 0xF3, 0x03, 0x07, 0xAA}, 8, ifArm64eElse(0x7F, 0xFF));
     libundirect_rebind(_initWithTitle_7args, class_tabDocument, @selector(_initWithTitle:URL:UUID:privateBrowsingEnabled:controlledByAutomation:bookmark:browserController:createDocumentView:), "@@:@@@BB@@@");
@@ -460,25 +480,33 @@ void initUndirection()
 
     // -[TiltedTabView interactiveTabCloseChangedWithTranslation:]
     // 14.3 arm64: sub_1000BBF90
+    // 14.5 arm64: sub_1000BC614
     // 14.3 arm64e: sub_1000C4CF8
     // memory of function arm64: [E00800B4 E923BC6D] (...)
+    // 14.5:                      4010[00B4 E923]
     // memory of function arm64e: (20/80)0900B4 (F7)(...) [F30300AA 0840611E]
 #if __arm64e__
     void* interactiveTabCloseChangedWithTranslation = (void*)(((intptr_t)libundirect_find(@"MobileSafari", (unsigned char[]){0xF3, 0x03, 0x00, 0xAA, 0x08, 0x40, 0x61, 0x1E}, 8, 0x7F)) - 4);
 #else
-    void* interactiveTabCloseChangedWithTranslation = libundirect_find(@"MobileSafari", (unsigned char[]){0xE0, 0x08, 0x00, 0xB4, 0xE9, 0x23, 0xBC, 0x6D}, 8, 0);
+    void* interactiveTabCloseChangedWithTranslation = (void*)(((intptr_t)libundirect_find(@"MobileSafari", (unsigned char[]){0x00, 0xB4, 0xE9, 0x23}, 4, 0)) - 4);
 #endif
     libundirect_rebind(interactiveTabCloseChangedWithTranslation, class_tiltedTabView, @selector(interactiveTabCloseChangedWithTranslation:), "v@:{CGPoint=dd}");
 
     // -[TiltedTabView interactiveTabCloseEndedWithTranslation:velocity:wasCanceled:]
     // 14.3 arm64: sub_1000BC0B0
     // 14.3 arm64e: sub_1000C4E2C
+    // 14.5 arm64: sub_1000BC400
     // memory of function arm64: [600E00B4 E923BB6D] (...)
+    // 14.5                       000700B4 F657BDA9
     // memory of function arm64e: (000F/A00E)00B4 (7F)(...) [FD030191 F50302AA 481CA24E]
 #if __arm64e__
     void* interactiveTabCloseEndedWithTranslation_velocity_wasCanceled = (void*)(((intptr_t)libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x03, 0x01, 0x91, 0xF5, 0x03, 0x02, 0xAA, 0x48, 0x1C, 0xA2, 0x4E}, 12, 0x7F)) - 4);
 #else
     void* interactiveTabCloseEndedWithTranslation_velocity_wasCanceled = libundirect_find(@"MobileSafari", (unsigned char[]){0x60, 0x0E, 0x00, 0xB4, 0xE9, 0x23, 0xBB, 0x6D}, 8, 0);
+    if(!interactiveTabCloseEndedWithTranslation_velocity_wasCanceled)
+    {
+        interactiveTabCloseEndedWithTranslation_velocity_wasCanceled = libundirect_find(@"MobileSafari", (unsigned char[]){0x00, 0x07, 0x00, 0xB4, 0xF6, 0x57, 0xBD, 0xA9}, 8, 0);
+    }
 #endif
     libundirect_rebind(interactiveTabCloseEndedWithTranslation_velocity_wasCanceled, class_tiltedTabView, @selector(interactiveTabCloseEndedWithTranslation:velocity:wasCanceled:), "v@:{CGPoint=dd}{CGPoint=dd}B");
 
@@ -487,17 +515,19 @@ void initUndirection()
     // criteria: references string "Preventing new private tab because Private Browsing is not available"
 
     // - (void)_pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded:(bool)arg2 alternativeOrdering:(bool)arg3
-    // 14.0: sub_10004c938, 14.2: sub_10004CAC0, arm64e: sub_10004E36C
+    // 14.0: sub_10004c938, 14.2: sub_10004CAC0, arm64e: sub_10004E36C, 14.5: sub_10004c62c
     // criteria: called by openNewTabWithOptions (wrong?)
     // criteria: called by BrowserController openNewTab:
     // memory of function: FF8301D1 F65703A9 F44F04A9 FD7B05A9 [FD430191 C00300B4]
+    // 14.5    (+arm64e)   FF8301D1 (...) 81B9FF97 (...) [48008052 08119F9A]
     // memory of function (arm64e): 7F2303D5 (...) [FD430191 800400B4]
-
-#ifdef __arm64e__
-    void* _pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x01, 0x91, 0x80, 0x04, 0x00, 0xB4}, 8, 0x7F);
-#else
-    void* _pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0x43, 0x01, 0x91, 0xC0, 0x03, 0x00, 0xB4}, 8, 0xFF);
-#endif
+    
+    #if __arm64e__
+    void* _pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering = libundirect_find(@"MobileSafari", (unsigned char[]){0x48, 0x00, 0x80, 0x52, 0x08, 0x11, 0x9F, 0x9A}, 8, 0x7F);
+    #else
+    //problem: function contains starting byte (FF), workaround: use 83 as starting byte and substract one
+    void* _pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering = (void*)(((intptr_t)libundirect_find(@"MobileSafari", (unsigned char[]){0x48, 0x00, 0x80, 0x52, 0x08, 0x11, 0x9F, 0x9A}, 8, 0x83)) - 1);;
+    #endif
     libundirect_rebind(_pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering, class_browserController, @selector(_pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded:alternativeOrdering:), "v@:BB");
 
     // TabController -(void)_closeTabDocuments:(void *)arg2 animated:(bool)arg3 temporarily:(bool)arg4 allowAddingToRecentlyClosedTabs:(bool)arg5 keepWebViewAlive:(bool)arg6
@@ -514,28 +544,44 @@ void initUndirection()
     // TabDocument -(void *)_initWithTitle:(void *)arg2 URL:(void *)arg3 UUID:(void *)arg4 privateBrowsingEnabled:(bool)arg5 controlledByAutomation:(bool)arg6 bookmark:(void *)arg7 browserController:(void *)arg8 createDocumentView:(void *)arg9 {
     // criteria: calls initWithPrivateBrowsingEnabled:traitEnvironment:controlledByAutomation:
     // 14.2: sub_1000f2a14
+    // 14.5: sub_1000f0620
 
     // TabDocument -(void *)initWithTitle:(void *)arg2 URL:(void *)arg3 UUID:(void *)arg4 privateBrowsingEnabled:(bool)arg5 controlledByAutomation:(bool)arg6 hibernated:(bool)arg7 bookmark:(void *)arg8 browserController:(void *)arg9 relatedWebView:(void *)arg10
     // criteria: calls _initWithTitle
     // 14.2: sub_1000ef64c
+    // 14.5: sub_1000f018c
 
     // TabDocument initWithTitle:(void *)arg2 URL:(void *)arg3 UUID:(void *)arg4 privateBrowsingEnabled:(bool)arg5 hibernated:(bool)arg6 bookmark:(void *)arg7 browserController:(void *)arg8
     // criteria: calls initWithTitle
     // 14.2: sub_1000ef82c
-    // memory of function: FF0302D1 FC6F02A9 FA6703A9 F85F04A9 F65705A9 F44F06A9 FD7B07A9 [FDC30191 F60307AA]
+    // 14.5: sub_1000f0bf0
+    // memory of function: FF0302D1 (...) [FDC30191 F60307AA]
+    // 14.5                FFC301D1 (...) [F70307AA F80306AA]
     void* initWithTitle_7args = libundirect_find(@"MobileSafari", (unsigned char[]){0xFD, 0xC3, 0x01, 0x91, 0xF6, 0x03, 0x07, 0xAA}, 8, ifArm64eElse(0x7F, 0xFF));
+    if(!initWithTitle_7args)
+    {
+        initWithTitle_7args = libundirect_find(@"MobileSafari", (unsigned char[]){0xF7, 0x03, 0x07, 0xAA, 0xF8, 0x03, 0x06, 0xAA}, 8, ifArm64eElse(0x7F, 0xFF));
+    }
     libundirect_rebind(initWithTitle_7args, class_tabDocument, @selector(initWithTitle:URL:UUID:privateBrowsingEnabled:hibernated:bookmark:browserController:), "@@:@@@BB@@");
 
     // TabController _insertTabDocument:(void *)arg2 atIndex:(unsigned long long)arg3 inBackground:(bool)arg4 animated:(bool)arg5 updateUI:(bool)arg6
     // 14.2: sub_1000dad58
+    // 14.5: sub_1000db448
     // criteria: calls insertObject:atIndex:
 
     // TabController -(void)insertTabDocument:(void *)arg2 afterTabDocument:(void *)arg3 inBackground:(bool)arg4 animated:(bool)arg5
     // 14.2: sub_1000db8f4
+    // 14.5: sub_1000dc0f0
     // criteria: calls _insertTabDocument
     // memory of function: F85FBCA9 F65701A9 F44F02A9 FD7B03A9 FDC30091 F30305AA [F40304AA F70303AA F60300AA]
-    void* insertTabDocument_4args = libundirect_find(@"MobileSafari", (unsigned char[]){0xF4, 0x03, 0x04, 0xAA, 0xF7, 0x03, 0x03, 0xAA, 0xF6, 0x03, 0x00, 0xAA}, 12, ifArm64eElse(0x7F, 0xF8));
+    // 14.5:               E00400B4 F85FBCA9 F65701A9 F44F02A9 FD7B03A9 FDC30091 [F30305AA F40304AA F60302AA F50300AA]
+    void* insertTabDocument_4args = libundirect_find(@"MobileSafari", (unsigned char[]){0xF3, 0x03, 0x05, 0xAA, 0xF4, 0x03, 0x04, 0xAA, 0xF6, 0x03, 0x02, 0xAA, 0xF5, 0x03, 0x00, 0xAA}, 16, ifArm64eElse(0x7F, 0xE0));
+    if(!insertTabDocument_4args)
+    {
+        insertTabDocument_4args = libundirect_find(@"MobileSafari", (unsigned char[]){0xF4, 0x03, 0x04, 0xAA, 0xF7, 0x03, 0x03, 0xAA, 0xF6, 0x03, 0x00, 0xAA}, 12, ifArm64eElse(0x7F, 0xF8));
+    }
     libundirect_rebind(insertTabDocument_4args, class_tabController, @selector(insertTabDocument:afterTabDocument:inBackground:animated:), "v@:@@BB");
+    
 
     // TabDocument unhibernate
     // 14.2: sub_1000f47c0, arm64e: sub_100100A20
@@ -557,9 +603,10 @@ void initUndirection()
     libundirect_rebind(_titleIncludeLoading_allowURLStringFallback_allowUntitled, class_tabDocument, @selector(_titleIncludeLoading:allowURLStringFallback:allowUntitled:), "@@:BBB");
 
     // TabDocument -(void)animateElement:(void *)arg2 toBarItem:(long long)arg3
-    // 14.2: sub_1000fcc48, arm64e: sub_100109988, iOS 14.1 arm64e: sub_100104918
+    // 14.2: sub_1000fcc48, arm64e: sub_100109988, iOS 14.1 arm64e: sub_100104918, 14.5: sub_1000fcde4
     // criteria: references boundingRect
     // memory of function: EB2BBA6D (...) [F30300AA 160500B4 C80A00B0]
+    // 14.5                               [F50300AA E00301AA 6AEA0194]
     // memory of function (arm64e): 7F2303D5 EB2BBA6D (...) [F30300AA 160500B4 080B0090]
     // memory of function (arm64e 14.1): 7F2303D5 EB2BBA6D (...) [F30300AA 160500B4 E80A00B0]
 #if __arm64e__
@@ -570,6 +617,10 @@ void initUndirection()
     }
 #else
     void* animateElement_toBarItem = libundirect_find(@"MobileSafari", (unsigned char[]){0xF3, 0x03, 0x00, 0xAA, 0x16, 0x05, 0x00, 0xB4, 0xC8, 0x0A, 0x00, 0xB0}, 12, 0xEB);
+    if(!animateElement_toBarItem)
+    {
+        animateElement_toBarItem = libundirect_find(@"MobileSafari", (unsigned char[]){0xF5, 0x03, 0x00, 0xAA, 0xE0, 0x03, 0x01, 0xAA, 0x6A, 0xEA, 0x01, 0x94}, 12, 0xEB);
+    }
 #endif
     libundirect_rebind(animateElement_toBarItem, class_tabDocument, @selector(animateElement:toBarItem:), "@@:@q");
 

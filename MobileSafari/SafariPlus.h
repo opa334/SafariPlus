@@ -816,6 +816,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @interface SearchEngineInfo : NSObject
 @property (readonly, nonatomic) NSString *shortName;
 + (instancetype)engineFromDictionary:(NSDictionary*)arg1 withController:(id)arg2;
+- (instancetype)initWithDictionary:(NSDictionary*)arg2 usingContext:(id)arg3;
 @end
 
 @interface SearchSuggestion : NSObject

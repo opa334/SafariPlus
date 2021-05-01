@@ -137,7 +137,26 @@ static NSString* stringWithSchemeStripped(NSString* oldString)
 				SearchEngineInfoClass = NSClassFromString(@"_SFSearchEngineInfo");
 			}
 
-			seSelf.customSearchEngine = [SearchEngineInfoClass engineFromDictionary:@{@"SearchEngineID" : @1337, @"SearchURLTemplate" : preferenceManager.customSearchEngineURL, @"SuggestionsURLTemplate" : customSearchEngineSuggestionsURL, @"ShortName" : preferenceManager.customSearchEngineName, @"ScriptingName" : preferenceManager.customSearchEngineName} withController:self];
+			NSDictionary* searchEngineDictionary = @{
+				@"SearchEngineIdentifier" : @"com.opa334.safariplus.custom", //required on iOS 14.5 and up
+				@"SearchEngineID" : @1337,
+				@"SearchURLTemplate" : preferenceManager.customSearchEngineURL,
+				@"SuggestionsURLTemplate" : customSearchEngineSuggestionsURL,
+				@"ShortName" : preferenceManager.customSearchEngineName,
+				@"ScriptingName" : preferenceManager.customSearchEngineName
+			};
+
+			if([SearchEngineInfoClass respondsToSelector:@selector(engineFromDictionary:withController:)])
+			{
+				//iOS 14.4 and down
+				seSelf.customSearchEngine = [SearchEngineInfoClass engineFromDictionary:searchEngineDictionary withController:self];
+			}
+			else
+			{
+				//iOS 14.5 and up
+				seSelf.customSearchEngine = [[SearchEngineInfoClass alloc] initWithDictionary:searchEngineDictionary usingContext:self];
+			}
+			
 			object_setClass(seSelf.customSearchEngine, [%c(SPSearchEngineInfo) class]);
 			[(SPSearchEngineInfo*)seSelf.customSearchEngine setUpSearchURLTemplateString];
 		}
