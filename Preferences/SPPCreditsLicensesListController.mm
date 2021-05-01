@@ -23,16 +23,6 @@
 
 @implementation SPPCreditsLicensesListController
 
-- (NSString*)title
-{
-	return [localizationManager localizedSPStringForKey:@"CREDITS_AND_LICENSES"];
-}
-
-- (NSString*)plistName
-{
-	return @"CreditsLicenses";
-}
-
 - (void)libSubstitrateLink
 {
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/PoomSmart/libSubstitrate"]];

@@ -26,16 +26,6 @@
 
 @implementation SPPTweakSpecificSettingsListController
 
-- (NSString*)plistName
-{
-	return @"TweakSpecificSettings";
-}
-
-- (NSString*)title
-{
-	return [localizationManager localizedSPStringForKey:@"TWEAK_SPECIFIC_SETTINGS"];
-}
-
 - (void)resetAllPreferences
 {
 	NSUserDefaults* sppDefaults = [[NSUserDefaults alloc] initWithSuiteName:preferenceDomainName];

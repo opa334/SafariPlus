@@ -30,6 +30,7 @@
 @interface SPPListController : PSListController
 {
 	NSArray* _allSpecifiers;
+	UITapGestureRecognizer* _tapGestureRecognizer;
 }
 
 - (NSString*)plistName;
@@ -39,4 +40,7 @@
 - (void)removeDisabledGroups:(NSMutableArray*)specifiers;
 - (void)openTwitterWithUsername:(NSString*)username;
 - (void)closeKeyboard;
+- (BOOL)shouldDismissKeyboardOnTap;
+- (BOOL)shouldAddTapGesture;
+- (void)tapGestureReceivedTap:(UITapGestureRecognizer*)sender;
 @end

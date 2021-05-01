@@ -47,6 +47,8 @@
 				<string>SPPPrivacyListController</string>
 				<key>label</key>
 				<string>PRIVACY</string>
+				<key>plistName</key>
+				<string>Privacy</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -59,6 +61,8 @@
 				<string>SPPUploadDownloadListController</string>
 				<key>label</key>
 				<string>UPLOADS_AND_DOWNLOADS</string>
+				<key>plistName</key>
+				<string>UploadsDownloads</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -68,9 +72,11 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>detail</key>
-				<string>SPPUsabilityListController</string>
+				<string>SPPListController</string>
 				<key>label</key>
 				<string>USABILITY</string>
+				<key>plistName</key>
+				<string>Usability</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -83,6 +89,8 @@
 				<string>SPPActionsListController</string>
 				<key>label</key>
 				<string>ACTIONS</string>
+				<key>plistName</key>
+				<string>Actions</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -95,6 +103,8 @@
 				<string>SPPGesturesListController</string>
 				<key>label</key>
 				<string>GESTURES</string>
+				<key>plistName</key>
+				<string>Gestures</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -104,9 +114,13 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>detail</key>
-				<string>SPPCustomizationListController</string>
+				<string>SPPListController</string>
 				<key>label</key>
 				<string>CUSTOMIZATION</string>
+				<key>plistName</key>
+				<string>Customization</string>
+				<key>shouldDismissKeyboardOnTap</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -125,6 +139,8 @@
 				<string>SPPTweakSpecificSettingsListController</string>
 				<key>label</key>
 				<string>TWEAK_SPECIFIC_SETTINGS</string>
+				<key>plistName</key>
+				<string>TweakSpecificSettings</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -137,6 +153,8 @@
 				<string>SPPCreditsLicensesListController</string>
 				<key>label</key>
 				<string>CREDITS_AND_LICENSES</string>
+				<key>plistName</key>
+				<string>CreditsLicenses</string>
 			</dict>
 			<dict>
 				<key>action</key>

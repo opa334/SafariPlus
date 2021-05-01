@@ -214,6 +214,46 @@
 	}
 }
 
+- (BOOL)shouldDismissKeyboardOnTap
+{
+	if(NSNumber* shouldDismissKeyboardOnTap = [[self specifier] propertyForKey:@"shouldDismissKeyboardOnTap"])
+	{
+		return [shouldDismissKeyboardOnTap boolValue];
+	}
+
+	return NO;
+}
+
+- (BOOL)shouldAddTapGesture
+{
+	if([self shouldDismissKeyboardOnTap])
+	{
+		return YES;
+	}
+
+	return NO;
+}
+
+- (void)tapGestureReceivedTap:(UITapGestureRecognizer*)sender
+{
+	if([self shouldDismissKeyboardOnTap])
+	{
+		[self closeKeyboard];
+	}
+}
+
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+
+	if([self shouldAddTapGesture])
+	{
+		_tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureReceivedTap:)];
+		_tapGestureRecognizer.cancelsTouchesInView = NO;
+		[self.view addGestureRecognizer:_tapGestureRecognizer];
+	}
+}
+
 - (void)closeKeyboard
 {
 	[self.view endEditing:YES];

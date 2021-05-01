@@ -27,16 +27,6 @@
 
 @implementation SPPPrivacyListController
 
-- (NSString*)plistName
-{
-	return @"Privacy";
-}
-
-- (NSString*)title
-{
-	return [localizationManager localizedSPStringForKey:@"PRIVACY"];
-}
-
 - (void)unlockBiometricProtectionSpecifiers
 {
 	for(PSSpecifier* specifier in [self valueForKey:@"_allSpecifiers"])

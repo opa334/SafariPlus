@@ -118,7 +118,7 @@
 				<key>label</key>
 				<string>CUSTOM_START_SITE</string>
 				<key>nestedEntryCount</key>
-				<integer>2</integer>
+				<integer>1</integer>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -135,18 +135,6 @@
 				<string>customStartSite</string>
 				<key>placeholder</key>
 				<string>https://google.com/</string>
-			</dict>
-			<dict>
-				<key>PostNotification</key>
-				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-				<key>cell</key>
-				<string>PSButtonCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SAVE</string>
-				<key>action</key>
-				<string>closeKeyboard</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -170,17 +158,7 @@
 				<key>label</key>
 				<string>CUSTOM_SEARCH_ENGINE</string>
 				<key>nestedEntryCount</key>
-				<integer>7</integer>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSStaticTextCell</string>
-				<key>cellClass</key>
-				<string>SPPNoSeparatorTableCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SEARCH_ENGINE_NAME</string>
+				<integer>3</integer>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -195,18 +173,10 @@
 				<string>false</string>
 				<key>key</key>
 				<string>customSearchEngineName</string>
+				<key>label</key>
+				<string>SEARCH_ENGINE_NAME</string>
 				<key>placeholder</key>
 				<string>Google</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSStaticTextCell</string>
-				<key>cellClass</key>
-				<string>SPPNoSeparatorTableCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SEARCH_URL</string>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -219,18 +189,10 @@
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
 				<string>customSearchEngineURL</string>
+				<key>label</key>
+				<string>SEARCH_URL</string>
 				<key>placeholder</key>
 				<string>https://google.com/search?q={searchTerms}</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSStaticTextCell</string>
-				<key>cellClass</key>
-				<string>SPPNoSeparatorTableCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SEARCH_SUGGESTIONS_URL</string>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -243,20 +205,10 @@
 				<string>com.opa334.safariplusprefs</string>
 				<key>key</key>
 				<string>customSearchEngineSuggestionsURL</string>
+				<key>label</key>
+				<string>SEARCH_SUGGESTIONS_URL</string>
 				<key>placeholder</key>
 				<string>https://www.google.com/complete/search&amp;q={searchTerms}</string>
-			</dict>
-			<dict>
-				<key>PostNotification</key>
-				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-				<key>cell</key>
-				<string>PSButtonCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SAVE</string>
-				<key>action</key>
-				<string>closeKeyboard</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -282,7 +234,7 @@
 				<key>label</key>
 				<string>CUSTOM_USER_AGENT</string>
 				<key>nestedEntryCount</key>
-				<integer>2</integer>
+				<integer>1</integer>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -299,18 +251,6 @@
 				<string>customUserAgent</string>
 				<key>placeholder</key>
 				<string>Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1</string>
-			</dict>
-			<dict>
-				<key>PostNotification</key>
-				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-				<key>cell</key>
-				<string>PSButtonCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SAVE</string>
-				<key>action</key>
-				<string>closeKeyboard</string>
 			</dict>
 			<dict>
 				<key>cell</key>
@@ -336,7 +276,7 @@
 				<key>label</key>
 				<string>CUSTOM_DESKTOP_USER_AGENT</string>
 				<key>nestedEntryCount</key>
-				<integer>2</integer>
+				<integer>1</integer>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
@@ -353,18 +293,6 @@
 				<string>customDesktopUserAgent</string>
 				<key>placeholder</key>
 				<string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/604.1 (KHTML, like Gecko) Version/12.0 Safari/604.1</string>
-			</dict>
-			<dict>
-				<key>PostNotification</key>
-				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-				<key>cell</key>
-				<string>PSButtonCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SAVE</string>
-				<key>action</key>
-				<string>closeKeyboard</string>
 			</dict>
 		</array>
 		<key>title</key>

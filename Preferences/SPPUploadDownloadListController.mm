@@ -23,14 +23,9 @@
 
 @implementation SPPUploadDownloadListController
 
-- (NSString*)plistName
+- (BOOL)shouldDismissKeyboardOnTap
 {
-	return @"UploadsDownloads";
-}
-
-- (NSString*)title
-{
-	return [localizationManager localizedSPStringForKey:@"UPLOADS_AND_DOWNLOADS"];
+	return YES;
 }
 
 - (NSArray*)sectionValues

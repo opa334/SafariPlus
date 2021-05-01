@@ -322,7 +322,7 @@
 "CUSTOM_SEARCH_ENGINE_FOOTER" = "Replace the default search engine, {searchTerms} is a placeholder for the enterred search term. The suggestions URL is optional.";
 "SEARCH_ENGINE_NAME" = "Search Engine Name";
 "SEARCH_URL" = "Search URL";
-"SEARCH_SUGGESTIONS_URL" = "Search Suggestions URL";
+"SEARCH_SUGGESTIONS_URL" = "Suggestions URL";
 
 "CUSTOM_USER_AGENT" = "Custom User Agent";
 "CUSTOM_USER_AGENT_FOOTER" = "Replace the default user agent.";

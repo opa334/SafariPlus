@@ -23,16 +23,6 @@
 
 @implementation SPPGesturesListController
 
-- (NSString*)plistName
-{
-	return @"Gestures";
-}
-
-- (NSString*)title
-{
-	return [localizationManager localizedSPStringForKey:@"GESTURES"];
-}
-
 - (NSArray *)gestureActionValues
 {
 	if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0)

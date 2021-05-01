@@ -23,16 +23,6 @@
 
 @implementation SPPActionsListController
 
-- (NSString*)plistName
-{
-	return @"Actions";
-}
-
-- (NSString*)title
-{
-	return [localizationManager localizedSPStringForKey:@"ACTIONS"];
-}
-
 - (NSArray *)modeValues
 {
 	return @[@(ModeSwitchActionNormalMode), @(ModeSwitchActionPrivateMode)];

@@ -52,7 +52,7 @@
 				<key>label</key>
 				<string>DOWNLOAD_MANAGER</string>
 				<key>nestedEntryCount</key>
-				<integer>35</integer>
+				<integer>33</integer>
 				<key>maxCFVersion</key>
 				<real>1660.00</real>
 			</dict>
@@ -180,21 +180,15 @@
 				<key>label</key>
 				<string>CUSTOM_DEFAULT_PATH</string>
 				<key>nestedEntryCount</key>
-				<integer>3</integer>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSStaticTextCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>/var</string>
+				<integer>1</integer>
 			</dict>
 			<dict>
 				<key>PostNotification</key>
 				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
 				<key>cell</key>
 				<string>PSEditTextCell</string>
+				<key>label</key>
+				<string>/var</string>
 				<key>default</key>
 				<string></string>
 				<key>defaults</key>
@@ -205,16 +199,6 @@
 				<string>customDefaultPath</string>
 				<key>placeholder</key>
 				<string>/mobile/Downloads/</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSButtonCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>label</key>
-				<string>SAVE</string>
-				<key>action</key>
-				<string>closeKeyboard</string>
 			</dict>
 			<dict>
 				<key>cell</key>
