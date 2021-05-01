@@ -70,7 +70,7 @@
 				<key>label</key>
 				<string>DOWNLOAD_MANAGER</string>
 				<key>nestedEntryCount</key>
-				<integer>32</integer>
+				<integer>30</integer>
 				<key>minCFVersion</key>
 				<real>1660.01</real>
 			</dict>
