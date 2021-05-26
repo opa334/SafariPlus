@@ -609,6 +609,9 @@ void initUndirection()
     // 14.5                               [F50300AA E00301AA 6AEA0194]
     // memory of function (arm64e): 7F2303D5 EB2BBA6D (...) [F30300AA 160500B4 080B0090]
     // memory of function (arm64e 14.1): 7F2303D5 EB2BBA6D (...) [F30300AA 160500B4 E80A00B0]
+    // 14.6: sub_1000fdca0
+    // memory of function (14.6, arm64): EB2BBA6D (...) [F30300AA 160500B4 A80A0090]
+
 #if __arm64e__
     void* animateElement_toBarItem = libundirect_find(@"MobileSafari", (unsigned char[]){0xF3, 0x03, 0x00, 0xAA, 0x16, 0x05, 0x00, 0xB4, 0xE8, 0x0A, 0x00, 0xB0}, 12, 0x7F);
     if(!animateElement_toBarItem)
@@ -620,6 +623,10 @@ void initUndirection()
     if(!animateElement_toBarItem)
     {
         animateElement_toBarItem = libundirect_find(@"MobileSafari", (unsigned char[]){0xF5, 0x03, 0x00, 0xAA, 0xE0, 0x03, 0x01, 0xAA, 0x6A, 0xEA, 0x01, 0x94}, 12, 0xEB);
+        if(!animateElement_toBarItem)
+        {
+            animateElement_toBarItem = libundirect_find(@"MobileSafari", (unsigned char[]){0xF3, 0x03, 0x00, 0xAA, 0x16, 0x05, 0x00, 0xB4, 0xA8, 0x0A, 0x00, 0x90}, 12, 0xEB);
+        }
     }
 #endif
     libundirect_rebind(animateElement_toBarItem, class_tabDocument, @selector(animateElement:toBarItem:), "@@:@q");
