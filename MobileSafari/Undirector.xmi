@@ -1,8 +1,4 @@
-extern "C"
-{
-    #import "substrate.h"
-}
-
+#import "substrate.h"
 #import <libundirect/libundirect_dynamic.h>
 
 #ifdef __LP64__
