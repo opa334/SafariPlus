@@ -37,6 +37,7 @@ extern BOOL skipBiometricProtection;
 
 extern NSString* getSafariTmpPath();
 extern NSURL* getSafariTmpURL();
+extern NSString* getInjectionPlatform();
 
 extern BOOL privateBrowsingEnabled(BrowserController* controller);
 extern BOOL privateBrowsingEnabledForTabDocument(TabDocument* tabDocument);

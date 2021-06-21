@@ -1372,9 +1372,16 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 - (void)presentWebContentErrorWithDownloadInfo:(SPDownloadInfo*)downloadInfo
 {
+	NSString* message = [localizationManager localizedSPStringForKey:@"WEBCONTENT_COMMUNICATION_FAILED"];
+
+	if([getInjectionPlatform() isEqualToString:@"libhooker"])
+	{
+		message = [[message stringByAppendingString:@" "] stringByAppendingString:[localizationManager localizedSPStringForKey:@"WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE"]];
+	}
+
 	UIAlertController *errorAlert = [UIAlertController
 		alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
-		message:[localizationManager localizedSPStringForKey:@"WEBCONTENT_COMMUNICATION_FAILED"]
+		message:message
 		preferredStyle:UIAlertControllerStyleAlert];
 
 	UIAlertAction *closeAction = [UIAlertAction actionWithTitle:[localizationManager

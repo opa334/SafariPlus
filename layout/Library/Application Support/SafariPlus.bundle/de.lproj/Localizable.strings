@@ -447,7 +447,8 @@
 "PREVIEW" = "Vorschau";
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
-"WEBCONTENT_COMMUNICATION_FAILED" = "Die Kommunikation mit dem WebContent Prozess ist fehlgeschlagen. Diese ist zum Abrufen der Video URL erforderlich. Wenn libhooker auf iOS <= 13.7 benutzt wird, stelle sicher dass die 'Allow tweaks in webpages' Option im libhooker Configurator aktiviert ist. Wenn libhooker auf iOS >= 14.0 benutzt wird, wird das Downloaden von Videos nicht funktionieren, da libhooker unter iOS 14 wegen einem Bug nicht in der Lage ist, Symbole innerhalb des WebContent Prozesses zu hooken.";
+"WEBCONTENT_COMMUNICATION_FAILED" = "Die Kommunikation mit dem WebContent Prozess ist fehlgeschlagen. Diese ist zum Abrufen der Video URL erforderlich. Stelle sicher dass SafariPlusWC.dylib nicht mit iCleaner Pro, Choicy oder ähnlichen Tweaks deaktiviert wurde.";
+"WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE" = "Da du libhooker benutzt, stelle bitte auch sicher, dass die Option 'Allow tweaks in webpages' im libhooker configurator aktiviert ist und das sowohl libhooker als auch dein Jailbreak auf der neusten Version sind.";
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "DURATION_UNKNOWN" = "Unbekannte Länge";

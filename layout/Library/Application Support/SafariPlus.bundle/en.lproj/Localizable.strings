@@ -447,7 +447,8 @@
 "PREVIEW" = "Preview";
 "PLAY" = "Play";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
-"WEBCONTENT_COMMUNICATION_FAILED" = "Communication with the WebContent process failed. This is needed to retrieve the video URL. If you are using libhooker on iOS <= 13.7, make sure that 'Allow tweaks in webpages' is enabled inside libhooker configurator. If you are using libhooker on iOS >= 14.0, video downloading simply won't work due to libhooker failing to hook symbols inside WebContent on iOS 14 and up.";
+"WEBCONTENT_COMMUNICATION_FAILED" = "Communication with the WebContent process failed. This is needed to retrieve the video URL. Make sure that you did not disable SafariPlusWC.dylib via iCleaner Pro, Choicy or similar.";
+"WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE" = "As you are using libhooker, also make sure that 'Allow tweaks in webpages' is enabled inside libhooker configurator and that both libhooker and your jailbreak are up to date.";
 "COPY_LINK" = "Copy Link";
 "SIZE_UNKNOWN" = "Unknown Size";
 "DURATION_UNKNOWN" = "Unknown Duration";

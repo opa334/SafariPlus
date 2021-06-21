@@ -36,6 +36,7 @@
 #import <sys/socket.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <netinet/in.h>
+#import <mach-o/dyld.h>
 
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
@@ -189,6 +190,35 @@ NSURL* getSafariTmpURL()
 		}
 	}
 	return tmpURL;
+}
+
+NSString* getInjectionPlatform()
+{
+	static NSString* injectionPlatform = nil;
+
+	if(!injectionPlatform)
+	{
+		for (uint32_t i = 0; i < _dyld_image_count(); i++)
+		{
+			const char *pathC = _dyld_get_image_name(i);
+			NSString* path = [NSString stringWithUTF8String:pathC];
+
+			if([path isEqualToString:@"/usr/lib/substitute-inserter.dylib"])
+			{
+				injectionPlatform = @"Substitute";
+			}
+			else if([path isEqualToString:@"/usr/lib/TweakInject.dylib"])
+			{
+				injectionPlatform = @"libhooker";
+			}
+			else if([path isEqualToString:@"/usr/lib/substrate/SubstrateInserter.dylib"])
+			{
+				injectionPlatform = @"Substrate";
+			}
+		}
+	}
+
+	return injectionPlatform;
 }
 
 //Return current browsing status
