@@ -50,11 +50,6 @@ NSBundle* SSBundle;	//SafariServices
 	return self;
 }
 
-- (NSMutableArray*)specifiers
-{
-	return [super specifiers];
-}
-
 - (NSString*)title
 {
 	return @"Safari Plus";

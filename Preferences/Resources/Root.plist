@@ -9,8 +9,6 @@
 				<string>PSGroupCell</string>
 				<key>headerCellClass</key>
 				<string>SPPRootHeaderView</string>
-				<key>icon</key>
-				<string>PrefHeader.png</string>
 			</dict>
 			<dict>
 				<key>PostNotification</key>

@@ -78,8 +78,7 @@
 - (void)parseSPLocalizationsForSpecifiers:(NSArray*)specifiers
 {
 	//Localize specifiers
-	NSMutableArray* mutableSpecifiers = (NSMutableArray*)specifiers;
-	for(PSSpecifier* specifier in mutableSpecifiers)
+	for(PSSpecifier* specifier in specifiers)
 	{
 		NSString *localizedTitle = [self localizedSPStringForKey:specifier.properties[@"label"]];
 		NSString *localizedFooter = [self localizedSPStringForKey:specifier.properties[@"footerText"]];
