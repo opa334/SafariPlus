@@ -505,8 +505,16 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 		if(IS_PAD)
 		{
 			//Set iPad positions to download button
-			UIView* button = MSHookIvar<UIView*>(activeToolbarOrToolbarForBarItemForBrowserController(controller, barButtonItemForSafariPlusOrderItem(BrowserToolbarDownloadsItem))._downloadsItem, "_view");
-			downloadInfo.sourceRect = [[button superview] convertRect:button.frame toView:rootViewController.view];
+			BrowserToolbar* toolbar = activeToolbarOrToolbarForBarItemForBrowserController(controller, barButtonItemForSafariPlusOrderItem(BrowserToolbarDownloadsItem));
+			if(toolbar)
+			{
+				UIView* buttonView = [toolbar._downloadsItem valueForKey:@"_view"];
+				downloadInfo.sourceRect = [[buttonView superview] convertRect:buttonView.frame toView:rootViewController.view];
+			}
+			else
+			{
+				downloadInfo.sourceRect = CGRectZero;
+			}
 		}
 
 		//Present download alert
