@@ -36,20 +36,18 @@
 	return self;
 }
 
-- (void)setFrame:(CGRect)frame
+- (void)layoutSubviews
 {
-	[super setFrame:CGRectMake(frame.origin.x,0,frame.size.width,frame.size.height)];
-
-	CGFloat xOffset = (frame.size.width - _currentWidth) / 2;
-
-	_headerImageView.frame = CGRectMake(xOffset,0,_currentWidth,frame.size.height+35);
+	[super layoutSubviews];
+	CGFloat xOffset = (self.frame.size.width - _currentWidth) / 2;
+	_headerImageView.frame = CGRectMake(xOffset,0,_currentWidth,self.frame.size.height);
 }
 
 - (CGFloat)preferredHeightForWidth:(CGFloat)width
 {
 	_currentWidth = width;
 	CGFloat height = width / _aspectRatio;
-	return height - 35;
+	return height;
 }
 
 @end
