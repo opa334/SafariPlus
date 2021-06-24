@@ -401,7 +401,7 @@
 
 - (void)runBlockOnObserverDelegates:(void (^)(id<DownloadObserverDelegate> receiverDelegate))block onMainThread:(BOOL)mainThread
 {
-	for(id<DownloadObserverDelegate> observerDelegate in _observerDelegates)
+	for(id<DownloadObserverDelegate> observerDelegate in [_observerDelegates copy])
 	{
 		if(observerDelegate)
 		{

@@ -47,7 +47,7 @@
 @property (nonatomic) BOOL wasCancelled;
 
 @property (nonatomic, weak) id<DownloadManagerDelegate> downloadManagerDelegate;
-@property (nonatomic) NSHashTable<id<DownloadObserverDelegate> >* observerDelegates;
+@property (nonatomic) NSHashTable<id<DownloadObserverDelegate>>* observerDelegates;
 
 - (instancetype)initWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 

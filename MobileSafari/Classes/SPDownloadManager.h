@@ -82,8 +82,12 @@
 
 - (void)addObserverDelegate:(id<DownloadsObserverDelegate>)observerDelegate;
 - (void)removeObserverDelegate:(id<DownloadsObserverDelegate>)observerDelegate;
+
+- (void)runBlockOnObserverDelegates:(void (^)(id<DownloadsObserverDelegate> receiverDelegate))block onMainThread:(BOOL)mainThread;
 - (void)totalProgressDidChange;
+- (void)totalDownloadsCountDidChange;
 - (void)runningDownloadsCountDidChange;
+- (void)downloadHistoryDidChange;
 
 - (void)closeDocumentIfObsoleteWithDownloadInfo:(SPDownloadInfo*)downloadInfo;
 

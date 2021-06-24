@@ -646,74 +646,83 @@
 
 - (void)addObserverDelegate:(NSObject<DownloadsObserverDelegate>*)observerDelegate
 {
-	if(![self.observerDelegates containsObject:observerDelegate])
+	if(![_observerDelegates containsObject:observerDelegate])
 	{
-		[self.observerDelegates addObject:observerDelegate];
+		[_observerDelegates addObject:observerDelegate];
 	}
 }
 
 - (void)removeObserverDelegate:(NSObject<DownloadsObserverDelegate>*)observerDelegate
 {
-	if([self.observerDelegates containsObject:observerDelegate])
+	if([_observerDelegates containsObject:observerDelegate])
 	{
-		[self.observerDelegates removeObject:observerDelegate];
+		[_observerDelegates removeObject:observerDelegate];
+	}
+}
+
+- (void)runBlockOnObserverDelegates:(void (^)(id<DownloadsObserverDelegate> receiverDelegate))block onMainThread:(BOOL)mainThread
+{
+	for(id<DownloadsObserverDelegate> observerDelegate in [_observerDelegates copy])
+	{
+		if(observerDelegate)
+		{
+			if(![NSThread isMainThread] && mainThread)
+			{
+				dispatch_async(dispatch_get_main_queue(), ^(void)
+				{
+					block(observerDelegate);
+				});
+			}
+			else
+			{
+				block(observerDelegate);
+			}
+		}
 	}
 }
 
 - (void)totalProgressDidChange
 {
-	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
+	[self runBlockOnObserverDelegates:^(id<DownloadsObserverDelegate> observerDelegate)
 	{
-		dispatch_async(dispatch_get_main_queue(), ^
+		if([(NSObject*)observerDelegate respondsToSelector:@selector(totalProgressDidChangeForDownloadManager:)])
 		{
-			if([observerDelegate respondsToSelector:@selector(totalProgressDidChangeForDownloadManager:)])
-			{
-				[observerDelegate totalProgressDidChangeForDownloadManager:self];
-			}
-		});
-	}
+			[observerDelegate totalProgressDidChangeForDownloadManager:self];
+		}
+	} onMainThread:YES];
 }
 
 - (void)runningDownloadsCountDidChange
 {
-	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
+	[self runBlockOnObserverDelegates:^(id<DownloadsObserverDelegate> observerDelegate)
 	{
-		dispatch_async(dispatch_get_main_queue(), ^
+		if([(NSObject*)observerDelegate respondsToSelector:@selector(runningDownloadsCountDidChangeForDownloadManager:)])
 		{
-			if([observerDelegate respondsToSelector:@selector(runningDownloadsCountDidChangeForDownloadManager:)])
-			{
-				[observerDelegate runningDownloadsCountDidChangeForDownloadManager:self];
-			}
-		});
-	}
+			[observerDelegate runningDownloadsCountDidChangeForDownloadManager:self];
+		}
+	} onMainThread:YES];
 }
 
 - (void)totalDownloadsCountDidChange
 {
-	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
+	[self runBlockOnObserverDelegates:^(id<DownloadsObserverDelegate> observerDelegate)
 	{
-		dispatch_async(dispatch_get_main_queue(), ^
+		if([(NSObject*)observerDelegate respondsToSelector:@selector(totalDownloadsCountDidChangeForDownloadManager:)])
 		{
-			if([observerDelegate respondsToSelector:@selector(totalDownloadsCountDidChangeForDownloadManager:)])
-			{
-				[observerDelegate totalDownloadsCountDidChangeForDownloadManager:self];
-			}
-		});
-	}
+			[observerDelegate totalDownloadsCountDidChangeForDownloadManager:self];
+		}
+	} onMainThread:YES];
 }
 
 - (void)downloadHistoryDidChange
 {
-	for(NSObject<DownloadsObserverDelegate>* observerDelegate in self.observerDelegates)
+	[self runBlockOnObserverDelegates:^(id<DownloadsObserverDelegate> observerDelegate)
 	{
-		dispatch_async(dispatch_get_main_queue(), ^
+		if([(NSObject*)observerDelegate respondsToSelector:@selector(downloadHistoryDidChangeForDownloadManager:)])
 		{
-			if([observerDelegate respondsToSelector:@selector(downloadHistoryDidChangeForDownloadManager:)])
-			{
-				[observerDelegate downloadHistoryDidChangeForDownloadManager:self];
-			}
-		});
-	}
+			[observerDelegate downloadHistoryDidChangeForDownloadManager:self];
+		}
+	} onMainThread:YES];
 }
 
 //When a download url was opened in a new tab, the tab will stay
@@ -847,17 +856,15 @@
 	}
 	else if(downloadInfo.request)
 	{
-		//Create instance of SPDownload
+		//Create download
 		SPDownload* download = [[SPDownload alloc] initWithDownloadInfo:downloadInfo];
-
-		//Set delegate for communication
 		download.downloadManagerDelegate = self;
+
+		//Add download to top of pendingDownloads array
+		[self.pendingDownloads insertObject:download atIndex:0];
 
 		//Start download
 		[download startDownload];
-
-		//Add download to array
-		[self.pendingDownloads insertObject:download atIndex:0];
 
 		//Save array to disk
 		[self saveDownloadsToDisk];
