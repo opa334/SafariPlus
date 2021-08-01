@@ -38,6 +38,10 @@
 #import <netinet/in.h>
 #import <mach-o/dyld.h>
 
+#import <WebKit/WKHTTPCookieStore.h>
+#import <WebKit/WKWebsiteDataStore.h>
+#import <WebKit/WKWebViewConfiguration.h>
+
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
@@ -898,4 +902,28 @@ BOOL isUsingCellularData()
 	}
 
 	return cellularData;
+}
+
+// write cookies of WebView to NSHTTPCookieStorage
+// only works on iOS 11ish and up
+// (allegedly on iOS 11 the API is half-broken so it will probably only fully work on 12 and up)
+BOOL collectCookiesFromWebView(WKWebView* webView)
+{
+	if([webView.configuration respondsToSelector:@selector(websiteDataStore)])
+	{
+		if([webView.configuration.websiteDataStore respondsToSelector:@selector(httpCookieStore)])
+		{
+			WKHTTPCookieStore* cookieStore = webView.configuration.websiteDataStore.httpCookieStore;
+			[cookieStore getAllCookies:^(NSArray<NSHTTPCookie*>* cookies)
+			{
+				for(NSHTTPCookie* cookie in cookies)
+				{
+					[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+				}
+			}];
+
+			return YES;
+		}
+	}
+	return NO;
 }

@@ -459,15 +459,15 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 - (BOOL)handleDownloadAlertForNavigationResponse:(WKNavigationResponse *)navigationResponse
 	decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
-	//Get MIMEType
 	NSString* MIMEType = navigationResponse.response.MIMEType;
 
-	//Fix for profile add alert not appearing
+	// Fix for profile add alert not appearing
 	if([MIMEType isEqualToString:@"application/x-apple-aspen-config"])
 	{
 		return YES;
 	}
 
+	// Blob files are unsupported (it's theoretically possible to support them via JS fuckery but I'm lazy)
 	if([navigationResponse.response.URL.scheme isEqualToString:@"blob"])
 	{
 		return YES;
@@ -479,10 +479,11 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 		[MIMEType containsString:@"audio/"] ||
 		[MIMEType isEqualToString:@"application/pdf"]))
 	{
-		//Cancel loading
+		// Cancel loading, this request will be handled by Safari Plus
 		decisionHandler(WKNavigationResponsePolicyCancel);
 
-		//Fix for some sites (dropbox etc.), credits to https://stackoverflow.com/a/34740466
+		// Copy the responses cookies into NSHTTPCookieStorage which NSURLSession uses
+		// Fixes dropbox, etc.
 		NSHTTPURLResponse *response = (NSHTTPURLResponse *)navigationResponse.response;
 		NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:[response allHeaderFields] forURL:response.URL];
 		for(NSHTTPCookie *cookie in cookies)
@@ -490,7 +491,11 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 			[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
 		}
 
-		//Get browserController and rootViewController
+		// Copy the WKWebView cookies into NSHTTPCookieStorage which NSURLSession uses
+		// Only works on iOS 11ish and up
+		// Adds support for sites that use authentication
+		collectCookiesFromWebView(castedSelf.webView);
+
 		BrowserController* controller = browserControllerForTabDocument(castedSelf);
 		BrowserRootViewController* rootViewController = rootViewControllerForBrowserController(controller);
 
@@ -517,7 +522,6 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 			}
 		}
 
-		//Present download alert
 		[downloadManager presentDownloadAlertWithDownloadInfo:downloadInfo];
 
 		return NO;

@@ -1110,6 +1110,10 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 				}
 			}
 
+			if(tabDocumentForVideo)
+			{
+				collectCookiesFromWebView(tabDocumentForVideo.webView);
+			}
 			downloadInfo.sourceDocument = tabDocumentForVideo;
 
 			if(preferenceManager.videoDownloadingUseTabTitleAsFilenameEnabled)
