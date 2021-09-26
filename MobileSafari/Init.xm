@@ -61,7 +61,7 @@ extern void initWKFullScreenViewController();
 {
 	@autoreleasepool
 	{
-		HBLogDebug(@"started loading SafariPlus!");
+		HBLogDebugWeak(@"started loading SafariPlus!");
 
 		initUndirection();
 
@@ -105,6 +105,6 @@ extern void initWKFullScreenViewController();
 			initWKFullScreenViewController();
 		}
 
-		HBLogDebug(@"finished loading SafariPlus!");
+		HBLogDebugWeak(@"finished loading SafariPlus!");
 	}
 }

@@ -212,7 +212,7 @@
 	{
 		if(!self.delegate)
 		{
-			HBLogDebug(@"prevented something?");
+			HBLogDebugWeak(@"prevented something?");
 			return;	//please don't break anything, please (fix for weird crash)
 		}
 	}

@@ -97,7 +97,7 @@
 		return;
 	}
 
-	HBLogDebug(@"cache_setConnection:%s forPid:%i", xpc_copy_description(connection), pid);
+	HBLogDebugWeak(@"cache_setConnection:%s forPid:%i", xpc_copy_description(connection), pid);
 
 	NSNumber* pidNum = [NSNumber numberWithInt:pid];
 	[_connectionsByPid setObject:connection forKey:pidNum];
@@ -110,7 +110,7 @@
 		return;
 	}
 
-	HBLogDebug(@"cache_invalidateConnectionForPid:%i", pid);
+	HBLogDebugWeak(@"cache_invalidateConnectionForPid:%i", pid);
 
 	NSNumber* pidNum = [NSNumber numberWithInt:pid];
 	[_connectionsByPid removeObjectForKey:pidNum];

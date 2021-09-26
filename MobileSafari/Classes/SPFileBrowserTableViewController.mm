@@ -107,7 +107,7 @@
 	NSMutableArray<SPFile*>* newFiles = [[fileManager filesAtURL:_directoryURL error:&fileLoadError] mutableCopy];
 	if(fileLoadError)
 	{
-		NSLog(@"Failed to load contents of %@, error:%@", _directoryURL.path, fileLoadError);
+		HBLogDebugWeak(@"Failed to load contents of %@, error:%@", _directoryURL.path, fileLoadError);
 	}
 
 	[newFiles sortUsingComparator:^NSComparisonResult (SPFile* a, SPFile* b)
@@ -327,14 +327,15 @@
 
 - (void)showFileNamed:(NSString*)filename
 {
-	NSInteger index = -1;
-	for(SPFile* file in _filesAtCurrentURL)
+	__block NSInteger index = -1;
+	[_filesAtCurrentURL enumerateObjectsUsingBlock:^(SPFile* file, NSUInteger idx, BOOL *stop)
 	{
 		if([file.name isEqualToString:filename])
 		{
-			index = [_filesAtCurrentURL indexOfObject:file];
+			index = idx;
+			*stop = YES;
 		}
-	}
+	}];
 
 	if(index == -1)
 	{
@@ -358,7 +359,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	//Return amount of files at current path
-	return [_filesAtCurrentURL count];
+	return _filesAtCurrentURL.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -373,8 +374,11 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	NSUInteger row = indexPath.row;
+	if(row >= _filesAtCurrentURL.count) return nil;
+
 	//Get file for row
-	SPFile* file = _filesAtCurrentURL[indexPath.row];
+	SPFile* file = _filesAtCurrentURL[row];
 
 	SPFileTableViewCell* cell = [self.tableView dequeueReusableCellWithIdentifier:@"SPFileTableViewCell"];
 
@@ -418,7 +422,10 @@
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	SPFile* file = _filesAtCurrentURL[indexPath.row];
+	NSUInteger row = indexPath.row;
+	if(row >= _filesAtCurrentURL.count) return NO;
+
+	SPFile* file = _filesAtCurrentURL[row];
 
 	//Only files should be editable
 	return file.isRegularFile;

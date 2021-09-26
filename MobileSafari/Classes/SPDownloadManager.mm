@@ -941,8 +941,8 @@
 didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge 
  completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition disposition, NSURLCredential *credential))completionHandler
 {
-	NSLog(@"didReceiveChallenge:%@", challenge);
-	NSLog(@"authenticationMethod:%@", challenge.protectionSpace.authenticationMethod);
+	HBLogDebugWeak(@"didReceiveChallenge:%@", challenge);
+	HBLogDebugWeak(@"authenticationMethod:%@", challenge.protectionSpace.authenticationMethod);
 
 	//completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust]);
 }

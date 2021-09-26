@@ -218,9 +218,30 @@ NSFileManager* fileManager = [NSFileManager defaultManager];
 	{
 		NSMutableAttributedString* cellTitleM = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (%@)", _applicationDisplayName, _name]];
 
+		UIColor* appNameColor;
+
+		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
+		{
+			appNameColor = [[UIColor alloc] initWithDynamicProvider:^UIColor*(UITraitCollection *traitCollection)
+			{
+				if(traitCollection.userInterfaceStyle == UIUserInterfaceStyleLight)
+				{
+					return [UIColor colorWithRed:50.0f/255.0f green:100.0f/255.0f blue:150.0f/255.0f alpha:1.0f];
+				}
+				else
+				{
+					return  [UIColor colorWithRed:120.0f/255.0f green:170.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
+				}
+			}];
+		}
+		else
+		{
+			appNameColor = [UIColor colorWithRed:50.0f/255.0f green:100.0f/255.0f blue:150.0f/255.0f alpha:1.0f];
+		}
+
 		NSDictionary* appNameAttributes =
-			@{
-				NSForegroundColorAttributeName : [UIColor colorWithRed:50.0f/255.0f green:100.0f/255.0f blue:150.0f/255.0f alpha:1.0f]
+		@{
+			NSForegroundColorAttributeName : appNameColor,
 		};
 
 		NSRange range = NSMakeRange(0, [_applicationDisplayName length]);

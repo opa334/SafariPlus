@@ -52,7 +52,7 @@ static BOOL fakeOpenLinksValue = NO;
 {
 	/*if([key isEqualToString:@"OpenLinksInBackground"])
 	{
-		NSLog(@"%@", [NSThread callStackSymbols]);
+		HBLogDebugWeak(@"%@", [NSThread callStackSymbols]);
 	}*/
 
 	if(shouldFakeOpenLinksKey)
@@ -1026,7 +1026,7 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 
 /*- (instancetype)_initWithTitle:(id)arg1 URL:(id)arg2 UUID:(NSUUID*)UUID privateBrowsingEnabled:(BOOL)arg4 bookmark:(id)arg5 browserController:(id)arg6
 {
-	NSLog(@"initWithTitle");
+	HBLogDebugWeak(@"initWithTitle");
 	TabDocument* orig = %orig;
 
 	orig.accessAuthenticated = NO;
@@ -1060,7 +1060,7 @@ void initTabDocument()
 {
 	Class TabDocumentClass;
 
-	if(kCFCoreFoundationVersionNumber > kCFCoreFoundationVersionNumber_iOS_8_0)
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
 	{
 		TabDocumentClass = objc_getClass("TabDocument");
 	}

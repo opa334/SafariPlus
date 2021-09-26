@@ -130,8 +130,6 @@
 		[hardLinkedURLs addObject:[fileManager accessibleHardLinkForFileAtURL:URL forced:NO]];
 	}
 
-	NSLog(@"hardLinkedURLs = %@", hardLinkedURLs);
-
 	[self _chooseFiles:[hardLinkedURLs copy]
 	 displayString:[((NSURL*)hardLinkedURLs.firstObject).lastPathComponent
 			stringByRemovingPercentEncoding] iconImage:nil];

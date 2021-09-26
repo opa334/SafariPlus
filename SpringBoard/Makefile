@@ -2,6 +2,8 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = SafariPlusSB
 SafariPlusSB_CFLAGS = -fobjc-arc -D SPRINGBOARD=1
+SafariPlusSB_FRAMEWORKS = Security
+SafariPlusSB_PRIVATE_FRAMEWORKS = AppSupport
 SafariPlusSB_FILES += $(wildcard Hooks/*.xm Classes/*.mm)
 SafariPlusSB_FILES += ../Shared/SPFile.mm ../Shared/NSFileManager+DirectorySize.mm
 

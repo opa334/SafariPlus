@@ -98,5 +98,12 @@
 #define ifArm64eElse(a,b) (b)
 #endif
 
+#import <HBLog.h>
+#ifdef __DEBUG__
+	#define HBLogDebugWeak(args ...) HBLogDebug(args)
+#else
+	#define HBLogDebugWeak(...)
+#endif
+
 //Used for debugging
 #define DEBUG_CRASH NSMutableArray* arr = (NSMutableArray*)[[NSArray alloc] init]; [arr addObject:@"crash"];

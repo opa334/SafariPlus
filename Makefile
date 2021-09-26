@@ -6,8 +6,6 @@ export NO_CEPHEI ?= 0
 export NO_ROCKETBOOTSTRAP ?= 0
 export NO_LIBCSCOLORPICKER ?= 0
 
-export PREFIX = $(THEOS)/toolchain/Xcode11.xctoolchain/usr/bin/
-
 ifeq ($(ROOTLESS),1)
 export NO_DEPENDENCIES = 1
 endif
@@ -15,10 +13,11 @@ endif
 ifeq ($(SIMJECT),1)
 export NO_CEPHEI = 1
 export NO_ROCKETBOOTSTRAP = 1
-export TARGET = simulator:clang:13.7:8.0
+export TARGET = simulator:clang:14.5:8.0
 export ARCHS = x86_64 i386
 else
-export TARGET = iphone:clang:13.0:8.0
+export PREFIX = $(THEOS)/toolchain/Xcode11.xctoolchain/usr/bin/
+export TARGET = iphone:clang:14.4:8.0
 export ARCHS = armv7 armv7s arm64 arm64e
 endif
 

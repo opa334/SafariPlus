@@ -204,9 +204,9 @@ void _xpc_connection_set_event_handler(xpc_connection_t connection, xpc_handler_
 
 	if(description)
 	{
-		if(strstr(description, "com.apple.WebKit.WebContent.peer") != NULL)
+		//						iOS 10 and up														iOS 8-9
+		if(strstr(description, "com.apple.WebKit.WebContent.peer") != NULL || strstr(description, "com.apple.WebKit.WebContent (peer)") != NULL)
 		{
-			NSLog(@"setting new handler...");
 			xpc_handler_t newHandler = ^(xpc_object_t message)
 			{
 				if(message)
@@ -216,7 +216,6 @@ void _xpc_connection_set_event_handler(xpc_connection_t connection, xpc_handler_
 					{
 						if(xpc_dictionary_get_bool(message, "safari-plus-fetch-video-url"))
 						{
-							NSLog(@"XPC received: %s", xpc_copy_description(message));
 							xpc_object_t reply = xpc_dictionary_create_reply(message);
 
 							NSString* videoURLString = getCurrentPlayingVideoURLStringIfExists();
@@ -305,17 +304,9 @@ static BOOL shouldEnable()
 
 	if(!isSafari())
 	{
-		logToFile(@"not safari, bye");
-		return NO;
+		logToFile(@"not safari, bye!");
+		return [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/Application Support/SafariPlus.bundle/.enableGlobalVideoDownloading"];
 	}
-
-	/*HBPreferences* preferences = [[HBPreferences alloc] initWithIdentifier:preferenceDomainName];
-
-	   logToFile(@"preferences:%@", preferences);
-
-	   BOOL tweakEnabled = [preferences boolForKey:@"tweakEnabled" default:YES];
-	   BOOL downloadManagerEnabled = [preferences boolForKey:@"downloadManagerEnabled" default:NO];
-	   BOOL videoDownloadingEnabled = [preferences boolForKey:@"videoDownloadingEnabled" default:NO];*/
 
 	//Cephei was originally used but doesn't work inside the
 	//XPC helper for some people so we use NSDictionary instead
@@ -330,11 +321,9 @@ static BOOL shouldEnable()
 	BOOL downloadManagerEnabled = [downloadManagerEnabledNum boolValue];
 	BOOL videoDownloadingEnabled = [videoDownloadingEnabledNum boolValue];
 
-	BOOL globalVideoDownloadingEnabled = [[NSFileManager defaultManager] fileExistsAtPath:@"/Library/Application Support/SafariPlus.bundle/.enableGlobalVideoDownloading"];
+	logToFile(@"tweakEnabled:%i downloadManagerEnabled:%i videoDownloadingEnabled:%i", tweakEnabled, downloadManagerEnabled, videoDownloadingEnabled);
 
-	logToFile(@"tweakEnabled:%i downloadManagerEnabled:%i videoDownloadingEnabled:%i globalVideoDownloadingEnabled:%i", tweakEnabled, downloadManagerEnabled, videoDownloadingEnabled, globalVideoDownloadingEnabled);
-
-	return (tweakEnabled && downloadManagerEnabled && videoDownloadingEnabled) || globalVideoDownloadingEnabled;
+	return tweakEnabled && downloadManagerEnabled && videoDownloadingEnabled;
 	#endif
 }
 

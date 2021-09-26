@@ -108,7 +108,7 @@ void reloadPreferences()
 		}
 		@catch(NSException* e)
 		{
-			NSLog(@"exception while reloading preferences: %@", e);
+			HBLogDebugWeak(@"exception while reloading preferences: %@", e);
 		}
 	}
 
@@ -126,7 +126,7 @@ void reloadPreferences()
 			}
 			@catch(NSException* e)
 			{
-				NSLog(@"exception while applying defaults: %@", e);
+				HBLogDebugWeak(@"exception while applying defaults: %@", e);
 			}
 		}
 	}

@@ -21,11 +21,7 @@
 #ifndef SIMJECT
 #import <rocketbootstrap/rocketbootstrap.h>
 #endif
-#import <AppSupport/CPDistributedMessagingCenter.h>
-
-@interface CPNotification : NSObject
-+ (void)showAlertWithTitle:(NSString*)title message:(NSString*)message userInfo:(NSDictionary*)userInfo badgeCount:(int)badgeCount soundName:(NSString*)soundName delay:(double)delay repeats:(BOOL)repeats bundleId:(NSString*)bundleId;
-@end
+#import "Classes/SBSPDistributedMessagingCenter.h"
 
 @interface SBApplicationInfo : NSObject
 @property (nonatomic,retain,readonly) NSURL* executableURL;

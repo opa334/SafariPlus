@@ -21,6 +21,7 @@
 #import "SPFilePickerTableViewController.h"
 
 #import "../Util.h"
+#import "../Defines.h"
 #import "SPFilePickerNavigationController.h"
 #import "SPLocalizationManager.h"
 #import "SPFileManager.h"
@@ -47,7 +48,7 @@
 	if(file.isRegularFile)
 	{
 		//tapped entry is file -> call delegate to upload file
-		NSLog(@"((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate = %@", ((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate);
+		HBLogDebugWeak(@"((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate = %@", ((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate);
 		[((SPFilePickerNavigationController*)self.navigationController).filePickerDelegate filePicker:(SPFilePickerNavigationController*)self.navigationController didSelectFiles:@[file.fileURL]];
 	}
 

@@ -36,7 +36,7 @@
 {
 	self = [super init];
 
-	_messagingCenter = [NSClassFromString(@"CPDistributedMessagingCenter") centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
+	_messagingCenter = [SBSPDistributedMessagingCenter centerNamed:@"com.opa334.SafariPlus.MessagingCenter"];
 	rocketbootstrap_distributedmessagingcenter_apply(_messagingCenter);
 
 	[_messagingCenter runServerOnCurrentThread];
@@ -207,7 +207,7 @@
 	}
 	@catch(NSException* exception)
 	{
-		NSLog(@"prevented crash with exception %@", exception);
+		HBLogDebugWeak(@"prevented crash with exception %@", exception);
 		[retDict setObject:exception forKey:@"exception"];
 	}
 

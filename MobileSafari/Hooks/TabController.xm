@@ -322,7 +322,7 @@ void* getInteractiveTabCloseChangedWithTranslationPointer()
 	{
 		IMP i = class_getMethodImplementation(objc_getClass("TiltedTabView"), @selector(interactiveTabCloseChangedWithTranslation:));
 		interactiveTabCloseChangedWithTranslation = make_sym_readable((void*)i);
-		//NSLog(@"interactiveTabCloseChangedWithTranslation = %p", interactiveTabCloseChangedWithTranslation);
+		HBLogDebugWeak(@"interactiveTabCloseChangedWithTranslation = %p", interactiveTabCloseChangedWithTranslation);
 	}
 	return interactiveTabCloseChangedWithTranslation;
 }
@@ -334,7 +334,7 @@ void* getInteractiveTabCloseEndedWithTranslationPointer()
 	{
 		IMP i = class_getMethodImplementation(objc_getClass("TiltedTabView"), @selector(interactiveTabCloseEndedWithTranslation:velocity:wasCanceled:));
 		interactiveTabCloseEndedWithTranslation = make_sym_readable((void*)i);
-		//NSLog(@"interactiveTabCloseEndedWithTranslation = %p", interactiveTabCloseEndedWithTranslation);
+		HBLogDebugWeak(@"interactiveTabCloseEndedWithTranslation = %p", interactiveTabCloseEndedWithTranslation);
 	}
 	return interactiveTabCloseEndedWithTranslation;
 }
@@ -346,7 +346,7 @@ void* getTabClosePointer()
 	{
 		IMP i = class_getMethodImplementation(objc_getClass("TabOverview"), @selector(_tabClose:));
 		tabClose = make_sym_readable((void*)i);
-		//NSLog(@"_tabClose = %p", _tabClose);
+		HBLogDebugWeak(@"tabClose = %p", tabClose);
 	}
 	return tabClose;
 }
@@ -358,21 +358,21 @@ BOOL isCallRelatedToTabSwipes()
 	if(frames >= 2)
 	{
 		long changedOffset = (intptr_t)callstack[2] - (intptr_t)getInteractiveTabCloseChangedWithTranslationPointer();
-		//NSLog(@"changedOffset = %ld", changedOffset);
+		HBLogDebugWeak(@"changedOffset = %ld", changedOffset);
 		if(changedOffset > 0 && changedOffset < 256)
 		{
 			return YES;
 		}
 
 		long endedOffset = (intptr_t)callstack[2] - (intptr_t)getInteractiveTabCloseEndedWithTranslationPointer();
-		//NSLog(@"endedOffset = %ld", endedOffset);
+		HBLogDebugWeak(@"endedOffset = %ld", endedOffset);
 		if(endedOffset > 0 && endedOffset < 256)
 		{
 			return YES;
 		}
 
 		long tabCloseOffset = (intptr_t)callstack[2] - (intptr_t)getTabClosePointer();
-		//NSLog(@"tabCloseOffset = %ld", tabCloseOffset);
+		HBLogDebugWeak(@"tabCloseOffset = %ld", tabCloseOffset);
 		if(tabCloseOffset > 0 && tabCloseOffset < 4000)
 		{
 			return YES;

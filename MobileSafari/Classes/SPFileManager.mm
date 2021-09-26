@@ -99,10 +99,10 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	_hardLinkURL = [getSafariTmpURL() URLByAppendingPathComponent:@"hardLink"];
 
 	_isSandboxed = access("/var/mobile", W_OK) != 0;
-	HBLogDebug(@"_isSandboxed:%i", _isSandboxed);
+	HBLogDebugWeak(@"_isSandboxed:%i", _isSandboxed);
 
 	BOOL isCheckra1n = access("/var/checkra1n.dmg", F_OK) == 0;
-	HBLogDebug(@"isCheckra1n:%i", isCheckra1n);
+	HBLogDebugWeak(@"isCheckra1n:%i", isCheckra1n);
 
 	if(isCheckra1n)
 	{
@@ -143,9 +143,9 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 - (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced
 {
-	HBLogDebug(@"accessibleHardLinkForFileAtURL:%@", URL);
-	HBLogDebug(@"isURLReadable:%i", [self isURLReadable:URL]);
-	HBLogDebug(@"isURLWritable:%i", [self isURLWritable:URL]);
+	HBLogDebugWeak(@"accessibleHardLinkForFileAtURL:%@", URL);
+	HBLogDebugWeak(@"isURLReadable:%i", [self isURLReadable:URL]);
+	HBLogDebugWeak(@"isURLWritable:%i", [self isURLWritable:URL]);
 
 	if((rocketBootstrapWorks && _isSandboxed) || forced)
 	{
@@ -155,13 +155,13 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 			NSError* linkError;
 			[self linkItemAtURL:URL toURL:hardLinkURL error:&linkError];
-			HBLogDebug(@"linkError:%@", linkError);
+			HBLogDebugWeak(@"linkError:%@", linkError);
 			if(linkError.code == 513 || linkError.code == 512)
 			{
 				[self removeItemAtURL:hardLinkURL error:nil];
 				NSError* copyError;
 				[self copyItemAtURL:URL toURL:hardLinkURL error:&copyError];
-				HBLogDebug(@"copyError:%@", copyError);
+				HBLogDebugWeak(@"copyError:%@", copyError);
 			}
 
 			return hardLinkURL;

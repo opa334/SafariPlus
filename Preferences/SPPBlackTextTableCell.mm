@@ -20,14 +20,23 @@
 
 #import "SPPBlackTextTableCell.h"
 
-//Button with black text color
+//Button with black text color (white in dark mode)
 
 @implementation SPPBlackTextTableCell
 
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
-	self.textLabel.textColor = [UIColor blackColor];
+	if([UIColor respondsToSelector:@selector(labelColor)])
+	{
+		self.textLabel.textColor = [UIColor labelColor];
+		self.textLabel.highlightedTextColor = [UIColor labelColor];
+	}
+	else
+	{
+		self.textLabel.textColor = [UIColor blackColor];
+		self.textLabel.highlightedTextColor = [UIColor blackColor];
+	}
 }
 
 @end

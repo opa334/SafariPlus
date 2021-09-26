@@ -56,18 +56,6 @@
 
 %end
 
-%hook UIMenu
-
-+ (UIMenu*)_sf_tabMenu
-{
-	UIMenu* orig = %orig;
-	NSLog(@"_sf_tabMenu:%@", orig);
-	NSLog(@"_sf_tabMenu.children:%@", orig.children);
-	return orig;
-}
-
-%end
-
 %hook BrowserController
 
 - (BOOL)canPerformAction:(SEL)arg1 withSender:(id)arg2
@@ -142,9 +130,7 @@
 					anythingLocked = YES;
 				}
 			}
-
-			NSLog(@"nonLockedCount = %lli", (long long)nonLockedCount);
-
+			
 			if(nonLockedCount > 0 && anythingLocked)
 			{
 				if(nonLockedCount > 1)
