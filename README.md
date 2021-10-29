@@ -84,7 +84,7 @@ You will need the following libraries / frameworks in order to compile Safari Pl
 
 - [RocketBootstrap](https://github.com/rpetrich/RocketBootstrap/)
 
-To compile the WebContent part of Safari Plus, WebKit headers from https://webkit.org/build-archives/ are needed. Put them in some directory and set the WEBKIT_ROOT variable inside the Makefile of WebContent to it. You will also need to remove WebKit and WebKitLegacy from that folder (otherwise the compiler will throw an error). To correctly compile it and avoid crashes at runtime, make sure to also follow the instructions [here](https://github.com/opa334/SafariPlus/blob/master/WebContent/HTMLMediaElement.xm#L126).
+To compile the WebContent part of Safari Plus, WebKit headers from https://webkit.org/build-archives/ are needed. Put them in some directory and set the WEBKIT_ROOT variable inside the Makefile of WebContent to it. You will also need to remove WebKit and WebKitLegacy from that folder (otherwise the compiler will throw an error). To correctly compile it and avoid crashes at runtime, make sure to also follow the instructions [here](https://github.com/opa334/SafariPlus/blob/master/WebContent/HTMLMediaElement.xm#L172).
 
 There are also some variables you can set when running make:
 
