@@ -485,16 +485,16 @@
 
 			dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 			{
-        	    [downloadManager mergeMovpkgAtURL:hardLinkedURL toFileAtURL:targetURL];
+				[downloadManager mergeMovpkgAtURL:hardLinkedURL toFileAtURL:targetURL];
 
-        	    dispatch_async(dispatch_get_main_queue(), ^
+				dispatch_async(dispatch_get_main_queue(), ^
 				{
 					[fileManager resetHardLinks];
 					[mergingActivityController dismissViewControllerAnimated:YES completion:nil];
 					[self unselectRow];
-        	        [self reload];
-        	    });
-        	});
+					[self reload];
+				});
+			});
 		};
 
 		if(![fileManager fileExistsAtURL:targetURL error:nil])
