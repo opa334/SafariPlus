@@ -477,7 +477,14 @@
 			UIAlertController* mergingActivityController = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"MERGING"] message:@"" preferredStyle:UIAlertControllerStyleAlert];
 			UIActivityIndicatorView* activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(10,5,50,50)];
 			activityIndicator.hidesWhenStopped = YES;
-			activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+			if(@available(iOS 13, *))
+			{
+				activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleMedium;
+			}
+			else
+			{
+				activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+			}
 			[activityIndicator startAnimating];
 			[mergingActivityController.view addSubview:activityIndicator];
 
