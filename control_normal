@@ -1,7 +1,7 @@
 Package: com.opa334.safariplus
 Name: Safari Plus
 Depends: firmware (>=8.0), mobilesubstrate, ws.hbang.common, com.creaturesurvive.libcscolorpicker, com.rpetrich.rocketbootstrap, com.opa334.libundirect (>=1.1.3) | firmware (<<14.0)
-Version: 1.7.18-2
+Version: 1.7.18-3
 Architecture: iphoneos-arm
 Description: Various enhancements to Safari!
 Depiction: https://opa334.github.io/depic/SafariPlus/index.html
