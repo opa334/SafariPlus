@@ -26,6 +26,7 @@
 
 extern void initUndirection();
 
+extern void init_SFDownloadManager();
 extern void initApplication();
 extern void initAVFullScreenPlaybackControlsViewController();
 extern void initAVPlaybackControlsView();
@@ -73,6 +74,7 @@ extern void initWKFullScreenViewController();
 
 		if(preferenceManager.tweakEnabled)	//Only initialise hooks if tweak is enabled
 		{
+			init_SFDownloadManager();
 			initApplication();
 			initAVFullScreenPlaybackControlsViewController();
 			initAVPlaybackControlsView();

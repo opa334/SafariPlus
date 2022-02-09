@@ -64,8 +64,7 @@ extern void requestAuthentication(NSString* reason, void (^successHandler)(void)
 extern void sendSimpleAlert(NSString* title, NSString* message);
 extern NSDictionary* decodeResumeData12(NSData* resumeData);
 extern BOOL isUsingCellularData();
-extern BOOL collectCookiesFromWebView(WKWebView* webView);
-//extern NSURL* videoURLFromWebAVPlayerController(WebAVPlayerController* playerController);
+extern TabDocument* fullscreenVideoTabDocumentForWindow(UIWindow* window);
 extern void loadOtherPlist();
 extern void saveOtherPlist();
 
@@ -90,8 +89,3 @@ extern void _dlogDownloadManager();
 #define dlogDownloadManager()
 
 #endif
-/*
-   @interface WKWebView (VideoURL)
-   - (NSString*)getNowPlayingVideoURL;
-   @end
- */

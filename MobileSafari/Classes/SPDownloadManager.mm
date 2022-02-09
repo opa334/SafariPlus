@@ -43,6 +43,11 @@
 #import <WebKit/WKWebView.h>
 #import <UserNotifications/UserNotifications.h>
 #import <AVFoundation/AVFoundation.h>
+#import <WebKit/WKWebView.h>
+#import <WebKit/WKWebsiteDataStore.h>
+#import <WebKit/WKHTTPCookieStore.h>
+#import <WebKit/WKWebViewConfiguration.h>
+
 
 @implementation SPDownloadManager
 
@@ -863,17 +868,20 @@
 		//Add download to top of pendingDownloads array
 		[self.pendingDownloads insertObject:download atIndex:0];
 
-		//Start download
-		[download startDownload];
+		[self collectCookiesFromWebView:downloadInfo.sourceDocument.webView withCompletionHandler:^(BOOL success)
+		{
+			//Start download
+			[download startDownload];
 
-		//Save array to disk
-		[self saveDownloadsToDisk];
+			//Save array to disk
+			[self saveDownloadsToDisk];
 
-		//Send notification
-		[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"] message:downloadInfo.filename window:downloadInfo.presentationController.view.window];
-		[self updateApplicationBadge];
+			//Send notification
+			[self sendNotificationWithTitle:[localizationManager localizedSPStringForKey:@"DOWNLOAD_STARTED"] message:downloadInfo.filename window:downloadInfo.presentationController.view.window];
+			[self updateApplicationBadge];
 
-		[self totalDownloadsCountDidChange];
+			[self totalDownloadsCountDidChange];
+		}];
 	}
 
 	dlogDownloadManager();
@@ -1087,33 +1095,20 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 	}
 }
 
-- (void)prepareVideoDownloadForDownloadInfo:(SPDownloadInfo*)downloadInfo
+- (void)prepareVideoDownloadForDownloadInfo:(SPDownloadInfo*)downloadInfo sourceWindow:(UIWindow*)window
 {
 	if(downloadInfo.sourceVideo)
 	{
 		[downloadInfo.sourceVideo.downloadButton setSpinning:YES];
 	}
 
-	[[SPMediaFetcher sharedFetcher] getURLForCurrentlyPlayingMediaWithCompletionHandler:^(NSURL* URL, int pid)
+	TabDocument* tabDocumentForVideo = fullscreenVideoTabDocumentForWindow(window);
+
+	[[SPMediaFetcher sharedFetcher] getURLForPlayingMediaOfTabDocument:tabDocumentForVideo withCompletionHandler:^(NSURL* URL)
 	{
 		if(URL)
 		{
 			downloadInfo.request = [NSURLRequest requestWithURL:URL];
-
-			TabDocument* tabDocumentForVideo;
-
-			for(BrowserController* bc in browserControllers())
-			{
-				if(bc.tabController.activeTabDocument.webView._webProcessIdentifier == pid)
-				{
-					tabDocumentForVideo = bc.tabController.activeTabDocument;
-				}
-			}
-
-			if(tabDocumentForVideo)
-			{
-				collectCookiesFromWebView(tabDocumentForVideo.webView);
-			}
 			downloadInfo.sourceDocument = tabDocumentForVideo;
 
 			if(preferenceManager.videoDownloadingUseTabTitleAsFilenameEnabled)
@@ -1152,30 +1147,76 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 		[dataTask resume];
 
+		// Continues in didReceiveResponse
+
 		//After 5 seconds we cancel the task and error out
 		/*dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^
-		   {
-		        if(dataTask.state == NSURLSessionTaskStateRunning)
-		        {
-		                [dataTask cancel];
-		                self.requestFetchDownloadInfo = nil;
+		{
+			if(dataTask.state == NSURLSessionTaskStateRunning)
+			{
+					[dataTask cancel];
+					self.requestFetchDownloadInfo = nil;
 
-		                if(downloadInfo.sourceVideo)
-		                {
-		                        [downloadInfo.sourceVideo.downloadButton setSpinning:NO];
-		                }
+					if(downloadInfo.sourceVideo)
+					{
+							[downloadInfo.sourceVideo.downloadButton setSpinning:NO];
+					}
 
-		                UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
-		                                                 message:[localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"] preferredStyle:UIAlertControllerStyleAlert];
+					UIAlertController* errorAlert = [UIAlertController alertControllerWithTitle:[localizationManager localizedSPStringForKey:@"ERROR"]
+														message:[localizationManager localizedSPStringForKey:@"UNABLE_TO_FETCH_FILE_INFORMATION"] preferredStyle:UIAlertControllerStyleAlert];
 
-		                UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
+					UIAlertAction* closeAction = [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"CLOSE"] style:UIAlertActionStyleDefault handler:nil];
 
-		                [errorAlert addAction:closeAction];
+					[errorAlert addAction:closeAction];
 
-		                [downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
-		        }
-		   });*/
+					[downloadInfo.presentationController presentViewController:errorAlert animated:YES completion:nil];
+			}
+		});*/
 	}
+}
+
+// write cookies of WebView to NSHTTPCookieStorage
+// only works on iOS 11ish and up
+// (allegedly on iOS 11 the API is half-broken so it will probably only fully work on 12 and up)
+- (void)collectCookiesFromWebView:(WKWebView*)webView withCompletionHandler:(void (^)(BOOL))completion
+{
+	if(webView)
+	{
+		if([webView.configuration respondsToSelector:@selector(websiteDataStore)])
+		{
+			if([webView.configuration.websiteDataStore respondsToSelector:@selector(httpCookieStore)])
+			{
+				WKHTTPCookieStore* cookieStore = webView.configuration.websiteDataStore.httpCookieStore;
+
+				// This is a threaded mess because some users were complaining about UI deadlocks
+				// So we avoid running anything except the completion handler on main thread
+				dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+				{
+					[cookieStore getAllCookies:^(NSArray<NSHTTPCookie*>* cookies)
+					{
+						dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+						{
+							for(NSHTTPCookie* cookie in cookies)
+							{
+								[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+							}
+
+							if(completion)
+							{
+								dispatch_async(dispatch_get_main_queue(), ^(void){
+									completion(YES);
+								});
+							}
+						});
+					}];
+				});
+
+				return;
+			}
+		}
+	}
+
+	if(completion) completion(NO);
 }
 
 - (void)presentDirectoryPickerWithDownloadInfo:(SPDownloadInfo*)downloadInfo

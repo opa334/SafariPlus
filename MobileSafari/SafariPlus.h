@@ -421,6 +421,13 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)_beginDownloadBackgroundTask:(id)arg1;
 @end
 
+@interface _SFDownload : NSObject
+@end
+
+@interface _SFDownloadManager : NSObject
+- (void)_addDownload:(id)arg1;
+@end
+
 @interface _SFFindOnPageView : UIView
 - (void)setShouldFocusTextField:(BOOL)arg1;
 - (void)showFindOnPage;
@@ -689,6 +696,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (id)loadURLInNewWindow:(id)arg1 inBackground:(BOOL)arg2 animated:(BOOL)arg3;	//iOS9
 - (void)newTabKeyPressed;
 - (void)_pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded:(BOOL)arg1 alternativeOrdering:(BOOL)arg2;
+- (void)navigationBarURLWasTapped:(id)arg1;
 
 //iOS 12.1.4 and below
 @property (readonly, nonatomic) NavigationBar* navigationBar;
@@ -699,6 +707,7 @@ typedef enum UIImageSymbolScale : NSInteger {
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeLeftGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeRightGestureRecognizer;
 @property (nonatomic, retain) UISwipeGestureRecognizer* URLBarSwipeDownGestureRecognizer;
+@property (nonatomic, retain) TabDocument* sp_fullscreenVideoTabDocument;
 - (void)handleGesture:(NSInteger)swipeAction;
 - (void)downloadsFromButtonBar;
 - (void)clearData;

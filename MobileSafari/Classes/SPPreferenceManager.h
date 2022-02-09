@@ -92,6 +92,7 @@
 @property (nonatomic, readonly) BOOL lockBars;
 @property (nonatomic, readonly) BOOL showFullSiteURLEnabled;
 @property (nonatomic, readonly) BOOL forceNativePlayerEnabled;
+@property (nonatomic, readonly) BOOL skipDownloadDialog;
 @property (nonatomic, readonly) BOOL suppressMailToDialog;
 
 @property (nonatomic, readonly) BOOL forceModeOnStartEnabled;

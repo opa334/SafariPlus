@@ -31,6 +31,6 @@
 - (void)cache_invalidateConnectionForPid:(pid_t)pid;
 - (xpc_connection_t)cache_getConnectionForPid:(pid_t)pid;
 
-- (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL, int pid))completionHandler;
+- (void)getURLForPlayingMediaOfTabDocument:(TabDocument*)tabDocument withCompletionHandler:(void (^)(NSURL* URL))completionHandler;
 
 @end

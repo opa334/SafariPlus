@@ -46,8 +46,11 @@
 		self.lockButton = [buttonClass buttonWithType:UIButtonTypeSystem];
 		[self.lockButton setImage:[UIImage imageNamed:@"LockButton_Open" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateNormal];
 		[self.lockButton setImage:[UIImage imageNamed:@"LockButton_Closed" inBundle:SPBundle compatibleWithTraitCollection:nil] forState:UIControlStateSelected];
+
 		self.lockButton.normalImageAlpha = 1.0;
 		self.lockButton.highlightedImageAlpha = 0.2;
+		self.lockButton.adjustsImageWhenDisabled = NO;
+		self.lockButton.adjustsImageWhenHighlighted = NO;
 		[headerView addSubview:self.lockButton];
 	}
 

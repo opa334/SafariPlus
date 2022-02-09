@@ -126,7 +126,7 @@
 	return [_connectionsByPid objectForKey:pidNum];
 }
 
-- (void)getURLForCurrentlyPlayingMediaWithCompletionHandler:(void (^)(NSURL* URL, int pid))completionHandler
+- (void)getURLForPlayingMediaOfTabDocument:(TabDocument*)tabDocument withCompletionHandler:(void (^)(NSURL* URL))completionHandler
 {
 	xpc_object_t fetchMessage = xpc_dictionary_create(NULL,NULL,0);
 	xpc_dictionary_set_bool(fetchMessage, "safari-plus-fetch-video-url", YES);
@@ -134,52 +134,47 @@
 	// pretend to be sending a normal pre-bootstrap message so WebContent doesn't crash in the case where the WebContent hooks don't work for some reason
 	xpc_dictionary_set_string(fetchMessage, "message-name", "pre-bootstrap");
 
+	// When WebContent injection is broken, it will never respond to our messages so we need to timeout after one second
 	dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-
 	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void)
 	{
-		intptr_t failed = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC));
+		intptr_t failed = dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC));
 		if(failed != 0)
 		{
-			completionHandler(nil, 0);
+			completionHandler(nil);
 		}
 	});
 
-	for(NSNumber* pidNum in [_connectionsByPid allKeys])
+	pid_t pid = tabDocument.webView._webProcessIdentifier;
+	xpc_connection_t connection = [self cache_getConnectionForPid:pid];
+
+	xpc_connection_send_message_with_reply(connection, fetchMessage, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(xpc_object_t reply)
 	{
-		pid_t pid = [pidNum intValue];
-		xpc_connection_t connection = [self cache_getConnectionForPid:pid];
-
-		xpc_connection_send_message_with_reply(connection, fetchMessage, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(xpc_object_t reply)
+		if(reply)
 		{
-			if(reply)
-			{
-				xpc_type_t replyType = xpc_get_type(reply);
+			xpc_type_t replyType = xpc_get_type(reply);
 
-				if(replyType == XPC_TYPE_DICTIONARY)
+			if(replyType == XPC_TYPE_DICTIONARY)
+			{
+				if(xpc_dictionary_get_bool(reply, "found-video-url"))
 				{
-					if(xpc_dictionary_get_bool(reply, "found-video-url"))
+					const char* URLCString = xpc_dictionary_get_string(reply, "video-url");
+					if(URLCString)
 					{
-						const char* URLCString = xpc_dictionary_get_string(reply, "video-url");
-						if(URLCString)
-						{
-							NSString* URLString = [NSString stringWithUTF8String:URLCString];
-							NSURL* URL = [NSURL URLWithString:URLString];
-							dispatch_async(dispatch_get_main_queue(), ^{
-								dispatch_semaphore_signal(semaphore);
-								completionHandler(URL, pid);
-							});
-							return;
-						}
+						NSString* URLString = [NSString stringWithUTF8String:URLCString];
+						NSURL* URL = [NSURL URLWithString:URLString];
+
+						dispatch_semaphore_signal(semaphore);
+						completionHandler(URL);
 					}
 				}
-				else if(replyType == XPC_TYPE_ERROR) //connection is likely invalid, remove it
-				{
-					[self cache_invalidateConnectionForPid:pid];
-				}
 			}
-		});
-	}
+			else if(replyType == XPC_TYPE_ERROR) //connection is likely invalid, remove it
+			{
+				[self cache_invalidateConnectionForPid:pid];
+			}
+		}
+	});
 }
 
 @end

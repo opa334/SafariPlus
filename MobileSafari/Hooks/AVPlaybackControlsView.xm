@@ -100,7 +100,7 @@
 	downloadInfo.presentationController = playbackControlsController.playerViewController.fullScreenViewController;
 	downloadInfo.sourceRect = [[self.downloadButton superview] convertRect:self.downloadButton.frame toView:downloadInfo.presentationController.view];
 
-	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
+	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo sourceWindow:self.window];
 }
 
 %new

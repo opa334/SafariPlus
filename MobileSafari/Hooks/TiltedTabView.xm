@@ -29,7 +29,81 @@
 #import <libundirect/libundirect_dynamic.h>
 #import <libundirect/libundirect_hookoverwrite.h>
 
+CGRect calculateLockButtonHitRect(UIScrollView* scrollView, TabThumbnailView* contentView)
+{
+	CGPoint midPointLockButton = CGPointMake(CGRectGetMidX(contentView.lockButton.bounds), CGRectGetMidY(contentView.lockButton.bounds));
+	CGPoint midPointLockButtonScrollView = [contentView.lockButton convertPoint:midPointLockButton toView:scrollView];
+	CGRect lockButtonHitRect = CGRectMake(midPointLockButtonScrollView.x - 22, midPointLockButtonScrollView.y - 22, 44, 44);
+	return lockButtonHitRect;
+}
+
 %hook TiltedTabView
+
+- (UIView*)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		if(![self valueForKey:@"_editedCloudTabItemView"])
+		{
+			UIScrollView* scrollView = [self valueForKey:@"_scrollView"];
+			CGPoint pointInScrollView = [self convertPoint:point toView:scrollView];
+			for(TiltedTabItem* item in self.items)
+			{
+				if([item respondsToSelector:@selector(layoutInfo)])
+				{
+					CGRect lockButtonHitRect = calculateLockButtonHitRect(scrollView, item.layoutInfo.contentView);
+					if(CGRectContainsPoint(lockButtonHitRect, pointInScrollView))
+					{
+						return item.layoutInfo.contentView.lockButton;
+					}
+				}
+				else
+				{
+					// iOS 8
+					CGRect lockButtonHitRect = calculateLockButtonHitRect(scrollView, item.contentView);
+					if(CGRectContainsPoint(lockButtonHitRect, pointInScrollView))
+					{
+						return item.contentView.lockButton;
+					}
+				}
+			}
+		}
+	}
+
+	return %orig;
+}
+
+- (TiltedTabItem*)_tiltedTabItemForLocation:(CGPoint)location
+{
+	TiltedTabItem* item = %orig;
+
+	if(preferenceManager.lockedTabsEnabled)
+	{
+		if(item)
+		{
+			UIScrollView* scrollView = [self valueForKey:@"_scrollView"];
+
+			CGRect lockButtonHitRect;
+
+			if([item respondsToSelector:@selector(layoutInfo)])
+			{
+				lockButtonHitRect = calculateLockButtonHitRect(scrollView, item.layoutInfo.contentView);
+			}
+			else
+			{
+				// iOS 8
+				lockButtonHitRect = calculateLockButtonHitRect(scrollView, item.contentView);
+			}
+
+			if(CGRectContainsPoint(lockButtonHitRect, location))
+			{
+				return nil;
+			}
+		}
+	}
+
+	return item;
+}
 
 %new
 - (void)_lockButtonPressed:(UIButton*)button

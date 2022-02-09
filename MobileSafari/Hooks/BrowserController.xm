@@ -40,6 +40,8 @@
 
 %property (nonatomic, assign) BOOL isSetUp;
 
+%property (nonatomic, retain) TabDocument *sp_fullscreenVideoTabDocument;
+
 //Present downloads view
 %new
 - (void)downloadsFromButtonBar
@@ -370,15 +372,15 @@
 	return %orig;
 }
 
-- (void)setFavoritesState:(NSInteger)arg1 animated:(BOOL)arg2
+- (void)setFavoritesState:(NSInteger)favoritesState animated:(BOOL)animated
 {
 	if(preferenceManager.customStartSiteEnabled && preferenceManager.customStartSite)
 	{
 		TabDocument* activeTabDocument = self.tabController.activeTabDocument;
 
-		if(arg1 == 4)
+		if(favoritesState == 4)
 		{
-			%orig(0,arg2);
+			%orig(0,animated);
 			[activeTabDocument loadURL:[NSURL URLWithString:preferenceManager.customStartSite] userDriven:NO];
 			return;
 		}
@@ -817,7 +819,7 @@
 	{
 		BOOL enabled;
 
-		if(self.favoritesFieldFocused) //TODO: Find alternative on iOS 14, no longer exists
+		if(self.favoritesFieldFocused)
 		{
 			enabled = NO;
 		}

@@ -28,6 +28,7 @@
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPTabManagerTableViewController.h"
 #import "../Classes/SPNavigationController.h"
+#import "../Classes/SPMediaFetcher.h"
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Enums.h"
@@ -588,8 +589,16 @@ BOOL isCallRelatedToTabSwipes()
 
 %group iOS11Up
 
-- (void)_closeTabDocuments:(NSArray<TabDocument*>*)documents animated:(BOOL)arg2 temporarily:(BOOL)arg3 allowAddingToRecentlyClosedTabs:(BOOL)arg4 keepWebViewAlive:(BOOL)arg5
+- (void)_closeTabDocuments:(NSArray<TabDocument*>*)documents animated:(BOOL)animated temporarily:(BOOL)temporarily allowAddingToRecentlyClosedTabs:(BOOL)allowAddingToRecentlyClosedTabs keepWebViewAlive:(BOOL)keepWebViewAlive
 {
+	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled && !keepWebViewAlive)
+	{
+		for(TabDocument* document in documents)
+		{
+			[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:document.webView._webProcessIdentifier];
+		}
+	}
+
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		NSMutableArray* documentsM = [documents mutableCopy];
@@ -602,7 +611,7 @@ BOOL isCallRelatedToTabSwipes()
 			}
 		}
 
-		return %orig([documentsM copy], arg2, arg3, arg4, arg5);
+		return %orig([documentsM copy], animated, temporarily, allowAddingToRecentlyClosedTabs, keepWebViewAlive);
 	}
 
 	return %orig;
@@ -612,8 +621,13 @@ BOOL isCallRelatedToTabSwipes()
 
 %group iOS10Down
 
-- (void)_closeTabDocument:(TabDocument*)document animated:(BOOL)arg2 temporarily:(BOOL)arg3 allowAddingToRecentlyClosedTabs:(BOOL)arg4 keepWebViewAlive:(BOOL)arg5
+- (void)_closeTabDocument:(TabDocument*)document animated:(BOOL)animated temporarily:(BOOL)temporarily allowAddingToRecentlyClosedTabs:(BOOL)allowAddingToRecentlyClosedTabs keepWebViewAlive:(BOOL)keepWebViewAlive
 {
+	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled && !keepWebViewAlive)
+	{
+		[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:document.webView._webProcessIdentifier];
+	}
+
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		if(document.locked)

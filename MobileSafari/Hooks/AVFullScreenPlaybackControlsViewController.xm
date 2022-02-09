@@ -124,7 +124,7 @@
 	downloadInfo.presentationController = self;
 	downloadInfo.sourceRect = [[self.downloadButton superview] convertRect:self.downloadButton.frame toView:self.view];
 
-	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo];
+	[downloadManager prepareVideoDownloadForDownloadInfo:downloadInfo sourceWindow:self.view.window];
 }
 
 %end

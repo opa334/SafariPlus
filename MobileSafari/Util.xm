@@ -904,26 +904,30 @@ BOOL isUsingCellularData()
 	return cellularData;
 }
 
-// write cookies of WebView to NSHTTPCookieStorage
-// only works on iOS 11ish and up
-// (allegedly on iOS 11 the API is half-broken so it will probably only fully work on 12 and up)
-BOOL collectCookiesFromWebView(WKWebView* webView)
+TabDocument* fullscreenVideoTabDocumentForWindow(UIWindow* window)
 {
-	if([webView.configuration respondsToSelector:@selector(websiteDataStore)])
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_13_0)
 	{
-		if([webView.configuration.websiteDataStore respondsToSelector:@selector(httpCookieStore)])
+		for(UIWindow* otherWindow in window.windowScene.windows)
 		{
-			WKHTTPCookieStore* cookieStore = webView.configuration.websiteDataStore.httpCookieStore;
-			[cookieStore getAllCookies:^(NSArray<NSHTTPCookie*>* cookies)
+			if([otherWindow isKindOfClass:NSClassFromString(@"MobileSafariWindow")])
 			{
-				for(NSHTTPCookie* cookie in cookies)
-				{
-					[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-				}
-			}];
-
-			return YES;
+				BrowserRootViewController* rootVC = (BrowserRootViewController*)otherWindow.rootViewController;
+				BrowserController* bc = rootVC.browserController;
+				return bc.sp_fullscreenVideoTabDocument;
+			}
 		}
+		return nil;
 	}
-	return NO;
+	else
+	{
+		for(BrowserController* bc in browserControllers())
+		{
+			if(bc.sp_fullscreenVideoTabDocument)
+			{
+				return bc.sp_fullscreenVideoTabDocument;
+			}
+		}
+		return nil;
+	}
 }

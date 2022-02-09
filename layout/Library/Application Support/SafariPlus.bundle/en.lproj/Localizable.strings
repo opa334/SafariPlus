@@ -180,7 +180,10 @@
 "SHOW_FULL_SITE_URL_FOOTER" = "Always show the full site URL in the top bar.";
 
 "FORCE_NATIVE_PLAYER" = "Force Native Player";
-"FORCE_NATIVE_PLAYER_FOOTER" = "On iPads running iOS 12 and above, Safari has a HTML5 video player that let's the website provide some of the media controls (Not all sites use this!). On 12.0 - 12.1.4 there is a toggle for it inside Safari settings, on 12.2 and above it's on by default. This option forces Safari to use the native player on all sites except YouTube, due to it not supporting the native player.";
+"FORCE_NATIVE_PLAYER_FOOTER" = "On iPads running iOS 12 and above, Safari uses the HTML5 video player api on some websites, which allows the website to provide the video player. On iOS 12.0 - 12.1.4 there is a toggle for it inside Safari settings, on iOS 12.2 and above it's enabled by default. This option forces Safari to use the native player on all sites except YouTube, because YouTube does not support the native player.";
+
+"SKIP_DOWNLOAD_DIALOG" = "Skip Download Dialog";
+"SKIP_DOWNLOAD_DIALOG_FOOTER" = "Skip the confirmation dialog that normally lets you choose whether or not to start downloading a file via the native download manager of Safari.";
 
 "SUPPRESS_MAILTO_DIALOG" = "Suppress Mailto Dialog";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suppress the dialog box that appears when a 'mailto:<email>' URL is accessed.";
@@ -449,6 +452,7 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "The path you set in settings under 'Custom Default Path' is invalid. Please correct it.";
 "WEBCONTENT_COMMUNICATION_FAILED" = "Communication with the WebContent process failed. This is needed to retrieve the video URL. Make sure that you did not disable SafariPlusWC.dylib via iCleaner Pro, Choicy or similar.";
 "WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE" = "As you are using libhooker, also make sure that 'Allow tweaks in webpages' is enabled inside libhooker configurator and that both libhooker and your jailbreak are up to date.";
+"BLOB_NOT_SUPPORTED_ERROR" = "The video you're trying to download is using a JavaScript blob object, this is currently not supported by Safari Plus.";
 "COPY_LINK" = "Copy Link";
 "SIZE_UNKNOWN" = "Unknown Size";
 "DURATION_UNKNOWN" = "Unknown Duration";

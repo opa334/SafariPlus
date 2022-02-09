@@ -168,6 +168,12 @@ LIBUNDIRECT_CLASS_ADD_GETTER(TabOverviewItemLayoutInfo, id, _tabOverviewItem, ta
     [self _pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded:NO alternativeOrdering:NO];
 }
 
+%new
+- (BOOL)isFavoritesFieldFocused
+{
+    return (MSHookIvar<NSInteger>(self, "_favoritesState") | 2) == 3;
+}
+
 %end
 
 %hook TabThumbnailView
@@ -535,12 +541,12 @@ void initUndirection()
     // 14.5    (+arm64e)   FF8301D1 (...) 81B9FF97 (...) [48008052 08119F9A]
     // memory of function (arm64e): 7F2303D5 (...) [FD430191 800400B4]
     
-    #if __arm64e__
+#if __arm64e__
     void* _pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering = libundirect_find(@"MobileSafari", (unsigned char[]){0x48, 0x00, 0x80, 0x52, 0x08, 0x11, 0x9F, 0x9A}, 8, 0x7F);
-    #else
+#else
     //problem: function contains starting byte (FF), workaround: use 83 as starting byte and substract one
     void* _pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering = (void*)(((intptr_t)libundirect_find(@"MobileSafari", (unsigned char[]){0x48, 0x00, 0x80, 0x52, 0x08, 0x11, 0x9F, 0x9A}, 8, 0x83)) - 1);;
-    #endif
+#endif
     libundirect_rebind(_pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded_alternativeOrdering, class_browserController, @selector(_pressedNewTabKeySwitchingToPrivateBrowsingIfNeeded:alternativeOrdering:), "v@:BB");
 
     // TabController -(void)_closeTabDocuments:(void *)arg2 animated:(bool)arg3 temporarily:(bool)arg4 allowAddingToRecentlyClosedTabs:(bool)arg5 keepWebViewAlive:(bool)arg6

@@ -180,7 +180,7 @@
 "SHOW_FULL_SITE_URL_FOOTER" = "Immer die gesamte URL der Seite in der oberen Leiste anzeigen.";
 
 "FORCE_NATIVE_PLAYER" = "Nativen Player erzwingen";
-"FORCE_NATIVE_PLAYER_FOOTER" = "Auf iPads besitzt Safari ab iOS 12 einen neuen HTML5 Player, welcher einige Elemente von der Webseite bezieht (nicht auf jeder Seite!). Auf 12.0 - 12.1.4 kann dieser in den Einstellungen aktiviert werden, ab 12.2 ist er standardmäßig an. Diese Option erzwingt die Benutzung des nativen Players auf jeder Seite außer YouTube, da es den nativen Player nicht unterstützt.";
+"FORCE_NATIVE_PLAYER_FOOTER" = "Auf iPads benutzt Safari ab iOS 12 auf einigen Seiten die HTML5 Videoplayer API, welche der Webseite erlaubt, den Videoplayer selbst bereitzustellen. Auf iOS 12.0 - 12.1.4 kann dieser in den Safari-Einstellungen aktiviert werden, ab iOS 12.2 ist er standardmäßig aktiviert. Diese Option erzwingt die Benutzung des nativen Players für alle Seiten außer YouTube (YouTube unterstützt den nativen Player nicht).";
 
 "SUPPRESS_MAILTO_DIALOG" = "Mailto Dialog deaktivieren";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
@@ -448,7 +448,7 @@
 "PLAY" = "Abspielen";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
 "WEBCONTENT_COMMUNICATION_FAILED" = "Die Kommunikation mit dem WebContent Prozess ist fehlgeschlagen. Diese ist zum Abrufen der Video URL erforderlich. Stelle sicher dass SafariPlusWC.dylib nicht mit iCleaner Pro, Choicy oder ähnlichen Tweaks deaktiviert wurde.";
-"WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE" = "Da du libhooker benutzt, stelle bitte auch sicher, dass die Option 'Allow tweaks in webpages' im libhooker configurator aktiviert ist und das sowohl libhooker als auch dein Jailbreak auf der neusten Version sind.";
+"WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE" = "Da du libhooker benutzt, stelle auch sicher, dass die Option 'Allow tweaks in webpages' in libhooker Configurator aktiviert ist und dass sowohl libhooker als auch dein Jailbreak auf der neusten Version sind.";
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "DURATION_UNKNOWN" = "Unbekannte Länge";

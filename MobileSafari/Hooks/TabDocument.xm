@@ -491,11 +491,6 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 			[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
 		}
 
-		// Copy the WKWebView cookies into NSHTTPCookieStorage which NSURLSession uses
-		// Only works on iOS 11ish and up
-		// Adds support for sites that use authentication
-		collectCookiesFromWebView(castedSelf.webView);
-
 		BrowserController* controller = browserControllerForTabDocument(castedSelf);
 		BrowserRootViewController* rootViewController = rootViewControllerForBrowserController(controller);
 
@@ -984,7 +979,45 @@ typedef void (^UIActionHandler)(__kindof UIAction *action);
 
 %end
 
+%group iOS9Up
+
+- (void)_webViewDidEnterFullscreen:(WKWebView*)webView
+{
+	%orig;
+	BrowserController* controller = browserControllerForTabDocument(castedSelf);
+	controller.sp_fullscreenVideoTabDocument = castedSelf;
+}
+
+- (void)_webViewDidExitFullscreen:(WKWebView*)webView
+{
+	%orig;
+	BrowserController* controller = browserControllerForTabDocument(castedSelf);
+	if(controller.sp_fullscreenVideoTabDocument == castedSelf)
+	{
+		controller.sp_fullscreenVideoTabDocument = nil;
+	}
+}
+
+%end
+
 %group iOS8
+
+%new
+- (void)_webViewDidEnterFullscreen:(WKWebView*)webView
+{
+	BrowserController* controller = browserControllerForTabDocument(castedSelf);
+	controller.sp_fullscreenVideoTabDocument = castedSelf;
+}
+
+%new
+- (void)_webViewDidExitFullscreen:(WKWebView*)webView
+{
+	BrowserController* controller = browserControllerForTabDocument(castedSelf);
+	if(controller.sp_fullscreenVideoTabDocument == castedSelf)
+	{
+		controller.sp_fullscreenVideoTabDocument = nil;
+	}
+}
 
 //Extra 'Open in new Tab' option + 'Open in opposite Mode' option + 'Download to' option
 - (NSMutableArray*)actionsForElement:(_WKActivatedElementInfo*)element
@@ -1077,6 +1110,11 @@ void initTabDocument()
 		{
 			%init(iOS13to13_3_1);
 		}
+	}
+
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
+	{
+		%init(iOS9Up, TabDocument=TabDocumentClass);
 	}
 
 	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_12_2)

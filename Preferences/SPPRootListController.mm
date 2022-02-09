@@ -24,12 +24,30 @@
 #import "Simulator.h"
 
 #import "../Shared/SPPreferenceUpdater.h"
+#import "../MobileSafari/Util.h"
+#import <mach-o/dyld.h>
 
 SPFileManager* fileManager;
 SPLocalizationManager* localizationManager;
 NSBundle* SPBundle;	//Safari Plus
 NSBundle* MSBundle;	//MobileSafari
 NSBundle* SSBundle;	//SafariServices
+
+BOOL isImageLoaded(NSString* imageName)
+{
+	for (uint32_t i = 0; i < _dyld_image_count(); i++)
+	{
+		const char *pathC = _dyld_get_image_name(i);
+		NSString* path = [NSString stringWithUTF8String:pathC];
+
+		if([path.lastPathComponent isEqualToString:imageName])
+		{
+			return YES;
+		}
+	}
+
+	return NO;
+}
 
 @implementation SPPRootListController
 
@@ -58,6 +76,16 @@ NSBundle* SSBundle;	//SafariServices
 - (NSString*)plistName
 {
 	return @"Root";
+}
+
+- (void)applyModificationsToSpecifiers:(NSMutableArray*)specifiers
+{
+	// Fix header not showing when using shuffle
+	if(isImageLoaded(@"shuffle.dylib"))
+	{
+		[specifiers insertObject:[PSSpecifier emptyGroupSpecifier] atIndex:0];
+	}
+	[super applyModificationsToSpecifiers:specifiers];
 }
 
 - (void)sourceLink

@@ -22,7 +22,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-@class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload, AVAssetDownloadURLSession;
+@class CPDistributedMessagingCenter, SPStatusBarNotificationWindow, SPDownload, AVAssetDownloadURLSession, WKWebView;
 
 @interface SPDownloadManager : NSObject <NSURLSessionDownloadDelegate, NSURLSessionDataDelegate, DownloadManagerDelegate, SPDirectoryPickerDelegate, AVAssetDownloadDelegate>
 @property (nonatomic) BOOL HLSSupported;
@@ -99,8 +99,9 @@
 - (void)configureDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)startDownloadWithInfo:(SPDownloadInfo*)downloadInfo;
 - (void)saveImageWithInfo:(SPDownloadInfo*)downloadInfo;
-- (void)prepareVideoDownloadForDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)prepareVideoDownloadForDownloadInfo:(SPDownloadInfo*)downloadInfo sourceWindow:(UIWindow*)window;
 - (void)prepareDownloadFromRequestForDownloadInfo:(SPDownloadInfo*)downloadInfo;
+- (void)collectCookiesFromWebView:(WKWebView*)webView withCompletionHandler:(void (^)(BOOL))completion;
 
 - (void)presentViewController:(UIViewController*)viewController withDownloadInfo:(SPDownloadInfo*)downloadInfo;
 - (void)presentDownloadAlertWithDownloadInfo:(SPDownloadInfo*)downloadInfo;

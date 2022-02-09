@@ -170,4 +170,9 @@
 	return self.filename;
 }
 
+- (NSString*)description
+{
+	return [[super description] stringByAppendingString:[NSString stringWithFormat:@" { request:%@ image:%@ filesize:%llu filename:%@ title:%@ targetURL:%@ customPath:%i sourceVideo:%@ sourceDocument:%@ presentationController:%@ sourceRect:%@ isHLSDownload:%i playlistExtension:%@ }", self.request, self.image, (unsigned long long)self.filesize, self.filename, self.title, self.targetURL, self.customPath, self.sourceVideo, self.sourceDocument, self.presentationController, NSStringFromCGRect(self.sourceRect), self.isHLSDownload, self.playlistExtension]];
+}
+
 @end

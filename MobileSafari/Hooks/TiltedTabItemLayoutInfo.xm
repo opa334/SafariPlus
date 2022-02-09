@@ -33,9 +33,12 @@
 
 - (void)tearDownThumbnailView
 {
-	if(self.contentView)
+	if(preferenceManager.lockedTabsEnabled)
 	{
-		[self.contentView.lockButton removeTarget:self.tiltedTabView action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+		if(self.contentView)
+		{
+			[self.contentView.lockButton removeTarget:self.tiltedTabView action:@selector(_lockButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+		}
 	}
 
 	%orig;
