@@ -1188,28 +1188,23 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 			{
 				WKHTTPCookieStore* cookieStore = webView.configuration.websiteDataStore.httpCookieStore;
 
-				// This is a threaded mess because some users were complaining about UI deadlocks
-				// So we avoid running anything except the completion handler on main thread
-				dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+				[cookieStore getAllCookies:^(NSArray<NSHTTPCookie*>* cookies)
 				{
-					[cookieStore getAllCookies:^(NSArray<NSHTTPCookie*>* cookies)
+					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
 					{
-						dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+						for(NSHTTPCookie* cookie in cookies)
 						{
-							for(NSHTTPCookie* cookie in cookies)
-							{
-								[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-							}
+							[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+						}
 
-							if(completion)
-							{
-								dispatch_async(dispatch_get_main_queue(), ^(void){
-									completion(YES);
-								});
-							}
-						});
-					}];
-				});
+						if(completion)
+						{
+							dispatch_async(dispatch_get_main_queue(), ^(void){
+								completion(YES);
+							});
+						}
+					});
+				}];
 
 				return;
 			}
