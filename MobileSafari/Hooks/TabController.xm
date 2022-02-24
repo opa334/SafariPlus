@@ -591,14 +591,6 @@ BOOL isCallRelatedToTabSwipes()
 
 - (void)_closeTabDocuments:(NSArray<TabDocument*>*)documents animated:(BOOL)animated temporarily:(BOOL)temporarily allowAddingToRecentlyClosedTabs:(BOOL)allowAddingToRecentlyClosedTabs keepWebViewAlive:(BOOL)keepWebViewAlive
 {
-	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled && !keepWebViewAlive)
-	{
-		for(TabDocument* document in documents)
-		{
-			[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:document.webView._webProcessIdentifier];
-		}
-	}
-
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		NSMutableArray* documentsM = [documents mutableCopy];
@@ -623,11 +615,6 @@ BOOL isCallRelatedToTabSwipes()
 
 - (void)_closeTabDocument:(TabDocument*)document animated:(BOOL)animated temporarily:(BOOL)temporarily allowAddingToRecentlyClosedTabs:(BOOL)allowAddingToRecentlyClosedTabs keepWebViewAlive:(BOOL)keepWebViewAlive
 {
-	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled && !keepWebViewAlive)
-	{
-		[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:document.webView._webProcessIdentifier];
-	}
-
 	if(preferenceManager.lockedTabsEnabled)
 	{
 		if(document.locked)

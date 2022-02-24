@@ -90,6 +90,18 @@
 	return self;
 }
 
+- (void)cache_removeDeadConnections
+{
+	[_connectionsByPid enumerateKeysAndObjectsUsingBlock:^(NSNumber* pidNum, xpc_connection_t connection, BOOL *stop)
+	{
+		if(xpc_connection_get_pid(connection) == 0)
+		{
+			HBLogDebugWeak(@"removing dead connection %@/%@", pidNum, connection);
+			[_connectionsByPid removeObjectForKey:pidNum];
+		}
+	}];
+}
+
 - (void)cache_setConnection:(xpc_connection_t)connection forPid:(pid_t)pid
 {
 	if(pid == 0 || !connection)
@@ -101,19 +113,7 @@
 
 	NSNumber* pidNum = [NSNumber numberWithInt:pid];
 	[_connectionsByPid setObject:connection forKey:pidNum];
-}
-
-- (void)cache_invalidateConnectionForPid:(pid_t)pid
-{
-	if(pid == 0)
-	{
-		return;
-	}
-
-	HBLogDebugWeak(@"cache_invalidateConnectionForPid:%i", pid);
-
-	NSNumber* pidNum = [NSNumber numberWithInt:pid];
-	[_connectionsByPid removeObjectForKey:pidNum];
+	[self cache_removeDeadConnections];
 }
 
 - (xpc_connection_t)cache_getConnectionForPid:(pid_t)pid
@@ -122,7 +122,10 @@
 	{
 		return nil;
 	}
-	NSNumber* pidNum = [NSNumber numberWithInt:pid];
+
+	[self cache_removeDeadConnections];
+
+	NSNumber* pidNum = [NSNumber numberWithInt:pid];	
 	return [_connectionsByPid objectForKey:pidNum];
 }
 
@@ -168,10 +171,6 @@
 						completionHandler(URL);
 					}
 				}
-			}
-			else if(replyType == XPC_TYPE_ERROR) //connection is likely invalid, remove it
-			{
-				[self cache_invalidateConnectionForPid:pid];
 			}
 		}
 	});

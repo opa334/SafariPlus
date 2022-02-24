@@ -28,7 +28,6 @@
 + (instancetype)sharedFetcher;
 
 - (void)cache_setConnection:(xpc_connection_t)connection forPid:(pid_t)pid;
-- (void)cache_invalidateConnectionForPid:(pid_t)pid;
 - (xpc_connection_t)cache_getConnectionForPid:(pid_t)pid;
 
 - (void)getURLForPlayingMediaOfTabDocument:(TabDocument*)tabDocument withCompletionHandler:(void (^)(NSURL* URL))completionHandler;

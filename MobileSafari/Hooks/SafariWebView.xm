@@ -50,22 +50,6 @@
 	}
 }
 
-%group MediaFetcherSupport
-
-- (void)_killWebContentProcess
-{
-	[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:[cSelf _webProcessIdentifier]];
-	%orig;
-}
-
-- (void)_killWebContentProcessAndResetState
-{
-	[[SPMediaFetcher sharedFetcher] cache_invalidateConnectionForPid:[cSelf _webProcessIdentifier]];
-	%orig;
-}
-
-%end
-
 %new
 - (void)setDesktopModeState:(NSInteger)desktopModeState
 {
@@ -183,9 +167,4 @@ void initSafariWebView()
 	}
 
 	%init(SafariWebView=SafariWebViewClass);
-
-	if(preferenceManager.downloadManagerEnabled && preferenceManager.videoDownloadingEnabled)
-	{
-		%init(MediaFetcherSupport,SafariWebView=SafariWebViewClass);
-	}
 }
