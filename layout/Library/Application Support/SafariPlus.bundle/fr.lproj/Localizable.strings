@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Le chemin que vous avez défini dans les paramètres sous 'Chemin d'accès par défaut' n'est pas valide. Veuillez le corriger.";
 /*WEBCONTENT_COMMUNICATION_FAILED*/
 /*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Copier le lien";
 "SIZE_UNKNOWN" = "Taille inconnue";
 "DURATION_UNKNOWN" = "Durée inconnue";

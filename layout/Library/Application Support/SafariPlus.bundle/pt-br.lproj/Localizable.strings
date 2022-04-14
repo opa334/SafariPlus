@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "O caminho que você definiu nas configurações em 'Caminho padrão personalizado' é inválido. Por favor corrija isso.";
 /*WEBCONTENT_COMMUNICATION_FAILED*/
 /*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Link de cópia";
 "SIZE_UNKNOWN" = "Tamanho desconhecido";
 "DURATION_UNKNOWN" = "Duração desconhecida";

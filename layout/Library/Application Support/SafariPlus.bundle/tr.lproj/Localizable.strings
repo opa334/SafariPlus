@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "’Özel Varsayılan Yol' ayarladığınız yol geçersiz. Lütfen düzeltin.";
 /*WEBCONTENT_COMMUNICATION_FAILED*/
 /*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Link kopyala";
 "SIZE_UNKNOWN" = "Bilinmeyen boyutu";
 /*DURATION_UNKNOWN*/

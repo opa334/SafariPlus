@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "El destino elegido en 'Destino por defecto personalizado' no es válido. Por favor corrígelo.";
 /*WEBCONTENT_COMMUNICATION_FAILED*/
 /*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Copiar enlace";
 "SIZE_UNKNOWN" = "Tamaño desconocido";
 /*DURATION_UNKNOWN*/

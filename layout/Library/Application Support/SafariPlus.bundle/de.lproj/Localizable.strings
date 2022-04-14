@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
 "WEBCONTENT_COMMUNICATION_FAILED" = "Die Kommunikation mit dem WebContent Prozess ist fehlgeschlagen. Diese ist zum Abrufen der Video URL erforderlich. Stelle sicher dass SafariPlusWC.dylib nicht mit iCleaner Pro, Choicy oder ähnlichen Tweaks deaktiviert wurde.";
 "WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE" = "Da du libhooker benutzt, stelle auch sicher, dass die Option 'Allow tweaks in webpages' in libhooker Configurator aktiviert ist und dass sowohl libhooker als auch dein Jailbreak auf der neusten Version sind.";
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "DURATION_UNKNOWN" = "Unbekannte Länge";

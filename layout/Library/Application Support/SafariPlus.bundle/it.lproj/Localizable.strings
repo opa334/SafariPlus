@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Il percorso che hai impostato nelle impostazioni sotto \"Percorso predefinito personalizzato\" non è valido. Si prega di correggerlo.";
 /*WEBCONTENT_COMMUNICATION_FAILED*/
 /*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Copia link";
 "SIZE_UNKNOWN" = "Dimensione sconosciuta";
 "DURATION_UNKNOWN" = "Durata sconosciuta";

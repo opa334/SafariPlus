@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "المسار الذي قمت بتعيينه في الإعدادات ضمن 'مسار افتراضي مخصص' غير صالح. يرجى تصحيح ذلك.";
 /*WEBCONTENT_COMMUNICATION_FAILED*/
 /*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "نسخ الرابط";
 "SIZE_UNKNOWN" = "الحجم غير معروف";
 "DURATION_UNKNOWN" = "الوقت غير معروف";

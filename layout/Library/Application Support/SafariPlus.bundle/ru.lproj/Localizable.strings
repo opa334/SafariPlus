@@ -452,7 +452,6 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Путь, заданный в настройках, как 'Директория по умолчанию' не доступен. Пожалуйста измените путь.";
 /*WEBCONTENT_COMMUNICATION_FAILED*/
 /*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
-/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Скопировать Ссылку";
 "SIZE_UNKNOWN" = "Размер не известен";
 /*DURATION_UNKNOWN*/
