@@ -29,7 +29,7 @@ NSString* simulatorPath(NSString* path)
 	{
 		NSString* simulatorID = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject].pathComponents[7];
 		NSString* strippedPath = [path stringByReplacingOccurrencesOfString:@"/var/mobile/" withString:@""];
-		return [NSString stringWithFormat:@"/Users/%@/Library/Developer/CoreSimulator/Devices/%@/data/%@", currentUser, simulatorID, strippedPath];
+		return [NSString stringWithFormat:@"/Users/%@/Library/Developer/CoreSimulator/Devices/%@/data/%@", CURRENT_USER, simulatorID, strippedPath];
 	}
 	return [UISystemRootDirectory() stringByAppendingPathComponent:path];
 }

@@ -307,10 +307,10 @@
 @property (nonatomic, readonly) NSString* customSearchEngineURL;
 @property (nonatomic, readonly) NSString* customSearchEngineSuggestionsURL;
 
+@property (nonatomic, readonly) BOOL unsandboxSafariEnabled;
 @property (nonatomic, readonly) BOOL largeTitlesEnabled;
 @property (nonatomic, readonly) BOOL sortDirectoriesAboveFiles;
 @property (nonatomic, readonly) BOOL pullUpToRefreshDisabled;
-@property (nonatomic, readonly) BOOL communicationErrorDisabled;
 
 #ifndef NO_CEPHEI
 - (HBPreferences*)preferences;

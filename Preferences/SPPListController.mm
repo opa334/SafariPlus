@@ -148,7 +148,7 @@
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier
 {
 	#ifdef NO_CEPHEI
-	NSString* plistPath = rPath(prefPlistPath);
+	NSString* plistPath = rPath(PREF_PLIST_PATH);
 	NSMutableDictionary* mutableDict = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
 	if(!mutableDict)
 	{
@@ -187,7 +187,7 @@
 
 - (id)readPreferenceValue:(PSSpecifier*)specifier
 {
-	NSString* plistPath = rPath(prefPlistPath);
+	NSString* plistPath = rPath(PREF_PLIST_PATH);
 	NSDictionary* dict = [NSDictionary dictionaryWithContentsOfFile:plistPath];
 
 	id obj = [dict objectForKey:[[specifier properties] objectForKey:@"key"]];

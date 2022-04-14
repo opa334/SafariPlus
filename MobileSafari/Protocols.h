@@ -21,7 +21,7 @@
 @class SPDownload, SPDownloadInfo, SPDownloadManager, SPFilePickerNavigationController, AVAssetDownloadURLSession;
 
 @protocol filePickerDelegate<NSObject>
-- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs;
+- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray<NSURL*>*)URLs;
 @end
 
 @protocol DownloadObserverDelegate

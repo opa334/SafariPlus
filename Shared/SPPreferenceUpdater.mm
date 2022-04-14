@@ -37,26 +37,26 @@
 
 + (BOOL)needsMerge
 {
-	BOOL colorsExists = [fileManager fileExistsAtPath:rPath(colorPrefsPath)];
-	BOOL otherExists = [fileManager fileExistsAtPath:rPath(otherPlistPath)];
+	BOOL colorsExists = [fileManager fileExistsAtPath:rPath(COLOR_PLIST_PATH_DEPRECATED)];
+	BOOL otherExists = [fileManager fileExistsAtPath:rPath(OTHER_PLIST_PATH_DEPRECATED)];
 
 	return colorsExists || otherExists;
 }
 
 + (void)update
 {
-	#ifndef NO_CEPHEI
+#ifndef NO_CEPHEI
 	BOOL mergeNeeded = [self needsMerge];
 
-	#ifndef PREFERENCES
+#ifndef PREFERENCES
 	HBPreferences* preferences = [preferenceManager preferences];
-  #else
-	NSUserDefaults* preferences = [[NSUserDefaults alloc] initWithSuiteName:preferenceDomainName];
-	#endif
+#else
+	NSUserDefaults* preferences = [[NSUserDefaults alloc] initWithSuiteName:PREFERENCE_DOMAIN_NAME];
+#endif
 
 	if(mergeNeeded)
 	{
-		NSDictionary* colorDict = [NSDictionary dictionaryWithContentsOfFile:rPath(colorPrefsPath)];
+		NSDictionary* colorDict = [NSDictionary dictionaryWithContentsOfFile:rPath(COLOR_PLIST_PATH_DEPRECATED)];
 		if(colorDict)
 		{
 			for(NSString* key in [colorDict allKeys])
@@ -67,10 +67,10 @@
 				[preferences setObject:lcscpHex forKey:key];
 			}
 
-			[fileManager removeItemAtPath:rPath(colorPrefsPath) error:nil];
+			[fileManager removeItemAtPath:rPath(COLOR_PLIST_PATH_DEPRECATED) error:nil];
 		}
 
-		NSDictionary* otherDict = [NSDictionary dictionaryWithContentsOfFile:rPath(otherPlistPath)];
+		NSDictionary* otherDict = [NSDictionary dictionaryWithContentsOfFile:rPath(OTHER_PLIST_PATH_DEPRECATED)];
 		if(otherDict)
 		{
 			NSArray* forceHTTPSExceptions = [otherDict objectForKey:@"ForceHTTPSExceptions"];
@@ -101,18 +101,17 @@
 					[preferences setObject:[pinnedLocationsM copy] forKey:@"pinnedLocations"];
 				}
 
-				[fileManager removeItemAtPath:rPath(otherPlistPath) error:nil];
+				[fileManager removeItemAtPath:rPath(OTHER_PLIST_PATH_DEPRECATED) error:nil];
 			}
 		}
 	}
 
-	NSDictionary* deprecatedToNewKeys = @
-					    {
-						    @"disablePushNotificationsEnabled" : @"pushNotificationsEnabled",
-						    @"disableBarNotificationsEnabled" : @"statusBarNotificationsEnabled",
-						    @"progressUnderDownloadsButtonEnabled" : @"previewDownloadProgressEnabled",
-						    @"gestureBackground" : @"gestureActionsInBackgroundEnabled",
-						    @"enhancedDownloadsEnabled" : @"downloadManagerEnabled"
+	NSDictionary* deprecatedToNewKeys = @{
+		@"disablePushNotificationsEnabled" : @"pushNotificationsEnabled",
+		@"disableBarNotificationsEnabled" : @"statusBarNotificationsEnabled",
+		@"progressUnderDownloadsButtonEnabled" : @"previewDownloadProgressEnabled",
+		@"gestureBackground" : @"gestureActionsInBackgroundEnabled",
+		@"enhancedDownloadsEnabled" : @"downloadManagerEnabled"
 	};
 
 	NSArray* currentKeys = [[preferences dictionaryRepresentation] allKeys];
@@ -136,16 +135,16 @@
 
 				[preferences setObject:obj forKey:newKey];
 			}
-			#ifdef PREFERENCES
+#ifdef PREFERENCES
 			//This crashes with HBPreferences, no idea why
 			[preferences removeObjectForKey:deprecatedKey];
-			#endif
+#endif
 		}
 	}
 
 	[preferences synchronize];
 
-	#endif
+#endif
 }
 
 + (NSString*)LCSCPHexFromLCPHex:(NSString*)lcpHex

@@ -262,8 +262,7 @@
 
 - (id<QLPreviewItem>)previewController:(QLPreviewController *)controller previewItemAtIndex:(NSInteger)index
 {
-	NSURL* fileURL = [_previewFiles objectAtIndex:index].fileURL;
-	return [fileManager accessibleHardLinkForFileAtURL:fileURL forced:NO];
+	return [_previewFiles objectAtIndex:index].fileURL;
 }
 
 - (void)previewControllerDidDismiss:(QLPreviewController *)controller
@@ -302,16 +301,9 @@
 			[openAlert addAction:[self showContentActionForFile:file withIndexPath:indexPath]];
 		}
 
-		NSURL* hardLinkedURL;
-
-		if([file conformsTo:kUTTypeAudiovisualContent] || [file isHLSStream])
-		{
-			hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
-		}
-
 		if([file isHLSStream])
 		{
-			NSString* extension = [downloadManager fileTypeOfMovpkgAtURL:hardLinkedURL];
+			NSString* extension = [downloadManager fileTypeOfMovpkgAtURL:file.fileURL];
 			
 			if(![extension isEqualToString:@""])
 			{
@@ -325,7 +317,7 @@
 		{
 			if([file conformsTo:kUTTypeAudiovisualContent])
 			{
-				if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(hardLinkedURL.path)) //This can take more than a second on larger files
+				if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(file.fileURL.path)) //This can take more than a second on larger files
 				{
 					[openAlert addAction:[self importToMediaLibraryActionForVideoWithURL:file.fileURL]];
 				}
@@ -334,11 +326,6 @@
 			{
 				[openAlert addAction:[self importToMediaLibraryActionForImageWithURL:file.fileURL]];
 			}
-		}
-
-		if(hardLinkedURL)
-		{
-			[fileManager resetHardLinks];
 		}
 
 		if(_filzaInstalled)
@@ -450,8 +437,7 @@
 	return [UIAlertAction actionWithTitle:[localizationManager localizedSPStringForKey:@"PLAY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
-		[self startPlayerWithMedia:hardLinkedURL];
+		[self startPlayerWithMedia:file.fileURL];
 	}];
 }
 
@@ -469,7 +455,6 @@
 	return [UIAlertAction actionWithTitle:[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MERGE_INTO_FILE"], targetExtension]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:NO];
 		NSURL* targetURL = [[[file fileURL] URLByDeletingPathExtension] URLByAppendingPathExtension:targetExtension];
 
 		void (^performMerge)(void) = ^
@@ -492,7 +477,7 @@
 
 			dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
 			{
-				[downloadManager mergeMovpkgAtURL:hardLinkedURL toFileAtURL:targetURL];
+				[downloadManager mergeMovpkgAtURL:file.fileURL toFileAtURL:targetURL];
 
 				dispatch_async(dispatch_get_main_queue(), ^
 				{
@@ -552,10 +537,8 @@
 			localizedSPStringForKey:@"OPEN_IN"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:file.fileURL forced:YES];
-
 		//Create documentController from selected file and present it
-		self.documentController = [UIDocumentInteractionController interactionControllerWithURL:hardLinkedURL];
+		self.documentController = [UIDocumentInteractionController interactionControllerWithURL:file.fileURL];
 		self.documentController.delegate = self;
 
 		[self.documentController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
@@ -575,8 +558,7 @@
 			localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
-		UIImage* image = [UIImage imageWithContentsOfFile:hardLinkedURL.path];
+		UIImage* image = [UIImage imageWithContentsOfFile:URL.path];
 		UIImageWriteToSavedPhotosAlbum(image, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 		[self unselectRow];
 	}];
@@ -588,8 +570,7 @@
 			localizedSPStringForKey:@"SAVE_TO_MEDIA_LIBRARY"]
 		style:UIAlertActionStyleDefault handler:^(UIAlertAction * action)
 	{
-		NSURL* hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:NO];
-		UISaveVideoAtPathToSavedPhotosAlbum(hardLinkedURL.path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
+		UISaveVideoAtPathToSavedPhotosAlbum(URL.path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 		[self unselectRow];
 	}];
 }

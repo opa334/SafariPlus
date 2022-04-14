@@ -45,8 +45,8 @@
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
-SPCommunicationManager* communicationManager = [SPCommunicationManager sharedInstance];
-SPFileManager* fileManager = [SPFileManager sharedInstance];
+SPCommunicationManager* communicationManager;
+SPFileManager* fileManager;
 SPPreferenceManager* preferenceManager;
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
@@ -73,7 +73,7 @@ void initDebug()
 
 	dateString = [dateFormatter stringFromDate:[NSDate date]];
 
-	NSString* debugLogDirectoryPath = [SPCachePath stringByAppendingString:@"/Logs"];
+	NSString* debugLogDirectoryPath = [CACHE_PATH stringByAppendingString:@"/Logs"];
 
 	NSString* debugLogPath = [NSString stringWithFormat:@"%@/%@.log", debugLogDirectoryPath, dateString];
 

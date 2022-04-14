@@ -29,5 +29,6 @@
 - (BOOL)testConnection;
 - (NSDictionary*)executeFileOperationOnSpringBoard:(NSDictionary*)operation;
 - (NSDictionary*)applicationDisplayNamesForPaths;
+- (BOOL)handleUnsandbox;
 
 @end

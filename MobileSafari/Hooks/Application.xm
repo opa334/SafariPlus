@@ -209,7 +209,7 @@
 {
 	rocketBootstrapWorks = [communicationManager testConnection];
 
-	if(!rocketBootstrapWorks && !preferenceManager.communicationErrorDisabled)
+	if(!rocketBootstrapWorks && preferenceManager.unsandboxSafariEnabled)
 	{
 		sendSimpleAlert([localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR"], [localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR_DESCRIPTION"]);
 	}

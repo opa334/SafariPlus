@@ -43,10 +43,10 @@
 {
 	self = [super init];
 
-	_cacheURL = [NSURL fileURLWithPath:SPCachePath];
+	_cacheURL = [NSURL fileURLWithPath:CACHE_PATH];
 
 	//Migrate old cache to new location
-	NSURL* oldCacheURL = [NSURL fileURLWithPath:SPDeprecatedCachePath];
+	NSURL* oldCacheURL = [NSURL fileURLWithPath:DEPRECATED_CACHE_PATH];
 
 	if([oldCacheURL checkResourceIsReachableAndReturnError:nil])
 	{

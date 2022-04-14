@@ -33,12 +33,12 @@ typedef NSString *NSFileAttributeKey;
 	NSDictionary* _displayNamesForPaths;
 }
 
-@property (nonatomic) BOOL isSandboxed;
+@property (nonatomic, getter=isSandboxed) BOOL sandboxed;
 
 + (instancetype)sharedInstance;
 #ifndef PREFERENCES
 - (void)resetHardLinks;
-- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced;
+- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL;
 - (NSString*)applicationDisplayNameForURL:(NSURL*)URL;
 #ifndef NO_ROCKETBOOTSTRAP
 - (BOOL)_isReadable:(const char*)str;

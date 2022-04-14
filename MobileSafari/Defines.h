@@ -20,33 +20,33 @@
 
 #if defined(SIMJECT)
 #define SPBundlePath [NSString stringWithFormat:@"%@/layout/Library/Application Support/SafariPlus.bundle", [CUR_DIR stringByDeletingLastPathComponent]]
-#define currentUser NSHomeDirectory().pathComponents[2]
-#define defaultDownloadPath [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", currentUser]
+#define CURRENT_USER NSHomeDirectory().pathComponents[2]
+#define DEFAULT_DOWNLOAD_PATH [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", CURRENT_USER]
 #else
 #define SPBundlePath @"/Library/Application Support/SafariPlus.bundle"
-#define oldDownloadPath [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
+#define OLD_DOWNLOAD_PATH [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
 #if defined(NO_ROCKETBOOTSTRAP)
-#define defaultDownloadPath [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
+#define DEFAULT_DOWNLOAD_PATH [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
 #else
-#define defaultDownloadPath @"/var/mobile/Downloads"
+#define DEFAULT_DOWNLOAD_PATH @"/var/mobile/Downloads"
 #endif
 #endif
 
 #if defined(ROOTLESS)	//Hack some stuff so that the patcher does not replace /Library with /var/LIB
-#define SPCachePath [[NSHomeDirectory() stringByAppendingString:[NSString stringWithCString:"/Libr" encoding:NSUTF8StringEncoding]] stringByAppendingString:@"ary/Safari Plus"]
+#define CACHE_PATH [[NSHomeDirectory() stringByAppendingString:[NSString stringWithCString:"/Libr" encoding:NSUTF8StringEncoding]] stringByAppendingString:@"ary/Safari Plus"]
 #else
-#define SPCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Safari Plus"]
+#define CACHE_PATH [NSHomeDirectory() stringByAppendingString:@"/Library/Safari Plus"]
 #endif
 
-#define preferenceDomainName @"com.opa334.safariplusprefs"
-#define preferencePlistName [preferenceDomainName stringByAppendingString:@".plist"];
-#define prefPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"
-#define otherPlistPath @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"	//NO LONGER USED
-#define colorPrefsPath @"/var/mobile/Library/Preferences/com.opa334.safaripluscolorprefs.plist"	//NO LONGER USED
+#define PREFERENCE_DOMAIN_NAME @"com.opa334.safariplusprefs"
+#define PREFERENCE_PLIST_NAME [PREFERENCE_DOMAIN_NAME stringByAppendingString:@".plist"]
+#define PREF_PLIST_PATH [NSString stringWithFormat:@"/var/mobile/Library/Preferences/%@.plist", PREFERENCE_DOMAIN_NAME]
+#define OTHER_PLIST_PATH_DEPRECATED @"/var/mobile/Library/Preferences/com.opa334.safariplusprefsOther.plist"	//NO LONGER USED
+#define COLOR_PLIST_PATH_DEPRECATED @"/var/mobile/Library/Preferences/com.opa334.safaripluscolorprefs.plist"	//NO LONGER USED
 
-#define SPDeprecatedCachePath [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
+#define DEPRECATED_CACHE_PATH [NSHomeDirectory() stringByAppendingString:@"/Library/Caches/com.opa334.safariplus"]
 #define IS_PAD ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad)
-#define currentDownloadStorageRevision 3
+#define CURRENT_DOWNLOAD_STORAGE_REVISION 3
 
 #ifndef kCFCoreFoundationVersionNumber_iOS_9_0
 #define kCFCoreFoundationVersionNumber_iOS_9_0 1223.1

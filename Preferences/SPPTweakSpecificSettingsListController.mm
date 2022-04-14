@@ -28,7 +28,7 @@
 
 - (void)resetAllPreferences
 {
-	NSUserDefaults* sppDefaults = [[NSUserDefaults alloc] initWithSuiteName:preferenceDomainName];
+	NSUserDefaults* sppDefaults = [[NSUserDefaults alloc] initWithSuiteName:PREFERENCE_DOMAIN_NAME];
 
 	void (^resetBlock)(void) = ^
 	{

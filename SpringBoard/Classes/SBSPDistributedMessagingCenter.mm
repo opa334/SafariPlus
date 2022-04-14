@@ -10,7 +10,7 @@ extern "C"
 @implementation SBSPDistributedMessagingCenter
 
 // ignore all messages that don't come from MobileSafari (security reasons)
-- (void)_dispatchMessageNamed:(id)arg1 userInfo:(id)arg2 reply:(id*)arg3 auditToken:(audit_token_t*)auditToken
+- (void)_dispatchMessageNamed:(NSString*)messageName userInfo:(NSDictionary*)userInfo reply:(NSDictionary**)reply auditToken:(audit_token_t*)auditToken
 {
 	struct __SecTask* secTask = SecTaskCreateWithAuditToken(NULL, *auditToken);
 	NSString* signingIdentifier = (__bridge_transfer NSString*)SecTaskCopySigningIdentifier(secTask, NULL);
@@ -20,7 +20,17 @@ extern "C"
 
 	if([signingIdentifier isEqualToString:@"com.apple.mobilesafari"])
 	{
-		return [super _dispatchMessageNamed:arg1 userInfo:arg2 reply:arg3 auditToken:auditToken];
+		if([messageName isEqualToString:@"com.opa334.SafariPlus.getSandboxExtension"])
+		{
+			NSValue* auditTokenValue = [NSValue valueWithPointer:(void*)auditToken];
+			NSMutableDictionary* userInfoM = userInfo.mutableCopy ?: [NSMutableDictionary new];
+			userInfoM[@"auditToken"] = auditTokenValue;
+			return [super _dispatchMessageNamed:messageName userInfo:userInfoM reply:reply auditToken:auditToken];
+		}
+		else
+		{
+			return [super _dispatchMessageNamed:messageName userInfo:userInfo reply:reply auditToken:auditToken];
+		}
 	}
 }
 

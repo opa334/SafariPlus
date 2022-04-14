@@ -78,16 +78,6 @@ BOOL isImageLoaded(NSString* imageName)
 	return @"Root";
 }
 
-- (void)applyModificationsToSpecifiers:(NSMutableArray*)specifiers
-{
-	// Fix header not showing when using shuffle
-	if(isImageLoaded(@"shuffle.dylib"))
-	{
-		[specifiers insertObject:[PSSpecifier emptyGroupSpecifier] atIndex:0];
-	}
-	[super applyModificationsToSpecifiers:specifiers];
-}
-
 - (void)sourceLink
 {
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://github.com/opa334/SafariPlus"]];

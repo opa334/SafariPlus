@@ -10,6 +10,32 @@
 				<key>defaults</key>
 				<string>com.opa334.safariplusprefs</string>
 				<key>footerText</key>
+				<string>UNSANDBOX_SAFARI_FOOTER</string>
+				<key>minCFVersion</key>
+				<real>1443.00</real>
+			</dict>
+			<dict>
+				<key>PostNotification</key>
+				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
+				<key>cell</key>
+				<string>PSSwitchCell</string>
+				<key>default</key>
+				<true/>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>key</key>
+				<string>unsandboxSafariEnabled</string>
+				<key>label</key>
+				<string>UNSANDBOX_SAFARI</string>
+				<key>minCFVersion</key>
+				<real>1443.00</real>
+			</dict>
+			<dict>
+				<key>cell</key>
+				<string>PSGroupCell</string>
+				<key>defaults</key>
+				<string>com.opa334.safariplusprefs</string>
+				<key>footerText</key>
 				<string>LARGE_TITLES_FOOTER</string>
 				<key>minCFVersion</key>
 				<real>1443.00</real>
@@ -73,28 +99,6 @@
 				<string>pullUpToRefreshDisabled</string>
 				<key>label</key>
 				<string>DISABLE_PULL_UP_TO_REFRESH</string>
-			</dict>
-			<dict>
-				<key>cell</key>
-				<string>PSGroupCell</string>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>footerText</key>
-				<string>DISABLE_COMMUNICATION_ERROR_FOOTER</string>
-			</dict>
-			<dict>
-				<key>PostNotification</key>
-				<string>com.opa334.safariplusprefs/ReloadPrefs</string>
-				<key>cell</key>
-				<string>PSSwitchCell</string>
-				<key>default</key>
-				<false/>
-				<key>defaults</key>
-				<string>com.opa334.safariplusprefs</string>
-				<key>key</key>
-				<string>communicationErrorDisabled</string>
-				<key>label</key>
-				<string>DISABLE_COMMUNICATION_ERROR</string>
 			</dict>
 			<dict>
 				<key>cell</key>

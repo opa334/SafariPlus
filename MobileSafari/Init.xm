@@ -20,6 +20,8 @@
 
 #import "Util.h"
 #import "Classes/SPPreferenceManager.h"
+#import "Classes/SPFileManager.h"
+#import "Classes/SPCommunicationManager.h"
 #import "Defines.h"
 
 // One constructor that inits all hooks
@@ -71,6 +73,8 @@ extern void initWKFullScreenViewController();
 		#endif
 
 		preferenceManager = [SPPreferenceManager sharedInstance];
+		communicationManager = [SPCommunicationManager sharedInstance];
+		fileManager = [SPFileManager sharedInstance];
 
 		if(preferenceManager.tweakEnabled)	//Only initialise hooks if tweak is enabled
 		{

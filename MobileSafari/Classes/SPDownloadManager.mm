@@ -97,7 +97,7 @@
 
 - (void)setUpDefaultDownloadURL
 {
-	if(preferenceManager.customDefaultPathEnabled && preferenceManager.customDefaultPath && rocketBootstrapWorks)
+	if(preferenceManager.customDefaultPathEnabled && preferenceManager.customDefaultPath && preferenceManager.unsandboxSafariEnabled && rocketBootstrapWorks)
 	{
 		self.defaultDownloadURL = [fileManager resolveSymlinkForURL:[NSURL fileURLWithPath:[@"/var" stringByAppendingString:preferenceManager.customDefaultPath]]];
 
@@ -106,7 +106,7 @@
 			return;
 		}
 	}
-	else if(!rocketBootstrapWorks)
+	else if(!rocketBootstrapWorks || !preferenceManager.unsandboxSafariEnabled)
 	{
 		self.defaultDownloadURL = [NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]];
 
@@ -116,7 +116,7 @@
 		}
 	}
 
-	self.defaultDownloadURL = [fileManager resolveSymlinkForURL:[NSURL fileURLWithPath:defaultDownloadPath]];
+	self.defaultDownloadURL = [fileManager resolveSymlinkForURL:[NSURL fileURLWithPath:DEFAULT_DOWNLOAD_PATH]];
 	[self createDownloadDirectoryIfNeeded];
 }
 
@@ -133,10 +133,11 @@
 
 - (void)migrateFromSandbox
 {
-  #ifndef NO_ROCKETBOOTSTRAP
-	if(rocketBootstrapWorks)
+#ifndef NO_ROCKETBOOTSTRAP
+	HBLogDebugWeak(@"migrateFromSandbox sandboxed: %d", fileManager.sandboxed);
+	if(!fileManager.sandboxed)
 	{
-		NSURL* oldDownloadURL = [NSURL fileURLWithPath:oldDownloadPath];
+		NSURL* oldDownloadURL = [NSURL fileURLWithPath:OLD_DOWNLOAD_PATH];
 
 		if([fileManager fileExistsAtURL:oldDownloadURL error:nil])
 		{
@@ -154,20 +155,20 @@
 				[fileManager removeItemAtURL:oldDownloadURL error:nil];
 
 				sendSimpleAlert([localizationManager localizedSPStringForKey:@"MIGRATION_TITLE"],
-						[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], oldDownloadPath, self.defaultDownloadURL.path]);
+						[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], OLD_DOWNLOAD_PATH, self.defaultDownloadURL.path]);
 			}
 		}
 	}
-  #endif
+#endif
 }
 
 - (void)verifyDownloadStorageRevision
 {
-	if([cacheManager downloadStorageRevision] != currentDownloadStorageRevision)
+	if([cacheManager downloadStorageRevision] != CURRENT_DOWNLOAD_STORAGE_REVISION)
 	{
 		[cacheManager clearDownloadCache];
 
-		[cacheManager setDownloadStorageRevision:currentDownloadStorageRevision];
+		[cacheManager setDownloadStorageRevision:CURRENT_DOWNLOAD_STORAGE_REVISION];
 	}
 }
 
@@ -1719,22 +1720,18 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 		CFStringRef fileExtension = (__bridge CFStringRef)[[downloadInfo pathURL] pathExtension];
 		CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
 
-		NSURL* hardLinkedURL;
+		NSString* path = [downloadInfo pathURL].path;
 
 		if(UTTypeConformsTo(uti, kUTTypeImage))
 		{
-			hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:[downloadInfo pathURL] forced:NO];
-
-			UIImage* image = [UIImage imageWithContentsOfFile:hardLinkedURL.path];
+			UIImage* image = [UIImage imageWithContentsOfFile:path];
 			UIImageWriteToSavedPhotosAlbum(image, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 		}
 		else if(UTTypeConformsTo(uti, kUTTypeAudiovisualContent))
 		{
-			hardLinkedURL = [fileManager accessibleHardLinkForFileAtURL:[downloadInfo pathURL] forced:NO];
-
-			if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(hardLinkedURL.path))
+			if(UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(path))
 			{
-				UISaveVideoAtPathToSavedPhotosAlbum(hardLinkedURL.path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
+				UISaveVideoAtPathToSavedPhotosAlbum(path, self, @selector(mediaImport:didFinishSavingWithError:contextInfo:), nil);
 			}
 			else
 			{

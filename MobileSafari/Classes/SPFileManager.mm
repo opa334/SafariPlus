@@ -22,6 +22,7 @@
 
 #ifndef PREFERENCES
 #import "SPCommunicationManager.h"
+#import "SPPreferenceManager.h"
 #endif
 
 #import "../SafariPlus.h"
@@ -90,30 +91,45 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return sharedInstance;
 }
 
-#if !defined(PREFERENCES) && !defined(NO_ROCKETBOOTSTRAP)
-
 - (instancetype)init
 {
 	self = [super init];
 
-	_hardLinkURL = [getSafariTmpURL() URLByAppendingPathComponent:@"hardLink"];
-
-	_isSandboxed = access("/var/mobile", W_OK) != 0;
-	HBLogDebugWeak(@"_isSandboxed:%i", _isSandboxed);
-
-	BOOL isCheckra1n = access("/var/checkra1n.dmg", F_OK) == 0;
-	HBLogDebugWeak(@"isCheckra1n:%i", isCheckra1n);
-
-	if(isCheckra1n)
+	_sandboxed = access("/var/mobile", W_OK) != 0;
+	if(access("/var/checkra1n.dmg", F_OK) == 0)
 	{
-		//Checkra1n seems to have incomplete sandbox patches
-		//So we just assume we're sandboxed if on checkra1n
-		_isSandboxed = YES;
+		HBLogDebugWeak(@"checkra1n");
+		// checkra1n has incomplete sandbox patches
+		_sandboxed = YES;
+	}
+
+#if !defined(PREFERENCES) && !defined(NO_ROCKETBOOTSTRAP)
+	HBLogDebugWeak(@"_sandboxed: %d, preferenceManager.unsandboxSafariEnabled: %d", _sandboxed, preferenceManager.unsandboxSafariEnabled);
+	HBLogDebugWeak(@"preferenceManager: %@", preferenceManager);
+	if(_sandboxed && preferenceManager.unsandboxSafariEnabled)
+	{
+		BOOL unsandboxed = [communicationManager handleUnsandbox];
+		if(unsandboxed)
+		{
+			HBLogDebugWeak(@"unsandboxing worked!!!");
+			_sandboxed = NO;
+		}
+	}
+	else if(!_sandboxed && !preferenceManager.unsandboxSafariEnabled)
+	{
+		HBLogDebugWeak(@"Safari is not sandboxed but we pretend it is because !preferenceManager.unsandboxSafariEnabled");
+		_sandboxed = YES;
 	}
 
 	_displayNamesForPaths = [communicationManager applicationDisplayNamesForPaths];
+#endif
 
+	HBLogDebugWeak(@"_sandboxed:%i", _sandboxed);
+
+#if !defined(PREFERENCES)
+	_hardLinkURL = [getSafariTmpURL() URLByAppendingPathComponent:@"hardLink"];
 	[self resetHardLinks];
+#endif
 
 	return self;
 }
@@ -141,34 +157,26 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return [_displayNamesForPaths objectForKey:URL.path];
 }
 
-- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced
+- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL
 {
 	HBLogDebugWeak(@"accessibleHardLinkForFileAtURL:%@", URL);
 	HBLogDebugWeak(@"isURLReadable:%i", [self isURLReadable:URL]);
 	HBLogDebugWeak(@"isURLWritable:%i", [self isURLWritable:URL]);
 
-	if((rocketBootstrapWorks && _isSandboxed) || forced)
+	NSURL* hardLinkURL = [_hardLinkURL URLByAppendingPathComponent:URL.lastPathComponent];
+
+	NSError* linkError;
+	[self linkItemAtURL:URL toURL:hardLinkURL error:&linkError];
+	HBLogDebugWeak(@"linkError:%@", linkError);
+	if(linkError.code == 513 || linkError.code == 512)
 	{
-		if(![self isURLReadable:URL] || ![self isURLWritable:URL] || forced)
-		{
-			NSURL* hardLinkURL = [_hardLinkURL URLByAppendingPathComponent:URL.lastPathComponent];
-
-			NSError* linkError;
-			[self linkItemAtURL:URL toURL:hardLinkURL error:&linkError];
-			HBLogDebugWeak(@"linkError:%@", linkError);
-			if(linkError.code == 513 || linkError.code == 512)
-			{
-				[self removeItemAtURL:hardLinkURL error:nil];
-				NSError* copyError;
-				[self copyItemAtURL:URL toURL:hardLinkURL error:&copyError];
-				HBLogDebugWeak(@"copyError:%@", copyError);
-			}
-
-			return hardLinkURL;
-		}
+		[self removeItemAtURL:hardLinkURL error:nil];
+		NSError* copyError;
+		[self copyItemAtURL:URL toURL:hardLinkURL error:&copyError];
+		HBLogDebugWeak(@"copyError:%@", copyError);
 	}
 
-	return URL;
+	return hardLinkURL;
 }
 
 - (BOOL)_isReadable:(const char*)str
@@ -202,495 +210,6 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 {
 	return [self _isWritable:[URL.path UTF8String]];
 }
-
-- (NSArray<NSString*>*)contentsOfDirectoryAtPath:(NSString*)path error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathReadable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectoryContents];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
-
-			return [execute(operation, error) objectForKey:@"return"];
-		}
-	}
-
-	return [super contentsOfDirectoryAtPath:path error:error];
-}
-
-- (NSArray<NSURL*>*)contentsOfDirectoryAtURL:(NSURL*)url includingPropertiesForKeys:(NSArray<NSURLResourceKey>*)keys options:(NSDirectoryEnumerationOptions)mask error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:url])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectoryContents_URL];
-			NSNumber* maskN = [NSNumber numberWithInteger:mask];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, url, @"url");
-			addToDict(operation, keys, @"keys");
-			addToDict(operation, maskN, @"mask");
-
-			return [execute(operation, error) objectForKey:@"return"];
-		}
-	}
-
-	return [super contentsOfDirectoryAtURL:url includingPropertiesForKeys:keys options:mask error:error];
-}
-
-- (BOOL)createDirectoryAtPath:(NSString*)path withIntermediateDirectories:(BOOL)createIntermediates attributes:(NSDictionary<NSFileAttributeKey, id>*)attributes error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathWritable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_CreateDirectory];
-			NSNumber* createIntermediatesN = [NSNumber numberWithBool:createIntermediates];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
-			addToDict(operation, createIntermediatesN, @"createIntermediates");
-			addToDict(operation, attributes, @"attributes");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super createDirectoryAtPath:path withIntermediateDirectories:createIntermediates attributes:attributes error:error];
-}
-
-- (BOOL)createDirectoryAtURL:(NSURL *)url withIntermediateDirectories:(BOOL)createIntermediates attributes:(NSDictionary<NSFileAttributeKey, id> *)attributes error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLWritable:url])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_CreateDirectory_URL];
-			NSNumber* createIntermediatesN = [NSNumber numberWithBool:createIntermediates];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, url, @"url");
-			addToDict(operation, createIntermediatesN, @"createIntermediates");
-			addToDict(operation, attributes, @"attributes");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super createDirectoryAtURL:url withIntermediateDirectories:createIntermediates attributes:attributes error:error];
-}
-
-- (BOOL)moveItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathReadable:srcPath] || ![self isPathWritable:dstPath])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_MoveItem];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, srcPath, @"srcPath");
-			addToDict(operation, dstPath, @"dstPath");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super moveItemAtPath:srcPath toPath:dstPath error:error];
-}
-
-- (BOOL)moveItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:srcURL] || ![self isURLWritable:dstURL])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_MoveItem_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, srcURL, @"srcURL");
-			addToDict(operation, dstURL, @"dstURL");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super moveItemAtURL:srcURL toURL:dstURL error:error];
-}
-
-- (BOOL)removeItemAtPath:(NSString*)path error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathWritable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_RemoveItem];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super removeItemAtPath:path error:error];
-}
-
-- (BOOL)removeItemAtURL:(NSURL*)URL error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLWritable:URL])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_RemoveItem_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, URL, @"URL");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super removeItemAtURL:URL error:error];
-}
-
-- (BOOL)copyItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathReadable:srcPath] || ![self isPathWritable:dstPath])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_CopyItem];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, srcPath, @"srcPath");
-			addToDict(operation, dstPath, @"dstPath");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super copyItemAtPath:srcPath toPath:dstPath error:error];
-}
-
-- (BOOL)copyItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:srcURL] || ![self isURLWritable:dstURL])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_CopyItem_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, srcURL, @"srcURL");
-			addToDict(operation, dstURL, @"dstURL");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super copyItemAtURL:srcURL toURL:dstURL error:error];
-}
-
-- (BOOL)linkItemAtPath:(NSString*)srcPath toPath:(NSString*)dstPath error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathReadable:srcPath] || ![self isPathWritable:dstPath])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_LinkItem];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, srcPath, @"srcPath");
-			addToDict(operation, dstPath, @"dstPath");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super linkItemAtPath:srcPath toPath:dstPath error:error];
-}
-
-- (BOOL)linkItemAtURL:(NSURL*)srcURL toURL:(NSURL*)dstURL error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:srcURL] || ![self isURLWritable:dstURL])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_LinkItem_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, srcURL, @"srcURL");
-			addToDict(operation, dstURL, @"dstURL");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super linkItemAtURL:srcURL toURL:dstURL error:error];
-}
-
-- (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:URL])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectoryContents_SPFile];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, URL, @"url");
-
-			return [execute(operation, error) objectForKey:@"return"];
-		}
-	}
-
-	return [SPFile filesAtURL:URL error:error];
-}
-
-- (BOOL)fileExistsAtPath:(NSString*)path
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathReadable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_FileExists];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
-
-			return [[execute(operation, nil) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super fileExistsAtPath:path];
-}
-
-- (BOOL)fileExistsAtPath:(NSString*)path isDirectory:(BOOL*)isDirectory
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathReadable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_FileExists_IsDirectory];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
-
-			NSDictionary* response = execute(operation, nil);
-
-			*isDirectory = [[response objectForKey:@"isDirectory"] boolValue];
-
-			return [[response objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [super fileExistsAtPath:path isDirectory:isDirectory];
-}
-
-- (NSDictionary<NSFileAttributeKey, id> *)attributesOfItemAtPath:(NSString *)path error:(NSError**)error;
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isPathReadable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_Attributes];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
-
-			return [execute(operation, error) objectForKey:@"return"];
-		}
-	}
-
-	return [super attributesOfItemAtPath:path error:error];
-}
-
-- (BOOL)isWritableFileAtPath:(NSString *)path
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_IsWritable];
-
-		NSMutableDictionary* operation = [NSMutableDictionary new];
-		addToDict(operation, operationType, @"operationType");
-		addToDict(operation, path, @"path");
-
-		return [[execute(operation, nil) objectForKey:@"return"] boolValue];
-	}
-
-	return [super isWritableFileAtPath:path];
-}
-
-- (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:url])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_FileExists_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, url, @"url");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	return [url checkResourceIsReachableAndReturnError:error];
-}
-
-- (BOOL)isDirectoryAtURL:(NSURL*)url error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:url])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_IsDirectory_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, url, @"url");
-
-			return [[execute(operation, error) objectForKey:@"return"] boolValue];
-		}
-	}
-
-	NSNumber* isDirectory;
-	[url getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:error];
-	return [isDirectory boolValue];
-}
-
-- (BOOL)URLResourceValue:(id*)value forKey:(NSURLResourceKey)key forURL:(NSURL*)url error:(NSError**)error
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResourceValue_URL];
-
-		NSMutableDictionary* operation = [NSMutableDictionary new];
-		addToDict(operation, operationType, @"operationType");
-		addToDict(operation, key, @"key");
-		addToDict(operation, url, @"url");
-
-		NSDictionary* response = execute(operation, error);
-
-		*value = [response objectForKey:@"value"];
-
-		return [[response objectForKey:@"return"] boolValue];
-	}
-
-	return [url getResourceValue:value forKey:key error:error];
-}
-
-- (NSString*)resolveSymlinkForPath:(NSString*)path
-{
-	NSString* resolvedPath;
-
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if([self isPathReadable:path])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResolveSymlinks];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, path, @"path");
-
-			resolvedPath = [execute(operation, nil) objectForKey:@"return"];
-		}
-	}
-
-	if(!resolvedPath)
-	{
-		resolvedPath = path.stringByResolvingSymlinksInPath;
-	}
-
-	//Fix up path (for some reason /var is not getting resolved correctly?)
-	if([resolvedPath hasPrefix:@"/var"])
-	{
-		resolvedPath = [resolvedPath stringByReplacingCharactersInRange:NSMakeRange(1, 3) withString:@"private/var"];
-	}
-
-	return resolvedPath;
-}
-
-- (NSURL*)resolveSymlinkForURL:(NSURL*)url
-{
-	NSURL* resolvedURL;
-
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:url])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_ResolveSymlinks_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, url, @"url");
-
-			resolvedURL = [execute(operation, nil) objectForKey:@"return"];
-		}
-	}
-
-	if(!resolvedURL)
-	{
-		resolvedURL = url.URLByResolvingSymlinksInPath;
-	}
-
-	NSString* resolvedPath = resolvedURL.path;
-
-	//Fix up path (for some reason /var is not getting resolved to /private/var correctly?)
-	if([resolvedPath hasPrefix:@"/var"])
-	{
-		resolvedPath = [resolvedPath stringByReplacingCharactersInRange:NSMakeRange(1, 3) withString:@"private/var"];
-
-		resolvedURL = [NSURL fileURLWithPath:resolvedPath];
-	}
-
-	return resolvedURL;
-}
-
-- (NSUInteger)sizeOfDirectoryAtURL:(NSURL*)directoryURL
-{
-	if(rocketBootstrapWorks && _isSandboxed)
-	{
-		if(![self isURLReadable:directoryURL])
-		{
-			NSNumber* operationType = [NSNumber numberWithInteger:FileOperation_DirectorySize_URL];
-
-			NSMutableDictionary* operation = [NSMutableDictionary new];
-			addToDict(operation, operationType, @"operationType");
-			addToDict(operation, directoryURL, @"url");
-
-			return [(NSNumber*)[execute(operation, nil) objectForKey:@"return"] unsignedIntegerValue];
-		}
-	}
-
-	return [super sizeOfDirectoryAtURL:directoryURL];
-}
-
-#else
 
 - (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error
 {
@@ -744,12 +263,10 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return resolvedURL;
 }
 
-#endif
-
 #ifdef NO_ROCKETBOOTSTRAP
 
 - (void)resetHardLinks { }
-- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL forced:(BOOL)forced { return URL; }
+- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL { return URL; }
 - (NSString*)applicationDisplayNameForURL:(NSURL*)URL { return nil; }
 
 #endif

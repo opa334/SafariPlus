@@ -111,7 +111,7 @@
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs
+- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray<NSURL*>*)URLs
 {
 	[filePicker dismissViewControllerAnimated:YES completion:nil];
 
@@ -121,18 +121,7 @@
 		return;
 	}
 
-	[fileManager resetHardLinks];
-
-	NSMutableArray* hardLinkedURLs = [NSMutableArray new];
-
-	for(NSURL* URL in URLs)
-	{
-		[hardLinkedURLs addObject:[fileManager accessibleHardLinkForFileAtURL:URL forced:NO]];
-	}
-
-	[self _chooseFiles:[hardLinkedURLs copy]
-	 displayString:[((NSURL*)hardLinkedURLs.firstObject).lastPathComponent
-			stringByRemovingPercentEncoding] iconImage:nil];
+	[self _chooseFiles:URLs displayString:[URLs.firstObject.lastPathComponent stringByRemovingPercentEncoding] iconImage:nil];
 }
 
 %end
@@ -177,7 +166,7 @@
 
 //Dismiss file picker and start upload or cancel
 %new
-- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray*)URLs
+- (void)filePicker:(SPFilePickerNavigationController*)filePicker didSelectFiles:(NSArray<NSURL*>*)URLs
 {
 	[filePicker dismissViewControllerAnimated:YES completion:nil];
 
@@ -190,21 +179,19 @@
 		//iOS8 needs the files to be inside sandbox (otherwise WebKit crashes)
 
 		//Mutable array for sandboxed URLs
-		NSMutableArray* sandboxedURLs = [NSMutableArray new];
+		NSMutableArray<NSURL*>* sandboxedURLs = [NSMutableArray new];
 
 		for(NSURL* URL in URLs)
 		{
 			//Create URL for tmp location
-			NSURL* sandboxedURL = [fileManager accessibleHardLinkForFileAtURL:URL forced:YES];
+			NSURL* sandboxedURL = [fileManager accessibleHardLinkForFileAtURL:URL];
 
 			//Add URL to array
 			[sandboxedURLs addObject:sandboxedURL];
 		}
 
 		//Choose files inside sandbox
-		[self _chooseFiles:sandboxedURLs
-		 displayString:[((NSURL*)sandboxedURLs.firstObject).lastPathComponent
-				stringByRemovingPercentEncoding] iconImage:nil];
+		[self _chooseFiles:sandboxedURLs displayString:[sandboxedURLs.firstObject.lastPathComponent stringByRemovingPercentEncoding] iconImage:nil];
 	}
 }
 

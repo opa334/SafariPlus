@@ -30,7 +30,7 @@
 
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier
 {
-	NSString* plistPath = rPath(prefPlistPath);
+	NSString* plistPath = rPath(PREF_PLIST_PATH);
 	NSMutableDictionary* mutableDict = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
 	[mutableDict setObject:value forKey:[[specifier properties] objectForKey:@"key"]];
 	[mutableDict writeToFile:plistPath atomically:YES];
@@ -39,7 +39,7 @@
 
 - (id)readPreferenceValue:(PSSpecifier*)specifier
 {
-	NSString* plistPath = rPath(prefPlistPath);
+	NSString* plistPath = rPath(PREF_PLIST_PATH);
 	NSDictionary* dict = [NSDictionary dictionaryWithContentsOfFile:plistPath];
 
 	id obj = [dict objectForKey:[[specifier properties] objectForKey:@"key"]];

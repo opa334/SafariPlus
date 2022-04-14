@@ -28,6 +28,10 @@
 #endif
 
 #include <sys/types.h>
+extern "C"
+{
+	int64_t sandbox_extension_consume(const char *extension_token);
+}
 
 @implementation SPCommunicationManager
 
@@ -85,6 +89,22 @@
 - (NSDictionary*)applicationDisplayNamesForPaths
 {
 	return [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.getApplicationDisplayNames" userInfo:nil];
+}
+
+- (BOOL)handleUnsandbox
+{
+	NSDictionary* reply = [_messagingCenter sendMessageAndReceiveReplyName:@"com.opa334.SafariPlus.getSandboxExtension" userInfo:nil];
+	NSString* nsVarWriteExtension = reply[@"varWriteExtension"];
+	NSString* nsRootReadExtension = reply[@"rootReadExtension"];
+	if(nsVarWriteExtension && nsRootReadExtension)
+	{
+		const char* varWriteExtension = nsVarWriteExtension.UTF8String;
+		const char* rootReadExtension = nsRootReadExtension.UTF8String;
+		int ret1 = sandbox_extension_consume(varWriteExtension);
+		int ret2 = sandbox_extension_consume(rootReadExtension);
+		return ret1 != -1 && ret2 != -1;
+	}
+	return NO;
 }
 
 #else
