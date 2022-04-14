@@ -182,6 +182,9 @@
 /*FORCE_NATIVE_PLAYER*/
 /*FORCE_NATIVE_PLAYER_FOOTER*/
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "Desactivar ventana de diálogo mailto";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Desactiva la ventana de diálogo que aparece al hacer click en una URL 'mailto:<email>' en iOS 10 y superior.";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 /*LARGE_TITLES*/
 /*LARGE_TITLES_FOOTER*/
 
@@ -340,9 +346,6 @@
 
 /*DISABLE_PULL_UP_TO_REFRESH*/
 /*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
-
-/*DISABLE_COMMUNICATION_ERROR*/
-/*DISABLE_COMMUNICATION_ERROR_FOOTER*/
 
 /*RESET_ALL_PREFERENCES*/
 /*RESET_ALL_PREFERENCES_CONFIRMATION*/
@@ -447,7 +450,9 @@
 /*PREVIEW*/
 "PLAY" = "Reproducir";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "El destino elegido en 'Destino por defecto personalizado' no es válido. Por favor corrígelo.";
-/*VIDEO_URL_NOT_FOUND*/
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Copiar enlace";
 "SIZE_UNKNOWN" = "Tamaño desconocido";
 /*DURATION_UNKNOWN*/

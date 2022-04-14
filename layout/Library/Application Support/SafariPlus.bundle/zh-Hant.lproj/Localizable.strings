@@ -182,6 +182,9 @@
 "FORCE_NATIVE_PLAYER" = "強制使用原生播放器";
 "FORCE_NATIVE_PLAYER_FOOTER" = "在運行 iOS 12 及更高版本的 iPad 上，Safari 帶有 HTML5 影片播放器，我們可以通過該網站提供一些媒體控件（並非所有網站都使用此控件！）。在 12.0 - 12.1.4 上，在 Safari 設置中有一個切換開關，在 12.2 及更高版本上默認為打開狀態。由於不支持本機播放器，因此該選項強制 Safari 在除 YouTube 之外的所有網站上使用本機播放器。";
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "禁止 Mailto 對話框";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "禁止訪問「mailto:<email>」連結時出現的對話框。";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 "LARGE_TITLES" = "大標題";
 "LARGE_TITLES_FOOTER" = "為每個 Safari Plus 的頁面開啟大標題。";
 
@@ -340,9 +346,6 @@
 
 /*DISABLE_PULL_UP_TO_REFRESH*/
 /*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
-
-"DISABLE_COMMUNICATION_ERROR" = "禁用通訊錯誤彈窗";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "當出於某種原因出現 RocketBootstrap 不可用時，禁用在套用啟動時顯示的通信錯誤警報。使用風險自負。";
 
 "RESET_ALL_PREFERENCES" = "還原所有設置";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "你確定要還原所有設置嗎？";
@@ -447,7 +450,9 @@
 "PREVIEW" = "預覽";
 "PLAY" = "播放";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "您在「自定義默認路徑」下的設置中的路徑無效。請更正。";
-"VIDEO_URL_NOT_FOUND" = "未找到影片連結！如果影片已暫停，請取消暫停，然後重試";
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "複製連結";
 "SIZE_UNKNOWN" = "未知大小";
 "DURATION_UNKNOWN" = "剩餘時間未知";

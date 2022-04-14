@@ -182,6 +182,9 @@
 "FORCE_NATIVE_PLAYER" = "Forçar jogador nativo";
 "FORCE_NATIVE_PLAYER_FOOTER" = "Nos iPads com iOS 12 e superior, o Safari possui um player de vídeo HTML5 que permite que o site forneça alguns dos controles de mídia (nem todos os sites usam isso!). Nas versões 12.0 - 12.1.4, há uma alternância nas configurações do Safari, nas versões 12.2 e superior, por padrão. Essa opção força o Safari a usar o player nativo em todos os sites, exceto o YouTube, por não oferecer suporte ao player nativo.";
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "Suprimir caixa de diálogo Mailto";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Suprima a caixa de diálogo que aparece quando um URL 'mailto: <email>' é acessado.";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 "LARGE_TITLES" = "Títulos Grandes";
 "LARGE_TITLES_FOOTER" = "Títulos grandes em todas as visualizações adicionadas pelo Safari Plus.";
 
@@ -340,9 +346,6 @@
 
 "DISABLE_PULL_UP_TO_REFRESH" = "Desativar Pull Up para atualizar";
 "DISABLE_PULL_UP_TO_REFRESH_FOOTER" = "Desative puxar para cima para atualizar dentro do navegador de arquivos. No iOS 13 e superior, isso permite fechar o navegador de arquivos deslizando para baixo.";
-
-"DISABLE_COMMUNICATION_ERROR" = "Desativar alerta de erro de comunicação";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Desative o alerta de erro de comunicação que aparece na inicialização do aplicativo quando o rocketbootstrap não estiver disponível por algum motivo. Use por sua conta e risco.";
 
 "RESET_ALL_PREFERENCES" = "Redefinir todas as preferências";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "Tem certeza de que deseja redefinir todas as preferências?";
@@ -447,7 +450,9 @@
 "PREVIEW" = "Pré-visualização";
 "PLAY" = "Jogar";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "O caminho que você definiu nas configurações em 'Caminho padrão personalizado' é inválido. Por favor corrija isso.";
-"VIDEO_URL_NOT_FOUND" = "Nenhum URL de vídeo encontrado! Se o vídeo estiver em pausa, retome-o e tente novamente.";
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Link de cópia";
 "SIZE_UNKNOWN" = "Tamanho desconhecido";
 "DURATION_UNKNOWN" = "Duração desconhecida";

@@ -182,6 +182,9 @@
 "FORCE_NATIVE_PLAYER" = "إجبار المشغل الأصلي";
 "FORCE_NATIVE_PLAYER_FOOTER" = "على أجهزة الـ iPad التي تعمل بنظام iOS 12 وأعلى، يحتوي Safari على مشغل فيديو HTML5 والذي يتيح للموقع بعض التحكم في الوسائط (لا تستخدم جميع المواقع هذا!). على 12.0 إلى 12.4 هناك مفتاح تبديل داخل إعدادات Safari لهذا الشيء، أما على 12.2 وأعلى يصبح الأمر افتراضي غير قابل للتخصيص. يفرض هذا الخيار على Safari استعمال المشغل الأصلي على جميع المواقع ما عدا يوتيوب لأنه لا يدعم المشغل الأصلي.";
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "منع مربع الحوار";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "منع مربع الحوار الذي يظهر عندما يستطيع 'mailto:<email>' الوصول إلى عنوان URL.";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 "LARGE_TITLES" = "عناوين كبيرة";
 "LARGE_TITLES_FOOTER" = "عناوين كبيرة في كل عرض مضافة بواسطة Safari Plus.";
 
@@ -340,9 +346,6 @@
 
 /*DISABLE_PULL_UP_TO_REFRESH*/
 /*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
-
-"DISABLE_COMMUNICATION_ERROR" = "تعطيل تنبيه خطأ التواصل";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "تعطيل تنبيه خطأ التواصل الذي يظهر عند تشغيل التطبيق عندما تكون حزمة RocketBootstrap غير متاحة لسببٍ ما. استخدمها على مسؤوليتك الخاصة.";
 
 "RESET_ALL_PREFERENCES" = "إعادة تعيين جميع الإعدادات";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "هل أنت متأكد أنك تريد إعادة تعيين جميع الإعدادات؟";
@@ -447,7 +450,9 @@
 "PREVIEW" = "معاينة";
 "PLAY" = "تشغيل";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "المسار الذي قمت بتعيينه في الإعدادات ضمن 'مسار افتراضي مخصص' غير صالح. يرجى تصحيح ذلك.";
-"VIDEO_URL_NOT_FOUND" = "لا يوجد عنوان URL للفيديو، إذا تم إيقاف الفيديو مؤقتًا، قم باستئنافه وأعد المحاولة.";
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "نسخ الرابط";
 "SIZE_UNKNOWN" = "الحجم غير معروف";
 "DURATION_UNKNOWN" = "الوقت غير معروف";

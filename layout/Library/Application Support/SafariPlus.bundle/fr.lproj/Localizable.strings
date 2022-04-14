@@ -182,6 +182,9 @@
 "FORCE_NATIVE_PLAYER" = "Forcer le lecteur vidéo natif";
 "FORCE_NATIVE_PLAYER_FOOTER" = "Sur les iPads fonctionnant sous iOS 12 et versions ultérieures, Safari dispose d'un lecteur vidéo HTML5 permettant au site Web de fournir certains des contrôles multimédias (tous les sites ne l'utilisent pas!). Sur 12.0 - 12.1.4, il existe une bascule pour cela dans les paramètres Safari, à partir de 12.2, il est activé par défaut. Cette option oblige Safari à utiliser le lecteur natif sur tous les sites, à l'exception de YouTube, car la plateforme ne prend pas en charge le lecteur natif.";
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "Supprimer la boîte de dialogue Mailto";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Supprime la boîte de dialogue qui apparaît sur iOS 10 et les versions supérieures d'un clic sur une URL 'mailto: <email>'.";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 "LARGE_TITLES" = "Grands titres";
 "LARGE_TITLES_FOOTER" = "Grands titres dans toutes les vues ajoutées par Safari Plus.";
 
@@ -340,9 +346,6 @@
 
 /*DISABLE_PULL_UP_TO_REFRESH*/
 /*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
-
-"DISABLE_COMMUNICATION_ERROR" = "Désactiver les alertes lors d'une erreur";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Désactivez la communication d'alertes lors d'une erreur. Par défaut, celles-ci apparaîssent au lancement de l'application lorsque rocketbootstrap n'est pas disponible pour une raison quelconque. Utilisez cette option à vos risques et périls.";
 
 "RESET_ALL_PREFERENCES" = "Réinitialiser toutes les préférences";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "Êtes-vous sûr de vouloir réinitialiser toutes les préférences?";
@@ -447,7 +450,9 @@
 "PREVIEW" = "Aperçu";
 "PLAY" = "Lancer";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Le chemin que vous avez défini dans les paramètres sous 'Chemin d'accès par défaut' n'est pas valide. Veuillez le corriger.";
-"VIDEO_URL_NOT_FOUND" = "Aucune vidéo trouvée! Si la vidéo est en pause, relancez-la et réessayez.";
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Copier le lien";
 "SIZE_UNKNOWN" = "Taille inconnue";
 "DURATION_UNKNOWN" = "Durée inconnue";

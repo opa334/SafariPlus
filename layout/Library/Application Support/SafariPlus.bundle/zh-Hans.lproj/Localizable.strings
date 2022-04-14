@@ -182,6 +182,9 @@
 "FORCE_NATIVE_PLAYER" = "强制使用本机播放器";
 "FORCE_NATIVE_PLAYER_FOOTER" = "在运行 iOS12 及更高版本的 iPad 上，Safari 带有 HTML5 视频播放器，我们可以通过该网站提供一些媒体控件（并非所有网站都使用此控件！）。 在 12.0-12.1.4 上，在 Safari 设置中有一个切换开关，在 12.2 及更高版本上默认为打开状态。 由于不支持本机播放器，因此该选项强制 Safari 在除 YouTube 之外的所有网站上使用本机播放器";
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "禁止 Mailto 对话框";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "禁止访问“mailto:<email>” URL时出现的对话框";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 "LARGE_TITLES" = "大标题";
 "LARGE_TITLES_FOOTER" = "为每个视图开启大标题 by Safari Plus";
 
@@ -340,9 +346,6 @@
 
 /*DISABLE_PULL_UP_TO_REFRESH*/
 /*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
-
-"DISABLE_COMMUNICATION_ERROR" = "禁用通讯错误弹窗";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "当出于某种原因出现 rocketbootstrap 不可用时，禁用在应用启动时显示的通信错误警报。 使用风险自负";
 
 "RESET_ALL_PREFERENCES" = "还原所有设置";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "你确定要还原所有设置吗？";
@@ -447,7 +450,9 @@
 "PREVIEW" = "预览";
 "PLAY" = "播放";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "您在“自定义默认路径”下的设置中的路径无效。 请更正";
-"VIDEO_URL_NOT_FOUND" = "未找到视频 URL！如果视频已暂停，请取消暂停，然后重试";
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "拷贝链接";
 "SIZE_UNKNOWN" = "未知大小";
 "DURATION_UNKNOWN" = "剩余时间未知";

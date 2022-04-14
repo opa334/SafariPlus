@@ -182,6 +182,9 @@
 "FORCE_NATIVE_PLAYER" = "Nativen Player erzwingen";
 "FORCE_NATIVE_PLAYER_FOOTER" = "Auf iPads benutzt Safari ab iOS 12 auf einigen Seiten die HTML5 Videoplayer API, welche der Webseite erlaubt, den Videoplayer selbst bereitzustellen. Auf iOS 12.0 - 12.1.4 kann dieser in den Safari-Einstellungen aktiviert werden, ab iOS 12.2 ist er standardmäßig aktiviert. Diese Option erzwingt die Benutzung des nativen Players für alle Seiten außer YouTube (YouTube unterstützt den nativen Player nicht).";
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "Mailto Dialog deaktivieren";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Deaktiviert den Dialog, der auf iOS 10 und höher beim Aufrufen eines 'mailto:<email>' Links erscheint.";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+"UNSANDBOX_SAFARI" = "Safari Sandbox schwächen";
+"UNSANDBOX_SAFARI_FOOTER" = "Wenn diese Option aktiviert ist, benutzt Safari RocketBootstrap um dem Safari Prozess Lesezugriff auf / und Schreibzugriff auf /var zu geben. Wenn diese Option deaktiviert ist, wird der Download Manager die Dateien im Sandbox Container von Safari speichern und die 'Jede Datei hochladen' Option wird nicht funktionieren. Diese Option reduziert die Sicherheit von Safari und im schlimmsten Fall, wenn ein Angreifer bereits Code im Safari Prozess ausführen kann, könnte dieser auch auf die genannten Pfade zugreifen.";
+
 "LARGE_TITLES" = "Große Titel";
 "LARGE_TITLES_FOOTER" = "Große Titel in jeder Ansicht, welche von Safari Plus hinzugefügt wird.";
 
@@ -340,9 +346,6 @@
 
 "DISABLE_PULL_UP_TO_REFRESH" = "Aktualisierung beim nach oben ziehen deaktivieren";
 "DISABLE_PULL_UP_TO_REFRESH_FOOTER" = "Deaktiviert die Aktualisierung des Dateibrowsers durch Ziehen nach oben. Auf iOS >=13 kann der Dateibrowser dann durchs Wischen nach unten geschlossen werden.";
-
-"DISABLE_COMMUNICATION_ERROR" = "Kommunikationsfehler Meldung deaktivieren";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Deaktiviert die Kommunikationsfehler Meldung, die beim App-Start angezeigt wird, wenn rocketbootstrap nicht funktioniert. Benutzung auf eigene Gefahr.";
 
 "RESET_ALL_PREFERENCES" = "Alle Einstellungen zurücksetzen";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "Bist du sicher, dass alle Einstellungen zurück gesetzt werden sollen?";
@@ -365,7 +368,7 @@
 "WELCOME_MESSAGE" = "Danke für das Installieren von Safari Plus! Wenn du über die Zukunft des Tweaks auf dem laufenden bleiben willst, folge mir doch auf Twitter! Diese Nachricht wird nie wieder angezeigt, versprochen!";
 "OPEN_TWITTER" = "Öffne Twitter";
 "COMMUNICATION_ERROR" = "Kommunikationsfehler";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde. Dein Downloadspfad wird auf den Sandbox Container von Safari geändert. Eine Option diese Meldung zu deaktivieren befindet sich unter Verhalten->Kommunikationsfehler Meldung deaktivieren.";
+"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde. Dein Downloadpfad wird auf den Sandbox Container von Safari geändert. Wenn diese Meldung nicht mehr angezeigt werden soll, deaktiviere 'Tweakspezifische Einstellungen' -> 'Safari Sandbox schwächen' in den Safari Plus Einstellungen.";
 "UNDIRECTOR_WARNING" = "Undirector Warnung";
 "UNDIRECTOR_WARNING_MESSAGE" = "Einige Features von Safari Plus könnten nicht funktionieren oder zu Abstürzen führen da der Patchfinder die iOS Version (%@, %@) anscheinend nicht unterstützt. Das rebinding der folgenden Selectors ist fehlgeschlagen:\n\n%@";
 
@@ -449,6 +452,7 @@
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Der Pfad, der in den Einstellungen unter der Option 'Benutzerdefinierter Pfad' gewählt wurde, ist ungültig. Bitte wähle einen korrekten Pfad aus!";
 "WEBCONTENT_COMMUNICATION_FAILED" = "Die Kommunikation mit dem WebContent Prozess ist fehlgeschlagen. Diese ist zum Abrufen der Video URL erforderlich. Stelle sicher dass SafariPlusWC.dylib nicht mit iCleaner Pro, Choicy oder ähnlichen Tweaks deaktiviert wurde.";
 "WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE" = "Da du libhooker benutzt, stelle auch sicher, dass die Option 'Allow tweaks in webpages' in libhooker Configurator aktiviert ist und dass sowohl libhooker als auch dein Jailbreak auf der neusten Version sind.";
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Link kopieren";
 "SIZE_UNKNOWN" = "Unbekannte Dateigröße";
 "DURATION_UNKNOWN" = "Unbekannte Länge";

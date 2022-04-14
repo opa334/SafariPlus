@@ -182,6 +182,9 @@
 /*FORCE_NATIVE_PLAYER*/
 /*FORCE_NATIVE_PLAYER_FOOTER*/
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "(iOS 10+) Откл. Email Диалога";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Отключает диалоговое окно, появляющееся на iOS 10 и выше при открытии окна отправки электронного письма.";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 /*LARGE_TITLES*/
 /*LARGE_TITLES_FOOTER*/
 
@@ -340,9 +346,6 @@
 
 /*DISABLE_PULL_UP_TO_REFRESH*/
 /*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
-
-"DISABLE_COMMUNICATION_ERROR" = "Откл. Оповещ. Об Ошибке";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Отключает оповещение об ошибке, отображающееся при отсутствии доступа к rocketbootstrap. Используйте на свой страх и риск.";
 
 /*RESET_ALL_PREFERENCES*/
 /*RESET_ALL_PREFERENCES_CONFIRMATION*/
@@ -447,7 +450,9 @@
 /*PREVIEW*/
 "PLAY" = "Воспроизвести";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Путь, заданный в настройках, как 'Директория по умолчанию' не доступен. Пожалуйста измените путь.";
-/*VIDEO_URL_NOT_FOUND*/
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Скопировать Ссылку";
 "SIZE_UNKNOWN" = "Размер не известен";
 /*DURATION_UNKNOWN*/

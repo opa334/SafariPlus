@@ -182,6 +182,9 @@
 /*FORCE_NATIVE_PLAYER*/
 /*FORCE_NATIVE_PLAYER_FOOTER*/
 
+/*SKIP_DOWNLOAD_DIALOG*/
+/*SKIP_DOWNLOAD_DIALOG_FOOTER*/
+
 "SUPPRESS_MAILTO_DIALOG" = "Elimina finestra di dialogo Mailto";
 "SUPPRESS_MAILTO_DIALOG_FOOTER" = "Elimina la finestra di dialogo che appare su iOS 10 e versioni successive quando si accede a un URL \"mailto: <email>\".";
 
@@ -332,6 +335,9 @@
 
 /* Tweak Specifc Settings */
 
+/*UNSANDBOX_SAFARI*/
+/*UNSANDBOX_SAFARI_FOOTER*/
+
 "LARGE_TITLES" = "Titoli larghi";
 "LARGE_TITLES_FOOTER" = "Titoli larghi in ogni sezione aggiunta da Safari Plus";
 
@@ -340,9 +346,6 @@
 
 /*DISABLE_PULL_UP_TO_REFRESH*/
 /*DISABLE_PULL_UP_TO_REFRESH_FOOTER*/
-
-"DISABLE_COMMUNICATION_ERROR" = "Disattiva avviso errore di comunicazione";
-"DISABLE_COMMUNICATION_ERROR_FOOTER" = "Disattiva l'avviso di errore di comunicazione che appare aprendo l'app quando rocketbootstrap non è disponibile per qualche ragione. Usa a tuo rischio e pericolo.";
 
 "RESET_ALL_PREFERENCES" = "Resetta tutte le preferenze";
 "RESET_ALL_PREFERENCES_CONFIRMATION" = "Sei sicuro di voler resettare tutte le preferenze?";
@@ -447,7 +450,9 @@
 "PREVIEW" = "Anteprima";
 "PLAY" = "Riproduci";
 "CUSTOM_DEFAULT_PATH_ERROR_MESSAGE" = "Il percorso che hai impostato nelle impostazioni sotto \"Percorso predefinito personalizzato\" non è valido. Si prega di correggerlo.";
-"VIDEO_URL_NOT_FOUND" = "Nessun URL del video trovato. Se il video è in pausa, rimuovilo dalla pausa e riprova ancora.";
+/*WEBCONTENT_COMMUNICATION_FAILED*/
+/*WEBCONTENT_COMMUNICATION_FAILED_LIBHOOKER_NOTICE*/
+/*BLOB_NOT_SUPPORTED_ERROR*/
 "COPY_LINK" = "Copia link";
 "SIZE_UNKNOWN" = "Dimensione sconosciuta";
 "DURATION_UNKNOWN" = "Durata sconosciuta";
