@@ -1188,26 +1188,31 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 			if([webView.configuration.websiteDataStore respondsToSelector:@selector(httpCookieStore)])
 			{
 				WKHTTPCookieStore* cookieStore = webView.configuration.websiteDataStore.httpCookieStore;
-
-				[cookieStore getAllCookies:^(NSArray<NSHTTPCookie*>* cookies)
+				if(cookieStore)
 				{
-					dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+					dispatch_async(dispatch_get_main_queue(), ^
 					{
-						for(NSHTTPCookie* cookie in cookies)
+						[cookieStore getAllCookies:^(NSArray<NSHTTPCookie*>* cookies)
 						{
-							[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-						}
+							dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void)
+							{
+								for(NSHTTPCookie* cookie in cookies)
+								{
+									[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+								}
 
-						if(completion)
-						{
-							dispatch_async(dispatch_get_main_queue(), ^(void){
-								completion(YES);
+								if(completion)
+								{
+									dispatch_async(dispatch_get_main_queue(), ^(void){
+										completion(YES);
+									});
+								}
 							});
-						}
+						}];
 					});
-				}];
 
-				return;
+					return;
+				}
 			}
 		}
 	}

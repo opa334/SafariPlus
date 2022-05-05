@@ -25,16 +25,19 @@
 #import "../../MobileSafari/Defines.h"
 #import "../../Shared/SPFile.h"
 #import "../../Shared/NSFileManager+DirectorySize.h"
+#import <dlfcn.h>
 
 #import <AVFoundation/AVFoundation.h>
 
 #include <dlfcn.h>
 
+char* (*sandbox_extension_issue_file_to_process)(const char *extension_class, const char *path, uint32_t flags, audit_token_t);
+char* (*sandbox_extension_issue_file)(const char *ext, const char *path, int reserved, int flags);
+
 extern "C"
 {
 	extern const char *const APP_SANDBOX_READ;
 	extern const char *const APP_SANDBOX_READ_WRITE;
-	char *sandbox_extension_issue_file_to_process(const char *extension_class, const char *path, uint32_t flags, audit_token_t);
 }
 
 @implementation SPSBReceiver
@@ -117,8 +120,20 @@ extern "C"
 	{
 		NSValue* auditTokenValue = userInfo[@"auditToken"];
 		audit_token_t* auditToken = (audit_token_t*)[auditTokenValue pointerValue];
-		char* varWriteExtension = sandbox_extension_issue_file_to_process(APP_SANDBOX_READ_WRITE, "/var", 0, *auditToken);
-		char* rootReadExtension = sandbox_extension_issue_file_to_process(APP_SANDBOX_READ, "/", 0, *auditToken);
+
+		char* varWriteExtension = NULL;
+		char* rootReadExtension = NULL;
+		if(sandbox_extension_issue_file_to_process)
+		{
+			varWriteExtension = sandbox_extension_issue_file_to_process(APP_SANDBOX_READ_WRITE, "/var", 0, *auditToken);
+			rootReadExtension = sandbox_extension_issue_file_to_process(APP_SANDBOX_READ, "/", 0, *auditToken);
+		}
+		else
+		{
+			varWriteExtension = sandbox_extension_issue_file(APP_SANDBOX_READ_WRITE, "/var", 0, 0);
+			rootReadExtension = sandbox_extension_issue_file(APP_SANDBOX_READ, "/", 0, 0);
+		}
+
 		if(varWriteExtension && rootReadExtension)
 		{
 			HBLogDebugWeak(@"varWriteExtension: %s", varWriteExtension);
@@ -133,3 +148,10 @@ extern "C"
 }
 
 @end
+
+void initReceiver()
+{
+	void* libSystemSandboxHandle = dlopen("/usr/lib/system/libsystem_sandbox.dylib", RTLD_NOW);
+	sandbox_extension_issue_file_to_process = (char *(*)(const char *, const char *, uint32_t, audit_token_t))dlsym(libSystemSandboxHandle, "sandbox_extension_issue_file_to_process");
+	sandbox_extension_issue_file = (char *(*)(const char *, const char *, int, int))dlsym(libSystemSandboxHandle, "sandbox_extension_issue_file");
+}

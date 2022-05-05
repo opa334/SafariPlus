@@ -167,6 +167,8 @@ SPSBReceiver* receiver;
 
 %end
 
+extern void initReceiver();
+
 %ctor
 {
 	%init();
@@ -179,4 +181,6 @@ SPSBReceiver* receiver;
 	{
 		%init(iOS9Down);
 	}
+
+	initReceiver();
 }
