@@ -402,8 +402,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 
 	NSMutableDictionary* allItems = [NSMutableDictionary new];
 
-	id target;
-
 	if(NSClassFromString(@"SFBarRegistration"))
 	{
 		SFBarRegistration* barRegistration = MSHookIvar<SFBarRegistration*>(self, "_barRegistration");
@@ -439,8 +437,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 		{
 			addToDict(allItems, [barRegistration UIBarButtonItemForItem:i], [NSNumber numberWithInteger:i]);
 		}
-
-		target = barRegistration;
 	}
 	else
 	{
@@ -473,8 +469,6 @@ static __kindof UIBarButtonItem* unsystemifiedBarButtonItem(__kindof UIBarButton
 			MSHookIvar<UIBarButtonItem*>(self, "_tabExposeItem") = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"TabButton"] style:UIBarButtonItemStylePlain target:browserControllerForBrowserToolbar(self) action:@selector(showTabsFromButtonBar)];
 		}
 		addToDict(allItems, MSHookIvar<UIBarButtonItem*>(self, "_tabExposeItem"), @(BrowserToolbarTabExposeItem));
-
-		target = self;
 	}
 
 	for(NSNumber* itemNumber in orderM)

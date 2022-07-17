@@ -16,7 +16,6 @@ export NO_ROCKETBOOTSTRAP = 1
 export TARGET = simulator:clang:14.5:8.0
 export ARCHS = x86_64 i386
 else
-export PREFIX = $(THEOS)/toolchain/Xcode11.xctoolchain/usr/bin/
 export TARGET = iphone:clang:14.4:8.0
 export ARCHS = armv7 armv7s arm64 arm64e
 endif

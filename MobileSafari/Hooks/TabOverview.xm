@@ -43,7 +43,6 @@
 		UIView* superview = [self.addTabButton superview];
 
 		BOOL desktopButtonAdded = NO;
-		BOOL tabManagerButtonAdded = NO;
 
 		if(preferenceManager.desktopButtonEnabled)
 		{
@@ -99,7 +98,6 @@
 
 			if(![self.tabManagerButton isDescendantOfView:superview])
 			{
-				tabManagerButtonAdded = YES;
 				[superview addSubview:self.tabManagerButton];
 			}
 		}

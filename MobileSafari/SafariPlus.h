@@ -22,6 +22,8 @@
 #import "substrate.h"
 #endif
 
+#import <UIKit/UIKit.h>
+
 #import <WebKit/WKNavigationAction.h>
 #import <WebKit/WKNavigationResponse.h>
 #import <WebKit/WKWebView.h>
