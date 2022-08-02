@@ -28,7 +28,6 @@
 #import "SPFileBrowserTableViewController.h"
 #import "SPFileTableViewCell.h"
 #import "SPLocalizationManager.h"
-#import "SPCommunicationManager.h"
 #import "SPFileManager.h"
 #import "../../Shared/SPFile.h"
 
@@ -276,6 +275,7 @@
 
 - (void)didSelectFile:(SPFile*)file atIndexPath:(NSIndexPath*)indexPath
 {
+	BOOL callSuper = YES;
 	if([file displaysAsRegularFile])
 	{
 		//Only cache one hard link at most
@@ -299,6 +299,7 @@
 		if(!file.isRegularFile)
 		{
 			[openAlert addAction:[self showContentActionForFile:file withIndexPath:indexPath]];
+			callSuper = NO;
 		}
 
 		if([file isHLSStream])
@@ -361,7 +362,10 @@
 		[self presentViewController:openAlert animated:YES completion:nil];
 	}
 
-	[super didSelectFile:file atIndexPath:indexPath];
+	if(callSuper)
+	{
+		[super didSelectFile:file atIndexPath:indexPath];
+	}
 }
 
 //Downloads are section 0, files are section 1

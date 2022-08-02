@@ -1,3 +1,5 @@
+#!/bin/sh
+
 set -e
 
 make SIMJECT=1

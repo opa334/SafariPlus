@@ -1,3 +1,5 @@
 .theos/
 .DS_Store
 packages/
+.WebKit
+.vscode

@@ -24,12 +24,8 @@
 #define DEFAULT_DOWNLOAD_PATH [NSString stringWithFormat:@"/Users/%@/Desktop/SafariPlusFiles/Downloads", CURRENT_USER]
 #else
 #define SPBundlePath @"/Library/Application Support/SafariPlus.bundle"
-#define OLD_DOWNLOAD_PATH [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
-#if defined(NO_ROCKETBOOTSTRAP)
-#define DEFAULT_DOWNLOAD_PATH [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
-#else
+#define SANDBOXED_DOWNLOAD_PATH [NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]
 #define DEFAULT_DOWNLOAD_PATH @"/var/mobile/Downloads"
-#endif
 #endif
 
 #if defined(ROOTLESS)	//Hack some stuff so that the patcher does not replace /Library with /var/LIB

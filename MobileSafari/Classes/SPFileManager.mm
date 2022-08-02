@@ -21,7 +21,6 @@
 #import "SPFileManager.h"
 
 #ifndef PREFERENCES
-#import "SPCommunicationManager.h"
 #import "SPPreferenceManager.h"
 #endif
 
@@ -32,49 +31,16 @@
 #import "../../Shared/SPFile.h"
 #import "../../Shared/NSFileManager+DirectorySize.h"
 #import "SPDownload.h"
+#import <MobileCoreServices/LSApplicationWorkspace.h>
+#import <MobileCoreServices/LSApplicationProxy.h>
+#import <MobileCoreServices/LSBundleProxy.h>
+
+@interface LSApplicationWorkspace ()
+- (void)enumerateBundlesOfType:(NSUInteger)type usingBlock:(void (^)(LSBundleProxy* bundleProxy))block;
+@end
 
 #import <unistd.h>
-/*
-#import <QuickLook/QuickLook.h>
-@interface QLThumbnail : NSObject
-- (id)initWithURL:(id)arg1;
-- (id)imageForUseMode:(NSUInteger)arg1 descriptor:(id)arg2 generateIfNeeded:(BOOL)arg3 contentRect:(CGRect*)arg4 error:(id*)arg5;
-@end
-
-@interface QLThumbnailGenerator : NSObject
-+ (void)generateThumbnailOfMaximumSize:(CGSize)arg1 scale:(double)arg2 forURL:(id)arg3 completionHandler:(void (^)(id arg1))completion;
-@end
-*/
-#ifndef PREFERENCES
-
-//Wrapper around executeFileOperationOnSpringBoard that simplifies error handling
-NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
-{
-	NSDictionary* dict = [mutDict copy];
-
-	NSDictionary* response = [communicationManager executeFileOperationOnSpringBoard:dict];
-
-	NSException* exception = [response objectForKey:@"exception"];
-	if(exception)
-	{
-		//Redirect SpringBoard crashes to Safari
-		@throw(exception);
-	}
-
-	if(error)
-	{
-		NSError* responseError = [response objectForKey:@"error"];
-
-		if(responseError)
-		{
-			*error = responseError;
-		}
-	}
-
-	return response;
-}
-
-#endif
+#import <libSandy.h>
 
 @implementation SPFileManager
 
@@ -91,42 +57,67 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 	return sharedInstance;
 }
 
+
+// Populate _displayNamesForPaths using MobileCoreServices
+- (void)populateApplicationDisplayNamesForPath
+{
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+	{
+		NSMutableDictionary* displayNamesForPaths = [NSMutableDictionary new];
+
+		LSApplicationWorkspace* workspace = [LSApplicationWorkspace defaultWorkspace];
+
+		//TODO: iOS 8 support
+		if([workspace respondsToSelector:@selector(enumerateBundlesOfType:usingBlock:)])
+		{
+			void (^enumerateBlock)(LSBundleProxy*) = ^(LSBundleProxy* bundleProxy)
+			{
+				NSLog(@"enum %@", bundleProxy);
+				NSString* localizedName = [bundleProxy localizedName];
+				if(localizedName)
+				{
+					NSString* dataContainerPath = bundleProxy.dataContainerURL.path;
+					if(dataContainerPath)
+					{
+						displayNamesForPaths[dataContainerPath] = localizedName;
+					}
+
+					NSString* bundleContainerPath = bundleProxy.bundleContainerURL.path;
+					if(bundleContainerPath)
+					{
+						displayNamesForPaths[bundleContainerPath] = localizedName;
+					}
+
+					[bundleProxy.groupContainerURLs enumerateKeysAndObjectsUsingBlock:^(NSString* groupID, NSURL* groupURL, BOOL *stop)
+					{
+						NSString* groupPath = groupURL.path;
+						if(groupPath)
+						{
+							displayNamesForPaths[groupURL.path] = groupID;
+						}
+					}];
+				}
+			}; 
+
+			[workspace enumerateBundlesOfType:0 usingBlock:enumerateBlock];
+			[workspace enumerateBundlesOfType:1 usingBlock:enumerateBlock];
+		}
+
+		_displayNamesForPaths = displayNamesForPaths.copy;
+	});
+}
+
 - (instancetype)init
 {
 	self = [super init];
 
-	_sandboxed = access("/var/mobile", W_OK) != 0;
-	if(access("/var/checkra1n.dmg", F_OK) == 0)
-	{
-		HBLogDebugWeak(@"checkra1n");
-		// checkra1n has incomplete sandbox patches
-		_sandboxed = YES;
-	}
-
-#if !defined(PREFERENCES) && !defined(NO_ROCKETBOOTSTRAP)
-	HBLogDebugWeak(@"_sandboxed: %d, preferenceManager.unsandboxSafariEnabled: %d", _sandboxed, preferenceManager.unsandboxSafariEnabled);
-	HBLogDebugWeak(@"preferenceManager: %@", preferenceManager);
-	if(_sandboxed && preferenceManager.unsandboxSafariEnabled)
-	{
-		BOOL unsandboxed = [communicationManager handleUnsandbox];
-		if(unsandboxed)
-		{
-			HBLogDebugWeak(@"unsandboxing worked!!!");
-			_sandboxed = NO;
-		}
-	}
-	else if(!_sandboxed && !preferenceManager.unsandboxSafariEnabled)
-	{
-		HBLogDebugWeak(@"Safari is not sandboxed but we pretend it is because !preferenceManager.unsandboxSafariEnabled");
-		_sandboxed = YES;
-	}
-
-	_displayNamesForPaths = [communicationManager applicationDisplayNamesForPaths];
-#endif
-
-	HBLogDebugWeak(@"_sandboxed:%i", _sandboxed);
-
 #if !defined(PREFERENCES)
+
+	// Get file access using libSandy
+	// If disabled inside settings, libSandy will return do nothing and kLibSandyErrorRestricted
+	libSandy_applyProfile("SafariPlus_FileAccess");
+
+	// Set up hard linking (only needed on iOS 8)
 	_hardLinkURL = [getSafariTmpURL() URLByAppendingPathComponent:@"hardLink"];
 	[self resetHardLinks];
 #endif
@@ -262,14 +253,6 @@ NSDictionary* execute(NSMutableDictionary* mutDict, NSError** error)
 
 	return resolvedURL;
 }
-
-#ifdef NO_ROCKETBOOTSTRAP
-
-- (void)resetHardLinks { }
-- (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL { return URL; }
-- (NSString*)applicationDisplayNameForURL:(NSURL*)URL { return nil; }
-
-#endif
 
 - (UIImage*)iconForDownload:(SPDownload*)download
 {

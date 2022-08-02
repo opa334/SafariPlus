@@ -18,24 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#import "../Classes/SPSBReceiver.h"
 #import "../../MobileSafari/Defines.h"
-
-SPSBReceiver* receiver;
-
-%hook SpringBoard
-
-//Use rocketbootstrap to receive messages through CPDistributedMessagingCenter
-- (id)init
-{
-	id orig = %orig;
-
-	receiver = [[SPSBReceiver alloc] init];
-
-	return orig;
-}
-
-%end
 
 @interface LSBundleProxy : NSObject
 @property (nonatomic,readonly) NSString* bundleIdentifier;
@@ -167,8 +150,6 @@ SPSBReceiver* receiver;
 
 %end
 
-extern void initReceiver();
-
 %ctor
 {
 	%init();
@@ -181,6 +162,4 @@ extern void initReceiver();
 	{
 		%init(iOS9Down);
 	}
-
-	initReceiver();
 }

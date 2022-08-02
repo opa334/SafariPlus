@@ -21,18 +21,17 @@
 #import <WebKit/WKWebView.h>
 #import "Protocols.h"
 
-@class BrowserController, BrowserRootViewController, BrowserToolbar, TabController, TabDocument, TabThumbnailView, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SPCommunicationManager, SafariWebView, NavigationBar, WebAVPlayerController;
+@class BrowserController, BrowserRootViewController, BrowserToolbar, TabController, TabDocument, TabThumbnailView, SPFileManager, SPCacheManager, SPDownload, SPDownloadInfo, SPDownloadManager, SPLocalizationManager, SPPreferenceManager, SafariWebView, NavigationBar, WebAVPlayerController;
 
 extern BOOL showAlert;
 extern SPFileManager* fileManager;
 extern SPPreferenceManager* preferenceManager;
 extern SPLocalizationManager* localizationManager;
 extern SPDownloadManager* downloadManager;
-extern SPCommunicationManager* communicationManager;
 extern SPCacheManager* cacheManager;
 extern NSBundle* SPBundle;
 extern NSBundle* MSBundle;
-extern BOOL rocketBootstrapWorks;
+extern BOOL libSandyWorks;
 extern BOOL skipBiometricProtection;
 
 extern NSString* getSafariTmpPath();

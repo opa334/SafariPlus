@@ -102,4 +102,23 @@
 	}
 }
 
+- (void)setUnsandboxEnabled:(id)value specifier:(PSSpecifier*)specifier
+{
+	NSString* forceSandboxFilePath = @"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.force_sandbox";
+	NSNumber* v = value;
+	if([v boolValue])
+	{
+		[[NSFileManager defaultManager] removeItemAtPath:forceSandboxFilePath error:nil];
+	}
+	else
+	{
+		[[NSFileManager defaultManager] createFileAtPath:forceSandboxFilePath contents:nil attributes:nil];
+	}
+}
+
+- (id)readSandboxEnabled:(PSSpecifier*)specifier
+{
+	return @(![[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.force_sandbox"]);
+}
+
 @end

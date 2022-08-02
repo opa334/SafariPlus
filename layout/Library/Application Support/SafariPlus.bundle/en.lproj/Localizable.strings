@@ -336,7 +336,7 @@
 /* Tweak Specifc Settings */
 
 "UNSANDBOX_SAFARI" = "Unsandbox Safari";
-"UNSANDBOX_SAFARI_FOOTER" = "When this option is enabled, Safari Plus utilizes RocketBootstrap to give the Safari process read rights to / and read-write rights to /var. When this option is disabled, the download manager will fall back to saving files inside the sandbox container of Safari and the 'Upload Any File' feature will not work. Note that this option reduces security and in the worst case, where an attacker has already managed to execute code inside the Safari process, the attacker could access the mentioned paths too.";
+"UNSANDBOX_SAFARI_FOOTER" = "When this option is enabled, Safari Plus utilizes libSandy to give the Safari process read rights to / and read-write rights to /var. When this option is disabled, the download manager will fall back to saving files inside the sandbox container of Safari and the 'Upload Any File' feature will not work. Note that this option reduces security and in the worst case, where an attacker has already managed to execute code inside the Safari process, the attacker could access the mentioned paths too.";
 
 "LARGE_TITLES" = "Large Titles";
 "LARGE_TITLES_FOOTER" = "Large Titles in every view added by Safari Plus.";
@@ -367,8 +367,8 @@
 "WELCOME_TITLE" = "Welcome!";
 "WELCOME_MESSAGE" = "Thanks for installing Safari Plus! If you wish to stay updated about the future of this tweak, make sure to follow me on Twitter! This message will not show again (I promise)!";
 "OPEN_TWITTER" = "Open Twitter";
-"COMMUNICATION_ERROR" = "Communication Error";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Unable to communicate with SpringBoard! A few features will not work. Please ensure that RocketBootstrap is installed correctly and that SafariPlusSB.dylib was not disabled via iCleaner Pro. Your default download path will be changed to the sandbox container of Safari. If you want to disable this message, you can do so inside Preferences by disabling 'Unsandbox Safari' under 'Tweak Specific Settings'.";
+"UNSANDBOX_ERROR" = "Unsandboxing Error";
+"UNSANDBOX_ERROR_DESCRIPTION" = "Failed to use libSandy to allow access to Safari Plus preferences (and the filesystem in case it's enabled in Settings). Some features of Safari Plus may not work or may not work correctly. Please ensure that libSandy is installed and that libSandySupport.dylib was not disabled via Choicy, iCleaner Pro or similar.";
 "UNDIRECTOR_WARNING" = "Undirector Warning";
 "UNDIRECTOR_WARNING_MESSAGE" = "Some features of Safari Plus may not work or cause crashes, the patchfinder likely does not support your iOS version (%@, %@). Unable to rebind the following selectors:\n\n%@";
 

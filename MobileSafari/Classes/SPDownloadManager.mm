@@ -30,7 +30,6 @@
 #import "SPDownloadInfo.h"
 #import "SPLocalizationManager.h"
 #import "SPPreferenceManager.h"
-#import "SPCommunicationManager.h"
 #import "SPCacheManager.h"
 #import "SPStatusBarNotification.h"
 #import "SPStatusBarNotificationWindow.h"
@@ -97,7 +96,7 @@
 
 - (void)setUpDefaultDownloadURL
 {
-	if(preferenceManager.customDefaultPathEnabled && preferenceManager.customDefaultPath && preferenceManager.unsandboxSafariEnabled && rocketBootstrapWorks)
+	if(preferenceManager.customDefaultPathEnabled && preferenceManager.customDefaultPath && [preferenceManager unsandboxSafariEnabled] && libSandyWorks)
 	{
 		self.defaultDownloadURL = [fileManager resolveSymlinkForURL:[NSURL fileURLWithPath:[@"/var" stringByAppendingString:preferenceManager.customDefaultPath]]];
 
@@ -106,9 +105,9 @@
 			return;
 		}
 	}
-	else if(!rocketBootstrapWorks || !preferenceManager.unsandboxSafariEnabled)
+	else if(![preferenceManager unsandboxSafariEnabled] || !libSandyWorks)
 	{
-		self.defaultDownloadURL = [NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingString:@"/Documents/Downloads"]];
+		self.defaultDownloadURL = [NSURL fileURLWithPath:SANDBOXED_DOWNLOAD_PATH];
 
 		if([self createDownloadDirectoryIfNeeded])
 		{
@@ -133,11 +132,9 @@
 
 - (void)migrateFromSandbox
 {
-#ifndef NO_ROCKETBOOTSTRAP
-	HBLogDebugWeak(@"migrateFromSandbox sandboxed: %d", fileManager.sandboxed);
-	if(!fileManager.sandboxed)
+	if([preferenceManager unsandboxSafariEnabled] && libSandyWorks)
 	{
-		NSURL* oldDownloadURL = [NSURL fileURLWithPath:OLD_DOWNLOAD_PATH];
+		NSURL* oldDownloadURL = [NSURL fileURLWithPath:SANDBOXED_DOWNLOAD_PATH];
 
 		if([fileManager fileExistsAtURL:oldDownloadURL error:nil])
 		{
@@ -155,11 +152,10 @@
 				[fileManager removeItemAtURL:oldDownloadURL error:nil];
 
 				sendSimpleAlert([localizationManager localizedSPStringForKey:@"MIGRATION_TITLE"],
-						[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], OLD_DOWNLOAD_PATH, self.defaultDownloadURL.path]);
+						[NSString stringWithFormat:[localizationManager localizedSPStringForKey:@"MIGRATION_MESSAGE"], SANDBOXED_DOWNLOAD_PATH, self.defaultDownloadURL.path]);
 			}
 		}
 	}
-#endif
 }
 
 - (void)verifyDownloadStorageRevision

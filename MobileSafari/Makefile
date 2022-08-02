@@ -6,22 +6,10 @@ SafariPlus_FILES = Util.xm Init.xm Undirector.xmi
 SafariPlus_FILES += $(wildcard Hooks/*.xm Classes/*.mm Classes/*.xm ../Shared/*.mm)
 SafariPlus_EXTRA_FRAMEWORKS += CydiaSubstrate
 
-ifeq ($(NO_CEPHEI),0)
-SafariPlus_EXTRA_FRAMEWORKS += Cephei
-else
-SafariPlus_CFLAGS += -D NO_CEPHEI=1
-endif
-
 ifeq ($(NO_LIBCSCOLORPICKER),0)
 SafariPlus_LIBRARIES += CSColorPicker
 else
 SafariPlus_CFLAGS += -D NO_LIBCSCOLORPICKER=1
-endif
-
-ifeq ($(NO_ROCKETBOOTSTRAP),0)
-SafariPlus_LIBRARIES += rocketbootstrap
-else
-SafariPlus_CFLAGS += -D NO_ROCKETBOOTSTRAP=1
 endif
 
 ifeq ($(DEBUG_LOGGING),1)
@@ -33,7 +21,7 @@ dir_string := @"\"$(CURDIR)\""
 SafariPlus_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
-SafariPlus_LIBRARIES += objc
+SafariPlus_LIBRARIES += objc sandy
 SafariPlus_FRAMEWORKS = UIKit CoreFoundation Foundation AVKit
 SafariPlus_PRIVATE_FRAMEWORKS = MobileIcons
 

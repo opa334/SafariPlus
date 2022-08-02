@@ -336,7 +336,7 @@
 /* Tweak Specifc Settings */
 
 "UNSANDBOX_SAFARI" = "Safari Sandbox schwächen";
-"UNSANDBOX_SAFARI_FOOTER" = "Wenn diese Option aktiviert ist, benutzt Safari RocketBootstrap um dem Safari Prozess Lesezugriff auf / und Schreibzugriff auf /var zu geben. Wenn diese Option deaktiviert ist, wird der Download Manager die Dateien im Sandbox Container von Safari speichern und die 'Jede Datei hochladen' Option wird nicht funktionieren. Diese Option reduziert die Sicherheit von Safari und im schlimmsten Fall, wenn ein Angreifer bereits Code im Safari Prozess ausführen kann, könnte dieser auch auf die genannten Pfade zugreifen.";
+"UNSANDBOX_SAFARI_FOOTER" = "Wenn diese Option aktiviert ist, benutzt Safari libSandy um dem Safari Prozess Lesezugriff auf / und Schreibzugriff auf /var zu geben. Wenn diese Option deaktiviert ist, wird der Download Manager die Dateien im Sandbox Container von Safari speichern und die 'Jede Datei hochladen' Option wird nicht funktionieren. Diese Option reduziert die Sicherheit von Safari und im schlimmsten Fall, wenn ein Angreifer bereits Code im Safari Prozess ausführen kann, könnte dieser auch auf die genannten Pfade zugreifen.";
 
 "LARGE_TITLES" = "Große Titel";
 "LARGE_TITLES_FOOTER" = "Große Titel in jeder Ansicht, welche von Safari Plus hinzugefügt wird.";
@@ -367,8 +367,8 @@
 "WELCOME_TITLE" = "Willkommen!";
 "WELCOME_MESSAGE" = "Danke für das Installieren von Safari Plus! Wenn du über die Zukunft des Tweaks auf dem laufenden bleiben willst, folge mir doch auf Twitter! Diese Nachricht wird nie wieder angezeigt, versprochen!";
 "OPEN_TWITTER" = "Öffne Twitter";
-"COMMUNICATION_ERROR" = "Kommunikationsfehler";
-"COMMUNICATION_ERROR_DESCRIPTION" = "Kommunikation mit SpringBoard fehlgeschlagen! Einige Features werden nicht funktionieren. Bitte stelle sicher, dass RocketBootstrap korrekt installiert ist und dass SafariPlusSB.dylib nicht via iCleaner Pro deaktiviert wurde. Dein Downloadpfad wird auf den Sandbox Container von Safari geändert. Wenn diese Meldung nicht mehr angezeigt werden soll, deaktiviere 'Tweakspezifische Einstellungen' -> 'Safari Sandbox schwächen' in den Safari Plus Einstellungen.";
+"UNSANDBOX_ERROR" = "Unsandbox Fehler";
+"UNSANDBOX_ERROR_DESCRIPTION" = "Fehler beim Versuch libSandy zu benutzen um Safari Zugriff auf die Safari Plus Einstellungen zu gewähren (beinhaltet auch Dateisystem Zugriff insofern dies in den Einstellungen aktiviert ist). Einige Features von Safari Plus werden möglicherweise nicht oder nicht korrekt funktionieren. Stelle sicher, dass libSandy installiert ist und dass libSandySupport.dylib nicht via Choicy oder iCleaner Pro deaktiviert wurde.";
 "UNDIRECTOR_WARNING" = "Undirector Warnung";
 "UNDIRECTOR_WARNING_MESSAGE" = "Einige Features von Safari Plus könnten nicht funktionieren oder zu Abstürzen führen da der Patchfinder die iOS Version (%@, %@) anscheinend nicht unterstützt. Das rebinding der folgenden Selectors ist fehlgeschlagen:\n\n%@";
 

@@ -25,7 +25,6 @@
 #import "Classes/SPFileManager.h"
 #import "Classes/SPPreferenceManager.h"
 #import "Classes/SPLocalizationManager.h"
-#import "Classes/SPCommunicationManager.h"
 #import "Classes/SPCacheManager.h"
 #import "SPPreferenceUpdater.h"
 
@@ -45,13 +44,12 @@
 NSBundle* MSBundle = [NSBundle mainBundle];
 NSBundle* SPBundle = [NSBundle bundleWithPath:SPBundlePath];
 
-SPCommunicationManager* communicationManager;
 SPFileManager* fileManager;
 SPPreferenceManager* preferenceManager;
 SPLocalizationManager* localizationManager = [SPLocalizationManager sharedInstance];
 SPDownloadManager* downloadManager;
 SPCacheManager* cacheManager = [SPCacheManager sharedInstance];
-BOOL rocketBootstrapWorks = NO;
+BOOL libSandyWorks = YES;
 BOOL skipBiometricProtection = NO;
 
 #ifdef DEBUG_LOGGING

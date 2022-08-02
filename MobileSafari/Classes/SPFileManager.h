@@ -33,14 +33,11 @@ typedef NSString *NSFileAttributeKey;
 	NSDictionary* _displayNamesForPaths;
 }
 
-@property (nonatomic, getter=isSandboxed) BOOL sandboxed;
-
 + (instancetype)sharedInstance;
 #ifndef PREFERENCES
 - (void)resetHardLinks;
 - (NSURL*)accessibleHardLinkForFileAtURL:(NSURL*)URL;
 - (NSString*)applicationDisplayNameForURL:(NSURL*)URL;
-#ifndef NO_ROCKETBOOTSTRAP
 - (BOOL)_isReadable:(const char*)str;
 - (BOOL)_isWritable:(const char*)str;
 - (BOOL)isPathReadable:(NSString*)path;
@@ -48,7 +45,7 @@ typedef NSString *NSFileAttributeKey;
 - (BOOL)isPathWritable:(NSString*)path;
 - (BOOL)isURLWritable:(NSURL*)URL;
 #endif
-#endif
+- (void)populateApplicationDisplayNamesForPath;
 - (NSArray<SPFile*>*)filesAtURL:(NSURL*)URL error:(NSError**)error;
 - (BOOL)fileExistsAtURL:(NSURL*)url error:(NSError**)error;
 - (BOOL)isDirectoryAtURL:(NSURL*)url error:(NSError**)error;

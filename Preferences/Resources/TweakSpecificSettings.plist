@@ -27,6 +27,10 @@
 				<string>unsandboxSafariEnabled</string>
 				<key>label</key>
 				<string>UNSANDBOX_SAFARI</string>
+				<key>set</key>
+				<string>setUnsandboxEnabled:specifier:</string>
+				<key>get</key>
+				<string>readSandboxEnabled:</string>
 				<key>minCFVersion</key>
 				<real>1443.00</real>
 			</dict>

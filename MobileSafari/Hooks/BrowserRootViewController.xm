@@ -25,8 +25,6 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
 
-#if !NO_CEPHEI || SIMJECT
-
 %hook BrowserRootViewController
 
 - (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion
@@ -123,11 +121,7 @@
 
 %end
 
-#endif
-
 void initBrowserRootViewController()
 {
-	#if !NO_CEPHEI || SIMJECT
 	%init();
-	#endif
 }

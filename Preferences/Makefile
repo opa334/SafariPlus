@@ -22,10 +22,6 @@ dir_string := @"\"$(CURDIR)\""
 SafariPlusPrefs_CFLAGS += -D SIMJECT=1 -D CUR_DIR=$(dir_string)
 endif
 
-ifeq ($(NO_CEPHEI),1)
-SafariPlusPrefs_CFLAGS += -D NO_CEPHEI=1
-endif
-
 SafariPlusPrefs_PRIVATE_FRAMEWORKS = Preferences MobileIcons
 
 include $(THEOS_MAKE_PATH)/bundle.mk

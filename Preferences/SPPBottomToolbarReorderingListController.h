@@ -20,9 +20,8 @@
 
 #import "SPPListController.h"
 #import "SafariPlusPrefs.h"
-#import "SPPEditableListController.h"
 
-@interface SPPBottomToolbarReorderingListController : SPPEditableListController
+@interface SPPBottomToolbarReorderingListController : PSEditableListController
 {
 	NSArray* _allItems;
 	NSMutableArray* _enabledItems;

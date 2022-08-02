@@ -26,9 +26,9 @@
 #import "../Classes/SPPreferenceManager.h"
 #import "../Classes/SPLocalizationManager.h"
 #import "../Classes/SPCacheManager.h"
-#import "../Classes/SPCommunicationManager.h"
 #import "../Shared/SPPreferenceUpdater.h"
 #import <libundirect/libundirect_dynamic.h>
+#import "../Classes/SPFileManager.h"
 
 #import <UserNotifications/UserNotifications.h>
 
@@ -64,6 +64,8 @@
 
 	if(browserControllers().firstObject && !self.sp_isSetUp)
 	{
+		[fileManager populateApplicationDisplayNamesForPath];
+
 		if(kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_13_0)
 		{
 			//Auto switch mode on launch
@@ -82,9 +84,9 @@
 			[cacheManager cleanUpTabStateAdditions];
 		}
 
-		[self handleTwitterAlert];
+		[self sp_handleTwitterAlert];
 
-		[self handleSBConnectionTest];
+		[self sp_handleLibSandyCheck];
 
 		if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_14_0)
 		{
@@ -147,7 +149,7 @@
 }
 
 %new
-- (void)handleTwitterAlert
+- (void)sp_handleTwitterAlert
 {
 	if([cacheManager firstStart])
 	{
@@ -203,15 +205,12 @@
 	}
 }
 
-//Tests whether Safari is able to communicate with SpringBoard
 %new
-- (void)handleSBConnectionTest
+- (void)sp_handleLibSandyCheck
 {
-	rocketBootstrapWorks = [communicationManager testConnection];
-
-	if(!rocketBootstrapWorks && preferenceManager.unsandboxSafariEnabled)
+	if(!libSandyWorks)
 	{
-		sendSimpleAlert([localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR"], [localizationManager localizedSPStringForKey:@"COMMUNICATION_ERROR_DESCRIPTION"]);
+		sendSimpleAlert([localizationManager localizedSPStringForKey:@"UNSANDBOX_ERROR"], [localizationManager localizedSPStringForKey:@"UNSANDBOX_ERROR_DESCRIPTION"]);
 	}
 }
 

@@ -645,8 +645,8 @@ typedef enum UIImageSymbolScale : NSInteger {
 - (void)sp_setUpIfReady;
 - (void)sp_applicationDidEnterBackground;
 - (void)sp_applicationWillEnterForeground;
-- (void)handleTwitterAlert;
-- (void)handleSBConnectionTest;
+- (void)sp_handleTwitterAlert;
+- (void)sp_handleLibSandyCheck;
 - (void)application:(UIApplication*)application handleEventsForBackgroundURLSession:(NSString*)identifier completionHandler:(void (^)(void))completionHandler;
 @end
 

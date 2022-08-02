@@ -147,19 +147,7 @@
 
 - (void)setPreferenceValue:(id)value specifier:(PSSpecifier*)specifier
 {
-	#ifdef NO_CEPHEI
-	NSString* plistPath = rPath(PREF_PLIST_PATH);
-	NSMutableDictionary* mutableDict = [NSMutableDictionary dictionaryWithContentsOfFile:plistPath];
-	if(!mutableDict)
-	{
-		mutableDict = [NSMutableDictionary new];
-	}
-	[mutableDict setObject:value forKey:[[specifier properties] objectForKey:@"key"]];
-	[mutableDict writeToFile:plistPath atomically:YES];
-	CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), CFSTR("com.opa334.safariplusprefs/ReloadPrefs"), NULL, NULL, YES);
-	#else
 	[super setPreferenceValue:value specifier:specifier];
-	#endif
 
 	if(specifier.cellType == PSSwitchCell)
 	{
@@ -182,25 +170,6 @@
 		}
 	}
 }
-
-#ifdef NO_CEPHEI
-
-- (id)readPreferenceValue:(PSSpecifier*)specifier
-{
-	NSString* plistPath = rPath(PREF_PLIST_PATH);
-	NSDictionary* dict = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-
-	id obj = [dict objectForKey:[[specifier properties] objectForKey:@"key"]];
-
-	if(!obj)
-	{
-		obj = [[specifier properties] objectForKey:@"default"];
-	}
-
-	return obj;
-}
-
-#endif
 
 - (void)openTwitterWithUsername:(NSString*)username
 {

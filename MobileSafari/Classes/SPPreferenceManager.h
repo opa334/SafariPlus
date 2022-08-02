@@ -22,10 +22,7 @@
 
 @interface SPPreferenceManager : NSObject
 {
-  #ifndef NO_CEPHEI
-	HBPreferences* _preferences;
-  #endif
-  NSDictionary* _defaults;
+  NSUserDefaults* _userDefaults;
 }
 
 + (instancetype)sharedInstance;
@@ -307,15 +304,11 @@
 @property (nonatomic, readonly) NSString* customSearchEngineURL;
 @property (nonatomic, readonly) NSString* customSearchEngineSuggestionsURL;
 
-@property (nonatomic, readonly) BOOL unsandboxSafariEnabled;
+- (BOOL)unsandboxSafariEnabled;
 @property (nonatomic, readonly) BOOL largeTitlesEnabled;
 @property (nonatomic, readonly) BOOL sortDirectoriesAboveFiles;
 @property (nonatomic, readonly) BOOL pullUpToRefreshDisabled;
 
-#ifndef NO_CEPHEI
-- (HBPreferences*)preferences;
-@property (nonatomic, readonly) BOOL preferencesAreValid;
-- (void)fallbackToPlistDictionary;
-#endif
+- (NSUserDefaults*)userDefaults;
 
 @end

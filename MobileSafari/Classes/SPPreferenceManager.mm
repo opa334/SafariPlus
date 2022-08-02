@@ -24,13 +24,14 @@
 #import "../Util.h"
 #import "../Enums.h"
 #import "Simulator.h"
+#import "../SafariPlus.h"
+#import <libSandy.h>
 
-#ifndef NO_CEPHEI
-#import <Cephei/HBPreferences.h>
-#endif
 #ifndef NO_LIBCSCOLORPICKER
 #import <CSColorPicker/CSColorPicker.h>
 #endif
+
+#import <Cephei/HBPreferences.h>
 
 void reloadPreferences()
 {
@@ -50,53 +51,26 @@ void reloadPreferences()
 	return sharedInstance;
 }
 
-#ifndef NO_CEPHEI
-
-- (HBPreferences*)preferences
+- (NSUserDefaults*)userDefaults
 {
-	return _preferences;
+	return _userDefaults;
 }
 
-- (void)fallbackToPlistDictionary
+- (NSDictionary*)preferencesDictionary
 {
-	NSDictionary* prefDict = [NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")];
-
-	[self reloadPreferencesFromDictionary:prefDict];
-}
-
+#if defined SIMJECT
+	return [NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")];
 #endif
+	return [_userDefaults dictionaryRepresentation];
+}
 
 - (void)reloadPreferences
 {
-	#if defined NO_CEPHEI
-	#if defined SIMJECT //SIMJECT
-	/*if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0)
-	{
-		[self reloadPreferencesFromDictionary:[[[NSUserDefaults alloc] initWithSuiteName:PREFERENCE_DOMAIN_NAME] dictionaryRepresentation]];
-	}
-	else
-	{*/
-		[self reloadPreferencesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")]];
-	//}
-	#else //NO CEPHEI EDITION
-	[self reloadPreferencesFromDictionary:[NSDictionary dictionaryWithContentsOfFile:rPath(@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist")]];
-	#endif
-	#else //NORMAL
-	[self reloadPreferencesFromDictionary:[_preferences dictionaryRepresentation]];
-
-	if(!_preferencesAreValid)
-	{
-		[self fallbackToPlistDictionary];
-	}
-	#endif
+	[self reloadPreferencesFromDictionary:[self preferencesDictionary]];
 }
 
 - (void)reloadPreferencesFromDictionary:(NSDictionary*)prefDict
 {
-	#ifndef NO_CEPHEI
-	_preferencesAreValid = prefDict != nil;
-	#endif
-
 	for(NSString* key in [prefDict allKeys])
 	{
 		id value = [prefDict objectForKey:key];
@@ -111,32 +85,13 @@ void reloadPreferences()
 			HBLogDebugWeak(@"exception while reloading preferences: %@", e);
 		}
 	}
-
-	for(NSString* key in _defaults)
-	{
-		if(![prefDict objectForKey:key])
-		{
-			id value = [_defaults objectForKey:key];
-
-			NSString* ivarName = [@"_" stringByAppendingString:key];
-
-			@try
-			{
-				[self setValue:value forKey:key];
-			}
-			@catch(NSException* e)
-			{
-				HBLogDebugWeak(@"exception while applying defaults: %@", e);
-			}
-		}
-	}
 }
 
 - (id)init
 {
 	self = [super init];
 
-	_defaults = @
+	NSDictionary* defaults = @
 	{
 		@"tweakEnabled" : @YES,
 
@@ -304,20 +259,45 @@ void reloadPreferences()
 		//@"customDesktopUserAgentEnabled" : @NO,
 		@"customDesktopUserAgent" : @"",
 
-		@"unsandboxSafariEnabled" : @YES,
 		//@"largeTitlesEnabled" : @NO,
 		//@"sortDirectoriesAboveFiles" : @NO,
 		//@"pullUpToRefreshDisabled" : @NO,
 	};
 
-	#ifndef NO_CEPHEI
-	_preferences = [[HBPreferences alloc] initWithIdentifier:PREFERENCE_DOMAIN_NAME];
-	#endif
+	if(kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_11_0)
+	{
+		int ret = libSandy_applyProfile("SafariPlus_Preferences");
+		if(ret == kLibSandyErrorXPCFailure)
+		{
+			libSandyWorks = NO;
+		}
+
+		//int denied = sandbox_check(getpid(), "user-preference-write", SANDBOX_FILTER_PATH | SANDBOX_CHECK_NO_REPORT, "com.opa334.safariplusprefs");
+		//NSLog(@"libSandy user pref write: %d", denied);
+
+		//_userDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.opa334.safariplusprefs"];
+		_userDefaults = [[NSUserDefaults alloc] initWithSuiteName:@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.plist"];
+		[_userDefaults registerDefaults:defaults];
+	}
+	else
+	{
+		NSBundle* cepheiBundle = [NSBundle bundleWithPath:@"/Library/Frameworks/Cephei.framework"];
+		[cepheiBundle load];
+
+		// this works because HBPreferences method signatures are somewhat similar to the ones of NSUserDefaults
+		_userDefaults = (NSUserDefaults*)[[NSClassFromString(@"HBPreferences") alloc] initWithIdentifier:PREFERENCE_DOMAIN_NAME];
+		[self reloadPreferencesFromDictionary:defaults];
+	}
 
 	[self reloadPreferences];
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)reloadPreferences, CFSTR("com.opa334.safariplusprefs/ReloadPrefs"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 
 	return self;
+}
+
+- (BOOL)unsandboxSafariEnabled
+{
+	return ![[NSFileManager defaultManager] fileExistsAtPath:@"/var/mobile/Library/Preferences/com.opa334.safariplusprefs.force_sandbox"];
 }
 
 - (BOOL)isURLOnHTTPSExceptionsList:(NSURL*)URL
@@ -364,11 +344,7 @@ void reloadPreferences()
 
 	_forceHTTPSExceptions = [forceHTTPSExceptionsM copy];
 
-	#ifndef NO_CEPHEI
-	[_preferences setObject:_forceHTTPSExceptions forKey:@"forceHTTPSExceptions"];
-	#else
-
-	#endif
+	[_userDefaults setObject:_forceHTTPSExceptions forKey:@"forceHTTPSExceptions"];
 }
 
 - (void)removeURLFromHTTPSExceptionsList:(NSURL*)URL
@@ -391,9 +367,7 @@ void reloadPreferences()
 
 	_forceHTTPSExceptions = [forceHTTPSExceptionsM copy];
 
-	#ifndef NO_CEPHEI
-	[_preferences setObject:_forceHTTPSExceptions forKey:@"forceHTTPSExceptions"];
-	#endif
+	[_userDefaults setObject:_forceHTTPSExceptions forKey:@"forceHTTPSExceptions"];
 }
 
 @end

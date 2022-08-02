@@ -26,11 +26,9 @@
 
 #ifndef SIMJECT
 
-#ifndef NO_CEPHEI
 #ifndef PREFERENCES
 #import <Cephei/HBPreferences.h>
 #import "../MobileSafari/Classes/SPPreferenceManager.h"
-#endif
 #endif
 
 @implementation SPPreferenceUpdater
@@ -45,11 +43,10 @@
 
 + (void)update
 {
-#ifndef NO_CEPHEI
 	BOOL mergeNeeded = [self needsMerge];
 
 #ifndef PREFERENCES
-	HBPreferences* preferences = [preferenceManager preferences];
+	NSUserDefaults* preferences = [preferenceManager userDefaults];
 #else
 	NSUserDefaults* preferences = [[NSUserDefaults alloc] initWithSuiteName:PREFERENCE_DOMAIN_NAME];
 #endif
@@ -143,8 +140,6 @@
 	}
 
 	[preferences synchronize];
-
-#endif
 }
 
 + (NSString*)LCSCPHexFromLCPHex:(NSString*)lcpHex
