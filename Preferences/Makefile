@@ -8,7 +8,7 @@ SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
 
 ifeq ($(NO_LIBCSCOLORPICKER),0)
-SafariPlusPrefs_LIBRARIES += CSColorPicker
+#SafariPlusPrefs_LIBRARIES += CSColorPicker
 else
 SafariPlusPrefs_CFLAGS += -D NO_LIBCSCOLORPICKER=1
 endif

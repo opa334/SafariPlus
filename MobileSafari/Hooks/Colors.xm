@@ -22,18 +22,7 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
-#ifndef NO_LIBCSCOLORPICKER
-#import <CSColorPicker/CSColorPicker.h>
-#else
-@implementation UIColor (noLibCSColorPicker)
-
-+ (UIColor*)cscp_colorFromHexString:(NSString*)hexString
-{
-	return [UIColor redColor];
-}
-
-@end
-#endif
+#import "../../Shared/ColorPickerCompat.h"
 
 %group iOS8
 
@@ -103,11 +92,11 @@
 
 		if(preferenceManager.topBarNormalBackgroundColorEnabled && preferenceManager.topBarNormalBackgroundColor && !privateBrowsing)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalBackgroundColor];
+			colorToSet = colorFromHex(preferenceManager.topBarNormalBackgroundColor);
 		}
 		else if(preferenceManager.topBarPrivateBackgroundColorEnabled && preferenceManager.topBarPrivateBackgroundColor && privateBrowsing)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateBackgroundColor];
+			colorToSet = colorFromHex(preferenceManager.topBarPrivateBackgroundColor);
 		}
 
 		_UIBackdropView* backdrop = MSHookIvar<_UIBackdropView*>(self, "_backdrop");
@@ -142,11 +131,11 @@
 	{
 		if(preferenceManager.topBarNormalTintColorEnabled && !self.usingLightControls)
 		{
-			return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTintColor]);
+			return %orig(colorFromHex(preferenceManager.topBarNormalTintColor));
 		}
 		else if(preferenceManager.topBarPrivateTintColorEnabled && self.usingLightControls)
 		{
-			return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTintColor]);
+			return %orig(colorFromHex(preferenceManager.topBarPrivateTintColor));
 		}
 	}
 
@@ -165,11 +154,11 @@
 
 		if(preferenceManager.topBarNormalProgressBarColorEnabled && !privateBrowsing)
 		{
-			progressView.progressBarFillColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalProgressBarColor];
+			progressView.progressBarFillColor = colorFromHex(preferenceManager.topBarNormalProgressBarColor);
 		}
 		else if(preferenceManager.topBarPrivateProgressBarColorEnabled && privateBrowsing)
 		{
-			progressView.progressBarFillColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateProgressBarColor];
+			progressView.progressBarFillColor = colorFromHex(preferenceManager.topBarPrivateProgressBarColor);
 		}
 	}
 }
@@ -188,11 +177,11 @@
 
 		if(preferenceManager.topBarNormalReaderButtonColorEnabled && preferenceManager.topBarNormalReaderButtonColor && !privateBrowsing)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalReaderButtonColor];
+			colorToSet = colorFromHex(preferenceManager.topBarNormalReaderButtonColor);
 		}
 		else if(preferenceManager.topBarPrivateReaderButtonColorEnabled && preferenceManager.topBarPrivateReaderButtonColor && privateBrowsing)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateReaderButtonColor];
+			colorToSet = colorFromHex(preferenceManager.topBarPrivateReaderButtonColor);
 		}
 
 		if(colorToSet)
@@ -244,11 +233,11 @@
 	{
 		if(preferenceManager.topBarNormalURLFontColorEnabled && !self.usingLightControls)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalURLFontColor];
+			return colorFromHex(preferenceManager.topBarNormalURLFontColor);
 		}
 		else if(preferenceManager.topBarPrivateURLFontColorEnabled && self.usingLightControls)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateURLFontColor];
+			return colorFromHex(preferenceManager.topBarPrivateURLFontColor);
 		}
 	}
 
@@ -262,11 +251,11 @@
 	{
 		if(preferenceManager.topBarNormalReloadButtonColorEnabled && !self.usingLightControls)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalReloadButtonColor];
+			return colorFromHex(preferenceManager.topBarNormalReloadButtonColor);
 		}
 		else if(preferenceManager.topBarPrivateReloadButtonColorEnabled && self.usingLightControls)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateReloadButtonColor];
+			return colorFromHex(preferenceManager.topBarPrivateReloadButtonColor);
 		}
 	}
 
@@ -282,11 +271,11 @@
 	{
 		if(preferenceManager.topBarNormalURLFontColorEnabled && !self.usingLightControls)
 		{
-			return [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalURLFontColor] colorWithAlphaComponent:0.5];
+			return [colorFromHex(preferenceManager.topBarNormalURLFontColor) colorWithAlphaComponent:0.5];
 		}
 		else if(preferenceManager.topBarPrivateURLFontColorEnabled && self.usingLightControls)
 		{
-			return [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateURLFontColor] colorWithAlphaComponent:0.5];
+			return [colorFromHex(preferenceManager.topBarPrivateURLFontColor) colorWithAlphaComponent:0.5];
 		}
 	}
 
@@ -308,11 +297,11 @@
 		{
 			if(preferenceManager.topBarNormalURLFontColorEnabled && !self.usingLightControls)
 			{
-				URLLabel.textColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalURLFontColor];
+				URLLabel.textColor = colorFromHex(preferenceManager.topBarNormalURLFontColor);
 			}
 			else if(preferenceManager.topBarPrivateURLFontColorEnabled && self.usingLightControls)
 			{
-				URLLabel.textColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateURLFontColor];
+				URLLabel.textColor = colorFromHex(preferenceManager.topBarPrivateURLFontColor);
 			}
 		}
 	}
@@ -332,13 +321,13 @@
 
 		if(preferenceManager.topBarNormalReloadButtonColorEnabled && !self.usingLightControls)
 		{
-			[reloadButton setImage:[reloadImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalReloadButtonColor]] forState:0];
-			[stopButton setImage:[stopImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalReloadButtonColor]] forState:0];
+			[reloadButton setImage:[reloadImage _flatImageWithColor:colorFromHex(preferenceManager.topBarNormalReloadButtonColor)] forState:0];
+			[stopButton setImage:[stopImage _flatImageWithColor:colorFromHex(preferenceManager.topBarNormalReloadButtonColor)] forState:0];
 		}
 		else if(preferenceManager.topBarPrivateReloadButtonColorEnabled && self.usingLightControls)
 		{
-			[reloadButton setImage:[reloadImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateReloadButtonColor]] forState:0];
-			[stopButton setImage:[stopImage _flatImageWithColor:[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateReloadButtonColor]] forState:0];
+			[reloadButton setImage:[reloadImage _flatImageWithColor:colorFromHex(preferenceManager.topBarPrivateReloadButtonColor)] forState:0];
+			[stopButton setImage:[stopImage _flatImageWithColor:colorFromHex(preferenceManager.topBarPrivateReloadButtonColor)] forState:0];
 		}
 	}
 }
@@ -354,11 +343,11 @@
 	{
 		if(preferenceManager.topBarNormalLockIconColorEnabled && !self.usingLightControls)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLockIconColor];
+			return colorFromHex(preferenceManager.topBarNormalLockIconColor);
 		}
 		else if(preferenceManager.topBarPrivateLockIconColorEnabled && self.usingLightControls)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLockIconColor];
+			return colorFromHex(preferenceManager.topBarPrivateLockIconColor);
 		}
 	}
 
@@ -374,11 +363,11 @@
 {
 	if(preferenceManager.topBarNormalLockIconColorEnabled && !self.usingLightControls)
 	{
-		return [self _lockImageWithTint:[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLockIconColor] usingMiniatureVersion:miniatureVersion];
+		return [self _lockImageWithTint:colorFromHex(preferenceManager.topBarNormalLockIconColor) usingMiniatureVersion:miniatureVersion];
 	}
 	else if(preferenceManager.topBarPrivateLockIconColorEnabled && self.usingLightControls)
 	{
-		return [self _lockImageWithTint:[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLockIconColor] usingMiniatureVersion:miniatureVersion];
+		return [self _lockImageWithTint:colorFromHex(preferenceManager.topBarPrivateLockIconColor) usingMiniatureVersion:miniatureVersion];
 	}
 
 	return %orig;
@@ -398,11 +387,11 @@
 	{
 		if(preferenceManager.tabTitleBarNormalTextColorEnabled && !self.usesDarkTheme)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalTextColor];
+			return colorFromHex(preferenceManager.tabTitleBarNormalTextColor);
 		}
 		else if(preferenceManager.tabTitleBarPrivateTextColorEnabled && self.usesDarkTheme)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateTextColor];
+			return colorFromHex(preferenceManager.tabTitleBarPrivateTextColor);
 		}
 	}
 
@@ -416,11 +405,11 @@
 	{
 		if(preferenceManager.tabTitleBarNormalBackgroundColorEnabled && !self.usesDarkTheme)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalBackgroundColor];
+			return colorFromHex(preferenceManager.tabTitleBarNormalBackgroundColor);
 		}
 		else if(preferenceManager.tabTitleBarPrivateBackgroundColorEnabled && self.usesDarkTheme)
 		{
-			return [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateBackgroundColor];
+			return colorFromHex(preferenceManager.tabTitleBarPrivateBackgroundColor);
 		}
 	}
 
@@ -444,11 +433,11 @@
 
 			if(preferenceManager.tabTitleBarNormalBackgroundColorEnabled && !privateMode)
 			{
-				headerView.backgroundColor = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalBackgroundColor];
+				headerView.backgroundColor = colorFromHex(preferenceManager.tabTitleBarNormalBackgroundColor);
 			}
 			else if(preferenceManager.tabTitleBarPrivateBackgroundColorEnabled && privateMode)
 			{
-				headerView.backgroundColor = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateBackgroundColor];
+				headerView.backgroundColor = colorFromHex(preferenceManager.tabTitleBarPrivateBackgroundColor);
 			}
 			else
 			{
@@ -461,11 +450,11 @@
 		{
 			if(preferenceManager.tabTitleBarNormalTextColorEnabled && !privateMode)
 			{
-				return %orig([UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalTextColor]);
+				return %orig(colorFromHex(preferenceManager.tabTitleBarNormalTextColor));
 			}
 			else if(preferenceManager.tabTitleBarPrivateTextColorEnabled && privateMode)
 			{
-				return %orig([UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateTextColor]);
+				return %orig(colorFromHex(preferenceManager.tabTitleBarPrivateTextColor));
 			}
 		}
 	}
@@ -500,7 +489,7 @@
 			{
 				CGFloat activeTitleAlpha = 1.0;
 
-				[[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+				[colorFromHex(preferenceManager.topBarNormalTabBarTitleColor) getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
 
 				titleLabel.alpha = activeTitleAlpha;
 				titleOverlayLabel.alpha = activeTitleAlpha;
@@ -519,7 +508,7 @@
 			{
 				CGFloat activeTitleAlpha = 1.0;
 
-				[[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
+				[colorFromHex(preferenceManager.topBarPrivateTabBarTitleColor) getRed:nil green:nil blue:nil alpha:&activeTitleAlpha];
 
 				titleLabel.alpha = activeTitleAlpha;
 				titleOverlayLabel.alpha = activeTitleAlpha;
@@ -544,11 +533,11 @@
 
 		if(preferenceManager.topBarNormalTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
 		{
-			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
+			titleLabel.textColor = [colorFromHex(preferenceManager.topBarNormalTabBarTitleColor) colorWithAlphaComponent:1.0];
 		}
 		else if(preferenceManager.topBarPrivateTabBarTitleColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
 		{
-			titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
+			titleLabel.textColor = [colorFromHex(preferenceManager.topBarPrivateTabBarTitleColor) colorWithAlphaComponent:1.0];
 		}
 	}
 }
@@ -564,13 +553,13 @@
 
 		if(preferenceManager.topBarNormalTabBarCloseButtonColorEnabled && ((TabBar8*)tabBar).barStyle == 0)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarCloseButtonColor];
-			//titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
+			colorToSet = colorFromHex(preferenceManager.topBarNormalTabBarCloseButtonColor);
+			//titleLabel.textColor = [colorFromHex(preferenceManager.topBarNormalTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
 		else if(preferenceManager.topBarPrivateTabBarCloseButtonColorEnabled && ((TabBar8*)tabBar).barStyle == 1)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarCloseButtonColor];
-			//titleLabel.textColor = [[UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
+			colorToSet = colorFromHex(preferenceManager.topBarPrivateTabBarCloseButtonColor);
+			//titleLabel.textColor = [colorFromHex(preferenceManager.topBarPrivateTabBarTitleColor] colorWithAlphaComponent:1.0];
 		}
 
 		if(colorToSet)
@@ -595,7 +584,7 @@
 
 	if(preferenceManager.topBarNormalTabBarTitleColorEnabled)
 	{
-		UIColor* topBarNormalTabBarTitleColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarTitleColor];
+		UIColor* topBarNormalTabBarTitleColor = colorFromHex(preferenceManager.topBarNormalTabBarTitleColor);
 
 		MSHookIvar<UIColor*>(normalStyle, "_itemTitleColor") = [topBarNormalTabBarTitleColor colorWithAlphaComponent:1.0];
 
@@ -612,7 +601,7 @@
 
 	if(preferenceManager.topBarNormalTabBarCloseButtonColorEnabled)
 	{
-		UIColor* topBarNormalTabBarCloseButtonColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTabBarCloseButtonColor];
+		UIColor* topBarNormalTabBarCloseButtonColor = colorFromHex(preferenceManager.topBarNormalTabBarCloseButtonColor);
 
 		MSHookIvar<UIImage*>(normalStyle, "_itemCloseButtonImage") = [%c(TabBarStyle) _closeButtonWithColor:topBarNormalTabBarCloseButtonColor];
 		MSHookIvar<UIImage*>(normalStyle, "_itemCloseButtonOverlayImage") = [%c(TabBarStyle) _closeButtonWithColor:topBarNormalTabBarCloseButtonColor];
@@ -630,7 +619,7 @@
 
 	if(preferenceManager.topBarPrivateTabBarTitleColorEnabled)
 	{
-		UIColor* topBarPrivateTabBarTitleColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarTitleColor];
+		UIColor* topBarPrivateTabBarTitleColor = colorFromHex(preferenceManager.topBarPrivateTabBarTitleColor);
 
 		MSHookIvar<UIColor*>(privateBrowsingStyle, "_itemTitleColor") = [topBarPrivateTabBarTitleColor colorWithAlphaComponent:1.0];
 
@@ -647,7 +636,7 @@
 
 	if(preferenceManager.topBarPrivateTabBarCloseButtonColorEnabled)
 	{
-		UIColor* topBarNormalTabBarCloseButtonColor = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTabBarCloseButtonColor];
+		UIColor* topBarNormalTabBarCloseButtonColor = colorFromHex(preferenceManager.topBarPrivateTabBarCloseButtonColor);
 
 		MSHookIvar<UIImage*>(privateBrowsingStyle, "_itemCloseButtonImage") = [%c(TabBarStyle) _closeButtonWithColor:topBarNormalTabBarCloseButtonColor];
 		MSHookIvar<UIImage*>(privateBrowsingStyle, "_itemCloseButtonOverlayImage") = [%c(TabBarStyle) _closeButtonWithColor:topBarNormalTabBarCloseButtonColor];
@@ -682,11 +671,11 @@
 
 			if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherNormalToolbarBackgroundColor && !privateBrowsing)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherNormalToolbarBackgroundColor);
 			}
 			else if(preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherPrivateToolbarBackgroundColor && privateBrowsing)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherPrivateToolbarBackgroundColor);
 			}
 
 			if(colorToSet)
@@ -726,11 +715,11 @@
 		{
 			if(preferenceManager.tabSwitcherNormalToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherNormalToolbarBackgroundColor && !privateBrowsing)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherNormalToolbarBackgroundColor);
 			}
 			else if(preferenceManager.tabSwitcherPrivateToolbarBackgroundColorEnabled && preferenceManager.tabSwitcherPrivateToolbarBackgroundColor && privateBrowsing)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherPrivateToolbarBackgroundColor);
 			}
 		}
 	}
@@ -740,11 +729,11 @@
 		{
 			if(preferenceManager.bottomBarNormalBackgroundColorEnabled && preferenceManager.bottomBarNormalBackgroundColor && !privateBrowsing)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.bottomBarNormalBackgroundColor);
 			}
 			else if(preferenceManager.bottomBarPrivateBackgroundColorEnabled && preferenceManager.bottomBarPrivateBackgroundColor && privateBrowsing)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.bottomBarPrivateBackgroundColor);
 			}
 		}
 	}
@@ -820,11 +809,11 @@
 			{
 				if(preferenceManager.topBarNormalTintColorEnabled && !privateMode)
 				{
-					return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarNormalTintColor]);
+					return %orig(colorFromHex(preferenceManager.topBarNormalTintColor));
 				}
 				else if(preferenceManager.topBarPrivateTintColorEnabled && privateMode)
 				{
-					return %orig([UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateTintColor]);
+					return %orig(colorFromHex(preferenceManager.topBarPrivateTintColor));
 				}
 			}
 		}
@@ -834,11 +823,11 @@
 			{
 				if(preferenceManager.bottomBarNormalTintColorEnabled && !privateMode)
 				{
-					return %orig([UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalTintColor]);
+					return %orig(colorFromHex(preferenceManager.bottomBarNormalTintColor));
 				}
 				else if(preferenceManager.bottomBarPrivateTintColorEnabled && privateMode)
 				{
-					return %orig([UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateTintColor]);
+					return %orig(colorFromHex(preferenceManager.bottomBarPrivateTintColor));
 				}
 			}
 		}

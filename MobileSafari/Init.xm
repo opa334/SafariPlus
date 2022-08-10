@@ -22,6 +22,7 @@
 #import "Classes/SPPreferenceManager.h"
 #import "Classes/SPFileManager.h"
 #import "Defines.h"
+#import "../Shared/ColorPickerCompat.h"
 #import <libSandy.h>
 
 // One constructor that inits all hooks
@@ -65,6 +66,8 @@ extern void initWKFullScreenViewController();
 	@autoreleasepool
 	{
 		HBLogDebugWeak(@"started loading SafariPlus!");
+
+		loadColorPicker();
 
 		initUndirection();
 

@@ -21,12 +21,21 @@
 #import "SPPColorTopBarListController.h"
 #import "SafariPlusPrefs.h"
 #import "../MobileSafari/Defines.h"
+#import "../Shared/ColorPickerCompat.h"
 
 @implementation SPPColorTopBarListController
 
 - (NSString*)plistName
 {
-	return @"ColorsTopBar";
+	if(useAleris())
+	{
+		return @"Alderis_ColorsTopBar";
+	}
+	else
+	{
+		return @"CSColorPicker_ColorsTopBar";
+	}
+	
 }
 
 - (NSString*)title

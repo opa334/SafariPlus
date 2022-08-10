@@ -27,10 +27,6 @@
 #import "../SafariPlus.h"
 #import <libSandy.h>
 
-#ifndef NO_LIBCSCOLORPICKER
-#import <CSColorPicker/CSColorPicker.h>
-#endif
-
 #import <Cephei/HBPreferences.h>
 
 void reloadPreferences()

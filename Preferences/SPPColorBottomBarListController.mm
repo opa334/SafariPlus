@@ -20,12 +20,20 @@
 
 #import "SPPColorBottomBarListController.h"
 #import "SafariPlusPrefs.h"
+#import "../Shared/ColorPickerCompat.h"
 
 @implementation SPPColorBottomBarListController
 
 - (NSString*)plistName
 {
-	return @"ColorsBottomBar";
+	if(useAleris())
+	{
+		return @"Alderis_ColorsBottomBar";
+	}
+	else
+	{
+		return @"CSColorPicker_ColorsBottomBar";
+	}
 }
 
 - (NSString*)title

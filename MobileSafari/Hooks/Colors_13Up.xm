@@ -26,18 +26,7 @@
 #import "../Defines.h"
 #import "../Util.h"
 #import "../Classes/SPPreferenceManager.h"
-#ifndef NO_LIBCSCOLORPICKER
-#import <CSColorPicker/CSColorPicker.h>
-#else
-@implementation UIColor (noLibCSColorPicker)
-
-+ (UIColor*)cscp_colorFromHexString:(NSString*)hexString
-{
-	return [UIColor redColor];
-}
-
-@end
-#endif
+#import "../../Shared/ColorPickerCompat.h"
 
 #import <dlfcn.h>
 
@@ -145,19 +134,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.topBarNormalLightTintColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLightTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.topBarNormalLightTintColor);
 		}
 		else if(preferenceManager.topBarNormalDarkTintColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalDarkTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.topBarNormalDarkTintColor);
 		}
 		else if(preferenceManager.topBarPrivateLightTintColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLightTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.topBarPrivateLightTintColor);
 		}
 		else if(preferenceManager.topBarPrivateDarkTintColorEnabled && isPrivateMode && isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateDarkTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.topBarPrivateDarkTintColor);
 		}
 
 		if(tintColorToSet)
@@ -187,19 +176,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.topBarNormalLightURLFontColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			URLColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLightURLFontColor];
+			URLColorToSet = colorFromHex(preferenceManager.topBarNormalLightURLFontColor);
 		}
 		else if(preferenceManager.topBarNormalDarkURLFontColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			URLColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalDarkURLFontColor];
+			URLColorToSet = colorFromHex(preferenceManager.topBarNormalDarkURLFontColor);
 		}
 		else if(preferenceManager.topBarPrivateLightURLFontColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			URLColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLightURLFontColor];
+			URLColorToSet = colorFromHex(preferenceManager.topBarPrivateLightURLFontColor);
 		}
 		else if(preferenceManager.topBarPrivateDarkURLFontColorEnabled && isPrivateMode && isDarkMode)
 		{
-			URLColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateDarkURLFontColor];
+			URLColorToSet = colorFromHex(preferenceManager.topBarPrivateDarkURLFontColor);
 		}
 
 		if(URLColorToSet)
@@ -218,19 +207,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.topBarNormalLightProgressBarColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			loadingBarColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLightProgressBarColor];
+			loadingBarColorToSet = colorFromHex(preferenceManager.topBarNormalLightProgressBarColor);
 		}
 		else if(preferenceManager.topBarNormalDarkProgressBarColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			loadingBarColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalDarkProgressBarColor];
+			loadingBarColorToSet = colorFromHex(preferenceManager.topBarNormalDarkProgressBarColor);
 		}
 		else if(preferenceManager.topBarPrivateLightProgressBarColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			loadingBarColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLightProgressBarColor];
+			loadingBarColorToSet = colorFromHex(preferenceManager.topBarPrivateLightProgressBarColor);
 		}
 		else if(preferenceManager.topBarPrivateDarkProgressBarColorEnabled && isPrivateMode && isDarkMode)
 		{
-			loadingBarColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateDarkProgressBarColor];
+			loadingBarColorToSet = colorFromHex(preferenceManager.topBarPrivateDarkProgressBarColor);
 		}
 
 		if(loadingBarColorToSet)
@@ -253,19 +242,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.topBarNormalLightBackgroundColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLightBackgroundColor];
+			colorToSet = colorFromHex(preferenceManager.topBarNormalLightBackgroundColor);
 		}
 		else if(preferenceManager.topBarNormalDarkBackgroundColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalDarkBackgroundColor];
+			colorToSet = colorFromHex(preferenceManager.topBarNormalDarkBackgroundColor);
 		}
 		else if(preferenceManager.topBarPrivateLightBackgroundColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLightBackgroundColor];
+			colorToSet = colorFromHex(preferenceManager.topBarPrivateLightBackgroundColor);
 		}
 		else if(preferenceManager.topBarPrivateDarkBackgroundColorEnabled && isPrivateMode && isDarkMode)
 		{
-			colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateDarkBackgroundColor];
+			colorToSet = colorFromHex(preferenceManager.topBarPrivateDarkBackgroundColor);
 		}
 
 		if(colorToSet)
@@ -309,19 +298,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.bottomBarNormalLightTintColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalLightTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.bottomBarNormalLightTintColor);
 		}
 		else if(preferenceManager.bottomBarNormalDarkTintColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalDarkTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.bottomBarNormalDarkTintColor);
 		}
 		else if(preferenceManager.bottomBarPrivateLightTintColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateLightTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.bottomBarPrivateLightTintColor);
 		}
 		else if(preferenceManager.bottomBarPrivateDarkTintColorEnabled && isPrivateMode && isDarkMode)
 		{
-			tintColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateDarkTintColor];
+			tintColorToSet = colorFromHex(preferenceManager.bottomBarPrivateDarkTintColor);
 		}
 
 		if(tintColorToSet)
@@ -366,38 +355,38 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 		{
 			if(preferenceManager.tabSwitcherNormalLightToolbarBackgroundColorEnabled && !isPrivateMode && !isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalLightToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherNormalLightToolbarBackgroundColor);
 			}
 			else if(preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColorEnabled && !isPrivateMode && isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColor);
 			}
 			else if(preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColorEnabled && isPrivateMode && !isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColor);
 			}
 			else if(preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColorEnabled && isPrivateMode && isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColor);
 			}
 		}
 		else
 		{
 			if(preferenceManager.bottomBarNormalLightBackgroundColorEnabled && !isPrivateMode && !isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalLightBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.bottomBarNormalLightBackgroundColor);
 			}
 			else if(preferenceManager.bottomBarNormalDarkBackgroundColorEnabled && !isPrivateMode && isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarNormalDarkBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.bottomBarNormalDarkBackgroundColor);
 			}
 			else if(preferenceManager.bottomBarPrivateLightBackgroundColorEnabled && isPrivateMode && !isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateLightBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.bottomBarPrivateLightBackgroundColor);
 			}
 			else if(preferenceManager.bottomBarPrivateDarkBackgroundColorEnabled && isPrivateMode && isDarkMode)
 			{
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.bottomBarPrivateDarkBackgroundColor];
+				colorToSet = colorFromHex(preferenceManager.bottomBarPrivateDarkBackgroundColor);
 			}
 		}
 
@@ -445,22 +434,22 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 			if(preferenceManager.topBarNormalLightTabBarTitleColorEnabled && !isPrivateMode && !isDarkMode)
 			{
 				inactiveAlphaToSet = preferenceManager.topBarNormalLightTabBarInactiveTitleOpacity;
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLightTabBarTitleColor];
+				colorToSet = colorFromHex(preferenceManager.topBarNormalLightTabBarTitleColor);
 			}
 			else if(preferenceManager.topBarNormalDarkTabBarTitleColorEnabled && !isPrivateMode && isDarkMode)
 			{
 				inactiveAlphaToSet = preferenceManager.topBarNormalDarkTabBarInactiveTitleOpacity;
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalDarkTabBarTitleColor];
+				colorToSet = colorFromHex(preferenceManager.topBarNormalDarkTabBarTitleColor);
 			}
 			else if(preferenceManager.topBarPrivateLightTabBarTitleColorEnabled && isPrivateMode && !isDarkMode)
 			{
 				inactiveAlphaToSet = preferenceManager.topBarPrivateLightTabBarInactiveTitleOpacity;
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLightTabBarTitleColor];
+				colorToSet = colorFromHex(preferenceManager.topBarPrivateLightTabBarTitleColor);
 			}
 			else if(preferenceManager.topBarPrivateDarkTabBarTitleColorEnabled && isPrivateMode && isDarkMode)
 			{
 				inactiveAlphaToSet = preferenceManager.topBarPrivateDarkTabBarInactiveTitleOpacity;
-				colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateDarkTabBarTitleColor];
+				colorToSet = colorFromHex(preferenceManager.topBarPrivateDarkTabBarTitleColor);
 			}
 
 			UIVisualEffectView* effectView = [self valueForKey:@"_contentEffectsView"];
@@ -503,38 +492,38 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.topBarNormalLightTabBarTitleColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			textColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLightTabBarTitleColor];
+			textColorToSet = colorFromHex(preferenceManager.topBarNormalLightTabBarTitleColor);
 		}
 		else if(preferenceManager.topBarNormalDarkTabBarTitleColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			textColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalDarkTabBarTitleColor];
+			textColorToSet = colorFromHex(preferenceManager.topBarNormalDarkTabBarTitleColor);
 		}
 		else if(preferenceManager.topBarPrivateLightTabBarTitleColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			textColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLightTabBarTitleColor];
+			textColorToSet = colorFromHex(preferenceManager.topBarPrivateLightTabBarTitleColor);
 		}
 		else if(preferenceManager.topBarPrivateDarkTabBarTitleColorEnabled && isPrivateMode && isDarkMode)
 		{
-			textColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateDarkTabBarTitleColor];
+			textColorToSet = colorFromHex(preferenceManager.topBarPrivateDarkTabBarTitleColor);
 		}
 
 		UIColor* buttonColorToSet;
 
 		if(preferenceManager.topBarNormalLightTabBarCloseButtonColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			buttonColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalLightTabBarCloseButtonColor];
+			buttonColorToSet = colorFromHex(preferenceManager.topBarNormalLightTabBarCloseButtonColor);
 		}
 		else if(preferenceManager.topBarNormalDarkTabBarCloseButtonColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			buttonColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarNormalDarkTabBarCloseButtonColor];
+			buttonColorToSet = colorFromHex(preferenceManager.topBarNormalDarkTabBarCloseButtonColor);
 		}
 		else if(preferenceManager.topBarPrivateLightTabBarCloseButtonColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			buttonColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateLightTabBarCloseButtonColor];
+			buttonColorToSet = colorFromHex(preferenceManager.topBarPrivateLightTabBarCloseButtonColor);
 		}
 		else if(preferenceManager.topBarPrivateDarkTabBarCloseButtonColorEnabled && isPrivateMode && isDarkMode)
 		{
-			buttonColorToSet = [UIColor cscp_colorFromHexString:preferenceManager.topBarPrivateDarkTabBarCloseButtonColor];
+			buttonColorToSet = colorFromHex(preferenceManager.topBarPrivateDarkTabBarCloseButtonColor);
 		}
 
 		if(textColorToSet)
@@ -649,19 +638,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 	if(preferenceManager.tabSwitcherNormalLightToolbarBackgroundColorEnabled && !isPrivateMode && !isDarkMode)
 	{
-		colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalLightToolbarBackgroundColor];
+		colorToSet = colorFromHex(preferenceManager.tabSwitcherNormalLightToolbarBackgroundColor);
 	}
 	else if(preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColorEnabled && !isPrivateMode && isDarkMode)
 	{
-		colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColor];
+		colorToSet = colorFromHex(preferenceManager.tabSwitcherNormalDarkToolbarBackgroundColor);
 	}
 	else if(preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColorEnabled && isPrivateMode && !isDarkMode)
 	{
-		colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColor];
+		colorToSet = colorFromHex(preferenceManager.tabSwitcherPrivateLightToolbarBackgroundColor);
 	}
 	else if(preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColorEnabled && isPrivateMode && isDarkMode)
 	{
-		colorToSet = [UIColor cscp_colorFromHexString:preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColor];
+		colorToSet = colorFromHex(preferenceManager.tabSwitcherPrivateDarkToolbarBackgroundColor);
 	}
 
 	UIVisualEffectView* header = [self valueForKey:@"_header"];
@@ -756,19 +745,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.tabTitleBarNormalLightTextColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalLightTextColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarNormalLightTextColor);
 		}
 		else if(preferenceManager.tabTitleBarNormalDarkTextColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalDarkTextColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarNormalDarkTextColor);
 		}
 		else if(preferenceManager.tabTitleBarPrivateLightTextColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateLightTextColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarPrivateLightTextColor);
 		}
 		else if(preferenceManager.tabTitleBarPrivateDarkTextColorEnabled && isPrivateMode && isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateDarkTextColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarPrivateDarkTextColor);
 		}
 
 		if(colorToUse)
@@ -795,19 +784,19 @@ BOOL (*_SFIsPrivateTintStyle)(NSUInteger tintStyle);
 
 		if(preferenceManager.tabTitleBarNormalLightBackgroundColorEnabled && !isPrivateMode && !isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalLightBackgroundColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarNormalLightBackgroundColor);
 		}
 		else if(preferenceManager.tabTitleBarNormalDarkBackgroundColorEnabled && !isPrivateMode && isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarNormalDarkBackgroundColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarNormalDarkBackgroundColor);
 		}
 		else if(preferenceManager.tabTitleBarPrivateLightBackgroundColorEnabled && isPrivateMode && !isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateLightBackgroundColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarPrivateLightBackgroundColor);
 		}
 		else if(preferenceManager.tabTitleBarPrivateDarkBackgroundColorEnabled && isPrivateMode && isDarkMode)
 		{
-			colorToUse = [UIColor cscp_colorFromHexString:preferenceManager.tabTitleBarPrivateDarkBackgroundColor];
+			colorToUse = colorFromHex(preferenceManager.tabTitleBarPrivateDarkBackgroundColor);
 		}
 
 		if(colorToUse)

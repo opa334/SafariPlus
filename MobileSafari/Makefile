@@ -7,7 +7,7 @@ SafariPlus_FILES += $(wildcard Hooks/*.xm Classes/*.mm Classes/*.xm ../Shared/*.
 SafariPlus_EXTRA_FRAMEWORKS += CydiaSubstrate
 
 ifeq ($(NO_LIBCSCOLORPICKER),0)
-SafariPlus_LIBRARIES += CSColorPicker
+#SafariPlus_LIBRARIES += CSColorPicker
 else
 SafariPlus_CFLAGS += -D NO_LIBCSCOLORPICKER=1
 endif

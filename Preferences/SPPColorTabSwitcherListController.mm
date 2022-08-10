@@ -20,12 +20,20 @@
 
 #import "SPPColorTabSwitcherListController.h"
 #import "SafariPlusPrefs.h"
+#import "../Shared/ColorPickerCompat.h"
 
 @implementation SPPColorTabSwitcherListController
 
 - (NSString*)plistName
 {
-	return @"ColorsTabSwitcher";
+	if(useAleris())
+	{
+		return @"Alderis_ColorsTabSwitcher";
+	}
+	else
+	{
+		return @"CSColorPicker_ColorsTabSwitcher";
+	}
 }
 
 - (NSString*)title

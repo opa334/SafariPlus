@@ -24,6 +24,7 @@
 #import "Simulator.h"
 
 #import "../Shared/SPPreferenceUpdater.h"
+#import "../Shared/ColorPickerCompat.h"
 #import "../MobileSafari/Util.h"
 #import <mach-o/dyld.h>
 
@@ -54,6 +55,8 @@ BOOL isImageLoaded(NSString* imageName)
 - (id)init
 {
 	self = [super init];
+
+	loadColorPicker();
 
 	fileManager = [SPFileManager sharedInstance];
 	localizationManager = [SPLocalizationManager sharedInstance];
