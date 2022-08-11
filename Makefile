@@ -12,7 +12,7 @@ ifeq ($(SIMJECT),1)
 export TARGET = simulator:clang:14.5:8.0
 export ARCHS = x86_64 i386
 else
-export TARGET = iphone:clang:14.5:8.0
+export TARGET = iphone:clang:13.7:8.0
 export ARCHS = armv7 armv7s arm64 arm64e
 endif
 
