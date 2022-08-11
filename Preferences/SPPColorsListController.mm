@@ -24,7 +24,7 @@
 
 @implementation SPPColorsListController
 
-#ifndef NO_LIBCSCOLORPICKER
+#ifndef NO_LIBCOLORPICKER
 
 - (NSString*)plistName
 {

@@ -92,7 +92,7 @@ There are also some variables you can set when running make:
 
 `ROOTLESS=1` to compile Safari Plus for rootless jailbreaks
 
-`NO_LIBCSCOLORPICKER=1` to compile Safari Plus without the libCSColorPicker dependecy (color settings will be disabled if this flag is set)
+`NO_LIBCOLORPICKER=1` to compile Safari Plus without the Alderis/libCSColorPicker dependecy (color settings will be disabled if this flag is set)
 
 `NO_DEPENDENCIES=1` to compile Safari Plus with all of the above NO_* flags set 
 

@@ -7,10 +7,8 @@ SafariPlusPrefs_FILES += $(wildcard *.mm ../Shared/*.mm)
 SafariPlusPrefs_INSTALL_PATH = /Library/PreferenceBundles
 SafariPlusPrefs_FRAMEWORKS = UIKit
 
-ifeq ($(NO_LIBCSCOLORPICKER),0)
-#SafariPlusPrefs_LIBRARIES += CSColorPicker
-else
-SafariPlusPrefs_CFLAGS += -D NO_LIBCSCOLORPICKER=1
+ifeq ($(NO_LIBCOLORPICKER),1)
+SafariPlusPrefs_CFLAGS += -D NO_LIBCOLORPICKER=1
 endif
 
 ifeq ($(ROOTLESS),1)

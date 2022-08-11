@@ -33,10 +33,9 @@ void loadColorPicker(void)
 
 UIColor* colorFromHex(NSString* hex)
 {
-#ifdef NO_LIBCSCOLORPICKER
+#ifdef NO_LIBCOLORPICKER
     return [UIColor redColor];
 #else
-
     if(useAleris())
     {
 #if defined(__arm64__) && __arm64__

@@ -2,7 +2,7 @@ export SIMJECT ?= 0
 export ROOTLESS ?= 0
 export NO_DEPENDENCIES ?= 0
 export DEBUG_LOGGING ?= 0
-export NO_LIBCSCOLORPICKER ?= 0
+export NO_LIBCOLORPICKER ?= 0
 
 ifeq ($(ROOTLESS),1)
 export NO_DEPENDENCIES = 1
@@ -17,7 +17,7 @@ export ARCHS = armv7 armv7s arm64 arm64e
 endif
 
 ifeq ($(NO_DEPENDENCIES),1)
-export NO_LIBCSCOLORPICKER = 1
+export NO_LIBCOLORPICKER = 1
 endif
 
 export INCLUDES = $(THEOS_PROJECT_DIR)/Shared
