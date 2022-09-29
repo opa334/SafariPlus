@@ -312,7 +312,7 @@
 			}
 		}
 
-		[openAlert addAction:[self openInActionForFile:file]];
+		[openAlert addAction:[self openInActionForFile:file withIndexPath:indexPath]];
 
 		if([file conformsTo:kUTTypeAudiovisualContent] || [file conformsTo:kUTTypeImage])
 		{
@@ -408,7 +408,7 @@
 			//iPad fix (Set position of open alert to row in table)
 			CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
 			longPressAlert.popoverPresentationController.sourceView = self.tableView;
-			longPressAlert.popoverPresentationController.sourceRect = CGRectMake(cellRect.size.width / 2.0, cellRect.origin.y + cellRect.size.height / 2, 1.0, 1.0);
+			longPressAlert.popoverPresentationController.sourceRect = cellRect;
 
 			//Present open alert
 			[self presentViewController:longPressAlert animated:YES completion:nil];
@@ -535,7 +535,7 @@
 	}];
 }
 
-- (UIAlertAction*)openInActionForFile:(SPFile*)file
+- (UIAlertAction*)openInActionForFile:(SPFile*)file withIndexPath:(NSIndexPath*)indexPath
 {
 	return [UIAlertAction actionWithTitle:[localizationManager
 			localizedSPStringForKey:@"OPEN_IN"]
@@ -545,7 +545,8 @@
 		self.documentController = [UIDocumentInteractionController interactionControllerWithURL:file.fileURL];
 		self.documentController.delegate = self;
 
-		[self.documentController presentOpenInMenuFromRect:CGRectZero inView:self.view animated:YES];
+		CGRect cellRect = [self.tableView rectForRowAtIndexPath:indexPath];
+		[self.documentController presentOpenInMenuFromRect:cellRect inView:self.tableView animated:YES];
 	}];
 }
 

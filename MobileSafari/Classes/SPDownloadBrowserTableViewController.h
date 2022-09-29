@@ -43,7 +43,7 @@
 - (UIAlertAction*)playActionForFile:(SPFile*)file;
 - (UIAlertAction*)showContentActionForFile:(SPFile*)file withIndexPath:(NSIndexPath*)indexPath;
 - (UIAlertAction*)mergeActionForFile:(SPFile*)file withTargetExtension:(NSString*)targetExtension;
-- (UIAlertAction*)openInActionForFile:(SPFile*)file;
+- (UIAlertAction*)openInActionForFile:(SPFile*)file withIndexPath:(NSIndexPath*)indexPath;
 - (UIAlertAction*)importToMediaLibraryActionForImageWithURL:(NSURL*)URL;
 - (UIAlertAction*)importToMediaLibraryActionForVideoWithURL:(NSURL*)URL;
 - (UIAlertAction*)showInFilzaActionForFile:(SPFile*)file;

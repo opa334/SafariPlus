@@ -1,7 +1,7 @@
 #include <dlfcn.h>
 #import <CSColorPicker/CSColorPicker.h>
 
-BOOL useAleris(void)
+BOOL useAlderis(void)
 {
 #if defined(__arm64__) && __arm64__
     static BOOL alderis;
@@ -17,9 +17,14 @@ BOOL useAleris(void)
 
 void loadColorPicker(void)
 {
-    if(useAleris())
+    if(useAlderis())
     {
+#ifdef PREFERENCES
         dlopen("/usr/lib/libcolorpicker.dylib", RTLD_NOW);
+#else
+        NSBundle* alderisBundle = [NSBundle bundleWithPath:@"/Library/Frameworks/Alderis.framework"];
+        [alderisBundle load];
+#endif
     }
     else
     {
@@ -36,7 +41,7 @@ UIColor* colorFromHex(NSString* hex)
 #ifdef NO_LIBCOLORPICKER
     return [UIColor redColor];
 #else
-    if(useAleris())
+    if(useAlderis())
     {
 #if defined(__arm64__) && __arm64__
         return [[UIColor alloc] initWithHbcp_propertyListValue:hex];

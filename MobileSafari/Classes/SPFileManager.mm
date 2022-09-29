@@ -114,7 +114,7 @@
 #if !defined(PREFERENCES)
 
 	// Get file access using libSandy
-	// If disabled inside settings, libSandy will return do nothing and kLibSandyErrorRestricted
+	// If disabled inside settings, libSandy will do nothing and return kLibSandyErrorRestricted
 	libSandy_applyProfile("SafariPlus_FileAccess");
 
 	// Set up hard linking (only needed on iOS 8)

@@ -27,7 +27,7 @@
 
 - (NSString*)plistName
 {
-	if(useAleris())
+	if(useAlderis())
 	{
 		return @"Alderis_ColorsTopBar";
 	}
