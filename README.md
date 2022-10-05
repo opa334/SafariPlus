@@ -6,29 +6,29 @@ Various enhancements to Safari
 ### Privacy
 - Force HTTPS (+ configurable exception sites)
 
-- Locked Tabs - Adds a lock-switch to every tab inside the tab switcher that, when enabled, prevents the specific tab from being closed until the switch is disabled again
+- Locked Tabs - Adds a lock switch to every tab inside the tab switcher that, when enabled, prevents the specific tab from being closed until the switch is disabled again
 
 - Biometric Protection - Require TouchID / FaceID verification for switching browsing modes, locking tabs, unlocking tabs or accessing locked tabs
 
 ### Uploads & Downloads
-- Upload Any File - An additonal option to the document sheet that can be used to upload any file on your root file system
+- Upload Any File - An additional option to the document sheet that can be used to upload any file on your root file system
 
-- Download Manager - Extensive enhancements to the downloading functionality of Safari, check out the preference page for more detailed info
+- Download Manager - Extensive enhancements to the downloading functionality of Safari, check the preference page for more detailed info
 
 ### Usability
-- Both Link Opening Options - Have the "Open in Background" option and the "Open in New Tab" option available alongside each other
+- Both Link Opening Options - Have both the "Open in Background" option and the "Open in New Tab" option available alongside each other
 
 - Open in Opposite Mode Option - Adds an option to open a long pressed URL in the respective other browsing mode
 
-- Desktop Mode Switch - A switch inside tab switcher that can be used to toggle desktop mode on / off globally
+- Desktop Mode Switch - A switch inside the tab switcher that can be used to toggle desktop mode on / off globally
 
-- Tab Manager - An easy way to batch-export, batch-close and batch-add tabs
+- Tab Manager - An easy way to batch-export, batch-close, and batch-add tabs
 
 - Disable Tab Limit - Disables the default tab limit (varies between devices)
 
 - Always Open Links in New Tab (+ Option to always open in background)
 
-- Disable tab swiping (Only available on iOS 12 and up)
+- Disable tab Swiping (Only available on iOS 12 and up)
 
 - Fully Disable Private Browsing
 
@@ -47,23 +47,23 @@ Various enhancements to Safari
 - Suppress Mailto Dialog (on iOS 10 and above)
 
 ### Actions
-- Change Browsing Mode on App Start, App Resume, External Link Opened
+- Change Browsing Mode on App Start, App Resume, and when an External Link is Opened
 
-- Auto Close Tabs on Minimazion or Close of Safari
+- Auto Close Tabs when Safari is Minimized or Closed
 
-- Auto-Clear Browser Data on Minimization or Close of Safari
+- Auto-Clear Browser Data hen Safari is Minimized or Closed
 
 ### Gestures
-- URL Bar Swipe Left, Right, Down Gestures
+- URL Bar Swipe Left, Right, and Down Gestures
 
-- Toolbar Swipe Left, Right, Up / Down Gestures
+- Toolbar Swipe Left, Right, and Up / Down Gestures
 
 - Many available actions to trigger
 
 ### Customization
-- Color Settings for Top Toolbar, Bottom Toolbar and Tab Switcher for both normal and private browsing modes
+- Color Settings for the Top Toolbar, Bottom Toolbar and the Tab Switcher for both normal and private browsing modes
 
-- Change the button order of the Top and Bottom Toolbars (also includes additonal buttons)
+- Change the button order of the Top and Bottom Toolbars and add additional buttons
 
 - Custom Start Site - Change the default favorites view when opening a new tab to a specified URL
 
@@ -72,7 +72,7 @@ Various enhancements to Safari
 - Custom User Agent - Change the user agent for both mobile and desktop mode
 
 ## Compatibilty
-Any iOS device between iOS 8.0 and 14.8.1 should be supported!
+Any iOS device running iOS versions 8.0 to 14.8.1 should be supported!
 
 ## Compiling
 
@@ -88,7 +88,7 @@ To compile the WebContent part of Safari Plus, slightly patched WebKit headers a
 
 There are also some variables you can set when running make:
 
-`SIMJECT=1` to compile Safari Plus for the iOS simulator
+`SIMJECT=1` to compile Safari Plus for an iOS simulator
 
 `ROOTLESS=1` to compile Safari Plus for rootless jailbreaks
 
